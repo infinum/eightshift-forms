@@ -1,13 +1,11 @@
 import { Data } from "./data";
 
 export class State {
-	constructor() {
-		this.data = new Data();
+	constructor(options = {}) {
+		this.data = new Data(options);
 
 		// State names.
 		this.SELECTS = 'selects';
-		this.TEXTAREAS = 'textareas';
-		this.DATES = 'dates';
 		this.FILES = 'files';
 		this.CHECKBOXES = 'checkboxes';
 		this.RADIOS = 'radios';
@@ -26,12 +24,14 @@ export class State {
 		this.INPUT = 'input';
 		this.INPUTSELECT = 'inputSelect';
 		this.ITEMS = 'items';
+		this.CUSTOM = 'custom';
 		this.TYPE = 'type';
 		this.INTERNALTYPE = 'internalType';
 		this.NAME = 'name';
-		this.CHOICE = 'choice';
 		this.LOADED = 'loaded';
 		this.CONFIG = 'config';
+		this.LOADER = 'loader';
+		this.GLOBALMSG = 'globalMsg';
 		this.CONFIG_SELECT_USE_PLACEHOLDER = 'usePlaceholder';
 		this.CONFIG_SELECT_USE_SEARCH = 'useSearch';
 		this.CONFIG_PHONE_DISABLE_PICKER = 'disablePicker';
@@ -46,8 +46,6 @@ export class State {
 				...window[this.data.prefix].state,
 				[`form_${formId}`]: {
 					[this.SELECTS]: {},
-					[this.TEXTAREAS]: {},
-					[this.DATES]: {},
 					[this.FILES]: {},
 					[this.CHECKBOXES]: {},
 					[this.RADIOS]: {},
@@ -63,12 +61,20 @@ export class State {
 			}
 		}
 
-		const formElement = document.querySelector(`${this.data.formSelector}[${this.data.DATA_ATTRIBUTES.formPostId}="${formId}"]`);
+		let formElement = '';
+
+		if (formId === 0) {
+			formElement = document.querySelector(this.data.formSelector);
+		} else {
+			formElement = document.querySelector(`${this.data.formSelector}[${this.data.DATA_ATTRIBUTES.formPostId}="${formId}"]`);
+		}
 
 		this.setState([this.FORM, this.FORMELEMENT], formElement, formId);
 		this.setState([this.FORM, this.FORMTYPE], formElement.getAttribute(this.data.DATA_ATTRIBUTES.formType), formId);
-		this.setState([this.FORM, this.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement.getAttribute(this.data.DATA_ATTRIBUTES.phoneDisablePicker)), formId);
-		this.setState([this.FORM, this.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement.getAttribute(this.data.DATA_ATTRIBUTES.phoneSync)), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement.getAttribute(this.data.DATA_ATTRIBUTES.phoneDisablePicker)), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement.getAttribute(this.data.DATA_ATTRIBUTES.phoneSync)), formId);
+		this.setState([this.FORM, this.LOADER], formElement.querySelector(this.data.loaderSelector), formId);
+		this.setState([this.FORM, this.GLOBALMSG], formElement.querySelector(this.data.globalMsgSelector), formId);
 
 		// Find all fields.
 		let items = formElement.querySelectorAll('input, select, textarea');
@@ -107,29 +113,21 @@ export class State {
 					// Combined fields like phone can have field null.
 					const customField = this.getFormFieldElementByChild(item);
 					const customType = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
-					const customName = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
 					const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.data.DATA_ATTRIBUTES.selectCustomProperties));
 
 					switch (customType) {
 						case 'phone':
-							this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
-							this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
-							this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
-							this.setState([this.ELEMENTS, customName, this.INTERNALTYPE], 'phone', formId);
-							this.setState([this.ELEMENTS, customName, this.VALUE], value, formId);
-							break;
 						case 'country':
 							this.setState([this.ELEMENTS, name, this.VALUECOUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
 							this.setState([this.ELEMENTS, name, this.VALUECOUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
 							this.setState([this.ELEMENTS, name, this.VALUECOUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
-							this.setState([this.ELEMENTS, name, this.INTERNALTYPE], 'country', formId);
-							this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 							break;
-						default:
-							this.setState([this.ELEMENTS, name, this.INTERNALTYPE], 'select', formId);
-							this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
-							break;
+						}
+
+					if (customType !== 'phone') {
+						this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 					}
+					this.setState([this.ELEMENTS, name, this.INTERNALTYPE], customType, formId);
 
 					this.setState([this.ELEMENTS, name, this.NAME], name, formId);
 					
@@ -257,25 +255,19 @@ export class State {
 			case 'select-one':
 				const customField = this.getFormFieldElementByChild(item);
 				const customType = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
-				const customName = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
 				const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.data.DATA_ATTRIBUTES.selectCustomProperties));
 
 				switch (customType) {
 					case 'phone':
-						this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
-						this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
-						this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
-						this.setState([this.ELEMENTS, customName, this.VALUE], value, formId);
-						break;
 					case 'country':
-						this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
-						this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
-						this.setState([this.ELEMENTS, customName, this.VALUECOUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
-						this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
+						this.setState([this.ELEMENTS, name, this.VALUECOUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
+						this.setState([this.ELEMENTS, name, this.VALUECOUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
+						this.setState([this.ELEMENTS, name, this.VALUECOUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
 						break;
-					default:
-						this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
-						break;
+				}
+
+				if (customType !== 'phone') {
+					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 				}
 				break;
 			default:
@@ -296,24 +288,32 @@ export class State {
 		return this.getState([this.FORM, this.FORMTYPE], formId);
 	}
 
+	getStateFormLoader(formId) {
+		return this.getState([this.FORM, this.LOADER], formId);
+	}
+
+	getStateFormGlobalMsg(formId) {
+		return this.getState([this.FORM, this.GLOBALMSG], formId);
+	}
+
 	getStateFormPhoneDisablePicker(formId) {
-		return this.getState([this.FORM, this.CONFIG_PHONE_DISABLE_PICKER], formId);
+		return this.getState([this.FORM, this.CONFIG, this.CONFIG_PHONE_DISABLE_PICKER], formId);
 	}
 
 	getStateFormPhoneUseSync(formId) {
-		return this.getState([this.FORM, this.CONFIG_PHONE_USE_PHONE_SYNC], formId);
+		return this.getState([this.FORM, this.CONFIG, this.CONFIG_PHONE_USE_PHONE_SYNC], formId);
 	}
 
 	getStateFormElement(formId) {
 		return this.getState([this.FORM, this.FORMELEMENT], formId);
 	}
 
-	getStateElements(formId) {
-		return this.getState([this.ELEMENTS], formId);
-	}
-
 	getStateElement(name, formId) {
 		return this.getState([this.ELEMENTS, name], formId);
+	}
+
+	getStateFormConfig(name, type, formId) {
+		return this.getState([this.ELEMENTS, name, this.FORM, this.CONFIG, type], formId);
 	}
 
 	getStateElementConfig(name, type, formId) {
@@ -324,24 +324,8 @@ export class State {
 		return this.getState([this.ELEMENTS, name, this.FIELD], formId);
 	}
 
-	getStateElementInput(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.INPUT], formId);
-	}
-
-	getStateElementChoice(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.CHOICE], formId);
-	}
-
-	getStateElementType(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.TYPE], formId);
-	}
-
-	getStateElementName(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.NAME], formId);
-	}
-
-	getStateElementItems(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.ITEMS], formId);
+	getStateElementCustom(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.CUSTOM], formId);
 	}
 
 	getStateElementValueCountry(name, formId) {
@@ -353,6 +337,18 @@ export class State {
 
 	getStateElementItem(name, value, formId) {
 		return this.getState([this.ELEMENTS, name, this.ITEMS, value], formId);
+	}
+
+	getStateElementInput(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.INPUT], formId);
+	}
+
+	getStateElementType(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.TYPE], formId);
+	}
+
+	getStateElementInputSelect(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.INPUTSELECT], formId);
 	}
 
 	getFormElementByChild(element) {

@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { CONDITIONAL_TAGS_OPERATORS, CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_LOGIC } from '../../form/assets/utilities';
+import { CONDITIONAL_TAGS_OPERATORS, CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_LOGIC } from '../../form/assets/data';
 
 export const CONDITIONAL_TAGS_OPERATORS_INTERNAL = {
 	[CONDITIONAL_TAGS_OPERATORS.IS]: __('is', 'eightshift-forms'),

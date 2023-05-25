@@ -109,7 +109,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 *
 	 * @return string
 	 */
-	public function getSettingsForm(string $type, string $formId = ''): string
+	public function getSettingsForm(string $type, string $formId): string
 	{
 		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
 

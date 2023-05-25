@@ -7,10 +7,10 @@ import { Data } from '../../form/assets/data';
  * Main conditon tags class.
  */
 export class ConditionalTags {
-	constructor() {
-		this.data = new Data();
-		this.state = new State();
-		this.utils = new Utils();
+	constructor(options = {}) {
+		this.data = new Data(options);
+		this.state = new State(options);
+		this.utils = new Utils(options);
 
 		// Simplify usage of constants
 		this.SHOW = this.data.CONDITIONAL_TAGS_ACTIONS.SHOW;

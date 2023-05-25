@@ -6,10 +6,10 @@ import { Utils } from './../../form/assets/utilities';
  * Main step class.
  */
 export class Steps {
-	constructor() {
-		this.data = new Data();
-		this.state = new State();
-		this.utils = new Utils();
+	constructor(options = {}) {
+		this.data = new Data(options);
+		this.state = new State(options);
+		this.utils = new Utils(options);
 
 		this.STEP_DIRECTION_PREV = 'prev';
 		this.STEP_DIRECTION_NEXT = 'next';

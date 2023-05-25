@@ -8,8 +8,8 @@ import { Data } from './data';
  */
 export class Utils {
 	constructor(options = {}) {
-		this.data = new Data(options.data);
-		this.state = new State();
+		this.data = new Data(options);
+		this.state = new State(options);
 
 		// Set all public methods.
 		this.publicMethods();
@@ -39,9 +39,11 @@ export class Utils {
 	}
 
 	// Reset form in general.
-	reset(element) {
+	reset(formId) {
+		const form = this.getStateFormElement(formId);
+
 		// Reset all error classes on fields.
-		element.querySelectorAll(`${this.data.fieldSelector}.${this.data.SELECTORS.CLASS_HAS_ERROR}`).forEach((item) => {
+		form.querySelectorAll(`${this.data.fieldSelector}.${this.data.SELECTORS.CLASS_HAS_ERROR}`).forEach((item) => {
 			item.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
 
 			const value = item.querySelector(this.data.errorSelector);
@@ -51,7 +53,7 @@ export class Utils {
 			}
 		});
 
-		this.unsetGlobalMsg(element);
+		this.unsetGlobalMsg(form);
 	}
 
 	// Remove one field error by name.
@@ -74,7 +76,7 @@ export class Utils {
 	}
 
 	// Dispatch custom event.
-	dispatchFormEvent(element, name, detail) {
+	dispatchFormEvent(formId, name, detail) {
 		const options = {
 			bubbles: true,
 		};
@@ -83,9 +85,7 @@ export class Utils {
 			options['detail'] = detail;
 		}
 
-		const event = new CustomEvent(name, options);
-
-		element.dispatchEvent(event);
+		this.state.getStateFormElement(formId).dispatchEvent(new CustomEvent(name, options));
 	}
 
 	// Scroll to specific element.
@@ -96,10 +96,11 @@ export class Utils {
 	}
 
 	// Show loader.
-	showLoader(element) {
-		const loader = element.querySelector(this.data.loaderSelector);
+	showLoader(formId) {
+		const loader = this.state.getStateFormLoader(formId);
+		const form = this.state.getStateFormElement(formId);
 
-		element?.classList?.add(this.data.SELECTORS.CLASS_LOADING);
+		form.classList.add(this.data.SELECTORS.CLASS_LOADING);
 
 		if (!loader) {
 			return;
@@ -134,11 +135,12 @@ export class Utils {
 	}
 
 	// Hide loader.
-	hideLoader(element) {
-		const loader = element.querySelector(this.data.loaderSelector);
+	hideLoader(formId) {
+		const loader = this.state.getStateFormLoader(formId);
+		const form = this.state.getStateFormElement(formId);
 
 		setTimeout(() => {
-			element?.classList?.remove(this.data.SELECTORS.CLASS_LOADING);
+			form?.classList?.remove(this.data.SELECTORS.CLASS_LOADING);
 
 			if (!loader) {
 				return;
@@ -149,8 +151,8 @@ export class Utils {
 	}
 
 	// Set global message.
-	setGlobalMsg(element, msg, status) {
-		const messageContainer = element.querySelector(this.data.globalMsgSelector);
+	setGlobalMsg(formId, msg, status) {
+		const messageContainer = this.state.getStateFormGlobalMsg(formId);
 
 		if (!messageContainer) {
 			return;
@@ -194,7 +196,9 @@ export class Utils {
 	}
 
 	// Build GTM data for the data layer.
-	getGtmData(element, eventName, formData) {
+	getGtmData(formId, eventName, formData) {
+		const form = this.state.getStateFormElement(formId);
+
 		const output = {};
 		const data = {};
 		for (const [key, value] of formData) { // eslint-disable-line no-unused-vars
@@ -204,7 +208,7 @@ export class Utils {
 			}
 
 			const itemValue = JSON.parse(value);
-			const item = element.querySelector(`${this.data.fieldSelector} [name="${itemValue.name}"]`);
+			const item = form.querySelector(`${this.data.fieldSelector} [name="${itemValue.name}"]`);
 			const trackingValue = item?.getAttribute(this.data.DATA_ATTRIBUTES.tracking);
 			if (!trackingValue) {
 				continue;
@@ -256,13 +260,14 @@ export class Utils {
 	}
 
 	// Submit GTM event.
-	gtmSubmit(element, formData, status, errors) {
-		const eventName = element.getAttribute(this.data.DATA_ATTRIBUTES.trackingEventName);
+	gtmSubmit(formId, formData, status, errors) {
+		const form = this.state.getStateFormElement(formId);
+		const eventName = form.getAttribute(this.data.DATA_ATTRIBUTES.trackingEventName);
 
 		if (eventName) {
-			const gtmData = this.getGtmData(element, eventName, formData);
+			const gtmData = this.getGtmData(formId, eventName, formData);
 
-			const additionalData = JSON.parse(element.getAttribute(this.data.DATA_ATTRIBUTES.trackingAdditionalData));
+			const additionalData = JSON.parse(form.getAttribute(this.data.DATA_ATTRIBUTES.trackingAdditionalData));
 			let additionalDataItems = additionalData?.general;
 
 			if (status === 'success') {
@@ -292,7 +297,7 @@ export class Utils {
 			}
 
 			if (window?.dataLayer && gtmData?.event) {
-				this.dispatchFormEvent(element, this.data.EVENTS.BEFORE_GTM_DATA_PUSH);
+				this.dispatchFormEvent(formId, this.data.EVENTS.BEFORE_GTM_DATA_PUSH);
 				window.dataLayer.push({...gtmData, ...additionalDataItems});
 			}
 		}
@@ -312,29 +317,6 @@ export class Utils {
 			case 'checkbox':
 				condition = Object.values(value).filter((item) => item !== '').length > 0;
 				break
-			// 	if (checked) {
-			// 		field.classList.add(this.data.SELECTORS.CLASS_FILLED);
-			// 	}
-			// 	break;
-			// case 'select': 
-			
-				// if (input.esFormsFieldType === 'phone') {
-				// 	break;
-				// }
-
-			// 	const customSelect = input.config.choices;
-
-			// 	if (customSelect.some((item) => item.selected === true && item.value !== '')) {
-			// 		input.passedElement.element.closest(this.data.fieldSelector).classList.add(this.data.SELECTORS.CLASS_FILLED);
-			// 	}
-				// break;
-			// }
-			// case 'tel': {
-			// 	if (input.value && input.value.length) {
-			// 		input.field.classList.add(this.data.SELECTORS.CLASS_FILLED);
-			// 	}
-			// 	break;
-			// }
 			default:
 				condition = value && value.length;
 				break;
@@ -525,21 +507,18 @@ export class Utils {
 
 		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
 
-		if (!this.state.getStateFormPhoneDisablePicker(formId) || this.state.getStateFormPhoneUseSync(formId)) {
+		if (!this.state.getStateFormPhoneDisablePicker(formId) && this.state.getStateFormPhoneUseSync(formId)) {
 			if (type === 'country') {
-				console.log(this.state.getStateFormPhoneDisablePicker(formId));
 				const country = this.state.getStateElementValueCountry(name, formId);
-	
 				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNALTYPE, 'tel', formId)].forEach((tel) => {
-					tel[this.state.ITEMS].setChoiceByValue(country.number);
+					tel[this.state.CUSTOM].setChoiceByValue(country.number);
 				});
 			}
 
 			if (type === 'phone') {
 				const phone = this.state.getStateElementValueCountry(name, formId);
-
 				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNALTYPE, 'country', formId)].forEach((country) => {
-					country[this.state.ITEMS].setChoiceByValue(phone.label);
+					country[this.state.CUSTOM].setChoiceByValue(phone.label);
 				});
 			}
 		}

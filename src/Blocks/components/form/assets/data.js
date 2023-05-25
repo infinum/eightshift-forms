@@ -18,7 +18,7 @@ export class Data {
 		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.formSubmit}`;
 
 		// Selectors.
-		this.formSelectorPrefix = options.formSelectorPrefix ?? `.${componentJsClass}`;
+		this.formSelectorPrefix = `.${componentJsClass}`;
 
 		// Specific selectors.
 		this.formSelector =  this.formSelectorPrefix;

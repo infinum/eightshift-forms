@@ -10,13 +10,12 @@ import { icons, getAttrKey, checkAttr, IconToggle, IconLabel, Select, MultiSelec
 import { CONDITIONAL_TAGS_OPERATORS_INTERNAL } from './conditional-tags-utils';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
-import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../../form/assets/utilities';
+import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../../form/assets/data';
 import { CONDITIONAL_TAGS_ACTIONS_INTERNAL, CONDITIONAL_TAGS_ACTIONS_INVERSE_INTERNAL } from './conditional-tags-utils';
 
 export const ConditionalTagsOptions = (attributes) => {
 	const {
 		setAttributes,
-		blockName,
 	} = attributes;
 
 	const postId = select('core/editor').getCurrentPostId();

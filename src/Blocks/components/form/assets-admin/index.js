@@ -2,7 +2,7 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
-import { Utils } from './../assets/utilities';
+import { Data } from './../assets/data';
 
 domReady(() => {
 	if (typeof esFormsLocalization === 'undefined') {
@@ -23,78 +23,76 @@ domReady(() => {
 	if (elements.length) {
 		import('./../assets/form').then(({ Form }) => {
 			const form = new Form({
-				utils: new Utils({
-					formSubmitRestApiUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.formSubmit}`,
-					formIsAdmin: true,
-				}),
+				formSubmitRestApiUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.formSubmit}`,
+				formIsAdmin: true,
 			});
 
 			form.init();
 		});
 	}
 
-	const selectorCache = `.${componentCacheJsClass}`;
-	const elementsCache = document.querySelectorAll(selectorCache);
+	// const selectorCache = `.${componentCacheJsClass}`;
+	// const elementsCache = document.querySelectorAll(selectorCache);
 
-	if (elementsCache.length) {
-		import('./cache').then(({ Cache }) => {
-			const cache = new Cache({
-				utils: new Utils(),
-				selector: selectorCache,
-				clearCacheRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.cacheClear}`,
-			});
+	// if (elementsCache.length) {
+	// 	import('./cache').then(({ Cache }) => {
+	// 		const cache = new Cache({
+	// 			utils: new Data(),
+	// 			selector: selectorCache,
+	// 			clearCacheRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.cacheClear}`,
+	// 		});
 
-			cache.init();
-		});
-	}
+	// 		cache.init();
+	// 	});
+	// }
 
-	const selectorMigration = `.${componentMigrationJsClass}`;
-	const elementsMigration = document.querySelectorAll(selectorMigration);
+	// const selectorMigration = `.${componentMigrationJsClass}`;
+	// const elementsMigration = document.querySelectorAll(selectorMigration);
 
-	if (elementsMigration.length) {
-		import('./migration').then(({ Migration }) => {
-			const migration = new Migration({
-				utils: new Utils(),
-				selector: selectorMigration,
-				outputSelector: `.${componentMigrationJsClass}-output`,
-				migrationRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.migration}`,
-			});
+	// if (elementsMigration.length) {
+	// 	import('./migration').then(({ Migration }) => {
+	// 		const migration = new Migration({
+	// 			utils: new Data(),
+	// 			selector: selectorMigration,
+	// 			outputSelector: `.${componentMigrationJsClass}-output`,
+	// 			migrationRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.migration}`,
+	// 		});
 
-			migration.init();
-		});
-	}
+	// 		migration.init();
+	// 	});
+	// }
 
-	const selectorTransfer = `.${componentTransferJsClass}`;
-	const elementsTransfer = document.querySelectorAll(selectorTransfer);
+	// const selectorTransfer = `.${componentTransferJsClass}`;
+	// const elementsTransfer = document.querySelectorAll(selectorTransfer);
 
-	if (elementsTransfer.length) {
-		import('./transfer').then(({ Transfer }) => {
-			const transfer = new Transfer({
-				utils: new Utils(),
-				selector: selectorTransfer,
-				itemSelector: `.${componentTransferJsClass}-item`,
-				uploadSelector: `.${componentTransferJsClass}-upload`,
-				overrideExistingSelector: `.${componentTransferJsClass}-existing`,
-				transferRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.transform}`,
-				uploadConfirmMsg: esFormsLocalization.uploadConfirmMsg,
-			});
+	// if (elementsTransfer.length) {
+	// 	import('./transfer').then(({ Transfer }) => {
+	// 		const transfer = new Transfer({
+	// 			utils: new Data(),
+	// 			selector: selectorTransfer,
+	// 			itemSelector: `.${componentTransferJsClass}-item`,
+	// 			uploadSelector: `.${componentTransferJsClass}-upload`,
+	// 			overrideExistingSelector: `.${componentTransferJsClass}-existing`,
+	// 			transferRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.transform}`,
+	// 			uploadConfirmMsg: esFormsLocalization.uploadConfirmMsg,
+	// 		});
 
-			transfer.init();
-		});
-	}
+	// 		transfer.init();
+	// 	});
+	// }
 
-	const selectorTestApi = `.${componentTestApiJsClass}`;
-	const elementsTestApi = document.querySelectorAll(selectorTestApi);
+	// const selectorTestApi = `.${componentTestApiJsClass}`;
+	// const elementsTestApi = document.querySelectorAll(selectorTestApi);
 
-	if (elementsTestApi.length) {
-		import('./test-api').then(({ TestApi }) => {
-			const testApi = new TestApi({
-				utils: new Utils(),
-				selector: selectorTestApi,
-				testApiRestUrl: `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.testApi}`,
-			});
+	// if (elementsTestApi.length) {
+	// 	import('./test-api').then(({ TestApi }) => {
+	// 		const testApi = new TestApi({
+	// 			utils: new Data(),
+	// 			selector: selectorTestApi,
+	// 			testApiRestUrl: `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.testApi}`,
+	// 		});
 
-			testApi.init();
-		});
-	}
+	// 		testApi.init();
+	// 	});
+	// }
 });

@@ -88,19 +88,17 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				'cardContent' => [
 					[
 						'component' => 'checkboxes',
-						'checkboxesFieldSkip' => true,
 						'checkboxesName' => $this->getSettingsName($use),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
-								'checkboxLabel' => $key,
+								'checkboxHideLabelText' => true,
 								'checkboxIsChecked' => $checked,
 								'checkboxIsDisabled' => $disabled,
 								'checkboxValue' => $use,
 								'checkboxSingleSubmit' => true,
 								'checkboxAsToggle' => true,
 								'checkboxAsToggleSize' => 'medium',
-								'checkboxHideLabelText' => true,
 							],
 						],
 					],

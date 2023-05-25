@@ -105,6 +105,7 @@ if (has_filter($filterName)) {
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
+		name="' . esc_attr($phoneName) . '"
 		' . $phoneSelectUseSearchAttr . '=' . $phoneUseSearch . '
 		' . $selectShowCountryIcons . '=true
 	>' . implode('', $options) . '</select>

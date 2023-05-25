@@ -7,10 +7,10 @@ import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
  * Enrichment class.
  */
 export class Enrichment {
-	constructor() {
-		this.data = new Data();
-		this.state = new State();
-		this.utils = new Utils();
+	constructor(options = {}) {
+		this.data = new Data(options);
+		this.state = new State(options);
+		this.utils = new Utils(options);
 
 		// LocalStorage name.
 		this.STORAGE_NAME = 'es-storage';

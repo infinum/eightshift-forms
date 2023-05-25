@@ -12,13 +12,13 @@ import { Data } from './data';
  * Main Forms class.
  */
 export class Form {
-	constructor() {
-		this.data = new Data();
-		this.state = new State();
-		this.utils = new Utils();
-		this.enrichment = new Enrichment();
-		this.conditionalTags = new ConditionalTags();
-		this.steps = new Steps();
+	constructor(options = {}) {
+		this.data = new Data(options);
+		this.state = new State(options);
+		this.utils = new Utils(options);
+		this.enrichment = new Enrichment(options);
+		this.conditionalTags = new ConditionalTags(options);
+		this.steps = new Steps(options);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -102,14 +102,16 @@ export class Form {
 
 		// Setup regular inputs.
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'text', formId)].forEach((input) => {
-			// switch (input.type) {
-			// 	case 'date':
-			// 	case 'datetime-local':
-			// 		// this.setupDateField(input, this.utils.FORM_ID);
-			// 		break;
-			// }
-
 			this.setupInputField(input.name, formId);
+		});
+
+		// Date.
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'date', formId)].forEach((input) => {
+			this.setupDateField(input.name, formId);
+		});
+
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'date', formId)].forEach((input) => {
+			this.setupDateField(input.name, formId);
 		});
 
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, 'type', 'tel', formId)].forEach((tel) => {
@@ -176,7 +178,7 @@ export class Form {
 				this.utils.reset(element);
 
 				// Remove loader.
-				this.utils.hideLoader(element);
+				this.utils.hideLoader(formId);
 
 				// Set global msg.
 				this.utils.setGlobalMsg(element, response.message, 'error');
@@ -199,13 +201,13 @@ export class Form {
 	 *
 	 * @public
 	 */
-	formSubmit(element, singleSubmit = false, isStepSubmit = false) {
+	formSubmit(formId, singleSubmit = false, isStepSubmit = false) {
 		// Dispatch event.
-		this.utils.dispatchFormEvent(element, this.data.EVENTS.BEFORE_FORM_SUBMIT);
+		this.utils.dispatchFormEvent(formId, this.data.EVENTS.BEFORE_FORM_SUBMIT);
 
-		const formData = this.getFormData(element, singleSubmit, isStepSubmit);
+		const formData = this.getFormData(formId, singleSubmit, isStepSubmit);
 
-		const formType = element.getAttribute(this.data.DATA_ATTRIBUTES.formType);
+		const formType = this.state.getStateFormType(formId);
 
 		// Populate body data.
 		const body = {
@@ -235,29 +237,29 @@ export class Form {
 			})
 			.then((response) => {
 				// Dispatch event.
-				this.utils.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT, response);
+				this.utils.dispatchFormEvent(formId, this.data.EVENTS.AFTER_FORM_SUBMIT, response);
 
 				// Clear all errors.
-				this.utils.reset(element);
+				this.utils.reset(formId);
 
 				// Remove loader.
-				this.utils.hideLoader(element);
+				this.utils.hideLoader(formId);
 
 				// On success state.
 				if (response.status === 'success') {
 					// Redirect on success.
 					if (isStepSubmit) {
-						this.steps.formStepStubmit(element, response);
+						// this.steps.formStepStubmit(element, response);
 					} else {
 						// Send GTM.
-						this.utils.gtmSubmit(element, formData, response.status);
+						this.utils.gtmSubmit(formId, formData, response.status);
 
 						// Dispatch event.
-						this.utils.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_SUCCESS, response);
+						this.utils.dispatchFormEvent(formId, this.data.EVENTS.AFTER_FORM_SUBMIT_SUCCESS, response);
 
-						if (element.hasAttribute(this.data.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
+						if (form.hasAttribute(this.data.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
 							// Set global msg.
-							this.utils.setGlobalMsg(element, response.message, 'success');
+							this.utils.setGlobalMsg(formId, response.message, 'success');
 
 							// Redirect to url and update url params from from data.
 							if (singleSubmit) {
@@ -659,6 +661,7 @@ export class Form {
 	 */
 	setupTelField(name, formId) {
 		this.setupInputField(name, formId);
+		this.setupSelectField(name, formId);
 	}
 
 	/**
@@ -694,21 +697,28 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupDateField(date, formId) {
+	setupDateField(name, formId) {
+		const {
+			type,
+			input,
+		} = this.state.getStateElement(name, formId);
+
 		import('flatpickr').then((flatpickr) => {
-			const {type} = date;
+			const previewFormat = input.getAttribute(this.data.DATA_ATTRIBUTES.datePreviewFormat);
+			const outputFormat = input.getAttribute(this.data.DATA_ATTRIBUTES.dateOutputFormat);
 
-			const previewFormat = date.getAttribute(this.data.DATA_ATTRIBUTES.datePreviewFormat);
-			const outputFormat = date.getAttribute(this.data.DATA_ATTRIBUTES.dateOutputFormat);
-
-			const datePicker = flatpickr.default(date, {
+			const datePicker = flatpickr.default(input, {
 				enableTime: type === 'datetime-local',
 				dateFormat: outputFormat,
 				altFormat: previewFormat,
 				altInput: true,
 			});
 
-			this.state.setStateArray([this.state.DATES], datePicker, formId);
+			this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+			this.state.setState([this.state.ELEMENTS, name, this.state.CUSTOM], datePicker, formId);
+
+			this.setupInputField(name, formId);
+
 		});
 	}
 
@@ -720,16 +730,22 @@ export class Form {
 	 * @public
 	 */
 	setupSelectField(name, formId) {
-		const data = this.state.getStateElement(name, formId);
+		let input = this.state.getStateElementInput(name, formId);
+		const type = this.state.getStateElementType(name, formId);
 
-		const {
-			input,
-			field,
-		} = data;
+		 if (type === 'tel') {
+			 input = this.state.getStateElementInputSelect(name, formId);
+		 }
 
 		import('choices.js').then((Choices) => {
 			const dataObject = this.data;
 
+			const customProperties = [
+				this.data.DATA_ATTRIBUTES.selectCountryCode,
+				this.data.DATA_ATTRIBUTES.selectCountryLabel,
+				this.data.DATA_ATTRIBUTES.selectCountryNumber,
+			]
+ 
 			const choices = new Choices.default(input, {
 				searchEnabled: this.state.getStateElementConfig(name, this.state.CONFIG_SELECT_USE_SEARCH, formId),
 				shouldSort: false,
@@ -758,20 +774,15 @@ export class Form {
 							const properties = args?.[1]?.customProperties;
 
 							if (properties) {
-								// Implement changes for phone/country picker.
-								const selectCountryCode = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryCode];
-								if (selectCountryCode) {
-									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryCode, selectCountryCode);
-								}
-								const selectCountryLabel = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryLabel];
-								if (selectCountryLabel) {
-									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryLabel, selectCountryLabel);
-								}
-								const selectCountryNumber = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryNumber];
-								if (selectCountryNumber) {
-									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryNumber, selectCountryNumber);
-								}
+								customProperties.forEach((property) => {
+									const check = properties?.[property];
+									if (check) {
+										element.setAttribute(property, check);
+									}
+								});
+							}
 
+							if (properties) {
 								// Conditional tags
 								// const conditionalTags = properties?.[dataObject.DATA_ATTRIBUTES.conditionalTags];
 
@@ -805,19 +816,12 @@ export class Form {
 							const properties = args?.[1]?.customProperties;
 
 							if (properties) {
-								// Implement changes for phone/country picker.
-								const selectCountryCode = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryCode];
-								if (selectCountryCode) {
-									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryCode, selectCountryCode);
-								}
-								const selectCountryLabel = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryLabel];
-								if (selectCountryLabel) {
-									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryLabel, selectCountryLabel);
-								}
-								const selectCountryNumber = properties?.[dataObject.DATA_ATTRIBUTES.selectCountryNumber];
-								if (selectCountryNumber) {
-									element.setAttribute(dataObject.DATA_ATTRIBUTES.selectCountryNumber, selectCountryNumber);
-								}
+								customProperties.forEach((property) => {
+									const check = properties?.[property];
+									if (check) {
+										element.setAttribute(property, check);
+									}
+								});
 							}
 
 							return element;
@@ -826,20 +830,17 @@ export class Form {
 				},
 			});
 
-			let customName = name;
-			const customField = this.state.getFormFieldElementByChild(input);
-
-			if (customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType) === 'phone') {
-				customName = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
+			const countryCookie = cookies.getCookie('esForms-country').toLocaleLowerCase();
+			if (countryCookie) {
+				choices.setChoiceByValue(countryCookie);
 			}
 
-			this.state.setState([this.state.ELEMENTS, customName, this.state.LOADED], true, formId);
-			this.state.setState([this.state.ELEMENTS, customName, this.state.ITEMS], choices, formId);
-			this.state.setState([this.state.ELEMENTS, customName, this.state.CHOICE], choices.containerOuter.element, formId);
+			this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+			this.state.setState([this.state.ELEMENTS, name, this.state.CUSTOM], choices, formId);
 
-			this.state.getStateElementChoice(customName, formId).addEventListener('focus', this.utils.onFocusEvent);
-			this.state.getStateElementChoice(customName, formId).addEventListener('blur', this.utils.onBlurEvent);
-			this.state.getStateElementChoice(customName, formId).addEventListener('change', this.utils.onChangeEvent);
+			choices.containerOuter.element.addEventListener('focus', this.utils.onFocusEvent);
+			choices.containerOuter.element.addEventListener('blur', this.utils.onBlurEvent);
+			choices.containerOuter.element.addEventListener('change', this.utils.onChangeEvent);
 		});
 	}
 
@@ -885,15 +886,12 @@ export class Form {
 	 * @public
 	 */
 	setupFileField(name, formId) {
-		const data = this.state.getStateElement(name, formId);
-
 		const {
 			input,
 			field,
-		} = data;
+		} = this.state.getStateElement(name, formId);
 
 		import('dropzone').then((Dropzone) => {
-			// Init dropzone.
 			const dropzone = new Dropzone.default(
 				field,
 				{
@@ -908,7 +906,7 @@ export class Form {
 
 			// Set data to internal state.
 			this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
-			this.state.setState([this.state.ELEMENTS, name, this.state.ITEMS], dropzone, formId);
+			this.state.setState([this.state.ELEMENTS, name, this.state.CUSTOM], dropzone, formId);
 
 			// On add one file add selectors for UX.
 			dropzone.on("addedfile", (file) => {
@@ -929,9 +927,9 @@ export class Form {
 			});
 
 			dropzone.on('removedfile', () => {
-				const {items} = this.state.getStateElement(name, formId);
+				const custom = this.state.getStateElementCustom(name, formId);
 
-				if (items.files.length === 0) {
+				if (custom.files.length === 0) {
 					field.classList.remove(this.data.SELECTORS.CLASS_FILLED);
 				}
 
@@ -1018,7 +1016,7 @@ export class Form {
 				switch (input.type) {
 					case 'date':
 					case 'datetime-local':
-						this.state.deleteState(this.state.DATES, formId);
+						// this.state.deleteState(this.state.DATES, formId);
 						break;
 				}
 
@@ -1037,7 +1035,7 @@ export class Form {
 				textarea.removeEventListener('focus', this.utils.onFocusEvent);
 				textarea.removeEventListener('blur', this.utils.onBlurEvent);
 
-				this.state.deleteState(this.state.TEXTAREAS, formId);
+				// this.state.deleteState(this.state.TEXTAREAS, formId);
 			});
 
 			// Setup file single inputs.
@@ -1093,44 +1091,45 @@ export class Form {
 	onFormSubmitEvent = (event) => {
 		event.preventDefault();
 
-		const element = event.target;
+		const formId = this.state.getFormIdByElement(event.target);
+
 		const stepButton = event.submitter;
 
-		// if (!this.steps.isMultiStepForm(element)) {
+		// if (!this.steps.isMultiStepForm(formId)) {
 		if (false) {
 			// Loader show.
-			this.utils.showLoader(element);
+			this.utils.showLoader(formId);
 
 			if (this.utils.isCaptchaUsed()) {
 				// Use captcha.
-				this.runFormCaptcha(element);
+				this.runFormCaptcha(formId);
 			} else {
 				// No captcha.
-				this.formSubmit(element);
+				this.formSubmit(formId);
 			}
 		} else {
 			// if (this.steps.isStepTrigger(stepButton)) {
 			if (true) {
 				if (stepButton.getAttribute(this.data.DATA_ATTRIBUTES.submitdStepDirection) === this.steps.STEP_DIRECTION_PREV) {
 					// Just go back a step.
-					this.steps.goBackAStep(element);
+					this.steps.goBackAStep(formId);
 				} else {
 					// Loader show.
-					this.utils.showLoader(element);
+					this.utils.showLoader(formId);
 	
 					// Submit for next.
-					this.formSubmit(element, false, true);
+					this.formSubmit(formId, false, true);
 				}
 			} else {
 				// Loader show.
-				this.utils.showLoader(element);
+				this.utils.showLoader(formId);
 
 				if (this.utils.isCaptchaUsed()) {
 					// Use captcha.
-					this.runFormCaptcha(element);
+					this.runFormCaptcha(formId);
 				} else {
 					// No captcha.
-					this.formSubmit(element);
+					this.formSubmit(formId);
 				}
 			}
 		}
@@ -1149,7 +1148,7 @@ export class Form {
 
 		const field = event.target.closest(this.data.fieldSelector);
 
-		this.state.getStateElementItems(field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName), this.state.getFormIdByElement(event.target)).hiddenFileInput.click()
+		this.state.getStateElementCustom(field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName), this.state.getFormIdByElement(event.target)).hiddenFileInput.click()
 
 		field.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 	};
