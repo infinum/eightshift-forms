@@ -25,54 +25,13 @@ export class Utils {
 	// Public methods
 	////////////////////////////////////////////////////////////////
 
-	// Unset global message.
-	unsetGlobalMsg(element) {
-		const messageContainer = element.querySelector(this.data.globalMsgSelector);
-
-		if (!messageContainer) {
-			return;
-		}
-
-		messageContainer.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
-		messageContainer.dataset.status = '';
-		messageContainer.innerHTML = '';
-	}
-
 	// Reset form in general.
-	reset(formId) {
-		const form = this.getStateFormElement(formId);
+	resetErrors(formId) {
+		for (const [name] of this.state.getStateElements(formId)) {
+			this.unsetFieldError(name, formId)
+		};
 
-		// Reset all error classes on fields.
-		form.querySelectorAll(`${this.data.fieldSelector}.${this.data.SELECTORS.CLASS_HAS_ERROR}`).forEach((item) => {
-			item.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
-
-			const value = item.querySelector(this.data.errorSelector);
-
-			if (value) {
-				value.innerHTML = ''
-			}
-		});
-
-		this.unsetGlobalMsg(form);
-	}
-
-	// Remove one field error by name.
-	removeFieldErrorByName(name, formId) {
-		const data = this.state.getStateElement(name, formId);
-
-		const {
-			field,
-		} = data;
-
-		if (field.classList.contains(this.data.SELECTORS.CLASS_HAS_ERROR)) {
-			field.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
-
-			const value = field.querySelector(this.data.errorSelector);
-
-			if (value) {
-				value.innerHTML = ''
-			}
-		}
+		this.unsetErrorGlobal(formId);
 	}
 
 	// Dispatch custom event.
@@ -89,86 +48,84 @@ export class Utils {
 	}
 
 	// Scroll to specific element.
-	scrollToElement(element) {
-		if (element !== null) {
-			element.scrollIntoView({block: 'start', behavior: 'smooth'});
-		}
+	scrollToElement(name, formId) {
+		this.state.getStateElementField(name, formId).scrollIntoView({block: 'start', behavior: 'smooth'});
+	}
+
+	scrollToErrorGlobal(formId) {
+		this.state.getStateFormErrorGlobalElement(formId).scrollIntoView({block: 'start', behavior: 'smooth'});
 	}
 
 	// Show loader.
 	showLoader(formId) {
-		const loader = this.state.getStateFormLoader(formId);
-		const form = this.state.getStateFormElement(formId);
+		this.state.getStateFormElement(formId).classList.add(this.data.SELECTORS.CLASS_LOADING);
+		this.state.getStateFormLoader(formId).classList.add(this.data.SELECTORS.CLASS_ACTIVE);
+	}
 
-		form.classList.add(this.data.SELECTORS.CLASS_LOADING);
+	// Remove one field error by name.
+	unsetFieldError(name, formId) {
+		const error = this.state.getStateElementError(name, formId);
 
-		if (!loader) {
-			return;
-		}
+		error.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
+		error.innerHTML = '';
+	}
 
-		loader.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
+	setFieldError(name, msg, formId) {
+		const error = this.state.getStateElementError(name, formId);
+
+		error.classList.add(this.data.SELECTORS.CLASS_HAS_ERROR);
+		error.innerHTML = msg;
 	}
 
 	// Output all error for fields.
-	outputErrors(element, fields) {
-		if (typeof fields === 'undefined') {
-			return;
-		}
-
-		// Set error classes and error text on fields which have validation errors.
-		for (const [key] of Object.entries(fields)) {
-			const item = element.querySelector(`${this.data.errorSelector}[data-id="${key}"]`);
-
-			item?.closest(this.data.fieldSelector).classList.add(this.data.SELECTORS.CLASS_HAS_ERROR);
-
-			if (item !== null) {
-				item.innerHTML = fields[key];
-			}
-		}
+	outputErrors(formId, data) {
+		for (const [name, msg] of Object.entries(data)) {
+			this.setFieldError(name, msg, formId);
+		};
 
 		// Scroll to element if the condition is right.
-		if (Object.entries(fields).length > 0 && !this.data.SETTINGS.FORM_DISABLE_SCROLL_TO_FIELD_ON_ERROR) {
-			const firstItem = Object.keys(fields)[0];
-
-			this.scrollToElement(element.querySelector(`${this.data.errorSelector}[data-id="${firstItem}"]`).parentElement);
+		const firstItemWithErrorName = Object.values(esForms.state.form_4069.elements).filter((item) => item.hasError === false)?.[0]?.name;
+		if (firstItemWithErrorName) {
+			this.scrollToElement(firstItemWithErrorName, formId);
 		}
 	}
 
 	// Hide loader.
 	hideLoader(formId) {
-		const loader = this.state.getStateFormLoader(formId);
-		const form = this.state.getStateFormElement(formId);
-
 		setTimeout(() => {
-			form?.classList?.remove(this.data.SELECTORS.CLASS_LOADING);
-
-			if (!loader) {
-				return;
-			}
-
-			loader.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+			this.state.getStateFormElement(formId).classList.remove(this.data.SELECTORS.CLASS_LOADING);
+			this.state.getStateFormLoader(formId).classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
 		}, parseInt(this.data.SETTINGS.HIDE_LOADING_STATE_TIMEOUT, 10));
 	}
 
+	// Unset global message.
+	unsetErrorGlobal(formId) {
+		const messageContainer = this.state.getStateFormErrorGlobalElement(formId);
+
+		console.log(messageContainer);
+
+		this.state.setState([this.state.FORM, this.state.ERROR_GLOBAL, this.state.STATUS], '', formId);
+		this.state.setState([this.state.FORM, this.state.ERROR_GLOBAL, this.state.MSG], '', formId);
+
+		messageContainer.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+		messageContainer.dataset.status = '';
+		messageContainer.innerHTML = '';
+	}
+
 	// Set global message.
-	setGlobalMsg(formId, msg, status) {
-		const messageContainer = this.state.getStateFormGlobalMsg(formId);
-
-		if (!messageContainer) {
-			return;
-		}
-
-		const headingSuccess = messageContainer?.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingSuccess);
-		const headingError = messageContainer?.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingError);
+	setErrorGlobal(formId, msg, status) {
+		const messageContainer = this.state.getStateFormErrorGlobalElement(formId);
 
 		messageContainer.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = status;
 
 		// Scroll to msg if the condition is right.
 		if (status === 'success') {
-			if (!this.data.SETTINGS.FORM_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS) {
-				this.scrollToElement(messageContainer);
+			if (!this.state.getStateFormConfigDisableScrollToGlobalMsgOnSuccess(formId)) {
+				this.scrollToErrorGlobal(formId);
 			}
+
+			const headingSuccess = this.state.getStateFormErrorGlobalHeadingSuccess(formId);
 
 			if (headingSuccess) {
 				messageContainer.innerHTML = `<div><div>${headingSuccess}</div><span>${msg}</span></div>`;
@@ -176,6 +133,8 @@ export class Utils {
 				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
 			}
 		} else {
+			const headingError = this.state.getStateFormErrorGlobalHeadingError(formId);
+
 			if (headingError) {
 				messageContainer.innerHTML = `<div><div>${headingError}</div><span>${msg}</span></div>`;
 			} else {
@@ -185,14 +144,8 @@ export class Utils {
 	}
 
 	// Hide global message.
-	hideGlobalMsg(element) {
-		const messageContainer = element.querySelector(this.data.globalMsgSelector);
-
-		if (!messageContainer) {
-			return;
-		}
-
-		messageContainer.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+	setGlobalMsg(formId) {
+		this.state.getStateFormErrorGlobalElement(formId).classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
 	}
 
 	// Build GTM data for the data layer.
@@ -304,12 +257,10 @@ export class Utils {
 	}
 
 	// Prefill inputs active/filled on init.
-	setFieldVisualState(data) {
-		const {
-			type,
-			value,
-			field,
-		} = data;
+	setFieldVisualState(name, formId) {
+		const type = this.state.getStateElementType(name, formId);
+		const value = this.state.getStateElementValue(name, formId);
+		const field = this.state.getStateElementField(name, formId);
 
 		let condition = false;
 
@@ -331,53 +282,66 @@ export class Utils {
 	}
 
 	// Reset form values if the condition is right.
-	resetForm(element) {
-		if (this.data.SETTINGS.FORM_RESET_ON_SUCCESS) {
-			const formId = element.getAttribute(this.data.DATA_ATTRIBUTES.formPostId);
-
-			// Unset the choices in the submitted form.
-			if (this.getState([this.state.SELECTS], formId)) {
-				this.getState([this.state.SELECTS], formId).forEach((item) => {
-					item.setChoiceByValue(item?.passedElement?.element.getAttribute(this.data.DATA_ATTRIBUTES.selectInitial));
-					item.clearInput();
-					item.unhighlightAll();
-				});
-			}
-
-			// Unset the files in the submitted form.
-			if (this.getState([this.state.FILES], formId)) {
-				this.getState([this.state.FILES], formId).forEach((item, index) => {
-					item.removeAllFiles();
-				});
-			}
-
-			const fields = element.querySelectorAll(this.data.fieldSelector);
-
-			[...fields].forEach((item) => {
-				item.classList.remove(this.data.SELECTORS.CLASS_FILLED);
-				item.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
-				item.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
-			});
-
-			const inputs = element.querySelectorAll(`${this.data.inputSelector}, ${this.data.textareaSelector}`);
-			[...inputs].forEach((item) => {
-				item.value = '';
-				item.checked = false;
-			});
-
-			// Remove focus from last input.
-			document.activeElement.blur();
-
-			// Dispatch event.
-			this.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_RESET);
+	resetForm(formId) {
+		if (!this.state.getStateFormConfigFormResetOnSuccess(formId)) {
+			return;
 		}
+
+		for (const [name, item] of this.state.getStateElements(formId)) {
+			const type = item[this.state.TYPE];
+			const items = item[this.state.ITEMS];
+			const custom = item[this.state.CUSTOM];
+
+			switch (type) {
+				case 'checkbox':
+					[...Object.values(items)].forEach((checkboxItem) => {
+						this.state.setState([this.state.ELEMENTS, name, this.state.ITEMS, checkboxItem.value, this.state.VALUE], '', formId);
+						this.state.setState([this.state.ELEMENTS, name, this.state.VALUE, checkboxItem.value, this.state.VALUE], '', formId);
+
+						this.setFieldVisualState(checkboxItem.value, formId);
+					});
+
+					this.unsetFieldError(name, formId);
+					break;
+				case 'file':
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+
+					this.unsetFieldError(name, formId);
+					custom.removeAllFiles();
+				case 'radio':
+					[...Object.values(items)].forEach((radioItem) => {
+						this.state.setState([this.state.ELEMENTS, name, this.state.ITEMS, radioItem.value, this.state.VALUE], '', formId);
+						this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+
+						this.setFieldVisualState(radioItem.value, formId);
+					});
+
+					this.unsetFieldError(name, formId);
+					break;
+				case 'select':
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+					this.unsetFieldError(name, formId);
+					custom.clearInput();
+					custom.unhighlightAll();
+					break;
+				default:
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+					this.setFieldVisualState(name, formId);
+					this.unsetFieldError(name, formId);
+					break;
+			}
+		}
+
+		// Remove focus from last input.
+		document.activeElement.blur();
+
+		// Dispatch event.
+		this.dispatchFormEvent(formId, this.data.EVENTS.AFTER_FORM_SUBMIT_RESET);
 	}
 
 	// Redirect to url and update url params from from data.
-	redirectToUrl(element, formData) {
-		let redirectUrl = element.getAttribute(this.data.DATA_ATTRIBUTES.successRedirect) ?? '';
-		const downloads = element.getAttribute(this.data.DATA_ATTRIBUTES.downloads) ?? '';
-		const variation = element.getAttribute(this.data.DATA_ATTRIBUTES.successRedirectVariation) ?? '';
+	redirectToUrl(formId, formData) {
+		let redirectUrl = this.state.getStateFormConfigSuccessRedirect(formId);
 
 		// Replace string templates used for passing data via url.
 		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
@@ -389,10 +353,12 @@ export class Utils {
 
 		const url = new URL(redirectUrl);
 
+		const downloads = this.state.getStateFormConfigDownloads(formId);
 		if (downloads) {
 			url.searchParams.append('es-downloads', downloads);
 		}
 
+		const variation = this.state.getStateFormConfigSuccessRedirectVariation(formId);
 		if (variation) {
 			url.searchParams.append('es-variation', variation);
 		}
@@ -401,10 +367,10 @@ export class Utils {
 	}
 
 	// Redirect to url by provided path.
-	redirectToUrlByRefference(redirectUrl, element, reload = false) {
-		this.dispatchFormEvent(element, this.data.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT, redirectUrl);
+	redirectToUrlByRefference(redirectUrl, formId, reload = false) {
+		this.dispatchFormEvent(formId, this.data.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT, redirectUrl);
 
-		if (!this.data.SETTINGS.FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS) {
+		if (!this.state.getStateFormConfigFormDisableNativeRedirectOnSuccess(formId)) {
 			// Do the actual redirect after some time.
 			setTimeout(() => {
 				window.location = redirectUrl;
@@ -412,28 +378,8 @@ export class Utils {
 				if (reload) {
 					window.location.reload();
 				}
-			}, parseInt(this.data.SETTINGS.REDIRECTION_TIMEOUT, 10));
+			}, parseInt(this.state.getStateFormConfigRedirectionTimeout(formId), 10));
 		}
-	}
-
-	// Check if captcha is used.
-	isCaptchaUsed() {
-		return Boolean(this.data.SETTINGS.CAPTCHA?.['siteKey']);
-	}
-
-	// Check if captcha init is used.
-	isCaptchaInitUsed() {
-		return Boolean(this.data.SETTINGS.CAPTCHA?.['loadOnInit']);
-	}
-
-	// Check if captcha badge is hidden.
-	isCaptchaHideBadgeUsed() {
-		return Boolean(this.data.SETTINGS.CAPTCHA?.['hideBadge']);
-	}
-
-	// Check if captcha enterprise is used.
-	isCaptchaEnterprise() {
-		return Boolean(this.data.SETTINGS.CAPTCHA?.['isEnterprise']);
 	}
 
 	// Check if form is fully loaded.
@@ -445,46 +391,9 @@ export class Utils {
 				this.state.setState([this.state.ISLOADED], true, formId);
 
 				// Triger event that form is fully loaded.
-				this.dispatchFormEvent(this.state.getStateFormElement(formId), this.data.EVENTS.FORM_JS_LOADED);
+				this.dispatchFormEvent(formId, this.data.EVENTS.FORM_JS_LOADED);
 			}
 		}, 100);
-	}
-
-	// Check if form is loaded in admin.
-	isFormAdmin() {
-		return this.data.formIsAdmin;
-	}
-
-	// Append common form data items.
-	getCommonFormDataItems(params) {
-		return [
-			{
-				key: this.data.FORM_PARAMS.postId,
-				value: JSON.stringify({
-					name: this.data.FORM_PARAMS.postId,
-					value: params?.formId,
-					type: 'hidden',
-				}),
-			},
-			{
-				key: this.data.FORM_PARAMS.type,
-				value: JSON.stringify({
-					name: this.data.FORM_PARAMS.type,
-					value: params?.formType,
-					type: 'hidden',
-				}),
-			}
-		];
-	}
-
-	// Return field element by name.
-	getFieldByName(element, name) {
-		return element.querySelector(`${this.data.fieldSelector}[${this.data.DATA_ATTRIBUTES.fieldName}="${name}"]`);
-	}
-
-	// Return field element by value.
-	getCheckboxByValue(element, value) {
-		return element.querySelector(`${this.data.fieldSelector} input[type="checkbox"][value="${value}"]`);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -493,10 +402,7 @@ export class Utils {
 
 	// On Focus event for regular fields.
 	onFocusEvent = (event) => {
-		const field = this.state.getFormFieldElementByChild(event.target);
-		const name = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
-
-		this.state.getStateElementField(name, this.state.getFormIdByElement(event.target)).classList.add(this.data.SELECTORS.CLASS_ACTIVE);
+		this.state.getStateElementField(this.state.getFormFieldElementByChild(event.target).getAttribute(this.data.DATA_ATTRIBUTES.fieldName), this.state.getFormIdByElement(event.target)).classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 	};
 
 	onChangeEvent = (event) => {
@@ -507,17 +413,17 @@ export class Utils {
 
 		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
 
-		if (!this.state.getStateFormPhoneDisablePicker(formId) && this.state.getStateFormPhoneUseSync(formId)) {
+		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
 			if (type === 'country') {
 				const country = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNALTYPE, 'tel', formId)].forEach((tel) => {
+				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNAL_TYPE, 'tel', formId)].forEach((tel) => {
 					tel[this.state.CUSTOM].setChoiceByValue(country.number);
 				});
 			}
 
 			if (type === 'phone') {
 				const phone = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNALTYPE, 'country', formId)].forEach((country) => {
+				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNAL_TYPE, 'country', formId)].forEach((country) => {
 					country[this.state.CUSTOM].setChoiceByValue(phone.label);
 				});
 			}
@@ -532,8 +438,9 @@ export class Utils {
 	onBlurEvent = (event) => {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
+		const formId = this.state.getFormIdByElement(event.target);
 
-		this.setFieldVisualState(this.state.getStateElement(name, this.state.getFormIdByElement(event.target)))
+		this.setFieldVisualState(name, formId);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -552,124 +459,6 @@ export class Utils {
 
 		if (typeof window?.[this.data.prefix]?.utils === 'undefined') {
 			window[this.data.prefix].utils = {
-				formIsAdmin: this.formIsAdmin,
-				formSubmitRestApiUrl: this.formSubmitRestApiUrl,
-
-				formSelectorPrefix: this.formSelectorPrefix,
-
-				formSelector: this.formSelector,
-				submitSingleSelector: this.submitSingleSelector,
-				stepSelector: this.stepSelector,
-				errorSelector: this.data.errorSelector,
-				loaderSelector: this.data.loaderSelector,
-				globalMsgSelector: this.data.globalMsgSelector,
-				groupSelector: this.groupSelector,
-				fieldSelector: this.data.fieldSelector,
-				dateFieldSelector: this.dateFieldSelector,
-				countryFieldSelector: this.countryFieldSelector,
-				inputSelector: this.data.inputSelector,
-				textareaSelector: this.data.textareaSelector,
-				selectSelector: this.selectSelector,
-				fileSelector: this.fileSelector,
-
-				selectClassName: this.selectClassName,
-
-				FORM_PARAMS: this.data.FORM_PARAMS,
-				DATA_ATTRIBUTES: this.data.DATA_ATTRIBUTES,
-				SETTINGS: this.data.SETTINGS,
-				EVENTS: this.data.EVENTS,
-				SELECTORS: this.SELECTORS,
-				DELIMITER: this.DELIMITER,
-				CONDITIONAL_TAGS_OPERATORS: this.CONDITIONAL_TAGS_OPERATORS,
-				CONDITIONAL_TAGS_ACTIONS: this.CONDITIONAL_TAGS_ACTIONS,
-				CONDITIONAL_TAGS_LOGIC: this.CONDITIONAL_TAGS_LOGIC,
-
-				FORMS_STATE: this.FORMS_STATE,
-
-				setFormStateInitial: (formId) => {
-					return this.setFormStateInitial(formId);
-				},
-				getFormStateByName: (key, name, formId) => {
-					return this.getFormStateByName(key, name, formId);
-				},
-				unsetGlobalMsg: (element) => {
-					this.unsetGlobalMsg(element);
-				},
-				reset: (element) => {
-					this.reset(element);
-				},
-				removeFieldErrorByName: (element, name) => {
-					this.removeFieldErrorByName(element, name);
-				},
-				dispatchFormEvent: (element, name) => {
-					this.dispatchFormEvent(element, name);
-				},
-				scrollToElement: (element) => {
-					this.scrollToElement(element);
-				},
-				showLoader: (element) => {
-					this.showLoader(element);
-				},
-				outputErrors: (element, fields) => {
-					this.outputErrors(element, fields);
-				},
-				hideLoader: (element) => {
-					this.hideLoader(element);
-				},
-				setGlobalMsg: (element, msg, status) => {
-					this.setGlobalMsg(element, msg, status);
-				},
-				hideGlobalMsg: (element) => {
-					this.hideGlobalMsg(element);
-				},
-				getGtmData: (element, eventName, formData) => {
-					return this.getGtmData(element, eventName, formData);
-				},
-				gtmSubmit: (element, formData, status, errors) => {
-					this.gtmSubmit(element, formData, status, errors);
-				},
-				setFieldVisualState: (input, type) => {
-					this.setFieldVisualState(input, type);
-				},
-				resetForm: (element) => {
-					this.resetForm(element);
-				},
-				redirectToUrl: (element, formData) => {
-					this.redirectToUrl(element, formData);
-				},
-				redirectToUrlByRefference: (redirectUrl, element, reload = false) => {
-					this.redirectToUrlByRefference(redirectUrl, element, reload);
-				},
-				isCaptchaUsed: () => {
-					this.isCaptchaUsed();
-				},
-				isCaptchaInitUsed: () => {
-					return this.isCaptchaInitUsed();
-				},
-				isCaptchaHideBadgeUsed: () => {
-					return this.isCaptchaHideBadgeUsed();
-				},
-				isCaptchaEnterprise: () => {
-					return this.isCaptchaEnterprise();
-				},
-				isFormLoaded: (formId, element, selectsLength, textareaLenght, filesLength) => {
-					this.isFormLoaded(formId, element, selectsLength, textareaLenght, filesLength);
-				},
-				isFormAdmin: () => {
-					return this.isFormAdmin();
-				},
-				getCommonFormDataItems: (params) => {
-					return this.getCommonFormDataItems(params);
-				},
-				getFieldByName: (element, name) => {
-					return this.getFieldByName(element, name);
-				},
-				onFocusEvent: (event) => {
-					this.onFocusEvent(event);
-				},
-				onBlurEvent: (event) => {
-					this.onBlurEvent(event);
-				},
 			}
 		}
 	}

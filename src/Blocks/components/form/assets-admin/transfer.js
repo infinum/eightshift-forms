@@ -76,7 +76,7 @@ export class Transfer {
 			.then((response) => {
 				const formElement = element.closest(this.utils.formSelector);
 
-				this.utils.setGlobalMsg(formElement, response.message, response.status);
+				this.utils.setErrorGlobal(formElement, response.message, response.status);
 
 				if (response.code >= 200 && response.code <= 299) {
 
@@ -90,7 +90,7 @@ export class Transfer {
 				}
 
 				setTimeout(() => {
-					this.utils.hideGlobalMsg(formElement);
+					this.utils.unsetErrorGlobal(formElement);
 				}, 6000);
 			});
 	};

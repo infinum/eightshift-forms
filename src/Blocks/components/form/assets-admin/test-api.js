@@ -52,7 +52,7 @@ export class TestApi {
 			})
 			.then((response) => {
 				const formElement = element.closest(this.utils.formSelector);
-				this.utils.setGlobalMsg(formElement, response.message, response.status);
+				this.utils.setErrorGlobal(formElement, response.message, response.status);
 
 				if (element.getAttribute('data-reload') === 'true') {
 					setTimeout(() => {
@@ -60,7 +60,7 @@ export class TestApi {
 					}, 1000);
 				} else {
 					setTimeout(() => {
-						this.utils.hideGlobalMsg(formElement);
+						this.utils.unsetErrorGlobal(formElement);
 					}, 6000);
 				}
 			});

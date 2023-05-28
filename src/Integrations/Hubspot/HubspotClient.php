@@ -787,7 +787,7 @@ class HubspotClient implements HubspotClientInterface
 			$output[] = [
 				'name' => $name,
 				'value' => $value,
-				'objectTypeId' => $param['objectTypeId'] ?? '',
+				'objectTypeId' => $param['custom'] ?? '',
 			];
 		}
 
