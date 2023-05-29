@@ -25,6 +25,8 @@ export class State {
 		this.ACTION_EXTERNAL = 'actionExternal';
 		this.FIELD = 'field';
 		this.VALUE = 'value';
+		this.INITIAL = 'initial';
+		this.VALUES = 'values';
 		this.VALUE_COUNTRY = 'valueCountry';
 		this.INPUT = 'input';
 		this.INPUT_SELECT = 'inputSelect';
@@ -46,6 +48,7 @@ export class State {
 		this.HEADING_SUCCESS = 'headingSuccess';
 		this.HEADING_ERROR = 'headingError';
 		this.IS_SINGLE_SUBMIT = 'isSingleSubmit';
+		this.SAVE_AS_JSON = 'saveAsJson';
 		this.IS_ADMIN = 'isAdmin';
 		this.SUBMIT_URL = 'submitUrl';
 		this.NONCE = 'nonce';
@@ -168,7 +171,6 @@ export class State {
 			switch (type) {
 				case 'radio':
 				case 'checkbox':
-					this.setState([this.ELEMENTS, name, this.VALUE, value], item.checked ? value : '', formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
 					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], type, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], '', formId);
@@ -176,34 +178,51 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.ITEMS, value, this.FIELD], item.parentNode.parentNode, formId);
 					this.setState([this.ELEMENTS, name, this.ITEMS, value, this.INPUT], item, formId);
 					this.setState([this.ELEMENTS, name, this.ITEMS, value, this.NAME], name, formId);
+
+					if (type === 'radio') {
+						this.setState([this.ELEMENTS, name, this.VALUE], item.checked ? value : '', formId);
+						this.setState([this.ELEMENTS, name, this.VALUES, value], item.checked ? value : '', formId);
+						this.setState([this.ELEMENTS, name, this.INITIAL, value], item.checked ? value : '', formId);
+					}
+
+					if (type === 'checkbox') {
+						this.setState([this.ELEMENTS, name, this.VALUE, value], item.checked ? value : '', formId);
+						this.setState([this.ELEMENTS, name, this.VALUES, value], item.checked ? value : '', formId);
+						this.setState([this.ELEMENTS, name, this.INITIAL, value], item.checked ? value : '', formId);
+					}
+
 					break;
 				case 'select-one':
 					// Combined fields like phone can have field null.
 					const customField = this.getFormFieldElementByChild(item);
 					const customType = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
-					const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.data.DATA_ATTRIBUTES.selectCustomProperties));
 
-					switch (customType) {
-						case 'phone':
-						case 'country':
-							this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
-							this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
-							this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
-							break;
-						}
+					if (item.options.length) {
+						const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.data.DATA_ATTRIBUTES.selectCustomProperties));
+
+						switch (customType) {
+							case 'phone':
+							case 'country':
+								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
+								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
+								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
+								break;
+							}
+					}
 
 					if (customType !== 'phone') {
 						this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
+						this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
 					}
-					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], customType, formId);
 
-					
+					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], customType, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], 'select', formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_PLACEHOLDER], Boolean(item.getAttribute(this.data.DATA_ATTRIBUTES.selectPlaceholder)), formId);
 					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(this.data.DATA_ATTRIBUTES.selectAllowSearch)), formId);
 					break;
 				case 'tel':
+					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
 					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], 'tel', formId);
@@ -212,6 +231,7 @@ export class State {
 					break;
 				case 'date':
 				case 'datetime-local':
+					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
 					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], type, formId);
@@ -223,6 +243,7 @@ export class State {
 					}
 					break;
 				default:
+					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
 					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], type, formId);
@@ -236,6 +257,7 @@ export class State {
 			this.setState([this.ELEMENTS, name, this.FIELD], field, formId);
 			this.setState([this.ELEMENTS, name, this.ERROR], field.querySelector(this.data.errorSelector), formId);
 			this.setState([this.ELEMENTS, name, this.IS_SINGLE_SUBMIT], item.classList.contains(this.data.submitSingleSelector.substring(1)), formId);
+			this.setState([this.ELEMENTS, name, this.SAVE_AS_JSON], Boolean(item.getAttribute(this.data.DATA_ATTRIBUTES.saveAsJson)), formId);
 		}
 	}
 
@@ -256,8 +278,17 @@ export class State {
 		} = item;
 
 		switch (type) {
+			case 'radio':
+				this.setState([this.ELEMENTS, name, this.VALUE], checked ? value : '', formId);
+				for (const [innerName] of Object.entries(this.getStateElementValues(name, formId))) {
+					this.setState([this.ELEMENTS, name, this.VALUES, innerName], '', formId);
+				}
+
+				this.setState([this.ELEMENTS, name, this.VALUES, value], checked ? value : '', formId);
+				break;
 			case 'checkbox':
 				this.setState([this.ELEMENTS, name, this.VALUE, value], checked ? value : '', formId);
+				this.setState([this.ELEMENTS, name, this.VALUES, value], checked ? value : '', formId);
 				break;
 			case 'select-one':
 				const customField = this.getFormFieldElementByChild(item);
@@ -363,8 +394,8 @@ export class State {
 		return this.getState([this.FORM], formId);
 	}
 
-	getStateFormSubmitUrl(formId, sufix) {
-		return `${this.getState([this.FORM, this.SUBMIT_URL], formId)}${sufix}` ;
+	getStateFormSubmitUrl(formId, sufix = '') {
+		return `${this.getState([this.FORM, this.SUBMIT_URL], formId)}${sufix}`;
 	}
 
 	getStateFormIsAdmin(formId) {
@@ -494,8 +525,20 @@ export class State {
 		return this.getState([this.ELEMENTS, name, this.CUSTOM], formId);
 	}
 
+	getStateElementIsSingleSubmit(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.IS_SINGLE_SUBMIT], formId);
+	}
+
+	getStateElementSaveAsJson(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.SAVE_AS_JSON], formId);
+	}
+
 	getStateElementValueCountry(name, formId) {
 		return this.getState([this.ELEMENTS, name, this.VALUE_COUNTRY], formId);
+	}
+
+	getStateElementInitial(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.INITIAL], formId);
 	}
 
 	getStateElementItems(name, formId) {
@@ -512,6 +555,10 @@ export class State {
 
 	getStateElementItemsInput(name, nameItem, formId) {
 		return this.getState([this.ELEMENTS, name, this.ITEMS, nameItem, this.INPUT], formId);
+	}
+
+	getStateElementValues(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.VALUES], formId);
 	}
 
 	getStateElementValue(name, formId) {

@@ -132,6 +132,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formPostId'] => $formId,
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType'] => $internalType,
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['settingsType'] => $type,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirect'] => Helper::getCurrentUrl(),
 		];
 
 		// Populate and build form.

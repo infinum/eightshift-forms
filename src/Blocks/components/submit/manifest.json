@@ -3,7 +3,6 @@
 	"componentName": "submit",
 	"title": "Submit",
 	"componentClass": "es-submit",
-	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
 			"submitValue": "Value",
@@ -42,10 +41,6 @@
 		"submitFieldHideLabel": {
 			"type": "boolean",
 			"default": true
-		},
-		"submitSingleSubmit": {
-			"type": "boolean",
-			"default": false
 		},
 		"submitServerSideRender": {
 			"type": "boolean",

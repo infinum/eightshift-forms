@@ -280,47 +280,49 @@ export class Utils {
 			return;
 		}
 
+		console.log(this.state.getStateElements(formId));
+
 		for (const [name, item] of this.state.getStateElements(formId)) {
 			const type = item[this.state.TYPE];
-			const items = item[this.state.ITEMS];
 			const custom = item[this.state.CUSTOM];
+			const values = item[this.state.VALUES];
+			const input = item[this.state.INPUT];
 
 			switch (type) {
 				case 'checkbox':
-					[...Object.values(items)].forEach((checkboxItem) => {
-						this.state.setState([this.state.ELEMENTS, name, this.state.ITEMS, checkboxItem.value, this.state.VALUE], '', formId);
-						this.state.setState([this.state.ELEMENTS, name, this.state.VALUE, checkboxItem.value, this.state.VALUE], '', formId);
+					// for(const [itemName] of Object.entries(values)) {
+					// 	this.state.setState([this.state.ELEMENTS, name, this.state.VALUE, itemName], '', formId);
+					// 	this.state.setState([this.state.ELEMENTS, name, this.state.VALUES, itemName], '', formId);
+					// };
 
-						this.setFieldVisualState(checkboxItem.value, formId);
-					});
+					// this.setFieldVisualState(name, formId);
+					// this.unsetFieldError(name, formId);
+					break;
+				case 'radio':
+					// for(const [itemName] of Object.entries(values)) {
+					// 	this.state.setState([this.state.ELEMENTS, name, this.state.VALUES, itemName], '', formId);
+					// };
 
-					this.unsetFieldError(name, formId);
+					// this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+					// this.setFieldVisualState(name, formId);
+					// this.unsetFieldError(name, formId);
 					break;
 				case 'file':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], this.state.getStateElementInitial(name, formId), formId);
 
 					this.unsetFieldError(name, formId);
 					custom.removeAllFiles();
-				case 'radio':
-					[...Object.values(items)].forEach((radioItem) => {
-						this.state.setState([this.state.ELEMENTS, name, this.state.ITEMS, radioItem.value, this.state.VALUE], '', formId);
-						this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
-
-						this.setFieldVisualState(radioItem.value, formId);
-					});
-
-					this.unsetFieldError(name, formId);
 					break;
 				case 'select':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], this.state.getStateElementInitial(name, formId), formId);
 					this.unsetFieldError(name, formId);
-					custom.clearInput();
-					custom.unhighlightAll();
+					custom.setChoiceByValue(this.state.getStateElementInitial(name, formId));
 					break;
 				default:
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], this.state.getStateElementInitial(name, formId), formId);
 					this.setFieldVisualState(name, formId);
 					this.unsetFieldError(name, formId);
+					input.value = this.state.getStateElementInitial(name, formId);
 					break;
 			}
 		}
@@ -356,7 +358,7 @@ export class Utils {
 			url.searchParams.append('es-variation', variation);
 		}
 
-		this.redirectToUrlByRefference(url.href, element);
+		this.redirectToUrlByRefference(url.href, formId);
 	}
 
 	// Redirect to url by provided path.
@@ -388,53 +390,6 @@ export class Utils {
 			}
 		}, 100);
 	}
-
-	////////////////////////////////////////////////////////////////
-	// Events callback
-	////////////////////////////////////////////////////////////////
-
-	// On Focus event for regular fields.
-	onFocusEvent = (event) => {
-		this.state.getStateElementField(this.state.getFormFieldElementByChild(event.target).getAttribute(this.data.DATA_ATTRIBUTES.fieldName), this.state.getFormIdByElement(event.target)).classList.add(this.data.SELECTORS.CLASS_ACTIVE);
-	};
-
-	onChangeEvent = (event) => {
-		const field = this.state.getFormFieldElementByChild(event.target);
-		const formId = this.state.getFormIdByElement(event.target);
-		const type = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
-		const name = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
-
-		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
-
-		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
-			if (type === 'country') {
-				const country = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNAL_TYPE, 'tel', formId)].forEach((tel) => {
-					tel[this.state.CUSTOM].setChoiceByValue(country.number);
-				});
-			}
-
-			if (type === 'phone') {
-				const phone = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNAL_TYPE, 'country', formId)].forEach((country) => {
-					country[this.state.CUSTOM].setChoiceByValue(phone.label);
-				});
-			}
-		}
-	}
-
-	onInputEvent = (event) => {
-		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
-	}
-
-	// On Blur generic method. Check for length of value.
-	onBlurEvent = (event) => {
-		const field = this.state.getFormFieldElementByChild(event.target);
-		const name = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
-		const formId = this.state.getFormIdByElement(event.target);
-
-		this.setFieldVisualState(name, formId);
-	};
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.

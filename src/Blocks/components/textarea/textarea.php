@@ -15,7 +15,6 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $textareaName = Components::checkAttr('textareaName', $attributes, $manifest);
 if (!$textareaName) {
@@ -29,7 +28,6 @@ $textareaIsRequired = Components::checkAttr('textareaIsRequired', $attributes, $
 $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
 $textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
 $textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
-$textareaSingleSubmit = Components::checkAttr('textareaSingleSubmit', $attributes, $manifest);
 $textareaSaveAsJson = Components::checkAttr('textareaSaveAsJson', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
@@ -39,7 +37,6 @@ $textareaClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
-	Components::selector($textareaSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
 if ($textareaTracking) {

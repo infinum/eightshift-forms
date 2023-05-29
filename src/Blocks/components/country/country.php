@@ -48,8 +48,6 @@ if ($countryUseSearch) {
 	$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($countryUseSearch);
 }
 
-$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectShowCountryIcons']] = true;
-
 $countryAttrsOutput = '';
 if ($countryAttrs) {
 	foreach ($countryAttrs as $key => $value) {

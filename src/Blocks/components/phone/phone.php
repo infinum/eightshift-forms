@@ -67,8 +67,6 @@ if ($phoneAttrs) {
 
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attributes);
-
-$selectShowCountryIcons = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectShowCountryIcons'];
 $phoneSelectUseSearchAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch'];
 
 $options = [];
@@ -107,7 +105,6 @@ $phone = '
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
 		' . $phoneSelectUseSearchAttr . '=' . $phoneUseSearch . '
-		' . $selectShowCountryIcons . '=true
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"

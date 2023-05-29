@@ -722,4 +722,18 @@ class Helper
 	{
 		return \function_exists('get_current_screen') && \get_current_screen()->is_block_editor();
 	}
+
+	/**
+	 * Get current url with params.
+	 *
+	 * @return string
+	 */
+	public static function getCurrentUrl(): string
+	{
+		$port = isset($_SERVER['HTTPS']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTPS'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$host = isset($_SERVER['HTTP_HOST']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_HOST'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		return ($port ? "https" : "http") . "://{$host}{$request}";
+	}
 }
