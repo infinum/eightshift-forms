@@ -429,7 +429,6 @@ export class Form {
 			const input = item[this.state.INPUT];
 			const name = item[this.state.NAME];
 			const value = item[this.state.VALUE];
-			const values = item[this.state.VALUES];
 			const internalType = item[this.state.INTERNAL_TYPE];
 			const saveAsJson = item[this.state.SAVE_AS_JSON];
 
@@ -483,11 +482,11 @@ export class Form {
 			switch (type) {
 				case 'checkbox':
 				case 'radio':
-					Object.values(values).forEach((item, index) => {
-						data.value = item;
+					// Object.values(values).forEach((item, index) => {
+					// 	data.value = item;
 
-						this.FORM_DATA.append(`${name}[${index}]`, JSON.stringify(data));
-					});
+					// 	this.FORM_DATA.append(`${name}[${index}]`, JSON.stringify(data));
+					// });
 					break;
 				case 'textarea':
 					// Convert textarea to json format with : as delimiter.

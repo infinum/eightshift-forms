@@ -12,11 +12,11 @@ export class State {
 		this.CHECKBOXES = 'checkboxes';
 		this.RADIOS = 'radios';
 		this.ISLOADED = 'isloaded';
-		this.FIELDS = 'cfFields';
-		this.VALUES = 'cfValues';
-		this.DEFAULTS = 'cfDefaults';
-		this.EVENTS = 'cfEvents';
-		this.REFERENCE = 'cfReference';
+		// this.FIELDS = 'cfFields';
+		// this.VALUES = 'cfValues';
+		// this.DEFAULTS = 'cfDefaults';
+		// this.EVENTS = 'cfEvents';
+		// this.REFERENCE = 'cfReference';
 		this.ELEMENTS = 'elements';
 		this.FORM = 'form';
 
@@ -180,14 +180,17 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.ITEMS, value, this.NAME], name, formId);
 
 					if (type === 'radio') {
-						this.setState([this.ELEMENTS, name, this.VALUE], item.checked ? value : '', formId);
-						this.setState([this.ELEMENTS, name, this.VALUES, value], item.checked ? value : '', formId);
-						this.setState([this.ELEMENTS, name, this.INITIAL, value], item.checked ? value : '', formId);
+						if (!this.getStateElementInitial(name, formId)) {
+							this.setState([this.ELEMENTS, name, this.INITIAL], item.checked ? value : '', formId);
+						}
+
+						if (item.checked) {
+							this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
+						}
 					}
 
 					if (type === 'checkbox') {
 						this.setState([this.ELEMENTS, name, this.VALUE, value], item.checked ? value : '', formId);
-						this.setState([this.ELEMENTS, name, this.VALUES, value], item.checked ? value : '', formId);
 						this.setState([this.ELEMENTS, name, this.INITIAL, value], item.checked ? value : '', formId);
 					}
 
@@ -280,15 +283,9 @@ export class State {
 		switch (type) {
 			case 'radio':
 				this.setState([this.ELEMENTS, name, this.VALUE], checked ? value : '', formId);
-				for (const [innerName] of Object.entries(this.getStateElementValues(name, formId))) {
-					this.setState([this.ELEMENTS, name, this.VALUES, innerName], '', formId);
-				}
-
-				this.setState([this.ELEMENTS, name, this.VALUES, value], checked ? value : '', formId);
 				break;
 			case 'checkbox':
 				this.setState([this.ELEMENTS, name, this.VALUE, value], checked ? value : '', formId);
-				this.setState([this.ELEMENTS, name, this.VALUES, value], checked ? value : '', formId);
 				break;
 			case 'select-one':
 				const customField = this.getFormFieldElementByChild(item);
@@ -555,10 +552,6 @@ export class State {
 
 	getStateElementItemsInput(name, nameItem, formId) {
 		return this.getState([this.ELEMENTS, name, this.ITEMS, nameItem, this.INPUT], formId);
-	}
-
-	getStateElementValues(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.VALUES], formId);
 	}
 
 	getStateElementValue(name, formId) {

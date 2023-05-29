@@ -280,51 +280,48 @@ export class Utils {
 			return;
 		}
 
-		console.log(this.state.getStateElements(formId));
-
 		for (const [name, item] of this.state.getStateElements(formId)) {
 			const type = item[this.state.TYPE];
 			const custom = item[this.state.CUSTOM];
-			const values = item[this.state.VALUES];
 			const input = item[this.state.INPUT];
+			const items = item[this.state.ITEMS];
+			const initial = item[this.state.INITIAL]
 
 			switch (type) {
 				case 'checkbox':
-					// for(const [itemName] of Object.entries(values)) {
-					// 	this.state.setState([this.state.ELEMENTS, name, this.state.VALUE, itemName], '', formId);
-					// 	this.state.setState([this.state.ELEMENTS, name, this.state.VALUES, itemName], '', formId);
-					// };
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], {...initial}, formId);
 
-					// this.setFieldVisualState(name, formId);
-					// this.unsetFieldError(name, formId);
+					for(const [innerName, innerValue] of Object.entries(initial)) {
+						items[innerName].input.checked = innerValue !== '';
+					};
 					break;
 				case 'radio':
-					// for(const [itemName] of Object.entries(values)) {
-					// 	this.state.setState([this.state.ELEMENTS, name, this.state.VALUES, itemName], '', formId);
-					// };
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
 
-					// this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
-					// this.setFieldVisualState(name, formId);
-					// this.unsetFieldError(name, formId);
+					if (initial === '') {
+						Object.values(items).forEach((inner) => {
+							inner.input.checked = false;
+						});
+					} else {
+						items[initial].input.checked = true;
+					}
 					break;
 				case 'file':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], this.state.getStateElementInitial(name, formId), formId);
-
-					this.unsetFieldError(name, formId);
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
 					custom.removeAllFiles();
 					break;
 				case 'select':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], this.state.getStateElementInitial(name, formId), formId);
-					this.unsetFieldError(name, formId);
-					custom.setChoiceByValue(this.state.getStateElementInitial(name, formId));
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
+					custom.setChoiceByValue(initial);
 					break;
 				default:
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], this.state.getStateElementInitial(name, formId), formId);
-					this.setFieldVisualState(name, formId);
-					this.unsetFieldError(name, formId);
-					input.value = this.state.getStateElementInitial(name, formId);
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
+					input.value = initial;
 					break;
 			}
+
+			this.setFieldVisualState(name, formId);
+			this.unsetFieldError(name, formId);
 		}
 
 		// Remove focus from last input.
