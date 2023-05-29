@@ -15,11 +15,6 @@ export class Utils {
 		this.publicMethods();
 	}
 
-	////////////////////////////////////////////////////////////////
-	// State callback
-	////////////////////////////////////////////////////////////////
-
-
 
 	////////////////////////////////////////////////////////////////
 	// Public methods
@@ -101,8 +96,6 @@ export class Utils {
 	// Unset global message.
 	unsetErrorGlobal(formId) {
 		const messageContainer = this.state.getStateFormErrorGlobalElement(formId);
-
-		console.log(messageContainer);
 
 		this.state.setState([this.state.FORM, this.state.ERROR_GLOBAL, this.state.STATUS], '', formId);
 		this.state.setState([this.state.FORM, this.state.ERROR_GLOBAL, this.state.MSG], '', formId);

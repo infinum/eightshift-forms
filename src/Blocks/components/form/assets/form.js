@@ -91,6 +91,10 @@ export class Form {
 			this.setupInputField(input.name, formId);
 		});
 
+		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'date', formId)].forEach((input) => {
+			this.setupInputField(input.name, formId);
+		});
+
 		// Date.
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'date', formId)].forEach((input) => {
 			this.setupDateField(input.name, formId);
@@ -458,6 +462,10 @@ export class Form {
 				custom: '',
 			};
 
+			// console.log(item);
+			// console.log(data);
+			// console.log('-------------------');
+
 			switch (formType) {
 				case 'hubspost':
 						data.custom = item.objectTypeId ?? '';
@@ -466,14 +474,33 @@ export class Form {
 
 			switch (type) {
 				case 'checkbox':
-				case 'radio':
-					
+					for (const [checkName, checkValue] of Object.entries(value)) {
+						data.value = checkValue;
+
+						this.FORM_DATA.append(name, JSON.stringify(data));
+					}
+					console.log(value);
 					break;
-				case 'date':
-				case 'radio':
-					
+				case 'file':
+					// If custom file use files got from the global object of files uploaded.
+					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? []; // eslint-disable-line no-case-declarations
+
+					// Loop files and append.
+					if (fileList.length) {
+						for (const [key, file] of Object.entries(fileList)) {
+							const status = file?.xhr?.response ? JSON.parse(file.xhr.response)?.status : 'error';
+
+							// Check if the file is ok.
+							if (status === 'success') {
+								console.log(`${name}[${key}]`);
+								data.value = file.upload.uuid;
+								this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
+							}
+						}
+					} else {
+						this.FORM_DATA.append(`${name}[0]`, JSON.stringify({}));
+					}
 					break;
-			
 				default:
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
@@ -765,7 +792,7 @@ export class Form {
 		input.addEventListener('keydown', this.utils.onFocusEvent);
 		input.addEventListener('focus', this.utils.onFocusEvent);
 		input.addEventListener('blur', this.utils.onBlurEvent);
-		input.addEventListener('input', debounce(this.utils.onInputEvent, 250));
+		input.addEventListener('input', debounce(this.utils.onInputEvent, 100));
 	}
 
 	/**
@@ -1204,10 +1231,10 @@ export class Form {
 		// 	});
 		// }
 
-		// Loader show.
 		this.utils.showLoader(formId);
 		this.runFormCaptcha(formId);
-		this.formSubmit(formId);
+
+		debounce(this.formSubmit(formId), 100);
 
 				// const stepButton = event.submitter;
 

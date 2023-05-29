@@ -210,6 +210,18 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT_SELECT], field.querySelector('select'), formId);
 					break;
+				case 'date':
+				case 'datetime-local':
+					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
+					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
+					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], type, formId);
+					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
+
+					if (type === 'datetime-local') {
+						this.setState([this.ELEMENTS, name, this.TYPE], 'date', formId);
+						this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], 'datetime', formId);
+					}
+					break;
 				default:
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
@@ -218,13 +230,56 @@ export class State {
 					break;
 			}
 
-			this.setState([this.ELEMENTS, name, this.ERRORMSG], '', formId);
 			this.setState([this.ELEMENTS, name, this.HASERROR], false, formId);
 			this.setState([this.ELEMENTS, name, this.LOADED], false, formId);
 			this.setState([this.ELEMENTS, name, this.NAME], name, formId);
 			this.setState([this.ELEMENTS, name, this.FIELD], field, formId);
 			this.setState([this.ELEMENTS, name, this.ERROR], field.querySelector(this.data.errorSelector), formId);
 			this.setState([this.ELEMENTS, name, this.IS_SINGLE_SUBMIT], item.classList.contains(this.data.submitSingleSelector.substring(1)), formId);
+		}
+	}
+
+	/**
+	 * Init fields initial values data.
+	 *
+	 * @param {object} element Form element.
+	 * @param {bool} isInit If this method is used in initial state or on every change.
+	 *
+	 * @returns void
+	 */
+	setValues(item, formId) {
+		const {
+			name,
+			value,
+			checked,
+			type,
+		} = item;
+
+		switch (type) {
+			case 'checkbox':
+				this.setState([this.ELEMENTS, name, this.VALUE, value], checked ? value : '', formId);
+				break;
+			case 'select-one':
+				const customField = this.getFormFieldElementByChild(item);
+				const customType = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
+				const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.data.DATA_ATTRIBUTES.selectCustomProperties));
+
+				switch (customType) {
+					case 'phone':
+					case 'country':
+						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
+						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
+						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
+						break;
+				}
+
+				if (customType !== 'phone') {
+					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
+				}
+				break;
+			default:
+				this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
+				break;
 		}
 	}
 
@@ -296,50 +351,6 @@ export class State {
 		});
 	
 		return stateObject;
-	}
-
-	/**
-	 * Init fields initial values data.
-	 *
-	 * @param {object} element Form element.
-	 * @param {bool} isInit If this method is used in initial state or on every change.
-	 *
-	 * @returns void
-	 */
-	setValues(item, formId) {
-		const {
-			name,
-			value,
-			checked,
-			type,
-		} = item;
-
-		switch (type) {
-			case 'checkbox':
-				this.setState([this.ELEMENTS, name, this.VALUE, value], checked ? value : '', formId);
-				break;
-			case 'select-one':
-				const customField = this.getFormFieldElementByChild(item);
-				const customType = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
-				const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.data.DATA_ATTRIBUTES.selectCustomProperties));
-
-				switch (customType) {
-					case 'phone':
-					case 'country':
-						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
-						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
-						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
-						break;
-				}
-
-				if (customType !== 'phone') {
-					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
-				}
-				break;
-			default:
-				this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
-				break;
-		}
 	}
 
 	getStateFilteredBykey(obj, targetKey, findItem, formId) {
