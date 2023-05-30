@@ -50,7 +50,7 @@ export class Cache {
 			})
 			.then((response) => {
 				const formElement = element.closest(this.utils.formSelector);
-				this.utils.setErrorGlobal(formElement, response.message, response.status);
+				this.utils.setGlobalMsg(formElement, response.message, response.status);
 
 				if (element.getAttribute('data-reload') === 'true') {
 					setTimeout(() => {
@@ -58,7 +58,7 @@ export class Cache {
 					}, 1000);
 				} else {
 					setTimeout(() => {
-						this.utils.unsetErrorGlobal(formElement);
+						this.utils.unsetGlobalMsg(formElement);
 					}, 6000);
 				}
 			});

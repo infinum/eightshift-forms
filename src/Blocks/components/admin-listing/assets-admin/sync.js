@@ -49,7 +49,7 @@ export class Sync {
 				return response.json();
 			})
 			.then((response) => {
-				this.utils.setErrorGlobal(document, response.message, response.status);
+				this.utils.setGlobalMsg(document, response.message, response.status);
 				if (response.status === 'success') {
 					setTimeout(() => {
 						location.reload();
@@ -57,7 +57,7 @@ export class Sync {
 				}
 
 				setTimeout(() => {
-					this.utils.unsetErrorGlobal(document);
+					this.utils.unsetGlobalMsg(document);
 				}, 6000);
 			});
 	};

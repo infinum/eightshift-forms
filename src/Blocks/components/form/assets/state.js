@@ -37,10 +37,10 @@ export class State {
 		this.INTERNAL_TYPE = 'internalType';
 		this.NAME = 'name';
 		this.ERROR = 'error';
-		this.ERROR_GLOBAL = 'errorGlobal';
+		this.GLOBAL_MSG = 'globalMsg';
 		this.STATUS = 'status';
 		this.MSG = 'msg';
-		this.HASERROR = 'hasError';
+		this.HAS_ERROR = 'hasError';
 		this.LOADED = 'loaded';
 		this.CONFIG = 'config';
 		this.LOADER = 'loader';
@@ -108,6 +108,7 @@ export class State {
 
 		this.setState([this.FORM, this.SUBMIT_URL], this.data.formSubmitRestApiUrl, formId);
 		this.setState([this.FORM, this.IS_ADMIN], this.data.formIsAdmin, formId);
+		this.setState([this.FORM, this.IS_SINGLE_SUBMIT], false, formId);
 		this.setState([this.FORM, this.ELEMENT], formElement, formId);
 		this.setState([this.FORM, this.TYPE], formElement.getAttribute(this.data.DATA_ATTRIBUTES.formType), formId);
 		this.setState([this.FORM, this.METHOD], formElement.getAttribute('method'), formId);
@@ -131,11 +132,11 @@ export class State {
 
 		const errorGlobal = formElement.querySelector(this.data.globalMsgSelector);
 
-		this.setState([this.FORM, this.ERROR_GLOBAL, this.ELEMENT], errorGlobal, formId);
-		this.setState([this.FORM, this.ERROR_GLOBAL, this.STATUS], '', formId);
-		this.setState([this.FORM, this.ERROR_GLOBAL, this.MSG], '', formId);
-		this.setState([this.FORM, this.ERROR_GLOBAL, this.HEADING_SUCCESS], errorGlobal.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingSuccess), formId);
-		this.setState([this.FORM, this.ERROR_GLOBAL, this.HEADING_ERROR], errorGlobal.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingError), formId);
+		this.setState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], errorGlobal, formId);
+		this.setState([this.FORM, this.GLOBAL_MSG, this.STATUS], '', formId);
+		this.setState([this.FORM, this.GLOBAL_MSG, this.MSG], '', formId);
+		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], errorGlobal.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingSuccess), formId);
+		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], errorGlobal.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingError), formId);
 
 		const captcha = esFormsLocalization.captcha ?? [];
 
@@ -244,6 +245,7 @@ export class State {
 						this.setState([this.ELEMENTS, name, this.TYPE], 'date', formId);
 						this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], 'datetime', formId);
 					}
+
 					break;
 				default:
 					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
@@ -254,7 +256,7 @@ export class State {
 					break;
 			}
 
-			this.setState([this.ELEMENTS, name, this.HASERROR], false, formId);
+			this.setState([this.ELEMENTS, name, this.HAS_ERROR], false, formId);
 			this.setState([this.ELEMENTS, name, this.LOADED], false, formId);
 			this.setState([this.ELEMENTS, name, this.NAME], name, formId);
 			this.setState([this.ELEMENTS, name, this.FIELD], field, formId);
@@ -279,6 +281,8 @@ export class State {
 			checked,
 			type,
 		} = item;
+
+		// Datepicker and dropzone are set using native lib events.
 
 		switch (type) {
 			case 'radio':
@@ -399,6 +403,10 @@ export class State {
 		return this.getState([this.FORM, this.IS_ADMIN], formId);
 	}
 
+	getStateFormIsSingleSubmit(formId) {
+		return this.getState([this.FORM, this.IS_SINGLE_SUBMIT], formId);
+	}
+
 	getStateFormType(formId) {
 		return this.getState([this.FORM, this.TYPE], formId);
 	}
@@ -427,28 +435,28 @@ export class State {
 		return this.getState([this.FORM, this.LOADER], formId);
 	}
 
-	getStateFormErrorGlobalElement(formId) {
-		return this.getState([this.FORM, this.ERROR_GLOBAL, this.ELEMENT], formId);
+	getStateFormGlobalMsgElement(formId) {
+		return this.getState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], formId);
 	}
 
 	getStateFormErrorGlobalStatus(formId) {
-		return this.getState([this.FORM, this.ERROR_GLOBAL, this.STATUS], formId);
+		return this.getState([this.FORM, this.GLOBAL_MSG, this.STATUS], formId);
 	}
 
 	getStateFormErrorGlobalMsg(formId) {
-		return this.getState([this.FORM, this.ERROR_GLOBAL, this.MSG], formId);
+		return this.getState([this.FORM, this.GLOBAL_MSG, this.MSG], formId);
 	}
 
 	getStateFormErrorGlobalStatus(formId) {
-		return this.getState([this.FORM, this.ERROR_GLOBAL, this.STATUS], formId);
+		return this.getState([this.FORM, this.GLOBAL_MSG, this.STATUS], formId);
 	}
 
 	getStateFormErrorGlobalHeadingSuccess(formId) {
-		return this.getState([this.FORM, this.ERROR_GLOBAL, this.HEADING_SUCCESS], formId);
+		return this.getState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], formId);
 	}
 
 	getStateFormErrorGlobalHeadingError(formId) {
-		return this.getState([this.FORM, this.ERROR_GLOBAL, this.HEADING_ERROR], formId);
+		return this.getState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], formId);
 	}
 
 	getStateFormConfigPhoneDisablePicker(formId) {
@@ -518,6 +526,10 @@ export class State {
 		return this.getState([this.ELEMENTS, name, this.FIELD], formId);
 	}
 
+	getStateElementInternalType(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.INTERNAL_TYPE], formId);
+	}
+
 	getStateElementCustom(name, formId) {
 		return this.getState([this.ELEMENTS, name, this.CUSTOM], formId);
 	}
@@ -563,7 +575,7 @@ export class State {
 	}
 
 	getStateElementHasError(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.HASERROR], formId);
+		return this.getState([this.ELEMENTS, name, this.HAS_ERROR], formId);
 	}
 
 	getStateElementErrorMsg(name, formId) {

@@ -54,12 +54,12 @@ export class Migration {
 			.then((response) => {
 				const formElement = element.closest(this.utils.formSelector);
 
-				this.utils.setErrorGlobal(formElement, response.message, response.status);
+				this.utils.setGlobalMsg(formElement, response.message, response.status);
 
 				document.querySelector(this.outputSelector).value = JSON.stringify(response, null, 4);
 
 				setTimeout(() => {
-					this.utils.unsetErrorGlobal(formElement);
+					this.utils.unsetGlobalMsg(formElement);
 				}, 6000);
 			});
 	};

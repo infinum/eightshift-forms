@@ -26,7 +26,7 @@ export class Utils {
 			this.unsetFieldError(name, formId)
 		};
 
-		this.unsetErrorGlobal(formId);
+		this.unsetGlobalMsg(formId);
 	}
 
 	// Dispatch custom event.
@@ -36,6 +36,7 @@ export class Utils {
 		};
 
 		if (detail) {
+			options['state'] = this.state.getStateForm(formId);
 			options['detail'] = detail;
 		}
 
@@ -47,8 +48,8 @@ export class Utils {
 		this.state.getStateElementField(name, formId).scrollIntoView({block: 'start', behavior: 'smooth'});
 	}
 
-	scrollToErrorGlobal(formId) {
-		this.state.getStateFormErrorGlobalElement(formId).scrollIntoView({block: 'start', behavior: 'smooth'});
+	scrollToGlobalMsg(formId) {
+		this.state.getStateFormGlobalMsgElement(formId).scrollIntoView({block: 'start', behavior: 'smooth'});
 	}
 
 	// Show loader.
@@ -62,6 +63,7 @@ export class Utils {
 		const error = this.state.getStateElementError(name, formId);
 
 		error.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
+		this.state.setState([this.state.ELEMENTS, name, this.state.HAS_ERROR], false, formId);
 		error.innerHTML = '';
 	}
 
@@ -69,6 +71,7 @@ export class Utils {
 		const error = this.state.getStateElementError(name, formId);
 
 		error.classList.add(this.data.SELECTORS.CLASS_HAS_ERROR);
+		this.state.setState([this.state.ELEMENTS, name, this.state.HAS_ERROR], true, formId);
 		error.innerHTML = msg;
 	}
 
@@ -79,7 +82,7 @@ export class Utils {
 		};
 
 		// Scroll to element if the condition is right.
-		const firstItemWithErrorName = Object.values(esForms.state.form_4069.elements).filter((item) => item.hasError === false)?.[0]?.name;
+		const firstItemWithErrorName = this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.HAS_ERROR, true, formId)?.[0]?.[this.state.NAME];
 		if (firstItemWithErrorName) {
 			this.scrollToElement(firstItemWithErrorName, formId);
 		}
@@ -94,11 +97,11 @@ export class Utils {
 	}
 
 	// Unset global message.
-	unsetErrorGlobal(formId) {
-		const messageContainer = this.state.getStateFormErrorGlobalElement(formId);
+	unsetGlobalMsg(formId) {
+		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
-		this.state.setState([this.state.FORM, this.state.ERROR_GLOBAL, this.state.STATUS], '', formId);
-		this.state.setState([this.state.FORM, this.state.ERROR_GLOBAL, this.state.MSG], '', formId);
+		this.state.setState([this.state.FORM, this.state.GLOBAL_MSG, this.state.STATUS], '', formId);
+		this.state.setState([this.state.FORM, this.state.GLOBAL_MSG, this.state.MSG], '', formId);
 
 		messageContainer.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = '';
@@ -106,8 +109,8 @@ export class Utils {
 	}
 
 	// Set global message.
-	setErrorGlobal(formId, msg, status) {
-		const messageContainer = this.state.getStateFormErrorGlobalElement(formId);
+	setGlobalMsg(formId, msg, status) {
+		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
 		messageContainer.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
 		messageContainer.dataset.status = status;
@@ -115,7 +118,7 @@ export class Utils {
 		// Scroll to msg if the condition is right.
 		if (status === 'success') {
 			if (!this.state.getStateFormConfigDisableScrollToGlobalMsgOnSuccess(formId)) {
-				this.scrollToErrorGlobal(formId);
+				this.scrollToGlobalMsg(formId);
 			}
 
 			const headingSuccess = this.state.getStateFormErrorGlobalHeadingSuccess(formId);
@@ -134,11 +137,6 @@ export class Utils {
 				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
 			}
 		}
-	}
-
-	// Hide global message.
-	setGlobalMsg(formId) {
-		this.state.getStateFormErrorGlobalElement(formId).classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
 	}
 
 	// Build GTM data for the data layer.
@@ -250,28 +248,44 @@ export class Utils {
 	}
 
 	// Prefill inputs active/filled on init.
-	setFieldVisualState(name, formId) {
+	setFieldFilledState(name, formId) {
 		const type = this.state.getStateElementType(name, formId);
 		const value = this.state.getStateElementValue(name, formId);
-		const field = this.state.getStateElementField(name, formId);
 
 		let condition = false;
 
 		switch (type) {
 			case 'checkbox':
 				condition = Object.values(value).filter((item) => item !== '').length > 0;
-				break
+				break;
 			default:
 				condition = value && value.length;
 				break;
 		}
 
 		if (condition) {
-			field.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
-			field.classList.add(this.data.SELECTORS.CLASS_FILLED);
+			this.unsetActiveState(name, formId);
+			this.setFilledState(name, formId);
 		} else {
-			field.classList.remove(this.data.SELECTORS.CLASS_ACTIVE, this.data.SELECTORS.CLASS_FILLED);
+			this.unsetActiveState(name, formId);
+			this.unsetFilledState(name, formId);
 		}
+	}
+
+	setFieldActiveState(name, formId) {
+		this.state.getStateElementField(name, formId).classList.add(this.data.SELECTORS.CLASS_ACTIVE);
+	}
+
+	unsetActiveState(name, formId) {
+		this.state.getStateElementField(name, formId).classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+	}
+
+	setFilledState(name, formId) {
+		this.state.getStateElementField(name, formId).classList.add(this.data.SELECTORS.CLASS_FILLED);
+	}
+
+	unsetFilledState(name, formId) {
+		this.state.getStateElementField(name, formId).classList.remove(this.data.SELECTORS.CLASS_FILLED);
 	}
 
 	// Reset form values if the condition is right.
@@ -314,13 +328,17 @@ export class Utils {
 					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
 					custom.setChoiceByValue(initial);
 					break;
+				case 'date':
+					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
+					custom.setDate(initial);
+					break;
 				default:
 					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
 					input.value = initial;
 					break;
 			}
 
-			this.setFieldVisualState(name, formId);
+			this.setFieldFilledState(name, formId);
 			this.unsetFieldError(name, formId);
 		}
 
@@ -386,6 +404,38 @@ export class Utils {
 				this.dispatchFormEvent(formId, this.data.EVENTS.FORM_JS_LOADED);
 			}
 		}, 100);
+	}
+
+	getSaveAsJsonFormatOutput(name, formId) {
+		const output = [];
+		const items = this.state.getStateElementValue(name, formId).split(/\r\n|\r|\n/);
+
+		if (items.length) {
+			items.forEach((item) => {
+				if (!item) {
+					return;
+				}
+
+				const innerItem = item.split(':');
+				const innerOutput = [];
+
+				if (innerItem) {
+					innerItem.forEach((inner) => {
+						const innerItem = inner.trim();
+
+						if (!innerItem) {
+							return;
+						}
+
+						innerOutput.push(innerItem.trim());
+					});
+				}
+
+				output.push(innerOutput);
+			});
+		}
+
+		return output;
 	}
 
 	////////////////////////////////////////////////////////////////
