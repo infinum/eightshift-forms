@@ -36,11 +36,17 @@ export class Utils {
 		};
 
 		if (detail) {
-			options['state'] = this.state.getStateForm(formId);
+			if (!isNaN(formId)) {
+				options['state'] = this.state.getStateForm(formId);
+			}
 			options['detail'] = detail;
 		}
 
-		this.state.getStateFormElement(formId).dispatchEvent(new CustomEvent(name, options));
+		if (!isNaN(formId)) {
+			this.state.getStateFormElement(formId).dispatchEvent(new CustomEvent(name, options));
+		} else {
+			formId.dispatchEvent(new CustomEvent(name, options));
+		}
 	}
 
 	// Scroll to specific element.

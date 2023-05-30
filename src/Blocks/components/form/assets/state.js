@@ -50,6 +50,7 @@ export class State {
 		this.IS_SINGLE_SUBMIT = 'isSingleSubmit';
 		this.SAVE_AS_JSON = 'saveAsJson';
 		this.IS_ADMIN = 'isAdmin';
+		this.IS_USED = 'isUsed';
 		this.SUBMIT_URL = 'submitUrl';
 		this.NONCE = 'nonce';
 
@@ -68,19 +69,26 @@ export class State {
 		this.CONFIG_HIDE_GLOBAL_MESSAGE_TIMEOUT = 'hideGlobalMessageTimeout'
 
 		this.CAPTCHA = 'captcha';
-		this.CAPTCHA_IS_USED = 'isUsed';
 		this.CAPTCHA_SITE_KEY = 'site_key';
 		this.CAPTCHA_IS_ENTERPRISE = 'isEnterprise';
 		this.CAPTCHA_SUBMIT_ACTION = 'submitAction';
 		this.CAPTCHA_INIT_ACTION = 'initAction';
 		this.CAPTCHA_LOAD_ON_INIT = 'loadOnInit';
 		this.CAPTCHA_HIDE_BADGE = 'hideBadge';
+
+		this.ENRICHMENT = 'enrichment';
+		this.ENRICHMENT_EXPIRATION = 'expiration';
+		this.ENRICHMENT_ALLOWED = 'allowed';
+		this.ENRICHMENT_MAP = 'map';
 	}
 	// Set state initial.
 	setFormStateInitial(formId) {
 		if (!window[this.data.prefix]?.state?.[`form_${formId}`]) {
 			window[this.data.prefix].state = {
 				...window[this.data.prefix].state,
+				[this.CAPTCHA]: {},
+				[this.ENRICHMENT]: {},
+
 				[`form_${formId}`]: {
 					[this.SELECTS]: {},
 					[this.FILES]: {},
@@ -138,17 +146,26 @@ export class State {
 		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], errorGlobal.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingSuccess), formId);
 		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], errorGlobal.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingError), formId);
 
-		const captcha = esFormsLocalization.captcha ?? [];
+		const captcha = esFormsLocalization.captcha ?? {};
+		this.setState([this.IS_USED], Boolean(captcha.isUsed), this.CAPTCHA);
 
-		this.setState([this.CAPTCHA, this.CAPTCHA_IS_USED], !captcha, formId);
+		if (captcha.isUsed) {
+			this.setState([this.SUBMIT_URL], `${this.data.formSubmitRestApiUrl}-captcha`, this.CAPTCHA);
+			this.setState([this.CAPTCHA_SITE_KEY], captcha.siteKey, this.CAPTCHA);
+			this.setState([this.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), this.CAPTCHA);
+			this.setState([this.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, this.CAPTCHA);
+			this.setState([this.CAPTCHA_INIT_ACTION], captcha.initAction, this.CAPTCHA);
+			this.setState([this.CAPTCHA_LOAD_ON_INIT], Boolean(captcha.loadOnInit), this.CAPTCHA);
+			this.setState([this.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), this.CAPTCHA);
+		}
 
-		if (captcha) {
-			this.setState([this.CAPTCHA, this.CAPTCHA_SITE_KEY], captcha.siteKey, formId);
-			this.setState([this.CAPTCHA, this.CAPTCHA_IS_ENTERPRISE], captcha.isEnterprise, formId);
-			this.setState([this.CAPTCHA, this.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, formId);
-			this.setState([this.CAPTCHA, this.CAPTCHA_INIT_ACTION], captcha.initAction, formId);
-			this.setState([this.CAPTCHA, this.CAPTCHA_LOAD_ON_INIT], captcha.loadOnInit, formId);
-			this.setState([this.CAPTCHA, this.CAPTCHA_HIDE_BADGE], captcha.hideBadge, formId);
+		const enrichment = esFormsLocalization.enrichment ?? {};
+		this.setState([this.IS_USED], Boolean(enrichment.isUsed), this.ENRICHMENT);
+
+		if (enrichment.isUsed) {
+			this.setState([this.ENRICHMENT_EXPIRATION], enrichment.expiration, this.ENRICHMENT);
+			this.setState([this.ENRICHMENT_ALLOWED], enrichment.allowed, this.ENRICHMENT);
+			this.setState([this.ENRICHMENT_MAP], enrichment.map, this.ENRICHMENT);
 		}
 
 		// Find all fields.
@@ -316,7 +333,7 @@ export class State {
 	}
 
 	setState(keyArray, value, formId) {
-		const formKey = `form_${formId}`;
+		const formKey = isNaN(formId) ? formId : `form_${formId}`;
 		let stateObject = window[this.data.prefix].state[formKey];
 
 		keyArray.forEach((key, index) => {
@@ -328,17 +345,23 @@ export class State {
 			}
 		});
 
-		window[this.data.prefix].state[formKey] = {
-			...window[this.data.prefix].state[formKey],
-			...stateObject[keyArray[0]]
-		};
+		if (keyArray.length > 1) {
+			window[this.data.prefix].state[formKey] = {
+				...window[this.data.prefix].state[formKey],
+				...stateObject[keyArray[0]]
+			};
+		} else {
+			window[this.data.prefix].state[formKey] = {
+				...window[this.data.prefix].state[formKey],
+			};
+		}
 	}
 
 	// Set state array by key.
 	setStateArray(keyArray, value, formId) {
-		const formKey = `form_${formId}`;
+		const formKey = isNaN(formId) ? formId : `form_${formId}`;
 		let stateObject = window[this.data.prefix].state[formKey];
-	
+
 		keyArray.forEach((key, index) => {
 			if (index === keyArray.length - 1) {
 				stateObject[key] = stateObject[key] || [];
@@ -348,7 +371,7 @@ export class State {
 				stateObject = stateObject[key];
 			}
 		});
-	
+
 		if (keyArray.length === 1) {
 			window[this.data.prefix].state[formKey] = {
 				...window[this.data.prefix].state[formKey],
@@ -369,8 +392,9 @@ export class State {
 
 	// Get state by keys.
 	getState(keys, formId) {
-		let stateObject = window?.[this.data.prefix]?.state?.[`form_${formId}`];
-	
+		const formKey = isNaN(formId) ? formId : `form_${formId}`;
+		let stateObject = window?.[this.data.prefix]?.state?.[formKey];
+
 		if (!stateObject) {
 			return undefined;
 		}
@@ -592,26 +616,44 @@ export class State {
 
 	// ----------------------------------------
 	// Captcha
-	getStateCaptchaIsUsed(formId) {
-		return this.getState([this.CAPTCHA, this.CAPTCHA_IS_USED], formId);
+	getStateCaptchaIsUsed() {
+		return this.getState([this.IS_USED], this.CAPTCHA);
 	}
-	getStateCaptchaSiteKey(formId) {
-		return this.getState([this.CAPTCHA, this.CAPTCHA_SITE_KEY], formId);
+	getStateCaptchaSubmitUrl() {
+		return this.getState([this.SUBMIT_URL], this.CAPTCHA);
 	}
-	getStateCaptchaIsEnterprise(formId) {
-		return this.getState([this.CAPTCHA, this.CAPTCHA_IS_ENTERPRISE], formId);
+	getStateCaptchaSiteKey() {
+		return this.getState([this.CAPTCHA_SITE_KEY], this.CAPTCHA);
 	}
-	getStateCaptchaSubmitAction(formId) {
-		return this.getState([this.CAPTCHA, this.CAPTCHA_SUBMIT_ACTION], formId);
+	getStateCaptchaIsEnterprise() {
+		return this.getState([this.CAPTCHA_IS_ENTERPRISE], this.CAPTCHA);
 	}
-	getStateCaptchaInitAction(formId) {
-		return this.getState([this.CAPTCHA, this.CAPTCHA_INIT_ACTION], formId);
+	getStateCaptchaSubmitAction() {
+		return this.getState([this.CAPTCHA_SUBMIT_ACTION], this.CAPTCHA);
 	}
-	getStateCaptchaLoadOnInit(formId) {
-		return this.getState([this.CAPTCHA, this.CAPTCHA_LOAD_ON_INIT], formId);
+	getStateCaptchaInitAction() {
+		return this.getState([this.CAPTCHA_INIT_ACTION], this.CAPTCHA);
 	}
-	getStateCaptchaHideBadge(formId) {
-		return this.getState([this.CAPTCHA, this.CAPTCHA_HIDE_BADGE], formId);
+	getStateCaptchaLoadOnInit() {
+		return this.getState([this.CAPTCHA_LOAD_ON_INIT], this.CAPTCHA);
+	}
+	getStateCaptchaHideBadge() {
+		return this.getState([this.CAPTCHA_HIDE_BADGE], this.CAPTCHA);
+	}
+
+	// ----------------------------------------
+	// Enrichment
+	getStateEnrichmentIsUsed() {
+		return this.getState([this.IS_USED], this.ENRICHMENT);
+	}
+	getStateEnrichmentExpiration() {
+		return this.getState([this.ENRICHMENT_EXPIRATION], this.ENRICHMENT);
+	}
+	getStateEnrichmentAllowed() {
+		return this.getState([this.ENRICHMENT_ALLOWED], this.ENRICHMENT);
+	}
+	getStateEnrichmentMap() {
+		return this.getState([this.ENRICHMENT_MAP], this.ENRICHMENT);
 	}
 
 	// ----------------------------------------

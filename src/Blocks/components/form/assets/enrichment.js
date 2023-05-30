@@ -34,88 +34,18 @@ export class Enrichment {
 	}
 
 	/**
-	 * Check if enrichment is used.
-	 * 
-	 * @public
-	 */
-	isEnrichmentUsed() {
-		if (this.data.SETTINGS.ENRICHMENT_CONFIG !== '[]') {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Filter all url params based on the allowed tags list.
-	 *
-	 * @param {array} allowedTags List of allowed tags from config.
-	 *
-	 * @returns {object}
-	 *
-	 * @public
-	 */
-	getUrlAllowedParams(allowedTags) {
-		const output = {};
-
-		// Bailout if nothing is set in the url.
-		if (!window.location.search) {
-			return output;
-		}
-
-		// Find url params.
-		const searchParams = new URLSearchParams(window.location.search);
-
-		allowedTags.forEach((element) => {
-			const item = searchParams.get(element);
-
-			if (item) {
-				output[element] = item;
-			}
-		});
-
-		return output;
-	}
-
-	/**
-	 * Filter all set cookies based on the allowed tags list.
-	 *
-	 * @param {array} allowedTags List of allowed tags from config.
-	 *
-	 * @returns {object}
-	 *
-	 * @public
-	 */
-	getCookiesAllowedParams(allowedTags) {
-		const output = {};
-
-		allowedTags.forEach((element) => {
-			const item = cookies.getCookie(element);
-
-			if (item) {
-				output[element] = item;
-			}
-		});
-
-		return output;
-	}
-
-	/**
 	 * Set localStorage value.
 	 * 
 	 * @public
 	 */
 	setLocalStorage() {
 		// Check if enrichment is used.
-		if (!this.isEnrichmentUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed()) {
 			return;
 		}
 
-		// Get config data.
-		const config = JSON.parse(this.data.SETTINGS.ENRICHMENT_CONFIG);
-
-		const allowedTags = config?.allowed;
-		const expiration = config?.expiration ?? '30';
+		const allowedTags = this.state.getStateEnrichmentAllowed();
+		const expiration = this.state.getStateEnrichmentExpiration();
 
 		// Missing data from backend, bailout.
 		if (!allowedTags) {
@@ -197,6 +127,60 @@ export class Enrichment {
 	getLocalStorage() {
 		return localStorage.getItem(this.STORAGE_NAME);
 	}
+
+	/**
+	 * Filter all url params based on the allowed tags list.
+	 *
+	 * @param {array} allowedTags List of allowed tags from config.
+	 *
+	 * @returns {object}
+	 *
+	 * @public
+	 */
+		getUrlAllowedParams(allowedTags) {
+			const output = {};
+	
+			// Bailout if nothing is set in the url.
+			if (!window.location.search) {
+				return output;
+			}
+	
+			// Find url params.
+			const searchParams = new URLSearchParams(window.location.search);
+	
+			allowedTags.forEach((element) => {
+				const item = searchParams.get(element);
+	
+				if (item) {
+					output[element] = item;
+				}
+			});
+	
+			return output;
+		}
+	
+		/**
+		 * Filter all set cookies based on the allowed tags list.
+		 *
+		 * @param {array} allowedTags List of allowed tags from config.
+		 *
+		 * @returns {object}
+		 *
+		 * @public
+		 */
+		getCookiesAllowedParams(allowedTags) {
+			const output = {};
+	
+			allowedTags.forEach((element) => {
+				const item = cookies.getCookie(element);
+	
+				if (item) {
+					output[element] = item;
+				}
+			});
+	
+			return output;
+		}
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.

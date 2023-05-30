@@ -17,6 +17,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
@@ -215,24 +216,37 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 
 		// Enrichment config.
-		$output['enrichmentConfig'] = \wp_json_encode($this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['data']['config']);
-
-		$output['delimiter'] = AbstractBaseRoute::DELIMITER;
-		$output['captcha'] = [];
+		if (\apply_filters(SettingsEnrichment::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			$output['enrichment'] = array_merge(
+				[
+					'isUsed' => true,
+				],
+				$this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['data']['config'] ?? [],
+			);
+		} else {
+			$output['enrichment'] = [
+				'isUsed' => false,
+			];
+		}
 
 		// Check if Captcha data is set and valid.
-		$isCaptchaSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-
-		if ($isCaptchaSettingsGlobalValid) {
+		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output['captcha'] = [
+				'isUsed' => true,
 				'isEnterprise' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
 				'siteKey' => !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
 				'submitAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				'initAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'loadOnInit' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY) ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'hideBadge' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY) ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				'loadOnInit' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+				'hideBadge' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+			];
+		} else {
+			$output['captcha'] = [
+				'isUsed' => false,
 			];
 		}
+
+		$output['delimiter'] = AbstractBaseRoute::DELIMITER;
 
 		$output = \wp_json_encode($output);
 

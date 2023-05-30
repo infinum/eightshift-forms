@@ -4,6 +4,7 @@ import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
 import { ConditionalTags } from './../../conditional-tags/assets';
 import { Steps } from './../../step/assets';
 import { Enrichment } from './enrichment';
+import { Captcha } from './captcha';
 import { Utils } from './utilities';
 import { State } from './state';
 import { Data } from './data';
@@ -17,8 +18,10 @@ export class Form {
 		this.state = new State(options);
 		this.utils = new Utils(options);
 		this.enrichment = new Enrichment(options);
-		this.conditionalTags = new ConditionalTags(options);
-		this.steps = new Steps(options);
+		this.captcha = new Captcha(options);
+
+		// this.conditionalTags = new ConditionalTags(options);
+		// this.steps = new Steps(options);
 
 		this.FORM_DATA = new FormData();
 	}
@@ -45,8 +48,11 @@ export class Form {
 		// Init conditional tags.
 		// this.conditionalTags.init();
 
+		// Init captcha.
+		this.captcha.init();
+
 		// Init enrichment.
-		// this.enrichment.init();
+		this.enrichment.init();
 	}
 
 	/**
@@ -151,7 +157,7 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getStateFormSubmitUrl(formId, '-captcha'), body)
+		fetch(this.state.getStateCaptchaSubmitUrl(), body)
 		.then((response) => {
 			return response.json();
 		})
@@ -192,7 +198,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	formSubmit(formId, filter = {}, isStepSubmit = false) {
+	formSubmit(formId, filter = {}) {
 		// Dispatch event.
 		this.utils.dispatchFormEvent(formId, this.data.EVENTS.BEFORE_FORM_SUBMIT);
 
@@ -282,6 +288,9 @@ export class Form {
 					// Redirect to url and update url params from from data.
 					this.utils.redirectToUrl(formId, this.FORM_DATA);
 				} else {
+					// Clear form values.
+					this.utils.resetForm(formId);
+
 					// Set global msg.
 					this.utils.setGlobalMsg(formId, message, status);
 
@@ -292,9 +301,6 @@ export class Form {
 							this.state.getStateFormElement().submit();
 						}, parseInt(this.state.getStateFormConfigRedirectionTimeout(formId), 10));
 					}
-
-					// Clear form values.
-					this.utils.resetForm(formId);
 				}
 			}
 		// }
@@ -338,14 +344,14 @@ export class Form {
 	}
 
 	runFormCaptcha(formId) {
-		if (!this.state.getStateCaptchaIsUsed(formId)) {
+		if (!this.state.getStateCaptchaIsUsed()) {
 			return;
 		}
 
-		const actionName = this.state.getStateCaptchaSubmitAction(formId);
-		const siteKey = this.state.getStateCaptchaSiteKey(formId);
+		const actionName = this.state.getStateCaptchaSubmitAction();
+		const siteKey = this.state.getStateCaptchaSiteKey();
 
-		if (this.state.getStateCaptchaIsEnterprise(formId)) {
+		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
 				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
 					this.formSubmitCaptcha(formId, token, 'enterprise', actionName);
@@ -580,6 +586,10 @@ export class Form {
 	}
 
 	setFormDataEnrichment() {
+		if (!this.state.getStateEnrichmentIsUsed()) {
+			return;
+		}
+
 		const data = this.enrichment.getLocalStorage();
 
 		if (data) {
@@ -1142,6 +1152,7 @@ export class Form {
 	 * @public
 	 */
 	onFormSubmitEvent = (event) => {
+		console.log('event');
 		event.preventDefault();
 
 		const formId = this.state.getFormIdByElement(event.target);
@@ -1159,9 +1170,12 @@ export class Form {
 		// }
 
 		this.utils.showLoader(formId);
-		this.runFormCaptcha(formId);
 
-		debounce(this.formSubmit(formId), 100);
+		if (this.state.getStateCaptchaIsUsed()) {
+			this.runFormCaptcha(formId);
+		} else {
+			debounce(this.formSubmit(formId), 100);
+		}
 
 				// const stepButton = event.submitter;
 

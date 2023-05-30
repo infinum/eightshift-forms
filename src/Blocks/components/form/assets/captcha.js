@@ -9,11 +9,9 @@ import { Utils } from "./utilities";
  */
 export class Captcha {
 	constructor(options = {}) {
-		this.data = new Data();
-		this.state = new State();
-
-		/** @type Utils */
-		this.utils = new Utils();
+		this.data = new Data(options);
+		this.state = new State(options);
+		this.utils = new Utils(options);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -29,10 +27,10 @@ export class Captcha {
 		// Set all public methods.
 		this.publicMethods();
 
-		// Load captcha on init.
+		// // Load captcha on init.
 		this.initCaptchaOnLoad();
 
-		// Hide badge.
+		// // Hide badge.
 		this.initHideCaptchaBadge();
 	}
 
@@ -42,18 +40,18 @@ export class Captcha {
 	 * @returns void
 	 */
 	initCaptchaOnLoad() {
-		if (!this.utils.isCaptchaUsed() || !this.utils.isCaptchaInitUsed()) {
+		if (!this.state.getStateCaptchaIsUsed() || !this.state.getStateCaptchaLoadOnInit()) {
 			return;
 		}
 
-		const actionName = this.utils.SETTINGS.CAPTCHA['initAction'];
-		const siteKey = this.utils.SETTINGS.CAPTCHA['siteKey'];
+		const actionName = this.state.getStateCaptchaInitAction();
+		const siteKey = this.state.getStateCaptchaSiteKey();
 
 		if (typeof grecaptcha === 'undefined') {
 			return;
 		}
 
-		if (this.utils.isCaptchaEnterprise()) {
+		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
 				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
 					this.formSubmitCaptchaInvisible(token, 'enterprise', actionName);
@@ -75,7 +73,7 @@ export class Captcha {
 	 *
 	 * @public
 	 */
-	formSubmitCaptchaInvisible(token, payed, action) {
+	formSubmitCaptchaInvisible(formId, token, payed, action) {
 		// Populate body data.
 		const body = {
 			method: 'POST',
@@ -93,12 +91,12 @@ export class Captcha {
 			referrer: 'no-referrer',
 		};
 
-		fetch(`${this.utils.formSubmitRestApiUrl}-captcha`, body)
+		fetch(this.state.getStateCaptchaSubmitUrl(), body)
 		.then((response) => {
 			return response.json();
 		})
 		.then((response) => {
-			this.utils.dispatchFormEvent(window, this.utils.EVENTS.AFTER_CAPTCHA_INIT, response?.data?.response);
+			this.utils.dispatchFormEvent(window, this.data.EVENTS.AFTER_CAPTCHA_INIT, response?.data?.response);
 		});
 	}
 
@@ -108,11 +106,11 @@ export class Captcha {
 	 * @public
 	 */
 	initHideCaptchaBadge() {
-		if (!this.utils.isCaptchaUsed() || !this.utils.isCaptchaHideBadgeUsed()) {
+		if (!this.state.getStateCaptchaIsUsed()) {
 			return;
 		}
 
-		document.querySelector('body').setAttribute(this.utils.DATA_ATTRIBUTES.hideCaptchaBadge, this.utils.isCaptchaHideBadgeUsed());
+		document.querySelector('body').setAttribute(this.data.DATA_ATTRIBUTES.hideCaptchaBadge, this.state.getStateCaptchaHideBadge());
 	}
 
 	////////////////////////////////////////////////////////////////

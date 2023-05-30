@@ -2,7 +2,6 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
-import { Captcha } from './captcha';
 import { Data } from './data';
 
 if (typeof esFormsLocalization === 'undefined') {
@@ -11,9 +10,6 @@ if (typeof esFormsLocalization === 'undefined') {
 
 // Run initial data.
 const data = new Data();
-
-// Run cpatcha on init state.
-// const captcha = new Captcha();
 
 /**
  * Init all functionality with one function.
