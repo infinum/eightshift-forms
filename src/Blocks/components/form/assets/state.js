@@ -14,16 +14,7 @@ export class State {
 		this.formIsAdmin = options.formIsAdmin ?? false;
 
 		// State names.
-		this.SELECTS = 'selects';
-		this.FILES = 'files';
-		this.CHECKBOXES = 'checkboxes';
-		this.RADIOS = 'radios';
 		this.ISLOADED = 'isloaded';
-		// this.FIELDS = 'cfFields';
-		// this.VALUES = 'cfValues';
-		// this.DEFAULTS = 'cfDefaults';
-		// this.EVENTS = 'cfEvents';
-		// this.REFERENCE = 'cfReference';
 		this.ELEMENTS = 'elements';
 		this.FORM = 'form';
 
@@ -57,6 +48,13 @@ export class State {
 		this.IS_USED = 'isUsed';
 		this.SUBMIT_URL = 'submitUrl';
 		this.NONCE = 'nonce';
+
+		// Conditional tags
+		this.CONDITIONAL_TAGS = 'conditionalTags';
+		this.TAGS = 'tags';
+		this.TAGS_REF = 'reference';
+		this.TAGS_DEFAULTS = 'defaults';
+		this.TAGS_EVENTS = 'events';
 
 		this.CONFIG = 'config';
 		this.CONFIG_SELECT_USE_PLACEHOLDER = 'usePlaceholder';
@@ -234,20 +232,6 @@ export class State {
 	setFormStateInitial(formId) {
 		this.setStateWindow();
 		window[prefix].state[`form_${formId}`] = {}
-		window[prefix].state[`form_${formId}`] = {
-			[this.SELECTS]: {},
-			[this.FILES]: {},
-			[this.CHECKBOXES]: {},
-			[this.RADIOS]: {},
-			[this.ISLOADED]: false,
-
-			[this.FIELDS]: {},
-			[this.VALUES]: {},
-			[this.DEFAULTS]: {},
-			[this.EVENTS]: {},
-			[this.REFERENCE]: {},
-			[this.ELEMENTS]: {},
-		}
 
 		let formElement = '';
 
@@ -257,6 +241,7 @@ export class State {
 			formElement = document.querySelector(`${this.getStateSelectorsForm()}[${this.getStateAttribute('formPostId')}="${formId}"]`);
 		}
 
+		this.setState([this.FORM, this.ISLOADED], false, formId);
 		this.setState([this.FORM, this.IS_SINGLE_SUBMIT], false, formId);
 		this.setState([this.FORM, this.ELEMENT], formElement, formId);
 		this.setState([this.FORM, this.TYPE], formElement.getAttribute(this.getStateAttribute('formType')), formId);
@@ -272,11 +257,15 @@ export class State {
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT], formElement.getAttribute(this.getStateAttribute('successRedirect')), formId);
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement.getAttribute(this.getStateAttribute('successRedirectVariation')), formId);
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formElement.getAttribute(this.getStateAttribute('downloads')), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONDITIONAL_TAGS], formElement.getAttribute(this.getStateAttribute('conditionalTags')), formId);
 
 		const globalMsg = formElement.querySelector(this.getStateSelectorsGlobalMsg());
 		this.setState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], globalMsg, formId);
 		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], globalMsg.getAttribute(this.getStateAttribute('formTyglobalMsgHeadingSuccesspe')), formId);
 		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], globalMsg.getAttribute(this.getStateAttribute('globalMsgHeadingError')), formId);
+
+		// Conditional tags
+		this.setState([this.CONDITIONAL_TAGS, this.TAGS_EVENTS], {}, formId);
 
 		// Find all fields.
 		let items = formElement.querySelectorAll('input, select, textarea');
@@ -372,7 +361,6 @@ export class State {
 						this.setState([this.ELEMENTS, name, this.TYPE], 'date', formId);
 						this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], 'datetime', formId);
 					}
-
 					break;
 				default:
 					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
@@ -381,6 +369,20 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], type, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					break;
+			}
+
+			const conditionalTags = field.getAttribute(this.getStateAttribute('conditionalTags'));
+			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], '', formId);
+			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], [], formId);
+			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], [], formId);
+
+			if (conditionalTags) {
+				const tag = JSON.parse(conditionalTags)?.[0];
+
+				this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], tag[0], formId);
+				this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], tag[1], formId);
+
+				this.setStateConditionalTags(name, formId);
 			}
 
 			this.setState([this.ELEMENTS, name, this.HAS_ERROR], false, formId);
@@ -467,32 +469,27 @@ export class State {
 		}
 	}
 
-	// Set state array by key.
-	setStateArray(keyArray, value, formId) {
-		const formKey = isNaN(formId) ? formId : `form_${formId}`;
-		let stateObject = window[prefix].state[formKey];
+	setStateConditionalTags(name, formId) {
+		const refOutput = [];
 
-		keyArray.forEach((key, index) => {
-			if (index === keyArray.length - 1) {
-				stateObject[key] = stateObject[key] || [];
-				stateObject[key].push(value);
-			} else {
-				stateObject[key] = stateObject[key] || {};
-				stateObject = stateObject[key];
-			}
+		const eventsOutput = {
+			...this.getStateConditionalTagsEvents(formId) ?? {},
+		};
+
+		this.getStateElementConditionalTagsTags(name, formId).forEach((item) => {
+			refOutput.push(Array(item.length).fill(false));
+
+			// Loop inner fields.
+			item.forEach((inner) => {
+				eventsOutput[inner[0]] = [
+					...eventsOutput[inner[0]] ?? [],
+					name
+				];
+			});
 		});
 
-		if (keyArray.length === 1) {
-			window[prefix].state[formKey] = {
-				...window[prefix].state[formKey],
-				...stateObject,
-			};
-		} else {
-			window[prefix].state[formKey] = {
-				...window[prefix].state[formKey],
-				[keyArray[0]]: stateObject,
-			};
-		}
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], refOutput, formId);
+		this.setState([this.CONDITIONAL_TAGS, this.TAGS_EVENTS], eventsOutput, formId);
 	}
 
 	// Delete state item by key
@@ -529,8 +526,13 @@ export class State {
 		return `${prefix}${output}`;
 	}
 
+	// ----------------------------------------
+	// Conditional Tags
 
-	
+	getStateConditionalTagsEvents(formId) {
+		return this.getState([this.CONDITIONAL_TAGS, this.EVENTS], formId);
+	}
+
 	// ----------------------------------------
 	// Config
 	getStateConfigNonce() {
@@ -609,6 +611,10 @@ export class State {
 		return this.getState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formId);
 	}
 
+	getStateFormConfigConditionalTags(formId) {
+		return this.getState([this.FORM, this.CONFIG, this.CONDITIONAL_TAGS], formId);
+	}
+
 	// ----------------------------------------
 	// Settings
 	getStateSettingsDisableScrollToGlobalMsgOnSuccess() {
@@ -648,6 +654,18 @@ export class State {
 
 	getStateElements(formId) {
 		return Object.entries(this.getState([this.ELEMENTS], formId));
+	}
+
+	getStateElementConditionalTagsDefaults(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], formId);
+	}
+
+	getStateElementConditionalTagsRef(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], formId);
+	}
+
+	getStateElementConditionalTagsTags(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], formId);
 	}
 
 	getStateElementConfig(name, type, formId) {

@@ -17,7 +17,7 @@ export class Form {
 		this.utils = new Utils(options);
 		this.enrichment = new Enrichment(options);
 		this.captcha = new Captcha(options);
-		// this.conditionalTags = new ConditionalTags(options);
+		this.conditionalTags = new ConditionalTags(options);
 		// this.steps = new Steps(options);
 
 		this.FORM_DATA = new FormData();
@@ -45,7 +45,7 @@ export class Form {
 		this.initOnlyForms();
 
 		// Init conditional tags.
-		// this.conditionalTags.init();
+		this.conditionalTags.init();
 
 		// Init captcha.
 		this.captcha.init();
@@ -128,6 +128,8 @@ export class Form {
 
 		// Form loaded.
 		this.utils.isFormLoaded(formId);
+
+		this.conditionalTags.initOne(formId);
 	}
 
 	/**
@@ -1246,6 +1248,8 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
 		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
+
+		this.conditionalTags.setField(name, formId);
 
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(

@@ -1,6 +1,6 @@
 import { debounce } from '@eightshift/frontend-libs/scripts/helpers';
 import { Utils } from './../../form/assets/utilities';
-import { State } from '../../form/assets/state';
+import { State, prefix } from '../../form/assets/state';
 import {
 	CONDITIONAL_TAGS_OPERATORS,
 	CONDITIONAL_TAGS_ACTIONS,
@@ -17,25 +17,22 @@ export class ConditionalTags {
 		this.utils = new Utils(options);
 
 		// Simplify usage of constants
-		this.SHOW = this.CONDITIONAL_TAGS_ACTIONS.SHOW;
-		this.HIDE = this.CONDITIONAL_TAGS_ACTIONS.HIDE;
-		this.OR = this.CONDITIONAL_TAGS_LOGIC.OR;
-		this.AND = this.CONDITIONAL_TAGS_LOGIC.AND;
-
-		// Define this forms ID.
-		this.FORM_ID = '';
+		this.SHOW = CONDITIONAL_TAGS_ACTIONS.SHOW;
+		this.HIDE = CONDITIONAL_TAGS_ACTIONS.HIDE;
+		this.OR = CONDITIONAL_TAGS_LOGIC.OR;
+		this.AND = CONDITIONAL_TAGS_LOGIC.AND;
 
 		// Map all conditional logic as a object.
 		this.OPERATORS = {
-			[this.CONDITIONAL_TAGS_OPERATORS.IS]: (input, value) => value === input,
-			[this.CONDITIONAL_TAGS_OPERATORS.ISN]: (input, value) => value !== input,
-			[this.CONDITIONAL_TAGS_OPERATORS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
-			[this.CONDITIONAL_TAGS_OPERATORS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
-			[this.CONDITIONAL_TAGS_OPERATORS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
-			[this.CONDITIONAL_TAGS_OPERATORS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
-			[this.CONDITIONAL_TAGS_OPERATORS.C]: (input, value) => input.includes(value),
-			[this.CONDITIONAL_TAGS_OPERATORS.SW]: (input, value) => input.startsWith(value),
-			[this.CONDITIONAL_TAGS_OPERATORS.EW]: (input, value) => input.endsWith(value),
+			[CONDITIONAL_TAGS_OPERATORS.IS]: (input, value) => value === input,
+			[CONDITIONAL_TAGS_OPERATORS.ISN]: (input, value) => value !== input,
+			[CONDITIONAL_TAGS_OPERATORS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
+			[CONDITIONAL_TAGS_OPERATORS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
+			[CONDITIONAL_TAGS_OPERATORS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
+			[CONDITIONAL_TAGS_OPERATORS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
+			[CONDITIONAL_TAGS_OPERATORS.C]: (input, value) => input.includes(value),
+			[CONDITIONAL_TAGS_OPERATORS.SW]: (input, value) => input.startsWith(value),
+			[CONDITIONAL_TAGS_OPERATORS.EW]: (input, value) => input.endsWith(value),
 		};
 	}
 
@@ -50,24 +47,7 @@ export class ConditionalTags {
 	 */
 	init() {
 		// Set all public methods.
-		// this.publicMethods();
-
-		// Init all forms.
-		this.initOnlyForms();
-	}
-
-	/**
-	 * Init all forms.
-	 * 
-	 * @public
-	 */
-	initOnlyForms() {
-		const elements = document.querySelectorAll(this.data.formSelector);
-
-		// Loop all forms on the page.
-		[...elements].forEach((element) => {
-			// this.initOne(element);
-		});
+		this.publicMethods();
 	}
 
 	/**
@@ -77,23 +57,12 @@ export class ConditionalTags {
 	 *
 	 * @public
 	 */
-	initOne(element) {
-		this.FORM_ID = element.getAttribute(this.state.getStateAttribute('formPostId'));
+	initOne(formId) {
+		// Set forms logic.
+		// this.initForms(formId);
 
-		console.log(this.state.getState([this.data.STATE_NAMES.ISLOADED], this.FORM_ID));
-
-		const interval = setInterval(() => {
-			// Wait until everything is fully loaded.
-			if (this.state.getState([this.data.STATE_NAMES.ISLOADED], this.FORM_ID)) {
-				clearInterval(interval);
-
-				// Set forms logic.
-				this.initForms(element);
-
-				// Set fields logic.
-				this.initFields(element);
-			}
-		}, 100);
+		// Set fields logic.
+		this.initFields(formId);
 	}
 
 	/**
@@ -103,8 +72,8 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	initForms(element) {
-		let tags = element.getAttribute(this.state.getStateAttribute('conditionalTags'));
+	initForms(formId) {
+		let tags = this.state.getStateFormConfigConditionalTags(formId);
 
 		if (!tags) {
 			return;
@@ -150,88 +119,24 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	initFields(element) {
+	initFields(formId) {
 		// Set internal preset data.
-		this.setInternalData(element);
+		// this.setInternalData(formId);
 
 		// Loop all fields and set data.
-		this.setFields(Object.keys(this.state.getState([this.state.FIELDS], this.FORM_ID)));
+		// this.setFields(Object.keys(this.state.getState([this.state.FIELDS], this.FORM_ID)));
 
-		// Set event listeners.
-		this.setListeners(element);
+		// // Set event listeners.
+		// this.setListeners(formId);
 	}
 
-	/**
-	 * Init fields internal data logic.
-	 *
-	 * @param {object} element Form element.
-	 *
-	 * @returns void
-	 */
-	setInternalData(element) {
-		// Find all fields and all conditional logic data.
-		const fields = element.querySelectorAll(`[${this.state.getStateAttribute('conditionalTags')}]`);
+	setField(name, formId) {
+		const value = this.state.getStateElementValue(name, formId);
+		const events = this.state.getStateConditionalTagsEvents(formId);
 
-		// Loop all items with conditional tags.
-		[...fields].forEach((field) => {
-			// Get field name and tags.
-			let name = field.getAttribute(this.state.getStateAttribute('fieldName'));
-			const tags = field.getAttribute(this.state.getStateAttribute('conditionalTags'));
-			const type = field.getAttribute(this.state.getStateAttribute('fieldType'));
-
-			switch (type) {
-				case 'checkbox':
-				case 'radio':
-				case 'option':
-					name = `${field.closest(`${this.data.fieldSelector}`).getAttribute(this.state.getStateAttribute('fieldName'))}---${name}`;
-					break;
-			}
-
-			// Bailout if missing data.
-			if (tags && name) {
-				// Set default object.
-				this.state.setState([this.state.DEFAULTS, name], this.HIDE, this.FORM_ID);
-				this.state.setState([this.state.FIELDS, name], [], this.FORM_ID);
-				this.state.setState([this.state.REFERENCE, name], [], this.FORM_ID);
-
-				// Decode json data.
-				const tag = JSON.parse(tags);
-
-				const dataItem = tag?.[0];
-
-				// Bailout if there is no logic.
-				if (dataItem.length > 0) {
-					this.state.setState([this.state.DEFAULTS, name], dataItem[0], this.FORM_ID);
-					this.state.setState([this.state.FIELDS, name], dataItem[1], this.FORM_ID);
-
-					// Loop fields.
-					dataItem[1].forEach((item) => {
-						// Create initial state for logic for or/and.
-						this.state.setStateArray([this.state.REFERENCE, name], Array(item.length).fill(false), this.FORM_ID);
-
-						// Loop inner fields.
-						item.forEach((inner) => {
-
-							console.log(inner);
-							this.state.setStateArray([this.state.EVENTS, inner[0]], name, this.FORM_ID);
-						});
-					});
-				}
-			}
+		events?.[name]?.forEach((eventName) => {
+			this.setFieldsRules(eventName, value, formId);
 		});
-
-		const selects = this.state.getState([this.state.SELECTS], this.FORM_ID);
-
-		if (selects) {
-			selects.forEach((select) => {
-				select.config.choices.forEach((choice) => {
-					choice.esFormsIsHidden = false;
-				});
-			});
-		}
-
-		// Set initial values of fields.
-		this.setValues(element, true);
 	}
 
 	/**
@@ -290,19 +195,16 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	setListeners(element) {
+	setListeners(formId) {
 		// Find all fields that need listeners.
-		const items = element.querySelectorAll(`input, textarea, select`);
-
-		if (items) {
-			items.forEach((item) => {
-				if (item.localName === 'select') {
-					item.addEventListener('change', this.onChangeEvent);
-				} else {
-					item.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
-				}
-			});
-		}
+		Object.keys(this.state.getStateConditionalTagsEvents(formId)).forEach((item) => {
+			console.log(item);
+			// if (item.localName === 'select') {
+			// 	item.addEventListener('change', this.onChangeEvent);
+			// } else {
+				item.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
+			// }
+		});
 	}
 
 	/**
@@ -382,14 +284,34 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	setFieldsRules(field) {
+	setFieldsRules(name, value, formId) {
 		// Loop all fields.
-		this.state.getState([this.state.FIELDS, field], this.FORM_ID).forEach((items, parent) => {
+		const output = [
+			...this.state.getStateElementConditionalTagsRef(name, formId),
+		];
+
+		this.state.getStateElementConditionalTagsTags(name, formId).forEach((items, parent) => {
 			// Loop all inner fields.
 			items.forEach((inner, index) => {
 				// Do the check based on the operator and set reference data with the correct state.
-				console.log(inner[0], inner[1], inner[2], this.state.getState([this.state.VALUES, inner[0]], this.FORM_ID));
-				this.state.setState([this.state.REFERENCE, field, parent, index], this.OPERATORS[inner[1]](this.state.getState([this.state.VALUES, inner[0]], this.FORM_ID), inner[2]), this.FORM_ID);
+				const condition = this.OPERATORS[inner[1]](value, inner[2]);
+
+				if (condition) {
+					
+				}
+				output[parent] = [
+					...output[parent],
+					
+					[index]: this.OPERATORS[inner[1]](value, inner[2]),
+				];
+
+				console.log(output);
+
+				// this.state.setState(
+				// 	[this.state.ELEMENTS, name, this.state.CONDITIONAL_TAGS, this.state.TAGS_REF],
+				// 	output,
+				// 	formId
+				// );
 			});
 		});
 	}

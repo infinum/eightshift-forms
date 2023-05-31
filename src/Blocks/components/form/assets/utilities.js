@@ -398,7 +398,7 @@ export class Utils {
 			if (this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.LOADED, false, formId).length === 0) {
 				clearInterval(interval);
 
-				this.state.setState([this.state.ISLOADED], true, formId);
+				this.state.setState([this.state.FORM, this.state.ISLOADED], true, formId);
 
 				// Triger event that form is fully loaded.
 				this.dispatchFormEvent(formId, this.state.getStateEventsFormJsLoaded());
