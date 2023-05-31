@@ -1,6 +1,5 @@
-import { Data } from "./data";
-import { State } from "./state";
-import { Utils } from "./utilities";
+import { State, prefix } from './state';
+import { Utils } from './utilities';
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 
 /**
@@ -8,7 +7,6 @@ import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
  */
 export class Enrichment {
 	constructor(options = {}) {
-		this.data = new Data(options);
 		this.state = new State(options);
 		this.utils = new Utils(options);
 
@@ -137,50 +135,50 @@ export class Enrichment {
 	 *
 	 * @public
 	 */
-		getUrlAllowedParams(allowedTags) {
-			const output = {};
-	
-			// Bailout if nothing is set in the url.
-			if (!window.location.search) {
-				return output;
+	getUrlAllowedParams(allowedTags) {
+		const output = {};
+
+		// Bailout if nothing is set in the url.
+		if (!window.location.search) {
+			return output;
+		}
+
+		// Find url params.
+		const searchParams = new URLSearchParams(window.location.search);
+
+		allowedTags.forEach((element) => {
+			const item = searchParams.get(element);
+
+			if (item) {
+				output[element] = item;
 			}
-	
-			// Find url params.
-			const searchParams = new URLSearchParams(window.location.search);
-	
-			allowedTags.forEach((element) => {
-				const item = searchParams.get(element);
-	
-				if (item) {
-					output[element] = item;
-				}
-			});
-	
-			return output;
-		}
-	
-		/**
-		 * Filter all set cookies based on the allowed tags list.
-		 *
-		 * @param {array} allowedTags List of allowed tags from config.
-		 *
-		 * @returns {object}
-		 *
-		 * @public
-		 */
-		getCookiesAllowedParams(allowedTags) {
-			const output = {};
-	
-			allowedTags.forEach((element) => {
-				const item = cookies.getCookie(element);
-	
-				if (item) {
-					output[element] = item;
-				}
-			});
-	
-			return output;
-		}
+		});
+
+		return output;
+	}
+
+	/**
+	 * Filter all set cookies based on the allowed tags list.
+	 *
+	 * @param {array} allowedTags List of allowed tags from config.
+	 *
+	 * @returns {object}
+	 *
+	 * @public
+	 */
+	getCookiesAllowedParams(allowedTags) {
+		const output = {};
+
+		allowedTags.forEach((element) => {
+			const item = cookies.getCookie(element);
+
+			if (item) {
+				output[element] = item;
+			}
+		});
+
+		return output;
+	}
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
@@ -192,28 +190,26 @@ export class Enrichment {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window?.[this.data.prefix]?.enrichment === 'undefined') {
-			window[this.data.prefix].enrichment = {
-				STORAGE_NAME: this.STORAGE_NAME,
-				init: () => {
-					this.init();
-				},
-				isEnrichmentUsed: () => {
-					return this.isEnrichmentUsed();
-				},
-				getUrlAllowedParams: (allowedTags) => {
-					return this.getUrlAllowedParams(allowedTags);
-				},
-				getCookiesAllowedParams: (allowedTags) => {
-					return this.getCookiesAllowedParams(allowedTags);
-				},
-				setLocalStorage: () => {
-					this.setLocalStorage();
-				},
-				getLocalStorage: () => {
-					return this.getLocalStorage();
-				},
-			};
-		}
+		this.state.setStateWindow();
+
+		window[prefix].enrichment = {}
+		window[prefix].enrichment = {
+			STORAGE_NAME: this.STORAGE_NAME,
+			init: () => {
+				this.init();
+			},
+			setLocalStorage: () => {
+				this.setLocalStorage();
+			},
+			getLocalStorage: () => {
+				return this.getLocalStorage();
+			},
+			getUrlAllowedParams: (allowedTags) => {
+				return this.getUrlAllowedParams(allowedTags);
+			},
+			getCookiesAllowedParams: (allowedTags) => {
+				return this.getCookiesAllowedParams(allowedTags);
+			},
+		};
 	}
 }

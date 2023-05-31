@@ -2,14 +2,11 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
-import { Data } from './data';
+import { prefix } from './state';
 
 if (typeof esFormsLocalization === 'undefined') {
 	console.warn('Your project is missing global variable esFormsLocalization called from the enqueue script in the forms. Forms will work but they will not get the admin settings configuration.');
 }
-
-// Run initial data.
-const data = new Data();
 
 /**
  * Init all functionality with one function.
@@ -40,13 +37,11 @@ if (!disableAutoInit) {
 		if (elements.length) {
 			initAll();
 		}
-
-		// captcha.init();
 	});
 } else {
 	// Load initAll method in window object for manual trigger.
-	window[data.prefix] = {
-		...window[data.prefix],
+	window[prefix] = {
+		...window[prefix],
 		initAll: () => {
 			initAll();
 		},

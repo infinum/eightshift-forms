@@ -1,7 +1,11 @@
 import { __ } from '@wordpress/i18n';
-import { CONDITIONAL_TAGS_OPERATORS, CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_LOGIC } from '../../form/assets/data';
+import {
+	CONDITIONAL_TAGS_ACTIONS,
+	CONDITIONAL_TAGS_LOGIC,
+	CONDITIONAL_TAGS_OPERATORS,
+} from '../assets/utils';
 
-export const CONDITIONAL_TAGS_OPERATORS_INTERNAL = {
+export const CONDITIONAL_TAGS_OPERATORS_LABELS = {
 	[CONDITIONAL_TAGS_OPERATORS.IS]: __('is', 'eightshift-forms'),
 	[CONDITIONAL_TAGS_OPERATORS.ISN]: __('is not', 'eightshift-forms'),
 	[CONDITIONAL_TAGS_OPERATORS.GT]: __('greater than', 'eightshift-forms'),
@@ -13,22 +17,22 @@ export const CONDITIONAL_TAGS_OPERATORS_INTERNAL = {
 	[CONDITIONAL_TAGS_OPERATORS.EW]: __('ends with', 'eightshift-forms'),
 };
 
-export const CONDITIONAL_TAGS_ACTIONS_INTERNAL = {
+export const CONDITIONAL_TAGS_ACTIONS_LABELS = {
 	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('visible', 'eightshift-forms'),
 	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('hidden', 'eightshift-forms'),
 };
 
-export const CONDITIONAL_TAGS_ACTIONS_INVERSE_INTERNAL = {
+export const CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS = {
 	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('Hide', 'eightshift-forms'),
 	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('Show', 'eightshift-forms'),
 };
 
-export const CONDITIONAL_TAGS_ACTIONS_SHORT_INTERNAL = {
+export const CONDITIONAL_TAGS_ACTIONS_SHORT_LABELS = {
 	[CONDITIONAL_TAGS_ACTIONS.SHOW]: __('show', 'eightshift-forms'),
 	[CONDITIONAL_TAGS_ACTIONS.HIDE]: __('hide', 'eightshift-forms'),
 };
 
-export const CONDITIONAL_TAGS_LOGIC_INTERNAL = {
+export const CONDITIONAL_TAGS_LOGIC_LABELS = {
 	[CONDITIONAL_TAGS_LOGIC.OR]: __('or', 'eightshift-forms'),
 	[CONDITIONAL_TAGS_LOGIC.AND]: __('and', 'eightshift-forms'),
 };

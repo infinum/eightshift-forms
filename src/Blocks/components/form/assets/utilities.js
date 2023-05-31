@@ -1,14 +1,12 @@
 /* global esFormsLocalization */
 
-import { State } from './state';
-import { Data } from './data';
+import { State, prefix } from './state';
 
 /**
  * Main Utilities class.
  */
 export class Utils {
 	constructor(options = {}) {
-		this.data = new Data(options);
 		this.state = new State(options);
 
 		// Set all public methods.
@@ -60,15 +58,15 @@ export class Utils {
 
 	// Show loader.
 	showLoader(formId) {
-		this.state.getStateFormElement(formId).classList.add(this.data.SELECTORS.CLASS_LOADING);
-		this.state.getStateFormLoader(formId).classList.add(this.data.SELECTORS.CLASS_ACTIVE);
+		this.state.getStateFormElement(formId).classList.add(this.state.getStateSelectorsClassLoading());
+		this.state.getStateFormLoader(formId).classList.add(this.state.getStateSelectorsClassActive());
 	}
 
 	// Remove one field error by name.
 	unsetFieldError(name, formId) {
 		const error = this.state.getStateElementError(name, formId);
 
-		error.classList.remove(this.data.SELECTORS.CLASS_HAS_ERROR);
+		error.classList.remove(this.state.getStateSelectorsClassHasError());
 		this.state.setState([this.state.ELEMENTS, name, this.state.HAS_ERROR], false, formId);
 		error.innerHTML = '';
 	}
@@ -76,7 +74,7 @@ export class Utils {
 	setFieldError(name, msg, formId) {
 		const error = this.state.getStateElementError(name, formId);
 
-		error.classList.add(this.data.SELECTORS.CLASS_HAS_ERROR);
+		error.classList.add(this.state.getStateSelectorsClassHasError());
 		this.state.setState([this.state.ELEMENTS, name, this.state.HAS_ERROR], true, formId);
 		error.innerHTML = msg;
 	}
@@ -96,20 +94,15 @@ export class Utils {
 
 	// Hide loader.
 	hideLoader(formId) {
-		setTimeout(() => {
-			this.state.getStateFormElement(formId).classList.remove(this.data.SELECTORS.CLASS_LOADING);
-			this.state.getStateFormLoader(formId).classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
-		}, parseInt(this.data.SETTINGS.HIDE_LOADING_STATE_TIMEOUT, 10));
+		this.state.getStateFormElement(formId).classList.remove(this.state.getStateSelectorsClassLoading());
+		this.state.getStateFormLoader(formId).classList.remove(this.state.getStateSelectorsClassActive());
 	}
 
 	// Unset global message.
 	unsetGlobalMsg(formId) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
-		this.state.setState([this.state.FORM, this.state.GLOBAL_MSG, this.state.STATUS], '', formId);
-		this.state.setState([this.state.FORM, this.state.GLOBAL_MSG, this.state.MSG], '', formId);
-
-		messageContainer.classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+		messageContainer.classList.remove(this.state.getStateSelectorsClassActive());
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
 	}
@@ -118,12 +111,12 @@ export class Utils {
 	setGlobalMsg(formId, msg, status) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
-		messageContainer.classList.add(this.data.SELECTORS.CLASS_ACTIVE);
+		messageContainer.classList.add(this.state.getStateSelectorsClassActive());
 		messageContainer.dataset.status = status;
 
 		// Scroll to msg if the condition is right.
 		if (status === 'success') {
-			if (!this.state.getStateFormConfigDisableScrollToGlobalMsgOnSuccess(formId)) {
+			if (!this.state.getStateSettingsDisableScrollToGlobalMsgOnSuccess(formId)) {
 				this.scrollToGlobalMsg(formId);
 			}
 
@@ -147,6 +140,7 @@ export class Utils {
 
 	// Build GTM data for the data layer.
 	getGtmData(formId, eventName, formData) {
+		return;
 		const form = this.state.getStateFormElement(formId);
 
 		const output = {};
@@ -159,7 +153,7 @@ export class Utils {
 
 			const itemValue = JSON.parse(value);
 			const item = form.querySelector(`${this.data.fieldSelector} [name="${itemValue.name}"]`);
-			const trackingValue = item?.getAttribute(this.data.DATA_ATTRIBUTES.tracking);
+			const trackingValue = item?.getAttribute(this.state.getStateAttribute('tracking'));
 			if (!trackingValue) {
 				continue;
 			}
@@ -212,12 +206,12 @@ export class Utils {
 	// Submit GTM event.
 	gtmSubmit(formId, formData, status, errors) {
 		const form = this.state.getStateFormElement(formId);
-		const eventName = form.getAttribute(this.data.DATA_ATTRIBUTES.trackingEventName);
+		const eventName = form.getAttribute(this.state.getStateAttribute('trackingEventName'));
 
 		if (eventName) {
 			const gtmData = this.getGtmData(formId, eventName, formData);
 
-			const additionalData = JSON.parse(form.getAttribute(this.data.DATA_ATTRIBUTES.trackingAdditionalData));
+			const additionalData = JSON.parse(form.getAttribute(this.state.getStateAttribute('trackingAdditionalData')));
 			let additionalDataItems = additionalData?.general;
 
 			if (status === 'success') {
@@ -247,7 +241,7 @@ export class Utils {
 			}
 
 			if (window?.dataLayer && gtmData?.event) {
-				this.dispatchFormEvent(formId, this.data.EVENTS.BEFORE_GTM_DATA_PUSH);
+				this.dispatchFormEvent(formId, this.state.getStateEventsBeforeGtmDataPush());
 				window.dataLayer.push({...gtmData, ...additionalDataItems});
 			}
 		}
@@ -279,24 +273,24 @@ export class Utils {
 	}
 
 	setFieldActiveState(name, formId) {
-		this.state.getStateElementField(name, formId).classList.add(this.data.SELECTORS.CLASS_ACTIVE);
+		this.state.getStateElementField(name, formId).classList.add(this.state.getStateSelectorsClassActive());
 	}
 
 	unsetActiveState(name, formId) {
-		this.state.getStateElementField(name, formId).classList.remove(this.data.SELECTORS.CLASS_ACTIVE);
+		this.state.getStateElementField(name, formId).classList.remove(this.state.getStateSelectorsClassActive());
 	}
 
 	setFilledState(name, formId) {
-		this.state.getStateElementField(name, formId).classList.add(this.data.SELECTORS.CLASS_FILLED);
+		this.state.getStateElementField(name, formId).classList.add(this.state.getStateSelectorsClassFilled());
 	}
 
 	unsetFilledState(name, formId) {
-		this.state.getStateElementField(name, formId).classList.remove(this.data.SELECTORS.CLASS_FILLED);
+		this.state.getStateElementField(name, formId).classList.remove(this.state.getStateSelectorsClassFilled());
 	}
 
 	// Reset form values if the condition is right.
 	resetForm(formId) {
-		if (!this.state.getStateFormConfigFormResetOnSuccess(formId)) {
+		if (!this.state.getStateSettingsResetOnSuccess(formId)) {
 			return;
 		}
 
@@ -352,7 +346,7 @@ export class Utils {
 		document.activeElement.blur();
 
 		// Dispatch event.
-		this.dispatchFormEvent(formId, this.data.EVENTS.AFTER_FORM_SUBMIT_RESET);
+		this.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitReset());
 	}
 
 	// Redirect to url and update url params from from data.
@@ -384,9 +378,9 @@ export class Utils {
 
 	// Redirect to url by provided path.
 	redirectToUrlByRefference(redirectUrl, formId, reload = false) {
-		this.dispatchFormEvent(formId, this.data.EVENTS.AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT, redirectUrl);
+		this.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccessBeforeRedirect(), redirectUrl);
 
-		if (!this.state.getStateFormConfigFormDisableNativeRedirectOnSuccess(formId)) {
+		if (!this.state.getStateSettingsDisableNativeRedirectOnSuccess(formId)) {
 			// Do the actual redirect after some time.
 			setTimeout(() => {
 				window.location = redirectUrl;
@@ -394,7 +388,7 @@ export class Utils {
 				if (reload) {
 					window.location.reload();
 				}
-			}, parseInt(this.state.getStateFormConfigRedirectionTimeout(formId), 10));
+			}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
 		}
 	}
 
@@ -407,7 +401,7 @@ export class Utils {
 				this.state.setState([this.state.ISLOADED], true, formId);
 
 				// Triger event that form is fully loaded.
-				this.dispatchFormEvent(formId, this.data.EVENTS.FORM_JS_LOADED);
+				this.dispatchFormEvent(formId, this.state.getStateEventsFormJsLoaded());
 			}
 		}, 100);
 	}
@@ -453,14 +447,9 @@ export class Utils {
 	 *
 	 * @private
 	 */
-	 publicMethods() {
-		if (typeof window?.[this.data.prefix] === 'undefined') {
-			window[this.data.prefix] = {};
-		}
+	publicMethods() {
+		this.state.setStateWindow();
 
-		if (typeof window?.[this.data.prefix]?.utils === 'undefined') {
-			window[this.data.prefix].utils = {
-			}
-		}
+		window[prefix].utils = {}
 	}
 }

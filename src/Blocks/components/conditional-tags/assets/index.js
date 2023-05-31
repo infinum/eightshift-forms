@@ -1,37 +1,41 @@
 import { debounce } from '@eightshift/frontend-libs/scripts/helpers';
 import { Utils } from './../../form/assets/utilities';
 import { State } from '../../form/assets/state';
-import { Data } from '../../form/assets/data';
+import {
+	CONDITIONAL_TAGS_OPERATORS,
+	CONDITIONAL_TAGS_ACTIONS,
+	CONDITIONAL_TAGS_LOGIC,
+} from './utils';
+
 
 /**
  * Main conditon tags class.
  */
 export class ConditionalTags {
 	constructor(options = {}) {
-		this.data = new Data(options);
 		this.state = new State(options);
 		this.utils = new Utils(options);
 
 		// Simplify usage of constants
-		this.SHOW = this.data.CONDITIONAL_TAGS_ACTIONS.SHOW;
-		this.HIDE = this.data.CONDITIONAL_TAGS_ACTIONS.HIDE;
-		this.OR = this.data.CONDITIONAL_TAGS_LOGIC.OR;
-		this.AND = this.data.CONDITIONAL_TAGS_LOGIC.AND;
+		this.SHOW = this.CONDITIONAL_TAGS_ACTIONS.SHOW;
+		this.HIDE = this.CONDITIONAL_TAGS_ACTIONS.HIDE;
+		this.OR = this.CONDITIONAL_TAGS_LOGIC.OR;
+		this.AND = this.CONDITIONAL_TAGS_LOGIC.AND;
 
 		// Define this forms ID.
 		this.FORM_ID = '';
 
 		// Map all conditional logic as a object.
-		this.CONDITIONAL_TAGS_OPERATORS = {
-			[this.data.CONDITIONAL_TAGS_OPERATORS.IS]: (input, value) => value === input,
-			[this.data.CONDITIONAL_TAGS_OPERATORS.ISN]: (input, value) => value !== input,
-			[this.data.CONDITIONAL_TAGS_OPERATORS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
-			[this.data.CONDITIONAL_TAGS_OPERATORS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
-			[this.data.CONDITIONAL_TAGS_OPERATORS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
-			[this.data.CONDITIONAL_TAGS_OPERATORS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
-			[this.data.CONDITIONAL_TAGS_OPERATORS.C]: (input, value) => input.includes(value),
-			[this.data.CONDITIONAL_TAGS_OPERATORS.SW]: (input, value) => input.startsWith(value),
-			[this.data.CONDITIONAL_TAGS_OPERATORS.EW]: (input, value) => input.endsWith(value),
+		this.OPERATORS = {
+			[this.CONDITIONAL_TAGS_OPERATORS.IS]: (input, value) => value === input,
+			[this.CONDITIONAL_TAGS_OPERATORS.ISN]: (input, value) => value !== input,
+			[this.CONDITIONAL_TAGS_OPERATORS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
+			[this.CONDITIONAL_TAGS_OPERATORS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
+			[this.CONDITIONAL_TAGS_OPERATORS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
+			[this.CONDITIONAL_TAGS_OPERATORS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
+			[this.CONDITIONAL_TAGS_OPERATORS.C]: (input, value) => input.includes(value),
+			[this.CONDITIONAL_TAGS_OPERATORS.SW]: (input, value) => input.startsWith(value),
+			[this.CONDITIONAL_TAGS_OPERATORS.EW]: (input, value) => input.endsWith(value),
 		};
 	}
 
@@ -46,7 +50,7 @@ export class ConditionalTags {
 	 */
 	init() {
 		// Set all public methods.
-		this.publicMethods();
+		// this.publicMethods();
 
 		// Init all forms.
 		this.initOnlyForms();
@@ -74,7 +78,7 @@ export class ConditionalTags {
 	 * @public
 	 */
 	initOne(element) {
-		this.FORM_ID = element.getAttribute(this.data.DATA_ATTRIBUTES.formPostId);
+		this.FORM_ID = element.getAttribute(this.state.getStateAttribute('formPostId'));
 
 		console.log(this.state.getState([this.data.STATE_NAMES.ISLOADED], this.FORM_ID));
 
@@ -100,7 +104,7 @@ export class ConditionalTags {
 	 * @returns void
 	 */
 	initForms(element) {
-		let tags = element.getAttribute(this.data.DATA_ATTRIBUTES.conditionalTags);
+		let tags = element.getAttribute(this.state.getStateAttribute('conditionalTags'));
 
 		if (!tags) {
 			return;
@@ -113,7 +117,7 @@ export class ConditionalTags {
 				return;
 			}
 
-			const type = item.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
+			const type = item.getAttribute(this.state.getStateAttribute('fieldType'));
 			let innerItem = '';
 
 			if (tag[2]) {
@@ -131,9 +135,9 @@ export class ConditionalTags {
 
 			if (innerItem) {
 				if (tag[1] === this.data.CONDITIONAL_TAGS_ACTIONS.HIDE) {
-					innerItem.classList.add(this.data.SELECTORS.CLASS_HIDDEN);
+					innerItem.classList.add(this.state.getStateSelectorsClassHidden());
 				} else {
-					innerItem.classList.add(this.data.SELECTORS.CLASS_VISIBLE);
+					innerItem.classList.add(this.state.getStateSelectorsClassVisible());
 				}
 			}
 		});
@@ -166,20 +170,20 @@ export class ConditionalTags {
 	 */
 	setInternalData(element) {
 		// Find all fields and all conditional logic data.
-		const fields = element.querySelectorAll(`[${this.data.DATA_ATTRIBUTES.conditionalTags}]`);
+		const fields = element.querySelectorAll(`[${this.state.getStateAttribute('conditionalTags')}]`);
 
 		// Loop all items with conditional tags.
 		[...fields].forEach((field) => {
 			// Get field name and tags.
-			let name = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldName);
-			const tags = field.getAttribute(this.data.DATA_ATTRIBUTES.conditionalTags);
-			const type = field.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
+			let name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+			const tags = field.getAttribute(this.state.getStateAttribute('conditionalTags'));
+			const type = field.getAttribute(this.state.getStateAttribute('fieldType'));
 
 			switch (type) {
 				case 'checkbox':
 				case 'radio':
 				case 'option':
-					name = `${field.closest(`${this.data.fieldSelector}`).getAttribute(this.data.DATA_ATTRIBUTES.fieldName)}---${name}`;
+					name = `${field.closest(`${this.data.fieldSelector}`).getAttribute(this.state.getStateAttribute('fieldName'))}---${name}`;
 					break;
 			}
 
@@ -270,11 +274,11 @@ export class ConditionalTags {
 			}
 
 			// Reset to original state.
-			(defaults !== this.HIDE) ? fieldElement.classList.remove(this.data.SELECTORS.CLASS_HIDDEN) : fieldElement.classList.add(this.data.SELECTORS.CLASS_HIDDEN);
+			(defaults !== this.HIDE) ? fieldElement.classList.remove(this.state.getStateSelectorsClassHidden()) : fieldElement.classList.add(this.state.getStateSelectorsClassHidden());
 
 			if (isValid) {
 				// Change state.
-				(defaults !== this.HIDE) ? fieldElement.classList.add(this.data.SELECTORS.CLASS_HIDDEN) : fieldElement.classList.remove(this.data.SELECTORS.CLASS_HIDDEN);
+				(defaults !== this.HIDE) ? fieldElement.classList.add(this.state.getStateSelectorsClassHidden()) : fieldElement.classList.remove(this.state.getStateSelectorsClassHidden());
 			}
 		});
 	}
@@ -385,7 +389,7 @@ export class ConditionalTags {
 			items.forEach((inner, index) => {
 				// Do the check based on the operator and set reference data with the correct state.
 				console.log(inner[0], inner[1], inner[2], this.state.getState([this.state.VALUES, inner[0]], this.FORM_ID));
-				this.state.setState([this.state.REFERENCE, field, parent, index], this.CONDITIONAL_TAGS_OPERATORS[inner[1]](this.state.getState([this.state.VALUES, inner[0]], this.FORM_ID), inner[2]), this.FORM_ID);
+				this.state.setState([this.state.REFERENCE, field, parent, index], this.OPERATORS[inner[1]](this.state.getState([this.state.VALUES, inner[0]], this.FORM_ID), inner[2]), this.FORM_ID);
 			});
 		});
 	}
@@ -440,50 +444,8 @@ export class ConditionalTags {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window?.[this.data.prefix]?.conditionalTags === 'undefined') {
-			window[this.data.prefix].conditionalTags = {
-				FORM_ID: this.FORM_ID,
-				CONDITIONAL_TAGS_OPERATORS: this.CONDITIONAL_TAGS_OPERATORS,
-				init: () => {
-					this.init();
-				},
-				initOnlyForms: () => {
-					this.initOnlyForms();
-				},
-				initOne: (element) => {
-					this.initOne(element);
-				},
-				initForms: (element) => {
-					this.initForms(element);
-				},
-				initFields: (element) => {
-					this.initFields(element);
-				},
-				setValues: (element) => {
-					this.setValues(element);
-				},
-				setInternalData: (element) => {
-					this.setInternalData(element);
-				},
-				setInnerData: (element) => {
-					this.setInnerData(element);
-				},
-				setListeners: () => {
-					this.setListeners();
-				},
-				setInitFields: (element, item) => {
-					this.setInitFields(element, item);
-				},
-				setFields: (element, item) => {
-					this.setFields(element, item);
-				},
-				onChangeEvent: (event) => {
-					this.onChangeEvent(event);
-				},
-				onFieldChangeEvent: (event) => {
-					this.onFieldChangeEvent(event);
-				},
-			};
-		}
+		this.state.setStateWindow();
+
+		window[prefix].conditionalTags = {}
 	}
 }

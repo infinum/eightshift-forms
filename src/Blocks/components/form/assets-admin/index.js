@@ -2,7 +2,6 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
-import { Data } from './../assets/data';
 
 domReady(() => {
 	if (typeof esFormsLocalization === 'undefined') {
@@ -23,7 +22,6 @@ domReady(() => {
 	if (elements.length) {
 		import('./../assets/form').then(({ Form }) => {
 			const form = new Form({
-				formSubmitRestApiUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.formSubmit}`,
 				formIsAdmin: true,
 			});
 

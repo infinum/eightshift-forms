@@ -6,7 +6,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { PanelBody, Button, Modal } from '@wordpress/components';
 import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector } from '@eightshift/frontend-libs/scripts';
-import { CONDITIONAL_TAGS_ACTIONS_INTERNAL } from './conditional-tags-utils';
+import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
 
@@ -81,7 +81,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 				<OptionSelector
 					value={conditionalTagsRulesForms?.[index]?.[1]}
-					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
+					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_LABELS)}
 					onChange={(value) => {
 						conditionalTagsRulesForms[index][1] = value;
 						setAttributes({ [getAttrKey('conditionalTagsAction', attributes, manifest)]: [...conditionalTagsRulesForms] });

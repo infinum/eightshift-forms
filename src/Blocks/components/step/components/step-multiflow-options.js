@@ -5,15 +5,14 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector } from '@eightshift/frontend-libs/scripts';
-import { CONDITIONAL_TAGS_OPERATORS_INTERNAL, CONDITIONAL_TAGS_ACTIONS_INTERNAL, CONDITIONAL_TAGS_LOGIC_INTERNAL } from './../../conditional-tags/components/conditional-tags-utils';
+import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { CONDITIONAL_TAGS_OPERATORS_LABELS, CONDITIONAL_TAGS_LOGIC_LABELS } from '../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
 
 export const StepMultiflowOptions = (attributes) => {
 	const {
 		setAttributes,
-		blockName,
 	} = attributes;
 
 	const stepMultiflowUse = checkAttr('stepMultiflowUse', attributes, manifest);
@@ -103,7 +102,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 						<Select
 							value={operatorValue}
-							options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL)}
+							options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_LABELS)}
 							onChange={(value) => {
 								stepMultiflowRules[index][1] = value;
 								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
@@ -143,7 +142,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 						<Select
 							value={stepMultiflowLogic}
-							options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_INTERNAL)}
+							options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_LABELS)}
 							onChange={(value) => {
 								stepMultiflowRules[index][3] = value;
 								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });

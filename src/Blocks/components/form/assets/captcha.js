@@ -1,15 +1,13 @@
 /* global grecaptcha */
 
-import { Data } from "./data";
-import { State } from "./state";
-import { Utils } from "./utilities";
+import { State, prefix } from './state';
+import { Utils } from './utilities';
 
 /**
  * Captcha class.
  */
 export class Captcha {
 	constructor(options = {}) {
-		this.data = new Data(options);
 		this.state = new State(options);
 		this.utils = new Utils(options);
 	}
@@ -27,7 +25,7 @@ export class Captcha {
 		// Set all public methods.
 		this.publicMethods();
 
-		// // Load captcha on init.
+		// Load captcha on init.
 		this.initCaptchaOnLoad();
 
 		// // Hide badge.
@@ -96,7 +94,7 @@ export class Captcha {
 			return response.json();
 		})
 		.then((response) => {
-			this.utils.dispatchFormEvent(window, this.data.EVENTS.AFTER_CAPTCHA_INIT, response?.data?.response);
+			this.utils.dispatchFormEvent(window, this.state.getStateEventsAfterCaptchaInit(), response?.data?.response);
 		});
 	}
 
@@ -110,7 +108,7 @@ export class Captcha {
 			return;
 		}
 
-		document.querySelector('body').setAttribute(this.data.DATA_ATTRIBUTES.hideCaptchaBadge, this.state.getStateCaptchaHideBadge());
+		document.querySelector('body').setAttribute(this.state.getStateAttribute('hideCaptchaBadge'), this.state.getStateCaptchaHideBadge());
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -123,21 +121,22 @@ export class Captcha {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window?.[this.data.prefix]?.captcha === 'undefined') {
-			window[this.data.prefix].captcha = {
-				init: () => {
-					this.init();
-				},
-				initCaptchaOnLoad: () => {
-					this.initCaptchaOnLoad();
-				},
-				formSubmitCaptchaInvisible: (token, payed, action) => {
-					this.formSubmitCaptchaInvisible(token, payed, action);
-				},
-				initHideCaptchaBadge: () => {
-					this.initHideCaptchaBadge();
-				}
-			};
-		}
+		this.state.setStateWindow();
+
+		window[prefix].captcha = {}
+		// window[prefix].captcha = {
+		// 	init: () => {
+		// 		this.init();
+		// 	},
+		// 	initCaptchaOnLoad: () => {
+		// 		this.initCaptchaOnLoad();
+		// 	},
+		// 	formSubmitCaptchaInvisible: (token, payed, action) => {
+		// 		this.formSubmitCaptchaInvisible(token, payed, action);
+		// 	},
+		// 	initHideCaptchaBadge: () => {
+		// 		this.initHideCaptchaBadge();
+		// 	}
+		// };
 	}
 }

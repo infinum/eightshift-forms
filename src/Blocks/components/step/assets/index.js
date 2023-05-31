@@ -1,5 +1,4 @@
-import { Data } from '../../form/assets/data';
-import { State } from '../../form/assets/state';
+import { State, prefix } from '../../form/assets/state';
 import { Utils } from './../../form/assets/utilities';
 
 /**
@@ -7,7 +6,6 @@ import { Utils } from './../../form/assets/utilities';
  */
 export class Steps {
 	constructor(options = {}) {
-		this.data = new Data(options);
 		this.state = new State(options);
 		this.utils = new Utils(options);
 
@@ -26,7 +24,7 @@ export class Steps {
 	 */
 	init() {
 		// Set all public methods.
-		this.publicMethods();
+		// this.publicMethods();
 	}
 
 	isMultiStepForm(element) {
@@ -148,9 +146,7 @@ export class Steps {
 	 * @private
 	 */
 	publicMethods() {
-		if (typeof window?.[this.data.prefix]?.step === 'undefined') {
-			window[this.data.prefix].step = {
-			}
-		}
+		this.state.setStateWindow();
+		window[prefix].step = {}
 	}
 }

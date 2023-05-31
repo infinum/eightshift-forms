@@ -6,12 +6,15 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, IconLabel, Select, MultiSelect, Control, Section } from '@eightshift/frontend-libs/scripts';
-import { CONDITIONAL_TAGS_OPERATORS_INTERNAL } from './conditional-tags-utils';
+import { icons, getAttrKey, checkAttr, IconToggle, IconLabel, Select, Control, Section } from '@eightshift/frontend-libs/scripts';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
-import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../../form/assets/data';
-import { CONDITIONAL_TAGS_ACTIONS_INTERNAL, CONDITIONAL_TAGS_ACTIONS_INVERSE_INTERNAL } from './conditional-tags-utils';
+import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../assets/utils';
+import {
+	CONDITIONAL_TAGS_ACTIONS_LABELS,
+	CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS,
+	CONDITIONAL_TAGS_OPERATORS_LABELS,
+} from './conditional-tags-labels';
 
 export const ConditionalTagsOptions = (attributes) => {
 	const {
@@ -49,10 +52,10 @@ export const ConditionalTagsOptions = (attributes) => {
 
 		return (
 			<>
-				<div>{sprintf(__('This field will be %s by default, but you can provide exception to this rule.', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INTERNAL[conditionalTagsRules[0]])}</div>
+				<div>{sprintf(__('This field will be %s by default, but you can provide exception to this rule.', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_LABELS[conditionalTagsRules[0]])}</div>
 				<Select
 					value={conditionalTagsRules[0]}
-					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_INTERNAL)}
+					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_LABELS)}
 					onChange={(value) => {
 						conditionalTagsRules[0] = value;
 						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
@@ -67,7 +70,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					{__('Set fields exception rules', 'eightshift-forms')}
 				</div>
 
-				<div className='es-mb-2'>{sprintf(__('%s "%s" field if:', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INVERSE_INTERNAL[conditionalTagsRules[0]], conditionalTagsBlockName)}</div>
+				<div className='es-mb-2'>{sprintf(__('%s "%s" field if:', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS[conditionalTagsRules[0]], conditionalTagsBlockName)}</div>
 
 				{conditionalTagsRules?.[1]?.map((_, index) => {
 					const total = conditionalTagsRules[1].length;
@@ -158,7 +161,7 @@ export const ConditionalTagsOptions = (attributes) => {
 
 					<Select
 						value={operatorValue}
-						options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_INTERNAL)}
+						options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_LABELS)}
 						onChange={(value) => {
 							conditionalTagsRules[1][parent][index][1] = value;
 							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });

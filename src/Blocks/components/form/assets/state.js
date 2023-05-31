@@ -1,10 +1,17 @@
 /* global esFormsLocalization */
 
-import { Data } from "./data";
+import manifest from './../manifest.json';
+import selectManifest from './../../select/manifest.json';
+
+export const prefix = 'esForms';
 
 export class State {
 	constructor(options = {}) {
-		this.data = new Data(options);
+		// Form endpoint to send data.
+		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.formSubmit}`;
+
+		// Detect if form is used in admin for settings or on the frontend.
+		this.formIsAdmin = options.formIsAdmin ?? false;
 
 		// State names.
 		this.SELECTS = 'selects';
@@ -38,11 +45,8 @@ export class State {
 		this.NAME = 'name';
 		this.ERROR = 'error';
 		this.GLOBAL_MSG = 'globalMsg';
-		this.STATUS = 'status';
-		this.MSG = 'msg';
 		this.HAS_ERROR = 'hasError';
 		this.LOADED = 'loaded';
-		this.CONFIG = 'config';
 		this.LOADER = 'loader';
 		this.ELEMENT = 'element';
 		this.HEADING_SUCCESS = 'headingSuccess';
@@ -54,19 +58,23 @@ export class State {
 		this.SUBMIT_URL = 'submitUrl';
 		this.NONCE = 'nonce';
 
+		this.CONFIG = 'config';
 		this.CONFIG_SELECT_USE_PLACEHOLDER = 'usePlaceholder';
 		this.CONFIG_SELECT_USE_SEARCH = 'useSearch';
 		this.CONFIG_PHONE_DISABLE_PICKER = 'disablePicker';
 		this.CONFIG_PHONE_USE_PHONE_SYNC = 'usePhoneSync';
-		this.CONFIG_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS = 'disableScrollToGlobalMsgOnSuccess';
-		this.CONFIG_DISABLE_SCROLL_TO_FIELD_ON_ERROR = 'disableScrollToFieldOnError';
-		this.CONFIG_FORM_RESET_ON_SUCCESS= 'formResetOnSuccess';
 		this.CONFIG_SUCCESS_REDIRECT= 'successRedirect';
 		this.CONFIG_SUCCESS_REDIRECT_VARIATION= 'successRedirectVariation';
 		this.CONFIG_DOWNLOADS= 'downloads';
-		this.CONFIG_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS = 'formDisableNativeRedirectOnSuccess'
-		this.CONFIG_REDIRECTION_TIMEOUT = 'redirectionTimeout'
-		this.CONFIG_HIDE_GLOBAL_MESSAGE_TIMEOUT = 'hideGlobalMessageTimeout'
+
+		this.SETTINGS = 'settings';
+		this.SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS = 'disableScrollToGlobalMsgOnSuccess';
+		this.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR = 'disableScrollToFieldOnError';
+		this.SETTINGS_FORM_RESET_ON_SUCCESS= 'formResetOnSuccess';
+		this.SETTINGS_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS = 'formDisableNativeRedirectOnSuccess';
+		this.SETTINGS_REDIRECTION_TIMEOUT = 'redirectionTimeout';
+		this.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT = 'hideGlobalMessageTimeout';
+		this.SETTINGS_FILE_REMOVE_LABEL = 'fileRemoveLabel';
 
 		this.CAPTCHA = 'captcha';
 		this.CAPTCHA_SITE_KEY = 'site_key';
@@ -79,78 +87,99 @@ export class State {
 		this.ENRICHMENT = 'enrichment';
 		this.ENRICHMENT_EXPIRATION = 'expiration';
 		this.ENRICHMENT_ALLOWED = 'allowed';
-		this.ENRICHMENT_MAP = 'map';
+
+		this.EVENTS = 'events';
+		this.EVENTS_BEFORE_FORM_SUBMIT = 'beforeFormSubmit';
+		this.EVENTS_AFTER_FORM_SUBMIT = 'afterFormSubmit';
+		this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT = 'afterFormSubmitSuccessBeforeRedirect';
+		this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS = 'afterFormSubmitSuccess';
+		this.EVENTS_AFTER_FORM_SUBMIT_RESET = 'afterFormSubmitReset';
+		this.EVENTS_AFTER_FORM_SUBMIT_ERROR = 'afterFormSubmitError';
+		this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION = 'afterFormSubmitErrorValidation';
+		this.EVENTS_AFTER_FORM_SUBMIT_END = 'afterFormSubmitEnd';
+		this.EVENTS_BEFORE_GTM_DATA_PUSH = 'beforeGtmDataPush';
+		this.EVENTS_FORM_JS_LOADED = 'jsFormLoaded';
+		this.EVENTS_AFTER_CAPTCHA_INIT = 'afterCaptchaInit';
+
+		this.SELECTORS = 'selectors';
+		this.SELECTORS_CLASS_ACTIVE = 'isActive';
+		this.SELECTORS_CLASS_FILLED = 'isFilled';
+		this.SELECTORS_CLASS_LOADING = 'isLoading';
+		this.SELECTORS_CLASS_HIDDEN = 'isHidden';
+		this.SELECTORS_CLASS_VISIBLE = 'isVisible';
+		this.SELECTORS_CLASS_HAS_ERROR = 'hasError';
+
+		// Selectors.
+		this.formSelectorPrefix = `.${manifest.componentJsClass}`;
+		// Class names.
+		this.selectClassName = selectManifest.componentClass;
+
+		// Specific selectors.
+		this.SELECTORS_PREFIX = 'prefix';
+		this.SELECTORS_FORM = 'form';
+		this.SELECTORS_SUBMIT_SINGLE = 'singleSubmit';
+		this.SELECTORS_STEP = `step`;
+		this.SELECTORS_STEP_SUBMIT = `stepSubmit`;
+		this.SELECTORS_ERROR = `error`;
+		this.SELECTORS_LOADER = `loader`;
+		this.SELECTORS_GLOBAL_MSG = `globalMsg`;
+		this.SELECTORS_GROUP = `group`;
+		this.SELECTORS_FIELD = `field`;
+
+		this.ATTRIBUTES = 'attributes';
+		this.PARAMS = 'params';
 	}
-	// Set state initial.
-	setFormStateInitial(formId) {
-		if (!window[this.data.prefix]?.state?.[`form_${formId}`]) {
-			window[this.data.prefix].state = {
-				...window[this.data.prefix].state,
-				[this.CAPTCHA]: {},
-				[this.ENRICHMENT]: {},
 
-				[`form_${formId}`]: {
-					[this.SELECTS]: {},
-					[this.FILES]: {},
-					[this.CHECKBOXES]: {},
-					[this.RADIOS]: {},
-					[this.ISLOADED]: false,
+	setStateWindow() {
+		if (!window[prefix]) {
+			window[prefix] = {}
+		}
+	}
 
-					[this.FIELDS]: {},
-					[this.VALUES]: {},
-					[this.DEFAULTS]: {},
-					[this.EVENTS]: {},
-					[this.REFERENCE]: {},
-					[this.ELEMENTS]: {},
-				}
-			}
+	setStateInitial() {
+		this.setStateWindow();
+
+		window[prefix].state = {};
+		window[prefix].state = {
+			[this.CAPTCHA]: {},
+			[this.ENRICHMENT]: {},
+			[this.SETTINGS]: {},
+			[this.EVENTS]: {},
+			[this.SELECTORS]: {},
+			[this.ATTRIBUTES]: {},
+			[this.PARAMS]: {},
+			[this.CONFIG]: {},
 		}
 
-		let formElement = '';
-
-		if (formId === 0) {
-			formElement = document.querySelector(this.data.formSelector);
-		} else {
-			formElement = document.querySelector(`${this.data.formSelector}[${this.data.DATA_ATTRIBUTES.formPostId}="${formId}"]`);
+		// Attributes.
+		for (const [key, item] of Object.entries(esFormsLocalization.customFormDataAttributes ?? {})) {
+			this.setState([key], item, this.ATTRIBUTES);
 		}
 
-		this.setState([this.FORM, this.SUBMIT_URL], this.data.formSubmitRestApiUrl, formId);
-		this.setState([this.FORM, this.IS_ADMIN], this.data.formIsAdmin, formId);
-		this.setState([this.FORM, this.IS_SINGLE_SUBMIT], false, formId);
-		this.setState([this.FORM, this.ELEMENT], formElement, formId);
-		this.setState([this.FORM, this.TYPE], formElement.getAttribute(this.data.DATA_ATTRIBUTES.formType), formId);
-		this.setState([this.FORM, this.METHOD], formElement.getAttribute('method'), formId);
-		this.setState([this.FORM, this.ACTION], formElement.getAttribute('action'), formId);
-		this.setState([this.FORM, this.ACTION_EXTERNAL], formElement.getAttribute(this.data.DATA_ATTRIBUTES.actionExternal), formId);
-		this.setState([this.FORM, this.TYPE_SETTINGS], formElement.getAttribute(this.data.DATA_ATTRIBUTES.settingsType), formId);
-		this.setState([this.FORM, this.LOADER], formElement.querySelector(this.data.loaderSelector), formId);
-		this.setState([this.FORM, this.NONCE], esFormsLocalization.nonce, formId);
+		// Params.
+		for (const [key, item] of Object.entries(esFormsLocalization.customFormParams ?? {})) {
+			this.setState([key], item, this.PARAMS);
+		}
 
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement.getAttribute(this.data.DATA_ATTRIBUTES.phoneDisablePicker)), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement.getAttribute(this.data.DATA_ATTRIBUTES.phoneSync)), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS], Boolean(esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_DISABLE_SCROLL_TO_FIELD_ON_ERROR], Boolean(esFormsLocalization.formDisableScrollToFieldOnError), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_FORM_RESET_ON_SUCCESS], Boolean(esFormsLocalization.formResetOnSuccess), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT], formElement.getAttribute(this.data.DATA_ATTRIBUTES.successRedirect), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement.getAttribute(this.data.DATA_ATTRIBUTES.successRedirectVariation), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formElement.getAttribute(this.data.DATA_ATTRIBUTES.downloads), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS], Boolean(esFormsLocalization.formDisableNativeRedirectOnSuccess), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_REDIRECTION_TIMEOUT], esFormsLocalization.redirectionTimeout ?? 600, formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_HIDE_GLOBAL_MESSAGE_TIMEOUT], esFormsLocalization.hideGlobalMessageTimeout ?? 6000, formId);
+		this.setState([this.SUBMIT_URL], this.formSubmitRestApiUrl, this.CONFIG);
+		this.setState([this.IS_ADMIN], this.formIsAdmin, this.CONFIG);
+		this.setState([this.NONCE], esFormsLocalization.nonce, this.CONFIG);
 
-		const errorGlobal = formElement.querySelector(this.data.globalMsgSelector);
+		// Global settings.
+		this.setState([this.SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS], Boolean(esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess), this.SETTINGS);
+		this.setState([this.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR], Boolean(esFormsLocalization.formDisableScrollToFieldOnError), this.SETTINGS);
+		this.setState([this.SETTINGS_FORM_RESET_ON_SUCCESS], Boolean(esFormsLocalization.formResetOnSuccess), this.SETTINGS);
+		this.setState([this.SETTINGS_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS], Boolean(esFormsLocalization.formDisableNativeRedirectOnSuccess), this.SETTINGS);
+		this.setState([this.SETTINGS_REDIRECTION_TIMEOUT], esFormsLocalization.redirectionTimeout ?? 600, this.SETTINGS);
+		this.setState([this.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT], esFormsLocalization.hideGlobalMessageTimeout ?? 6000, this.SETTINGS);
+		this.setState([this.SETTINGS_FILE_REMOVE_LABEL], esFormsLocalization.fileRemoveLabel ?? '', this.SETTINGS);
 
-		this.setState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], errorGlobal, formId);
-		this.setState([this.FORM, this.GLOBAL_MSG, this.STATUS], '', formId);
-		this.setState([this.FORM, this.GLOBAL_MSG, this.MSG], '', formId);
-		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], errorGlobal.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingSuccess), formId);
-		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], errorGlobal.getAttribute(this.data.DATA_ATTRIBUTES.globalMsgHeadingError), formId);
-
+		// Captcha.
 		const captcha = esFormsLocalization.captcha ?? {};
 		this.setState([this.IS_USED], Boolean(captcha.isUsed), this.CAPTCHA);
 
 		if (captcha.isUsed) {
-			this.setState([this.SUBMIT_URL], `${this.data.formSubmitRestApiUrl}-captcha`, this.CAPTCHA);
+			this.setState([this.SUBMIT_URL],  this.getStateConfigSubmitUrl('-captcha'), this.CAPTCHA);
 			this.setState([this.CAPTCHA_SITE_KEY], captcha.siteKey, this.CAPTCHA);
 			this.setState([this.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), this.CAPTCHA);
 			this.setState([this.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, this.CAPTCHA);
@@ -159,14 +188,95 @@ export class State {
 			this.setState([this.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), this.CAPTCHA);
 		}
 
+		// Enrichment.
 		const enrichment = esFormsLocalization.enrichment ?? {};
 		this.setState([this.IS_USED], Boolean(enrichment.isUsed), this.ENRICHMENT);
 
 		if (enrichment.isUsed) {
 			this.setState([this.ENRICHMENT_EXPIRATION], enrichment.expiration, this.ENRICHMENT);
 			this.setState([this.ENRICHMENT_ALLOWED], enrichment.allowed, this.ENRICHMENT);
-			this.setState([this.ENRICHMENT_MAP], enrichment.map, this.ENRICHMENT);
 		}
+
+		// Events.
+		this.setState([this.EVENTS_BEFORE_FORM_SUBMIT], this.getEventName(this.EVENTS_BEFORE_FORM_SUBMIT), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_FORM_SUBMIT], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_RESET], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_RESET), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_ERROR), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_END], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_END), this.EVENTS);
+		this.setState([this.EVENTS_BEFORE_GTM_DATA_PUSH], this.getEventName(this.EVENTS_BEFORE_GTM_DATA_PUSH), this.EVENTS);
+		this.setState([this.EVENTS_FORM_JS_LOADED], this.getEventName(this.EVENTS_FORM_JS_LOADED), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_CAPTCHA_INIT], this.getEventName(this.EVENTS_AFTER_CAPTCHA_INIT), this.EVENTS);
+
+		// Selectors.
+		this.setState([this.SELECTORS_CLASS_ACTIVE], 'is-active', this.SELECTORS);
+		this.setState([this.SELECTORS_CLASS_FILLED], 'is-filled', this.SELECTORS);
+		this.setState([this.SELECTORS_CLASS_LOADING], 'is-loading', this.SELECTORS);
+		this.setState([this.SELECTORS_CLASS_HIDDEN], 'is-hidden', this.SELECTORS);
+		this.setState([this.SELECTORS_CLASS_VISIBLE], 'is-visible', this.SELECTORS);
+		this.setState([this.SELECTORS_CLASS_HAS_ERROR], 'has-error', this.SELECTORS);
+
+		this.setState([this.SELECTORS_PREFIX], this.formSelectorPrefix, this.SELECTORS);
+		this.setState([this.SELECTORS_FORM], this.formSelectorPrefix, this.SELECTORS);
+		this.setState([this.SELECTORS_SUBMIT_SINGLE], `${this.formSelectorPrefix}-single-submit`, this.SELECTORS);
+		this.setState([this.SELECTORS_STEP], `${this.formSelectorPrefix}-step`, this.SELECTORS);
+		this.setState([this.SELECTORS_STEP_SUBMIT], `${this.formSelectorPrefix}-step-trigger`, this.SELECTORS);
+		this.setState([this.SELECTORS_ERROR], `${this.formSelectorPrefix}-error`, this.SELECTORS);
+		this.setState([this.SELECTORS_LOADER], `${this.formSelectorPrefix}-loader`, this.SELECTORS);
+		this.setState([this.SELECTORS_GLOBAL_MSG], `${this.formSelectorPrefix}-global-msg`, this.SELECTORS);
+		this.setState([this.SELECTORS_GROUP], `${this.formSelectorPrefix}-group`, this.SELECTORS);
+		this.setState([this.SELECTORS_FIELD], `${this.formSelectorPrefix}-field`, this.SELECTORS);
+	}
+
+	// Set state initial.
+	setFormStateInitial(formId) {
+		this.setStateWindow();
+		window[prefix].state[`form_${formId}`] = {}
+		window[prefix].state[`form_${formId}`] = {
+			[this.SELECTS]: {},
+			[this.FILES]: {},
+			[this.CHECKBOXES]: {},
+			[this.RADIOS]: {},
+			[this.ISLOADED]: false,
+
+			[this.FIELDS]: {},
+			[this.VALUES]: {},
+			[this.DEFAULTS]: {},
+			[this.EVENTS]: {},
+			[this.REFERENCE]: {},
+			[this.ELEMENTS]: {},
+		}
+
+		let formElement = '';
+
+		if (formId === 0) {
+			formElement = document.querySelector(this.getStateSelectorsForm());
+		} else {
+			formElement = document.querySelector(`${this.getStateSelectorsForm()}[${this.getStateAttribute('formPostId')}="${formId}"]`);
+		}
+
+		this.setState([this.FORM, this.IS_SINGLE_SUBMIT], false, formId);
+		this.setState([this.FORM, this.ELEMENT], formElement, formId);
+		this.setState([this.FORM, this.TYPE], formElement.getAttribute(this.getStateAttribute('formType')), formId);
+		this.setState([this.FORM, this.METHOD], formElement.getAttribute('method'), formId);
+		this.setState([this.FORM, this.ACTION], formElement.getAttribute('action'), formId);
+		this.setState([this.FORM, this.ACTION_EXTERNAL], formElement.getAttribute(this.getStateAttribute('actionExternal')), formId);
+		this.setState([this.FORM, this.TYPE_SETTINGS], formElement.getAttribute(this.getStateAttribute('settingsType')), formId);
+		this.setState([this.FORM, this.LOADER], formElement.querySelector(this.getStateSelectorsLoader()), formId);
+
+		// Form settings
+		this.setState([this.FORM, this.CONFIG, this.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement.getAttribute(this.getStateAttribute('phoneDisablePicker'))), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement.getAttribute(this.getStateAttribute('phoneSync'))), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT], formElement.getAttribute(this.getStateAttribute('successRedirect')), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement.getAttribute(this.getStateAttribute('successRedirectVariation')), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formElement.getAttribute(this.getStateAttribute('downloads')), formId);
+
+		const globalMsg = formElement.querySelector(this.getStateSelectorsGlobalMsg());
+		this.setState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], globalMsg, formId);
+		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], globalMsg.getAttribute(this.getStateAttribute('formTyglobalMsgHeadingSuccesspe')), formId);
+		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], globalMsg.getAttribute(this.getStateAttribute('globalMsgHeadingError')), formId);
 
 		// Find all fields.
 		let items = formElement.querySelectorAll('input, select, textarea');
@@ -183,7 +293,7 @@ export class State {
 				continue;
 			}
 
-			const field = formElement.querySelector(`${this.data.fieldSelector}[${this.data.DATA_ATTRIBUTES.fieldName}="${name}"]`);
+			const field = formElement.querySelector(`${this.getStateSelectorsField()}[${this.getStateAttribute('fieldName')}="${name}"]`);
 
 			// Make changes depending on the field type.
 			switch (type) {
@@ -216,17 +326,17 @@ export class State {
 				case 'select-one':
 					// Combined fields like phone can have field null.
 					const customField = this.getFormFieldElementByChild(item);
-					const customType = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
+					const customType = customField.getAttribute(this.getStateAttribute('fieldType'));
 
 					if (item.options.length) {
-						const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.data.DATA_ATTRIBUTES.selectCustomProperties));
+						const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.getStateAttribute('selectCustomProperties')));
 
 						switch (customType) {
 							case 'phone':
 							case 'country':
-								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
-								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
-								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
+								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.getStateAttribute('selectCountryCode')], formId);
+								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'label'], customData[this.getStateAttribute('selectCountryLabel')], formId);
+								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'number'], customData[this.getStateAttribute('selectCountryNumber')], formId);
 								break;
 							}
 					}
@@ -239,8 +349,8 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], customType, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], 'select', formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
-					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_PLACEHOLDER], Boolean(item.getAttribute(this.data.DATA_ATTRIBUTES.selectPlaceholder)), formId);
-					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(this.data.DATA_ATTRIBUTES.selectAllowSearch)), formId);
+					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_PLACEHOLDER], Boolean(item.getAttribute(this.getStateAttribute('selectPlaceholder'))), formId);
+					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(this.getStateAttribute('selectAllowSearch'))), formId);
 					break;
 				case 'tel':
 					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
@@ -277,9 +387,9 @@ export class State {
 			this.setState([this.ELEMENTS, name, this.LOADED], false, formId);
 			this.setState([this.ELEMENTS, name, this.NAME], name, formId);
 			this.setState([this.ELEMENTS, name, this.FIELD], field, formId);
-			this.setState([this.ELEMENTS, name, this.ERROR], field.querySelector(this.data.errorSelector), formId);
-			this.setState([this.ELEMENTS, name, this.IS_SINGLE_SUBMIT], item.classList.contains(this.data.submitSingleSelector.substring(1)), formId);
-			this.setState([this.ELEMENTS, name, this.SAVE_AS_JSON], Boolean(item.getAttribute(this.data.DATA_ATTRIBUTES.saveAsJson)), formId);
+			this.setState([this.ELEMENTS, name, this.ERROR], field.querySelector(this.getStateSelectorsError()), formId);
+			this.setState([this.ELEMENTS, name, this.IS_SINGLE_SUBMIT], item.classList.contains(this.getStateSelectorsSubmitSingle().substring(1)), formId);
+			this.setState([this.ELEMENTS, name, this.SAVE_AS_JSON], Boolean(item.getAttribute(this.getStateAttribute('saveAsJson'))), formId);
 		}
 	}
 
@@ -310,15 +420,15 @@ export class State {
 				break;
 			case 'select-one':
 				const customField = this.getFormFieldElementByChild(item);
-				const customType = customField.getAttribute(this.data.DATA_ATTRIBUTES.fieldType);
-				const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.data.DATA_ATTRIBUTES.selectCustomProperties));
+				const customType = customField.getAttribute(this.getStateAttribute('fieldType'));
+				const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.getStateAttribute('selectCustomProperties')));
 
 				switch (customType) {
 					case 'phone':
 					case 'country':
-						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.data.DATA_ATTRIBUTES.selectCountryCode], formId);
-						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'label'], customData[this.data.DATA_ATTRIBUTES.selectCountryLabel], formId);
-						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'number'], customData[this.data.DATA_ATTRIBUTES.selectCountryNumber], formId);
+						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.getStateAttribute('selectCountryCode')], formId);
+						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'label'], customData[this.getStateAttribute('selectCountryLabel')], formId);
+						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'number'], customData[this.getStateAttribute('selectCountryNumber')], formId);
 						break;
 				}
 
@@ -334,7 +444,7 @@ export class State {
 
 	setState(keyArray, value, formId) {
 		const formKey = isNaN(formId) ? formId : `form_${formId}`;
-		let stateObject = window[this.data.prefix].state[formKey];
+		let stateObject = window[prefix].state[formKey];
 
 		keyArray.forEach((key, index) => {
 			if (index === keyArray.length - 1) {
@@ -346,13 +456,13 @@ export class State {
 		});
 
 		if (keyArray.length > 1) {
-			window[this.data.prefix].state[formKey] = {
-				...window[this.data.prefix].state[formKey],
+			window[prefix].state[formKey] = {
+				...window[prefix].state[formKey],
 				...stateObject[keyArray[0]]
 			};
 		} else {
-			window[this.data.prefix].state[formKey] = {
-				...window[this.data.prefix].state[formKey],
+			window[prefix].state[formKey] = {
+				...window[prefix].state[formKey],
 			};
 		}
 	}
@@ -360,7 +470,7 @@ export class State {
 	// Set state array by key.
 	setStateArray(keyArray, value, formId) {
 		const formKey = isNaN(formId) ? formId : `form_${formId}`;
-		let stateObject = window[this.data.prefix].state[formKey];
+		let stateObject = window[prefix].state[formKey];
 
 		keyArray.forEach((key, index) => {
 			if (index === keyArray.length - 1) {
@@ -373,13 +483,13 @@ export class State {
 		});
 
 		if (keyArray.length === 1) {
-			window[this.data.prefix].state[formKey] = {
-				...window[this.data.prefix].state[formKey],
+			window[prefix].state[formKey] = {
+				...window[prefix].state[formKey],
 				...stateObject,
 			};
 		} else {
-			window[this.data.prefix].state[formKey] = {
-				...window[this.data.prefix].state[formKey],
+			window[prefix].state[formKey] = {
+				...window[prefix].state[formKey],
 				[keyArray[0]]: stateObject,
 			};
 		}
@@ -393,7 +503,7 @@ export class State {
 	// Get state by keys.
 	getState(keys, formId) {
 		const formKey = isNaN(formId) ? formId : `form_${formId}`;
-		let stateObject = window?.[this.data.prefix]?.state?.[formKey];
+		let stateObject = window?.[prefix]?.state?.[formKey];
 
 		if (!stateObject) {
 			return undefined;
@@ -409,22 +519,34 @@ export class State {
 		return stateObject;
 	}
 
-	getStateFilteredBykey(obj, targetKey, findItem, formId) {
-		return Object.values(Object.fromEntries(Object.entries(this.getState([obj], formId)).filter(([key, value]) => value[targetKey] === findItem)));
+	getStateTop(name) {
+		return window?.[prefix]?.state?.[name];
+	}
+
+	getEventName(name) {
+		const output = name.charAt(0).toUpperCase() + name.slice(1);
+
+		return `${prefix}${output}`;
+	}
+
+
+	
+	// ----------------------------------------
+	// Config
+	getStateConfigNonce() {
+		return this.getState([this.NONCE], this.CONFIG);
+	}
+	getStateConfigSubmitUrl(sufix = '') {
+		return `${this.getState([this.SUBMIT_URL], this.CONFIG)}${sufix}`;
+	}
+	getStateConfigIsAdmin() {
+		return this.getState([this.IS_ADMIN], this.CONFIG);
 	}
 
 	// ----------------------------------------
 	// Form
 	getStateForm(formId) {
 		return this.getState([this.FORM], formId);
-	}
-
-	getStateFormSubmitUrl(formId, sufix = '') {
-		return `${this.getState([this.FORM, this.SUBMIT_URL], formId)}${sufix}`;
-	}
-
-	getStateFormIsAdmin(formId) {
-		return this.getState([this.FORM, this.IS_ADMIN], formId);
 	}
 
 	getStateFormIsSingleSubmit(formId) {
@@ -451,28 +573,12 @@ export class State {
 		return this.getState([this.FORM, this.TYPE_SETTINGS], formId);
 	}
 
-	getStateFormNonce(formId) {
-		return this.getState([this.FORM, this.NONCE], formId);
-	}
-
 	getStateFormLoader(formId) {
 		return this.getState([this.FORM, this.LOADER], formId);
 	}
 
 	getStateFormGlobalMsgElement(formId) {
 		return this.getState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], formId);
-	}
-
-	getStateFormErrorGlobalStatus(formId) {
-		return this.getState([this.FORM, this.GLOBAL_MSG, this.STATUS], formId);
-	}
-
-	getStateFormErrorGlobalMsg(formId) {
-		return this.getState([this.FORM, this.GLOBAL_MSG, this.MSG], formId);
-	}
-
-	getStateFormErrorGlobalStatus(formId) {
-		return this.getState([this.FORM, this.GLOBAL_MSG, this.STATUS], formId);
 	}
 
 	getStateFormErrorGlobalHeadingSuccess(formId) {
@@ -491,18 +597,6 @@ export class State {
 		return this.getState([this.FORM, this.CONFIG, this.CONFIG_PHONE_USE_PHONE_SYNC], formId);
 	}
 
-	getStateFormConfigDisableScrollToGlobalMsgOnSuccess(formId) {
-		return this.getState([this.FORM, this.CONFIG, this.CONFIG_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS], formId);
-	}
-
-	getStateFormConfigDisableScrollToFieldOnError(formId) {
-		return this.getState([this.FORM, this.CONFIG, this.CONFIG_DISABLE_SCROLL_TO_FIELD_ON_ERROR], formId);
-	}
-
-	getStateFormConfigFormResetOnSuccess(formId) {
-		return this.getState([this.FORM, this.CONFIG, this.CONFIG_FORM_RESET_ON_SUCCESS], formId);
-	}
-
 	getStateFormConfigSuccessRedirect(formId) {
 		return this.getState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT], formId);
 	}
@@ -515,16 +609,34 @@ export class State {
 		return this.getState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formId);
 	}
 
-	getStateFormConfigFormDisableNativeRedirectOnSuccess(formId) {
-		return this.getState([this.FORM, this.CONFIG, this.CONFIG_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS], formId);
+	// ----------------------------------------
+	// Settings
+	getStateSettingsDisableScrollToGlobalMsgOnSuccess() {
+		return this.getState([this.SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS], this.SETTINGS);
 	}
 
-	getStateFormConfigRedirectionTimeout(formId) {
-		return this.getState([this.FORM, this.CONFIG, this.CONFIG_REDIRECTION_TIMEOUT], formId);
+	getStateSettingsDisableScrollToFieldOnError() {
+		return this.getState([this.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR], this.SETTINGS);
 	}
 
-	getStateFormConfigHideGlobalMessageTimeout(formId) {
-		return this.getState([this.FORM, this.CONFIG, this.CONFIG_HIDE_GLOBAL_MESSAGE_TIMEOUT], formId);
+	getStateSettingsResetOnSuccess() {
+		return this.getState([this.SETTINGS_FORM_RESET_ON_SUCCESS], this.SETTINGS);
+	}
+
+	getStateSettingsDisableNativeRedirectOnSuccess() {
+		return this.getState([this.SETTINGS_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS], this.SETTINGS);
+	}
+
+	getStateSettingsRedirectionTimeout() {
+		return this.getState([this.SETTINGS_REDIRECTION_TIMEOUT], this.SETTINGS);
+	}
+
+	getStateSettingsHideGlobalMessageTimeout() {
+		return this.getState([this.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT], this.SETTINGS);
+	}
+
+	getStateSettingsFileRemoveLabel() {
+		return this.getState([this.SETTINGS_FILE_REMOVE_LABEL], this.SETTINGS);
 	}
 
 	// ----------------------------------------
@@ -536,10 +648,6 @@ export class State {
 
 	getStateElements(formId) {
 		return Object.entries(this.getState([this.ELEMENTS], formId));
-	}
-
-	getStateElement(name, formId) {
-		return this.getState([this.ELEMENTS, name], formId);
 	}
 
 	getStateElementConfig(name, type, formId) {
@@ -598,14 +706,6 @@ export class State {
 		return this.getState([this.ELEMENTS, name, this.ERROR], formId);
 	}
 
-	getStateElementHasError(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.HAS_ERROR], formId);
-	}
-
-	getStateElementErrorMsg(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.ERRORMSG], formId);
-	}
-
 	getStateElementType(name, formId) {
 		return this.getState([this.ELEMENTS, name, this.TYPE], formId);
 	}
@@ -652,22 +752,134 @@ export class State {
 	getStateEnrichmentAllowed() {
 		return this.getState([this.ENRICHMENT_ALLOWED], this.ENRICHMENT);
 	}
-	getStateEnrichmentMap() {
-		return this.getState([this.ENRICHMENT_MAP], this.ENRICHMENT);
+
+	// ----------------------------------------
+	// Events
+
+	getStateEventsBeforeFormSubmit() {
+		return this.getState([this.EVENTS_BEFORE_FORM_SUBMIT], this.EVENT);
+	}
+	getStateEventsAfterFormSubmit() {
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT], this.EVENT);
+	}
+	getStateEventsAfterFormSubmitSuccessBeforeRedirect() {
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT], this.EVENT);
+	}
+	getStateEventsAfterFormSubmitSuccess() {
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS], this.EVENT);
+	}
+	getStateEventsAfterFormSubmitReset() {
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_RESET], this.EVENT);
+	}
+	getStateEventsAfterFormSubmitError() {
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR], this.EVENT);
+	}
+	getStateEventsAfterFormSubmitErrorValidation() {
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION], this.EVENT);
+	}
+	getStateEventsAfterFormSubmitEnd() {
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_END], this.EVENT);
+	}
+	getStateEventsBeforeGtmDataPush() {
+		return this.getState([this.EVENTS_BEFORE_GTM_DATA_PUSH], this.EVENT);
+	}
+	getStateEventsFormJsLoaded() {
+		return this.getState([this.EVENTS_FORM_JS_LOADED], this.EVENT);
+	}
+	getStateEventsAfterCaptchaInit() {
+		return this.getState([this.EVENTS_AFTER_CAPTCHA_INIT], this.EVENT);
+	}
+
+	// ----------------------------------------
+	// Selectors
+	getStateSelectorsClassActive() {
+		return this.getState([this.SELECTORS_CLASS_ACTIVE], this.SELECTORS);
+	}
+	getStateSelectorsClassFilled() {
+		return this.getState([this.SELECTORS_CLASS_FILLED], this.SELECTORS);
+	}
+	getStateSelectorsClassLoading() {
+		return this.getState([this.SELECTORS_CLASS_LOADING], this.SELECTORS);
+	}
+	getStateSelectorsClassHidden() {
+		return this.getState([this.SELECTORS_CLASS_HIDDEN], this.SELECTORS);
+	}
+	getStateSelectorsClassVisible() {
+		return this.getState([this.SELECTORS_CLASS_VISIBLE], this.SELECTORS);
+	}
+	getStateSelectorsClassHasError() {
+		return this.getState([this.SELECTORS_CLASS_HAS_ERROR], this.SELECTORS);
+	}
+	getStateSelectorsForm() {
+		return this.getState([this.SELECTORS_FORM], this.SELECTORS);
+	}
+
+	getStateSelectorsSubmitSingle() {
+		return this.getState([this.SELECTORS_SUBMIT_SINGLE], this.SELECTORS);
+	}
+
+	getStateSelectorsStep() {
+		return this.getState([this.SELECTORS_STEP], this.SELECTORS);
+	}
+
+	getStateSelectorsStepSubmit() {
+		return this.getState([this.SELECTORS_STEP_SUBMIT], this.SELECTORS);
+	}
+
+	getStateSelectorsError() {
+		return this.getState([this.SELECTORS_ERROR], this.SELECTORS);
+	}
+
+	getStateSelectorsLoader() {
+		return this.getState([this.SELECTORS_LOADER], this.SELECTORS);
+	}
+
+	getStateSelectorsGlobalMsg() {
+		return this.getState([this.SELECTORS_GLOBAL_MSG], this.SELECTORS);
+	}
+
+	getStateSelectorsGroup() {
+		return this.getState([this.SELECTORS_GROUP], this.SELECTORS);
+	}
+
+	getStateSelectorsField() {
+		return this.getState([this.SELECTORS_FIELD], this.SELECTORS);
+	}
+
+	// ----------------------------------------
+	// Attributes
+	getStateAttributes() {
+		return this.getStateTop(this.ATTRIBUTES);
+	}
+	getStateAttribute(name) {
+		return this.getStateAttributes()[name];
+	}
+
+	// ----------------------------------------
+	// Params
+	getStateParams() {
+		return this.getStateTop(this.PARAMS);
+	}
+	getStateParam(name) {
+		return this.getStateParams()[name];
 	}
 
 	// ----------------------------------------
 	// Other
 
+	getStateFilteredBykey(obj, targetKey, findItem, formId) {
+		return Object.values(Object.fromEntries(Object.entries(this.getState([obj], formId)).filter(([key, value]) => value[targetKey] === findItem)));
+	}
+
 	getFormElementByChild(element) {
-		return element.closest(`${this.data.formSelector}`);
+		return element.closest(this.getStateSelectorsForm());
 	}
 
 	getFormFieldElementByChild(element) {
-		return element.closest(`${this.data.fieldSelector}`);
+		return element.closest(this.getStateSelectorsField());
 	}
 
 	getFormIdByElement(element) {
-		return this.getFormElementByChild(element).getAttribute(this.data.DATA_ATTRIBUTES.formPostId);
+		return this.getFormElementByChild(element).getAttribute(this.getStateAttribute('formPostId'));
 	}
 }

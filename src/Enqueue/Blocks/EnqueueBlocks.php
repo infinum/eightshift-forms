@@ -185,17 +185,15 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		// Frontend part.
 		$hideGlobalMessageTimeout = Filters::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
 		$redirectionTimeout = Filters::getFilterName(['block', 'form', 'redirectionTimeout']);
-		$hideLoadingStateTimeout = Filters::getFilterName(['block', 'form', 'hideLoadingStateTimeout']);
-		$fileCustomRemoveLabel = Filters::getFilterName(['block', 'file', 'previewRemoveLabel']);
+		$fileRemoveLabel = Filters::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
 		$output['restRoutes'] = [
-			'formSubmit' => AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,
+			'formSubmit' => '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,
 		];
 
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
-		$output['hideLoadingStateTimeout'] = \apply_filters($hideLoadingStateTimeout, 600);
-		$output['fileCustomRemoveLabel'] = \apply_filters($fileCustomRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
+		$output['fileRemoveLabel'] = \apply_filters($fileRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
 		$output['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
@@ -245,8 +243,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				'isUsed' => false,
 			];
 		}
-
-		$output['delimiter'] = AbstractBaseRoute::DELIMITER;
 
 		$output = \wp_json_encode($output);
 
