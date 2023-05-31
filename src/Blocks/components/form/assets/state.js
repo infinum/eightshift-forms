@@ -55,6 +55,8 @@ export class State {
 		this.TAGS_REF = 'reference';
 		this.TAGS_DEFAULTS = 'defaults';
 		this.TAGS_EVENTS = 'events';
+		this.CONDITIONAL_TAGS_FORM = 'conditionalTagsForm';
+		this.CONDITIONAL_TAGS_EVENTS = 'conditionalTagsEvents';
 
 		this.CONFIG = 'config';
 		this.CONFIG_SELECT_USE_PLACEHOLDER = 'usePlaceholder';
@@ -257,7 +259,7 @@ export class State {
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT], formElement.getAttribute(this.getStateAttribute('successRedirect')), formId);
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement.getAttribute(this.getStateAttribute('successRedirectVariation')), formId);
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formElement.getAttribute(this.getStateAttribute('downloads')), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONDITIONAL_TAGS], formElement.getAttribute(this.getStateAttribute('conditionalTags')), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONDITIONAL_TAGS_FORM], formElement.getAttribute(this.getStateAttribute('conditionalTags')), formId);
 
 		const globalMsg = formElement.querySelector(this.getStateSelectorsGlobalMsg());
 		this.setState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], globalMsg, formId);
@@ -265,7 +267,7 @@ export class State {
 		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], globalMsg.getAttribute(this.getStateAttribute('globalMsgHeadingError')), formId);
 
 		// Conditional tags
-		this.setState([this.CONDITIONAL_TAGS, this.TAGS_EVENTS], {}, formId);
+		this.setState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], {}, formId);
 
 		// Find all fields.
 		let items = formElement.querySelectorAll('input, select, textarea');
@@ -473,7 +475,7 @@ export class State {
 		const refOutput = [];
 
 		const eventsOutput = {
-			...this.getStateConditionalTagsEvents(formId) ?? {},
+			...this.getStateFormConditionalTagsEvents(formId) ?? {},
 		};
 
 		this.getStateElementConditionalTagsTags(name, formId).forEach((item) => {
@@ -489,7 +491,7 @@ export class State {
 		});
 
 		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], refOutput, formId);
-		this.setState([this.CONDITIONAL_TAGS, this.TAGS_EVENTS], eventsOutput, formId);
+		this.setState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], eventsOutput, formId);
 	}
 
 	// Delete state item by key
@@ -524,13 +526,6 @@ export class State {
 		const output = name.charAt(0).toUpperCase() + name.slice(1);
 
 		return `${prefix}${output}`;
-	}
-
-	// ----------------------------------------
-	// Conditional Tags
-
-	getStateConditionalTagsEvents(formId) {
-		return this.getState([this.CONDITIONAL_TAGS, this.EVENTS], formId);
 	}
 
 	// ----------------------------------------
@@ -577,6 +572,10 @@ export class State {
 
 	getStateFormLoader(formId) {
 		return this.getState([this.FORM, this.LOADER], formId);
+	}
+
+	getStateFormConditionalTagsEvents(formId) {
+		return this.getState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], formId);
 	}
 
 	getStateFormGlobalMsgElement(formId) {

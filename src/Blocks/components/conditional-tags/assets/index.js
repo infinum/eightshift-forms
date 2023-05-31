@@ -120,159 +120,31 @@ export class ConditionalTags {
 	 * @returns void
 	 */
 	initFields(formId) {
-		// Set internal preset data.
-		// this.setInternalData(formId);
-
-		// Loop all fields and set data.
-		// this.setFields(Object.keys(this.state.getState([this.state.FIELDS], this.FORM_ID)));
-
-		// // Set event listeners.
-		// this.setListeners(formId);
+		for(const [name] of this.state.getStateElements(formId)) {
+			this.setField(name, formId);
+		}
 	}
 
 	setField(name, formId) {
-		const value = this.state.getStateElementValue(name, formId);
-		const events = this.state.getStateConditionalTagsEvents(formId);
-
-		events?.[name]?.forEach((eventName) => {
-			this.setFieldsRules(eventName, value, formId);
+		this.state.getStateFormConditionalTagsEvents(formId)?.[name]?.forEach((eventName) => {
+			this.setFieldsRules(eventName, formId);
 		});
-	}
 
-	/**
-	 * Set master logic for conditional tags.
-	 *
-	 * @param {string} name Field name.
-	 *
-	 * @returns void
-	 */
-	setFields(fields) {
-		fields.forEach((field) => {
-			// Set reference data based on the condtions.
-			this.setFieldsRules(field);
+		for(const [name] of this.state.getStateElements(formId)) {
+			const field = this.state.getStateElementField(name, formId);
 
 			// Find defaults to know what direction to use.
-			const defaults = this.state.getState([this.state.DEFAULTS, field], this.FORM_ID);
+			const defaults = this.state.getStateElementConditionalTagsDefaults(name, formId);
 
 			// Check if conditions are valid or not. This is where the magic happens.
-			const isValid = this.state.getState([this.state.REFERENCE, field], this.FORM_ID).map((validItem) => validItem.every(Boolean)).some(Boolean);
-
-			// Find field or inner item to toggle.
-			const fieldDetails = field.split('---');
-			let fieldElement = this.state.getState([this.state.ELEMENTS, field], this.FORM_ID);
-
-			if (fieldDetails.length > 1 && typeof fieldElement === 'string' && fieldElement === 'select') {
-
-				const getSelect = this.state.getState([this.state.SELECTS, fieldDetails[0]], this.FORM_ID);
-
-				fieldElement = Array.from(getSelect.choiceList.element.childNodes).find((item) => item.getAttribute('data-value') === fieldDetails[1]);
-				const constChoiceItem = getSelect.config.choices.find((item) => item.value === fieldDetails[1]);
-
-				constChoiceItem.esFormsIsHidden = false;
-				if (isValid) {
-					constChoiceItem.esFormsIsHidden = true;
-				}
-			}
-
-			if (!fieldElement) {
-				return;
-			}
+			const isValid = this.state.getStateElementConditionalTagsRef(name, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
 
 			// Reset to original state.
-			(defaults !== this.HIDE) ? fieldElement.classList.remove(this.state.getStateSelectorsClassHidden()) : fieldElement.classList.add(this.state.getStateSelectorsClassHidden());
+			(defaults !== this.HIDE) ? field.classList.remove(this.state.getStateSelectorsClassHidden()) : field.classList.add(this.state.getStateSelectorsClassHidden());
 
 			if (isValid) {
 				// Change state.
-				(defaults !== this.HIDE) ? fieldElement.classList.add(this.state.getStateSelectorsClassHidden()) : fieldElement.classList.remove(this.state.getStateSelectorsClassHidden());
-			}
-		});
-	}
-
-	/**
-	 * Init event listeners.
-	 *
-	 * @param {object} element Form element.
-	 *
-	 * @returns void
-	 */
-	setListeners(formId) {
-		// Find all fields that need listeners.
-		Object.keys(this.state.getStateConditionalTagsEvents(formId)).forEach((item) => {
-			console.log(item);
-			// if (item.localName === 'select') {
-			// 	item.addEventListener('change', this.onChangeEvent);
-			// } else {
-				item.addEventListener('input', debounce(this.onFieldChangeEvent, 250));
-			// }
-		});
-	}
-
-	/**
-	 * Init fields initial values data.
-	 *
-	 * @param {object} element Form element.
-	 * @param {bool} isInit If this method is used in initial state or on every change.
-	 *
-	 * @returns void
-	 */
-	setValues(element, isInit=false) {
-		// Find all fields.
-		let items = element.querySelectorAll('input, select, textarea');
-
-		// Loop all fields.
-		for (const [key, item] of Object.entries(items)) {
-			const itemValue = item.value;
-			const itemName = item.name;
-			const itemType = item.type;
-
-			if (itemName === 'search_terms') {
-				continue;
-			}
-
-			// Make changes depending on the field type.
-			switch (itemType) {
-				case 'radio':
-					if (item.checked) {
-						this.state.setState([this.state.VALUES, itemName], itemValue, this.FORM_ID);
-					}
-
-					if (isInit) {
-						this.state.setState([this.state.VALUES, itemName], '', this.FORM_ID);
-
-						this.state.setState([this.state.ELEMENTS, itemName], this.utils.getFieldByName(element, itemName), this.FORM_ID);
-						this.state.setState([this.state.ELEMENTS, `${itemName}---${itemValue}`], item.parentNode.parentNode, this.FORM_ID);
-					}
-					break;
-				case 'checkbox':
-					this.state.setState([this.state.VALUES, `${itemName}---${itemValue}`], item.checked ? itemValue : '', this.FORM_ID);
-
-					if (isInit) {
-						this.state.setState([this.state.ELEMENTS, `${itemName}---${itemValue}`], item.parentNode.parentNode, this.FORM_ID);
-					}
-					break;
-				case 'select-one':
-					// Set values based on the input name depeneding on the value.
-					this.state.setState([this.state.VALUES, itemName], itemValue, this.FORM_ID);
-
-					if (isInit) {
-						this.state.setState([this.state.ELEMENTS, itemName], this.utils.getFieldByName(element, itemName), this.FORM_ID);
-
-						item.parentNode.parentNode.querySelectorAll('.choices__list--dropdown .choices__item').forEach((option) => {
-							const optionValue = option.getAttribute('data-value');
-							if (optionValue) {
-								this.state.setState([this.state.ELEMENTS, `${itemName}---${option.getAttribute('data-value')}`], 'select', this.FORM_ID);
-							}
-						})
-					}
-					break;
-				default:
-					// Set values based on the input name depeneding on the value.
-					this.state.setState([this.state.VALUES, itemName], itemValue, this.FORM_ID);
-
-					if (isInit) {
-						this.state.setState([this.state.ELEMENTS, itemName], this.utils.getFieldByName(element, itemName), this.FORM_ID);
-					}
-					break;
+				(defaults !== this.HIDE) ? field.classList.add(this.state.getStateSelectorsClassHidden()) : field.classList.remove(this.state.getStateSelectorsClassHidden());
 			}
 		}
 	}
@@ -284,76 +156,19 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	setFieldsRules(name, value, formId) {
+	setFieldsRules(name, formId) {
 		// Loop all fields.
-		const output = [
-			...this.state.getStateElementConditionalTagsRef(name, formId),
-		];
+		let output = this.state.getStateElementConditionalTagsRef(name, formId);
 
 		this.state.getStateElementConditionalTagsTags(name, formId).forEach((items, parent) => {
 			// Loop all inner fields.
 			items.forEach((inner, index) => {
+				const value = this.state.getStateElementValue(inner[0], formId);
+
 				// Do the check based on the operator and set reference data with the correct state.
-				const condition = this.OPERATORS[inner[1]](value, inner[2]);
-
-				if (condition) {
-					
-				}
-				output[parent] = [
-					...output[parent],
-					
-					[index]: this.OPERATORS[inner[1]](value, inner[2]),
-				];
-
-				console.log(output);
-
-				// this.state.setState(
-				// 	[this.state.ELEMENTS, name, this.state.CONDITIONAL_TAGS, this.state.TAGS_REF],
-				// 	output,
-				// 	formId
-				// );
+				output[parent][index] = this.OPERATORS[inner[1]](value, inner[2]);
 			});
 		});
-	}
-
-	////////////////////////////////////////////////////////////////
-	// Events callback
-	////////////////////////////////////////////////////////////////
-
-	/**
-	 * Handle custom select event change.
-	 *
-	 * @param {object} event Event callback.
-	 *
-	 * @public
-	 */
-	onChangeEvent = (event) => {
-		this.onFieldChangeEvent(event);
-	};
-
-	/**
-	 * Handle action on input change.
-	 *
-	 * @param {object} event Event callback.
-	 *
-	 * @public
-	 */
-	onFieldChangeEvent = (event) => {
-		const inputElement = event.target;
-
-		let {name} = inputElement;
-
-		if (inputElement.type === 'checkbox') {
-			name = `${inputElement.name}---${inputElement.value}`;
-		}
-
-		this.setValues(inputElement.closest(this.utils.formSelector));
-
-		const fields = this.state.getState([this.state.EVENTS, name], this.FORM_ID);
-
-		if (fields) {
-			this.setFields(fields);
-		}
 	}
 
 	////////////////////////////////////////////////////////////////
