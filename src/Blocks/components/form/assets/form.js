@@ -444,7 +444,7 @@ export class Form {
 							}
 						}
 					} else {
-						this.FORM_DATA.append(`${name}[0]`, JSON.stringify({}));
+						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
 					}
 					break;
 				default:
@@ -928,7 +928,7 @@ export class Form {
 					},
 					{
 						name: this.state.getStateParam('type'),
-						value: 'fileUpload',
+						value: 'fileUpload', // Not connected to anything just here for reference.
 						type: 'hidden',
 					},
 					{
@@ -952,8 +952,7 @@ export class Form {
 
 				// Output errors if ther is any.
 				if (response?.data?.validation !== undefined) {
-					const errorMsgOutput = file.previewTemplate.querySelector('.dz-error-message span');
-					errorMsgOutput.innerHTML = response?.data?.validation?.[file?.upload?.uuid];
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.validation?.[file?.upload?.uuid];
 
 					// Remove faulty files.
 					setTimeout(() => {

@@ -148,15 +148,12 @@ class FormSubmitFilesRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
-
-		$fieldName = $formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
-
 		// Finish.
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				__('File upload success', 'eightshift-forms'),
 				[
-					'file' => $formDataReference['files'][$fieldName]['id'],
+					'file' => $formDataReference['filesUpload']['id'],
 				]
 			)
 		);

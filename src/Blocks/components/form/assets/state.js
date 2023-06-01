@@ -265,7 +265,7 @@ export class State {
 
 		const globalMsg = formElement.querySelector(this.getStateSelectorsGlobalMsg());
 		this.setState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], globalMsg, formId);
-		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], globalMsg.getAttribute(this.getStateAttribute('formTyglobalMsgHeadingSuccesspe')), formId);
+		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], globalMsg.getAttribute(this.getStateAttribute('globalMsgHeadingSuccess')), formId);
 		this.setState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], globalMsg.getAttribute(this.getStateAttribute('globalMsgHeadingError')), formId);
 
 		// Conditional tags
@@ -632,11 +632,11 @@ export class State {
 		return this.getState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], formId);
 	}
 
-	getStateFormErrorGlobalHeadingSuccess(formId) {
+	getStateFormGlobalMsgHeadingSuccess(formId) {
 		return this.getState([this.FORM, this.GLOBAL_MSG, this.HEADING_SUCCESS], formId);
 	}
 
-	getStateFormErrorGlobalHeadingError(formId) {
+	getStateFormGlobalMsgHeadingError(formId) {
 		return this.getState([this.FORM, this.GLOBAL_MSG, this.HEADING_ERROR], formId);
 	}
 

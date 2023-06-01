@@ -92,7 +92,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			// Prepare all data.
 			$formDataReference = $this->getFormDataReference($request);
 
-			$isStepValidation = $this->isStepValidation($formDataReference);
+			// $isStepValidation = $this->isStepValidation($formDataReference);
 
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
@@ -109,7 +109,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					}
 
 					// Upload files to temp folder.
-					$formDataReference['files'] = $this->uploadFile($formDataReference['files']);
+					$formDataReference['filesUpload'] = $this->uploadFile($formDataReference['filesUpload']);
 					break;
 				case self::ROUTE_TYPE_SETTINGS:
 					// Validate params.
@@ -135,6 +135,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 						}
 					}
 
+					// Validate captcha.
 					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 						$captchaParams = $formDataReference['captcha'];
 
@@ -151,31 +152,19 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							return \rest_ensure_response($captcha);
 						}
 					}
-
-					// if (!$isStepValidation) {
-						// Extract hidden params from localStorage set on the frontend.
-						$formDataReference['params'] = $this->extractStorageParams($formDataReference['params']);
-
-						// Attach some special keys for specific types.
-						if ($formDataReference['type'] === SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY) {
-							$formDataReference['action'] = $this->getFormCustomAction($formDataReference['params']);
-							$formDataReference['actionExternal'] = $this->getFormCustomActionExternal($formDataReference['params']);
-						}
-					// }
-
 					break;
 			}
 
-			if ($this->isStepValidation($formDataReference)) {
-				return \rest_ensure_response(
-					$this->getApiSuccessOutput(
-						\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
-						[
-							'nextStep' => 'step-1',
-						]
-					)
-				);
-			}
+			// if ($this->isStepValidation($formDataReference)) {
+			// 	return \rest_ensure_response(
+			// 		$this->getApiSuccessOutput(
+			// 			\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
+			// 			[
+			// 				'nextStep' => 'step-1',
+			// 			]
+			// 		)
+			// 	);
+			// }
 
 			// Do Action.
 			return $this->submitAction($formDataReference);

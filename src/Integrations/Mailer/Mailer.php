@@ -58,10 +58,9 @@ class Mailer implements MailerInterface
 		array $responseFields = []
 	): bool {
 
-		error_log( print_r( ( $fields ), true ) );
-
+		$time_start = microtime(true);
 		// Send email.
-		return \wp_mail(
+		$a = \wp_mail(
 			$this->getTemplate('to', $fields, $to),
 			$this->getTemplate('subject', $fields, $subject),
 			$this->getTemplate('message', $fields, $template, $responseFields),
@@ -71,6 +70,13 @@ class Mailer implements MailerInterface
 			),
 			$this->prepareFiles($files)
 		);
+		$time_end = microtime(true);
+$execution_time = ($time_end - $time_start);
+
+error_log( print_r( ( 'Total Execution Time:'.$execution_time.' Sec' ), true ) );
+
+
+		return $a;
 	}
 
 	/**
@@ -172,7 +178,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return string
 	 */
-	protected function getType(): string
+	private function getType(): string
 	{
 		return 'Content-Type: text/html; charset=UTF-8';
 	}
@@ -185,7 +191,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return string
 	 */
-	protected function getFrom(string $email, string $name): string
+	private function getFrom(string $email, string $name): string
 	{
 		if (empty($email)) {
 			return '';
@@ -206,7 +212,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return array<int, string>
 	 */
-	protected function getHeader(string $email, string $name = ''): array
+	private function getHeader(string $email, string $name = ''): array
 	{
 		return [
 			$this->getType(),
@@ -224,10 +230,10 @@ class Mailer implements MailerInterface
 	 *
 	 * @return string
 	 */
-	protected function getTemplate(string $type, array $items, string $template = '', array $responseFields = []): string
+	private function getTemplate(string $type, array $items, string $template = '', array $responseFields = []): string
 	{
 		$params = \array_merge(
-			$this->prepareFields($items),
+			$this->prepareParams($items),
 			$responseFields
 		);
 
@@ -245,24 +251,17 @@ class Mailer implements MailerInterface
 	}
 
 	/**
-	 * Prepare email fields.
+	 * Prepare params.
 	 *
-	 * @param array<string, mixed> $fields Fields to prepare.
+	 * @param array<string, mixed> $params Params to prepare.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	protected function prepareFields(array $fields): array
+	private function prepareParams(array $params): array
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
-
-		foreach ($fields as $key => $param) {
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
-				continue;
-			}
-
+		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 
@@ -283,7 +282,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return array<string>
 	 */
-	protected function prepareFiles(array $files): array
+	private function prepareFiles(array $files): array
 	{
 		$output = [];
 
@@ -291,20 +290,20 @@ class Mailer implements MailerInterface
 			return $output;
 		}
 
-		foreach ($files as $items) {
-			if (!$items) {
+		error_log( print_r( ( $files ), true ) );
+		
+
+		foreach ($files as $file) {
+			$value = $file['value'] ?? [];
+
+			if (!$value) {
 				continue;
 			}
 
-			foreach ($items as $file) {
-				$path = $file['path'] ?? '';
-
-				if (!$path) {
-					continue;
-				}
-
-				$output[] = $path;
-			}
+			$output = [
+				...$output,
+				...$value,
+			];
 		}
 
 		return $output;

@@ -183,11 +183,6 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 		// Send email if it is configured in the backend.
 		$this->formSubmitMailer->sendEmails($formDataReference);
 
-		// Always delete the files from the disk.
-		if ($files) {
-			$this->deleteFiles($files);
-		}
-
 		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(

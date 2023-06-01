@@ -12,8 +12,8 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
-use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
@@ -29,6 +29,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Use API helper trait.
 	 */
 	use ApiHelper;
+
+	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
 
 	/**
 	 * List of all custom form params used.
@@ -222,7 +227,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function prepareParams(array $params): array
 	{
-		return \array_map(
+		$paramsOutput = \array_map(
 			static function ($item) {
 				// Check if array then output only value that is not empty.
 				if (\is_array($item)) {
@@ -275,6 +280,56 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			},
 			$params
 		);
+
+		$output = [];
+
+		foreach ($paramsOutput as $key => $value) {
+			switch ($key) {
+				case self::CUSTOM_FORM_PARAMS['postId']:
+					$output['formId'] = $value['value'];
+					break;
+				case self::CUSTOM_FORM_PARAMS['type']:
+					$output['type'] = $value['value'];
+					break;
+				case self::CUSTOM_FORM_PARAMS['action']:
+					$output['action'] = $value['value'];
+					break;
+				case self::CUSTOM_FORM_PARAMS['captcha']:
+					$output['captcha'] = $value['value'];
+					break;
+				case self::CUSTOM_FORM_PARAMS['actionExternal']:
+					$output['actionExternal'] = $value['value'];
+					break;
+				case self::CUSTOM_FORM_PARAMS['settingsType']:
+					$output['settingsType'] = $value['value'];
+					break;
+				case self::CUSTOM_FORM_PARAMS['storage']:
+					$output['storage'] = $value['value'];
+					break;
+				case self::CUSTOM_FORM_PARAMS['stepFields']:
+					$output['stepFields'] = $value['value'];
+					break;
+				default:
+					if ($value['type'] === 'file') {
+						$output['files'][$key] = $value['value'] ? array_merge(
+							$value,
+							[
+								'value' => \array_map(
+									function ($item) {
+										return $this->getFilePath($item);
+									},
+									explode(self::DELIMITER, $value['value'])
+								),
+							]
+						) : [];
+					} else {
+						$output['params'][$key] = $value;
+					}
+					break;
+			}
+		}
+
+		return $output;
 	}
 
 	/**
@@ -286,156 +341,19 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function prepareFile(array $file, array $params): array
 	{
-		$fieldName = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
-
-		if (!$fieldName) {
-			return $file;
+		$file = $file['file'] ?? [];
+		
+		if (!$file) {
+			return [];
 		}
 
-		$fileId = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['fileId']]['value'] ?? '';
-
-		if (!$fileId) {
-			return $file;
-		}
-
-		$file = $file['file'];
-
-		$file['id'] = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['fileId']]['value'] ?? '';
-		$file['fieldName'] = $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
-
-		return $file;
-	}
-
-	/**
-	 * Return form Type from form params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @throws UnverifiedRequestException Wrong request response.
-	 *
-	 * @return string
-	 */
-	protected function getFormType(array $params): string
-	{
-		$formType = $params[self::CUSTOM_FORM_PARAMS['type']] ?? '';
-
-		if (!$formType) {
-			throw new UnverifiedRequestException(
-				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
-			);
-		}
-
-		return $formType['value'] ?? '';
-	}
-
-	/**
-	 * Return mailer for sender email field params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return string
-	 */
-	protected function getFormCustomAction(array $params): string
-	{
-		return $params[self::CUSTOM_FORM_PARAMS['action']]['value'] ?? '';
-	}
-
-	/**
-	 * Return form step fields params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return array<int, string>
-	 */
-	protected function getFormStepFields(array $params): array
-	{
-		return $params[self::CUSTOM_FORM_PARAMS['stepFields']]['value'] ?? [];
-	}
-
-	/**
-	 * Return form captcha fields params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return array<int, string>
-	 */
-	protected function getFormCaptcha(array $params): array
-	{
-		return isset($params[self::CUSTOM_FORM_PARAMS['captcha']]['value']) ? json_decode($params[self::CUSTOM_FORM_PARAMS['captcha']]['value'], true) : [];
-	}
-
-	/**
-	 * Return mailer for sender email field params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return string
-	 */
-	protected function getFormCustomActionExternal(array $params): string
-	{
-		return $params[self::CUSTOM_FORM_PARAMS['actionExternal']]['value'] ?? '';
-	}
-
-	/**
-	 * Return form settings type from form params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @throws UnverifiedRequestException Wrong request response.
-	 *
-	 * @return string
-	 */
-	protected function getFormSettingsType(array $params): string
-	{
-		return $params[self::CUSTOM_FORM_PARAMS['settingsType']]['value'] ?? '';
-	}
-
-	/**
-	 * Return form ID from form params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @throws UnverifiedRequestException Wrong request response.
-	 *
-	 * @return string
-	 */
-	protected function getFormId(array $params): string
-	{
-		$formId = $params[self::CUSTOM_FORM_PARAMS['postId']] ?? '';
-
-		if (!$formId) {
-			throw new UnverifiedRequestException(
-				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
-			);
-		}
-
-		return $formId['value'] ?? '';
-	}
-
-	/**
-	 * Extract storage parameters from params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function extractStorageParams(array $params): array
-	{
-		if (!isset($params[self::CUSTOM_FORM_PARAMS['storage']])) {
-			return $params;
-		}
-
-		$storage = $params[self::CUSTOM_FORM_PARAMS['storage']]['value'] ?? [];
-
-		if (!$storage) {
-			return $params;
-		}
-
-		$storage = \json_decode($storage, true);
-
-		$params[self::CUSTOM_FORM_PARAMS['storage']]['value'] = $storage;
-
-		return $params;
+		return array_merge(
+			$file,
+			[
+				'id' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['fileId']]['value'] ?? '',
+				'fieldName' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '',
+			]
+		);
 	}
 
 	/**
@@ -465,52 +383,51 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		// Get params from request.
 		$params = $this->prepareParams($request->get_body_params());
 
-		// Get filess from request.
-		$file = $this->prepareFile($request->get_file_params(), $params);
-
 		// Get form id from params.
-		$formId = $this->getFormId($params);
+		$formId = $params['formId'] ?? '';
 
 		// Get form type from params.
-		$formType = $this->getFormType($params);
+		$type = $params['type'] ?? '';
 
 		// Get form settings for admin from params.
-		$formSettingsType = $this->getFormSettingsType($params);
+		$formSettingsType = $params['settingsType'] ?? '';
 
 		// Manual populate output it admin settings our build it from form Id.
-		if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+		if ($type === Settings::SETTINGS_TYPE_NAME || $type === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
 			$formDataReference = [
 				'formId' => $formId,
-				'type' => $formType,
+				'type' => $type,
 				'itemId' => '',
 				'innerId' => '',
-				'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$formType]) ? \apply_filters(Filters::ALL[$formSettingsType][$formType], $formId) : [],
+				'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$type]) ? \apply_filters(Filters::ALL[$formSettingsType][$type], $formId) : [],
 			];
 		} else {
 			$formDataReference = Helper::getFormDetailsById($formId);
 		}
 
+		// Populare files on upload.
+		$formDataReference['filesUpload'] = $this->prepareFile($request->get_file_params(), $params['params'] ?? []);
+
+		// Populate files from uploaded ID.
+		$formDataReference['files'] = $params['files'] ?? [];
+
 		// Populare params.
-		$formDataReference['params'] = $params;
+		$formDataReference['params'] = $params['params'] ?? [];
 
-		// Populare files.
-		$formDataReference['files'] = $file;
+		// Populare action.
+		$formDataReference['action'] = $params['action'] ?? '';
 
-		// Output step fields.
-		$stepFields = $this->getFormStepFields($params);
+		// Populare action external.
+		$formDataReference['actionExternal'] = $params['actionExternal'] ?? '';
 
-		if ($stepFields) {
-			$formDataReference['stepFields'] = $this->getFormStepFields($params);
-
-			// No need for this field to be in the params after the data is extracted.
-			unset($formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['stepFields']]);
-		}
+		// Populare step fields.
+		$formDataReference['stepFields'] = $params['stepFields'] ?? [];
 
 		// Get form captcha from params.
-		$formDataReference['captcha'] = $this->getFormCaptcha($params);
+		$formDataReference['captcha'] = json_decode($params['captcha'] ?? '', true) ?? [];
 
-		// No need for this field to be in the params after the data is extracted.
-		unset($formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['captcha']]);
+		// Get form storage from params.
+		$formDataReference['storage'] = json_decode($params['storage'] ?? '', true) ?? [];
 
 		return $formDataReference;
 	}

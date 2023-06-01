@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Testfilters;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -657,9 +658,8 @@ class Testfilters implements ServiceInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		return __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.mmdb';
+		return Helper::getRealpath(__DIR__ . '/geoip.mmdb');
 	}
-
 	/**
 	 * Provide custom geolocation phar location.
 	 *
@@ -672,7 +672,7 @@ class Testfilters implements ServiceInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		return __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.phar';
+		return Helper::getRealpath(__DIR__ . '/geoip.phar');
 	}
 
 	/**

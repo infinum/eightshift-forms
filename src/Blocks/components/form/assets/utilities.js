@@ -75,6 +75,7 @@ export class Utils {
 		error.innerHTML = '';
 	}
 
+	
 	setFieldError(name, msg, formId) {
 		const error = this.state.getStateElementError(name, formId);
 
@@ -91,7 +92,7 @@ export class Utils {
 
 		// Scroll to element if the condition is right.
 		const firstItemWithErrorName = this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.HAS_ERROR, true, formId)?.[0]?.[this.state.NAME];
-		if (firstItemWithErrorName) {
+		if (firstItemWithErrorName && !this.state.getStateSettingsDisableScrollToFieldOnError()) {
 			this.scrollToElement(firstItemWithErrorName, formId);
 		}
 	}
@@ -124,7 +125,7 @@ export class Utils {
 				this.scrollToGlobalMsg(formId);
 			}
 
-			const headingSuccess = this.state.getStateFormErrorGlobalHeadingSuccess(formId);
+			const headingSuccess = this.state.getStateFormGlobalMsgHeadingSuccess(formId);
 
 			if (headingSuccess) {
 				messageContainer.innerHTML = `<div><div>${headingSuccess}</div><span>${msg}</span></div>`;
@@ -132,7 +133,7 @@ export class Utils {
 				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
 			}
 		} else {
-			const headingError = this.state.getStateFormErrorGlobalHeadingError(formId);
+			const headingError = this.state.getStateFormGlobalMsgHeadingError(formId);
 
 			if (headingError) {
 				messageContainer.innerHTML = `<div><div>${headingError}</div><span>${msg}</span></div>`;

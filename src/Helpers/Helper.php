@@ -736,4 +736,18 @@ class Helper
 
 		return ($port ? "https" : "http") . "://{$host}{$request}";
 	}
+
+	/**
+	 * Get realpath with file name.
+	 *
+	 * @return string
+	 */
+	public static function getRealpath(string $prefix, string $fileName = ''): string
+	{
+		if ($fileName) {
+			return \realpath($prefix) . \DIRECTORY_SEPARATOR . $fileName;
+		}
+
+		return \realpath($prefix);
+	}
 }

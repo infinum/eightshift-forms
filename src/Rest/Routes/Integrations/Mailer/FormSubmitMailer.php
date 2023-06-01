@@ -102,22 +102,12 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// If email fails.
 		if (!$response) {
-			// Always delete the files from the disk.
-			if ($files) {
-				$this->deleteFiles($files);
-			}
-
 			return $this->getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorEmailSend', $formId),
 			);
 		}
 
 		$this->sendConfirmationEmail($formId, $params, $files);
-
-		// Always delete the files from the disk.
-		if ($files) {
-			$this->deleteFiles($files);
-		}
 
 		// Finish.
 		return $this->getApiSuccessOutput(

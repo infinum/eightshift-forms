@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-
 /**
  * Trait UploadHelper
  */
@@ -26,30 +24,27 @@ trait UploadHelper
 	 */
 	protected function uploadFile(array $file): array
 	{
-		$this->deleteUploadFolderContent();
-		$output = [];
-
 		if (!$file) {
-			return $output;
+			return [];
 		}
 
 		$fieldName = $file['fieldName'] ?? '';
 
 		if (!$fieldName) {
-			return $output;
+			return [];
 		}
 
 		$fileId = $file['id'] ?? '';
 
 		if (!$fileId) {
-			return $output;
+			return [];
 		}
 
 		if (!\defined('WP_CONTENT_DIR')) {
-			return $output;
+			return [];
 		}
 
-		$folderPath = \WP_CONTENT_DIR . \DIRECTORY_SEPARATOR . 'esforms-tmp' . \DIRECTORY_SEPARATOR;
+		$folderPath = Helper::getRealpath(\WP_CONTENT_DIR . '/esforms-tmp');
 
 		if (!\is_dir($folderPath)) {
 			\mkdir($folderPath);
@@ -59,7 +54,7 @@ trait UploadHelper
 
 		// If file is faulty return error.
 		if ($error !== \UPLOAD_ERR_OK) {
-			return $output;
+			return [];
 		}
 
 		// Create hashed file name so there is no collision.
@@ -68,19 +63,18 @@ trait UploadHelper
 		$name = "{$fileId}.{$ext}";
 
 		// Create final folder location path.
-		$finalFilePath = $folderPath . $name;
+		$finalFilePath = Helper::getRealpath($folderPath, $name);
 
 		// Move the file to new location.
 		\move_uploaded_file($file['tmp_name'], $finalFilePath);
 
-		$output[$fieldName] = [
-			'id' => $fileId,
-			'name' => $name,
-			'path' => $finalFilePath,
-			'type' => $file['type'],
-		];
-
-		return $output;
+		return array_merge(
+			$file,
+			[
+				'path' => $finalFilePath,
+				'ext' => $ext,
+			]
+		);
 	}
 
 	/**
@@ -122,13 +116,13 @@ trait UploadHelper
 			return;
 		}
 
-		$folderPath = \WP_CONTENT_DIR . \DIRECTORY_SEPARATOR . 'esforms-tmp' . \DIRECTORY_SEPARATOR;
+		$folderPath = Helper::getRealpath(\WP_CONTENT_DIR . '/esforms-tmp');
 
 		if (!\is_dir($folderPath)) {
 			return;
 		}
 
-		$files = \glob("{$folderPath}*");
+		$files = \glob("{$folderPath}/*");
 
 		if (!$files) {
 			return;
@@ -158,7 +152,7 @@ trait UploadHelper
 			return '';
 		}
 
-		$filePath = \WP_CONTENT_DIR . \DIRECTORY_SEPARATOR . 'esforms-tmp' . \DIRECTORY_SEPARATOR . $name;
+		$filePath = Helper::getRealpath(\WP_CONTENT_DIR . "/esforms-tmp/{$name}");
 
 		if (!\file_exists($filePath)) {
 			return '';

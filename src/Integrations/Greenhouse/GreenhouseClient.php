@@ -431,7 +431,7 @@ class GreenhouseClient implements ClientInterface
 					continue;
 				}
 
-				$output[$id] = new CURLFile(\realpath($path), $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$output[$id] = new CURLFile(Helper::getRealpath($path), $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			}
 		}
 

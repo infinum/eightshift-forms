@@ -114,10 +114,13 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 		$formType = $data['type'];
-		$params = $data['params'];
 		$formId = $data['formId'];
 		$fieldsOnly = $data['fieldsOnly'];
 		$stepFields = $data['stepFields'] ?? [];
+		$params = \array_merge(
+			$data['params'],
+			$data['files']
+		);
 
 		// Manualy build fields from settings components.
 		if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
@@ -263,7 +266,7 @@ class Validator extends AbstractValidation
 	public function validateFiles(array $data): array
 	{
 		$output = [];
-		$file = $data['files'];
+		$file = $data['filesUpload'];
 		$formId = $data['formId'];
 		$fieldsOnly = $data['fieldsOnly'];
 		$validationReference = $this->getValidationReference($fieldsOnly);
