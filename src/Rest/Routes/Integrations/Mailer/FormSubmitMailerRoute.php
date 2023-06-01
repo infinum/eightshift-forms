@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -55,23 +56,33 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected $labels;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		FormSubmitMailerInterface $formSubmitMailer,
-		LabelsInterface $labels
+		LabelsInterface $labels,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->labels = $labels;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -112,6 +123,16 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected function getValidatorLabels()
 	{
 		return $this->labels;
+	}
+
+	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
 	}
 
 	/**

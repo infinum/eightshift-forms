@@ -10,11 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Validation\Validator;
 use WP_REST_Request;
 
@@ -34,10 +36,28 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	use SettingsHelper;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
+	 * Create a new instance that injects classes
+	 *
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
+	 */
+	public function __construct(CaptchaInterface $captcha)
+	{
+		$this->captcha = $captcha;
+	}
+
+	/**
 	 * Route types.
 	 */
 	protected const ROUTE_TYPE_DEFAULT = 'default';
 	protected const ROUTE_TYPE_FILE = 'file';
+	protected const ROUTE_TYPE_SETTINGS = 'settings';
 	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
 
 	/**
@@ -91,6 +111,17 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					// Upload files to temp folder.
 					$formDataReference['files'] = $this->uploadFile($formDataReference['files']);
 					break;
+				case self::ROUTE_TYPE_SETTINGS:
+					// Validate params.
+					$validate = $this->getValidator()->validateParams($formDataReference);
+
+					if ($validate) {
+						throw new UnverifiedRequestException(
+							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+							$validate
+						);
+					}
+					break;
 				default:
 					// Validate params.
 					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
@@ -104,7 +135,24 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 						}
 					}
 
-					if (!$isStepValidation) {
+					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+						$captchaParams = $formDataReference['captcha'];
+
+						if (!$captchaParams) {
+							throw new UnverifiedRequestException(
+								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$captchaParams
+							);
+						}
+
+						$captcha = $this->captcha->check($captchaParams['token'], $captchaParams['action'], $captchaParams['isEnterprise'] ?? false);
+
+						if ($captcha['status'] === AbstractBaseRoute::STATUS_ERROR) {
+							return \rest_ensure_response($captcha);
+						}
+					}
+
+					// if (!$isStepValidation) {
 						// Extract hidden params from localStorage set on the frontend.
 						$formDataReference['params'] = $this->extractStorageParams($formDataReference['params']);
 
@@ -113,7 +161,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							$formDataReference['action'] = $this->getFormCustomAction($formDataReference['params']);
 							$formDataReference['actionExternal'] = $this->getFormCustomActionExternal($formDataReference['params']);
 						}
-					}
+					// }
 
 					break;
 			}
@@ -166,6 +214,13 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * @return $this
 	 */
 	abstract protected function getValidatorPatterns();
+
+	/**
+	 * Returns captcha class.
+	 *
+	 * @return $this
+	 */
+	abstract protected function getCaptcha();
 
 	/**
 	 * Returns validator labels class.

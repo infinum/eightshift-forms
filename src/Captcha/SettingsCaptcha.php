@@ -3,12 +3,12 @@
 /**
  * Captcha Settings class - Google reCaptcha.
  *
- * @package EightshiftForms\Validation
+ * @package EightshiftForms\Captcha
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Validation;
+namespace EightshiftForms\Captcha;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;

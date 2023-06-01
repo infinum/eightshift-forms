@@ -21,7 +21,7 @@ use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsCaptcha;
 
 /**
  * Labels class.

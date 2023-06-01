@@ -1,4 +1,4 @@
-import { Utils } from '../../form/assets/utilities';
+
 import { State, prefix } from '../../form/assets/state';
 import {
 	CONDITIONAL_TAGS_OPERATORS,
@@ -6,14 +6,12 @@ import {
 	CONDITIONAL_TAGS_LOGIC,
 } from './utils';
 
-
 /**
  * Main conditon tags class.
  */
 export class ConditionalTags {
 	constructor(options = {}) {
 		this.state = new State(options);
-		this.utils = new Utils(options);
 
 		// Simplify usage of constants
 		this.SHOW = CONDITIONAL_TAGS_ACTIONS.SHOW;
@@ -33,84 +31,100 @@ export class ConditionalTags {
 			[CONDITIONAL_TAGS_OPERATORS.SW]: (input, value) => input.startsWith(value),
 			[CONDITIONAL_TAGS_OPERATORS.EW]: (input, value) => input.endsWith(value),
 		};
+
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	////////////////////////////////////////////////////////////////
 	// Public methods
 	////////////////////////////////////////////////////////////////
-
 	/**
-	 * Init all actions.
+	 * Init one form by element after the loaded event is fired.
 	 * 
-	 * @public
-	 */
-	init() {
-		// Set all public methods.
-		this.publicMethods();
-	}
-
-	/**
-	 * Init one form by element.
-	 * 
-	 * @param {object} element Form element.
+	 * @param {string} fromId Form Id.
 	 *
 	 * @public
+	 *
+	 * @returns void
 	 */
 	initOne(formId) {
 		this.state.getStateFormElement(formId).addEventListener(this.state.getStateEventsFormJsLoaded(), this.onInitEvent);
 	}
 
-	onInitEvent = (event) => {
-		const { formId } = event.detail;
-		// Set forms logic.
-		// this.initForms(formId);
-
-		// Set fields logic.
-		this.initFields(formId);
-	}
-
 	/**
 	 * Init forms conditional logic.
 	 *
-	 * @param {object} element Form element.
+	 * @param {string} fromId Form Id.
+	 *
+	 * @public
 	 *
 	 * @returns void
 	 */
 	initForms(formId) {
-		let tags = this.state.getStateFormConfigConditionalTags(formId);
-
+		// Get all tags from state.
+		let tags = this.state.getStateFormConditionalTagsForm(formId);
 		if (!tags) {
 			return;
 		}
 
-		JSON.parse(tags).forEach((tag) => {
-			const item = element.querySelector(`${this.data.fieldSelector}[data-field-name='${tag[0]}']`);
+		// Loop tags.
+		tags.forEach((tag) => {
+			const field = this.state.getStateElementField(tag[0], formId);
 
-			if (!item) {
+			// Bailout if field doesn't exist.
+			if (!field) {
 				return;
 			}
 
-			const type = item.getAttribute(this.state.getStateAttribute('fieldType'));
+			// Get field type.
+			const type = this.state.getStateElementType(tag[0], formId);
+
+			// Prepare element placeholder.
 			let innerItem = '';
 
+			// If tag has inner items items.
 			if (tag[2]) {
 				if (type === 'select') {
-					// select.
-					innerItem = item.querySelector(`.choices__item--choice[data-value="${tag[2]}"]`);
+					// Use for select.
+					innerItem = field.querySelector(`.choices__item--choice[data-value="${tag[2]}"]`);
 				} else {
-					// checkbox/radio.
-					innerItem = item.querySelector(`[value="${tag[2]}"]`).parentNode.parentNode;
+					// Use for radio and checkbox.
+					innerItem = this.state.getStateElementItemsField(tag[0], tag[2], formId);
 				}
 			} else {
-				// input/textarea.
-				innerItem = item;
+				// input/textarea, etc.
+				innerItem = this.state.getStateElementField(tag[0], formId);
 			}
 
-			if (innerItem) {
-				if (tag[1] === this.data.CONDITIONAL_TAGS_ACTIONS.HIDE) {
-					innerItem.classList.add(this.state.getStateSelectorsClassHidden());
-				} else {
-					innerItem.classList.add(this.state.getStateSelectorsClassVisible());
+			// Bailout if we have no element to apply.
+			if (!innerItem) {
+				return;
+			}
+
+			if (tag[1] === this.HIDE) {
+				// Handle hide state.
+				innerItem.classList.add(this.state.getStateSelectorsClassHidden());
+
+				// Select must set internal state for attributes due to rerendering in the choices lib.
+				if (tag[2] && type === 'select') {
+					const customItem = this.state.getStateElementCustom(tag[0], formId).config.choices.filter((item) => item.value === tag[2])?.[0];
+
+					if (customItem) {
+						customItem.customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHidden();
+					}
+				}
+			} else {
+				// Handle show state.
+				innerItem.classList.add(this.state.getStateSelectorsClassVisible());
+
+				// Select must set internal state for attributes due to rerendering in the choices lib.
+				if (tag[2] && type === 'select') {
+					const customItem = this.state.getStateElementCustom(tag[0], formId).config.choices.filter((item) => item.value === tag[2])?.[0];
+
+					if (customItem) {
+						customItem.customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisible();
+					}
 				}
 			}
 		});
@@ -119,7 +133,9 @@ export class ConditionalTags {
 	/**
 	 * Init fields conditional logic.
 	 *
-	 * @param {object} element Form element.
+	 * @param {string} fromId Form Id.
+	 *
+	 * @public
 	 *
 	 * @returns void
 	 */
@@ -129,27 +145,59 @@ export class ConditionalTags {
 		}
 	}
 
+	/**
+	 * Set field conditional logic.
+	 *
+	 * @param {string} name Field name.
+	 * @param {string} fromId Form Id.
+	 *
+	 * @public
+	 *
+	 * @returns void
+	 */
 	setField(name, formId) {
+		// Check and set top level events and set rules.
 		this.state.getStateFormConditionalTagsEvents(formId)?.[name]?.forEach((eventName) => {
 			this.setFieldsRules(eventName, formId);
 		});
 
+		// Set top level fields state.
 		this.setFieldTopLevel(formId);
 
+		// Check and set inner level events and set rules.
 		this.state.getStateFormConditionalTagsInnerEvents(formId)?.[name]?.forEach((eventName) => {
 			this.setFieldsRulesInner(eventName, formId);
 		});
 
+		// Set inner level fields state.
 		this.setFieldInner(formId);
+
+		// Set inner level fields state - for select specific.
 		this.setFieldInnerSelect(formId);
 	}
 
+	/**
+	 * Set field top level state.
+	 *
+	 * @param {string} fromId Form Id.
+	 *
+	 * @public
+	 *
+	 * @returns void
+	 */
 	setFieldTopLevel(formId) {
+		// Loop all elements.
 		for(const [name] of this.state.getStateElements(formId)) {
+			// Find field.
 			const field = this.state.getStateElementField(name, formId);
 
 			// Find defaults to know what direction to use.
 			const defaults = this.state.getStateElementConditionalTagsDefaults(name, formId);
+
+			// Bailout if default is missing.
+			if (!defaults) {
+				return;
+			}
 
 			// Check if conditions are valid or not. This is where the magic happens.
 			const isValid = this.state.getStateElementConditionalTagsRef(name, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
@@ -158,24 +206,38 @@ export class ConditionalTags {
 			(defaults !== this.HIDE) ? field.classList.remove(this.state.getStateSelectorsClassHidden()) : field.classList.add(this.state.getStateSelectorsClassHidden());
 
 			if (isValid) {
-				// Change state.
+				// Change state if valid.
 				(defaults !== this.HIDE) ? field.classList.add(this.state.getStateSelectorsClassHidden()) : field.classList.remove(this.state.getStateSelectorsClassHidden());
 			}
 		}
 	}
 
+	/**
+	 * Set field inner level state.
+	 *
+	 * @param {string} fromId Form Id.
+	 *
+	 * @public
+	 *
+	 * @returns void
+	 */
 	setFieldInner(formId) {
+		// Loop all elements.
 		for(const [name] of this.state.getStateElements(formId)) {
+			// Find parent field.
 			const parentField = this.state.getStateElementField(name, formId);
 
+			// Find inner items.
 			const items = Object.keys(this.state.getStateElementItems(name, formId) ?? []);
 
+			// Loop inner items.
 			items.forEach((innerName) => {
 				const field = this.state.getStateElementItemsField(name, innerName, formId);
 
 				// Find defaults to know what direction to use.
 				const defaults = this.state.getStateElementConditionalTagsDefaultsInner(name, innerName, formId);
 
+				// Bailout if default is missing.
 				if (!defaults) {
 					return;
 				}
@@ -187,10 +249,11 @@ export class ConditionalTags {
 				(defaults !== this.HIDE) ?field.classList.remove(this.state.getStateSelectorsClassHidden()) : field.classList.add(this.state.getStateSelectorsClassHidden());
 
 				if (isValid) {
-					// Change state.
+					// Change state if valid.
 					(defaults !== this.HIDE) ? field.classList.add(this.state.getStateSelectorsClassHidden()) : field.classList.remove(this.state.getStateSelectorsClassHidden());
 				}
 
+				// If all items in in parent are hidden, hide the top level field.
 				if (parentField.querySelectorAll(`.${this.state.getStateSelectorsClassHidden()}`).length === items.length && items.length > 0) {
 					parentField.classList.add(this.state.getStateSelectorsClassHidden());
 				} else {
@@ -200,64 +263,101 @@ export class ConditionalTags {
 		}
 	}
 
+	/**
+	 * Set field inner level state - select only.
+	 *
+	 * @param {string} fromId Form Id.
+	 *
+	 * @public
+	 *
+	 * @returns void
+	 */
 	setFieldInnerSelect(formId) {
+		// Loop all select elements.
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'select', formId)].forEach(({name}) => {
+			// Find parent field.
 			const parentField = this.state.getStateElementField(name, formId);
 
+			// Get choices object.
 			const custom = this.state.getStateElementCustom(name, formId);
+
+			// Get choices items.
 			const items = custom?.choiceList?.element?.children ?? [];
+
+			// Get active choice value.
 			const activeItem = custom.getValue(true);
 
+			// Loop inner items.
 			[...items].forEach((field) => {
-				// Find defaults to know what direction to use.
+				// Find item value.
 				const innerName = field.getAttribute(this.state.getStateAttribute('selectValue'));
 
+				// Bailout if placeholder.
 				if (!innerName) {
 					return;
 				}
 
+				// Find defaults to know what direction to use.
 				const defaults = this.state.getStateElementConditionalTagsDefaultsInner(name, innerName, formId);
 
+				// Bailout if default is missing.
 				if (!defaults) {
 					return;
 				}
 
-					// Check if conditions are valid or not. This is where the magic happens.
+				// Check if conditions are valid or not. This is where the magic happens.
 				const isValid = this.state.getStateElementConditionalTagsRefInner(name, innerName, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
+
+				// Find option index.
 				const index = field.getAttribute(this.state.getStateAttribute('selectId')) - 1;
 
 				// Reset to original state.
 				if (defaults !== this.HIDE) {
-					field.setAttribute(this.state.getStateAttribute('selectVisibility'), 'visible');
-					custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = 'visible';
+					// Set attribute.
+					field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassVisible());
+
+					// Set object config value due to rerendering issue.
+					custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisible();
 				} else {
+					// Set attribute.
 					field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassHidden());
+
+					// Set object config value due to rerendering issue.
 					custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHidden();
 				}
 
 				if (isValid) {
-					// Change state.
+					// Change state if valid.
 					if (defaults !== this.HIDE) {
+						// Set attribute.
 						field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassHidden());
+
+						// Set object config value due to rerendering issue.
 						custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHidden();
 
+						// If current item to change is selected, unset the choice.
 						if (innerName === activeItem) {
-							console.log('pero');
 							custom.setChoiceByValue('');
 						}
 
 					 } else {
-						field.setAttribute(this.state.getStateAttribute('selectVisibility'), 'visible');
-						custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = 'visible';
+						// Set attribute.
+						field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassVisible());
+
+						// Set object config value due to rerendering issue.
+						custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisible();
 					 }
 				}
 
+				// In case if option is hidden by default the logic is flipped.
 				if (!isValid && defaults === this.HIDE) {
+					// If current item to change is selected, unset the choice.
 					if (innerName === activeItem) {
 						custom.setChoiceByValue('');
 					}
 				}
 
+				// If all items in in parent are hidden, hide the top level field.
 				if (parentField.querySelectorAll(`[${this.state.getStateAttribute('selectVisibility')}="${this.state.getStateSelectorsClassHidden()}"]`).length === items.length - 1 && items.length - 1 > 0) {
 					parentField.classList.add(this.state.getStateSelectorsClassHidden());
 					custom.setChoiceByValue('');
@@ -269,89 +369,57 @@ export class ConditionalTags {
 	}
 
 	/**
-	 * Do the actual logic of checking conditions for rule.
+	 * Do the actual logic of checking conditions for rule - inner item.
 	 *
 	 * @param {string} name Field name.
+	 * @param {string} fromId Form Id.
+	 *
+	 * @public
 	 *
 	 * @returns void
 	 */
-		setFieldsRulesInner(name, formId) {
-			// Loop all fields.
-			const nameData = name.split('---');
-			const topName = nameData[0];
-			const innerName = nameData[1];
+	setFieldsRulesInner(name, formId) {
+		// Explode name because we can have inner items that have parent prefix.
+		const nameData = name.split('---');
+		const topName = nameData[0];
+		const innerName = nameData[1];
 
-			let output = this.state.getStateElementConditionalTagsRefInner(topName, innerName, formId);
+		// Opulate current ref state.
+		let output = this.state.getStateElementConditionalTagsRefInner(topName, innerName, formId);
 
-			this.state.getStateElementConditionalTagsTagsInner(topName, innerName, formId).forEach((items, parent) => {
-			// 	// Loop all inner fields.
-				items.forEach((inner, index) => {
-					let value = '';
-
-					const type = this.state.getStateElementType(inner[0], formId);
-
-					if (!type) {
-						return;
-					}
-
-					switch (type) {
-						case 'checkbox':
-							if (inner[2] === '') {
-								if (Object.values(this.state.getStateElementValue(inner[0], formId)).map((inner) => !inner).every(Boolean)) {
-									value = '';
-								} else {
-									value = 'empty';
-								}
-							} else {
-								value = this.state.getStateElementValue(inner[0], formId)[inner[2]] === inner[2] ? inner[2] : '';
-							}
-							break;
-						default:
-							value = this.state.getStateElementValue(inner[0], formId);
-							break;
-					}
-
-					// Do the check based on the operator and set reference data with the correct state.
-					output[parent][index] = this.OPERATORS[inner[1]](value, inner[2]);
-				});
-			});
-		}
-
-	/**
-	 * Do the actual logic of checking conditions for rule.
-	 *
-	 * @param {string} name Field name.
-	 *
-	 * @returns void
-	 */
-	setFieldsRules(name, formId) {
-		// Loop all fields.
-		let output = this.state.getStateElementConditionalTagsRef(name, formId);
-
-		this.state.getStateElementConditionalTagsTags(name, formId).forEach((items, parent) => {
+		// Loop all conditional tags.
+		this.state.getStateElementConditionalTagsTagsInner(topName, innerName, formId).forEach((items, parent) => {
 			// Loop all inner fields.
 			items.forEach((inner, index) => {
+				// Placeholder value to chack later.
 				let value = '';
 
+				// Get element type.
 				const type = this.state.getStateElementType(inner[0], formId);
 
+				// Bailout if type is missing.
 				if (!type) {
 					return;
 				}
 
 				switch (type) {
 					case 'checkbox':
+						// If check box inner items are missing this applys to parent element not children.
 						if (inner[2] === '') {
+							// If all inner items are empty and not set this will output value to empty.
 							if (Object.values(this.state.getStateElementValue(inner[0], formId)).map((inner) => !inner).every(Boolean)) {
 								value = '';
 							} else {
+								// If we don't care about value just need to have not empty any item, value is set to something random.
 								value = 'empty';
 							}
 						} else {
+							// If we selected inner item in options use the value of that item.
 							value = this.state.getStateElementValue(inner[0], formId)[inner[2]] === inner[2] ? inner[2] : '';
 						}
 						break;
 					default:
+						// Get element value by name.
 						value = this.state.getStateElementValue(inner[0], formId);
 						break;
 				}
@@ -360,6 +428,83 @@ export class ConditionalTags {
 				output[parent][index] = this.OPERATORS[inner[1]](value, inner[2]);
 			});
 		});
+	}
+
+	/**
+	 * Do the actual logic of checking conditions for rule - top level item.
+	 *
+	 * @param {string} name Field name.
+	 * @param {string} fromId Form Id.
+	 *
+	 * @public
+	 *
+	 * @returns void
+	 */
+	setFieldsRules(name, formId) {
+		// Opulate current ref state.
+		let output = this.state.getStateElementConditionalTagsRef(name, formId);
+
+		// Loop all conditional tags.
+		this.state.getStateElementConditionalTagsTags(name, formId).forEach((items, parent) => {
+			// Loop all inner fields.
+			items.forEach((inner, index) => {
+				// Placeholder value to chack later.
+				let value = '';
+
+				// Get element type.
+				const type = this.state.getStateElementType(inner[0], formId);
+
+				// Bailout if type is missing.
+				if (!type) {
+					return;
+				}
+
+				switch (type) {
+					case 'checkbox':
+						// If check box inner items are missing this applys to parent element not children.
+						if (inner[2] === '') {
+							// If all inner items are empty and not set this will output value to empty.
+							if (Object.values(this.state.getStateElementValue(inner[0], formId)).map((inner) => !inner).every(Boolean)) {
+								value = '';
+							} else {
+								// If we don't care about value just need to have not empty any item, value is set to something random.
+								value = 'empty';
+							}
+						} else {
+							// If we selected inner item in options use the value of that item.
+							value = this.state.getStateElementValue(inner[0], formId)[inner[2]] === inner[2] ? inner[2] : '';
+						}
+						break;
+					default:
+						// Get element value by name.
+						value = this.state.getStateElementValue(inner[0], formId);
+						break;
+				}
+
+				// Do the check based on the operator and set reference data with the correct state.
+				output[parent][index] = this.OPERATORS[inner[1]](value, inner[2]);
+			});
+		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Events callback
+	////////////////////////////////////////////////////////////////
+	/**
+	 * On init event callback.
+	 *
+	 * @param {CustomEvent} event Event object.
+	 *
+	 * @public
+	 */
+	onInitEvent = (event) => {
+		const { formId } = event.detail;
+
+		// Set fields logic.
+		this.initFields(formId);
+
+		// Set forms logic.
+		this.initForms(formId);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -375,5 +520,46 @@ export class ConditionalTags {
 		this.state.setStateWindow();
 
 		window[prefix].conditionalTags = {}
+		window[prefix].conditionalTags = {
+			SHOW: this.SHOW,
+			HIDE: this.HIDE,
+			OR: this.OR,
+			AND: this.AND,
+			OPERATORS: this.OPERATORS,
+
+			init: () => {
+				this.init();
+			},
+			initOne: (formId) => {
+				this.initOne(formId);
+			},
+			initForms: (formId) => {
+				this.initForms(formId);
+			},
+			initFields: (formId) => {
+				this.initFields(formId);
+			},
+			setField: (name, formId) => {
+				this.setField(name, formId);
+			},
+			setFieldTopLevel: (formId) => {
+				this.setFieldTopLevel(formId);
+			},
+			setFieldInner: (formId) => {
+				this.setFieldInner(formId);
+			},
+			setFieldInnerSelect: (formId) => {
+				this.setFieldInnerSelect(formId);
+			},
+			setFieldsRulesInner: (name, formId) => {
+				this.setFieldsRulesInner(name, formId);
+			},
+			setFieldsRules: (name, formId) => {
+				this.setFieldsRules(name, formId);
+			},
+			onInitEvent: (event) => {
+				this.onInitEvent(event);
+			},
+		}
 	}
 }

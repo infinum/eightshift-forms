@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Greenhouse;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -65,6 +66,13 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	public $formSubmitMailer;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -72,19 +80,22 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ClientInterface $greenhouseClient Inject ClientInterface which holds Greenhouse connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		ClientInterface $greenhouseClient,
-		FormSubmitMailerInterface $formSubmitMailer
+		FormSubmitMailerInterface $formSubmitMailer,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->greenhouseClient = $greenhouseClient;
 		$this->formSubmitMailer = $formSubmitMailer;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -125,6 +136,16 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	protected function getValidatorLabels()
 	{
 		return $this->labels;
+	}
+
+	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
 	}
 
 	/**

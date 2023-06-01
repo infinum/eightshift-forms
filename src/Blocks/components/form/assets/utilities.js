@@ -1,5 +1,3 @@
-/* global esFormsLocalization */
-
 import { State, prefix } from './state';
 
 /**

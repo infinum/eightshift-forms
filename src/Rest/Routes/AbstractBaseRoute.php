@@ -49,6 +49,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'hubspotPageName' => 'es-form-hubspot-page-name',
 		'hubspotPageUrl' => 'es-form-hubspot-page-url',
 		'mailchimpTags' => 'es-form-mailchimp-tags',
+		'captcha' => 'es-form-captcha',
 	];
 
 	/**
@@ -352,6 +353,18 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
+	 * Return form captcha fields params.
+	 *
+	 * @param array<string, mixed> $params Array of params got from form.
+	 *
+	 * @return array<int, string>
+	 */
+	protected function getFormCaptcha(array $params): array
+	{
+		return isset($params[self::CUSTOM_FORM_PARAMS['captcha']]['value']) ? json_decode($params[self::CUSTOM_FORM_PARAMS['captcha']]['value'], true) : [];
+	}
+
+	/**
 	 * Return mailer for sender email field params.
 	 *
 	 * @param array<string, mixed> $params Array of params got from form.
@@ -492,6 +505,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			// No need for this field to be in the params after the data is extracted.
 			unset($formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['stepFields']]);
 		}
+
+		// Get form captcha from params.
+		$formDataReference['captcha'] = $this->getFormCaptcha($params);
+
+		// No need for this field to be in the params after the data is extracted.
+		unset($formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['captcha']]);
 
 		return $formDataReference;
 	}

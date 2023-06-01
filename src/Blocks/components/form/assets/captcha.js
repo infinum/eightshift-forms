@@ -10,6 +10,9 @@ export class Captcha {
 	constructor(options = {}) {
 		this.state = new State(options);
 		this.utils = new Utils(options);
+
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -22,9 +25,6 @@ export class Captcha {
 	 * @public
 	 */
 	init() {
-		// Set all public methods.
-		this.publicMethods();
-
 		// Load captcha on init.
 		this.initCaptchaOnLoad();
 
@@ -52,13 +52,13 @@ export class Captcha {
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
 				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
-					this.formSubmitCaptchaInvisible(token, 'enterprise', actionName);
+					this.formSubmitCaptchaInvisible(token, true, actionName);
 				});
 			});
 		} else {
 			grecaptcha.ready(async () => {
 				await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
-					this.formSubmitCaptchaInvisible(token, 'free', actionName);
+					this.formSubmitCaptchaInvisible(token, false, actionName);
 				});
 			});
 		}
@@ -71,7 +71,7 @@ export class Captcha {
 	 *
 	 * @public
 	 */
-	formSubmitCaptchaInvisible(formId, token, payed, action) {
+	formSubmitCaptchaInvisible(token, isEnterprise, action) {
 		// Populate body data.
 		const body = {
 			method: 'POST',
@@ -81,7 +81,7 @@ export class Captcha {
 			},
 			body: JSON.stringify({
 				token,
-				payed,
+				isEnterprise,
 				action,
 			}),
 			credentials: 'same-origin',

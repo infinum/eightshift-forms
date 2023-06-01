@@ -14,7 +14,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsSettings;
-use EightshiftForms\Validation\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 

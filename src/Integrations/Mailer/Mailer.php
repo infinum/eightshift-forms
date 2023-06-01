@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
@@ -24,6 +25,11 @@ use Parsedown;
  */
 class Mailer implements MailerInterface
 {
+	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
+
 	/**
 	 * Use general helper trait.
 	 */
@@ -51,6 +57,8 @@ class Mailer implements MailerInterface
 		array $fields = [],
 		array $responseFields = []
 	): bool {
+
+		error_log( print_r( ( $fields ), true ) );
 
 		// Send email.
 		return \wp_mail(

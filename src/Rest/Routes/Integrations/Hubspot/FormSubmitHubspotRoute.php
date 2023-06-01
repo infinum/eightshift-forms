@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
@@ -77,6 +78,13 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	public $formSubmitMailer;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -85,6 +93,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -92,7 +101,8 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		HubspotClientInterface $hubspotClient,
 		ClearbitClientInterface $clearbitClient,
-		FormSubmitMailerInterface $formSubmitMailer
+		FormSubmitMailerInterface $formSubmitMailer,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
@@ -100,6 +110,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;
 		$this->formSubmitMailer = $formSubmitMailer;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -140,6 +151,16 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	protected function getValidatorLabels()
 	{
 		return $this->labels;
+	}
+
+	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
 	}
 
 	/**

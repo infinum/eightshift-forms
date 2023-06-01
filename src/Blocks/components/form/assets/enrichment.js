@@ -1,5 +1,4 @@
 import { State, prefix } from './state';
-import { Utils } from './utilities';
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 
 /**
@@ -8,10 +7,9 @@ import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 export class Enrichment {
 	constructor(options = {}) {
 		this.state = new State(options);
-		this.utils = new Utils(options);
 
-		// LocalStorage name.
-		this.STORAGE_NAME = 'es-storage';
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -22,10 +20,14 @@ export class Enrichment {
 	 * Init all actions.
 	 * 
 	 * @public
+	 *
+	 * @returns void
 	 */
 	init() {
-		// Set all public methods.
-		this.publicMethods();
+		// Check if enrichment is used.
+		if (!this.state.getStateEnrichmentIsUsed()) {
+			return;
+		}
 
 		// Set local storage data.
 		this.setLocalStorage();
@@ -35,6 +37,8 @@ export class Enrichment {
 	 * Set localStorage value.
 	 * 
 	 * @public
+	 *
+	 * @returns void
 	 */
 	setLocalStorage() {
 		// Check if enrichment is used.
@@ -78,14 +82,14 @@ export class Enrichment {
 
 			// Remove expired storage if it exists.
 			if (expirationDate.getTime() < currentStorage.timestamp) {
-				localStorage.removeItem(this.STORAGE_NAME);
+				localStorage.removeItem(this.state.getStateEnrichmentStorageName());
 			}
 		}
 
 		// Create new storage if this is the first visit or it was expired.
 		if (this.getLocalStorage() === null) {
 			localStorage.setItem(
-				this.STORAGE_NAME,
+				this.state.getStateEnrichmentStorageName(),
 				JSON.stringify(newStorage)
 			);
 			return;
@@ -114,16 +118,18 @@ export class Enrichment {
 		};
 
 		// Update localStorage with the new item.
-		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
+		localStorage.setItem(this.state.getStateEnrichmentStorageName(), JSON.stringify(finalOutput));
 	}
 
 	/**
 	 * Get localStorage value.
-	 * 
+	 *
 	 * @public
+	 *
+	 * @returns {string}
 	 */
 	getLocalStorage() {
-		return localStorage.getItem(this.STORAGE_NAME);
+		return localStorage.getItem(this.state.getStateEnrichmentStorageName());
 	}
 
 	/**
@@ -131,9 +137,9 @@ export class Enrichment {
 	 *
 	 * @param {array} allowedTags List of allowed tags from config.
 	 *
-	 * @returns {object}
-	 *
 	 * @public
+	 *
+	 * @returns {object}
 	 */
 	getUrlAllowedParams(allowedTags) {
 		const output = {};
@@ -194,7 +200,6 @@ export class Enrichment {
 
 		window[prefix].enrichment = {}
 		window[prefix].enrichment = {
-			STORAGE_NAME: this.STORAGE_NAME,
 			init: () => {
 				this.init();
 			},

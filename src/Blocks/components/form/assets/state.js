@@ -197,6 +197,7 @@ export class State {
 		if (enrichment.isUsed) {
 			this.setState([this.ENRICHMENT_EXPIRATION], enrichment.expiration, this.ENRICHMENT);
 			this.setState([this.ENRICHMENT_ALLOWED], enrichment.allowed, this.ENRICHMENT);
+			this.setState([this.NAME], 'es-storage', this.ENRICHMENT);
 		}
 
 		// Events.
@@ -261,7 +262,6 @@ export class State {
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT], formElement.getAttribute(this.getStateAttribute('successRedirect')), formId);
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement.getAttribute(this.getStateAttribute('successRedirectVariation')), formId);
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formElement.getAttribute(this.getStateAttribute('downloads')), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONDITIONAL_TAGS_FORM], formElement.getAttribute(this.getStateAttribute('conditionalTags')), formId);
 
 		const globalMsg = formElement.querySelector(this.getStateSelectorsGlobalMsg());
 		this.setState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], globalMsg, formId);
@@ -271,6 +271,7 @@ export class State {
 		// Conditional tags
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], {}, formId);
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
+		this.setState([this.FORM, this.CONDITIONAL_TAGS_FORM], JSON.parse(formElement.getAttribute(this.getStateAttribute('conditionalTags'))), formId);
 
 		// Find all fields.
 		let items = formElement.querySelectorAll('input, select, textarea');
@@ -623,6 +624,10 @@ export class State {
 		return this.getState([this.FORM, this.CONDITIONAL_TAGS_INNER_EVENTS], formId);
 	}
 
+	getStateFormConditionalTagsForm(formId) {
+		return this.getState([this.FORM, this.CONDITIONAL_TAGS_FORM], formId);
+	}
+
 	getStateFormGlobalMsgElement(formId) {
 		return this.getState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], formId);
 	}
@@ -653,10 +658,6 @@ export class State {
 
 	getStateFormConfigDownloads(formId) {
 		return this.getState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formId);
-	}
-
-	getStateFormConfigConditionalTags(formId) {
-		return this.getState([this.FORM, this.CONFIG, this.CONDITIONAL_TAGS], formId);
 	}
 
 	// ----------------------------------------
@@ -833,6 +834,9 @@ export class State {
 	}
 	getStateEnrichmentAllowed() {
 		return this.getState([this.ENRICHMENT_ALLOWED], this.ENRICHMENT);
+	}
+	getStateEnrichmentStorageName() {
+		return this.getState([this.NAME], this.ENRICHMENT);
 	}
 
 	// ----------------------------------------

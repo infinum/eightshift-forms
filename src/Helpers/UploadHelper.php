@@ -146,6 +146,40 @@ trait UploadHelper
 	}
 
 	/**
+	 * Return file path by provided name with ext.
+	 *
+	 * @param string $name File name.
+	 *
+	 * @return mixed
+	 */
+	protected function getFilePath(string $name)
+	{
+		if (!\defined('WP_CONTENT_DIR')) {
+			return '';
+		}
+
+		$filePath = \WP_CONTENT_DIR . \DIRECTORY_SEPARATOR . 'esforms-tmp' . \DIRECTORY_SEPARATOR . $name;
+
+		if (!\file_exists($filePath)) {
+			return '';
+		}
+
+		return $filePath;
+	}
+
+	/**
+	 * Return file by provided name with ext.
+	 *
+	 * @param string $name File name.
+	 *
+	 * @return mixed
+	 */
+	protected function getFile(string $name)
+	{
+		return \file($this->getFilePath($name));
+	}
+
+	/**
 	 * Check if there is a faulty file in the array.
 	 *
 	 * @param array<string, mixed> $files Files to check.

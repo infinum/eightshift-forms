@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -64,6 +65,13 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	public $formSubmitMailer;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -71,19 +79,22 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		ActiveCampaignClientInterface $activeCampaignClient,
-		FormSubmitMailerInterface $formSubmitMailer
+		FormSubmitMailerInterface $formSubmitMailer,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->activeCampaignClient = $activeCampaignClient;
 		$this->formSubmitMailer = $formSubmitMailer;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -124,6 +135,16 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	protected function getValidatorLabels()
 	{
 		return $this->labels;
+	}
+
+	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
 	}
 
 	/**

@@ -29,7 +29,7 @@ $conditionalTags = Components::render(
 
 $customAttributes = [];
 
-$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectVisibility']] = 'visible';
+$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectVisibility']] = 'isVisible';
 
 if ($conditionalTags) {
 	$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;

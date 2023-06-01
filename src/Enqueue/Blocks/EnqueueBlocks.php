@@ -26,7 +26,7 @@ use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Validation\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;

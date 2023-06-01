@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
@@ -52,20 +53,30 @@ class FormSubmitValidateStepRoute extends AbstractFormSubmit
 	protected $validationPatterns;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
-		LabelsInterface $labels
+		LabelsInterface $labels,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -106,6 +117,16 @@ class FormSubmitValidateStepRoute extends AbstractFormSubmit
 	protected function getValidatorPatterns()
 	{
 		return $this->validationPatterns;
+	}
+
+	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
 	}
 
 	/**

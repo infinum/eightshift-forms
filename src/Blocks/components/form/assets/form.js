@@ -1,4 +1,4 @@
-/* global grecaptcha, esFormsLocalization */
+/* global grecaptcha */
 
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
 import { ConditionalTags } from './../../conditional-tags/assets/conditional-tags';
@@ -43,9 +43,6 @@ export class Form {
 
 		// Init all forms.
 		this.initOnlyForms();
-
-		// Init conditional tags.
-		this.conditionalTags.init();
 
 		// Init captcha.
 		this.captcha.init();
@@ -130,63 +127,6 @@ export class Form {
 
 		// Form loaded.
 		this.utils.isFormLoaded(formId);
-	}
-
-	/**
-	 *  Handle form submit and all logic in case we have captcha in place.
-	 * 
-	 * @param {object} element Form element.
-	 * @param {string} token Captcha token from api.
-	 *
-	 * @public
-	 */
-	formSubmitCaptcha(formId, token, payed, action) {
-		// Populate body data.
-		const body = {
-			method: this.state.getStateFormMethod(formId),
-			mode: 'same-origin',
-			headers: {
-				Accept: 'application/json',
-			},
-			body: JSON.stringify({
-				token,
-				payed,
-				action,
-			}),
-			credentials: 'same-origin',
-			redirect: 'follow',
-			referrer: 'no-referrer',
-		};
-
-		fetch(this.state.getStateCaptchaSubmitUrl(), body)
-		.then((response) => {
-			return response.json();
-		})
-		.then((response) => {
-			const {
-				status,
-				message,
-			} = response;
-
-			// On success state.
-			if (status === 'success') {
-				this.formSubmit(formId);
-			} else {
-				// Clear all errors.
-				this.utils.resetErrors(formId);
-
-				// Remove loader.
-				this.utils.hideLoader(formId);
-
-				// Set global msg.
-				this.utils.setGlobalMsg(formId, message, status);
-
-				// Hide global msg in any case after some time.
-				setTimeout(() => {
-					this.utils.unsetGlobalMsg(formId);
-				}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
-			}
-		});
 	}
 
 	/**
@@ -355,13 +295,24 @@ export class Form {
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
 				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
-					this.formSubmitCaptcha(formId, token, 'enterprise', actionName);
+					this.setFormDataCaptcha({
+						token,
+						isEnterprise: true,
+						action: actionName,
+					});
+
+					this.formSubmit(formId);
 				});
 			});
 		} else {
 			grecaptcha.ready(async () => {
 				await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
-					this.formSubmitCaptcha(formId, token, 'free', actionName);
+					this.setFormDataCaptcha({
+						token,
+						isEnterprise: false,
+						action: actionName,
+					});
+					this.formSubmit(formId);
 				});
 			});
 		}
@@ -487,7 +438,8 @@ export class Form {
 
 							// Check if the file is ok.
 							if (status === 'success') {
-								data.value = file.upload.uuid;
+								const fileExt = file.upload.filename.split('.').slice(-1)?.[0];
+								data.value = `${file.upload.uuid}.${fileExt}`;
 								this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
 							}
 						}
@@ -657,6 +609,16 @@ export class Form {
 		}
 
 		this.buildFormDataItems(output);
+	}
+
+	setFormDataCaptcha(data) {
+		this.buildFormDataItems([
+			{
+				name: this.state.getStateParam('captcha'),
+				value: JSON.stringify(data),
+				type: 'hidden',
+			},
+		]);
 	}
 
 	buildFormDataItems(data, dataSet = this.FORM_DATA) {

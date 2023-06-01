@@ -55,7 +55,7 @@ use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
-use EightshiftForms\Validation\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
 

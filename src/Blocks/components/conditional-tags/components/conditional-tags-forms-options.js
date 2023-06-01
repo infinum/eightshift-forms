@@ -155,10 +155,11 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 						setIsNewRuleAdded(false);
 					}}
 				>
+					<div className='es-mb-10'>{__('It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.', 'eightshift-forms')}</div>
+
 					{conditionalTagsRulesForms.length > 0 &&
 						<div className='es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300'>
 							<span className='es-w-40'>{__('Field', 'eightshift-forms')}</span>
-							{hasSubFields && <span className='es-w-40'>{__('Inner fields', 'eightshift-forms')}</span>}
 							<span className='es-w-40'>{__('Visibility', 'eightshift-forms')}</span>
 						</div>
 					}
