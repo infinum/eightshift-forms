@@ -1,5 +1,5 @@
 import { State, prefix } from '../../form/assets/state';
-import { Utils } from './../../form/assets/utilities';
+import { Utils } from '../../form/assets/utilities';
 
 /**
  * Main step class.

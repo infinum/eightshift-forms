@@ -51,12 +51,14 @@ export class State {
 
 		// Conditional tags
 		this.CONDITIONAL_TAGS = 'conditionalTags';
+		this.CONDITIONAL_TAGS_INNER = 'conditionalTagsInner';
 		this.TAGS = 'tags';
 		this.TAGS_REF = 'reference';
 		this.TAGS_DEFAULTS = 'defaults';
 		this.TAGS_EVENTS = 'events';
 		this.CONDITIONAL_TAGS_FORM = 'conditionalTagsForm';
 		this.CONDITIONAL_TAGS_EVENTS = 'conditionalTagsEvents';
+		this.CONDITIONAL_TAGS_INNER_EVENTS = 'conditionalTagsInnerEvents';
 
 		this.CONFIG = 'config';
 		this.CONFIG_SELECT_USE_PLACEHOLDER = 'usePlaceholder';
@@ -268,6 +270,7 @@ export class State {
 
 		// Conditional tags
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], {}, formId);
+		this.setState([this.FORM, this.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
 
 		// Find all fields.
 		let items = formElement.querySelectorAll('input, select, textarea');
@@ -312,6 +315,8 @@ export class State {
 						this.setState([this.ELEMENTS, name, this.VALUE, value], item.checked ? value : '', formId);
 						this.setState([this.ELEMENTS, name, this.INITIAL, value], item.checked ? value : '', formId);
 					}
+
+					this.setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(this.getStateAttribute('conditionalTags')), name, value, formId);
 
 					break;
 				case 'select-one':
@@ -373,20 +378,6 @@ export class State {
 					break;
 			}
 
-			const conditionalTags = field.getAttribute(this.getStateAttribute('conditionalTags'));
-			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], '', formId);
-			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], [], formId);
-			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], [], formId);
-
-			if (conditionalTags) {
-				const tag = JSON.parse(conditionalTags)?.[0];
-
-				this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], tag[0], formId);
-				this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], tag[1], formId);
-
-				this.setStateConditionalTags(name, formId);
-			}
-
 			this.setState([this.ELEMENTS, name, this.HAS_ERROR], false, formId);
 			this.setState([this.ELEMENTS, name, this.LOADED], false, formId);
 			this.setState([this.ELEMENTS, name, this.NAME], name, formId);
@@ -394,6 +385,9 @@ export class State {
 			this.setState([this.ELEMENTS, name, this.ERROR], field.querySelector(this.getStateSelectorsError()), formId);
 			this.setState([this.ELEMENTS, name, this.IS_SINGLE_SUBMIT], item.classList.contains(this.getStateSelectorsSubmitSingle().substring(1)), formId);
 			this.setState([this.ELEMENTS, name, this.SAVE_AS_JSON], Boolean(item.getAttribute(this.getStateAttribute('saveAsJson'))), formId);
+
+			// Conditional tags.
+			this.setStateConditionalTags(field, name, formId);
 		}
 	}
 
@@ -471,27 +465,74 @@ export class State {
 		}
 	}
 
-	setStateConditionalTags(name, formId) {
+	setStateConditionalTags(field, name, formId) {
+		const conditionalTags = field.getAttribute(this.getStateAttribute('conditionalTags'));
+
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], '', formId);
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], [], formId);
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], [], formId);
+
+		if (conditionalTags) {
+			const tag = JSON.parse(conditionalTags)?.[0];
+
+			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], tag[0], formId);
+			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], tag[1], formId);
+
+			this.setStateConditionalTagsInner(name, formId, tag[1]);
+		}
+	}
+
+	setStateConditionalTagsItems(conditionalTags, name, innerName, formId) {
+		if (!innerName) {
+			return;
+		}
+
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_DEFAULTS], '', formId);
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS], [], formId);
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_REF], [], formId);
+
+		if (!conditionalTags) {
+			return;
+		}
+
+		const tag = JSON.parse(conditionalTags)?.[0];
+
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_DEFAULTS], tag[0], formId);
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS], tag[1], formId);
+
+		this.setStateConditionalTagsInner(name, formId, tag[1], innerName);
+	}
+
+	setStateConditionalTagsInner(name, formId, tags, innerName = '') {
 		const refOutput = [];
 
+		const isInner = Boolean(innerName);
+
+		const events = isInner ? this.getStateFormConditionalTagsInnerEvents(formId) : this.getStateFormConditionalTagsEvents(formId)
+
 		const eventsOutput = {
-			...this.getStateFormConditionalTagsEvents(formId) ?? {},
+			...events ?? {},
 		};
 
-		this.getStateElementConditionalTagsTags(name, formId).forEach((item) => {
+		tags.forEach((item) => {
 			refOutput.push(Array(item.length).fill(false));
 
 			// Loop inner fields.
 			item.forEach((inner) => {
 				eventsOutput[inner[0]] = [
 					...eventsOutput[inner[0]] ?? [],
-					name
+					(isInner) ? `${name}---${innerName}` : name,
 				];
 			});
 		});
 
-		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], refOutput, formId);
-		this.setState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], eventsOutput, formId);
+		if (isInner) {
+			this.setState([this.FORM, this.CONDITIONAL_TAGS_INNER_EVENTS], eventsOutput, formId);
+			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_REF], refOutput, formId);
+		} else {
+			this.setState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], eventsOutput, formId);
+			this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], refOutput, formId);
+		}
 	}
 
 	// Delete state item by key
@@ -509,7 +550,7 @@ export class State {
 		}
 	
 		keys.forEach((key) => {
-			stateObject = stateObject[key];
+			stateObject = stateObject?.[key];
 			if (!stateObject) {
 				return undefined;
 			}
@@ -576,6 +617,10 @@ export class State {
 
 	getStateFormConditionalTagsEvents(formId) {
 		return this.getState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], formId);
+	}
+
+	getStateFormConditionalTagsInnerEvents(formId) {
+		return this.getState([this.FORM, this.CONDITIONAL_TAGS_INNER_EVENTS], formId);
 	}
 
 	getStateFormGlobalMsgElement(formId) {
@@ -659,12 +704,24 @@ export class State {
 		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], formId);
 	}
 
+	getStateElementConditionalTagsDefaultsInner(name, innerName, formId) {
+		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_DEFAULTS], formId);
+	}
+
 	getStateElementConditionalTagsRef(name, formId) {
 		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], formId);
 	}
 
+	getStateElementConditionalTagsRefInner(name, innerName, formId) {
+		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_REF], formId);
+	}
+
 	getStateElementConditionalTagsTags(name, formId) {
 		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], formId);
+	}
+
+	getStateElementConditionalTagsTagsInner(name, innerName, formId) {
+		return this.getState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS], formId);
 	}
 
 	getStateElementConfig(name, type, formId) {
@@ -673,6 +730,10 @@ export class State {
 
 	getStateElementField(name, formId) {
 		return this.getState([this.ELEMENTS, name, this.FIELD], formId);
+	}
+
+	getStateElementLoaded(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.LOADED], formId);
 	}
 
 	getStateElementInternalType(name, formId) {
@@ -713,6 +774,10 @@ export class State {
 
 	getStateElementItemsInput(name, nameItem, formId) {
 		return this.getState([this.ELEMENTS, name, this.ITEMS, nameItem, this.INPUT], formId);
+	}
+
+	getStateElementItemsField(name, nameItem, formId) {
+		return this.getState([this.ELEMENTS, name, this.ITEMS, nameItem, this.FIELD], formId);
 	}
 
 	getStateElementValue(name, formId) {

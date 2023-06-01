@@ -61,13 +61,13 @@ if ($selectAttrs) {
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
 
-$placeholder = $selectPlaceholder ? Components::render(
+$placeholder = Components::render(
 	'select-option',
 	[
-		'selectOptionLabel' => $selectPlaceholder,
+		'selectOptionLabel' => $selectPlaceholder ?: esc_html__('Select option', 'eightshift-forms'),
 		'selectOptionAsPlaceholder' => true,
 	]
-) : '';
+);
 
 $select = '
 	<select

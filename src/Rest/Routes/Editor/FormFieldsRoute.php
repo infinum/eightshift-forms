@@ -153,18 +153,12 @@ class FormFieldsRoute extends AbstractBaseRoute
 					$label = $name;
 				}
 
-				if ($type === 'checkboxes') {
-					foreach ($this->getInnerItems($value['innerBlocks'], $type, $name, false) as $value) {
-						$outputFields[] = $value;
-					}
-				} else {
-					$outputFields[] = [
-						'label' => $label,
-						'value' => $name,
-						'type' => $type,
-						'subItems' => $this->getInnerItems($value['innerBlocks'], $type, $name),
-					];
-				}
+				$outputFields[] = [
+					'label' => $label,
+					'value' => $name,
+					'type' => $type,
+					'subItems' => $this->getInnerItems($value['innerBlocks'], $type, $name),
+				];
 			}
 		}
 
@@ -210,28 +204,10 @@ class FormFieldsRoute extends AbstractBaseRoute
 				$innerLabel = $innerKeyValue;
 			}
 
-			$delimiter = AbstractBaseRoute::DELIMITER;
-
-			$outputItem = [
+			$output[] = [
 				'label' => $innerLabel,
 				'value' => "{$innerKeyValue}",
 			];
-
-			if ($blockName['name'] === 'checkbox') {
-				$outputItem['type'] = $blockName['name'];
-				$outputItem['subItems'] = [
-					[
-						'label' => __('Unchecked' , 'eightshift-forms'),
-						'value' => '',
-					],
-					[
-						'label' => __('Checked' , 'eightshift-forms'),
-						'value' => "{$parentName}{$delimiter}{$innerKeyValue}",
-					],
-				];
-			}
-
-			$output[] = $outputItem;
 		}
 
 		return $output;

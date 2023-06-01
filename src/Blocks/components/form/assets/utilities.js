@@ -33,11 +33,17 @@ export class Utils {
 			bubbles: true,
 		};
 
+		if (!isNaN(formId)) {
+			options['detail'] = {
+				formId,
+			};
+		}
+
 		if (detail) {
-			if (!isNaN(formId)) {
-				options['state'] = this.state.getStateForm(formId);
+			options['detail'] = {
+				...options['detail'],
+				options: detail,
 			}
-			options['detail'] = detail;
 		}
 
 		if (!isNaN(formId)) {

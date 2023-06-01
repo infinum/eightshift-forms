@@ -1,8 +1,8 @@
 /* global grecaptcha, esFormsLocalization */
 
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import { ConditionalTags } from './../../conditional-tags/assets';
-import { Steps } from './../../step/assets';
+import { ConditionalTags } from './../../conditional-tags/assets/conditional-tags';
+import { Steps } from '../../step/assets/step';
 import { Enrichment } from './enrichment';
 import { Captcha } from './captcha';
 import { Utils } from './utilities';
@@ -66,6 +66,8 @@ export class Form {
 
 			this.state.setFormStateInitial(formId);
 
+			this.conditionalTags.initOne(formId);
+
 			this.initOne(formId);
 		});
 	}
@@ -128,8 +130,6 @@ export class Form {
 
 		// Form loaded.
 		this.utils.isFormLoaded(formId);
-
-		this.conditionalTags.initOne(formId);
 	}
 
 	/**
@@ -753,6 +753,7 @@ export class Form {
 		import('flatpickr').then((flatpickr) => {
 			const state = this.state;
 			const utils = this.utils;
+			const conditionalTags = this.conditionalTags;
 
 			flatpickr.default(input, {
 				enableTime: this.state.getStateElementInternalType(name, formId) === 'datetime',
@@ -774,6 +775,7 @@ export class Form {
 					state.setState([state.ELEMENTS, name, state.VALUE], value, formId);
 
 					utils.setFieldFilledState(name, formId);
+					conditionalTags.setField(name, formId);
 				},
 			});
 		});
@@ -801,13 +803,16 @@ export class Form {
 				this.state.getStateAttribute('selectCountryCode'),
 				this.state.getStateAttribute('selectCountryLabel'),
 				this.state.getStateAttribute('selectCountryNumber'),
-			]
+				this.state.getStateAttribute('conditionalTags'),
+				this.state.getStateAttribute('selectVisibility'),
+			];
  
 			const choices = new Choices.default(input, {
 				searchEnabled: this.state.getStateElementConfig(name, this.state.CONFIG_SELECT_USE_SEARCH, formId),
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
+				duplicateItemsAllowed: false,
 				placeholder: this.state.getStateElementConfig(name, this.state.CONFIG_SELECT_USE_PLACEHOLDER, formId),
 				searchFields: ['label', 'value', 'customProperties'],
 				itemSelectText: '',
@@ -828,49 +833,7 @@ export class Form {
 						},
 						choice: (...args) => {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
-							const properties = args?.[1]?.customProperties;
-
-							if (properties) {
-								customProperties.forEach((property) => {
-									const check = properties?.[property];
-									if (check) {
-										element.setAttribute(property, check);
-									}
-								});
-							}
-
-							if (properties) {
-								// Conditional tags
-								// const conditionalTags = properties?.[dataObject.DATA_ATTRIBUTES.conditionalTags];
-
-								// if (conditionalTags) {
-								// 	element.setAttribute(dataObject.DATA_ATTRIBUTES.conditionalTags, conditionalTags);
-								// }
-
-							// 	const fieldName = properties?.[dataObject.DATA_ATTRIBUTES.fieldName];
-							// 	if (fieldName) {
-							// 		element.setAttribute(dataObject.DATA_ATTRIBUTES.fieldName, fieldName);
-							// 	}
-
-							// 	const fieldType = properties?.[dataObject.DATA_ATTRIBUTES.fieldType];
-							// 	if (fieldType) {
-							// 		element.setAttribute(dataObject.DATA_ATTRIBUTES.fieldType, fieldType);
-							// 	}
-							// }
-
-							// Set state for choices conditional tags.
-							// const state = dataObject.getState([state.SELECTS, this.passedElement.element.name], formId);
-							// if (state) {
-							// 	if (state.config.choices.find((item) => item.value === args?.[1]?.value).esFormsIsHidden) {
-							// 		element.classList.add(dataObject.SELECTORS.CLASS_HIDDEN);
-							// 	}
-							}
-
-							return element;
-						},
-						item: (...args) => {
-							const element = Choices.default.defaults.templates.choice.call(this, ...args);
-							const properties = args?.[1]?.customProperties;
+							const properties = !state.getStateElementLoaded(name, formId) ? args?.[1]?.customProperties : this.config?.choices[args?.[1]?.id - 1]?.customProperties;
 
 							if (properties) {
 								customProperties.forEach((property) => {
@@ -894,6 +857,10 @@ export class Form {
 
 			this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
 			this.state.setState([this.state.ELEMENTS, name, this.state.CUSTOM], choices, formId);
+
+			choices.config.choices.map((item) => {
+				this.state.setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
+			});
 
 			choices.containerOuter.element.addEventListener('focus', this.onFocusEvent);
 			choices.containerOuter.element.addEventListener('blur', this.onBlurEvent);
@@ -1231,6 +1198,8 @@ export class Form {
 				});
 			}
 		}
+
+		this.conditionalTags.setField(name, formId);
 
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
