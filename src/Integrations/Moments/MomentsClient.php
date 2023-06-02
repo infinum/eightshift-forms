@@ -484,9 +484,6 @@ class MomentsClient implements ClientInterface
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
 		$filterName = Filters::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params) ?? [];
@@ -515,8 +512,8 @@ class MomentsClient implements ClientInterface
 					break;
 			}
 
-			$internalType = $param['internalType'] ?? '';
-			switch ($internalType) {
+			$typeCustom = $param['typeCustom'] ?? '';
+			switch ($typeCustom) {
 				case 'email':
 					$value = \strtolower($value);
 					break;

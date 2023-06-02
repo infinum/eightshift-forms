@@ -448,9 +448,6 @@ class JiraClient implements JiraClientInterface
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
 		$formTitle = \get_the_title((int) $formId);
 
 		$additionalDescription = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);

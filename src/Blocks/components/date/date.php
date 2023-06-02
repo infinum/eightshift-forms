@@ -27,6 +27,7 @@ $dateIsReadOnly = Components::checkAttr('dateIsReadOnly', $attributes, $manifest
 $dateIsRequired = Components::checkAttr('dateIsRequired', $attributes, $manifest);
 $dateTracking = Components::checkAttr('dateTracking', $attributes, $manifest);
 $dateType = Components::checkAttr('dateType', $attributes, $manifest);
+$dateTypeCustom = Components::checkAttr('dateTypeCustom', $attributes, $manifest);
 $dateAttrs = Components::checkAttr('dateAttrs', $attributes, $manifest);
 $datePreviewFormat = Components::checkAttr('datePreviewFormat', $attributes, $manifest);
 $dateOutputFormat = Components::checkAttr('dateOutputFormat', $attributes, $manifest);
@@ -58,8 +59,6 @@ if ($datePreviewFormat) {
 if ($dateOutputFormat) {
 	$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['dateOutputFormat']] = esc_attr($dateOutputFormat);
 }
-
-$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal']] = esc_attr($dateType);
 
 $dateAttrsOutput = '';
 if ($dateAttrs) {
@@ -97,6 +96,9 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => [
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			],
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

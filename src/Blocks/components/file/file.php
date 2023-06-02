@@ -23,6 +23,7 @@ $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
 $fileCustomInfoText = Components::checkAttr('fileCustomInfoText', $attributes, $manifest);
 $fileCustomInfoTextUse = Components::checkAttr('fileCustomInfoTextUse', $attributes, $manifest);
 $fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
+$fileTypeCustom = Components::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Components::checkAttr('fileAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
@@ -93,6 +94,9 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => [
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			],
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

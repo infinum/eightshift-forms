@@ -73,12 +73,14 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'trackingEventName' => 'data-tracking-event-name',
 		'trackingAdditionalData' => 'data-tracking-additional-data',
 		'tracking' => 'data-tracking',
+		'cacheType' => 'data-cache-type',
+		'migrationType' => 'data-migration-type',
 		'successRedirect' => 'data-success-redirect',
 		'successRedirectVariation' => 'data-success-redirect-variation',
 		'conditionalTags' => 'data-conditional-tags',
 		'typeSelector' => 'data-type-selector',
 		'actionExternal' => 'data-action-external',
-		'fieldTypeInternal' => 'data-type-internal',
+		'fieldTypeCustom' => 'data-type-custom',
 		'fieldUncheckedValue' => 'data-unchecked-value',
 		'settingsType' => 'data-settings-type',
 		'groupSaveAsOneField' => 'data-group-save-as-one-field',
@@ -102,6 +104,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'globalMsgHeadingSuccess' => 'data-msg-heading-success',
 		'globalMsgHeadingError' => 'data-msg-heading-error',
 		'hideCaptchaBadge' => 'data-hide-captcha-badge',
+		'reload' => 'data-reload',
 	];
 
 	/**

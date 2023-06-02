@@ -8,7 +8,7 @@ export const prefix = 'esForms';
 export class State {
 	constructor(options = {}) {
 		// Form endpoint to send data.
-		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.formSubmit}`;
+		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? esFormsLocalization.restRoutes.formSubmit;
 
 		// Detect if form is used in admin for settings or on the frontend.
 		this.formIsAdmin = options.formIsAdmin ?? false;
@@ -32,7 +32,8 @@ export class State {
 		this.CUSTOM = 'custom';
 		this.TYPE = 'type';
 		this.TYPE_SETTINGS = 'typeSettings';
-		this.INTERNAL_TYPE = 'internalType';
+		this.TYPE_INTERNAL = 'typeInternal';
+		this.TYPE_CUSTOM = 'typeCustom';
 		this.NAME = 'name';
 		this.ERROR = 'error';
 		this.GLOBAL_MSG = 'globalMsg';
@@ -46,7 +47,9 @@ export class State {
 		this.SAVE_AS_JSON = 'saveAsJson';
 		this.IS_ADMIN = 'isAdmin';
 		this.IS_USED = 'isUsed';
+		this.REST_PREFIX = 'restPrefix';
 		this.SUBMIT_URL = 'submitUrl';
+		this.SUBMIT_URL_CACHE = 'submitUrlCache';
 		this.NONCE = 'nonce';
 
 		// Conditional tags
@@ -163,6 +166,7 @@ export class State {
 			this.setState([key], item, this.PARAMS);
 		}
 
+		this.setState([this.REST_PREFIX], esFormsLocalization.restPrefix, this.CONFIG);
 		this.setState([this.SUBMIT_URL], this.formSubmitRestApiUrl, this.CONFIG);
 		this.setState([this.IS_ADMIN], this.formIsAdmin, this.CONFIG);
 		this.setState([this.NONCE], esFormsLocalization.nonce, this.CONFIG);
@@ -181,7 +185,7 @@ export class State {
 		this.setState([this.IS_USED], Boolean(captcha.isUsed), this.CAPTCHA);
 
 		if (captcha.isUsed) {
-			this.setState([this.SUBMIT_URL],  this.getStateConfigSubmitUrl('-captcha'), this.CAPTCHA);
+			this.setState([this.SUBMIT_URL], this.getRestUrl(this.getStateConfigSubmitUrl(), '-', 'captcha'), this.CAPTCHA);
 			this.setState([this.CAPTCHA_SITE_KEY], captcha.siteKey, this.CAPTCHA);
 			this.setState([this.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), this.CAPTCHA);
 			this.setState([this.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, this.CAPTCHA);
@@ -237,6 +241,10 @@ export class State {
 	setFormStateInitial(formId) {
 		this.setStateWindow();
 		window[prefix].state[`form_${formId}`] = {}
+		window[prefix].state[`form_${formId}`] = {
+			[this.ELEMENTS]: {},
+			[this.FORM]: {},
+		}
 
 		let formElement = '';
 
@@ -295,7 +303,7 @@ export class State {
 				case 'radio':
 				case 'checkbox':
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
-					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], type, formId);
+					this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], type, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], '', formId);
 					this.setState([this.ELEMENTS, name, this.ITEMS, value, this.VALUE], value, formId);
 					this.setState([this.ELEMENTS, name, this.ITEMS, value, this.FIELD], item.parentNode.parentNode, formId);
@@ -323,12 +331,12 @@ export class State {
 				case 'select-one':
 					// Combined fields like phone can have field null.
 					const customField = this.getFormFieldElementByChild(item);
-					const customType = customField.getAttribute(this.getStateAttribute('fieldType'));
+					const typeTemp = customField.getAttribute(this.getStateAttribute('fieldType'));
 
 					if (item.options.length) {
 						const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.getStateAttribute('selectCustomProperties')));
 
-						switch (customType) {
+						switch (typeTemp) {
 							case 'phone':
 							case 'country':
 								this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.getStateAttribute('selectCountryCode')], formId);
@@ -338,12 +346,12 @@ export class State {
 							}
 					}
 
-					if (customType !== 'phone') {
+					if (typeTemp !== 'phone') {
 						this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 						this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
 					}
 
-					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], customType, formId);
+					this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], typeTemp, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], 'select', formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_PLACEHOLDER], Boolean(item.getAttribute(this.getStateAttribute('selectPlaceholder'))), formId);
@@ -353,7 +361,7 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
-					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], 'tel', formId);
+					this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], 'tel', formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT_SELECT], field.querySelector('select'), formId);
 					break;
@@ -362,19 +370,19 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
-					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], type, formId);
+					this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], type, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 
 					if (type === 'datetime-local') {
 						this.setState([this.ELEMENTS, name, this.TYPE], 'date', formId);
-						this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], 'datetime', formId);
+						this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], 'datetime', formId);
 					}
 					break;
 				default:
 					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
-					this.setState([this.ELEMENTS, name, this.INTERNAL_TYPE], type, formId);
+					this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], type, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					break;
 			}
@@ -385,6 +393,7 @@ export class State {
 			this.setState([this.ELEMENTS, name, this.FIELD], field, formId);
 			this.setState([this.ELEMENTS, name, this.ERROR], field.querySelector(this.getStateSelectorsError()), formId);
 			this.setState([this.ELEMENTS, name, this.IS_SINGLE_SUBMIT], item.classList.contains(this.getStateSelectorsSubmitSingle().substring(1)), formId);
+			this.setState([this.ELEMENTS, name, this.TYPE_CUSTOM], field.getAttribute(this.getStateAttribute('fieldTypeCustom')), formId);
 			this.setState([this.ELEMENTS, name, this.SAVE_AS_JSON], Boolean(item.getAttribute(this.getStateAttribute('saveAsJson'))), formId);
 
 			// Conditional tags.
@@ -419,10 +428,10 @@ export class State {
 				break;
 			case 'select-one':
 				const customField = this.getFormFieldElementByChild(item);
-				const customType = customField.getAttribute(this.getStateAttribute('fieldType'));
+				const typeCustom = customField.getAttribute(this.getStateAttribute('fieldType'));
 				const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(this.getStateAttribute('selectCustomProperties')));
 
-				switch (customType) {
+				switch (typeCustom) {
 					case 'phone':
 					case 'country':
 						this.setState([this.ELEMENTS, name, this.VALUE_COUNTRY, 'code'], customData[this.getStateAttribute('selectCountryCode')], formId);
@@ -431,7 +440,7 @@ export class State {
 						break;
 				}
 
-				if (customType !== 'phone') {
+				if (typeCustom !== 'phone') {
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 				}
 				break;
@@ -575,11 +584,14 @@ export class State {
 	getStateConfigNonce() {
 		return this.getState([this.NONCE], this.CONFIG);
 	}
-	getStateConfigSubmitUrl(sufix = '') {
-		return `${this.getState([this.SUBMIT_URL], this.CONFIG)}${sufix}`;
+	getStateConfigSubmitUrl() {
+		return this.getState([this.SUBMIT_URL], this.CONFIG);
 	}
 	getStateConfigIsAdmin() {
 		return this.getState([this.IS_ADMIN], this.CONFIG);
+	}
+	getStateConfigRestPrefix() {
+		return this.getState([this.REST_PREFIX], this.CONFIG);
 	}
 
 	// ----------------------------------------
@@ -737,8 +749,12 @@ export class State {
 		return this.getState([this.ELEMENTS, name, this.LOADED], formId);
 	}
 
-	getStateElementInternalType(name, formId) {
-		return this.getState([this.ELEMENTS, name, this.INTERNAL_TYPE], formId);
+	getStateElementTypeInternal(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.TYPE_INTERNAL], formId);
+	}
+
+	getStateElementTypeCustom(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.TYPE_CUSTOM], formId);
 	}
 
 	getStateElementCustom(name, formId) {
@@ -967,5 +983,16 @@ export class State {
 
 	getFormIdByElement(element) {
 		return this.getFormElementByChild(element).getAttribute(this.getStateAttribute('formPostId'));
+	}
+
+	getRestUrl(value, delimitier = '/' , after = '') {
+		const url = this.getStateConfigRestPrefix().replace(/\/$/, ""); // Remove trailing slash.
+		const sufix = value.replace(/^\/+/, ''); // Remove leading /
+
+		if (after) {
+			return `${url}/${sufix}${delimitier}${after}`;
+		}
+
+		return `${url}/${sufix}`;
 	}
 }

@@ -394,9 +394,6 @@ class GreenhouseClient implements ClientInterface
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
 		$filterName = Filters::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params) ?? [];
@@ -431,7 +428,7 @@ class GreenhouseClient implements ClientInterface
 					continue;
 				}
 
-				$output[$id] = new CURLFile(Helper::getRealpath($path), $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				$output[$id] = new CURLFile($path, $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			}
 		}
 

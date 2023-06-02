@@ -29,6 +29,7 @@ $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $mani
 $textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
 $textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
 $textareaSaveAsJson = Components::checkAttr('textareaSaveAsJson', $attributes, $manifest);
+$textareaTypeCustom = Components::checkAttr('textareaTypeCustom', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
@@ -85,6 +86,9 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => [
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			],
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

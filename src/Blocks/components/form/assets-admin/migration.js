@@ -1,11 +1,10 @@
-/* global esFormsLocalization */
-
 import { Utils } from "../assets/utilities";
+import { State } from "../assets/state";
 
 export class Migration {
-	constructor(options) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor(options = {}) {
+		this.utils = new Utils(options);
+		this.state = new State(options);
 
 		this.selector = options.selector;
 		this.outputSelector = options.outputSelector;
@@ -14,9 +13,7 @@ export class Migration {
 	}
 
 	init() {
-		const elements = document.querySelectorAll(this.selector);
-
-		[...elements].forEach((element) => {
+		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
 	}
@@ -25,12 +22,13 @@ export class Migration {
 	onClick = (event) => {
 		event.preventDefault();
 
-		const element = event.target;
-
 		const formData = new FormData();
 
-		formData.append('type', element.getAttribute('data-type'));
+		const formId = this.state.getFormIdByElement(event.target);
 
+		formData.append('type', event.target.getAttribute(this.state.getStateAttribute('migrationType')));
+
+		console.log(this.outputSelector);
 		document.querySelector(this.outputSelector).value = 'Please wait, this may take a few minutes...';
 
 		// Populate body data.
@@ -39,7 +37,7 @@ export class Migration {
 			mode: 'same-origin',
 			headers: {
 				Accept: 'application/json',
-				'X-WP-Nonce': esFormsLocalization.nonce,
+				'X-WP-Nonce': this.state.getStateConfigNonce(),
 			},
 			body: formData,
 			credentials: 'same-origin',
@@ -47,19 +45,22 @@ export class Migration {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.migrationRestUrl, body)
+		fetch(this.state.getRestUrl(this.migrationRestUrl), body)
 			.then((response) => {
 				return response.json();
 			})
 			.then((response) => {
-				const formElement = element.closest(this.utils.formSelector);
+				const {
+					message,
+					status,
+				} = response;
 
-				this.utils.setGlobalMsg(formElement, response.message, response.status);
+				this.utils.setGlobalMsg(formId, message, status);
 
 				document.querySelector(this.outputSelector).value = JSON.stringify(response, null, 4);
 
 				setTimeout(() => {
-					this.utils.unsetGlobalMsg(formElement);
+					this.utils.unsetGlobalMsg(formId);
 				}, 6000);
 			});
 	};

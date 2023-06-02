@@ -66,6 +66,9 @@
 		"phoneUseSearch": {
 			"type": "boolean",
 			"default": true
+		},
+		"phoneTypeCustom": {
+			"type": "string"
 		}
 	}
 }

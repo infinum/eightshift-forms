@@ -31,6 +31,9 @@
 			"type": "string",
 			"default": "date"
 		},
+		"dateTypeCustom": {
+			"type": "string"
+		},
 		"dateIsDisabled": {
 			"type": "boolean",
 			"default": false

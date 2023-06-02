@@ -29,6 +29,7 @@ $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $
 $selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
 $selectUseSearch = Components::checkAttr('selectUseSearch', $attributes, $manifest);
 $selectPlaceholder = Components::checkAttr('selectPlaceholder', $attributes, $manifest);
+$selectTypeCustom = Components::checkAttr('selectTypeCustom', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
@@ -64,7 +65,7 @@ $additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attri
 $placeholder = Components::render(
 	'select-option',
 	[
-		'selectOptionLabel' => $selectPlaceholder ?: esc_html__('Select option', 'eightshift-forms'),
+		'selectOptionLabel' => $selectPlaceholder ?: esc_html__('Select option', 'eightshift-forms'), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 		'selectOptionAsPlaceholder' => true,
 	]
 );
@@ -96,6 +97,9 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => [
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			],
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

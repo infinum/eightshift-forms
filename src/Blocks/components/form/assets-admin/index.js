@@ -29,36 +29,35 @@ domReady(() => {
 		});
 	}
 
-	// const selectorCache = `.${componentCacheJsClass}`;
-	// const elementsCache = document.querySelectorAll(selectorCache);
+	const selectorCache = `.${componentCacheJsClass}`;
+	const elementsCache = document.querySelectorAll(selectorCache);
 
-	// if (elementsCache.length) {
-	// 	import('./cache').then(({ Cache }) => {
-	// 		const cache = new Cache({
-	// 			utils: new Data(),
-	// 			selector: selectorCache,
-	// 			clearCacheRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.cacheClear}`,
-	// 		});
+	if (elementsCache.length) {
+		import('./cache').then(({ Cache }) => {
+			const cache = new Cache({
+				formIsAdmin: true,
+				selector: selectorCache,
+				clearCacheRestUrl: esFormsLocalization.restRoutes.cacheClear,
+			});
 
-	// 		cache.init();
-	// 	});
-	// }
+			cache.init();
+		});
+	}
 
-	// const selectorMigration = `.${componentMigrationJsClass}`;
-	// const elementsMigration = document.querySelectorAll(selectorMigration);
+	const selectorMigration = `.${componentMigrationJsClass}`;
+	const elementsMigration = document.querySelectorAll(selectorMigration);
 
-	// if (elementsMigration.length) {
-	// 	import('./migration').then(({ Migration }) => {
-	// 		const migration = new Migration({
-	// 			utils: new Data(),
-	// 			selector: selectorMigration,
-	// 			outputSelector: `.${componentMigrationJsClass}-output`,
-	// 			migrationRestUrl: `${esFormsLocalization.restPrefix}${esFormsLocalization.restRoutes.migration}`,
-	// 		});
+	if (elementsMigration.length) {
+		import('./migration').then(({ Migration }) => {
+			const migration = new Migration({
+				selector: selectorMigration,
+				outputSelector: `.${componentMigrationJsClass}-output`,
+				migrationRestUrl: esFormsLocalization.restRoutes.migration,
+			});
 
-	// 		migration.init();
-	// 	});
-	// }
+			migration.init();
+		});
+	}
 
 	// const selectorTransfer = `.${componentTransferJsClass}`;
 	// const elementsTransfer = document.querySelectorAll(selectorTransfer);
@@ -79,18 +78,18 @@ domReady(() => {
 	// 	});
 	// }
 
-	// const selectorTestApi = `.${componentTestApiJsClass}`;
-	// const elementsTestApi = document.querySelectorAll(selectorTestApi);
+	const selectorTestApi = `.${componentTestApiJsClass}`;
+	const elementsTestApi = document.querySelectorAll(selectorTestApi);
 
-	// if (elementsTestApi.length) {
-	// 	import('./test-api').then(({ TestApi }) => {
-	// 		const testApi = new TestApi({
-	// 			utils: new Data(),
-	// 			selector: selectorTestApi,
-	// 			testApiRestUrl: `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.testApi}`,
-	// 		});
+	if (elementsTestApi.length) {
+		import('./test-api').then(({ TestApi }) => {
+			const testApi = new TestApi({
+				formIsAdmin: true,
+				selector: selectorTestApi,
+				testApiRestUrl: esFormsLocalization.restRoutes.testApi,
+			});
 
-	// 		testApi.init();
-	// 	});
-	// }
+			testApi.init();
+		});
+	}
 });

@@ -332,9 +332,6 @@ class AirtableClient implements ClientInterface
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
 		$filterName = Filters::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params) ?? [];
@@ -351,7 +348,7 @@ class AirtableClient implements ClientInterface
 				continue;
 			}
 
-			switch ($param['internalType'] ?? '') {
+			switch ($param['typeCustom'] ?? '') {
 				case 'singleCheckbox':
 					$value = \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
 					break;

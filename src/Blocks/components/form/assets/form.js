@@ -161,11 +161,11 @@ export class Form {
 		};
 
 		// Url for frontend forms.
-		let url = this.state.getStateConfigSubmitUrl(`-${formType}`);
+		let url = this.state.getRestUrl(this.state.getStateConfigSubmitUrl(), '-', formType);
 
 		// For admin settings use different url and add nonce.
 		if (this.state.getStateConfigIsAdmin()) {
-			url = this.state.getStateConfigSubmitUrl();
+			url = this.state.getRestUrl(this.state.getStateConfigSubmitUrl());
 			body.headers['X-WP-Nonce'] = this.state.getStateConfigNonce();
 		}
 
@@ -360,10 +360,10 @@ export class Form {
 		for (const [key, item] of this.state.getStateElements(formId)) { // eslint-disable-line no-unused-vars
 
 			const name = key;
-			const type = this.state.getStateElementType(key, formId);
+			const internalType = this.state.getStateElementTypeInternal(key, formId);
 			const input = this.state.getStateElementInput(key, formId);
 			const value = this.state.getStateElementValue(key, formId);
-			const internalType = this.state.getStateElementInternalType(key, formId);
+			const typeCustom = this.state.getStateElementTypeCustom(key, formId);
 			const saveAsJson = this.state.getStateElementSaveAsJson(key, formId);
 			const items = this.state.getStateElementItems(key, formId);
 			const valueCountry = this.state.getStateElementValueCountry(key, formId);
@@ -386,8 +386,8 @@ export class Form {
 			const data = {
 				name,
 				value,
-				type,
-				internalType,
+				type: internalType,
+				typeCustom,
 				custom: '',
 			};
 
@@ -397,7 +397,7 @@ export class Form {
 					break;
 			}
 
-			switch (type) {
+			switch (internalType) {
 				case 'checkbox':
 					Object.values(value).forEach((item, index) => {
 						data.value = item;
@@ -497,8 +497,10 @@ export class Form {
 
 			if (groupId) {
 				this.FORM_DATA.append(groupId, JSON.stringify({
+					name: groupId,
 					value: groupInnerItems,
 					type: 'group',
+					typeCustom: 'group',
 				}));
 			}
 		}
@@ -511,22 +513,18 @@ export class Form {
 			{
 				name: this.state.getStateParam('postId'),
 				value: formId,
-				type: 'hidden',
 			},
 			{
 				name: this.state.getStateParam('type'),
 				value: this.state.getStateFormType(formId),
-				type: 'hidden',
 			},
 			{
 				name: this.state.getStateParam('action'),
 				value: this.state.getStateFormAction(formId),
-				type: 'hidden',
 			},
 			{
 				name: this.state.getStateParam('actionExternal'),
 				value: this.state.getStateFormActionExternal(formId),
-				type: 'hidden',
 			},
 		]);
 	}
@@ -543,7 +541,6 @@ export class Form {
 				{
 					name: this.state.getStateParam('storage'),
 					value: this.enrichment.getLocalStorage(),
-					type: 'hidden',
 				},
 			]);
 		}
@@ -565,7 +562,6 @@ export class Form {
 		// 			this.FORM_DATA.append(this.data.FORM_PARAMS.stepFields, JSON.stringify({
 		// 				name: this.data.FORM_PARAMS.stepFields,
 		// 				value: outputStepFields,
-		// 				type: 'hidden',
 		// 			}));
 		// 		}
 		// 	}
@@ -577,7 +573,6 @@ export class Form {
 			{
 				name: this.state.getStateParam('settingsType'),
 				value: this.state.getStateFormTypeSettings(formId),
-				type: 'hidden',
 			},
 		]);
 	}
@@ -592,17 +587,14 @@ export class Form {
 					{
 						name: this.state.getStateParam('hubspotCookie'),
 						value: cookies.getCookie('hubspotutk'),
-						type: 'hidden',
 					},
 					{
 						name: this.state.getStateParam('hubspotPageName'),
 						value: document.title,
-						type: 'hidden',
 					},
 					{
 						name: this.state.getStateParam('hubspotPageUrl'),
 						value: window.location.href,
-						type: 'hidden',
 					},
 				];
 				break;
@@ -616,7 +608,6 @@ export class Form {
 			{
 				name: this.state.getStateParam('captcha'),
 				value: JSON.stringify(data),
-				type: 'hidden',
 			},
 		]);
 	}
@@ -626,13 +617,17 @@ export class Form {
 			const {
 				name,
 				value,
-				type,
+				type = 'hidden',
+				typeCustom = 'hidden',
+				custom = '',
 			} = item;
 
 			dataSet.append(name, JSON.stringify({
-				name: name,
-				value: value,
-				type: type,
+				name,
+				value,
+				type,
+				typeCustom,
+				custom,
 			}));
 		});
 	}
@@ -718,7 +713,7 @@ export class Form {
 			const conditionalTags = this.conditionalTags;
 
 			flatpickr.default(input, {
-				enableTime: this.state.getStateElementInternalType(name, formId) === 'datetime',
+				enableTime: this.state.getStateElementTypeInternal(name, formId) === 'datetime',
 				dateFormat: input.getAttribute(this.state.getStateAttribute('dateOutputFormat')),
 				altFormat: input.getAttribute(this.state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
@@ -783,6 +778,7 @@ export class Form {
 				},
 				callbackOnCreateTemplates: function() {
 					return {
+						// Fake select option.
 						option: (...args) => {
 							const element = Choices.default.defaults.templates.option.call(this, ...args);
 							const properties = args?.[0]?.customProperties;
@@ -793,9 +789,26 @@ export class Form {
 
 							return element;
 						},
+						// Dropdown items.
 						choice: (...args) => {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
 							const properties = !state.getStateElementLoaded(name, formId) ? args?.[1]?.customProperties : this.config?.choices[args?.[1]?.id - 1]?.customProperties;
+
+							if (properties) {
+								customProperties.forEach((property) => {
+									const check = properties?.[property];
+									if (check) {
+										element.setAttribute(property, check);
+									}
+								});
+							}
+
+							return element;
+						},
+						// Selected item.
+						item: (...args) => {
+							const element = Choices.default.defaults.templates.item.call(this, ...args);
+							const properties = args?.[1]?.customProperties;
 
 							if (properties) {
 								customProperties.forEach((property) => {
@@ -875,7 +888,7 @@ export class Form {
 			const dropzone = new Dropzone.default(
 				field,
 				{
-					url: this.state.getStateConfigSubmitUrl('-files'),
+					url: this.state.getRestUrl(this.state.getStateConfigSubmitUrl(), '-', 'files'),
 					addRemoveLinks: true,
 					autoDiscover: false,
 					parallelUploads: 1,
@@ -924,24 +937,20 @@ export class Form {
 					{
 						name: this.state.getStateParam('postId'),
 						value: formId,
-						type: 'hidden',
 					},
 					{
 						name: this.state.getStateParam('type'),
 						value: 'fileUpload', // Not connected to anything just here for reference.
-						type: 'hidden',
 					},
 					{
 						// Add field name to know where whas this file upload to.
 						name: this.state.getStateParam('name'),
 						value: name,
-						type: 'hidden',
 					},
 					{
 						// Add file ID to know the file.
 						name: this.state.getStateParam('fileId'),
 						value: file?.upload?.uuid,
-						type: 'hidden',
 					},
 				], formData);
 			});
@@ -1147,14 +1156,14 @@ export class Form {
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
 			if (type === 'country') {
 				const country = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNAL_TYPE, 'tel', formId)].forEach((tel) => {
+				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE_INTERNAL, 'tel', formId)].forEach((tel) => {
 					tel[this.state.CUSTOM].setChoiceByValue(country.number);
 				});
 			}
 
 			if (type === 'phone') {
 				const phone = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.INTERNAL_TYPE, 'country', formId)].forEach((country) => {
+				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE_INTERNAL, 'country', formId)].forEach((country) => {
 					country[this.state.CUSTOM].setChoiceByValue(phone.label);
 				});
 			}

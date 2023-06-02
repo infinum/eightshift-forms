@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -18,6 +19,7 @@ if (!$radiosName) {
 
 $radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosIsRequired = Components::checkAttr('radiosIsRequired', $attributes, $manifest);
+$radiosTypeCustom = Components::checkAttr('radiosTypeCustom', $attributes, $manifest);
 
 // Add internal counter name key.
 $radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
@@ -56,6 +58,9 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => [
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			],
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

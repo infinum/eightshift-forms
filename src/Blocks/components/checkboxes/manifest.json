@@ -35,6 +35,9 @@
 		"checkboxesIsToggles": {
 			"type": "boolean",
 			"default": false
+		},
+		"checkboxesTypeCustom": {
+			"type": "string"
 		}
 	},
 	"options": {

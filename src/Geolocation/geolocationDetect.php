@@ -8,7 +8,6 @@
 
 declare(strict_types=1);
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 
 /**
@@ -18,8 +17,10 @@ use EightshiftForms\Hooks\Variables;
  */
 function setEightshiftFormsLocationCookie(): void
 {
+	$sep = DIRECTORY_SEPARATOR;
+
 	// Require forms hooks.
-	require_once Helper::getRealpath(dirname(__DIR__, 2) . "/src/Hooks/Variables.php");
+	require_once dirname(__DIR__, 2) . "{$sep}src{$sep}Hooks{$sep}Variables.php";
 
 	// Bailout if geolocation is not used.
 	if (!Variables::getGeolocationUse() || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
@@ -27,7 +28,7 @@ function setEightshiftFormsLocationCookie(): void
 	}
 
 	// Require geo detect file from libs.
-	require_once Helper::getRealpath(dirname(__DIR__, 2) . "/vendor/infinum/eightshift-libs/src/Geolocation/geolocationDetect.php");
+	require_once dirname(__DIR__, 2) . "{$sep}vendor{$sep}infinum{$sep}eightshift-libs{$sep}src{$sep}Geolocation{$sep}geolocationDetect.php";
 
 	// Run setting of cookie.
 	setLocationCookie( // @phpstan-ignore-line

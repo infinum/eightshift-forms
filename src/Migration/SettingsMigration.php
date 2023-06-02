@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
@@ -87,7 +88,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									'data-type' => self::VERSION_2_3,
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
@@ -108,7 +109,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									'data-type' => self::VERSION_3_4,
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_3_4,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
@@ -122,6 +123,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 				'layoutContent' => [
 					[
 						'component' => 'textarea',
+						'textareaName' => 'log',
 						'textareaFieldLabel' => \__('Log output', 'eightshift-forms'),
 						'textareaIsReadOnly' => true,
 						'additionalClass' => "{$manifestForm['componentMigrationJsClass']}-output",

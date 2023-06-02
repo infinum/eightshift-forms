@@ -44,7 +44,9 @@ trait UploadHelper
 			return [];
 		}
 
-		$folderPath = Helper::getRealpath(\WP_CONTENT_DIR . '/esforms-tmp');
+		$sep = DIRECTORY_SEPARATOR;
+
+		$folderPath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}";
 
 		if (!\is_dir($folderPath)) {
 			\mkdir($folderPath);
@@ -63,7 +65,7 @@ trait UploadHelper
 		$name = "{$fileId}.{$ext}";
 
 		// Create final folder location path.
-		$finalFilePath = Helper::getRealpath($folderPath, $name);
+		$finalFilePath = "{$folderPath}{$name}";
 
 		// Move the file to new location.
 		\move_uploaded_file($file['tmp_name'], $finalFilePath);
@@ -115,14 +117,15 @@ trait UploadHelper
 		if (!\defined('WP_CONTENT_DIR')) {
 			return;
 		}
+		$sep = DIRECTORY_SEPARATOR;
 
-		$folderPath = Helper::getRealpath(\WP_CONTENT_DIR . '/esforms-tmp');
+		$folderPath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}";
 
 		if (!\is_dir($folderPath)) {
 			return;
 		}
 
-		$files = \glob("{$folderPath}/*");
+		$files = \glob("{$folderPath}*");
 
 		if (!$files) {
 			return;
@@ -152,7 +155,9 @@ trait UploadHelper
 			return '';
 		}
 
-		$filePath = Helper::getRealpath(\WP_CONTENT_DIR . "/esforms-tmp/{$name}");
+		$sep = DIRECTORY_SEPARATOR;
+
+		$filePath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}{$name}";
 
 		if (!\file_exists($filePath)) {
 			return '';
@@ -162,15 +167,16 @@ trait UploadHelper
 	}
 
 	/**
-	 * Return file by provided name with ext.
+	 * Return file name from path.
 	 *
 	 * @param string $name File name.
 	 *
 	 * @return mixed
 	 */
-	protected function getFile(string $name)
+	protected function getFileNameFromPath(string $path)
 	{
-		return \file($this->getFilePath($name));
+		$path = \explode(\DIRECTORY_SEPARATOR, $path);
+		return \end($path);
 	}
 
 	/**

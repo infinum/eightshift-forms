@@ -160,9 +160,6 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			);
 		}
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
 		// Prepare params for output.
 		$params = Helper::prepareGenericParamsOutput($params);
 

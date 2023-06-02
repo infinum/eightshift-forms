@@ -480,35 +480,6 @@ class Helper
 	}
 
 	/**
-	 * Remove unecesery custom params.
-	 *
-	 * @param array<string, mixed> $params Params to check.
-	 * @param array<int, string> $additional Additional keys to remove.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function removeUneceseryParamFields(array $params, array $additional = []): array
-	{
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
-		$additional = \array_flip($additional);
-
-		return \array_filter(
-			$params,
-			static function ($item) use ($customFields, $additional) {
-				if (isset($customFields[$item['name'] ?? ''])) {
-					return false;
-				}
-
-				if ($additional && isset($additional[$item['name'] ?? ''])) {
-					return false;
-				}
-
-				return true;
-			}
-		);
-	}
-
-	/**
 	 * Convert date formats to libs formats.
 	 *
 	 * @param string $date Date to convert.
@@ -539,14 +510,17 @@ class Helper
 	 * Prepare generic params output. Used if no specific configurations are needed.
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param array<string> $exclude Exclude params.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function prepareGenericParamsOutput(array $params): array
+	public static function prepareGenericParamsOutput(array $params, array $exclude = []): array
 	{
 		$output = [];
 
-		foreach ($params as $key => $param) {
+		$exclude = array_flip($exclude);
+
+		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
 			if (!$value) {
 				continue;
@@ -554,6 +528,10 @@ class Helper
 
 			$name = $param['name'] ?? '';
 			if (!$name) {
+				continue;
+			}
+
+			if (isset($exclude[$name])) {
 				continue;
 			}
 
@@ -735,19 +713,5 @@ class Helper
 		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return ($port ? "https" : "http") . "://{$host}{$request}";
-	}
-
-	/**
-	 * Get realpath with file name.
-	 *
-	 * @return string
-	 */
-	public static function getRealpath(string $prefix, string $fileName = ''): string
-	{
-		if ($fileName) {
-			return \realpath($prefix) . \DIRECTORY_SEPARATOR . $fileName;
-		}
-
-		return \realpath($prefix);
 	}
 }

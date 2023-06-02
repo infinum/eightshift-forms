@@ -149,11 +149,9 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'countryIsRequired' => $isRequired,
 								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
 									$isRequired ? 'countryIsRequired' : '',
-									'countryAttrs',
+									'countryTypeCustom',
 								]),
-								'countryAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'country',
-								],
+								'countryTypeCustom' => 'country',
 							];
 							break;
 						default:
@@ -247,16 +245,14 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputIsEmail' => true,
 						'inputIsRequired' => $isRequired,
 						'inputValidationPattern' => $validationPattern ? 'momentsEmail' : '',
-						'inputAttrs' => [
-							'data-type-internal' => 'email',
-						],
+						'inputTypeCustom' => 'email',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
 							$validationMaxLength ? 'inputMaxLength' : '',
 							$validationPattern ? 'inputValidationPattern' : '',
 							'inputIsEmail',
 							'inputType',
-							'inputAttrs',
+							'inputTypeCustom',
 						]),
 					];
 
@@ -317,11 +313,9 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'countryIsRequired' => $isRequired,
 								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
 									$isRequired ? 'countryIsRequired' : '',
-									'countryAttrs',
+									'countryTypeCustom',
 								]),
-								'countryAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'country',
-								],
+								'countryTypeCustom' => 'country',
 							];
 							break;
 						default:

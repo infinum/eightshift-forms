@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -18,6 +19,7 @@ if (!$checkboxesName) {
 
 $checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $manifest);
 $checkboxesIsRequired = Components::checkAttr('checkboxesIsRequired', $attributes, $manifest);
+$checkboxesTypeCustom = Components::checkAttr('checkboxesTypeCustom', $attributes, $manifest);
 
 // Add internal counter name key.
 $checkboxesContent = (string) preg_replace_callback('/name=""/', function () use ($checkboxesName) {
@@ -56,6 +58,9 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => [
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			],
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

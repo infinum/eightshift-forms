@@ -58,9 +58,8 @@ class Mailer implements MailerInterface
 		array $responseFields = []
 	): bool {
 
-		$time_start = microtime(true);
 		// Send email.
-		$a = \wp_mail(
+		return \wp_mail(
 			$this->getTemplate('to', $fields, $to),
 			$this->getTemplate('subject', $fields, $subject),
 			$this->getTemplate('message', $fields, $template, $responseFields),
@@ -70,13 +69,6 @@ class Mailer implements MailerInterface
 			),
 			$this->prepareFiles($files)
 		);
-		$time_end = microtime(true);
-$execution_time = ($time_end - $time_start);
-
-error_log( print_r( ( 'Total Execution Time:'.$execution_time.' Sec' ), true ) );
-
-
-		return $a;
 	}
 
 	/**
@@ -289,9 +281,6 @@ error_log( print_r( ( 'Total Execution Time:'.$execution_time.' Sec' ), true ) )
 		if (!$files) {
 			return $output;
 		}
-
-		error_log( print_r( ( $files ), true ) );
-		
 
 		foreach ($files as $file) {
 			$value = $file['value'] ?? [];

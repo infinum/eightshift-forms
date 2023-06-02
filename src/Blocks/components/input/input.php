@@ -23,6 +23,7 @@ if (!$inputName) {
 $inputValue = Components::checkAttr('inputValue', $attributes, $manifest);
 $inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $manifest);
 $inputType = Components::checkAttr('inputType', $attributes, $manifest);
+$inputTypeCustom = Components::checkAttr('inputTypeCustom', $attributes, $manifest);
 $inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
 $inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
 $inputIsRequired = Components::checkAttr('inputIsRequired', $attributes, $manifest);
@@ -108,7 +109,7 @@ echo Components::render(
 				Components::props('conditionalTags', $attributes)
 			),
 			'fieldAttrs' => [
-				'data-input-type' => $inputType,
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			],
 		]),
 		[

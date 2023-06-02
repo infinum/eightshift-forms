@@ -53,6 +53,9 @@
 		"selectUseSearch": {
 			"type": "boolean",
 			"default": true
+		},
+		"selectTypeCustom": {
+			"type": "string"
 		}
 	}
 }

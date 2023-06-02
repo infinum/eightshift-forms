@@ -273,9 +273,6 @@ class GoodbitsClient implements ClientInterface
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
 		$filterName = Filters::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params) ?? [];
