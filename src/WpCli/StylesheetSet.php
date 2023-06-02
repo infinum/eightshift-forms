@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\WpCli;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use WP_CLI;
 
@@ -79,7 +78,7 @@ class StylesheetSet implements ServiceCliInterface
 	{
 		$path = $argsAsoc['additional-path'] ?? '';
 
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 
 		$targetPath = __DIR__ . $sep . Config::getProjectName();
 		$destinationPath = \get_template_directory() . $sep . $path;

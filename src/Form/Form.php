@@ -177,7 +177,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$innerBlock['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
 				$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 				$innerBlock['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
-				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = wp_json_encode($formsConditionalTagsRulesForms);
+				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = \wp_json_encode($formsConditionalTagsRulesForms);
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
 				$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
 
@@ -186,7 +186,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 				// If the users don't add first step add it to the list.
 				if ($hasSteps && $innerBlock['innerBlocks'][0]['blockName'] !== "{$formsNamespace}/step") {
-					array_unshift(
+					\array_unshift(
 						$innerBlock['innerBlocks'],
 						[
 							'blockName' => "{$formsNamespace}/step",
@@ -220,7 +220,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 					// Add custom field block around none forms block to be able to use positioning.
 					if ($namespace !== $formsNamespace) {
-						$customUsedAttrsDiff = array_intersect_key(
+						$customUsedAttrsDiff = \array_intersect_key(
 							$inBlock['attrs'] ?? [],
 							Components::getComponent('field')['attributes']
 						);
@@ -229,15 +229,15 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 						if ($customUsedAttrsDiff) {
 							foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
-								$customUsedAttrs["field" . ucfirst($customDiffKey)] = $customDiffValue;
+								$customUsedAttrs['field' . \ucfirst($customDiffKey)] = $customDiffValue;
 							}
 						}
 
 						$inBlock = [];
 						$inBlock['blockName'] = "{$formsNamespace}/field";
-						$inBlock['attrs'] = array_merge(
+						$inBlock['attrs'] = \array_merge(
 							[
-								'fieldFieldContent' => apply_filters('the_content', render_block($inBlock)),
+								'fieldFieldContent' => \apply_filters('the_content', \render_block($inBlock)),
 								'fieldFieldHideLabel' => true,
 								'fieldFieldUseError' => false,
 							],
@@ -254,7 +254,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 							$inBlockOutput[$stepKey] = [
 								'blockName' => $inBlock['blockName'],
-								'attrs' => array_merge(
+								'attrs' => \array_merge(
 									$inBlock['attrs'],
 									[
 										'stepStepContent' => '',
@@ -268,7 +268,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						}
 
 						// Blocks in steps are passed as an attribute and we need to convert block to HTML string and append to the previous.
-						$inBlockOutput[$stepKey]['attrs']['stepStepContent'] = $inBlockOutput[$stepKey]['attrs']['stepStepContent'] . apply_filters('the_content', render_block($inBlock));
+						$inBlockOutput[$stepKey]['attrs']['stepStepContent'] = $inBlockOutput[$stepKey]['attrs']['stepStepContent'] . \apply_filters('the_content', \render_block($inBlock));
 					} else {
 						// Just populate normal blocks if there are no steps here.
 						$inBlockOutput[$inKey] = [
@@ -290,11 +290,11 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 					$inBlockOutput = \array_map(
 						static function ($key, $item) use ($stepsTotalCount) {
-							$item['attrs']['stepStepId'] = $key; 
-							$item['attrs']['stepStepTotal'] = $stepsTotalCount; 
+							$item['attrs']['stepStepId'] = $key;
+							$item['attrs']['stepStepTotal'] = $stepsTotalCount;
 							return $item;
 						},
-						\array_keys($inBlockOutput), 
+						\array_keys($inBlockOutput),
 						$inBlockOutput
 					);
 				}

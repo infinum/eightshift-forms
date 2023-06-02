@@ -78,7 +78,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	{
 		parent::enqueueScripts();
 
-		$output = array_merge(
+		$output = \array_merge(
 			$this->getEnqueueSharedInlineCommonItems(),
 			[
 				'nonce' => \wp_create_nonce('wp_rest'),

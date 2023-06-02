@@ -309,14 +309,14 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					break;
 				default:
 					if ($value['type'] === 'file') {
-						$output['files'][$key] = $value['value'] ? array_merge(
+						$output['files'][$key] = $value['value'] ? \array_merge(
 							$value,
 							[
 								'value' => \array_map(
 									function ($item) {
 										return $this->getFilePath($item);
 									},
-									explode(self::DELIMITER, $value['value'])
+									\explode(self::DELIMITER, $value['value'])
 								),
 							]
 						) : [];
@@ -340,12 +340,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function prepareFile(array $file, array $params): array
 	{
 		$file = $file['file'] ?? [];
-		
+
 		if (!$file) {
 			return [];
 		}
 
-		return array_merge(
+		return \array_merge(
 			$file,
 			[
 				'id' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['fileId']]['value'] ?? '',
@@ -377,7 +377,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getFormDataReference($request) {
+	protected function getFormDataReference($request): array
+	{
 		// Get params from request.
 		$params = $this->prepareParams($request->get_body_params());
 
@@ -422,10 +423,10 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$formDataReference['stepFields'] = $params['stepFields'] ?? [];
 
 		// Get form captcha from params.
-		$formDataReference['captcha'] = json_decode($params['captcha'] ?? '', true) ?? [];
+		$formDataReference['captcha'] = \json_decode($params['captcha'] ?? '', true) ?? [];
 
 		// Get form storage from params.
-		$formDataReference['storage'] = json_decode($params['storage'] ?? '', true) ?? [];
+		$formDataReference['storage'] = \json_decode($params['storage'] ?? '', true) ?? [];
 
 		return $formDataReference;
 	}

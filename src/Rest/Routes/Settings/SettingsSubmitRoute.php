@@ -137,7 +137,8 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	 *
 	 * @return string
 	 */
-	protected function routeGetType(): string {
+	protected function routeGetType(): string
+	{
 		return self::ROUTE_TYPE_SETTINGS;
 	}
 

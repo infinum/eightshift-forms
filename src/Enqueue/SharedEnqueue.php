@@ -30,6 +30,11 @@ use EightshiftForms\Rest\Routes\SubmitFilesRoute;
  */
 trait SharedEnqueue
 {
+	/**
+	 * Get enqueue shared inline varables.
+	 *
+	 * @return array<mixed>
+	 */
 	public function getEnqueueSharedInlineCommonItems(): array
 	{
 		$restPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
@@ -47,7 +52,7 @@ trait SharedEnqueue
 				'prefixTestApi' => AbstractTestApi::ROUTE_PREFIX_TEST_API,
 				'files' => SubmitFilesRoute::ROUTE_SLUG,
 
-				// Admin
+				// Admin.
 				'settings' => SettingsSubmitRoute::ROUTE_SLUG,
 				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
 				'migration' => MigrationRoute::ROUTE_SLUG,

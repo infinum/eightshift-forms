@@ -18,7 +18,7 @@ trait UploadHelper
 	/**
 	 * Prepare all files and upload to uploads folder.
 	 *
-	 * @param array<string, mixed> $files Files to prepare.
+	 * @param array<string, mixed> $file File to prepare.
 	 *
 	 * @return array<string, array<int, array<string, mixed>>>
 	 */
@@ -44,7 +44,7 @@ trait UploadHelper
 			return [];
 		}
 
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 
 		$folderPath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}";
 
@@ -70,7 +70,7 @@ trait UploadHelper
 		// Move the file to new location.
 		\move_uploaded_file($file['tmp_name'], $finalFilePath);
 
-		return array_merge(
+		return \array_merge(
 			$file,
 			[
 				'path' => $finalFilePath,
@@ -117,7 +117,7 @@ trait UploadHelper
 		if (!\defined('WP_CONTENT_DIR')) {
 			return;
 		}
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 
 		$folderPath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}";
 
@@ -133,7 +133,7 @@ trait UploadHelper
 
 		foreach ($files as $file) {
 			// file is younger than x hours skip it.
-			if (time()-filemtime($file) < $numberOfHours * \HOUR_IN_SECONDS) {
+			if (\time() - \filemtime($file) < $numberOfHours * \HOUR_IN_SECONDS) {
 				continue;
 			}
 
@@ -155,7 +155,7 @@ trait UploadHelper
 			return '';
 		}
 
-		$sep = DIRECTORY_SEPARATOR;
+		$sep = \DIRECTORY_SEPARATOR;
 
 		$filePath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}{$name}";
 
@@ -169,11 +169,11 @@ trait UploadHelper
 	/**
 	 * Return file name from path.
 	 *
-	 * @param string $name File name.
+	 * @param string $path File path.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	protected function getFileNameFromPath(string $path)
+	protected function getFileNameFromPath(string $path): string
 	{
 		$path = \explode(\DIRECTORY_SEPARATOR, $path);
 		return \end($path);

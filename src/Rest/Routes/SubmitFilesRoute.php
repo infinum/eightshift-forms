@@ -134,12 +134,12 @@ class SubmitFilesRoute extends AbstractFormSubmit
 	 *
 	 * @return string
 	 */
-	protected function routeGetType(): string {
+	protected function routeGetType(): string
+	{
 		return self::ROUTE_TYPE_FILE;
 	}
 
-
-		/**
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
@@ -151,7 +151,7 @@ class SubmitFilesRoute extends AbstractFormSubmit
 		// Finish.
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
-				__('File upload success', 'eightshift-forms'),
+				\esc_html__('File upload success', 'eightshift-forms'),
 				[
 					'file' => $formDataReference['filesUpload']['id'],
 				]

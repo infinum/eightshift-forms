@@ -291,7 +291,6 @@ class Validator extends AbstractValidation
 					if (!$this->isMimeTypeValid($file)) {
 						$output[$id] = \sprintf($this->getValidationLabel('validationAcceptMime', $formId), $dataValue);
 					}
-	
 					if (!$this->isFileTypeValid($fileName, $dataValue)) {
 						$output[$id] = \sprintf($this->getValidationLabel('validationAccept', $formId), $dataValue);
 					}

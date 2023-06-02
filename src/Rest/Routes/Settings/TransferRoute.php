@@ -312,7 +312,7 @@ class TransferRoute extends AbstractBaseRoute
 		if (!$filePath) {
 			return false;
 		}
-		
+
 		$data = \json_decode(\implode(' ', (array)\file($filePath)), true);
 
 		if (!$data) {

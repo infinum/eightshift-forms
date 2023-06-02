@@ -157,7 +157,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 					'label' => $label,
 					'value' => $name,
 					'type' => $type,
-					'subItems' => $this->getInnerItems($value['innerBlocks'], $type, $name),
+					'subItems' => $this->getInnerItems($value['innerBlocks'], $type),
 				];
 			}
 		}
@@ -173,7 +173,15 @@ class FormFieldsRoute extends AbstractBaseRoute
 		);
 	}
 
-	private function getInnerItems(array $items, string $parentType, string $parentName, bool $useEmpty = true): array
+	/**
+	 * Get inner items with details
+	 *
+	 * @param array<mixed> $items Items to find in the block.
+	 * @param string $parentType Parent type for the block.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getInnerItems(array $items, string $parentType): array
 	{
 		$output = [];
 
@@ -181,12 +189,10 @@ class FormFieldsRoute extends AbstractBaseRoute
 			return $output;
 		}
 
-		if ($useEmpty) {
-			$output[] = [
-				'label' => $parentType === 'radios' ? \__('Unchecked', 'eightshift-forms') : \__('Unselected', 'eightshift-forms'),
-				'value' => '',
-			];
-		}
+		$output[] = [
+			'label' => $parentType === 'radios' ? \__('Unchecked', 'eightshift-forms') : \__('Unselected', 'eightshift-forms'),
+			'value' => '',
+		];
 
 		foreach ($items as $item) {
 			$blockName = Helper::getBlockNameDetails($item['blockName']);

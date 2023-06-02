@@ -211,7 +211,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		// Enrichment config.
 		if (\apply_filters(SettingsEnrichment::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			$output['enrichment'] = array_merge(
+			$output['enrichment'] = \array_merge(
 				[
 					'isUsed' => true,
 				],

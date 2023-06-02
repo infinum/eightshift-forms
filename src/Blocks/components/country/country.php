@@ -74,7 +74,6 @@ if (has_filter($filterName)) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
-		
 
 		$customProperties = [
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryCode'] => $code,

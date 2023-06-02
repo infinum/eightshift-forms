@@ -18,7 +18,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -518,7 +517,7 @@ class Helper
 	{
 		$output = [];
 
-		$exclude = array_flip($exclude);
+		$exclude = \array_flip($exclude);
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';

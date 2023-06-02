@@ -121,8 +121,5 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 				)
 			);
 		}
-
-
-
 	}
 }

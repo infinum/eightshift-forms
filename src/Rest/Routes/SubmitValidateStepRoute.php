@@ -134,11 +134,12 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	 *
 	 * @return string
 	 */
-	protected function routeGetType(): string {
+	protected function routeGetType(): string
+	{
 		return self::ROUTE_TYPE_STEP_VALIDATION;
 	}
 
-		/**
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
@@ -153,7 +154,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		// Finish.
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
-				__('File upload success', 'eightshift-forms'),
+				\esc_html__('File upload success', 'eightshift-forms'),
 				[
 					'file' => $formDataReference['files'][$fieldName]['id'],
 				]

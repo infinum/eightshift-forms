@@ -17,7 +17,6 @@ use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Parsedown;
 
 /**
