@@ -7,9 +7,6 @@ export const prefix = 'esForms';
 
 export class State {
 	constructor(options = {}) {
-		// Form endpoint to send data.
-		this.formSubmitRestApiUrl = options.formSubmitRestApiUrl ?? esFormsLocalization.restRoutes.formSubmit;
-
 		// Detect if form is used in admin for settings or on the frontend.
 		this.formIsAdmin = options.formIsAdmin ?? false;
 
@@ -47,9 +44,6 @@ export class State {
 		this.SAVE_AS_JSON = 'saveAsJson';
 		this.IS_ADMIN = 'isAdmin';
 		this.IS_USED = 'isUsed';
-		this.REST_PREFIX = 'restPrefix';
-		this.SUBMIT_URL = 'submitUrl';
-		this.SUBMIT_URL_CACHE = 'submitUrlCache';
 		this.NONCE = 'nonce';
 
 		// Conditional tags
@@ -166,8 +160,6 @@ export class State {
 			this.setState([key], item, this.PARAMS);
 		}
 
-		this.setState([this.REST_PREFIX], esFormsLocalization.restPrefix, this.CONFIG);
-		this.setState([this.SUBMIT_URL], this.formSubmitRestApiUrl, this.CONFIG);
 		this.setState([this.IS_ADMIN], this.formIsAdmin, this.CONFIG);
 		this.setState([this.NONCE], esFormsLocalization.nonce, this.CONFIG);
 
@@ -185,7 +177,6 @@ export class State {
 		this.setState([this.IS_USED], Boolean(captcha.isUsed), this.CAPTCHA);
 
 		if (captcha.isUsed) {
-			this.setState([this.SUBMIT_URL], this.getRestUrl(this.getStateConfigSubmitUrl(), '-', 'captcha'), this.CAPTCHA);
 			this.setState([this.CAPTCHA_SITE_KEY], captcha.siteKey, this.CAPTCHA);
 			this.setState([this.CAPTCHA_IS_ENTERPRISE], Boolean(captcha.isEnterprise), this.CAPTCHA);
 			this.setState([this.CAPTCHA_SUBMIT_ACTION], captcha.submitAction, this.CAPTCHA);
@@ -391,13 +382,15 @@ export class State {
 			this.setState([this.ELEMENTS, name, this.LOADED], false, formId);
 			this.setState([this.ELEMENTS, name, this.NAME], name, formId);
 			this.setState([this.ELEMENTS, name, this.FIELD], field, formId);
-			this.setState([this.ELEMENTS, name, this.ERROR], field.querySelector(this.getStateSelectorsError()), formId);
+			this.setState([this.ELEMENTS, name, this.ERROR], field?.querySelector(this.getStateSelectorsError()), formId);
 			this.setState([this.ELEMENTS, name, this.IS_SINGLE_SUBMIT], item.classList.contains(this.getStateSelectorsSubmitSingle().substring(1)), formId);
-			this.setState([this.ELEMENTS, name, this.TYPE_CUSTOM], field.getAttribute(this.getStateAttribute('fieldTypeCustom')), formId);
+			this.setState([this.ELEMENTS, name, this.TYPE_CUSTOM], field?.getAttribute(this.getStateAttribute('fieldTypeCustom')), formId);
 			this.setState([this.ELEMENTS, name, this.SAVE_AS_JSON], Boolean(item.getAttribute(this.getStateAttribute('saveAsJson'))), formId);
 
 			// Conditional tags.
-			this.setStateConditionalTags(field, name, formId);
+			if (field) {
+				this.setStateConditionalTags(field, name, formId);
+			}
 		}
 	}
 
@@ -581,17 +574,11 @@ export class State {
 
 	// ----------------------------------------
 	// Config
-	getStateConfigNonce() {
-		return this.getState([this.NONCE], this.CONFIG);
-	}
-	getStateConfigSubmitUrl() {
-		return this.getState([this.SUBMIT_URL], this.CONFIG);
-	}
 	getStateConfigIsAdmin() {
 		return this.getState([this.IS_ADMIN], this.CONFIG);
 	}
-	getStateConfigRestPrefix() {
-		return this.getState([this.REST_PREFIX], this.CONFIG);
+	getStateConfigNonce() {
+		return this.getState([this.NONCE], this.CONFIG);
 	}
 
 	// ----------------------------------------
@@ -818,9 +805,6 @@ export class State {
 	getStateCaptchaIsUsed() {
 		return this.getState([this.IS_USED], this.CAPTCHA);
 	}
-	getStateCaptchaSubmitUrl() {
-		return this.getState([this.SUBMIT_URL], this.CAPTCHA);
-	}
 	getStateCaptchaSiteKey() {
 		return this.getState([this.CAPTCHA_SITE_KEY], this.CAPTCHA);
 	}
@@ -985,14 +969,58 @@ export class State {
 		return this.getFormElementByChild(element).getAttribute(this.getStateAttribute('formPostId'));
 	}
 
-	getRestUrl(value, delimitier = '/' , after = '') {
-		const url = this.getStateConfigRestPrefix().replace(/\/$/, ""); // Remove trailing slash.
-		const sufix = value.replace(/^\/+/, ''); // Remove leading /
-
-		if (after) {
-			return `${url}/${sufix}${delimitier}${after}`;
-		}
-
-		return `${url}/${sufix}`;
+	getRestUrl(value) {
+		return getRestUrl(value);
 	}
+
+	getRestUrlByType(type, value) {
+		return getRestUrlByType(type, value);
+	}
+}
+
+export const ROUTES = {
+	// Common.
+	PREFIX: esFormsLocalization.restRoutes.prefix,
+	PREFIX_PROJECT: esFormsLocalization.restRoutes.prefixProject,
+	PREFIX_SUBMIT: esFormsLocalization.restRoutes.prefixSubmit,
+	PREFIX_TEST_API: esFormsLocalization.restRoutes.prefixTestApi,
+	FILES: esFormsLocalization.restRoutes.files,
+
+	// Admin.
+	SETTINGS: esFormsLocalization.restRoutes.settings,
+	CACHE_CLEAR: esFormsLocalization.restRoutes.cacheClear,
+	MIGRATION: esFormsLocalization.restRoutes.migration,
+	TRANSFER: esFormsLocalization.restRoutes.transfer,
+	SYNC_DIRECT: esFormsLocalization.restRoutes.syncDirect,
+
+	// Editor.
+	PREFIX_INTEGRATIONS_ITEMS_INNER: esFormsLocalization.restRoutes.prefixIntegrationItemsInner,
+	PREFIX_INTEGRATIONS_ITEMS: esFormsLocalization.restRoutes.prefixIntegrationItems,
+	PREFIX_INTEGRATION_EDITOR: esFormsLocalization.restRoutes.prefixIntegrationEditor,
+	INTEGRATIONS_EDITOR_SYNC: esFormsLocalization.restRoutes.integrationsEditorSync,
+	INTEGRATIONS_EDITOR_CREATE: esFormsLocalization.restRoutes.integrationsEditorCreate,
+	FORM_FIELDS: esFormsLocalization.restRoutes.formFields,
+	COUNTRIES_GEOLOCATION: esFormsLocalization.restRoutes.countriesGeolocation,
+
+	// Public.
+	CAPTCHA: esFormsLocalization.restRoutes.captcha,
+}
+
+export function getRestUrl(value, isPartial = false) {
+	const prefix = isPartial ? ROUTES.PREFIX_PROJECT : ROUTES.PREFIX;
+
+	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
+	const sufix = value.replace(/^\/+/, ''); // Remove leading slash.
+
+	return `${url}/${sufix}`;
+}
+
+export function getRestUrlByType(type, value, isPartial = false) {
+	const prefix = isPartial ? ROUTES.PREFIX_PROJECT : ROUTES.PREFIX;
+
+	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
+	const sufix = value.replace(/^\/+/, ''); // Remove leading slash.
+	const typePrefix = type.replace(/^\/|\/$/g, ''); // Remove leading and trailing slash.
+
+	return `${url}/${typePrefix}/${sufix}`;
 }

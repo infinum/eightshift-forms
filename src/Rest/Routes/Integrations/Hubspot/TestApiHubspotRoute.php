@@ -22,7 +22,7 @@ class TestApiHubspotRoute extends AbstractTestApi
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractTestApi::ROUTE_PREFIX_TEST_API . '-' . SettingsHubspot::SETTINGS_TYPE_KEY . '/';
+	public const ROUTE_SLUG = SettingsHubspot::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable for Hubspot data.
@@ -48,7 +48,7 @@ class TestApiHubspotRoute extends AbstractTestApi
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractTestApi::ROUTE_PREFIX_TEST_API . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

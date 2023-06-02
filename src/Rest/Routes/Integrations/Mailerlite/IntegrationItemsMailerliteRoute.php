@@ -30,7 +30,7 @@ class IntegrationItemsMailerliteRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '-mailerlite/';
+	public const ROUTE_SLUG = SettingsMailerlite::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Get the base url of the route
@@ -39,7 +39,7 @@ class IntegrationItemsMailerliteRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

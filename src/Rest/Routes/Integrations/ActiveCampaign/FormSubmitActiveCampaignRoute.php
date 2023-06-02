@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
+use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -27,7 +28,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-active-campaign/';
+	public const ROUTE_SLUG = SettingsActiveCampaign::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -104,7 +105,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

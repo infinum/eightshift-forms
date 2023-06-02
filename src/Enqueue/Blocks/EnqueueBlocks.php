@@ -14,19 +14,14 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
-use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
-use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
-use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
-use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
-use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -37,6 +32,11 @@ use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
  */
 class EnqueueBlocks extends AbstractEnqueueBlocks
 {
+	/**
+	 * Use shared helper trait.
+	 */
+	use SharedEnqueue;
+
 	/**
 	 * Use general helper trait.
 	 */
@@ -180,16 +180,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	{
 		parent::enqueueBlockFrontendScript();
 
-		$output = $this->getInlineScriptCommon();
+		$output = $this->getEnqueueSharedInlineCommonItems();
 
 		// Frontend part.
 		$hideGlobalMessageTimeout = Filters::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
 		$redirectionTimeout = Filters::getFilterName(['block', 'form', 'redirectionTimeout']);
 		$fileRemoveLabel = Filters::getFilterName(['block', 'file', 'previewRemoveLabel']);
-
-		$output['restRoutes'] = [
-			'formSubmit' => '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,
-		];
 
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
@@ -263,7 +259,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		parent::enqueueBlockEditorScript();
 
-		$output = $this->getInlineScriptCommon();
+		$output = $this->getEnqueueSharedInlineCommonItems();
 
 		$additionalBlocksFilterName = Filters::getFilterName(['blocks', 'additionalBlocks']);
 		$formsStyleOptionsFilterName = Filters::getFilterName(['block', 'forms', 'styleOptions']);
@@ -302,39 +298,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['countryDataset'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
-		$output['restRoutes'] = [
-			'countriesGeolocation' => GeolocationCountriesRoute::ROUTE_SLUG,
-			'integrationsItemsInner' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
-			'integrationsItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
-			'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
-			'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
-			'formFields' => FormFieldsRoute::ROUTE_SLUG,
-			'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
-		];
-
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');
 
 		$output = \wp_json_encode($output);
 
 		\wp_add_inline_script($this->getBlockEditorScriptsHandle(), "const esFormsLocalization = {$output}", 'before');
-	}
-
-	/**
-	 * Get common inline scripts details for frontend and editor.
-	 *
-	 * @return array<string, string>
-	 */
-	private function getInlineScriptCommon(): array
-	{
-		$restRoutesPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
-		$restRoutesPrefix = \get_rest_url(\get_current_blog_id()) . $restRoutesPrefixProject;
-
-		return [
-			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
-			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
-			'restPrefixProject' => $restRoutesPrefixProject,
-			'restPrefix' => $restRoutesPrefix,
-		];
 	}
 }

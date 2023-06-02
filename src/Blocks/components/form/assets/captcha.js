@@ -1,6 +1,6 @@
 /* global grecaptcha */
 
-import { State, prefix } from './state';
+import { State, prefix , ROUTES} from './state';
 import { Utils } from './utilities';
 
 /**
@@ -89,7 +89,7 @@ export class Captcha {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getStateCaptchaSubmitUrl(), body)
+		fetch(this.state.getRestUrl(ROUTES.CAPTCHA), body)
 		.then((response) => {
 			return response.json();
 		})

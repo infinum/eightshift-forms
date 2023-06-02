@@ -84,7 +84,7 @@ class MigrationRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_SETTINGS . '-migration/';
+	public const ROUTE_SLUG = 'migration';
 
 	/**
 	 * Get the base url of the route

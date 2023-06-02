@@ -110,7 +110,6 @@ if ($fieldName) {
 if ($blockName) {
 	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $blockName;
 }
-error_log( print_r( ( $fieldAttrs ), true ) );
 
 $fieldAttrsOutput = '';
 if ($fieldAttrs) {

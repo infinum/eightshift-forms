@@ -443,6 +443,17 @@ export class Utils {
 		return output;
 	}
 
+	/**
+	 * 
+	 * @param {*} file 
+	 * @returns 
+	 */
+	getFileNameFromFileObject(file) {
+		const fileExt = file.upload.filename.split('.').slice(-1)?.[0];
+
+		return `${file.upload.uuid}.${fileExt}`;
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////

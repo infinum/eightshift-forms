@@ -8,6 +8,7 @@ import { select } from "@wordpress/data";
 import { Button } from '@wordpress/components';
 import { icons, Select, Section } from '@eightshift/frontend-libs/scripts';
 import { updateIntegrationBlocks, getSettingsPageUrl, resetInnerBlocks } from '../../utils';
+import { getRestUrlByType, ROUTES } from '../../form/assets/state';
 
 export const IntegrationsOptions = ({
 	block,
@@ -25,8 +26,7 @@ export const IntegrationsOptions = ({
 
 	useEffect(() => {
 		apiFetch({
-			path:
-				`${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.integrationsItems}-${block}`
+			path: getRestUrlByType(ROUTES.PREFIX_INTEGRATIONS_ITEMS, block, true),
 		}).then((response) => {
 			if (response.code === 200) {
 				setFormItems(response.data);
@@ -35,8 +35,7 @@ export const IntegrationsOptions = ({
 
 		if (innerIdKey && itemId) {
 			apiFetch({
-				path:
-					`${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.integrationsItemsInner}-${block}/?id=${itemId}`
+				path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATIONS_ITEMS_INNER, block, true)}?id=${itemId}`,
 			}).then((response) => {
 				if (response.code === 200) {
 					setFormInnerItems(response.data);

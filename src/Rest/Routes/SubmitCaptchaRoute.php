@@ -18,9 +18,9 @@ use Throwable;
 use WP_REST_Request;
 
 /**
- * Class FormSubmitCaptchaRoute
+ * Class SubmitCaptchaRoute
  */
-class FormSubmitCaptchaRoute extends AbstractBaseRoute
+class SubmitCaptchaRoute extends AbstractBaseRoute
 {
 	/**
 	 * Use general helper trait.
@@ -30,7 +30,7 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-captcha/';
+	public const ROUTE_SLUG = 'captcha';
 
 	/**
 	 * Instance variable of LabelsInterface data.

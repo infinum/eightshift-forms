@@ -1,12 +1,12 @@
 /* global grecaptcha */
 
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import { ConditionalTags } from './../../conditional-tags/assets/conditional-tags';
+import { State, prefix, ROUTES } from './state';
+import { Utils } from './utilities';
 import { Steps } from '../../step/assets/step';
 import { Enrichment } from './enrichment';
 import { Captcha } from './captcha';
-import { Utils } from './utilities';
-import { State, prefix } from './state';
+import { ConditionalTags } from './conditional-tags';
 
 /**
  * Main Forms class.
@@ -161,11 +161,11 @@ export class Form {
 		};
 
 		// Url for frontend forms.
-		let url = this.state.getRestUrl(this.state.getStateConfigSubmitUrl(), '-', formType);
+		let url = this.state.getRestUrlByType(ROUTES.PREFIX_SUBMIT, formType);
 
 		// For admin settings use different url and add nonce.
 		if (this.state.getStateConfigIsAdmin()) {
-			url = this.state.getRestUrl(this.state.getStateConfigSubmitUrl());
+			url = this.state.getRestUrl(ROUTES.SETTINGS);
 			body.headers['X-WP-Nonce'] = this.state.getStateConfigNonce();
 		}
 
@@ -438,8 +438,7 @@ export class Form {
 
 							// Check if the file is ok.
 							if (status === 'success') {
-								const fileExt = file.upload.filename.split('.').slice(-1)?.[0];
-								data.value = `${file.upload.uuid}.${fileExt}`;
+								data.value = this.utils.getFileNameFromFileObject(file);
 								this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
 							}
 						}
@@ -888,7 +887,7 @@ export class Form {
 			const dropzone = new Dropzone.default(
 				field,
 				{
-					url: this.state.getRestUrl(this.state.getStateConfigSubmitUrl(), '-', 'files'),
+					url: this.state.getRestUrl(ROUTES.FILES),
 					addRemoveLinks: true,
 					autoDiscover: false,
 					parallelUploads: 1,

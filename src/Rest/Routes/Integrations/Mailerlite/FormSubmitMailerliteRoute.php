@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailerlite;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -28,7 +29,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-mailerlite/';
+	public const ROUTE_SLUG = SettingsMailerlite::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -105,7 +106,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 import { Utils } from "../assets/utilities";
-import { State } from "../assets/state";
+import { State, ROUTES } from "../assets/state";
 
 export class Cache {
 	constructor(options = {}) {
@@ -7,8 +7,6 @@ export class Cache {
 		this.state = new State(options);
 
 		this.selector = options.selector;
-
-		this.clearCacheRestUrl = options.clearCacheRestUrl;
 	}
 
 	init() {
@@ -41,7 +39,7 @@ export class Cache {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl(this.clearCacheRestUrl), body)
+		fetch(this.state.getRestUrl(ROUTES.CACHE_CLEAR), body)
 			.then((response) => {
 				return response.json();
 			})

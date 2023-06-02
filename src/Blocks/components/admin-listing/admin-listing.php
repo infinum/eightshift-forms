@@ -8,6 +8,7 @@
 
 use EightshiftForms\AdminMenus\FormAdminMenu;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -156,7 +157,7 @@ if ($adminListingForms) {
 						'label' => __('Sync', 'eightshift-forms'),
 						'internal' => true,
 						'isButton' => true,
-						'additionalAttrs' => ['data-id' => $id],
+						'additionalAttrs' => [AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['syncId'] => $id],
 						'additionalClass' => $componentJsSyncClass,
 					] : [],
 					[
@@ -273,6 +274,10 @@ echo Components::render('layout', [
 			])
 			: Components::ensureString($formCardsToDisplay),
 	]),
-]),
+]);
 
-Components::render('global-msg', Components::props('globalMsg', $attributes));
+// This is fake form to be able to init state for global msg.
+?>
+<form class="<?php echo esc_attr(Components::getComponent('form')['componentJsClass']); ?>">
+	<?php echo Components::render('global-msg', Components::props('globalMsg', $attributes)); ?>
+</form>

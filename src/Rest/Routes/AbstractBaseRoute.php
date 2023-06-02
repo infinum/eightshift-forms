@@ -74,7 +74,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'trackingAdditionalData' => 'data-tracking-additional-data',
 		'tracking' => 'data-tracking',
 		'cacheType' => 'data-cache-type',
+		'syncId' => 'data-sync-id',
 		'migrationType' => 'data-migration-type',
+		'migrationExportItems' => 'data-migration-export-items',
 		'successRedirect' => 'data-success-redirect',
 		'successRedirectVariation' => 'data-success-redirect-variation',
 		'conditionalTags' => 'data-conditional-tags',
@@ -154,14 +156,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @var string
 	 */
-	public const ROUTE_PREFIX_FORM_SUBMIT = 'form-submit';
-
-	/**
-	 * Dynamic name route prefix for settings.
-	 *
-	 * @var string
-	 */
-	public const ROUTE_PREFIX_SETTINGS = 'settings';
+	public const ROUTE_PREFIX_FORM_SUBMIT = 'submit';
 
 	/**
 	 * Dynamic name route prefix for integration editor.

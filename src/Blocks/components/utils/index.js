@@ -7,6 +7,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { Tooltip } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import { AnimatedContentVisibility, camelize, classnames, IconLabel, icons, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -32,7 +33,9 @@ export const isOptionDisabled = (key, options) => {
  * @returns {void}
  */
 export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId = '') => {
-	apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsEditorCreate}/?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}` }).then((response) => {
+	apiFetch({
+		path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATION_EDITOR, ROUTES.INTEGRATIONS_EDITOR_CREATE, true)}?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}`,
+	}).then((response) => {
 		resetInnerBlocks(clientId);
 
 		if (response.code === 200) {
@@ -54,7 +57,9 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
  * @returns {void}
  */
 export const syncIntegrationBlocks = (clientId, postId) => {
-	return apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsEditorSync}/?id=${postId}` }).then((response) => {
+	return apiFetch({
+		path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATION_EDITOR, ROUTES.INTEGRATIONS_EDITOR_SYNC, true)}?id=${postId}`,
+	}).then((response) => {
 		resetInnerBlocks(clientId);
 
 		if (response.code === 200) {
@@ -84,7 +89,7 @@ export const syncIntegrationBlocks = (clientId, postId) => {
  */
 export const clearTransientCache = (type) => {
 	return apiFetch({
-		path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.cacheClear}/`,
+		path: getRestUrl(ROUTES.CACHE_CLEAR, true),
 		method: 'POST',
 		data: { type },
 	}).then((response) => {

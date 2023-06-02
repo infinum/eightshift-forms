@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Goodbits;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -28,7 +29,7 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-goodbits/';
+	public const ROUTE_SLUG = SettingsGoodbits::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -105,7 +106,7 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

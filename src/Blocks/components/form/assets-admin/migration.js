@@ -1,5 +1,5 @@
 import { Utils } from "../assets/utilities";
-import { State } from "../assets/state";
+import { State, ROUTES } from "../assets/state";
 
 export class Migration {
 	constructor(options = {}) {
@@ -8,8 +8,6 @@ export class Migration {
 
 		this.selector = options.selector;
 		this.outputSelector = options.outputSelector;
-
-		this.migrationRestUrl = options.migrationRestUrl;
 	}
 
 	init() {
@@ -28,7 +26,6 @@ export class Migration {
 
 		formData.append('type', event.target.getAttribute(this.state.getStateAttribute('migrationType')));
 
-		console.log(this.outputSelector);
 		document.querySelector(this.outputSelector).value = 'Please wait, this may take a few minutes...';
 
 		// Populate body data.
@@ -45,7 +42,7 @@ export class Migration {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl(this.migrationRestUrl), body)
+		fetch(this.state.getRestUrl(ROUTES.MIGRATION), body)
 			.then((response) => {
 				return response.json();
 			})

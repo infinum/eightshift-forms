@@ -504,9 +504,6 @@ class WorkableClient implements ClientInterface
 			$output['answers'] = $answers;
 		}
 
-		error_log( print_r( ( $output ), true ) );
-		
-
 		return $output;
 	}
 

@@ -22,7 +22,7 @@ class TestApiActiveCampaignRoute extends AbstractTestApi
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractTestApi::ROUTE_PREFIX_TEST_API . '-' . SettingsActiveCampaign::SETTINGS_TYPE_KEY . '/';
+	public const ROUTE_SLUG = SettingsActiveCampaign::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable for ActiveCampaign data.
@@ -48,7 +48,7 @@ class TestApiActiveCampaignRoute extends AbstractTestApi
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractTestApi::ROUTE_PREFIX_TEST_API . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

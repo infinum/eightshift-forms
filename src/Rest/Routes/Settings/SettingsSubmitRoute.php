@@ -20,9 +20,9 @@ use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
- * Class FormSettingsSubmitRoute
+ * Class SettingsSubmitRoute
  */
-class FormSettingsSubmitRoute extends AbstractFormSubmit
+class SettingsSubmitRoute extends AbstractFormSubmit
 {
 	/**
 	 * Use general helper trait.
@@ -80,7 +80,7 @@ class FormSettingsSubmitRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_SETTINGS . '-submit/';
+	public const ROUTE_SLUG = 'settings';
 
 	/**
 	 * Get the base url of the route

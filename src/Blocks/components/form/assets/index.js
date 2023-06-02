@@ -15,10 +15,7 @@ if (typeof esFormsLocalization === 'undefined') {
  */
 function initAll() {
 	import('./form').then(({ Form }) => {
-		const form = new Form();
-
-		// Run forms.
-		form.init();
+		new Form().init();
 	});
 }
 

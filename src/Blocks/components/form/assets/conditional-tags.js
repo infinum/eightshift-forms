@@ -1,10 +1,10 @@
 
-import { State, prefix } from '../../form/assets/state';
+import { State, prefix } from './state';
 import {
 	CONDITIONAL_TAGS_OPERATORS,
 	CONDITIONAL_TAGS_ACTIONS,
 	CONDITIONAL_TAGS_LOGIC,
-} from './utils';
+} from '../../conditional-tags/assets/utils';
 
 /**
  * Main conditon tags class.

@@ -9,6 +9,7 @@ import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, Ico
 import { CONDITIONAL_TAGS_OPERATORS_LABELS, CONDITIONAL_TAGS_LOGIC_LABELS } from '../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
+import { ROUTES, getRestUrl } from '../../form/assets/state';
 
 export const StepMultiflowOptions = (attributes) => {
 	const {
@@ -27,7 +28,9 @@ export const StepMultiflowOptions = (attributes) => {
 	const [formSteps, setFormSteps] = useState([]);
 
 	useEffect(() => {
-		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${stepMultiflowPostId}&useMultiflow=true` }).then((response) => {
+		apiFetch({
+			path: `${getRestUrl(ROUTES.FORM_FIELDS, true)}?id=${stepMultiflowPostId}&useMultiflow=true`,
+		}).then((response) => {
 			if (response.code === 200 && response.data) {
 				setFormFields(response.data.fields);
 				setFormSteps(response.data.steps);

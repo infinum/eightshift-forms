@@ -9,6 +9,7 @@ import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, Ico
 import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
+import { ROUTES, getRestUrl } from '../../form/assets/state';
 
 export const ConditionalTagsFormsOptions = (attributes) => {
 	const {
@@ -24,7 +25,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
-		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${conditionalTagsPostId}` }).then((response) => {
+		apiFetch({ path: `${getRestUrl(ROUTES.FORM_FIELDS, true)}?id=${conditionalTagsPostId}` }).then((response) => {
 			if (response.code === 200 && response.data) {
 				setFormFields(response.data.fields);
 			}

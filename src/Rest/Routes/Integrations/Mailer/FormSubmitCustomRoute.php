@@ -26,7 +26,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-custom/';
+	public const ROUTE_SLUG = 'custom';
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -83,7 +83,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

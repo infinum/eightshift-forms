@@ -17,6 +17,10 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
+if (!$fileName) {
+	return;
+}
+
 $fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
 $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);

@@ -1,5 +1,5 @@
 import { Utils } from "../assets/utilities";
-import { State } from "../assets/state";
+import { State, ROUTES } from "../assets/state";
 
 export class TestApi {
 	constructor(options = {}) {
@@ -7,8 +7,6 @@ export class TestApi {
 		this.state = new State(options);
 
 		this.selector = options.selector;
-
-		this.testApiRestUrl = options.testApiRestUrl;
 	}
 
 	init() {
@@ -42,7 +40,7 @@ export class TestApi {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl(this.testApiRestUrl, '-', integrationType), body)
+		fetch(this.state.getRestUrlByType(ROUTES.PREFIX_TEST_API, integrationType), body)
 			.then((response) => {
 				return response.json();
 			})

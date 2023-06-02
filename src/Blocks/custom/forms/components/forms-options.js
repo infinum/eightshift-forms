@@ -29,6 +29,7 @@ import {
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { getSettingsJsonOptions } from '../../../components/utils';
 import manifest from '../manifest.json';
+import { ROUTES, getRestUrl } from '../../../components/form/assets/state';
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const {
@@ -77,7 +78,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	if (typeof esFormsLocalization !== 'undefined' && esFormsLocalization?.use?.geolocation) {
 		formsUseGeolocation = true;
 
-		geolocationApi = `${esFormsLocalization.restPrefix}/${esFormsLocalization.restRoutes.countriesGeolocation}`;
+		geolocationApi = getRestUrl(ROUTES.COUNTRIES_GEOLOCATION);
 	}
 
 	const formSelectOptions = getFetchWpApi(
@@ -88,7 +89,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	);
 
 	useEffect(() => {
-		apiFetch({ path: `${esFormsLocalization.restPrefixProject}/${esFormsLocalization.restRoutes.countriesGeolocation}` }).then((response) => {
+		apiFetch({
+			path: getRestUrl(ROUTES.COUNTRIES_GEOLOCATION, true),
+		}).then((response) => {
 			if (response.code === 200) {
 				setFormFields(response.data);
 			}

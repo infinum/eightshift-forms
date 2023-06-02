@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - validating step
+ * The class register route for public form submiting endpoint - files
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -17,9 +17,9 @@ use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
- * Class FormSubmitValidateStepRoute
+ * Class SubmitFilesRoute
  */
-class FormSubmitValidateStepRoute extends AbstractFormSubmit
+class SubmitFilesRoute extends AbstractFormSubmit
 {
 	/**
 	 * Use general helper trait.
@@ -29,7 +29,7 @@ class FormSubmitValidateStepRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-validate-step/';
+	public const ROUTE_SLUG = 'files';
 
 	/**
 	 * Instance variable of LabelsInterface data.
@@ -135,8 +135,9 @@ class FormSubmitValidateStepRoute extends AbstractFormSubmit
 	 * @return string
 	 */
 	protected function routeGetType(): string {
-		return self::ROUTE_TYPE_STEP_VALIDATION;
+		return self::ROUTE_TYPE_FILE;
 	}
+
 
 		/**
 	 * Implement submit action.
@@ -147,15 +148,12 @@ class FormSubmitValidateStepRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
-
-		$fieldName = $formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
-
 		// Finish.
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				__('File upload success', 'eightshift-forms'),
 				[
-					'file' => $formDataReference['files'][$fieldName]['id'],
+					'file' => $formDataReference['filesUpload']['id'],
 				]
 			)
 		);

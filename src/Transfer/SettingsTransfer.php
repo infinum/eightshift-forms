@@ -12,6 +12,7 @@ namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -104,7 +105,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'submitValue' => \__('Export', 'eightshift-forms'),
 								'submitVariant' => 'outline',
 								'submitAttrs' => [
-									'data-type' => self::TYPE_EXPORT_GLOBAL_SETTINGS,
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 								],
 								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 							],
@@ -124,7 +125,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'submitValue' => \__('Export', 'eightshift-forms'),
 								'submitVariant' => 'outline',
 								'submitAttrs' => [
-									'data-type' => self::TYPE_EXPORT_ALL,
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_ALL,
 								],
 								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 							],
@@ -150,8 +151,8 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'submitIsDisabled' => true,
 								'submitVariant' => 'outline',
 								'submitAttrs' => [
-									'data-type' => self::TYPE_EXPORT_FORMS,
-									'data-items' => '',
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_FORMS,
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationExportItems'] => '',
 								],
 								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 							],
@@ -188,6 +189,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
+								'checkboxValue' => 'override',
 								'checkboxAsToggle' => true,
 								'checkboxAsToggleSize' => 'medium',
 								'checkboxLabel' => \__('Override existing forms', 'eightshift-forms'),
@@ -201,6 +203,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 					],
 					[
 						'component' => 'file',
+						'fileName' => 'upload',
 						'fileIsRequired' => true,
 						'fileFieldLabel' => \__('Backup file (JSON)', 'eightshift-forms'),
 						'fileAccept' => 'json',
@@ -216,7 +219,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'submitValue' => \__('Import JSON', 'eightshift-forms'),
 								'submitVariant' => 'outline',
 								'submitAttrs' => [
-									'data-type' => self::TYPE_IMPORT,
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_IMPORT,
 								],
 								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 							],

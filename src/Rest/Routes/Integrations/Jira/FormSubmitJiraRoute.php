@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Jira;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\Jira\JiraClientInterface;
+use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -28,7 +29,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-jira/';
+	public const ROUTE_SLUG = SettingsJira::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -105,7 +106,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

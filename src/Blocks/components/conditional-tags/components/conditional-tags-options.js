@@ -15,6 +15,7 @@ import {
 	CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS,
 	CONDITIONAL_TAGS_OPERATORS_LABELS,
 } from './conditional-tags-labels';
+import { ROUTES, getRestUrl } from '../../form/assets/state';
 
 export const ConditionalTagsOptions = (attributes) => {
 	const {
@@ -38,7 +39,7 @@ export const ConditionalTagsOptions = (attributes) => {
 	}
 
 	useEffect(() => {
-		apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.formFields}/?id=${postId}` }).then((response) => {
+		apiFetch({ path: `${getRestUrl(ROUTES.FORM_FIELDS, true)}?id=${postId}` }).then((response) => {
 			if (response.code === 200 && response.data) {
 				setFormFields(response.data.fields);
 			}
