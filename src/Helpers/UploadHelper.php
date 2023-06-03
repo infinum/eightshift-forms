@@ -180,6 +180,20 @@ trait UploadHelper
 	}
 
 	/**
+	 * Return file ext from path.
+	 *
+	 * @param string $path File path.
+	 *
+	 * @return string
+	 */
+	protected function getFileExtFromPath(string $path): string
+	{
+		$filename = $this->getFileNameFromPath($path);
+		$ext = \explode('.', $filename);
+		return \end($ext);
+	}
+
+	/**
 	 * Check if there is a faulty file in the array.
 	 *
 	 * @param array<string, mixed> $files Files to check.

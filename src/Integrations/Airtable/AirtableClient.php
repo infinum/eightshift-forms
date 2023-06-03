@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -330,6 +331,9 @@ class AirtableClient implements ClientInterface
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		$filterName = Filters::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {

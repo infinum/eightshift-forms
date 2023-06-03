@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Jira;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -446,6 +447,9 @@ class JiraClient implements JiraClientInterface
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		$formTitle = \get_the_title((int) $formId);
 

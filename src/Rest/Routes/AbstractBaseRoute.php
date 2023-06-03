@@ -286,27 +286,36 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			switch ($key) {
 				case self::CUSTOM_FORM_PARAMS['postId']:
 					$output['formId'] = $value['value'];
+					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['type']:
 					$output['type'] = $value['value'];
+					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['action']:
 					$output['action'] = $value['value'];
+					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['captcha']:
 					$output['captcha'] = $value['value'];
+					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['actionExternal']:
 					$output['actionExternal'] = $value['value'];
+					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['settingsType']:
 					$output['settingsType'] = $value['value'];
+					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['storage']:
 					$output['storage'] = $value['value'];
+					$value['value'] = json_decode($value['value'], true);
+					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['stepFields']:
 					$output['stepFields'] = $value['value'];
+					$output['params'][$key] = $value;
 					break;
 				default:
 					if ($value['type'] === 'file') {

@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
@@ -595,6 +596,9 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		$standardFields = \array_flip(ActiveCampaign::STANDARD_FIELDS);
 

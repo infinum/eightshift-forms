@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Workable;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
@@ -386,6 +387,9 @@ class WorkableClient implements ClientInterface
 	{
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		$output = [];
 		$answers = [];

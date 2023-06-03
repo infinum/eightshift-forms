@@ -225,9 +225,6 @@ class HubspotClient implements HubspotClientInterface
 			$paramsFiles
 		);
 
-		error_log( print_r( ( $body ), true ) );
-		
-
 		$url = $this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemIdExploded[1]}/{$itemIdExploded[0]}");
 
 		$response = \wp_remote_post(
@@ -248,9 +245,6 @@ class HubspotClient implements HubspotClientInterface
 			$itemId,
 			$formId
 		);
-
-		error_log( print_r( ( $details ), true ) );
-		
 
 		$code = $details['code'];
 		$body = $details['body'];
@@ -723,9 +717,6 @@ class HubspotClient implements HubspotClientInterface
 			$output['consent']['communications'] = $communicationOutput;
 		}
 
-		error_log( print_r( ( $output ), true ) );
-		
-
 		return $output;
 	}
 
@@ -810,10 +801,6 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$output = [];
 
-		if (!$files) {
-			return [];
-		}
-
 		foreach ($files as $items) {
 			if (!$items) {
 				continue;
@@ -831,6 +818,7 @@ class HubspotClient implements HubspotClientInterface
 				$output[] = [
 					'name' => $name,
 					'value' => $fileUrl,
+					'objectTypeId' => $items['custom'] ?? '',
 				];
 			}
 		}

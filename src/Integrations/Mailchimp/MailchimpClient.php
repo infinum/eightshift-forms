@@ -452,6 +452,9 @@ class MailchimpClient implements MailchimpClientInterface
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
+
 		$filterName = Filters::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params) ?? [];
