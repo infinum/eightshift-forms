@@ -743,5 +743,4 @@ class Helper
 			}
 		);
 	}
-
 }

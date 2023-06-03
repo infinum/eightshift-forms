@@ -627,7 +627,7 @@ class HubspotClient implements HubspotClientInterface
 		$consentData = \json_decode($consentData[0]['value'], true);
 
 		$output[self::HUBSPOT_CONSENT_COMMUNICATION] = [
-			'items' => array_map(
+			'items' => \array_map(
 				static function ($item) {
 					return [
 						'id' => (string) $item['communicationTypeId'],
@@ -663,6 +663,7 @@ class HubspotClient implements HubspotClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param string $itemId ItemID.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
@@ -681,7 +682,7 @@ class HubspotClient implements HubspotClientInterface
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
 			$value = $param['value'] ?? '';
-			$name = $param['name'] ? explode(AbstractBaseRoute::DELIMITER, $param['name']) : [];
+			$name = $param['name'] ? \explode(AbstractBaseRoute::DELIMITER, $param['name']) : [];
 
 			if ($data[self::HUBSPOT_CONSENT_LEGITIMATE]['isActive']) {
 				$output['legitimateInterest'] = [
@@ -701,11 +702,11 @@ class HubspotClient implements HubspotClientInterface
 				if ($typeCustom === self::HUBSPOT_CONSENT_COMMUNICATION) {
 					$communicationOutput[] = [
 						'value' => !!$value,
-						'subscriptionTypeId' => end($name),
-						'text' => array_values(array_filter(
+						'subscriptionTypeId' => \end($name),
+						'text' => \array_values(\array_filter(
 							$data[self::HUBSPOT_CONSENT_COMMUNICATION]['items'],
-							static function($item) use ($name) {
-								return $item['id'] === end($name);
+							static function ($item) use ($name) {
+								return $item['id'] === \end($name);
 							}
 						))[0]['label'],
 					];
@@ -744,7 +745,7 @@ class HubspotClient implements HubspotClientInterface
 
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
-			
+
 			// Remove consent data.
 			if (
 				$typeCustom === self::HUBSPOT_CONSENT_COMMUNICATION ||

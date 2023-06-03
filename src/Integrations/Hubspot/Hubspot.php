@@ -497,7 +497,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					$communicationIsRequired = $communicationItem['isRequired'] ?? false;
 					$communicationText = $communication['text'] ?? '';
 					$communicationLabel = $communicationItem['label'] ?? '';
-				 	$communicationId = $communicationItem['id'] ?? '';
+					$communicationId = $communicationItem['id'] ?? '';
 					$communicationIsHidden = $communication['isHidden'] ?? false;
 
 					$output[] = [
@@ -511,7 +511,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => $communicationLabel,
-								'checkboxValue' => \strip_tags($communicationLabel),
+								'checkboxValue' => \wp_strip_all_tags($communicationLabel),
 								'checkboxIsChecked' => $communicationIsHidden,
 								'checkboxIsDisabled' => $communicationIsHidden,
 								'checkboxHideLabel' => $communicationIsHidden,
@@ -550,7 +550,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						[
 							'component' => 'checkbox',
 							'checkboxLabel' => $processingLabel,
-							'checkboxValue' => \strip_tags($processingLabel),
+							'checkboxValue' => \wp_strip_all_tags($processingLabel),
 							'checkboxIsChecked' => $processingIsHidden,
 							'checkboxIsDisabled' => $processingIsHidden,
 							'checkboxHideLabel' => $processingIsHidden,
