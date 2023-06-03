@@ -47,6 +47,9 @@
 		"selectAttrs": {
 			"type": "object"
 		},
+		"selectFieldAttrs": {
+			"type": "object"
+		},
 		"selectDisabledOptions": {
 			"type": "array"
 		},

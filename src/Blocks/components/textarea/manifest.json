@@ -65,6 +65,9 @@
 		"textareaAttrs": {
 			"type": "object"
 		},
+		"textareaFieldAttrs": {
+			"type": "object"
+		},
 		"textareaDisabledOptions": {
 			"type": "array"
 		},

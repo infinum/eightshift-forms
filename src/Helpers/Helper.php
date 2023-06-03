@@ -18,6 +18,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -713,4 +714,34 @@ class Helper
 
 		return ($port ? "https" : "http") . "://{$host}{$request}";
 	}
+
+	/**
+	 * Remove unecesery custom params.
+	 *
+	 * @param array<string, mixed> $params Params to check.
+	 * @param array<int, string> $additional Additional keys to remove.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function removeUneceseryParamFields(array $params, array $additional = []): array
+	{
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$additional = \array_flip($additional);
+
+		return \array_filter(
+			$params,
+			static function ($item) use ($customFields, $additional) {
+				if (isset($customFields[$item['name'] ?? ''])) {
+					return false;
+				}
+
+				if ($additional && isset($additional[$item['name'] ?? ''])) {
+					return false;
+				}
+
+				return true;
+			}
+		);
+	}
+
 }

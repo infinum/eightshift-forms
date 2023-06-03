@@ -27,6 +27,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"checkboxHideLabel": {
+			"type": "boolean",
+			"default": false
+		},
 		"checkboxValue": {
 			"type": "string"
 		},

@@ -357,15 +357,15 @@ export class Form {
 		const skipFields = filter.skipFields ?? [];
 
 		// Iterate all form items.
-		for (const [key, item] of this.state.getStateElements(formId)) { // eslint-disable-line no-unused-vars
+		for (const [key] of this.state.getStateElements(formId)) { // eslint-disable-line no-unused-vars
 
 			const name = key;
 			const internalType = this.state.getStateElementTypeInternal(key, formId);
-			const input = this.state.getStateElementInput(key, formId);
 			const value = this.state.getStateElementValue(key, formId);
 			const typeCustom = this.state.getStateElementTypeCustom(key, formId);
 			const saveAsJson = this.state.getStateElementSaveAsJson(key, formId);
 			const items = this.state.getStateElementItems(key, formId);
+			const field = this.state.getStateElementField(key, formId);
 			const valueCountry = this.state.getStateElementValueCountry(key, formId);
 
 			// Used for single submit.
@@ -375,10 +375,6 @@ export class Form {
 
 			// Used for group submit.
 			if (skipFields.length && skipFields.includes(name)) {
-				continue;
-			}
-
-			if (input.disabled) {
 				continue;
 			}
 
@@ -392,8 +388,8 @@ export class Form {
 			};
 
 			switch (formType) {
-				case 'hubspost':
-						data.custom = item.objectTypeId ?? '';
+				case 'hubspot':
+						data.custom = field.getAttribute(this.state.getStateAttribute('hubspotTypeId')) ?? '';
 					break;
 			}
 
@@ -577,7 +573,7 @@ export class Form {
 	}
 
 	setFormDataPerType(formId) {
-		const output = [];
+		let output = [];
 
 		switch (this.state.getStateFormType(formId)) {
 			case 'hubspot':

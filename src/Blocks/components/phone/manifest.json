@@ -60,6 +60,9 @@
 		"phoneAttrs": {
 			"type": "object"
 		},
+		"phoneFieldAttrs": {
+			"type": "object"
+		},
 		"phoneDisabledOptions": {
 			"type": "array"
 		},

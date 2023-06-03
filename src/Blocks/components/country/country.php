@@ -31,6 +31,7 @@ $countryAttrs = Components::checkAttr('countryAttrs', $attributes, $manifest);
 $countryUseSearch = Components::checkAttr('countryUseSearch', $attributes, $manifest);
 $countryFormPostId = Components::checkAttr('countryFormPostId', $attributes, $manifest);
 $countryTypeCustom = Components::checkAttr('countryTypeCustom', $attributes, $manifest);
+$countryFieldAttrs = Components::checkAttr('countryFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $countryFieldLabel = $attributes[Components::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
@@ -116,9 +117,12 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => [
-				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			],
+			'fieldAttrs' => array_merge(
+				$countryFieldAttrs,
+				[
+					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				],
+			),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

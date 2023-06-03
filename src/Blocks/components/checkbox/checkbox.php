@@ -34,6 +34,7 @@ $checkboxAttrs = Components::checkAttr('checkboxAttrs', $attributes, $manifest);
 $checkboxAsToggle = Components::checkAttr('checkboxAsToggle', $attributes, $manifest);
 $checkboxAsToggleSize = Components::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
 $checkboxHideLabelText = Components::checkAttr('checkboxHideLabelText', $attributes, $manifest);
+$checkboxHideLabel = Components::checkAttr('checkboxHideLabel', $attributes, $manifest);
 $checkboxHelp = Components::checkAttr('checkboxHelp', $attributes, $manifest);
 $checkboxFieldAttrs = Components::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
 
@@ -111,16 +112,18 @@ if ($checkboxFieldAttrs) {
 			<?php disabled($checkboxIsDisabled); ?>
 			<?php wp_readonly($checkboxIsReadOnly); ?>
 		/>
-		<label
-			for="<?php echo esc_attr($checkboxName); ?>"
-			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
-		>
-			<?php if (!$checkboxHideLabelText) { ?>
-				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
-					<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
-				</span>
-			<?php } ?>
-		</label>
+		<?php if (!$checkboxHideLabel) { ?>
+			<label
+				for="<?php echo esc_attr($checkboxName); ?>"
+				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+			>
+				<?php if (!$checkboxHideLabelText) { ?>
+					<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+						<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
+					</span>
+				<?php } ?>
+			</label>
+		<?php } ?>
 	</div>
 	<?php if ($checkboxHelp) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">

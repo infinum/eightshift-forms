@@ -30,6 +30,9 @@
 		},
 		"radiosTypeCustom": {
 			"type": "string"
+		},
+		"radiosFieldAttrs": {
+			"type": "object"
 		}
 	}
 }

@@ -31,6 +31,7 @@ $dateTypeCustom = Components::checkAttr('dateTypeCustom', $attributes, $manifest
 $dateAttrs = Components::checkAttr('dateAttrs', $attributes, $manifest);
 $datePreviewFormat = Components::checkAttr('datePreviewFormat', $attributes, $manifest);
 $dateOutputFormat = Components::checkAttr('dateOutputFormat', $attributes, $manifest);
+$dateFieldAttrs = Components::checkAttr('dateFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $dateFieldLabel = $attributes[Components::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
@@ -96,9 +97,12 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => [
-				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			],
+			'fieldAttrs' => array_merge(
+				$dateFieldAttrs,
+				[
+					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				],
+			),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

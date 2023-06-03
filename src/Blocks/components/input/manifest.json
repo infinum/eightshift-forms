@@ -86,6 +86,9 @@
 		"inputAttrs": {
 			"type": "object"
 		},
+		"inputFieldAttrs": {
+			"type": "object"
+		},
 		"inputDisabledOptions": {
 			"type": "array"
 		}

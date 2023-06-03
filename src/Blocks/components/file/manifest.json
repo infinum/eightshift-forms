@@ -55,6 +55,9 @@
 		"fileAttrs": {
 			"type": "object"
 		},
+		"fileFieldAttrs": {
+			"type": "object"
+		},
 		"fileDisabledOptions": {
 			"type": "array"
 		},

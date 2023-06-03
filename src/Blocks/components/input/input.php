@@ -32,6 +32,7 @@ $inputMin = Components::checkAttr('inputMin', $attributes, $manifest);
 $inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
 $inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
 $inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
+$inputFieldAttrs = Components::checkAttr('inputFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
@@ -108,9 +109,12 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => [
-				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			],
+			'fieldAttrs' => array_merge(
+				$inputFieldAttrs,
+				[
+					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				],
+			),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

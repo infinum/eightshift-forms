@@ -38,6 +38,9 @@
 		},
 		"checkboxesTypeCustom": {
 			"type": "string"
+		},
+		"checkboxesFieldAttrs": {
+			"type": "object"
 		}
 	},
 	"options": {

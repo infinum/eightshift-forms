@@ -30,6 +30,7 @@ $selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
 $selectUseSearch = Components::checkAttr('selectUseSearch', $attributes, $manifest);
 $selectPlaceholder = Components::checkAttr('selectPlaceholder', $attributes, $manifest);
 $selectTypeCustom = Components::checkAttr('selectTypeCustom', $attributes, $manifest);
+$selectFieldAttrs = Components::checkAttr('selectFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
@@ -97,9 +98,12 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => [
-				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			],
+			'fieldAttrs' => array_merge(
+				$selectFieldAttrs,
+				[
+					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				],
+			),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

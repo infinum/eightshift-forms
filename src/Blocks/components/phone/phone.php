@@ -33,6 +33,7 @@ $phoneAttrs = Components::checkAttr('phoneAttrs', $attributes, $manifest);
 $phoneUseSearch = Components::checkAttr('phoneUseSearch', $attributes, $manifest);
 $phoneFormPostId = Components::checkAttr('phoneFormPostId', $attributes, $manifest);
 $phoneTypeCustom = Components::checkAttr('phoneTypeCustom', $attributes, $manifest);
+$phoneFieldAttrs = Components::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $phoneFieldLabel = $attributes[Components::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
@@ -133,9 +134,12 @@ echo Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => [
-				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			],
+			'fieldAttrs' => array_merge(
+				$phoneFieldAttrs,
+				[
+					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				],
+			),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
