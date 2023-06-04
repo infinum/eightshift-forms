@@ -112,6 +112,10 @@ export class State {
 		this.TRACKING_EVENT_NAME = 'event_name';
 		this.TRACKING_EVENT_ADDITIONAL_DATA = 'event_additional_data';
 
+		this.STEPS = 'steps';
+		this.STEPS_FLOW = 'flow';
+		this.STEPS_CURRENT = 'current';
+
 		// Selectors.
 		this.formSelectorPrefix = `.${manifest.componentJsClass}`;
 		// Class names.
@@ -277,6 +281,11 @@ export class State {
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], {}, formId);
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_FORM], JSON.parse(formElement.getAttribute(this.getStateAttribute('conditionalTags'))), formId);
+
+		// Steps.
+		this.setState([this.FORM, this.STEPS, this.STEPS_FLOW], JSON.parse(formElement.getAttribute(this.getStateAttribute('formStepsFlow'))), formId);
+		this.setState([this.FORM, this.STEPS, this.STEPS_CURRENT], formElement.getAttribute(this.getStateAttribute('formStepsCurrent')), formId);
+		this.setState([this.FORM, this.STEPS, this.IS_USED], formElement.hasAttribute(this.getStateAttribute('formStepsFlow')), formId);
 
 		// Find all fields.
 		let items = formElement.querySelectorAll('input, select, textarea');
@@ -678,6 +687,17 @@ export class State {
 
 	getStateFormConfigDownloads(formId) {
 		return this.getState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formId);
+	}
+
+
+	getStateFormStepsFlow(formId) {
+		return this.getState([this.FORM, this.STEPS, this.STEPS_FLOW], formId);
+	}
+	getStateFormStepsCurrent(formId) {
+		return this.getState([this.FORM, this.STEPS, this.STEPS_CURRENT], formId);
+	}
+	getStateFormStepsIsUsed(formId) {
+		return this.getState([this.FORM, this.STEPS, this.IS_USED], formId);
 	}
 
 	// ----------------------------------------

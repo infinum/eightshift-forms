@@ -1,5 +1,5 @@
-import { State, prefix } from '../../form/assets/state';
-import { Utils } from '../../form/assets/utilities';
+import { State, prefix } from './state';
+import { Utils } from './utilities';
 
 /**
  * Main step class.
@@ -25,14 +25,6 @@ export class Steps {
 	init() {
 		// Set all public methods.
 		// this.publicMethods();
-	}
-
-	isMultiStepForm(element) {
-		return element.hasAttribute(this.utils.DATA_ATTRIBUTES.formStepsFlow);
-	}
-
-	getCurrentStep(element) {
-		return element.getAttribute(this.utils.DATA_ATTRIBUTES.formStepsCurrent);
 	}
 
 	getAllFieldsInStep(element, stepId) {

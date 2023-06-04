@@ -3,7 +3,7 @@
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
 import { State, prefix, ROUTES } from './state';
 import { Utils } from './utilities';
-import { Steps } from '../../step/assets/step';
+import { Steps } from './step';
 import { Enrichment } from './enrichment';
 import { Captcha } from './captcha';
 import { ConditionalTags } from './conditional-tags';
@@ -18,7 +18,7 @@ export class Form {
 		this.enrichment = new Enrichment(options);
 		this.captcha = new Captcha(options);
 		this.conditionalTags = new ConditionalTags(options);
-		// this.steps = new Steps(options);
+		this.steps = new Steps(options);
 
 		this.FORM_DATA = new FormData();
 	}
@@ -39,7 +39,7 @@ export class Form {
 		this.publicMethods();
 
 		// Init step.
-		// this.steps.init();
+		this.steps.init();
 
 		// Init all forms.
 		this.initOnlyForms();
@@ -1075,13 +1075,20 @@ export class Form {
 
 		this.utils.showLoader(formId);
 
-		if (this.state.getStateCaptchaIsUsed()) {
-			this.runFormCaptcha(formId);
-		} else {
-			debounce(this.formSubmit(formId), 100);
-		}
+		if (this.state.getStateFormStepsIsUsed(formId)) {
+			const stepButton = event.submitter;
 
-		// const stepButton = event.submitter;
+			const direction = stepButton.getAttribute(this.state.getStateAttribute('submitStepDirection'));
+
+			debounce(this.formSubmit(formId), 100);
+
+		} else {
+			if (this.state.getStateCaptchaIsUsed()) {
+				this.runFormCaptcha(formId);
+			} else {
+				debounce(this.formSubmit(formId), 100);
+			}
+		}
 
 		// if (!this.steps.isMultiStepForm(formId)) {
 		// if (false) {
@@ -1098,7 +1105,7 @@ export class Form {
 		// } else {
 		// 	// if (this.steps.isStepTrigger(stepButton)) {
 		// 	if (true) {
-		// 		if (stepButton.getAttribute(this.data.DATA_ATTRIBUTES.submitdStepDirection) === this.steps.STEP_DIRECTION_PREV) {
+		// 		if (stepButton.getAttribute(this.data.DATA_ATTRIBUTES.submitStepDirection) === this.steps.STEP_DIRECTION_PREV) {
 		// 			// Just go back a step.
 		// 			this.steps.goBackAStep(formId);
 		// 		} else {

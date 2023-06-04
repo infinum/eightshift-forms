@@ -65,7 +65,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'formStepsFlow' => 'data-form-steps-flow',
 		'formStepsCurrent' => 'data-form-steps-current',
 		'fieldStepId' => 'data-step-id',
-		'submitdStepDirection' => 'data-step-direction',
+		'submitStepDirection' => 'data-step-direction',
 		'formPostId' => 'data-form-post-id',
 		'fieldId' => 'data-field-id',
 		'fieldName' => 'data-field-name',
