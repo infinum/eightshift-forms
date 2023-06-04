@@ -59,10 +59,6 @@ if ($inputType === 'email' || $inputType === 'url') {
 	$inputType = 'text';
 }
 
-if ($inputTracking) {
-	$inputAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($inputTracking);
-}
-
 if ($inputValue) {
 	$inputAttrs['value'] = esc_attr($inputValue);
 }
@@ -105,16 +101,13 @@ echo Components::render(
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldHideLabel' => $inputType === 'hidden',
 			'fieldUseError' => $inputType !== 'hidden',
+			'fieldTypeCustom' => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $inputTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => array_merge(
-				$inputFieldAttrs,
-				[
-					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				],
-			),
+			'fieldAttrs' => $inputFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

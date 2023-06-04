@@ -223,7 +223,7 @@ export class Form {
 				}
 			} else {
 				// Send GTM.
-				this.utils.gtmSubmit(formId, this.FORM_DATA, status);
+				this.utils.gtmSubmit(formId, status);
 
 				if (this.state.getStateFormConfigSuccessRedirect(formId)) {
 					// Redirect to url and update url params from from data.
@@ -260,7 +260,7 @@ export class Form {
 		// } else {
 			this.utils.setGlobalMsg(formId, message, status);
 
-			this.utils.gtmSubmit(formId, this.FORM_DATA, status, data?.validation);
+			this.utils.gtmSubmit(formId, status, data?.validation);
 
 			// Dispatch event.
 			if (data?.validation !== undefined) {
@@ -385,6 +385,7 @@ export class Form {
 				type: internalType,
 				typeCustom,
 				custom: '',
+				innerName: '',
 			};
 
 			switch (formType) {
@@ -395,18 +396,26 @@ export class Form {
 
 			switch (internalType) {
 				case 'checkbox':
-					Object.values(value).forEach((item, index) => {
-						data.value = item;
+					let indexCheck = 0;
+					for(const [checkName, checkValue] of Object.entries(value)) {
+						data.value = checkValue;
+						data.innerName = checkName;
 
-						this.FORM_DATA.append(`${name}[${index}]`, JSON.stringify(data));
-					});
+						console.log(checkValue);
+
+						this.FORM_DATA.append(`${name}[${indexCheck}]`, JSON.stringify(data));
+						indexCheck++;
+					};
 					break;
 				case 'radio':
-					Object.values(items).forEach((item, index) => {
-						data.value = item.input.checked ? item.value : '';
+					let indexRadio = 0;
+					for(const [radioName, radioValue] of Object.entries(items)) {
+						data.value = radioValue.input.checked ? radioValue.value : '';
+						data.innerName = radioName;
 
-						this.FORM_DATA.append(`${name}[${index}]`, JSON.stringify(data));
-					});
+						this.FORM_DATA.append(`${name}[${indexRadio}]`, JSON.stringify(data));
+						indexRadio++;
+					};
 					break;
 				case 'textarea':
 					// Convert textarea to json format with : as delimiter.

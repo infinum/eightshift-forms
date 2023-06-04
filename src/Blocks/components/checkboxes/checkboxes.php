@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -55,16 +54,12 @@ echo Components::render(
 			'fieldId' => $checkboxesName,
 			'fieldName' => $checkboxesName,
 			'fieldIsRequired' => $checkboxesIsRequired,
+			'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => array_merge(
-				$checkboxesFieldAttrs,
-				[
-					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				]
-			),
+			'fieldAttrs' => $checkboxesFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

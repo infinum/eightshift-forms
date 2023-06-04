@@ -42,9 +42,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"radioTracking": {
-			"type": "string"
-		},
 		"radioFieldType": {
 			"type": "string",
 			"default": "fieldset"

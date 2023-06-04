@@ -455,6 +455,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'radiosName' => $name,
 							'radiosFieldLabel' => $label,
 							'radiosIsRequired' => $isRequired,
+							'radiosTracking' => $name,
 							'radiosFieldAttrs' => [
 								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
@@ -465,7 +466,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 										'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
 										'radioLabel' => $radio['label'],
 										'radioValue' => $radio['value'],
-										'radioTracking' => $name,
 										'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
 											'radioValue',
 										], false),

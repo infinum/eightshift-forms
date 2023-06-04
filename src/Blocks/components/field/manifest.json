@@ -99,6 +99,12 @@
 		"fieldConditionalTags": {
 			"type": "string"
 		},
+		"fieldTypeCustom": {
+			"type": "string"
+		},
+		"fieldTracking": {
+			"type": "string"
+		},
 		"fieldDisabledOptions": {
 			"type": "array"
 		},

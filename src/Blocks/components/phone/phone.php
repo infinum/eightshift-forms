@@ -48,10 +48,6 @@ $phoneSelectClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'select'),
 ]);
 
-if ($phoneTracking) {
-	$phoneAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($phoneTracking);
-}
-
 if ($phoneValue) {
 	$phoneAttrs['value'] = esc_attr($phoneValue);
 }
@@ -130,16 +126,13 @@ echo Components::render(
 			'fieldName' => $phoneName,
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),
+			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $phoneTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => array_merge(
-				$phoneFieldAttrs,
-				[
-					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				],
-			),
+			'fieldAttrs' => $phoneFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

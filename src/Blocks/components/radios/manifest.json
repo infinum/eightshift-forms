@@ -25,6 +25,9 @@
 		"radiosMeta": {
 			"type": "string"
 		},
+		"radiosTracking": {
+			"type": "string"
+		},
 		"radiosDisabledOptions": {
 			"type": "array"
 		},

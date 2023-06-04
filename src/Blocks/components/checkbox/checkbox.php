@@ -54,10 +54,6 @@ $checkboxInputClass = Components::classnames([
 	Components::selector($checkboxSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-if ($checkboxTracking) {
-	$checkboxAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($checkboxTracking);
-}
-
 if ($checkboxValue) {
 	$checkboxAttrs['value'] = esc_attr($checkboxValue);
 }
@@ -89,6 +85,10 @@ if ($checkboxValue) {
 
 if ($componentName) {
 	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;
+}
+
+if ($checkboxTracking) {
+	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($checkboxTracking);
 }
 
 $checkboxFieldAttrsOutput = '';

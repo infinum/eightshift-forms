@@ -41,10 +41,6 @@ $selectClass = Components::classnames([
 	Components::selector($selectSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-if ($selectTracking) {
-	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($selectTracking);
-}
-
 if ($selectUseSearch) {
 	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($selectUseSearch);
 }
@@ -94,16 +90,13 @@ echo Components::render(
 			'fieldName' => $selectName,
 			'fieldIsRequired' => $selectIsRequired,
 			'fieldDisabled' => !empty($selectIsDisabled),
+			'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $selectTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => array_merge(
-				$selectFieldAttrs,
-				[
-					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				],
-			),
+			'fieldAttrs' => $selectFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

@@ -41,10 +41,6 @@ $textareaClass = Components::classnames([
 	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
 ]);
 
-if ($textareaTracking) {
-	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($textareaTracking);
-}
-
 if ($textareaSaveAsJson) {
 	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['saveAsJson']] = esc_attr($textareaSaveAsJson);
 }
@@ -83,16 +79,13 @@ echo Components::render(
 			'fieldName' => $textareaName,
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),
+			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $textareaTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => array_merge(
-				$textareaFieldAttrs,
-				[
-					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				],
-			),
+			'fieldAttrs' => $textareaFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

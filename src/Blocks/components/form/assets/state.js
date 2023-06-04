@@ -108,6 +108,10 @@ export class State {
 		this.SELECTORS_CLASS_VISIBLE = 'isVisible';
 		this.SELECTORS_CLASS_HAS_ERROR = 'hasError';
 
+		this.TRACKING = 'tracking';
+		this.TRACKING_EVENT_NAME = 'event_name';
+		this.TRACKING_EVENT_ADDITIONAL_DATA = 'event_additional_data';
+
 		// Selectors.
 		this.formSelectorPrefix = `.${manifest.componentJsClass}`;
 		// Class names.
@@ -254,6 +258,8 @@ export class State {
 		this.setState([this.FORM, this.ACTION_EXTERNAL], formElement.getAttribute(this.getStateAttribute('actionExternal')), formId);
 		this.setState([this.FORM, this.TYPE_SETTINGS], formElement.getAttribute(this.getStateAttribute('settingsType')), formId);
 		this.setState([this.FORM, this.LOADER], formElement.querySelector(this.getStateSelectorsLoader()), formId);
+		this.setState([this.FORM, this.TRACKING, this.TRACKING_EVENT_NAME], formElement.getAttribute(this.getStateAttribute('trackingEventName')), formId);
+		this.setState([this.FORM, this.TRACKING, this.TRACKING_EVENT_ADDITIONAL_DATA], JSON.parse(formElement.getAttribute(this.getStateAttribute('trackingAdditionalData'))), formId);
 
 		// Form settings
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement.getAttribute(this.getStateAttribute('phoneDisablePicker'))), formId);
@@ -306,14 +312,17 @@ export class State {
 							this.setState([this.ELEMENTS, name, this.INITIAL], item.checked ? value : '', formId);
 						}
 
-						if (item.checked) {
-							this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
+						if (!this.getStateElementValue(name, formId)) {
+							this.setState([this.ELEMENTS, name, this.VALUE], item.checked ? value : '', formId);
 						}
+
+						this.setState([this.ELEMENTS, name, this.TRACKING], field.getAttribute(this.getStateAttribute('tracking')), formId);
 					}
 
 					if (type === 'checkbox') {
 						this.setState([this.ELEMENTS, name, this.VALUE, value], item.checked ? value : '', formId);
 						this.setState([this.ELEMENTS, name, this.INITIAL, value], item.checked ? value : '', formId);
+						this.setState([this.ELEMENTS, name, this.TRACKING, value], item.parentNode.parentNode.getAttribute(this.getStateAttribute('tracking')), formId);
 					}
 
 					this.setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(this.getStateAttribute('conditionalTags')), name, value, formId);
@@ -347,6 +356,7 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_PLACEHOLDER], Boolean(item.getAttribute(this.getStateAttribute('selectPlaceholder'))), formId);
 					this.setState([this.ELEMENTS, name, this.CONFIG, this.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(this.getStateAttribute('selectAllowSearch'))), formId);
+					this.setState([this.ELEMENTS, name, this.TRACKING], field.getAttribute(this.getStateAttribute('tracking')), formId);
 					break;
 				case 'tel':
 					this.setState([this.ELEMENTS, name, this.INITIAL], value, formId);
@@ -355,6 +365,7 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], 'tel', formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT_SELECT], field.querySelector('select'), formId);
+					this.setState([this.ELEMENTS, name, this.TRACKING], field.getAttribute(this.getStateAttribute('tracking')), formId);
 					break;
 				case 'date':
 				case 'datetime-local':
@@ -363,6 +374,7 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], type, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
+					this.setState([this.ELEMENTS, name, this.TRACKING], field.getAttribute(this.getStateAttribute('tracking')), formId);
 
 					if (type === 'datetime-local') {
 						this.setState([this.ELEMENTS, name, this.TYPE], 'date', formId);
@@ -375,6 +387,7 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.TYPE], type, formId);
 					this.setState([this.ELEMENTS, name, this.TYPE_INTERNAL], type, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
+					this.setState([this.ELEMENTS, name, this.TRACKING], field.getAttribute(this.getStateAttribute('tracking')), formId);
 					break;
 			}
 
@@ -615,6 +628,14 @@ export class State {
 		return this.getState([this.FORM, this.LOADER], formId);
 	}
 
+	getStateFormTrackingEventName(formId) {
+		return this.getState([this.FORM, this.TRACKING, this.TRACKING_EVENT_NAME], formId);
+	}
+
+	getStateFormTrackingEventAdditionalData(formId) {
+		return this.getState([this.FORM, this.TRACKING, this.TRACKING_EVENT_ADDITIONAL_DATA], formId);
+	}
+
 	getStateFormConditionalTagsEvents(formId) {
 		return this.getState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], formId);
 	}
@@ -790,6 +811,10 @@ export class State {
 
 	getStateElementError(name, formId) {
 		return this.getState([this.ELEMENTS, name, this.ERROR], formId);
+	}
+
+	getStateElementTracking(name, formId) {
+		return this.getState([this.ELEMENTS, name, this.TRACKING], formId);
 	}
 
 	getStateElementType(name, formId) {

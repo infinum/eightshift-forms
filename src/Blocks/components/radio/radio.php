@@ -25,7 +25,6 @@ $radioLabel = Components::checkAttr('radioLabel', $attributes, $manifest);
 $radioName = Components::checkAttr('radioName', $attributes, $manifest);
 $radioIsChecked = Components::checkAttr('radioIsChecked', $attributes, $manifest);
 $radioIsDisabled = Components::checkAttr('radioIsDisabled', $attributes, $manifest);
-$radioTracking = Components::checkAttr('radioTracking', $attributes, $manifest);
 $radioSingleSubmit = Components::checkAttr('radioSingleSubmit', $attributes, $manifest);
 $radioAttrs = Components::checkAttr('radioAttrs', $attributes, $manifest);
 $radioFieldAttrs = Components::checkAttr('radioFieldAttrs', $attributes, $manifest);
@@ -40,10 +39,6 @@ $radioInputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'input'),
 	Components::selector($radioSingleSubmit, $componentJsSingleSubmitClass),
 ]);
-
-if ($radioTracking) {
-	$radioAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($radioTracking);
-}
 
 if ($radioValue) {
 	$radioAttrs['value'] = esc_attr($radioValue);
@@ -72,7 +67,6 @@ if ($radioValue) {
 if ($componentName) {
 	$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;
 }
-
 
 $radioFieldAttrsOutput = '';
 if ($radioFieldAttrs) {

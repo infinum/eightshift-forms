@@ -41,10 +41,6 @@ $dateClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-if ($dateTracking) {
-	$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($dateTracking);
-}
-
 if ($dateValue) {
 	$dateAttrs['value'] = esc_attr($dateValue);
 }
@@ -93,16 +89,13 @@ echo Components::render(
 			'fieldName' => $dateName,
 			'fieldIsRequired' => $dateIsRequired,
 			'fieldDisabled' => !empty($dateIsDisabled),
+			'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $dateTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => array_merge(
-				$dateFieldAttrs,
-				[
-					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				],
-			),
+			'fieldAttrs' => $dateFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

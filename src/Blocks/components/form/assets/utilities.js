@@ -144,79 +144,56 @@ export class Utils {
 	}
 
 	// Build GTM data for the data layer.
-	getGtmData(formId, eventName, formData) {
-		return;
-		const form = this.state.getStateFormElement(formId);
-
+	getGtmData(formId) {
 		const output = {};
-		const data = {};
-		for (const [key, value] of formData) { // eslint-disable-line no-unused-vars
-			// Skip for files.
-			if (typeof value !== 'string') {
+		for (const [name] of this.state.getStateElements(formId)) {
+			const value = this.state.getStateElementValue(name, formId);
+			const trackingName = this.state.getStateElementTracking(name, formId);
+			const valueCountry = this.state.getStateElementValueCountry(name, formId);
+			if (!trackingName) {
 				continue;
 			}
 
-			const itemValue = JSON.parse(value);
-			const item = form.querySelector(`${this.data.fieldSelector} [name="${itemValue.name}"]`);
-			const trackingValue = item?.getAttribute(this.state.getStateAttribute('tracking'));
-			if (!trackingValue) {
-				continue;
-			}
+			switch (this.state.getStateElementTypeInternal(name, formId)) {
+				case 'checkbox':
+					for(const [checkName, checkValue] of Object.entries(value)) {
+						const trackingCheckName = trackingName?.[checkName];
 
-			if (trackingValue in data) {
-				if (itemValue.value) {
-					data[trackingValue].push(itemValue.value);
-				}
-			} else {
-				switch (itemValue.type) {
-					case 'checkbox':
-					case 'radio':
-						data[trackingValue] = itemValue.value ? [itemValue.value] : [];
-						break;
-					case 'select-one':
-						data[trackingValue] = item.selectedOptions[0]?.label;
-						break;
-					default:
-						data[trackingValue]= itemValue.value;
-						break;
-				}
-			}
-		}
-
-		for (const [key, value] of Object.entries(data)) {
-			if (Array.isArray(value)) {
-				switch (value.length) {
-					case 0:
-						output[key] = false;
-						break;
-					case 1:
-						if (value[0] === 'on') {
-							output[key] = true;
-						} else {
-							output[key] = value;
+						if(!(trackingCheckName in output)) {
+							output[trackingCheckName] = [];
 						}
-						break;
-					default:
-						output[key] = value;
-						break;
-				}
-			} else {
-				output[key] = value;
+
+						if (checkValue) {
+							output[trackingCheckName].push(checkValue);
+						}
+					}
+					break;
+				case 'tel':
+					let telValue = value;
+
+					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
+						telValue = `${valueCountry.number}${value}`;
+					}
+
+					output[trackingName] = value ? telValue : '';
+					break
+				default:
+					output[trackingName] = value ?? '';
+					break;
 			}
 		}
 
-		return Object.assign({}, { event: eventName, ...output });
+		return Object.assign({}, { event: this.state.getStateFormTrackingEventName(formId), ...output });
 	}
 
 	// Submit GTM event.
-	gtmSubmit(formId, formData, status, errors) {
-		const form = this.state.getStateFormElement(formId);
-		const eventName = form.getAttribute(this.state.getStateAttribute('trackingEventName'));
+	gtmSubmit(formId, status, errors) {
+		const eventName = this.state.getStateFormTrackingEventName(formId);
 
 		if (eventName) {
-			const gtmData = this.getGtmData(formId, eventName, formData);
+			const gtmData = this.getGtmData(formId);
 
-			const additionalData = JSON.parse(form.getAttribute(this.state.getStateAttribute('trackingAdditionalData')));
+			const additionalData = this.state.getStateFormTrackingEventAdditionalData(formId);
 			let additionalDataItems = additionalData?.general;
 
 			if (status === 'success') {

@@ -41,6 +41,7 @@ if (!disableAutoInit) {
 		...window[prefix],
 		initAll: () => {
 			initAll();
+			return 'Eightshift Forms initialized';
 		},
 	};
 }

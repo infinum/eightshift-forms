@@ -357,13 +357,13 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'radiosFieldLabel' => $label,
 						'radiosFieldHidden' => $isHidden,
 						'radiosIsRequired' => $isRequired,
+						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
-							function ($radio) use ($name) {
+							function ($radio) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio['name'],
 									'radioValue' => $radio['value'],
-									'radioTracking' => $name,
 									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
 										'radioValue',
 									], false),

@@ -42,10 +42,6 @@ $countryClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-if ($countryTracking) {
-	$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($countryTracking);
-}
-
 if ($countryUseSearch) {
 	$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($countryUseSearch);
 }
@@ -113,16 +109,13 @@ echo Components::render(
 			'fieldName' => $countryName,
 			'fieldIsRequired' => $countryIsRequired,
 			'fieldDisabled' => !empty($countryIsDisabled),
+			'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $countryTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => array_merge(
-				$countryFieldAttrs,
-				[
-					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				],
-			),
+			'fieldAttrs' => $countryFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

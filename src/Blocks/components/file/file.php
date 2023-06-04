@@ -60,10 +60,6 @@ $customFile = '
 	</div>
 ';
 
-if ($fileTracking) {
-	$fileAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($fileTracking);
-}
-
 $fileAttrsOutput = '';
 if ($fileAttrs) {
 	foreach ($fileAttrs as $key => $value) {
@@ -95,16 +91,13 @@ echo Components::render(
 			'fieldId' => $fileName,
 			'fieldName' => $fileName,
 			'fieldIsRequired' => $fileIsRequired,
+			'fieldTypeCustom' => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $fileTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => array_merge(
-				$fileFieldAttrs,
-				[
-					AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom'] => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				],
-			),
+			'fieldAttrs' => $fileFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

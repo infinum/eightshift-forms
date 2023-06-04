@@ -72,6 +72,8 @@ $fieldIsRequired = Components::checkAttr('fieldIsRequired', $attributes, $manife
 $fieldConditionalTags = Components::checkAttr('fieldConditionalTags', $attributes, $manifest);
 $fieldInlineBeforeAfterContent = Components::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
 $fieldIsFiftyFiftyHorizontal = Components::checkAttr('fieldIsFiftyFiftyHorizontal', $attributes, $manifest);
+$fieldTypeCustom = Components::checkAttr('fieldTypeCustom', $attributes, $manifest);
+$fieldTracking = Components::checkAttr('fieldTracking', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -109,6 +111,14 @@ if ($fieldName) {
 
 if ($blockName) {
 	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $blockName;
+}
+
+if ($fieldTypeCustom) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom']] = $fieldTypeCustom;
+}
+
+if ($fieldTracking) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = $fieldTracking;
 }
 
 $fieldAttrsOutput = '';

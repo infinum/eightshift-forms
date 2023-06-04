@@ -15,7 +15,6 @@ export const RadioOptions = (attributes) => {
 	const radioValue = checkAttr('radioValue', attributes, manifest);
 	const radioIsChecked = checkAttr('radioIsChecked', attributes, manifest);
 	const radioIsDisabled = checkAttr('radioIsDisabled', attributes, manifest);
-	const radioTracking = checkAttr('radioTracking', attributes, manifest);
 	const radioDisabledOptions = checkAttr('radioDisabledOptions', attributes, manifest);
 
 	return (
@@ -51,16 +50,6 @@ export const RadioOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('radioIsDisabled', attributes, manifest), radioDisabledOptions)}
 				/>
-
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
-					<TextControl
-						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
-						value={radioTracking}
-						onChange={(value) => setAttributes({ [getAttrKey('radioTracking', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('radioTracking', attributes, manifest), radioDisabledOptions)}
-						className='es-no-field-spacing'
-					/>
-				</Section>
 			</PanelBody>
 
 			<ConditionalTagsOptions
