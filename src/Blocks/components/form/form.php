@@ -97,11 +97,6 @@ if ($formType) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType']] = esc_html($formType);
 }
 
-if ($formHasSteps) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formStepsFlow']] = '[]';
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formStepsCurrent']] = 'step-0';
-}
-
 if ($formConditionalTags) {
 	// Extract just the field name from the given data, if needed.
 	$rawConditionalTagData = $formConditionalTags;

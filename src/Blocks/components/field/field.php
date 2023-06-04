@@ -30,7 +30,6 @@ if ($fieldSkip) {
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$blockJsClass = $attributes['blockJsClass'] ?? '';
 $blockName = $attributes['blockName'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
@@ -81,7 +80,6 @@ $fieldClass = Components::classnames([
 	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
 	Components::selector($fieldHidden, $componentClass, '', 'hidden'),
-	Components::selector($blockJsClass, $blockJsClass),
 	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($fieldStyle && $componentClass, $componentClass, '', $fieldStyle),
 	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),

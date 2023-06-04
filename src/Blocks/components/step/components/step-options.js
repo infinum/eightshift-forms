@@ -1,10 +1,8 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions } from '../../../components/field/components/field-options';
-import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { icons, checkAttr, getAttrKey, IconLabel, Section } from '@eightshift/frontend-libs/scripts';
+import { NameFieldLabel } from './../../utils';
 import manifest from '../manifest.json';
 
 export const StepOptions = (attributes) => {
@@ -13,6 +11,7 @@ export const StepOptions = (attributes) => {
 	} = attributes;
 
 	const stepName = checkAttr('stepName', attributes, manifest);
+	const stepLabel = checkAttr('stepLabel', attributes, manifest);
 
 	return (
 		<>
@@ -23,6 +22,12 @@ export const StepOptions = (attributes) => {
 						help={__('Identifies the step within form multi step flow. Must be unique.', 'eightshift-forms')}
 						value={stepName}
 						onChange={(value) => setAttributes({ [getAttrKey('stepName', attributes, manifest)]: value })}
+					/>
+					<TextControl
+						label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}
+						help={__('This label will not be shown on the frontend, this is only for easier configuration.', 'eightshift-forms')}
+						value={stepLabel}
+						onChange={(value) => setAttributes({ [getAttrKey('stepLabel', attributes, manifest)]: value })}
 					/>
 				</Section>
 			</PanelBody>

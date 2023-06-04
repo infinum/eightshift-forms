@@ -163,7 +163,8 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					continue;
 				}
 
-				$hasSteps = \array_search('eightshift-forms/step', \array_column($innerBlock['innerBlocks'] ?? '', 'blockName'));
+				// Check if this form uses steps.
+				$hasSteps = \array_search($formsNamespace . '/step', \array_column($innerBlock['innerBlocks'] ?? '', 'blockName'));
 				$hasSteps = $hasSteps !== false;
 
 				// Get block name details.

@@ -17,6 +17,7 @@ export const StepEditor = (attributes) => {
 	} = attributes;
 
 	const stepName = checkAttr('stepName', attributes, manifest);
+	const stepLabel = checkAttr('stepLabel', attributes, manifest);
 
 	const stepClass = classnames([
 		selector(componentClass, componentClass),
@@ -26,7 +27,7 @@ export const StepEditor = (attributes) => {
 	return (
 		<div className={stepClass}>
 			<div className={`${componentClass}__inner`}>
-				Step - {stepName ? stepName : '?'}
+				Step - {stepLabel ? stepLabel : stepName}
 			</div>
 
 			<MissingName value={stepName} className={`${componentClass}__missing`} />

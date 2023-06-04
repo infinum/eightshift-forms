@@ -148,15 +148,17 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
+		$currentStep = $formDataReference['steps']['current'];
 
-		$fieldName = $formDataReference['params'][AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '';
+		$currentStepId = intVal(str_replace('step-', '', $currentStep));
 
-		// Finish.
+		$nextStep = $currentStepId + 1;
+
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
-				\esc_html__('File upload success', 'eightshift-forms'),
+				\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
 				[
-					'file' => $formDataReference['files'][$fieldName]['id'],
+					'nextStep' => "step-{$nextStep}",
 				]
 			)
 		);

@@ -115,6 +115,8 @@ export class State {
 		this.STEPS = 'steps';
 		this.STEPS_FLOW = 'flow';
 		this.STEPS_CURRENT = 'current';
+		this.STEPS_ITEMS = 'items';
+		this.STEPS_ELEMENTS = 'elements';
 
 		// Selectors.
 		this.formSelectorPrefix = `.${manifest.componentJsClass}`;
@@ -283,15 +285,36 @@ export class State {
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_FORM], JSON.parse(formElement.getAttribute(this.getStateAttribute('conditionalTags'))), formId);
 
 		// Steps.
-		this.setState([this.FORM, this.STEPS, this.STEPS_FLOW], JSON.parse(formElement.getAttribute(this.getStateAttribute('formStepsFlow'))), formId);
-		this.setState([this.FORM, this.STEPS, this.STEPS_CURRENT], formElement.getAttribute(this.getStateAttribute('formStepsCurrent')), formId);
-		this.setState([this.FORM, this.STEPS, this.IS_USED], formElement.hasAttribute(this.getStateAttribute('formStepsFlow')), formId);
+		const steps = formElement.querySelectorAll(this.getStateSelectorsStep(formId));
+		this.setState([this.FORM, this.STEPS, this.IS_USED], false, formId);
 
-		// Find all fields.
-		let items = formElement.querySelectorAll('input, select, textarea');
+		if (steps.length) {
+			this.setState([this.FORM, this.STEPS, this.IS_USED], true, formId);
+			this.setState([this.FORM, this.STEPS, this.STEPS_FLOW], [], formId);
+			this.setState([this.FORM, this.STEPS, this.STEPS_CURRENT], 'step-0', formId);
+			this.setState([this.FORM, this.STEPS, this.STEPS_ITEMS], {}, formId);
+			this.setState([this.FORM, this.STEPS, this.STEPS_ELEMENTS], {}, formId);
+
+			Object.values(steps).forEach((item) => {
+				const stepFields = item.querySelectorAll(this.getStateSelectorsField());
+				const stepId = item.getAttribute(this.getStateAttribute('stepId'));
+				const stepOutput = [];
+
+				stepFields.forEach((stepField) => {
+					const stepFieldName = stepField.getAttribute(this.getStateAttribute('fieldName'));
+
+					if (stepFieldName) {
+						stepOutput.push(stepFieldName);
+					}
+				})
+
+				this.setState([this.FORM, this.STEPS, this.STEPS_ELEMENTS, stepId], item, formId);
+				this.setState([this.FORM, this.STEPS, this.STEPS_ITEMS, stepId], stepOutput, formId);
+			});
+		}
 
 		// Loop all fields.
-		for (const [key, item] of Object.entries(items)) {
+		for (const [key, item] of Object.entries(formElement.querySelectorAll('input, select, textarea'))) {
 			const {
 				value,
 				name,
@@ -696,6 +719,15 @@ export class State {
 	getStateFormStepsCurrent(formId) {
 		return this.getState([this.FORM, this.STEPS, this.STEPS_CURRENT], formId);
 	}
+	getStateFormStepsItem(stepId, formId) {
+		return this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS, stepId], formId);
+	}
+	getStateFormStepsItems(formId) {
+		return this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS], formId);
+	}
+	getStateFormStepsElement(stepId, formId) {
+		return this.getState([this.FORM, this.STEPS, this.STEPS_ELEMENTS, stepId], formId);
+	}
 	getStateFormStepsIsUsed(formId) {
 		return this.getState([this.FORM, this.STEPS, this.IS_USED], formId);
 	}
@@ -1049,6 +1081,7 @@ export const ROUTES = {
 
 	// Public.
 	CAPTCHA: esFormsLocalization.restRoutes.captcha,
+	VALIDATION_STEP: esFormsLocalization.restRoutes.validationStep,
 }
 
 export function getRestUrl(value, isPartial = false) {

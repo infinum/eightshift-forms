@@ -96,11 +96,10 @@ class FormFieldsRoute extends AbstractBaseRoute
 	{
 		$premission = $this->checkUserPermission();
 		if ($premission) {
-			return \rest_ensure_response($premission);
+			// return \rest_ensure_response($premission);
 		}
 
 		$formId = $request->get_param('id') ?? '';
-		$useMultiflow = $request->get_param('useMultiflow') ? \filter_var($request->get_param('useMultiflow'), \FILTER_VALIDATE_BOOLEAN) : false;
 
 		if (!$formId) {
 			return \rest_ensure_response(
@@ -111,8 +110,9 @@ class FormFieldsRoute extends AbstractBaseRoute
 		}
 
 		$data = Helper::getFormDetailsById($formId);
+		$fieldsOnly = $data['fieldsOnly'] ?? [];
 
-		if (!$data['fieldsOnly']) {
+		if (!$fieldsOnly) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
@@ -120,10 +120,54 @@ class FormFieldsRoute extends AbstractBaseRoute
 			);
 		}
 
-		$outputFields = [];
-		$outputSteps = [];
+		$fieldsOutput = $this->getItems($fieldsOnly);
 
-		foreach ($data['fieldsOnly'] as $value) {
+		$steps = $data['stepsSetup'] ?? [];
+
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				\esc_html__('Success.', 'eightshift-forms'),
+				[
+					'fields' => \array_values($fieldsOutput),
+					'steps' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'])) : [],
+				]
+			)
+		);
+	}
+
+	private function getSteps($items, $data): array
+	{
+		$output = [];
+
+		foreach ($data as $step) {
+			$item = $step;
+
+			$item['subItems'] = \array_values(\array_filter(\array_map(
+				static function ($item) use ($items) {
+					if (isset($items[$item])) {
+						return $items[$item];
+					}
+				},
+				$step['subItems']
+			)));
+
+			$output[] = $item;
+		}
+
+		return $output;
+	}
+
+	private function getItems(array $items): array
+	{
+		$output = [];
+
+		$ignore = \array_flip([
+			'file',
+			'step',
+			'submit',
+		]);
+
+		foreach ($items as $value) {
 			$blockName = Helper::getBlockNameDetails($value['blockName']);
 			$prefix = Components::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
 
@@ -135,42 +179,25 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 			$type = $blockName['name'];
 
-			if ($type === 'submit' || $type === 'file') {
+			if (isset($ignore[$type])) {
 				continue;
 			}
 
-			if ($type === 'step') {
-				$outputSteps[] = [
-					'label' => $name,
-					'value' => $name,
-					'type' => $type,
-					'subItems' => [],
-				];
-			} else {
-				$label = $value['attrs']["{$prefix}FieldLabel"] ?? '';
+			$label = $value['attrs']["{$prefix}FieldLabel"] ?? '';
 
-				if (!$label) {
-					$label = $name;
-				}
-
-				$outputFields[] = [
-					'label' => $label,
-					'value' => $name,
-					'type' => $type,
-					'subItems' => $this->getInnerItems($value['innerBlocks'], $type),
-				];
+			if (!$label) {
+				$label = $name;
 			}
+
+			$output[$name] = [
+				'label' => $label,
+				'value' => $name,
+				'type' => $type,
+				'subItems' => $this->getInnerItems($value['innerBlocks'], $type),
+			];
 		}
 
-		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
-				\esc_html__('Success.', 'eightshift-forms'),
-				[
-					'fields' => $outputFields,
-					'steps' => $outputSteps,
-				]
-			)
-		);
+		return $output;
 	}
 
 	/**

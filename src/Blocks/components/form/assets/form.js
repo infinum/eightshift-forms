@@ -139,7 +139,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	formSubmit(formId, filter = {}) {
+	formSubmit(formId, filter = {}, isStepsFinalSubmit = false) {
 		// Dispatch event.
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsBeforeFormSubmit());
 
@@ -179,6 +179,10 @@ export class Form {
 				// On success state.
 				if (response.status === 'success') {
 					this.formSubmitSuccess(formId, response);
+
+					if (isStepsFinalSubmit) {
+						this.steps.resetSteps(formId);
+					}
 				} else {
 					this.formSubmitError(formId, response);
 				}
@@ -188,6 +192,47 @@ export class Form {
 
 			this.FORM_DATA = new FormData();
 	}
+
+		/**
+	 * Handle form submit and all logic.
+	 * 
+	 * @param {object} element Form element.
+	 * @param {boolean|object} singleSubmit Is form single submit, used in admin if yes pass element.
+	 * @param {boolean} isStepValidation Is form single submit, used in admin.
+	 * @param {boolean} isStepSubmit Check if is step submit.
+	 *
+	 * @public
+	 */
+		formSubmitStep(formId, filter = {}) {
+			this.setFormData(formId, filter);
+			this.setFormDataStep(formId);
+
+			// Populate body data.
+			const body = {
+				method: this.state.getStateFormMethod(formId),
+				mode: 'same-origin',
+				headers: {
+					Accept: 'multipart/form-data',
+				},
+				body: this.FORM_DATA,
+				credentials: 'same-origin',
+				redirect: 'follow',
+				referrer: 'no-referrer',
+			};
+	
+			const url = this.state.getRestUrl(ROUTES.VALIDATION_STEP);
+	
+			fetch(url, body)
+				.then((response) => {
+					return response.json();
+				})
+				.then((response) => {
+					this.formSubmitBefore(formId, response);
+					this.steps.formStepStubmit(formId, response);
+				});
+
+				this.FORM_DATA = new FormData();
+		}
 
 	formSubmitBefore(formId, response) {
 		// Dispatch event.
@@ -207,44 +252,38 @@ export class Form {
 			data,
 		} = response;
 
-		// Redirect on success.
-		// if (isStepSubmit) {
-		// 	// this.steps.formStepStubmit(element, response);
-		// } else {
-			// Dispatch event.
-			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccess(), response);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccess(), response);
 
-			if (this.state.getStateConfigIsAdmin()) {
+		if (this.state.getStateConfigIsAdmin()) {
+			// Set global msg.
+			this.utils.setGlobalMsg(formId, message, status);
+
+			if (this.state.getStateFormIsSingleSubmit(formId)) {
+				this.utils.redirectToUrlByRefference(window.location.href, formId, true);
+			}
+		} else {
+			// Send GTM.
+			this.utils.gtmSubmit(formId, status);
+
+			if (this.state.getStateFormConfigSuccessRedirect(formId)) {
+				// Redirect to url and update url params from from data.
+				this.utils.redirectToUrl(formId, this.FORM_DATA);
+			} else {
+				// Clear form values.
+				this.utils.resetForm(formId);
+
 				// Set global msg.
 				this.utils.setGlobalMsg(formId, message, status);
 
-				if (this.state.getStateFormIsSingleSubmit(formId)) {
-					this.utils.redirectToUrlByRefference(window.location.href, formId, true);
-				}
-			} else {
-				// Send GTM.
-				this.utils.gtmSubmit(formId, status);
-
-				if (this.state.getStateFormConfigSuccessRedirect(formId)) {
-					// Redirect to url and update url params from from data.
-					this.utils.redirectToUrl(formId, this.FORM_DATA);
-				} else {
-					// Clear form values.
-					this.utils.resetForm(formId);
-
-					// Set global msg.
-					this.utils.setGlobalMsg(formId, message, status);
-
-					// Do normal success without redirect.
-					// Do the actual redirect after some time for custom form processed externally.
-					if (data?.processExternaly) {
-						setTimeout(() => {
-							this.state.getStateFormElement().submit();
-						}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
-					}
+				// Do normal success without redirect.
+				// Do the actual redirect after some time for custom form processed externally.
+				if (data?.processExternaly) {
+					setTimeout(() => {
+						this.state.getStateFormElement().submit();
+					}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
 				}
 			}
-		// }
+		}
 	}
 
 	formSubmitError(formId, response) {
@@ -254,24 +293,18 @@ export class Form {
 			data,
 		} = response;
 
-		// Set global msg.
-		// if (isStepSubmit) {
-		// 	// this.steps.formStepStubmit(element, response);
-		// } else {
-			this.utils.setGlobalMsg(formId, message, status);
+		this.utils.setGlobalMsg(formId, message, status);
 
-			this.utils.gtmSubmit(formId, status, data?.validation);
+		this.utils.gtmSubmit(formId, status, data?.validation);
 
-			// Dispatch event.
-			if (data?.validation !== undefined) {
-				this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitErrorValidation(), response);
+		// Dispatch event.
+		if (data?.validation !== undefined) {
+			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitErrorValidation(), response);
 
-				// this.steps.goBackToFirstValidationErrorStep(formId, data?.validation);
-				this.utils.outputErrors(formId, data?.validation);
-			} else {
-				this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitError(), response);
-			}
-		// }
+			this.utils.outputErrors(formId, data?.validation);
+		} else {
+			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitError(), response);
+		}
 	}
 
 	formSubmitAfter(formId, response) {
@@ -284,7 +317,7 @@ export class Form {
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitEnd(), response);
 	}
 
-	runFormCaptcha(formId) {
+	runFormCaptcha(formId, isStepsFinalSubmit = false) {
 		if (!this.state.getStateCaptchaIsUsed()) {
 			return;
 		}
@@ -301,7 +334,7 @@ export class Form {
 						action: actionName,
 					});
 
-					this.formSubmit(formId);
+					this.formSubmit(formId, {}, isStepsFinalSubmit);
 				});
 			});
 		} else {
@@ -312,7 +345,7 @@ export class Form {
 						isEnterprise: false,
 						action: actionName,
 					});
-					this.formSubmit(formId);
+					this.formSubmit(formId, {}, isStepsFinalSubmit);
 				});
 			});
 		}
@@ -346,7 +379,7 @@ export class Form {
  *
  * @public
  */
-	setFormDataFields(formId, filter = {}, isStepSubmit = false) {
+	setFormDataFields(formId, filter = {}) {
 		const formType = this.state.getStateFormType(formId);
 
 		// Used for single submit.
@@ -400,8 +433,6 @@ export class Form {
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						data.value = checkValue;
 						data.innerName = checkName;
-
-						console.log(checkValue);
 
 						this.FORM_DATA.append(`${name}[${indexCheck}]`, JSON.stringify(data));
 						indexCheck++;
@@ -512,6 +543,16 @@ export class Form {
 		return output;
 	}
 
+	setFormDataStep(formId) {
+		this.buildFormDataItems([
+			{
+				name: this.state.getStateParam('steps'),
+				value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
+				custom: this.state.getStateFormStepsCurrent(formId),
+			},
+		]);
+	}
+
 	setFormDataCommon(formId) {
 		this.buildFormDataItems([
 			{
@@ -548,28 +589,6 @@ export class Form {
 				},
 			]);
 		}
-	}
-
-	setFormDataStep() {
-		// Output fields to validate if we are validating steps only.
-		// const stepId = this.steps.getCurrentStep(element);
-		// if (stepId && isStepSubmit) {
-		// 	// Find all fields by name in the step.
-		// 	const fieldsInStep = this.steps.getAllFieldsInStep(element, stepId);
-
-		// 	if (fieldsInStep) {
-		// 		// Find all field names and remove null ones (submit).
-		// 		const outputStepFields = Array.from(fieldsInStep, (stepField) => stepField.getAttribute(this.state.getStateAttribute('fieldName'))).filter(n => n);
-
-		// 		// Append the data as a custom field.
-		// 		if (outputStepFields) {
-		// 			this.FORM_DATA.append(this.data.FORM_PARAMS.stepFields, JSON.stringify({
-		// 				name: this.data.FORM_PARAMS.stepFields,
-		// 				value: outputStepFields,
-		// 			}));
-		// 		}
-		// 	}
-		// }
 	}
 
 	setFormDataAdmin(formId) {
@@ -611,7 +630,7 @@ export class Form {
 		this.buildFormDataItems([
 			{
 				name: this.state.getStateParam('captcha'),
-				value: JSON.stringify(data),
+				value: data,
 			},
 		]);
 	}
@@ -1073,16 +1092,32 @@ export class Form {
 
 		const formId = this.state.getFormIdByElement(event.target);
 
-		this.utils.showLoader(formId);
-
 		if (this.state.getStateFormStepsIsUsed(formId)) {
-			const stepButton = event.submitter;
+			// Steps flow.
+			const direction = event.submitter.getAttribute(this.state.getStateAttribute('submitStepDirection'));
 
-			const direction = stepButton.getAttribute(this.state.getStateAttribute('submitStepDirection'));
+			switch (direction) {
+				case 'next':
+					this.utils.showLoader(formId);
+					debounce(this.formSubmitStep(formId), 100);
+					break;
+				case 'prev':
+					this.steps.goToPrevStep(formId);
+					break;
+				default:
+					this.utils.showLoader(formId);
 
-			debounce(this.formSubmit(formId), 100);
-
+					if (this.state.getStateCaptchaIsUsed()) {
+						this.runFormCaptcha(formId, true);
+					} else {
+						debounce(this.formSubmit(formId, {}, true), 100);
+					}
+					break;
+			}
 		} else {
+			// Normal flow.
+			this.utils.showLoader(formId);
+
 			if (this.state.getStateCaptchaIsUsed()) {
 				this.runFormCaptcha(formId);
 			} else {

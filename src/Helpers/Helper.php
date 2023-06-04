@@ -349,7 +349,6 @@ class Helper
 			'innerId' => '',
 			'fields' => [],
 			'fieldsOnly' => [],
-			'stepFields' => [],
 		];
 
 		$form = \get_post_field('post_content', (int) $formId);
@@ -373,7 +372,10 @@ class Helper
 		}
 
 		$blockName = self::getBlockNameDetails($blockName);
+		$namespace = $blockName['namespace'];
 		$type = $blockName['nameAttr'];
+
+		$fieldsOnly = $blocks['innerBlocks'][0]['innerBlocks'] ?? [];
 
 		$output['type'] = $type;
 		$output['typeFilter'] = $blockName['name'];
@@ -382,7 +384,7 @@ class Helper
 		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';
 		$output['innerId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"] ?? '';
 		$output['fields'] = $blocks;
-		$output['fieldsOnly'] = $blocks['innerBlocks'][0]['innerBlocks'] ?? [];
+		$output['fieldsOnly'] = $fieldsOnly;
 
 		switch ($output['typeFilter']) {
 			case SettingsActiveCampaign::SETTINGS_TYPE_KEY:
@@ -415,17 +417,88 @@ class Helper
 				break;
 		}
 
-		$output['fieldNames'] = \array_values(\array_filter(\array_map(
-			static function ($item) {
-				$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
-				$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
+		$ignoreBlocks = array_flip([
+			'step',
+			'submit',
+		]);
 
-				if ($value) {
-					return $value;
+		$output['fieldNames'] = \array_values(\array_filter(\array_map(
+			static function ($item) use ($ignoreBlocks) {
+				$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
+
+				if (!isset($ignoreBlocks[$blockItemName])) {
+					$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
+
+					if ($value) {
+						return $value;
+					}
 				}
 			},
 			$output['fieldsOnly']
 		)));
+
+		// Check if this form uses steps.
+		$hasSteps = \array_search($namespace . '/step', \array_column($output['fieldsOnly'] ?? '', 'blockName'));
+		$hasSteps = $hasSteps !== false;
+
+		if ($hasSteps) {
+			$stepCurrent = 'step-init';
+
+			// If the users don't add first step add it to the list.
+			if ($output['fieldsOnly'][0]['blockName'] !== "{$namespace}/step") {
+				\array_unshift(
+					$output['fieldsOnly'],
+					[
+						'blockName' => "{$namespace}/step",
+						'attrs' => [
+							'stepStepName' => $stepCurrent,
+							'stepStepLabel' => __('Step init', 'eightshift-forms'),
+							'stepStepContent' => '',
+						],
+						'innerBlocks' => [],
+						'innerHTML' => '',
+						'innerContent' => [],
+					],
+				);
+			}
+
+			$outputSteps = [];
+			$outputStepsRelations = [];
+			foreach ($output['fieldsOnly'] as $block) {
+				$blockName = self::getBlockNameDetails($block['blockName']);
+				$name = $blockName['name'];
+
+					if ($name === 'step') {
+						$stepCurrent = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Name")] ?? '';
+						$stepLabel = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Label")] ?? '';
+
+						if (!$stepLabel) {
+							$stepLabel = $stepCurrent;
+						}
+						$outputSteps[$stepCurrent] = [
+							'label' => $stepLabel,
+							'value' => $stepCurrent,
+						];
+
+						continue;
+					}
+
+					if ($name === 'submit') {
+						continue;
+					}
+
+					$itemName = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Name")] ?? '';
+					if (!$itemName) {
+						continue;
+					}
+
+					$outputSteps[$stepCurrent]['subItems'][] = $itemName;
+					$outputStepsRelations[$itemName] = $stepCurrent;
+			}
+
+			$output['stepsSetup']['steps'] = $outputSteps;
+			$output['stepsSetup']['relations'] = $outputStepsRelations;
+		}
 
 		return $output;
 	}

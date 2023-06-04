@@ -12,6 +12,9 @@
 		"stepName": {
 			"type": "string"
 		},
+		"stepLabel": {
+			"type": "string"
+		},
 		"stepTotal": {
 			"type": "integer"
 		},
@@ -27,14 +30,6 @@
 		},
 		"stepMultiflowRules": {
 			"type": "array"
-		},
-		"stepMultiflowAction": {
-			"type": "string",
-			"default": "show"
-		},
-		"stepMultiflowLogic": {
-			"type": "string",
-			"default": "all"
 		}
 	}
 }

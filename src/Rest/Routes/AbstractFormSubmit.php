@@ -91,8 +91,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			// Prepare all data.
 			$formDataReference = $this->getFormDataReference($request);
 
-			// $isStepValidation = $this->isStepValidation($formDataReference);
-
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
 					// Validate files.
@@ -119,6 +117,19 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
 							$validate
 						);
+					}
+					break;
+				case self::ROUTE_TYPE_STEP_VALIDATION:
+					// Validate params.
+					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+						$validate = $this->getValidator()->validateParams($formDataReference);
+
+						if ($validate) {
+							throw new UnverifiedRequestException(
+								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$validate
+							);
+						}
 					}
 					break;
 				default:
@@ -153,17 +164,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					}
 					break;
 			}
-
-			// if ($this->isStepValidation($formDataReference)) {
-			// 	return \rest_ensure_response(
-			// 		$this->getApiSuccessOutput(
-			// 			\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
-			// 			[
-			// 				'nextStep' => 'step-1',
-			// 			]
-			// 		)
-			// 	);
-			// }
 
 			// Do Action.
 			return $this->submitAction($formDataReference);

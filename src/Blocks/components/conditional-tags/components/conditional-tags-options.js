@@ -100,7 +100,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							}
 
 							{(conditionalTagsRules?.[1]?.length > 1 && (index + 1) < total) &&
-								<div className='es-font-weight-700 es-mt-3'>
+								<div className='es-font-weight-700'>
 									{__('OR', 'eightshift-forms')}
 								</div>
 							}

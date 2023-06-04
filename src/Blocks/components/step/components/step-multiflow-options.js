@@ -6,7 +6,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
 import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel } from '@eightshift/frontend-libs/scripts';
-import { CONDITIONAL_TAGS_OPERATORS_LABELS, CONDITIONAL_TAGS_LOGIC_LABELS } from '../../conditional-tags/components/conditional-tags-labels';
+import { CONDITIONAL_TAGS_OPERATORS } from '../../conditional-tags/assets/utils';
+import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
 import { ROUTES, getRestUrl } from '../../form/assets/state';
@@ -17,84 +18,226 @@ export const StepMultiflowOptions = (attributes) => {
 	} = attributes;
 
 	const stepMultiflowUse = checkAttr('stepMultiflowUse', attributes, manifest);
-	const stepMultiflowAction = checkAttr('stepMultiflowAction', attributes, manifest);
-	const stepMultiflowLogic = checkAttr('stepMultiflowLogic', attributes, manifest);
 	const stepMultiflowRules = checkAttr('stepMultiflowRules', attributes, manifest);
 	const stepMultiflowPostId = checkAttr('stepMultiflowPostId', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
 	const [formFields, setFormFields] = useState([]);
-	const [formSteps, setFormSteps] = useState([]);
 
 	useEffect(() => {
 		apiFetch({
 			path: `${getRestUrl(ROUTES.FORM_FIELDS, true)}?id=${stepMultiflowPostId}&useMultiflow=true`,
 		}).then((response) => {
 			if (response.code === 200 && response.data) {
-				setFormFields(response.data.fields);
-				setFormSteps(response.data.steps);
+				setFormFields(response.data.steps);
 			}
 		});
 	}, [stepMultiflowPostId, isModalOpen]);
 
-	// console.log(formFields);
-	// console.log(formSteps);
+	const MultiflowType = () => {
+		return (
+			<>
+				{stepMultiflowRules?.map((_, index) => {
 
-	const ConditionalTagsItem = ({ index }) => {
+					// Remove condition if field value is missing.
+					const itemExists = formFields?.filter((item) => {
+						return stepMultiflowRules?.[index]?.[0] === item?.value && item?.value !== '';
+					});
+
+					console.log(itemExists, isNewRuleAdded, (!itemExists.length && !isNewRuleAdded));
+					
+					if (!itemExists.length && !isNewRuleAdded) {
+						
+						stepMultiflowRules.splice(index, 1);
+						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+						console.log(itemExists, stepMultiflowRules, index);
+						return null;
+					}
+
+					return (
+						<div className='es-border-b-cool-gray-100 es-pb-7 es-mb-7'>
+							<div className='es-h-spaced es-mb-3'>
+								<span>{__('Go to step', 'eightshift-forms')}</span>
+								<Select
+									value={stepMultiflowRules?.[index]?.[0]}
+									options={formFields}
+									onChange={(value) => {
+										stepMultiflowRules[index][0] = value;
+										setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+									}}
+									noBottomSpacing
+									simpleValue
+									noSearch
+								/>
+								<span>{__('if step', 'eightshift-forms')}</span>
+
+								<Select
+									value={stepMultiflowRules?.[index]?.[1]}
+									options={formFields}
+									onChange={(value) => {
+										stepMultiflowRules[index][1] = value;
+										stepMultiflowRules[index][2] = [];
+										setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+									}}
+									noBottomSpacing
+									simpleValue
+									noSearch
+								/>
+
+								<span>{__('matches the following conditions:', 'eightshift-forms')}</span>
+
+								<Button
+									icon={icons.trash}
+									onClick={() => {
+										stepMultiflowRules.splice(index, 1);
+										setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+									}}
+									label={__('Remove', 'eightshift-forms')}
+									className='es-ml-auto es-rounded-1!'
+								/>
+							</div>
+
+							<ConditionalTagsType topParent={index}/>
+						</div>
+					);
+				})}
+
+				<Button
+					icon={icons.plusCircleFillAlt}
+					onClick={() => {
+						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules, [formFields?.[0]?.value ?? '', formFields?.[0]?.value ?? '', []]] });
+						setIsNewRuleAdded(true);
+					}}
+					className='es-rounded-1'
+				>
+					{__('Add flow', 'eightshift-forms')}
+				</Button>
+			</>
+		)
+	}
+
+	const ConditionalTagsType = ({topParent}) => {
 		if (!formFields) {
 			return null;
 		}
 
-		if (!formSteps) {
-			return null;
-		}
+		return (
+			<>
+				<div className='es-v-spaced'>
+					{stepMultiflowRules?.[topParent]?.[2]?.map((_, index) => {
+						const total = stepMultiflowRules[topParent][1].length;
+						return (
+							<>
+								{stepMultiflowRules?.[topParent]?.[2]?.[index]?.map((_, innerIndex) => {
+										const itemExists = formFields?.[topParent]?.subItems?.filter((item) => {
+											// console.log(stepMultiflowRules, stepMultiflowRules?.[topParent]?.[2]?.[index]?.[innerIndex]?.[0], item.value, item?.value !== '');
+											
+											return stepMultiflowRules?.[topParent]?.[2]?.[index]?.[innerIndex]?.[0] === item?.value && item?.value !== '';
+										});
 
-		const operatorValue = stepMultiflowRules?.[index]?.[1] ?? 'is';
-		const fieldValue = stepMultiflowRules?.[index]?.[0];
+										if (!itemExists.length && !isNewRuleAdded) {
+											// stepMultiflowRules[topParent][2][index].splice(innerIndex, 1);
+
+											// console.log(stepMultiflowRules, stepMultiflowRules[topParent][2][index], innerIndex);
+											
+
+											// if (stepMultiflowRules[topParent][2][index].length === 0) {
+											// 	stepMultiflowRules[topParent][2].splice(index, 1);
+											// }
+
+											// setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+											// return null;
+										}
+
+										return (
+											<ConditionalTagsItem topParent={topParent} parent={index} index={innerIndex} total={stepMultiflowRules[topParent][2][index].length} />
+										);
+									})
+								}
+
+								{(stepMultiflowRules?.[topParent]?.[2]?.length > 1 && (index + 1) < total) &&
+									<div className='es-font-weight-700'>
+										{__('OR', 'eightshift-forms')}
+									</div>
+								}
+							</>
+						);
+					})}
+
+					<Button
+						icon={icons.plusCircleFillAlt}
+						onClick={() => {
+							stepMultiflowRules[topParent][2].push([[formFields?.[topParent]?.subItems?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '']]);
+							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+							setIsNewRuleAdded(true);
+						}}
+						className='es-rounded-1 es-mt-4'
+					>
+						{(__('Add step rules', 'eightshift-forms'))}
+					</Button>
+				</div>
+			</>
+		);
+	}
+
+	const ConditionalTagsItem = ({ topParent, parent, index, total }) => {
+		const operatorValue = stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[1] ?? CONDITIONAL_TAGS_OPERATORS.IS;
+		const fieldValue = stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[0];
 
 		// Internal state due to rerendering issue.
-		const [inputCheck, setInputCheck] = useState(stepMultiflowRules?.[index]?.[2]);
+		const [inputCheck, setInputCheck] = useState(stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[2]);
 
-		const options = formFields?.find((item) => item.value === stepMultiflowRules[index][0])?.subItems ?? [];
-
-		const showRuleValuePicker = options?.length > 0 && (operatorValue === 'is' || operatorValue === 'isn');
+		const formFieldOptions = formFields?.find((item) => item.value === stepMultiflowRules[topParent][1])?.subItems ?? [];
+		const formFieldSelectedItem = formFieldOptions?.find((item) => item.value === fieldValue)?.subItems ?? [];
+		const showRuleValuePicker = formFieldSelectedItem?.length > 0 && (operatorValue === CONDITIONAL_TAGS_OPERATORS.IS || operatorValue === CONDITIONAL_TAGS_OPERATORS.ISN);
 
 		return (
 			<>
-				<div className='es-display-flex es-items-baseline es-gap-2 es-mb-6'>
-					<span>{__('Go to', 'eightshift-forms')}</span>
+				<div className='es-h-spaced'>
 					<Select
-						value={stepMultiflowAction}
-						options={formSteps}
+						value={fieldValue}
+						options={formFieldOptions}
 						onChange={(value) => {
-							stepMultiflowRules[index][0] = value;
+							stepMultiflowRules[topParent][2][parent][index][0] = value;
+							stepMultiflowRules[topParent][2][parent][index][2] = '';
 							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 						}}
 						noBottomSpacing
 						simpleValue
 						noSearch
+						additionalSelectClasses='es-w-40'
 					/>
-					<span>{__('step if ', 'eightshift-forms')}</span>
 
-					<span>{__('of the following match:', 'eightshift-forms')}</span>
-				</div>
+					<Select
+						value={operatorValue}
+						options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_LABELS)}
+						onChange={(value) => {
+							stepMultiflowRules[topParent][2][parent][index][1] = value;
+							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+						}}
+						noBottomSpacing
+						simpleValue
+						noSearch
+						additionalSelectClasses='es-w-40'
+					/>
 
-				<div className='es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300'>
-					<span className='es-w-40'>{__('Field', 'eightshift-forms')}</span>
-					<span className='es-w-40'>{__('Condition', 'eightshift-forms')}</span>
-					<span className='es-w-40'>{__('Value', 'eightshift-forms')}</span>
-					<span className='es-w-40'>{__('Operator', 'eightshift-forms')}</span>
-				</div>
-
-				{stepMultiflowRules?.map((_, index) => {
-					return(
-						<div>
-						<Select
-							value={fieldValue}
-							options={formFields}
+					<span>{'='}</span>
+					{!showRuleValuePicker ?
+						<TextControl
+							value={inputCheck}
+							onBlur={() => setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] })}
 							onChange={(value) => {
-								stepMultiflowRules[index][0] = value;
+								stepMultiflowRules[topParent][2][parent][index][2] = value;
+								setInputCheck(value);
+							}}
+							className='es-w-40 es-m-0-bcf!'
+						/> :
+						<Select
+							value={stepMultiflowRules?.[2]?.[parent]?.[index]?.[2]}
+							options={formFieldSelectedItem}
+							onChange={(value) => {
+								stepMultiflowRules[topParent][2][parent][index][2] = value;
 								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 							}}
 							noBottomSpacing
@@ -102,61 +245,37 @@ export const StepMultiflowOptions = (attributes) => {
 							noSearch
 							additionalSelectClasses='es-w-40'
 						/>
+					}
 
-						<Select
-							value={operatorValue}
-							options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_LABELS)}
-							onChange={(value) => {
-								stepMultiflowRules[index][1] = value;
+					{(total === index + 1) &&
+						<Button
+							icon={icons.plusCircleFillAlt}
+							onClick={() => {
+								stepMultiflowRules[topParent][2][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, ''];
 								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+
+								setIsNewRuleAdded(true);
 							}}
-							noBottomSpacing
-							simpleValue
-							noSearch
-							additionalSelectClasses='es-w-40'
-						/>
+							className='es-rounded-1'
+						>
+							{__('AND', 'eightshift-forms')}
+						</Button>
+					}
 
-						{!showRuleValuePicker &&
-							<TextControl
-								value={inputCheck}
-								onBlur={() => setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] })}
-								onChange={(value) => {
-									stepMultiflowRules[index][2] = value;
-									setInputCheck(value);
-								}}
-								className='es-w-40 es-m-0-bcf!'
-							/>
-						}
+					<Button
+						icon={icons.trash}
+						onClick={() => {
+							stepMultiflowRules[topParent][2][parent].splice(index, 1);
 
-						{showRuleValuePicker &&
-							<Select
-								value={stepMultiflowRules?.[index]?.[2]}
-								options={options}
-								onChange={(value) => {
-									stepMultiflowRules[index][2] = value;
-									setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
-								}}
-								noBottomSpacing
-								simpleValue
-								noSearch
-								additionalSelectClasses='es-w-40'
-							/>
-						}
-
-						<Select
-							value={stepMultiflowLogic}
-							options={getConstantsOptions(CONDITIONAL_TAGS_LOGIC_LABELS)}
-							onChange={(value) => {
-								stepMultiflowRules[index][3] = value;
-								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
-							}}
-							noBottomSpacing
-							simpleValue
-							noSearch
-						/>
-					</div>
-					);
-				})}
+							if (stepMultiflowRules[topParent][2][parent].length === 0) {
+								stepMultiflowRules[topParent][2].splice(parent, 1);
+							}
+							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+						}}
+						label={__('Remove', 'eightshift-forms')}
+						className='es-ml-auto es-rounded-1!'
+					/>
+				</div>
 			</>
 		);
 	};
@@ -190,7 +309,6 @@ export const StepMultiflowOptions = (attributes) => {
 						setAttributes({ [getAttrKey('stepMultiflowUse', attributes, manifest)]: value });
 
 						if (!value) {
-							// setAttributes({ [getAttrKey('stepMultiflowAction', attributes, manifest)]: undefined });
 							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: undefined });
 						} else {
 							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [] });
@@ -222,7 +340,7 @@ export const StepMultiflowOptions = (attributes) => {
 				{isModalOpen &&
 					<Modal
 						overlayClassName='es-conditional-tags-modal es-geolocation-modal'
-						className='es-modal-max-width-3xl es-rounded-3!'
+						className='es-modal-max-width-5xl es-rounded-3!'
 						title={<IconLabel icon={icons.anchor} label={__('Multi-flow setup', 'eightshift-forms')} standalone />}
 						onRequestClose={() => {
 							setIsModalOpen(false);
@@ -230,47 +348,8 @@ export const StepMultiflowOptions = (attributes) => {
 						}}
 					>
 						<div className='es-v-spaced'>
-							{stepMultiflowRules?.map((_, index) => {
-
-								// Remove condition if field value is missing.
-								const itemExists = formFields?.filter((item) => {
-									return stepMultiflowRules?.[index]?.[0] === item?.value && item?.value !== '';
-								});
-
-								if (!itemExists.length && !isNewRuleAdded) {
-									stepMultiflowRules.splice(index, 1);
-									setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
-									return null;
-								}
-
-								return (
-									<div key={index}>
-										<ConditionalTagsItem index={index} />
-
-										<Button
-											icon={icons.trash}
-											onClick={() => {
-												stepMultiflowRules.splice(index, 1);
-												setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
-											}}
-											label={__('Remove', 'eightshift-forms')}
-											className='es-ml-auto es-rounded-1!'
-										/>
-									</div>
-								);
-							})}
+							<MultiflowType />
 						</div>
-
-						<Button
-							icon={icons.plusCircleFillAlt}
-							onClick={() => {
-								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules, [formFields?.[0]?.value ?? '', 'is', '', '']] });
-								setIsNewRuleAdded(true);
-							}}
-							className='es-rounded-1 es-mt-4'
-						>
-							{__('Add rule', 'eightshift-forms')}
-						</Button>
 
 						<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
 							<IconLabel

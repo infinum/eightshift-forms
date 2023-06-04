@@ -42,7 +42,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'postId' => 'es-form-post-id',
 		'type' => 'es-form-type',
 		'name' => 'es-form-field-name',
-		'stepFields' => 'es-form-step-fields',
+		'steps' => 'es-form-steps',
 		'settingsType' => 'es-form-settings-type',
 		'singleSubmit' => 'es-form-single-submit',
 		'storage' => 'es-form-storage',
@@ -62,9 +62,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	public const CUSTOM_FORM_DATA_ATTRIBUTES = [
 		'formType' => 'data-form-type',
-		'formStepsFlow' => 'data-form-steps-flow',
-		'formStepsCurrent' => 'data-form-steps-current',
-		'fieldStepId' => 'data-step-id',
+		'stepId' => 'data-step-id',
 		'submitStepDirection' => 'data-step-direction',
 		'formPostId' => 'data-form-post-id',
 		'fieldId' => 'data-field-id',
@@ -313,9 +311,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					$value['value'] = \json_decode($value['value'], true);
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['stepFields']:
-					$output['stepFields'] = $value['value'];
-					$output['params'][$key] = $value;
+				case self::CUSTOM_FORM_PARAMS['steps']:
+					$output['steps'] = [
+						'fields' => $value['value'],
+						'current' => $value['custom'],
+					];
 					break;
 				default:
 					if ($value['type'] === 'file') {
@@ -430,25 +430,14 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$formDataReference['actionExternal'] = $params['actionExternal'] ?? '';
 
 		// Populare step fields.
-		$formDataReference['stepFields'] = $params['stepFields'] ?? [];
+		$formDataReference['steps'] = $params['steps'] ?? [];
 
 		// Get form captcha from params.
-		$formDataReference['captcha'] = \json_decode($params['captcha'] ?? '', true) ?? [];
+		$formDataReference['captcha'] = $params['captcha'] ?? [];
 
 		// Get form storage from params.
 		$formDataReference['storage'] = \json_decode($params['storage'] ?? '', true) ?? [];
 
 		return $formDataReference;
-	}
-
-	/**
-	 * Check if route is step validation
-	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
-	 * @return boolean
-	 */
-	protected function isStepValidation(array $formDataReference): bool
-	{
-		return !empty($formDataReference['stepFields'] ?? []);
 	}
 }
