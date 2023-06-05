@@ -291,11 +291,11 @@ export class State {
 		if (steps.length) {
 			this.setState([this.FORM, this.STEPS, this.IS_USED], true, formId);
 			this.setState([this.FORM, this.STEPS, this.STEPS_FLOW], [], formId);
-			this.setState([this.FORM, this.STEPS, this.STEPS_CURRENT], 'step-0', formId);
+			this.setState([this.FORM, this.STEPS, this.STEPS_CURRENT], '', formId);
 			this.setState([this.FORM, this.STEPS, this.STEPS_ITEMS], {}, formId);
 			this.setState([this.FORM, this.STEPS, this.STEPS_ELEMENTS], {}, formId);
 
-			Object.values(steps).forEach((item) => {
+			Object.values(steps).forEach((item, index) => {
 				const stepFields = item.querySelectorAll(this.getStateSelectorsField());
 				const stepId = item.getAttribute(this.getStateAttribute('stepId'));
 				const stepOutput = [];
@@ -310,6 +310,10 @@ export class State {
 
 				this.setState([this.FORM, this.STEPS, this.STEPS_ELEMENTS, stepId], item, formId);
 				this.setState([this.FORM, this.STEPS, this.STEPS_ITEMS, stepId], stepOutput, formId);
+
+				if (index === 0) {
+					this.setState([this.FORM, this.STEPS, this.STEPS_CURRENT], stepId, formId);
+				}
 			});
 		}
 
@@ -718,6 +722,12 @@ export class State {
 	}
 	getStateFormStepsCurrent(formId) {
 		return this.getState([this.FORM, this.STEPS, this.STEPS_CURRENT], formId);
+	}
+	getStateFormStepsFirstStep(formId) {
+		return Object.keys(this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS], formId))[0];
+	}
+	getStateFormStepsLastStep(formId) {
+		return Object.keys(this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS], formId)).pop();
 	}
 	getStateFormStepsItem(stepId, formId) {
 		return this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS, stepId], formId);

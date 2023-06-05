@@ -6,17 +6,11 @@
 	"componentJsClass": "js-es-block-step",
 	"componentJsTriggerClass": "js-es-block-step-trigger",
 	"attributes": {
-		"stepId": {
-			"type": "integer"
-		},
 		"stepName": {
 			"type": "string"
 		},
 		"stepLabel": {
 			"type": "string"
-		},
-		"stepTotal": {
-			"type": "integer"
 		},
 		"stepContent": {
 			"type": "string"

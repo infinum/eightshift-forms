@@ -63,9 +63,11 @@ export class Form {
 
 			this.state.setFormStateInitial(formId);
 
+			this.initOne(formId);
+
 			this.conditionalTags.initOne(formId);
 
-			this.initOne(formId);
+			this.steps.initOne(formId);
 		});
 	}
 
@@ -1093,15 +1095,21 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 
 		if (this.state.getStateFormStepsIsUsed(formId)) {
+			const button = event.submitter;
+			const field = this.state.getFormFieldElementByChild(button);
 			// Steps flow.
-			const direction = event.submitter.getAttribute(this.state.getStateAttribute('submitStepDirection'));
+			let direction = button.getAttribute(this.state.getStateAttribute('submitStepDirection'));
+
+			if (field.classList.contains(this.state.getStateSelectorsClassHidden())) {
+				direction = this.steps.STEP_DIRECTION_NEXT;
+			}
 
 			switch (direction) {
-				case 'next':
+				case this.steps.STEP_DIRECTION_NEXT:
 					this.utils.showLoader(formId);
 					debounce(this.formSubmitStep(formId), 100);
 					break;
-				case 'prev':
+				case this.steps.STEP_DIRECTION_PREV:
 					this.steps.goToPrevStep(formId);
 					break;
 				default:

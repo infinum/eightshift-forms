@@ -49,7 +49,11 @@ export class ConditionalTags {
 	 * @returns void
 	 */
 	initOne(formId) {
-		this.state.getStateFormElement(formId).addEventListener(this.state.getStateEventsFormJsLoaded(), this.onInitEvent);
+		this.state.getStateFormElement(formId).addEventListener(
+			this.state.getStateEventsFormJsLoaded(),
+			this.onInitEvent,
+			{ once: true }
+		);
 	}
 
 	/**

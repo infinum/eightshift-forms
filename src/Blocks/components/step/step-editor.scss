@@ -27,12 +27,14 @@
 	}
 }
 
-.es-form[data-block-ssr='true'] {
-	.es-step {
-		display: none;
-
-		&.is-active {
+.es-form {
+	&__fields {
+		.es-step:first-child {
 			display: block;
 		}
+	}
+
+	.es-step {
+		display: none;
 	}
 }

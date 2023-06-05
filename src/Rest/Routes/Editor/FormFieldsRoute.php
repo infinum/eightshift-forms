@@ -130,6 +130,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 				[
 					'fields' => \array_values($fieldsOutput),
 					'steps' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'])) : [],
+					'names' => $data['fieldNamesFull'],
 				]
 			)
 		);
@@ -140,6 +141,12 @@ class FormFieldsRoute extends AbstractBaseRoute
 		$output = [];
 
 		foreach ($data as $step) {
+			$value = $step['value'] ?? '';
+
+			if(!$value) {
+				continue;
+			}
+
 			$item = $step;
 
 			$item['subItems'] = \array_values(\array_filter(\array_map(

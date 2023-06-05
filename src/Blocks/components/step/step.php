@@ -18,13 +18,11 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentFieldClass = $manifestField['componentClass'] ?? '';
 
-$stepId = Components::checkAttr('stepId', $attributes, $manifest);
+$stepName = Components::checkAttr('stepName', $attributes, $manifest);
 $stepContent = Components::checkAttr('stepContent', $attributes, $manifest);
-$stepTotal = Components::checkAttr('stepTotal', $attributes, $manifest);
 
 $stepClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($stepId === 0, 'is-active'),
 	Components::selector($componentJsClass, $componentJsClass),
 ]);
 
@@ -34,12 +32,13 @@ if (!$stepContent) {
 
 ?>
 
-<div class="<?php echo esc_attr($stepClass); ?>" data-step-id="step-<?php echo esc_attr($stepId); ?>">
+<div class="<?php echo esc_attr($stepClass); ?>" data-step-id="<?php echo esc_attr($stepName); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
+		<?php echo esc_attr($stepName); ?>
 		<?php echo $stepContent; ?>
 
-		<?php
-		if ($stepId !== 0) {
+		<div class="<?php echo esc_attr("{$componentFieldClass} {$componentClass}__navigation"); ?>">
+			<?php
 			echo Components::render(
 				'submit',
 				array_merge(
@@ -60,11 +59,6 @@ if (!$stepContent) {
 					]
 				)
 			);
-		}
-		?>
-
-		<?php
-		if ($stepId < $stepTotal) {
 			echo Components::render(
 				'submit',
 				array_merge(
@@ -85,7 +79,7 @@ if (!$stepContent) {
 					]
 				)
 			);
-		}
-		?>
+			?>
+		</div>
 	</div>
 </div>

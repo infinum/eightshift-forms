@@ -15,5 +15,11 @@
 		> .es-field {
 			@include form-fields-children-mandatory-styles;
 		}
+
+		.es-field--submit.is-hidden {
+			button {
+				pointer-events: none;
+			}
+		}
 	}
 }

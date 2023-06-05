@@ -1,8 +1,9 @@
 import React from 'react';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section, props } from '@eightshift/frontend-libs/scripts';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 
@@ -10,6 +11,8 @@ export const CheckboxOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
 	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
@@ -24,11 +27,15 @@ export const CheckboxOptions = (attributes) => {
 			<PanelBody title={__('Checkbox', 'eightshift-forms')}>
 				<TextControl
 					label={<NameFieldLabel value={checkboxValue} label={__('Value', 'eightshift-forms')} />}
-					help={__('Internal value, sent if checked.', 'eightshift-forms')}
+					help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 					value={checkboxValue}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
+					onChange={(value) => {
+						setIsNameChanged(true);
+						setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
+					}
 					disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
 				/>
+				<NameChangeWarning isChanged={isNameChanged} type={'value'} />
 
 				<TextControl
 					label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}

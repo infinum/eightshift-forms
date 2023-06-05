@@ -312,7 +312,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['steps']:
-					$output['steps'] = [
+					$output['apiSteps'] = [
 						'fields' => $value['value'],
 						'current' => $value['custom'],
 					];
@@ -430,7 +430,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		$formDataReference['actionExternal'] = $params['actionExternal'] ?? '';
 
 		// Populare step fields.
-		$formDataReference['steps'] = $params['steps'] ?? [];
+		$formDataReference['apiSteps'] = $params['apiSteps'] ?? [];
 
 		// Get form captcha from params.
 		$formDataReference['captcha'] = $params['captcha'] ?? [];

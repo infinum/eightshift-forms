@@ -1,17 +1,20 @@
 import React from 'react';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, props, icons, Section, IconToggle, IconLabel } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const RadiosOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const radiosName = checkAttr('radiosName', attributes, manifest);
 	const radiosIsRequired = checkAttr('radiosIsRequired', attributes, manifest);
@@ -26,10 +29,14 @@ export const RadiosOptions = (attributes) => {
 						label={<NameFieldLabel value={radiosName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={radiosName}
-						onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
+						}
 						disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
+					<NameChangeWarning isChanged={isNameChanged} />
 				</Section>
 
 				<FieldOptions

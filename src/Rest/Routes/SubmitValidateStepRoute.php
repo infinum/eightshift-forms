@@ -148,19 +148,125 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
-		$currentStep = $formDataReference['steps']['current'];
+		$currentStep = $formDataReference['apiSteps']['current'] ?? '';
+		if (!$currentStep) {
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+				)
+			);
+		}
 
-		$currentStepId = intVal(str_replace('step-', '', $currentStep));
+		$submittedNames = $formDataReference['apiSteps']['fields'] ?? [];
+		if (!$submittedNames) {
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+				)
+			);
+		}
 
-		$nextStep = $currentStepId + 1;
+		$steps = $formDataReference['stepsSetup']['steps'] ?? [];
+		if (!$steps) {
+			return \rest_ensure_response(
+				$this->getApiErrorOutput(
+					\esc_html__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
+				)
+			);
+		}
+
+		$multiflow = $formDataReference['stepsSetup']['multiflow'] ?? [];
+
+		$nextStep = '';
+
+		if ($multiflow) {
+			$type = 'multiflow';
+
+			$params = $formDataReference['params'] ?? [];
+
+			if (!$params) {
+				return \rest_ensure_response(
+					$this->getApiErrorOutput(
+						\esc_html__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
+					)
+				);
+			}
+
+			foreach ($multiflow as $flow) {
+				$flowCurrent = $flow[1] ?? '';
+				$flowNext = $flow[0] ?? '';
+				$flowConditions = $flow[2] ?? [];
+
+				if (!$flowNext || !$flowCurrent || !$flowConditions) {
+					continue;
+				}
+
+				if ($currentStep !== $flowCurrent) {
+					continue;
+				}
+
+				if ($this->checkFlowConditions($flowConditions, $submittedNames, $params)) {
+					$nextStep = $flowNext;
+				}
+			}
+
+			// If nothing is valid go to normal next step.
+			if (!$nextStep) {
+				$nextStep = $this->getNextStepRegular($steps, $currentStep);
+			}
+
+		} else {
+			$nextStep = $this->getNextStepRegular($steps, $currentStep);
+			$type = 'multistep';
+		}
 
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
 				[
-					'nextStep' => "step-{$nextStep}",
+					'type' => $type,
+					'nextStep' => $nextStep,
 				]
 			)
 		);
+	}
+
+	private function getNextStepRegular(array $steps, string $currentStep): string
+	{
+		$keys = \array_keys($steps);
+		return $keys[array_search($currentStep, $keys) +1];
+	}
+
+	private function checkFlowConditions(array $flowConditions, array $submittedNames, $params): bool
+	{
+		$output = [];
+
+		foreach ($flowConditions as $index => $conditions) {
+			$output[$index] = [];
+
+			foreach ($conditions as $innerIndex => $condition) {
+				$output[$index][$innerIndex] = false;
+
+				$name = $condition[0] ?? '';
+				$operator = $condition[1] ?? '';
+				$value = $condition[2] ?? '';
+
+				if (!$name || !$operator) {
+					continue;
+				}
+
+				$paramValue = $params[$name]['value'] ?? '';
+
+				if ($paramValue === $value) {
+					$output[$index][$innerIndex] = true;
+				}
+			}
+		}
+
+		return array_reduce($output, function ($carry, $validItem) {
+			return $carry || (bool) array_reduce($validItem, function ($subcarry, $item) {
+					return $subcarry && (bool) $item;
+			}, true);
+		}, false);
 	}
 }

@@ -192,6 +192,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						[
 							'blockName' => "{$formsNamespace}/step",
 							'attrs' => [
+								'stepStepName' => 'step-init',
 								'stepStepContent' => '',
 							],
 							'innerBlocks' => [],
@@ -287,17 +288,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					$innerBlock['attrs']["{$blockName}FormHasSteps"] = true;
 
 					$inBlockOutput = \array_values($inBlockOutput);
-					$stepsTotalCount = \count($inBlockOutput) - 1;
-
-					$inBlockOutput = \array_map(
-						static function ($key, $item) use ($stepsTotalCount) {
-							$item['attrs']['stepStepId'] = $key;
-							$item['attrs']['stepStepTotal'] = $stepsTotalCount;
-							return $item;
-						},
-						\array_keys($inBlockOutput),
-						$inBlockOutput
-					);
 				}
 
 				$innerBlockOutput[] = [

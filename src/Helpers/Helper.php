@@ -422,20 +422,23 @@ class Helper
 			'submit',
 		]);
 
-		$output['fieldNames'] = \array_values(\array_filter(\array_map(
-			static function ($item) use ($ignoreBlocks) {
-				$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
+		foreach ($output['fieldsOnly'] as $item) {
+			$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
 
-				if (!isset($ignoreBlocks[$blockItemName])) {
-					$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
+			$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
 
-					if ($value) {
-						return $value;
-					}
-				}
-			},
-			$output['fieldsOnly']
-		)));
+			if (!$value) {
+				continue;
+			}
+
+			$output['fieldNamesFull'][] = $value;
+
+			if (isset($ignoreBlocks[$blockItemName])) {
+				continue;
+			}
+
+			$output['fieldNames'][] = $value;
+		}
 
 		// Check if this form uses steps.
 		$hasSteps = \array_search($namespace . '/step', \array_column($output['fieldsOnly'] ?? '', 'blockName'));
@@ -462,42 +465,39 @@ class Helper
 				);
 			}
 
-			$outputSteps = [];
-			$outputStepsRelations = [];
 			foreach ($output['fieldsOnly'] as $block) {
 				$blockName = self::getBlockNameDetails($block['blockName']);
 				$name = $blockName['name'];
 
-					if ($name === 'step') {
-						$stepCurrent = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Name")] ?? '';
-						$stepLabel = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Label")] ?? '';
+				if ($name === 'step') {
+					$stepCurrent = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Name")] ?? '';
+					$stepLabel = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Label")] ?? '';
 
-						if (!$stepLabel) {
-							$stepLabel = $stepCurrent;
-						}
-						$outputSteps[$stepCurrent] = [
-							'label' => $stepLabel,
-							'value' => $stepCurrent,
-						];
-
-						continue;
+					if (!$stepLabel) {
+						$stepLabel = $stepCurrent;
 					}
+					$output['stepsSetup']['steps'][$stepCurrent] = [
+						'label' => $stepLabel,
+						'value' => $stepCurrent,
+					];
 
-					if ($name === 'submit') {
-						continue;
-					}
+					continue;
+				}
 
-					$itemName = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Name")] ?? '';
-					if (!$itemName) {
-						continue;
-					}
+				if ($name === 'submit') {
+					continue;
+				}
 
-					$outputSteps[$stepCurrent]['subItems'][] = $itemName;
-					$outputStepsRelations[$itemName] = $stepCurrent;
+				$itemName = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Name")] ?? '';
+				if (!$itemName) {
+					continue;
+				}
+
+				$output['stepsSetup']['steps'][$stepCurrent]['subItems'][] = $itemName;
+				$output['stepsSetup']['relations'][$itemName] = $stepCurrent;
 			}
 
-			$output['stepsSetup']['steps'] = $outputSteps;
-			$output['stepsSetup']['relations'] = $outputStepsRelations;
+			$output['stepsSetup']['multiflow'] = $output['fields']['innerBlocks'][0]['attrs']["{$type}StepMultiflowRules"] ?? [];
 		}
 
 		return $output;

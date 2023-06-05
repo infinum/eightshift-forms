@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { isArray } from 'lodash';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import {
@@ -17,7 +18,7 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import { isOptionDisabled, NameFieldLabel } from '../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 
@@ -26,6 +27,8 @@ export const DateOptions = (attributes) => {
 		setAttributes,
 		title = __('Date', 'eightshift-forms'),
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const dateName = checkAttr('dateName', attributes, manifest);
 	const dateValue = checkAttr('dateValue', attributes, manifest);
@@ -52,9 +55,13 @@ export const DateOptions = (attributes) => {
 						label={<NameFieldLabel value={dateName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={dateName}
-						onChange={(value) => setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
+						}
 						disabled={isOptionDisabled(getAttrKey('dateName', attributes, manifest), dateDisabledOptions)}
 					/>
+					<NameChangeWarning isChanged={isNameChanged} />
 
 					<Select
 						icon={icons.optionListAlt}

@@ -6,7 +6,7 @@ import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { Tooltip } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { AnimatedContentVisibility, camelize, classnames, IconLabel, icons, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { AnimatedContentVisibility, camelize, classnames, IconLabel, icons, STORE_NAME, Notification } from '@eightshift/frontend-libs/scripts';
 import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
 
 /**
@@ -337,13 +337,14 @@ export const MissingName = ({ value, asPlaceholder, className }) => {
  * "Name" option label with optional "Required" notification.
  *
  * @param {string} value Field value.
+ * @param {string} label Field label.
  *
  * @returns Component
  */
 export const NameFieldLabel = ({ value, label }) => {
 	return (
 		<div className='es-h-between es-w-full'>
-			<IconLabel icon={icons.idCard} label={label ?? __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
+			<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
 
 			<AnimatedContentVisibility showIf={!value}>
 				<Tooltip text={__('The form may not work correctly.', 'eightshift-forms')}>
@@ -351,5 +352,40 @@ export const NameFieldLabel = ({ value, label }) => {
 				</Tooltip>
 			</AnimatedContentVisibility>
 		</div>
+	);
+};
+
+/**
+ * Show warning if name value is changed.
+ *
+ * @param {bool} isChanged Is name changed.
+ * @param {string} type Is this value.
+ *
+ * @returns Component
+ */
+export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
+	let text = '';
+
+	if (!isChanged) {
+		return null
+	}
+
+	switch (type) {
+		case 'value':
+			text = __('After changing the field value, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			break;
+		case 'step':
+			text = __('After changing the step name, ensure that you review forms multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			break;
+		default:
+			text = __('After changing the field name, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			break;
+	}
+
+	return (
+		<Notification
+			text={text}
+			type={'warning'}
+		/>
 	);
 };

@@ -6,4 +6,11 @@
 			@include form-fields-children-styles;
 		}
 	}
+
+	&__navigation {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
 }

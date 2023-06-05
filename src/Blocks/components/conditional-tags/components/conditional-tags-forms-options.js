@@ -21,7 +21,6 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 	const conditionalTagsPostId = checkAttr('conditionalTagsPostId', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
@@ -151,10 +150,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 					className='es-modal-max-width-xxl es-rounded-3!'
 					title={<IconLabel icon={icons.visibilityAlt} label={__('Field visibility overrides', 'eightshift-forms')} standalone />}
-					onRequestClose={() => {
-						setIsModalOpen(false);
-						setIsNewRuleAdded(false);
-					}}
+					onRequestClose={() => setIsModalOpen(false)}
 				>
 					<div className='es-mb-10'>{__('It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.', 'eightshift-forms')}</div>
 
@@ -167,16 +163,6 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 					<div className='es-v-spaced'>
 						{conditionalTagsRulesForms?.map((_, index) => {
-							const itemExists = formFields.filter((item) => {
-								return conditionalTagsRulesForms?.[index]?.[0] === item?.value && item?.value !== '';
-							});
-
-							if (!itemExists.length && !isNewRuleAdded) {
-								conditionalTagsRulesForms.splice(index, 1);
-								setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms] });
-								return null;
-							}
-
 							return (
 								<div key={index} className='es-h-spaced'>
 									<ConditionalTagsItem index={index} />
@@ -187,10 +173,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 					<Button
 						icon={icons.plusCircleFillAlt}
-						onClick={() => {
-							setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms, [formFields?.[0]?.value ?? '', 'show', '']] });
-							setIsNewRuleAdded(true);
-						}}
+						onClick={() => setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms, [formFields?.[0]?.value ?? '', 'show', '']] })}
 						className='es-rounded-1 es-mt-4'
 					>
 						{__('Add visibility rule', 'eightshift-forms')}
@@ -206,10 +189,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 						<Button
 							variant='primary'
-							onClick={() => {
-								setIsModalOpen(false);
-								setIsNewRuleAdded(false);
-							}}
+							onClick={() => setIsModalOpen(false)}
 							className='es-rounded-1.5!'
 						>
 							{__('Save', 'eightshift-forms')}

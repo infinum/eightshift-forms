@@ -1,15 +1,18 @@
 import React from 'react';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section, props } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 
 export const RadioOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const radioLabel = checkAttr('radioLabel', attributes, manifest);
 	const radioValue = checkAttr('radioValue', attributes, manifest);
@@ -22,11 +25,16 @@ export const RadioOptions = (attributes) => {
 			<PanelBody title={__('Radio button', 'eightshift-forms')}>
 				<TextControl
 					label={<NameFieldLabel value={radioValue} label={__('Value', 'eightshift-forms')} />}
-					help={__('Internal value, sent if selected.', 'eightshift-forms')}
+					help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 					value={radioValue}
-					onChange={(value) => setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
+					onChange={(value) => {
+						setIsNameChanged(true);
+						setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
+					}
 					disabled={isOptionDisabled(getAttrKey('radioValue', attributes, manifest), radioDisabledOptions)}
 				/>
+
+<NameChangeWarning isChanged={isNameChanged} type={'value'} />
 
 				<TextControl
 					label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}

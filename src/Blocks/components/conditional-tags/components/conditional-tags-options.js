@@ -29,7 +29,6 @@ export const ConditionalTagsOptions = (attributes) => {
 	const conditionalTagsBlockName = checkAttr('conditionalTagsBlockName', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isNewRuleAdded, setIsNewRuleAdded] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
 	// Reset old conditional tags to new one, object based.
@@ -78,25 +77,9 @@ export const ConditionalTagsOptions = (attributes) => {
 					return (
 						<>
 							{conditionalTagsRules?.[1]?.[index]?.map((_, innerIndex) => {
-									const itemExists = formFields?.filter((item) => {
-										return conditionalTagsRules?.[1]?.[index]?.[innerIndex]?.[0] === item?.value && item?.value !== '';
-									});
-
-									if (!itemExists.length && !isNewRuleAdded) {
-										conditionalTagsRules[1][index].splice(innerIndex, 1);
-
-										if (conditionalTagsRules[1][index].length === 0) {
-											conditionalTagsRules[1].splice(index, 1);
-										}
-
-										setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-										return null;
-									}
-
-									return (
-										<ConditionalTagsItem parent={index} index={innerIndex} total={conditionalTagsRules[1][index].length} />
-									);
-								})
+								return (
+									<ConditionalTagsItem parent={index} index={innerIndex} total={conditionalTagsRules[1][index].length} />
+								)})
 							}
 
 							{(conditionalTagsRules?.[1]?.length > 1 && (index + 1) < total) &&
@@ -113,7 +96,6 @@ export const ConditionalTagsOptions = (attributes) => {
 					onClick={() => {
 						conditionalTagsRules[1].push([[formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '']]);
 						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-						setIsNewRuleAdded(true);
 					}}
 					className='es-rounded-1 es-mt-4'
 				>
@@ -204,8 +186,6 @@ export const ConditionalTagsOptions = (attributes) => {
 							onClick={() => {
 								conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, ''];
 								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-
-								setIsNewRuleAdded(true);
 							}}
 							className='es-rounded-1'
 						>
@@ -294,10 +274,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 							className='es-modal-max-width-5xl es-rounded-3!'
 							title={<IconLabel icon={icons.conditionalVisibility} label={__('Conditional visibility', 'eightshift-forms')} standalone />}
-							onRequestClose={() => {
-								setIsModalOpen(false);
-								setIsNewRuleAdded(false);
-							}}
+							onRequestClose={() => setIsModalOpen(false)}
 						>
 							<div className='es-v-spaced'>
 								<ConditionalTagsType />
@@ -313,10 +290,7 @@ export const ConditionalTagsOptions = (attributes) => {
 	
 								<Button
 									variant='primary'
-									onClick={() => {
-										setIsModalOpen(false);
-										setIsNewRuleAdded(false);
-									}}
+									onClick={() => setIsModalOpen(false)}
 									className='es-rounded-1.5!'
 								>
 									{__('Save', 'eightshift-forms')}

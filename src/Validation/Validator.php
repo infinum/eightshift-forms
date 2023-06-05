@@ -116,7 +116,7 @@ class Validator extends AbstractValidation
 		$formType = $data['type'];
 		$formId = $data['formId'];
 		$fieldsOnly = $data['fieldsOnly'];
-		$stepFields = $data['steps']['fields'] ?? [];
+		$stepFields = $data['apiSteps']['fields'] ?? [];
 		$params = \array_merge(
 			$data['params'],
 			$data['files']
