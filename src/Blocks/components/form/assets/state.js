@@ -2,6 +2,7 @@
 
 import manifest from './../manifest.json';
 import selectManifest from './../../select/manifest.json';
+import { CONDITIONAL_TAGS_ACTIONS } from '../../conditional-tags/assets/utils';
 
 export const prefix = 'esForms';
 
@@ -53,6 +54,7 @@ export class State {
 		this.TAGS_REF = 'reference';
 		this.TAGS_DEFAULTS = 'defaults';
 		this.TAGS_EVENTS = 'events';
+		this.CONDITIONAL_TAGS_IGNORE = 'conditionalTagsIgnore';
 		this.CONDITIONAL_TAGS_FORM = 'conditionalTagsForm';
 		this.CONDITIONAL_TAGS_EVENTS = 'conditionalTagsEvents';
 		this.CONDITIONAL_TAGS_INNER_EVENTS = 'conditionalTagsInnerEvents';
@@ -282,6 +284,7 @@ export class State {
 		// Conditional tags
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_EVENTS], {}, formId);
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
+		this.setState([this.FORM, this.CONDITIONAL_TAGS_IGNORE], [], formId);
 		this.setState([this.FORM, this.CONDITIONAL_TAGS_FORM], JSON.parse(formElement.getAttribute(this.getStateAttribute('conditionalTags'))), formId);
 
 		// Steps.
@@ -520,7 +523,7 @@ export class State {
 	setStateConditionalTags(field, name, formId) {
 		const conditionalTags = field.getAttribute(this.getStateAttribute('conditionalTags'));
 
-		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], '', formId);
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_DEFAULTS], CONDITIONAL_TAGS_ACTIONS.SHOW, formId);
 		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS], [], formId);
 		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS, this.TAGS_REF], [], formId);
 
@@ -539,7 +542,7 @@ export class State {
 			return;
 		}
 
-		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_DEFAULTS], '', formId);
+		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_DEFAULTS], CONDITIONAL_TAGS_ACTIONS.SHOW, formId);
 		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS], [], formId);
 		this.setState([this.ELEMENTS, name, this.CONDITIONAL_TAGS_INNER, innerName, this.TAGS_REF], [], formId);
 
@@ -678,6 +681,10 @@ export class State {
 
 	getStateFormConditionalTagsInnerEvents(formId) {
 		return this.getState([this.FORM, this.CONDITIONAL_TAGS_INNER_EVENTS], formId);
+	}
+
+	getStateFormConditionalTagsIgnore(formId) {
+		return this.getState([this.FORM, this.CONDITIONAL_TAGS_IGNORE], formId);
 	}
 
 	getStateFormConditionalTagsForm(formId) {
@@ -930,37 +937,37 @@ export class State {
 	// Events
 
 	getStateEventsBeforeFormSubmit() {
-		return this.getState([this.EVENTS_BEFORE_FORM_SUBMIT], this.EVENT);
+		return this.getState([this.EVENTS_BEFORE_FORM_SUBMIT], this.EVENTS);
 	}
 	getStateEventsAfterFormSubmit() {
-		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT], this.EVENT);
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT], this.EVENTS);
 	}
 	getStateEventsAfterFormSubmitSuccessBeforeRedirect() {
-		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT], this.EVENT);
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT], this.EVENTS);
 	}
 	getStateEventsAfterFormSubmitSuccess() {
-		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS], this.EVENT);
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS], this.EVENTS);
 	}
 	getStateEventsAfterFormSubmitReset() {
-		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_RESET], this.EVENT);
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_RESET], this.EVENTS);
 	}
 	getStateEventsAfterFormSubmitError() {
-		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR], this.EVENT);
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR], this.EVENTS);
 	}
 	getStateEventsAfterFormSubmitErrorValidation() {
-		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION], this.EVENT);
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION], this.EVENTS);
 	}
 	getStateEventsAfterFormSubmitEnd() {
-		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_END], this.EVENT);
+		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_END], this.EVENTS);
 	}
 	getStateEventsBeforeGtmDataPush() {
-		return this.getState([this.EVENTS_BEFORE_GTM_DATA_PUSH], this.EVENT);
+		return this.getState([this.EVENTS_BEFORE_GTM_DATA_PUSH], this.EVENTS);
 	}
 	getStateEventsFormJsLoaded() {
-		return this.getState([this.EVENTS_FORM_JS_LOADED], this.EVENT);
+		return this.getState([this.EVENTS_FORM_JS_LOADED], this.EVENTS);
 	}
 	getStateEventsAfterCaptchaInit() {
-		return this.getState([this.EVENTS_AFTER_CAPTCHA_INIT], this.EVENT);
+		return this.getState([this.EVENTS_AFTER_CAPTCHA_INIT], this.EVENTS);
 	}
 
 	// ----------------------------------------

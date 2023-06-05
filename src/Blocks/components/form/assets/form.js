@@ -21,6 +21,10 @@ export class Form {
 		this.steps = new Steps(options);
 
 		this.FORM_DATA = new FormData();
+
+		this.FILTER_IS_STEPS_FINAL_SUBMIT = 'isStepsFinalSubmit';
+		this.FILTER_SKIP_FIELDS = 'skipFields';
+		this.FILTER_USE_ONLY_FIELDS = 'useOnlyFields';
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -141,7 +145,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	formSubmit(formId, filter = {}, isStepsFinalSubmit = false) {
+	formSubmit(formId, filter = {}) {
 		// Dispatch event.
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsBeforeFormSubmit());
 
@@ -182,7 +186,7 @@ export class Form {
 				if (response.status === 'success') {
 					this.formSubmitSuccess(formId, response);
 
-					if (isStepsFinalSubmit) {
+					if (filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]) {
 						this.steps.resetSteps(formId);
 					}
 				} else {
@@ -230,7 +234,7 @@ export class Form {
 				})
 				.then((response) => {
 					this.formSubmitBefore(formId, response);
-					this.steps.formStepStubmit(formId, response);
+					this.steps.formStepSubmit(formId, response);
 				});
 
 				this.FORM_DATA = new FormData();
@@ -319,7 +323,7 @@ export class Form {
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitEnd(), response);
 	}
 
-	runFormCaptcha(formId, isStepsFinalSubmit = false) {
+	runFormCaptcha(formId, filter = {}) {
 		if (!this.state.getStateCaptchaIsUsed()) {
 			return;
 		}
@@ -336,7 +340,7 @@ export class Form {
 						action: actionName,
 					});
 
-					this.formSubmit(formId, {}, isStepsFinalSubmit);
+					this.formSubmit(formId, filter);
 				});
 			});
 		} else {
@@ -347,7 +351,7 @@ export class Form {
 						isEnterprise: false,
 						action: actionName,
 					});
-					this.formSubmit(formId, {}, isStepsFinalSubmit);
+					this.formSubmit(formId, filter);
 				});
 			});
 		}
@@ -362,7 +366,7 @@ export class Form {
 			this.setFormDataAdmin(formId);
 			filter = {
 				...filter,
-				skipFields: this.setFormDataGroup(formId) ?? [],
+				[this.FILTER_SKIP_FIELDS]: this.setFormDataGroup(formId) ?? [],
 			};
 		} else {
 			this.setFormDataPerType(formId);
@@ -385,11 +389,11 @@ export class Form {
 		const formType = this.state.getStateFormType(formId);
 
 		// Used for single submit.
-		const useOnlyFields = filter.useOnlyFields ?? [];
+		const useOnlyFields = filter?.[this.FILTER_USE_ONLY_FIELDS] ?? [];
 		this.state.setState([this.state.FORM, this.state.IS_SINGLE_SUBMIT], Boolean(useOnlyFields.length), formId);
 
 		// Used for group submit.
-		const skipFields = filter.skipFields ?? [];
+		const skipFields = filter?.[this.FILTER_SKIP_FIELDS] ?? [];
 
 		// Iterate all form items.
 		for (const [key] of this.state.getStateElements(formId)) { // eslint-disable-line no-unused-vars
@@ -1107,7 +1111,14 @@ export class Form {
 			switch (direction) {
 				case this.steps.STEP_DIRECTION_NEXT:
 					this.utils.showLoader(formId);
-					debounce(this.formSubmitStep(formId), 100);
+
+					const filterNext = {
+						[this.FILTER_SKIP_FIELDS]: [
+							...this.conditionalTags.getIgnoreFields(formId),
+						],
+					};
+
+					debounce(this.formSubmitStep(formId, filterNext), 100);
 					break;
 				case this.steps.STEP_DIRECTION_PREV:
 					this.steps.goToPrevStep(formId);
@@ -1115,10 +1126,18 @@ export class Form {
 				default:
 					this.utils.showLoader(formId);
 
+					const filterFinal = {
+						[this.FILTER_SKIP_FIELDS]: [
+							...this.steps.getIgnoreFields(formId),
+							...this.conditionalTags.getIgnoreFields(formId),
+						],
+						[this.FILTER_IS_STEPS_FINAL_SUBMIT]: true,
+					};
+
 					if (this.state.getStateCaptchaIsUsed()) {
-						this.runFormCaptcha(formId, true);
+						this.runFormCaptcha(formId, filterFinal);
 					} else {
-						debounce(this.formSubmit(formId, {}, true), 100);
+						debounce(this.formSubmit(formId, filterFinal), 100);
 					}
 					break;
 			}
@@ -1126,51 +1145,18 @@ export class Form {
 			// Normal flow.
 			this.utils.showLoader(formId);
 
+			const filterNormal = {
+				[this.FILTER_SKIP_FIELDS]: [
+					...this.conditionalTags.getIgnoreFields(formId),
+				],
+			};
+
 			if (this.state.getStateCaptchaIsUsed()) {
-				this.runFormCaptcha(formId);
+				this.runFormCaptcha(formId, filterNormal);
 			} else {
-				debounce(this.formSubmit(formId), 100);
+				debounce(this.formSubmit(formId, filterNormal), 100);
 			}
 		}
-
-		// if (!this.steps.isMultiStepForm(formId)) {
-		// if (false) {
-		// 	// Loader show.
-		// 	this.utils.showLoader(formId);
-
-		// 	if (this.utils.isCaptchaUsed()) {
-		// 		// Use captcha.
-		// 		this.runFormCaptcha(formId);
-		// 	} else {
-		// 		// No captcha.
-		// 		this.formSubmit(formId);
-		// 	}
-		// } else {
-		// 	// if (this.steps.isStepTrigger(stepButton)) {
-		// 	if (true) {
-		// 		if (stepButton.getAttribute(this.data.DATA_ATTRIBUTES.submitStepDirection) === this.steps.STEP_DIRECTION_PREV) {
-		// 			// Just go back a step.
-		// 			this.steps.goBackAStep(formId);
-		// 		} else {
-		// 			// Loader show.
-		// 			this.utils.showLoader(formId);
-	
-		// 			// Submit for next.
-		// 			this.formSubmit(formId, false, true);
-		// 		}
-		// 	} else {
-		// 		// Loader show.
-		// 		this.utils.showLoader(formId);
-
-		// 		if (this.utils.isCaptchaUsed()) {
-		// 			// Use captcha.
-		// 			this.runFormCaptcha(formId);
-		// 		} else {
-		// 			// No captcha.
-		// 			this.formSubmit(formId);
-		// 		}
-		// 	}
-		// }
 	};
 
 	/**
@@ -1229,7 +1215,7 @@ export class Form {
 			debounce(
 				this.formSubmit(
 					formId, {
-						useOnlyFields: [name]
+						[this.FILTER_USE_ONLY_FIELDS]: [name]
 					}
 			), 100);
 		}
@@ -1248,7 +1234,7 @@ export class Form {
 			debounce(
 				this.formSubmit(
 					formId, {
-						useOnlyFields: [name]
+						[this.FILTER_USE_ONLY_FIELDS]: [name]
 					}
 			), 100);
 		}

@@ -57,6 +57,8 @@ class Mailer implements MailerInterface
 		array $responseFields = []
 	): bool {
 
+		$fields = Helper::removeUneceseryParamFields($fields);
+
 		// Send email.
 		return \wp_mail(
 			$this->getTemplate('to', $fields, $to),

@@ -96,7 +96,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 	{
 		$premission = $this->checkUserPermission();
 		if ($premission) {
-			// return \rest_ensure_response($premission);
+			return \rest_ensure_response($premission);
 		}
 
 		$formId = $request->get_param('id') ?? '';

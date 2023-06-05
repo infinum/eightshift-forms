@@ -51,8 +51,7 @@ export class ConditionalTags {
 	initOne(formId) {
 		this.state.getStateFormElement(formId).addEventListener(
 			this.state.getStateEventsFormJsLoaded(),
-			this.onInitEvent,
-			{ once: true }
+			this.onInitEvent
 		);
 	}
 
@@ -198,11 +197,6 @@ export class ConditionalTags {
 			// Find defaults to know what direction to use.
 			const defaults = this.state.getStateElementConditionalTagsDefaults(name, formId);
 
-			// Bailout if default is missing.
-			if (!defaults) {
-				return;
-			}
-
 			// Check if conditions are valid or not. This is where the magic happens.
 			const isValid = this.state.getStateElementConditionalTagsRef(name, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
 
@@ -240,11 +234,6 @@ export class ConditionalTags {
 
 				// Find defaults to know what direction to use.
 				const defaults = this.state.getStateElementConditionalTagsDefaultsInner(name, innerName, formId);
-
-				// Bailout if default is missing.
-				if (!defaults) {
-					return;
-				}
 
 				// Check if conditions are valid or not. This is where the magic happens.
 				const isValid = this.state.getStateElementConditionalTagsRefInner(name, innerName, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
@@ -303,11 +292,6 @@ export class ConditionalTags {
 
 				// Find defaults to know what direction to use.
 				const defaults = this.state.getStateElementConditionalTagsDefaultsInner(name, innerName, formId);
-
-				// Bailout if default is missing.
-				if (!defaults) {
-					return;
-				}
 
 				// Check if conditions are valid or not. This is where the magic happens.
 				const isValid = this.state.getStateElementConditionalTagsRefInner(name, innerName, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
@@ -489,6 +473,21 @@ export class ConditionalTags {
 				output[parent][index] = this.OPERATORS[inner[1]](value, inner[2]);
 			});
 		});
+	}
+
+	getIgnoreFields(formId) {
+		const output = [];
+		for(const [name] of this.state.getStateElements(formId)) {
+			const isHidden = this.state.getStateElementField(name, formId)?.classList?.contains(this.state.getStateSelectorsClassHidden());
+
+			if (!isHidden) {
+				continue;
+			}
+
+			output.push(name);
+		};
+
+		return output;
 	}
 
 	////////////////////////////////////////////////////////////////

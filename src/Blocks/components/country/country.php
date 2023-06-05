@@ -81,7 +81,7 @@ if (has_filter($filterName)) {
 		$options[] = '
 			<option
 				value="' . $label . '"
-				' . AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCustomProperties'] . '=' . wp_json_encode($customProperties) . '
+				' . AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCustomProperties'] . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $settings['country']['preselectedValue'], false) . '
 			>' . $label . '</option>';
 	}

@@ -35,8 +35,7 @@ export class Steps {
 	initOne(formId) {
 		this.state.getStateFormElement(formId).addEventListener(
 			this.state.getStateEventsFormJsLoaded(),
-			this.onInitEvent,
-			{ once: true }
+			this.onInitEvent
 		);
 	}
 
@@ -47,7 +46,7 @@ export class Steps {
 	 *
 	 * @public
 	 */
-	formStepStubmit(formId, response) {
+	formStepSubmit(formId, response) {
 		const {
 			status,
 			message,
@@ -75,8 +74,6 @@ export class Steps {
 			...this.state.getStateFormStepsFlow(formId),
 			currentStep,
 		];
-
-		console.log(nextStep, flow, formId);
 
 		this.setChangeStep(nextStep, flow, formId);
 
@@ -116,6 +113,24 @@ export class Steps {
 
 		this.state.setState([this.state.FORM, this.state.STEPS, this.state.STEPS_CURRENT], nextStep, formId);
 		this.state.setState([this.state.FORM, this.state.STEPS, this.state.STEPS_FLOW], flow, formId);
+	}
+
+	getIgnoreFields(formId) {
+		const flow = this.state.getStateFormStepsFlow(formId);
+
+		flow.push(this.state.getStateFormStepsLastStep(formId));
+
+		const items = this.state.getStateFormStepsItems(formId);
+
+		const filteredObject = [];
+
+		Object.keys(items).forEach((key) => {
+			if (!flow.includes(key)) {
+				filteredObject.push(...items[key]);
+			}
+		});
+
+		return filteredObject;
 	}
 
 	// ////////////////////////////////////////////////////////////////
