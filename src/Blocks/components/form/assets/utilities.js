@@ -398,19 +398,21 @@ export class Utils {
 				};
 			}
 
-			for (const [key, value] of Object.entries(additionalDataItems)) {
-				if (value === '{invalidFieldsString}') {
-					additionalDataItems[key] = Object.keys(errors).join(',');
+			if (typeof errors !== 'undefined') {
+				for (const [key, value] of Object.entries(additionalDataItems)) {
+					if (value === '{invalidFieldsString}') {
+						additionalDataItems[key] = Object.keys(errors).join(',');
+					}
+	
+					if (value === '{invalidFieldsArray}') {
+						additionalDataItems[key] = Object.keys(errors);
+					}
 				}
-
-				if (value === '{invalidFieldsArray}') {
-					additionalDataItems[key] = Object.keys(errors);
+	
+				if (window?.dataLayer && gtmData?.event) {
+					this.dispatchFormEvent(element, this.EVENTS.BEFORE_GTM_DATA_PUSH);
+					window.dataLayer.push({...gtmData, ...additionalDataItems});
 				}
-			}
-
-			if (window?.dataLayer && gtmData?.event) {
-				this.dispatchFormEvent(element, this.EVENTS.BEFORE_GTM_DATA_PUSH);
-				window.dataLayer.push({...gtmData, ...additionalDataItems});
 			}
 		}
 	}

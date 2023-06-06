@@ -154,7 +154,8 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($response[Validator::VALIDATOR_OUTPUT_KEY], $formId);
 		}
 
-		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
+		// Skip fallback email if integration is disabled.
+		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
 			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
@@ -162,9 +163,16 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 		// Send email if it is configured in the backend.
 		$this->formSubmitMailer->sendEmails($formDataRefrerence);
 
-		// Always delete the files from the disk.
-		if ($files) {
-			$this->deleteFiles($files);
+		// Output fake success and send fallback email.
+		if ($response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
+			$this->formSubmitMailer->sendFallbackEmail($response);
+			$response = $this->getIntegrationApiSuccessOutput($response);
+			return \rest_ensure_response(
+				$this->getIntegrationApiOutput(
+					$response,
+					$this->labels->getLabel($response['message'], $formId),
+				)
+			);
 		}
 
 		// Finish.

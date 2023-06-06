@@ -128,7 +128,7 @@ if ($adminListingForms) {
 				'data-integration-is-valid' => wp_json_encode($activeIntegrationIsValid),
 				'data-integration-is-api-valid' => wp_json_encode($activeIntegrationIsApiValid),
 			],
-			'cardTitle' => ($isFormValid ? '<a href="' . $editLink . '">' . $formTitle . '</a>' : $formTitle) . ($adminListingIsDeveloperMode ? " ({$id})" : ''),
+			'cardTitle' => '<a href="' . $editLink . '">' . $formTitle . ($adminListingIsDeveloperMode ? " ({$id})" : '') . '</a>',
 			'cardSubTitle' => $errorText . $subtitle,
 			'cardShowButtonsOnHover' => true,
 			'cardIcon' => $cardIcon,
