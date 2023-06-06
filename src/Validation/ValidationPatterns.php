@@ -121,20 +121,20 @@ class ValidationPatterns implements ValidationPatternsInterface
 			...self::VALIDATION_PATTERNS_PRIVATE,
 		];
 
-		$userPatterns = \preg_split("/\\r\\n|\\r|\\n/", $this->getOptionValue(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
+		$userPatterns = \preg_split("/\\r\\n|\\r|\\n/", $this->getOptionValueAsJson(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
 
 		if ($userPatterns) {
 			foreach ($userPatterns as $pattern) {
 				$pattern = \explode(' : ', $pattern);
 
-				if (!isset($pattern[0]) || !isset($pattern[1])) {
+				if (!isset($pattern[0]) || !isset($pattern[1]) || !isset($pattern[2])) {
 						continue;
 				};
 
 				$output[] = [
-					'value' => $pattern[1],
-					'label' => $pattern[0],
-					'output' => $pattern[2],
+					'value' => $pattern[1] ?? '',
+					'label' => $pattern[0] ?? '',
+					'output' => $pattern[2] ?? '',
 				];
 			}
 		}

@@ -70,6 +70,11 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_MOMENTS_API_PASSWORD_KEY = 'moments-api-password';
 
 	/**
+	 * Skip integration.
+	 */
+	public const SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY = 'moments-skip-integration';
+
+	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
