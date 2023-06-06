@@ -154,10 +154,6 @@ export const StepMultiflowOptions = (attributes) => {
 		const formFieldSelectedItem = formFieldOptions?.find((item) => item.value === fieldValue)?.subItems ?? [];
 		const showRuleValuePicker = formFieldSelectedItem?.length > 0 && (operatorValue === CONDITIONAL_TAGS_OPERATORS.IS || operatorValue === CONDITIONAL_TAGS_OPERATORS.ISN);
 
-		console.log(stepMultiflowRules);
-		console.log(formFieldSelectedItem);
-		
-
 		return (
 			<>
 				<div className='es-h-spaced'>

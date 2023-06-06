@@ -92,15 +92,18 @@ export class State {
 		this.EVENTS = 'events';
 		this.EVENTS_BEFORE_FORM_SUBMIT = 'beforeFormSubmit';
 		this.EVENTS_AFTER_FORM_SUBMIT = 'afterFormSubmit';
-		this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT = 'afterFormSubmitSuccessBeforeRedirect';
 		this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS = 'afterFormSubmitSuccess';
-		this.EVENTS_AFTER_FORM_SUBMIT_RESET = 'afterFormSubmitReset';
 		this.EVENTS_AFTER_FORM_SUBMIT_ERROR = 'afterFormSubmitError';
 		this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION = 'afterFormSubmitErrorValidation';
 		this.EVENTS_AFTER_FORM_SUBMIT_END = 'afterFormSubmitEnd';
-		this.EVENTS_BEFORE_GTM_DATA_PUSH = 'beforeGtmDataPush';
+		this.EVENTS_AFTER_GTM_DATA_PUSH = 'afterGtmDataPush';
+		this.EVENTS_AFTER_FORM_SUBMIT_RESET = 'afterFormSubmitReset';
+		this.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT = 'afterFormSubmitSuccessBeforeRedirect';
 		this.EVENTS_FORM_JS_LOADED = 'jsFormLoaded';
 		this.EVENTS_AFTER_CAPTCHA_INIT = 'afterCaptchaInit';
+
+		this.EVENTS_STEPS_GO_TO_NEXT_STEP = 'goToNextStep';
+		this.EVENTS_STEPS_GO_TO_PREV_STEP = 'goToPrevStep';
 
 		this.SELECTORS = 'selectors';
 		this.SELECTORS_CLASS_ACTIVE = 'isActive';
@@ -216,9 +219,11 @@ export class State {
 		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_ERROR), this.EVENTS);
 		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION), this.EVENTS);
 		this.setState([this.EVENTS_AFTER_FORM_SUBMIT_END], this.getEventName(this.EVENTS_AFTER_FORM_SUBMIT_END), this.EVENTS);
-		this.setState([this.EVENTS_BEFORE_GTM_DATA_PUSH], this.getEventName(this.EVENTS_BEFORE_GTM_DATA_PUSH), this.EVENTS);
+		this.setState([this.EVENTS_AFTER_GTM_DATA_PUSH], this.getEventName(this.EVENTS_AFTER_GTM_DATA_PUSH), this.EVENTS);
 		this.setState([this.EVENTS_FORM_JS_LOADED], this.getEventName(this.EVENTS_FORM_JS_LOADED), this.EVENTS);
 		this.setState([this.EVENTS_AFTER_CAPTCHA_INIT], this.getEventName(this.EVENTS_AFTER_CAPTCHA_INIT), this.EVENTS);
+		this.setState([this.EVENTS_STEPS_GO_TO_NEXT_STEP], this.getEventName(this.EVENTS_STEPS_GO_TO_NEXT_STEP), this.EVENTS);
+		this.setState([this.EVENTS_STEPS_GO_TO_PREV_STEP], this.getEventName(this.EVENTS_STEPS_GO_TO_PREV_STEP), this.EVENTS);
 
 		// Selectors.
 		this.setState([this.SELECTORS_CLASS_ACTIVE], 'is-active', this.SELECTORS);
@@ -731,10 +736,22 @@ export class State {
 		return this.getState([this.FORM, this.STEPS, this.STEPS_CURRENT], formId);
 	}
 	getStateFormStepsFirstStep(formId) {
-		return Object.keys(this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS], formId))[0];
+		const items = this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS], formId);
+
+		if (!items) {
+			return '';
+		}
+
+		return items?.[0];
 	}
 	getStateFormStepsLastStep(formId) {
-		return Object.keys(this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS], formId)).pop();
+		const items = this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS], formId);
+
+		if (!items) {
+			return '';
+		}
+
+		return items?.pop();
 	}
 	getStateFormStepsItem(stepId, formId) {
 		return this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS, stepId], formId);
@@ -960,14 +977,20 @@ export class State {
 	getStateEventsAfterFormSubmitEnd() {
 		return this.getState([this.EVENTS_AFTER_FORM_SUBMIT_END], this.EVENTS);
 	}
-	getStateEventsBeforeGtmDataPush() {
-		return this.getState([this.EVENTS_BEFORE_GTM_DATA_PUSH], this.EVENTS);
+	getStateEventsAfterGtmDataPush() {
+		return this.getState([this.EVENTS_AFTER_GTM_DATA_PUSH], this.EVENTS);
 	}
 	getStateEventsFormJsLoaded() {
 		return this.getState([this.EVENTS_FORM_JS_LOADED], this.EVENTS);
 	}
 	getStateEventsAfterCaptchaInit() {
 		return this.getState([this.EVENTS_AFTER_CAPTCHA_INIT], this.EVENTS);
+	}
+	getStateEventsStepsGoToNextStep() {
+		return this.getState([this.EVENTS_STEPS_GO_TO_NEXT_STEP], this.EVENTS);
+	}
+	getStateEventsStepsGoToPrevStep() {
+		return this.getState([this.EVENTS_STEPS_GO_TO_PREV_STEP], this.EVENTS);
 	}
 
 	// ----------------------------------------

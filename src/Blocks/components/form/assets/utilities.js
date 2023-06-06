@@ -223,8 +223,15 @@ export class Utils {
 			}
 
 			if (window?.dataLayer && gtmData?.event) {
-				this.dispatchFormEvent(formId, this.state.getStateEventsBeforeGtmDataPush());
 				window.dataLayer.push({...gtmData, ...additionalDataItems});
+
+				this.dispatchFormEvent(
+					formId,
+					this.state.getStateEventsAfterGtmDataPush(), {
+						gtmData,
+						additionalDataItems,
+					}
+				);
 			}
 		}
 	}

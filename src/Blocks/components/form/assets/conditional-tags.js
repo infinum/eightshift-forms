@@ -49,10 +49,12 @@ export class ConditionalTags {
 	 * @returns void
 	 */
 	initOne(formId) {
-		this.state.getStateFormElement(formId).addEventListener(
-			this.state.getStateEventsFormJsLoaded(),
-			this.onInitEvent
-		);
+		if (!this.state.getStateConfigIsAdmin(formId)) {
+			this.state.getStateFormElement(formId).addEventListener(
+				this.state.getStateEventsFormJsLoaded(),
+				this.onInitEvent
+			);
+		}
 	}
 
 	/**

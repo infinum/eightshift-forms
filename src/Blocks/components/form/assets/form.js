@@ -1078,7 +1078,7 @@ export class Form {
 		// 		button.removeEventListener('blur', this.onBlurEvent);
 		// 	});
 
-		// 	this.state.dispatchFormEvent(element, this.state.getStateEventsAfterFormsEventsClear());
+		// 	this.state.dispatchFormEvent(element, this.state.getStateEventsAfterFormSubmitReset(), formId);
 		// });
 	}
 

@@ -349,6 +349,9 @@ class Helper
 			'innerId' => '',
 			'fields' => [],
 			'fieldsOnly' => [],
+			'fieldNames' => [],
+			'fieldNamesFull' => [],
+			'stepsSetup' => [],
 		];
 
 		$form = \get_post_field('post_content', (int) $formId);

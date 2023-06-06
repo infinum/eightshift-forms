@@ -33,10 +33,12 @@ export class Steps {
 	 * @public
 	 */
 	initOne(formId) {
-		this.state.getStateFormElement(formId).addEventListener(
-			this.state.getStateEventsFormJsLoaded(),
-			this.onInitEvent
-		);
+		if (!this.state.getStateConfigIsAdmin(formId)) {
+			this.state.getStateFormElement(formId).addEventListener(
+				this.state.getStateEventsFormJsLoaded(),
+				this.onInitEvent
+			);
+		}
 	}
 
 	/**
@@ -81,6 +83,8 @@ export class Steps {
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
 			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`).closest(this.state.getStateSelectorsField()).classList.add(this.state.getStateSelectorsClassHidden());
 		}
+
+		this.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToNextStep());
 	}
 
 	goToPrevStep(formId) {
@@ -95,6 +99,8 @@ export class Steps {
 		newFlow.pop();
 
 		this.setChangeStep(nextStep, newFlow, formId);
+
+		this.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToPrevStep());
 	}
 
 	resetSteps(formId) {
