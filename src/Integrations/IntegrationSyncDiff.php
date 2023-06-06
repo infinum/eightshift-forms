@@ -450,6 +450,18 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Run diff.
 		$output = $this->diffChanges($integration, $content, $editorOutput);
 
+		// In case of integration errors resulting in empty output, we will not delete the form. Instead, we will allow the user to decide what to do next.
+		if ($output['isOutputMissing']) {
+			return [
+				'formId' => $formId,
+				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'debugType' => 'after_empty_output',
+				'message' => \esc_html__('It appears that there is an error with the API connection when retrieving form data as the output is currently empty.', 'eightshift-forms'),
+				'data' => $output,
+			];
+		}
+		
+
 		// Bailout if update is not necesery.
 		if (!$output['update']) {
 			return [
@@ -509,6 +521,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			'changed' => [],
 			'order' => $diff['order'],
 			'output' => [],
+			'isOutputMissing' => false,
 			'diff' => $diff['diff'],
 		];
 
@@ -553,17 +566,24 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			}
 		}
 
-		// Reorder block by provided array list in the content data and remove items that are missing.
-		$output['output'] = \array_filter(
-			\array_replace(
-				\array_flip($output['order']),
-				$output['output']
-			),
-			static fn($item) => \is_array($item)
-		);
+		// If output is missing create a flag and bailout.
+		if (!$output['output']) {
+			$output['isOutputMissing'] = true;
+		} else {
+			// If output not is missing recreate a form.
 
-		// Recounstruct blocks output and build array for final serialization.
-		$output['output'] = $this->reconstructBlocksTopLevelOutput($output, $editorOutput);
+			// Reorder block by provided array list in the content data and remove items that are missing.
+			$output['output'] = \array_filter(
+				\array_replace(
+					\array_flip($output['order']),
+					$output['output']
+				),
+				static fn($item) => \is_array($item)
+			);
+	
+			// Recounstruct blocks output and build array for final serialization.
+			$output['output'] = $this->reconstructBlocksTopLevelOutput($output, $editorOutput);
+		}
 
 		return $output;
 	}
