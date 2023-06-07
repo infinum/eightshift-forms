@@ -1,4 +1,5 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import {
 	selector,
@@ -27,7 +28,7 @@ export const StepEditor = (attributes) => {
 	return (
 		<div className={stepClass}>
 			<div className={`${componentClass}__inner`}>
-				Step - {stepLabel ? stepLabel : stepName}
+				{stepLabel ? stepLabel : stepName}
 			</div>
 
 			<MissingName value={stepName} className={`${componentClass}__missing`} />

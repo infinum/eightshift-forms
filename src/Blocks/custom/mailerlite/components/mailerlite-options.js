@@ -1,5 +1,4 @@
 import React from 'react';
-import { PanelBody } from '@wordpress/components';
 import { checkAttr } from '@eightshift/frontend-libs/scripts';
 import { IntegrationsOptions } from './../../../components/integrations/components/integrations-options';
 import manifest from './../manifest.json';

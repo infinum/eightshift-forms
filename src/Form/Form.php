@@ -224,29 +224,39 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 					// Add custom field block around none forms block to be able to use positioning.
 					if ($namespace !== $formsNamespace) {
+						// Find all forms attribtues added to a custom block.
 						$customUsedAttrsDiff = \array_intersect_key(
 							$inBlock['attrs'] ?? [],
 							Components::getComponent('field')['attributes']
 						);
 
+						// Change the forms attributes to a correct prefix and remove them from the original block.
 						$customUsedAttrs = [];
-
 						if ($customUsedAttrsDiff) {
 							foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
 								$customUsedAttrs['field' . \ucfirst($customDiffKey)] = $customDiffValue;
+								unset($inBlock['attrs'][$customDiffKey]);
 							}
 						}
 
-						$inBlock = [];
-						$inBlock['blockName'] = "{$formsNamespace}/field";
-						$inBlock['attrs'] = \array_merge(
-							[
-								'fieldFieldContent' => \apply_filters('the_content', \render_block($inBlock)),
-								'fieldFieldHideLabel' => true,
-								'fieldFieldUseError' => false,
-							],
-							$customUsedAttrs
-						);
+						// Change the original output of the custom block.
+						$inBlock = [
+							'blockName' => "{$formsNamespace}/field",
+							'attrs' => array_merge(
+								$customUsedAttrs,
+								[
+									// Build string of custom blocks.
+									'fieldFieldContent' => \apply_filters('the_content', \render_block($inBlock)),
+									// Remove label.
+									'fieldFieldHideLabel' => true,
+									// And remove error fields.
+									'fieldFieldUseError' => false,
+								]
+							),
+							'innerBlocks' => [],
+							'innerHTML' => '',
+							'innerContent' => [],
+						];
 					}
 
 					// Populate the list of steps position in the original array.
@@ -278,9 +288,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						$inBlockOutput[$inKey] = [
 							'blockName' => $inBlock['blockName'],
 							'attrs' => $inBlock['attrs'],
-							'innerBlocks' => $inBlock['innerBlocks'],
+							'innerBlocks' => $inBlock['innerBlocks'] ?? [],
 							'innerHTML' => '',
-							'innerContent' => $inBlock['innerBlocks'],
+							'innerContent' => $inBlock['innerBlocks'] ?? [],
 						];
 					}
 				}

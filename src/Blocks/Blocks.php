@@ -33,13 +33,6 @@ class Blocks extends AbstractBlocks
 	public const BLOCKS_UNIQUE_STRING_FILTER_NAME = 'es_blocks_unique_string';
 
 	/**
-	 * Blocks option checkbox is checked name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME = 'es_blocks_options_checkbox_is_checked_filter';
-
-	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -55,9 +48,6 @@ class Blocks extends AbstractBlocks
 
 		// Create new custom category for custom blocks.
 		\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
-
-		// Blocks option checkbox is checked name constant.
-		\add_filter(static::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME, [$this, 'isCheckboxOptionChecked'], 10, 2);
 	}
 
 	/**

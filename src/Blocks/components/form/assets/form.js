@@ -680,7 +680,7 @@ export class Form {
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
 		input.addEventListener('blur', this.onBlurEvent);
-		input.addEventListener('input', debounce(this.onInputEvent, 100));
+		input.addEventListener('input', this.onInputEvent);
 	}
 
 	/**
@@ -894,7 +894,7 @@ export class Form {
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
 		input.addEventListener('blur', this.onBlurEvent);
-		input.addEventListener('input', debounce(this.onInputEvent, 250));
+		input.addEventListener('input', this.onInputEvent);
 	}
 
 	/**

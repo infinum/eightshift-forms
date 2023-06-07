@@ -10,7 +10,8 @@
 			"type": "string"
 		},
 		"stepLabel": {
-			"type": "string"
+			"type": "string",
+			"default": "Step - ???"
 		},
 		"stepContent": {
 			"type": "string"

@@ -9,7 +9,6 @@ export const JiraOptions = ({
 	
 	const {
 		title,
-		blockName,
 	} = manifest;
 
 	return (

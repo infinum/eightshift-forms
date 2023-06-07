@@ -79,23 +79,20 @@ export class Steps {
 			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`).closest(this.state.getStateSelectorsField()).classList.add(this.state.getStateSelectorsClassHidden());
 		}
 
-		this.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToNextStep());
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToNextStep());
 	}
 
 	goToPrevStep(formId) {
 		const flow = this.state.getStateFormStepsFlow(formId);
 
-		const nextStep =  flow[flow.length - 1];
-
+		const nextStep =  flow.pop();
 		const newFlow = [
 			...flow,
 		];
 
-		newFlow.pop();
-
 		this.setChangeStep(nextStep, newFlow, formId);
 
-		this.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToPrevStep());
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToPrevStep());
 	}
 
 	resetSteps(formId) {

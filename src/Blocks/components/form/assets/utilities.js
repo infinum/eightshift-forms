@@ -26,22 +26,20 @@ export class Utils {
 	}
 
 	// Dispatch custom event.
-	dispatchFormEvent(formId, name, detail) {
+	dispatchFormEvent(formId, name, additional) {
 		const options = {
 			bubbles: true,
+			detail: {
+				[prefix]: window?.[prefix],
+			}
 		};
 
 		if (!isNaN(formId)) {
-			options['detail'] = {
-				formId,
-			};
+			options.detail.formId = formId;
 		}
 
-		if (detail) {
-			options['detail'] = {
-				...options['detail'],
-				options: detail,
-			}
+		if (additional) {
+			options.detail.additional = additional
 		}
 
 		if (!isNaN(formId)) {

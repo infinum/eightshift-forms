@@ -21,6 +21,7 @@ export class State {
 		this.ACTION_EXTERNAL = 'actionExternal';
 		this.FIELD = 'field';
 		this.VALUE = 'value';
+		this.VALUE_COMBINED = 'valueCombined';
 		this.INITIAL = 'initial';
 		this.VALUES = 'values';
 		this.VALUE_COUNTRY = 'valueCountry';
@@ -142,6 +143,8 @@ export class State {
 
 		this.ATTRIBUTES = 'attributes';
 		this.PARAMS = 'params';
+
+		this.publicMethods();
 	}
 
 	setStateWindow() {
@@ -410,6 +413,12 @@ export class State {
 					this.setState([this.ELEMENTS, name, this.INPUT], item, formId);
 					this.setState([this.ELEMENTS, name, this.INPUT_SELECT], field.querySelector('select'), formId);
 					this.setState([this.ELEMENTS, name, this.TRACKING], field.getAttribute(this.getStateAttribute('tracking')), formId);
+
+					if (!value) {
+						this.setState([this.ELEMENTS, name, this.VALUE_COMBINED], '', formId);
+					} else {
+						this.setState([this.ELEMENTS, name, this.VALUE_COMBINED], `${this.getStateElementValueCountry(name, formId).number}${value}`, formId);
+					}
 					break;
 				case 'date':
 				case 'datetime-local':
@@ -493,6 +502,14 @@ export class State {
 				if (typeCustom !== 'phone') {
 					this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
 				}
+
+				if (typeCustom === 'phone') {
+					this.setState([this.ELEMENTS, name, this.VALUE_COMBINED], `${this.getStateElementValueCountry(name, formId).number}${this.getStateElementValue(name, formId)}`, formId);
+				}
+				break;
+			case 'tel':
+				this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
+				this.setState([this.ELEMENTS, name, this.VALUE_COMBINED], `${this.getStateElementValueCountry(name, formId).number}${value}`, formId);
 				break;
 			default:
 				this.setState([this.ELEMENTS, name, this.VALUE], value, formId);
@@ -742,7 +759,7 @@ export class State {
 			return '';
 		}
 
-		return items?.[0];
+		return Object.keys(items)?.[0];
 	}
 	getStateFormStepsLastStep(formId) {
 		const items = this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS], formId);
@@ -751,7 +768,7 @@ export class State {
 			return '';
 		}
 
-		return items?.pop();
+		return Object.keys(items)?.pop();
 	}
 	getStateFormStepsItem(stepId, formId) {
 		return this.getState([this.FORM, this.STEPS, this.STEPS_ITEMS, stepId], formId);
@@ -1092,6 +1109,21 @@ export class State {
 
 	getRestUrlByType(type, value) {
 		return getRestUrlByType(type, value);
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Private methods - not shared to the public window object.
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Set all public methods.
+	 * 
+	 * @private
+	 */
+	publicMethods() {
+		this.setStateWindow();
+
+		window[prefix].store = {}
 	}
 }
 

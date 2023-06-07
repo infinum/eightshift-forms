@@ -94,7 +94,7 @@ export class Captcha {
 			return response.json();
 		})
 		.then((response) => {
-			this.utils.dispatchFormEvent(window, this.state.getStateEventsAfterCaptchaInit(), response?.data?.response);
+			this.utils.dispatchFormEvent(window, this.state.getStateEventsAfterCaptchaInit(), response);
 		});
 	}
 
