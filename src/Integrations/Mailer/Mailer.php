@@ -81,48 +81,34 @@ class Mailer implements MailerInterface
 		}
 
 		$integration = $data['integration'] ?? '';
-		$url = $data['url'] ?? '';
 		$files = $data['files'] ?? [];
-		$response = $data['response'] ? \wp_json_encode($data['response']) : '';
 		$formId = $data['formId'] ?? '';
-		$itemId = $data['itemId'] ?? '';
-		$params = $data['params'] ?? [];
-		$code = $data['code'] ?? 400;
-		$body = $data['body'] ? \wp_json_encode($data['body']) : '';
+		$isDisabled = $data['isDisabled'] ?? false;
 
-		if (\is_array($itemId)) {
-			$itemId = \implode(AbstractBaseRoute::DELIMITER, $itemId);
+		// translators: %1$s replaces the integration name and %2$s formId.
+		$subject = \sprintf(\__('Failed %1$s integration: %2$s', 'eightshift-forms'), $integration, $formId);
+		$body = '<p>' . \esc_html__('It seems like there was an issue with the user\'s form submission. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
+
+		if ($isDisabled) {
+			$body = '<p>' . \esc_html__('It appears that your integration is currently inactive, and as a result, all the data from your form is included in this email for you to manually input.', 'eightshift-forms') . '</p>';
+			// translators: %1$s replaces the integration name and %2$s formId.
+			$subject = \sprintf(\__('Disabled %1$s integration: %2$s', 'eightshift-forms'), $integration, $formId);
 		}
 
-		$paramsOutput = "
-			<p><strong>Form Details:</strong></p>
-			<ul>
-				<li>formId: {$formId}</li>
-				<li>itemId: {$itemId}</li>
-				<li>integration: {$integration}</li>
-				<li>response code: {$code}</li>
-				<li>url: {$url}</li>
-			</ul>
-		";
+		// translators: %s replaces the form name.
+		$body .= '<p>' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
 
-		if ($params) {
-			$paramsOutput .= "<p><strong>Data sent to integration:</strong></p>";
-			$paramsOutput .= $this->fallbackEmailPrepareParams($params);
+		if (isset($data['files'])) {
+			unset($data['files']);
+		}
+		if (isset($data['subject'])) {
+			unset($data['subject']);
+		}
+		if (isset($data['isDisabled'])) {
+			unset($data['isDisabled']);
 		}
 
-		if ($response) {
-			$paramsOutput .= "
-				<p><strong>Data got from integration response:</strong></p>
-				{$response}
-			";
-		}
-
-		if ($body) {
-			$paramsOutput .= "
-				<p><strong>Data got from integration response body:</strong></p>
-				{$body}
-			";
-		}
+		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
 
 		$filesOutput = [];
 		if ($files) {
@@ -142,10 +128,6 @@ class Mailer implements MailerInterface
 
 		$to = $this->getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
 		$cc = $this->getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration);
-		// translators: %1$s replaces the integration name and %2$s formId.
-		$subject = \sprintf(\__('Your %1$s form failed: %2$s', 'eightshift-forms'), $integration, $formId);
-		// translators: %s replaces the parameters list html.
-		$templateHtml = \sprintf(\__("<p>It looks like something went wrong with the users form submition, here is all the data to debug.</p>%s", 'eightshift-forms'), $paramsOutput);
 		$headers = [
 			$this->getType()
 		];
@@ -155,7 +137,7 @@ class Mailer implements MailerInterface
 		}
 
 		// Send email.
-		return \wp_mail($to, $subject, $templateHtml, $headers, $filesOutput);
+		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
 	}
 
 	/**
@@ -297,32 +279,6 @@ class Mailer implements MailerInterface
 
 				$output[] = $path;
 			}
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Prepare recursive params for fallback email.
-	 *
-	 * @param array<mixed> $params Params to check.
-	 *
-	 * @return string
-	 */
-	private function fallbackEmailPrepareParams(array $params): string
-	{
-		$output = '';
-
-		foreach ($params as $paramKey => $paramValue) {
-			if (\is_array($paramValue)) {
-				$paramValueOutput = '<ul>';
-				$paramValueOutput .= $this->fallbackEmailPrepareParams($paramValue);
-				$paramValueOutput .= '</ul>';
-
-				$paramValue = $paramValueOutput;
-			}
-
-			$output .= "<li>{$paramKey}: {$paramValue}</li>";
 		}
 
 		return $output;
