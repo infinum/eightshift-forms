@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * SettingsHelper trait.
@@ -504,7 +505,7 @@ trait SettingsHelper
 	 *
 	 * @return string
 	 */
-	public static function getFormFieldNames(array $fieldNames): string
+	public function getFormFieldNames(array $fieldNames): string
 	{
 		$output = [];
 
@@ -523,14 +524,53 @@ trait SettingsHelper
 	 *
 	 * @return string
 	 */
-	public static function getFormResponseTags(string $formType): string
+	public function getFormResponseTags(string $formType): string
 	{
 		$tags = Filters::ALL[$formType]['emailTemplateTags'] ?? [];
 
 		if ($tags) {
-			return self::getFormFieldNames($tags);
+			return $this->getFormFieldNames($tags);
 		}
 
 		return '';
+	}
+
+	/**
+	 * Settings output data deactivated integration.
+	 *
+	 * @param string $key Key to return.
+	 *
+	 * @return string
+	 */
+	public function settingDataDeactivatedIntegration(string $key): string
+	{
+		$output = [
+			'checkboxLabel' => \__('Deactivate integration and send all the data to the fallback email.', 'eightshift-forms'),
+			'checkboxHelp' => \__('If you choose to activate this option, the form integration will be disabled and all the data will be sent to the fallback email address set for the form.', 'eightshift-forms'),
+			'introSubtitle' => \__('To ensure your form is not lost, it is important to activate the "Stop form syncing" option in the debug settings and avoid clicking on the form sync button.', 'eightshift-forms'),
+		];
+
+		return $output[$key] ?? '';
+	}
+
+	/**
+	 * Setting output for Test api connection
+	 *
+	 * @param string $key Settings key.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function settingTestAliConnection(string $key): array
+	{
+		return [
+			'component' => 'submit',
+			'submitFieldSkip' => true,
+			'submitValue' => \__('Test API connection', 'eightshift-forms'),
+			'submitVariant' => 'outline',
+			'submitAttrs' => [
+				'data-type' => $key,
+			],
+			'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+		];
 	}
 }

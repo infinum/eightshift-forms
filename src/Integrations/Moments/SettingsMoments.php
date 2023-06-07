@@ -16,7 +16,6 @@ use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -68,6 +67,11 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 	 * API password.
 	 */
 	public const SETTINGS_MOMENTS_API_PASSWORD_KEY = 'moments-api-password';
+
+	/**
+	 * Skip integration.
+	 */
+	public const SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY = 'moments-skip-integration';
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -133,6 +137,8 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 		$apiPassword = Variables::getApiPasswordMoments();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 
+		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY);
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -143,59 +149,75 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_URL_KEY),
-								'inputFieldLabel' => \__('API url', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_URL_MOMENTS', !empty($apiUrl)),
-								'inputType' => 'text',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiUrl) ? $apiUrl : $this->getOptionValue(self::SETTINGS_MOMENTS_API_URL_KEY),
-								'inputIsDisabled' => !empty($apiUrl),
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => $this->settingDataDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => $this->settingDataDeactivatedIntegration('checkboxHelp'),
+										'checkboxIsChecked' => $deactivateIntegration,
+										'checkboxValue' => self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
 							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_KEY_KEY),
-								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_MOMENTS', !empty($apiKey)),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY),
-								'inputIsDisabled' => !empty($apiKey),
-							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
-								'inputFieldLabel' => \__('API username', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_USERNAME_MOMENTS', !empty($apiUsername)),
-								'inputType' => 'text',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiUsername) ? $apiUsername : $this->getOptionValue(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
-								'inputIsDisabled' => !empty($apiUsername),
-							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
-								'inputFieldLabel' => \__('API password', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_PASSWORD_MOMENTS', !empty($apiPassword)),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiPassword) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
-								'inputIsDisabled' => !empty($apiPassword),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Test api connection', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::SETTINGS_TYPE_KEY,
+							...($deactivateIntegration ? [
+								[
+									'component' => 'intro',
+									'introSubtitle' => $this->settingDataDeactivatedIntegration('introSubtitle'),
+									'introIsHighlighted' => true,
+									'introIsHighlightedImportant' => true,
 								],
-								'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
-							],
+							] : [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_URL_KEY),
+									'inputFieldLabel' => \__('API url', 'eightshift-forms'),
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_URL_MOMENTS', !empty($apiUrl)),
+									'inputType' => 'text',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiUrl) ? $apiUrl : $this->getOptionValue(self::SETTINGS_MOMENTS_API_URL_KEY),
+									'inputIsDisabled' => !empty($apiUrl),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_KEY_KEY),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_MOMENTS', !empty($apiKey)),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY),
+									'inputIsDisabled' => !empty($apiKey),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
+									'inputFieldLabel' => \__('API username', 'eightshift-forms'),
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_USERNAME_MOMENTS', !empty($apiUsername)),
+									'inputType' => 'text',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiUsername) ? $apiUsername : $this->getOptionValue(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
+									'inputIsDisabled' => !empty($apiUsername),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
+									'inputFieldLabel' => \__('API password', 'eightshift-forms'),
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_PASSWORD_MOMENTS', !empty($apiPassword)),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiPassword) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
+									'inputIsDisabled' => !empty($apiPassword),
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								$this->settingTestAliConnection(self::SETTINGS_TYPE_KEY),
+							]),
 						],
 					],
 					[

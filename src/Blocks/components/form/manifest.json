@@ -60,6 +60,9 @@
 		"formSuccessRedirectVariation": {
 			"type": "string"
 		},
+		"formSuccessRedirectVariationUrl": {
+			"type": "string"
+		},
 		"formPhoneSync": {
 			"type": "boolean",
 			"default": false

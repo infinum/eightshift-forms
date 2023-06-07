@@ -17,7 +17,6 @@ use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -64,6 +63,11 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	 * List Tags Show Key.
 	 */
 	public const SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY = 'mailchimp-list-tags-show';
+
+	/**
+	 * Skip integration.
+	 */
+	public const SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY = 'mailchimp-skip-integration';
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -202,6 +206,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 
 		$apiKey = Variables::getApiKeyMailchimp();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -213,29 +218,45 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_MAILCHIMP', !empty($apiKey)),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-								'inputIsDisabled' => !empty($apiKey),
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => $this->settingDataDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => $this->settingDataDeactivatedIntegration('checkboxHelp'),
+										'checkboxIsChecked' => $deactivateIntegration,
+										'checkboxValue' => self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
 							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Test api connection', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::SETTINGS_TYPE_KEY,
+							...($deactivateIntegration ? [
+								[
+									'component' => 'intro',
+									'introSubtitle' => $this->settingDataDeactivatedIntegration('introSubtitle'),
+									'introIsHighlighted' => true,
+									'introIsHighlightedImportant' => true,
 								],
-								'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
-							],
+							] : [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_MAILCHIMP', !empty($apiKey)),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+									'inputIsDisabled' => !empty($apiKey),
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								$this->settingTestAliConnection(self::SETTINGS_TYPE_KEY),
+							]),
 						],
 					],
 					[

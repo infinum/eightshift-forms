@@ -17,6 +17,18 @@ import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
  *
  * @returns {boolean}
  */
+export const isDeveloperMode = () => {
+	return Boolean(esFormsLocalization?.isDeveloperMode);
+};
+
+/**
+ * check if block options is disabled by integration or other component.
+ *
+ * @param {string} key Key to check.
+ * @param {array} options Options array to check.
+ *
+ * @returns {boolean}
+ */
 export const isOptionDisabled = (key, options) => {
 	return options.includes(key);
 };
@@ -60,23 +72,25 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 	return apiFetch({
 		path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATION_EDITOR, ROUTES.INTEGRATIONS_EDITOR_SYNC, true)}?id=${postId}`,
 	}).then((response) => {
-		resetInnerBlocks(clientId);
-
-		if (response.code === 200) {
-			const builtBlocks = createBlocksFromInnerBlocksTemplate(response?.data?.data?.output);
-
-			updateInnerBlocks(clientId, builtBlocks);
-
-			return {
-				update: response?.data?.data?.update,
-				removed: response?.data?.data?.removed,
-				added: response?.data?.data?.added,
-				replaced: response?.data?.data?.replaced,
-				changed: response?.data?.data?.changed,
-			};
+		if (isDeveloperMode()) {
+			console.log(response);
 		}
 
-		return null;
+		if (response.code === 200) {
+			resetInnerBlocks(clientId);
+			updateInnerBlocks(clientId, createBlocksFromInnerBlocksTemplate(response?.data?.data?.output));
+		}
+
+		return {
+			message: response?.message,
+			debugType: response?.data?.debugType,
+			status: response?.status,
+			update: response?.data?.data?.update,
+			removed: response?.data?.data?.removed,
+			added: response?.data?.data?.added,
+			replaced: response?.data?.data?.replaced,
+			changed: response?.data?.data?.changed,
+		};
 	});
 };
 

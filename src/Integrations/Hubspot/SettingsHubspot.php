@@ -18,7 +18,6 @@ use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -85,6 +84,11 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	 * Use Clearbit map keys Key.
 	 */
 	public const SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY = 'hubspot-clearbit-map-keys';
+
+	/**
+	 * Skip integration.
+	 */
+	public const SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY = 'hubspot-skip-integration';
 
 	/**
 	 * Instance variable for Clearbit settings.
@@ -195,6 +199,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 
 		$apiKey = Variables::getApiKeyHubspot();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -206,29 +211,45 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_HUBSPOT', !empty($apiKey)),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-								'inputIsDisabled' => !empty($apiKey),
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => $this->settingDataDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => $this->settingDataDeactivatedIntegration('checkboxHelp'),
+										'checkboxIsChecked' => $deactivateIntegration,
+										'checkboxValue' => self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
 							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Test api connection', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::SETTINGS_TYPE_KEY,
+							...($deactivateIntegration ? [
+								[
+									'component' => 'intro',
+									'introSubtitle' => $this->settingDataDeactivatedIntegration('introSubtitle'),
+									'introIsHighlighted' => true,
+									'introIsHighlightedImportant' => true,
 								],
-								'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
-							],
+							] : [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_HUBSPOT', !empty($apiKey)),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+									'inputIsDisabled' => !empty($apiKey),
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								$this->settingTestAliConnection(self::SETTINGS_TYPE_KEY),
+							]),
 						],
 					],
 					[

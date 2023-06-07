@@ -213,8 +213,8 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 		$formDetails = Helper::getFormDetailsById($formId);
 
 		$fieldNames = $formDetails['fieldNames'];
-		$fieldNameTags = SettingsHelper::getFormFieldNames($fieldNames);
-		$formResponseTags = SettingsHelper::getFormResponseTags($formDetails['typeFilter']);
+		$fieldNameTags = $this->getFormFieldNames($fieldNames);
+		$formResponseTags = $this->getFormResponseTags($formDetails['typeFilter']);
 
 		$isSenderUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
 		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);

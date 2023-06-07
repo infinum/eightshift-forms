@@ -40,6 +40,9 @@
 			},
 			"default": []
 		},
+		"formsSuccessRedirectVariationUrl": {
+			"type": "string"
+		},
 		"formsFormDataTypeSelector": {
 			"type": "string"
 		},

@@ -16,7 +16,7 @@ export const FormSelectorOptions = ({
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContent, setModalContent] = useState({});
 
-	const { createSuccessNotice, createNotice } = useDispatch(noticesStore);
+	const { createNotice } = useDispatch(noticesStore);
 
 	const activeIntegration = getActiveIntegrationBlockName(clientId);
 
@@ -108,18 +108,34 @@ export const FormSelectorOptions = ({
 						onClick={() => {
 							// Sync integration blocks.
 							syncIntegrationBlocks(clientId, postId).then((val) => {
-								setModalContent(val);
-
-								createNotice(val?.update ? 'success' : 'info', val?.update ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'), {
-									type: 'snackbar',
-									explicitDismiss: val?.update,
-									actions: val?.update ? [
+								if (val?.status === 'error') {
+									createNotice(
+										'error',
+										val?.message,
 										{
-											label: __('View report', 'eightshift-forms'),
-											onClick: () => setIsModalOpen(true),
+											type: 'snackbar',
+											icon: '❌',
 										}
-									] : [],
-								});
+									);
+								} else {
+									setModalContent(val);
+
+									createNotice(
+										val?.update ? 'success' : 'info',
+										val?.update ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'),
+										{
+											type: 'snackbar',
+											icon: '✅',
+											explicitDismiss: val?.update,
+											actions: val?.update ? [
+												{
+													label: __('View report', 'eightshift-forms'),
+													onClick: () => setIsModalOpen(true),
+												}
+											] : [],
+										}
+									);
+								}
 							});
 						}}
 						className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
@@ -133,7 +149,7 @@ export const FormSelectorOptions = ({
 						icon={icons.data}
 						onClick={() => {
 							// Sync integration blocks.
-							clearTransientCache(activeIntegration).then((msg) => createSuccessNotice(msg, {
+							clearTransientCache(activeIntegration).then((msg) => createNotice('success', msg, {
 								type: 'snackbar',
 							}));
 						}}

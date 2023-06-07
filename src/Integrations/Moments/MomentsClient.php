@@ -149,7 +149,8 @@ class MomentsClient implements ClientInterface
 			$body,
 			$files,
 			$itemId,
-			$formId
+			$formId,
+			$this->isCheckboxOptionChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];

@@ -43,6 +43,7 @@ trait ApiHelper
 	 * @param array<mixed> $files All files prepared for API.
 	 * @param string $itemId List Id used for API (questions, form id, list id, item id).
 	 * @param string $formId Internal form ID.
+	 * @param boolean $isDisabled If integration is disabled.
 	 * @param boolean $isCurl Used for some changed if native cURL is used.
 	 *
 	 * @return array<string, mixed>
@@ -55,6 +56,7 @@ trait ApiHelper
 		array $files = [],
 		string $itemId = '',
 		string $formId = '',
+		bool $isDisabled = false,
 		bool $isCurl = false
 	): array {
 
@@ -90,6 +92,7 @@ trait ApiHelper
 			'url' => $url,
 			'itemId' => $itemId,
 			'formId' => $formId,
+			'isDisabled' => $isDisabled,
 		];
 	}
 
@@ -104,6 +107,9 @@ trait ApiHelper
 	 */
 	public function getIntegrationApiErrorOutput(array $details, string $msg, array $additional = []): array
 	{
+		unset($details['status']);
+		unset($details['message']);
+
 		return \array_merge(
 			[
 				'status' => AbstractBaseRoute::STATUS_ERROR,
@@ -125,6 +131,9 @@ trait ApiHelper
 	public function getIntegrationApiSuccessOutput(array $details, array $additional = []): array
 	{
 		$integration = $details['integration'] ?? '';
+
+		unset($details['status']);
+		unset($details['message']);
 
 		return \array_merge(
 			[
