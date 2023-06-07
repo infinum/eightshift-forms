@@ -17,14 +17,22 @@ export const hooks = () => {
 
 	// All adding additional blocks to the custom form builder.
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
-		if (name === `${namespace}/${blockName}` && typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
-			esFormsLocalization.additionalBlocks.forEach((element) => {
-				settings.attributes.mailerAllowedBlocks.default.push(element);
+		if (name === `${namespace}/${blockName}`) {
+			if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
+				esFormsLocalization.additionalBlocks.forEach((element) => {
+					if (!settings.attributes.mailerAllowedBlocks.default.includes(element)) {
+						settings.attributes.mailerAllowedBlocks.default.push(element);
+					}
+				});
+			}
+
+			select(STORE_NAME).getSettings().fieldsAlways.forEach((element) => {
+				if (!settings.attributes.mailerAllowedBlocks.default.includes(element)) {
+					settings.attributes.mailerAllowedBlocks.default.push(element);
+				}
 			});
 		}
 
 		return settings;
 	});
-
-
 };

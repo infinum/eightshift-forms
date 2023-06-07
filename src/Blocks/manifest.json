@@ -12,6 +12,9 @@
 		"outputCssGloballyAdditionalStyles": [],
 		"useWrapper": false
 	},
+	"fieldsAlways": [
+		"eightshift-forms/step"
+	],
 	"fields": [
 		"eightshift-forms/file",
 		"eightshift-forms/input",

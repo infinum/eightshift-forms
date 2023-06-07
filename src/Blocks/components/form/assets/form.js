@@ -42,9 +42,6 @@ export class Form {
 		// Set all public methods.
 		this.publicMethods();
 
-		// Init step.
-		this.steps.init();
-
 		// Init all forms.
 		this.initOnlyForms();
 

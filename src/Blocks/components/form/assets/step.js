@@ -11,6 +11,9 @@ export class Steps {
 
 		this.STEP_DIRECTION_PREV = 'prev';
 		this.STEP_DIRECTION_NEXT = 'next';
+
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -18,27 +21,19 @@ export class Steps {
 	////////////////////////////////////////////////////////////////
 
 	/**
-	 * Init all actions.
-	 * 
-	 * @public
-	 */
-	init() {
-		// Set all public methods.
-		this.publicMethods();
-	}
-
-	/**
 	 * Init steps.
 	 * 
 	 * @public
 	 */
 	initOne(formId) {
-		if (!this.state.getStateConfigIsAdmin(formId)) {
-			this.state.getStateFormElement(formId).addEventListener(
-				this.state.getStateEventsFormJsLoaded(),
-				this.onInitEvent
-			);
+		if (this.state.getStateConfigIsAdmin(formId)) {
+			return;
 		}
+
+		this.state.getStateFormElement(formId).addEventListener(
+			this.state.getStateEventsFormJsLoaded(),
+			this.onInitEvent
+		);
 	}
 
 	/**

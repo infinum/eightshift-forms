@@ -11,6 +11,9 @@ export const MailerEditor = ({ attributes, setAttributes, clientId }) => {
 
 	const mailerAllowedBlocks = checkAttr('mailerAllowedBlocks', attributes, manifest);
 
+	console.log(mailerAllowedBlocks);
+	
+
 	return (
 		<div className={blockClass}>
 			<FormEditor
