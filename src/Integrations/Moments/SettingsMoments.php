@@ -157,7 +157,7 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Deactivate integration and send all the data to the fallback email.', 'eightshift-forms'),
-										'checkboxHelp' => \__('If you choose to activate this option, the form integration will be disabled and all data will be sent to the fallback email address set for the form.', 'eightshift-forms'),
+										'checkboxHelp' => \__('If you choose to activate this option, the form integration will be disabled and all the data will be sent to the fallback email address set for the form.', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY),
 										'checkboxValue' => self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
