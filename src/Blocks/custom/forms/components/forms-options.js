@@ -60,6 +60,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 	const formsDownloads = checkAttr('formsDownloads', attributes, manifest);
 	const formsSuccessRedirectVariation = checkAttr('formsSuccessRedirectVariation', attributes, manifest);
+	const formsSuccessRedirectVariationUrl = checkAttr('formsSuccessRedirectVariationUrl', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
@@ -154,6 +155,14 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						additionalSelectClasses='es-w-36'
 						simpleValue
 						inlineLabel
+						clearable
+					/>
+
+					<TextControl
+						label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
+						help={__('Additional url and file downloads that will be passed to the "Thank you" page.', 'eightshift-forms')}
+						value={formsSuccessRedirectVariationUrl}
+						onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
 					/>
 
 					<Collapsable

@@ -43,6 +43,7 @@ $formType = Components::checkAttr('formType', $attributes, $manifest);
 $formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
 $formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
 $formDownloads = Components::checkAttr('formDownloads', $attributes, $manifest);
+$formSuccessRedirectVariationUrl = Components::checkAttr('formSuccessRedirectVariationUrl', $attributes, $manifest);
 $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
@@ -107,8 +108,16 @@ if ($formConditionalTags) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = esc_html($rawConditionalTagData);
 }
 
-if ($formDownloads) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = Helper::encryptor(wp_json_encode(array_map(fn ($item) => $item['id'], $formDownloads)));
+if ($formDownloads || $formSuccessRedirectVariationUrl) {
+	$downloadsOutput = [];
+	if ($formSuccessRedirectVariationUrl) {
+		$downloadsOutput['url'] = $formSuccessRedirectVariationUrl;
+	}
+	if ($formDownloads) {
+		$downloadsOutput['files'] = array_map(fn ($item) => $item['id'], $formDownloads);
+	}
+
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = Helper::encryptor(wp_json_encode($downloadsOutput));
 }
 
 if ($formId) {

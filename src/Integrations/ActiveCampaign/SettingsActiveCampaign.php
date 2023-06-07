@@ -16,7 +16,6 @@ use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -183,16 +182,7 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								[
-									'component' => 'submit',
-									'submitFieldSkip' => true,
-									'submitValue' => \__('Test api connection', 'eightshift-forms'),
-									'submitVariant' => 'outline',
-									'submitAttrs' => [
-										'data-type' => self::SETTINGS_TYPE_KEY,
-									],
-									'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
-								],
+								$this->settingTestAliConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],

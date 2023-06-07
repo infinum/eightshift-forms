@@ -460,7 +460,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				'data' => $output,
 			];
 		}
-		
 
 		// Bailout if update is not necesery.
 		if (!$output['update']) {
@@ -580,7 +579,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				),
 				static fn($item) => \is_array($item)
 			);
-	
+
 			// Recounstruct blocks output and build array for final serialization.
 			$output['output'] = $this->reconstructBlocksTopLevelOutput($output, $editorOutput);
 		}

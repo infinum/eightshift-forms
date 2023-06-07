@@ -33,6 +33,7 @@ $formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationA
 $formsConditionalTagsRules = Components::checkAttr('formsConditionalTagsRules', $attributes, $manifest);
 $formsDownloads = Components::checkAttr('formsDownloads', $attributes, $manifest);
 $formsSuccessRedirectVariation = Components::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
+$formsSuccessRedirectVariationUrl = Components::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
 $formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
 
 // Override form ID in case we use geo location but use this feature only on frontend.
@@ -120,6 +121,7 @@ if ($formsServerSideRender) {
 					$blockName = Helper::getBlockNameDetails($innerBlock['blockName'])['name'];
 
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormSuccessRedirectVariation"] = $formsSuccessRedirectVariation;
+					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormSuccessRedirectVariationUrl"] = $formsSuccessRedirectVariationUrl;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDownloads"] = $formsDownloads;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormType"] = $blockName;
 					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;

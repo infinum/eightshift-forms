@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * SettingsHelper trait.
@@ -534,6 +535,13 @@ trait SettingsHelper
 		return '';
 	}
 
+	/**
+	 * Settings output data deactivated integration.
+	 *
+	 * @param string $key Key to return.
+	 *
+	 * @return string
+	 */
 	public function settingDataDeactivatedIntegration(string $key): string
 	{
 		$output = [
@@ -543,5 +551,26 @@ trait SettingsHelper
 		];
 
 		return $output[$key] ?? '';
+	}
+
+	/**
+	 * Setting output for Test api connection
+	 *
+	 * @param string $key Settings key.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function settingTestAliConnection(string $key): array
+	{
+		return [
+			'component' => 'submit',
+			'submitFieldSkip' => true,
+			'submitValue' => \__('Test API connection', 'eightshift-forms'),
+			'submitVariant' => 'outline',
+			'submitAttrs' => [
+				'data-type' => $key,
+			],
+			'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+		];
 	}
 }
