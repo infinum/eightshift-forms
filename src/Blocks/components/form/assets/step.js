@@ -105,6 +105,9 @@ export class Steps {
 
 	resetSteps(formId) {
 		const firstStep = this.state.getStateFormStepsFirstStep(formId);
+		if (!firstStep) {
+			return;
+		}
 
 		this.setChangeStep(firstStep, [], formId);
 
@@ -112,6 +115,10 @@ export class Steps {
 	}
 
 	setChangeStep(nextStep, flow, formId) {
+		if (!nextStep) {
+			return;
+		}
+
 		const currentStep = this.state.getStateFormStepsCurrent(formId);
 
 		this.state.getStateFormStepsElement(currentStep, formId).classList.remove(this.state.getStateSelectorsClassActive());
