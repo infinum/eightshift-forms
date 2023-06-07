@@ -4,7 +4,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
-import { Tooltip } from '@wordpress/components';
+import { Tooltip, Button } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import { AnimatedContentVisibility, camelize, classnames, IconLabel, icons, STORE_NAME, Notification } from '@eightshift/frontend-libs/scripts';
 import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
@@ -118,8 +118,9 @@ export const clearTransientCache = (type) => {
  *
  * @returns {string}
  */
-export const getSettingsPageUrl = (postId) => {
+export const getSettingsPageUrl = () => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const postId = select('core/editor').getCurrentPostId();
 
 	const {
 		settingsPageUrl,
@@ -245,17 +246,6 @@ export const getFilteredAttributes = (attributes, filterAttributes, appendItems 
 		...output,
 		...appendItems,
 	};
-};
-
-/**
- * Get active integration block name by checking the paren item.
- *
- * @param {string} clientId Client Id to check.
- *
- * @returns {string}
- */
-export const getActiveIntegrationBlockName = (clientId) => {
-	return select('core/block-editor').getBlocksByClientId(clientId)?.[0]?.innerBlocks?.[0]?.attributes?.blockName;
 };
 
 /**
@@ -403,3 +393,20 @@ export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
 		/>
 	);
 };
+
+/**
+ * Returns setting button component.
+ *
+ * @returns Component
+ */
+export const SettingsButton = () => {
+	return (
+		<Button
+			href={getSettingsPageUrl()}
+			icon={icons.options}
+			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition es-mb-5'
+		>
+			{__('Form settings', 'eightshift-forms')}
+		</Button>
+	)
+}

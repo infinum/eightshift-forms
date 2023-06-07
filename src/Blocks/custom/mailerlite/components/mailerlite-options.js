@@ -17,14 +17,14 @@ export const MailerliteOptions = ({
 	} = manifest;
 
 	return (
-		<PanelBody title={title}>
-			<IntegrationsOptions
-				block={blockName}
-				setAttributes={setAttributes}
-				clientId={clientId}
-				itemId={checkAttr(itemIdKey, attributes, manifest)}
-				itemIdKey={itemIdKey}
-			/>
-		</PanelBody>
+		<IntegrationsOptions
+			title={title}
+			block={blockName}
+			attributes={attributes}
+			setAttributes={setAttributes}
+			clientId={clientId}
+			itemId={checkAttr(itemIdKey, attributes, manifest)}
+			itemIdKey={itemIdKey}
+		/>
 	);
 };

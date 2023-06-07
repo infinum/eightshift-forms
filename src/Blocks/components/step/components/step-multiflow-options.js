@@ -241,9 +241,8 @@ export const StepMultiflowOptions = (attributes) => {
 	};
 
 	return (
-		<>
-		{(formFields?.length < 1) ? 
-			<PanelBody>
+		<PanelBody title={__('Multiflow form', 'eightshift-forms')}>
+			{(formFields?.length < 1) ? 
 				<Control
 					icon={icons.anchor}
 					label={__('Multi-flow setup', 'eightshift-forms')}
@@ -258,9 +257,8 @@ export const StepMultiflowOptions = (attributes) => {
 						addSubtitleGap
 						standalone
 					/>
-				</Control>
-			</PanelBody> :
-			<PanelBody>
+				</Control> :
+			 <>
 				<IconToggle
 					icon={icons.anchor}
 					label={__('Use steps multi-flow', 'eightshift-forms')}
@@ -330,8 +328,8 @@ export const StepMultiflowOptions = (attributes) => {
 						</div>
 					</Modal>
 				}
-			</PanelBody>
+			</>
 		}
-		</>
+		</PanelBody>
 	);
 }
