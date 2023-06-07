@@ -117,6 +117,11 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	public const SETTINGS_JIRA_SELF_HOSTED_KEY = 'jira-self-hosted';
 
 	/**
+	 * Skip integration.
+	 */
+	public const SETTINGS_JIRA_SKIP_INTEGRATION_KEY = 'jira-skip-integration';
+
+	/**
 	 * Instance variable for Jira data.
 	 *
 	 * @var JiraClientInterface
@@ -297,7 +302,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 							[
 								'component' => 'intro',
 								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
-								'introHelp' => SettingsHelper::getFieldTagsOutput(SettingsHelper::getFormFieldNames($formDetails['fieldNames'])),
+								'introHelp' => SettingsHelper::getFieldTagsOutput($this->getFormFieldNames($formDetails['fieldNames'])),
 							],
 							[
 								'component' => 'divider',
@@ -399,6 +404,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 		$apiUser = Variables::getApiUserJira();
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -410,73 +416,98 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 						'tabLabel' => \__('API', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_KEY_KEY),
-								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								// translators: %s will be replaced with global variable name.
-								'inputFieldHelp' => \sprintf(\__('
-									Provided by the Jira user token. Check the <b>Help</b> tab for instructions on how to get it.<br/><br/>
-									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_KEY_JIRA', !empty($apiKey))),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY),
-								'inputIsDisabled' => !empty($apiKey),
-							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_BOARD_KEY),
-								'inputFieldLabel' => \__('Board', 'eightshift-forms'),
-								'inputType' => 'text',
-								'inputIsRequired' => true,
-								// translators: %s will be replaced with global variable name.
-								'inputFieldHelp' => \sprintf(\__('
-									Provided in the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.<br/><br/>
-									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_BOARD_JIRA', !empty($apiBoard))),
-								'inputValue' => !empty($apiBoard) ? $apiBoard : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY),
-								'inputIsDisabled' => !empty($apiBoard),
-							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_USER_KEY),
-								'inputFieldLabel' => \__('User', 'eightshift-forms'),
-								// translators: %s will be replaced with global variable name.
-								'inputFieldHelp' => \sprintf(\__('
-									E-mail or user name of the user connected to the user token.<br/><br/>
-									%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_USER_JIRA', !empty($apiUser))),
-								'inputType' => 'text',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiUser) ? $apiUser : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY),
-								'inputIsDisabled' => !empty($apiUser),
-							],
-							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Use self-hosted version', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
-										'checkboxValue' => self::SETTINGS_JIRA_SELF_HOSTED_KEY,
+										'checkboxLabel' => $this->settingDataDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => $this->settingDataDeactivatedIntegration('checkboxHelp'),
+										'checkboxIsChecked' => $deactivateIntegration,
+										'checkboxValue' => self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY,
+										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
+									]
+								]
+							],
+							...($deactivateIntegration ? [
+								[
+									'component' => 'intro',
+									'introSubtitle' => $this->settingDataDeactivatedIntegration('introSubtitle'),
+									'introIsHighlighted' => true,
+									'introIsHighlightedImportant' => true,
+								],
+							] : [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_KEY_KEY),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+									// translators: %s will be replaced with global variable name.
+									'inputFieldHelp' => \sprintf(\__('
+										Provided by the Jira user token. Check the <b>Help</b> tab for instructions on how to get it.<br/><br/>
+										%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_KEY_JIRA', !empty($apiKey))),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY),
+									'inputIsDisabled' => !empty($apiKey),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_BOARD_KEY),
+									'inputFieldLabel' => \__('Board', 'eightshift-forms'),
+									'inputType' => 'text',
+									'inputIsRequired' => true,
+									// translators: %s will be replaced with global variable name.
+									'inputFieldHelp' => \sprintf(\__('
+										Provided in the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.<br/><br/>
+										%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_BOARD_JIRA', !empty($apiBoard))),
+									'inputValue' => !empty($apiBoard) ? $apiBoard : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY),
+									'inputIsDisabled' => !empty($apiBoard),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_USER_KEY),
+									'inputFieldLabel' => \__('User', 'eightshift-forms'),
+									// translators: %s will be replaced with global variable name.
+									'inputFieldHelp' => \sprintf(\__('
+										E-mail or user name of the user connected to the user token.<br/><br/>
+										%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_USER_JIRA', !empty($apiUser))),
+									'inputType' => 'text',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiUser) ? $apiUser : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY),
+									'inputIsDisabled' => !empty($apiUser),
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => $this->getSettingsName(self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Use self-hosted version', 'eightshift-forms'),
+											'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+											'checkboxValue' => self::SETTINGS_JIRA_SELF_HOSTED_KEY,
+											'checkboxAsToggle' => true,
+											'checkboxAsToggleSize' => 'medium',
+										],
 									],
 								],
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Test api connection', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::SETTINGS_TYPE_KEY,
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
 								],
-								'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
-							],
+								[
+									'component' => 'submit',
+									'submitFieldSkip' => true,
+									'submitValue' => \__('Test api connection', 'eightshift-forms'),
+									'submitVariant' => 'outline',
+									'submitAttrs' => [
+										'data-type' => self::SETTINGS_TYPE_KEY,
+									],
+									'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+								],
+							]),
 						],
 					],
 					[

@@ -16,6 +16,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -183,13 +184,35 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			}
 		}
 
-		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
+		// Output integrations validation issues.
+		if (isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
+			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($response[Validator::VALIDATOR_OUTPUT_KEY], $formId);
+		}
+
+		// Skip fallback email if integration is disabled.
+		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
 			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
 
 		// Send email if it is configured in the backend.
-		$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
+			$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		}
+
+		// Output fake success and send fallback email.
+		if ($response['isDisabled'] && !isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
+			$this->formSubmitMailer->sendFallbackEmail($response);
+
+			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
+
+			return \rest_ensure_response(
+				$this->getIntegrationApiOutput(
+					$fakeResponse,
+					$this->labels->getLabel($fakeResponse['message'], $formId),
+				)
+			);
+		}
 
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(

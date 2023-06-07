@@ -70,6 +70,11 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT = 5;
 
 	/**
+	 * Skip integration.
+	 */
+	public const SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY = 'workable-skip-integration';
+
+	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -130,6 +135,7 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 		$subdomain = Variables::getSubdomainWorkable();
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -141,39 +147,64 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_WORKABLE_API_KEY_KEY),
-								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_WORKABLE', !empty($apiKey)),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_WORKABLE_API_KEY_KEY),
-								'inputIsDisabled' => !empty($apiKey),
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => $this->settingDataDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => $this->settingDataDeactivatedIntegration('checkboxHelp'),
+										'checkboxIsChecked' => $deactivateIntegration,
+										'checkboxValue' => self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
 							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
-								'inputFieldLabel' => \__('Subdomain', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_SUBDOMAIN_WORKABLE', !empty($subdomain)),
-								'inputType' => 'text',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($subdomain) ? $subdomain : $this->getOptionValue(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
-								'inputIsDisabled' => !empty($subdomain),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Test api connection', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::SETTINGS_TYPE_KEY,
+							...($deactivateIntegration ? [
+								[
+									'component' => 'intro',
+									'introSubtitle' => $this->settingDataDeactivatedIntegration('introSubtitle'),
+									'introIsHighlighted' => true,
+									'introIsHighlightedImportant' => true,
 								],
-								'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
-							],
+							] : [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_WORKABLE_API_KEY_KEY),
+									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_WORKABLE', !empty($apiKey)),
+									'inputType' => 'password',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_WORKABLE_API_KEY_KEY),
+									'inputIsDisabled' => !empty($apiKey),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
+									'inputFieldLabel' => \__('Subdomain', 'eightshift-forms'),
+									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_SUBDOMAIN_WORKABLE', !empty($subdomain)),
+									'inputType' => 'text',
+									'inputIsRequired' => true,
+									'inputValue' => !empty($subdomain) ? $subdomain : $this->getOptionValue(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
+									'inputIsDisabled' => !empty($subdomain),
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'submit',
+									'submitFieldSkip' => true,
+									'submitValue' => \__('Test api connection', 'eightshift-forms'),
+									'submitVariant' => 'outline',
+									'submitAttrs' => [
+										'data-type' => self::SETTINGS_TYPE_KEY,
+									],
+									'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+								],
+							]),
 						],
 					],
 					[

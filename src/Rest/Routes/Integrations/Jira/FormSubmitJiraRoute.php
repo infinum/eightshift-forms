@@ -146,7 +146,8 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			$formId
 		);
 
-		if ($response['status'] === AbstractBaseRoute::STATUS_ERROR) {
+		// Skip fallback email if integration is disabled.
+		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
 			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
@@ -154,7 +155,23 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 		$formDataRefrerence['emailResponseTags'] = $this->getEmailResponseTags($response);
 
 		// Send email if it is configured in the backend.
-		$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
+			$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		}
+
+		// Output fake success and send fallback email.
+		if ($response['isDisabled'] && !isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
+			$this->formSubmitMailer->sendFallbackEmail($response);
+
+			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
+
+			return \rest_ensure_response(
+				$this->getIntegrationApiOutput(
+					$fakeResponse,
+					$this->labels->getLabel($fakeResponse['message'], $formId),
+				)
+			);
+		}
 
 		// Finish.
 		return \rest_ensure_response(

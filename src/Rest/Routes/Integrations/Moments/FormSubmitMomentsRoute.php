@@ -161,16 +161,20 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 		}
 
 		// Send email if it is configured in the backend.
-		$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
+			$this->formSubmitMailer->sendEmails($formDataRefrerence);
+		}
 
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
+		if ($response['isDisabled'] && !isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
 			$this->formSubmitMailer->sendFallbackEmail($response);
-			$response = $this->getIntegrationApiSuccessOutput($response);
+
+			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
+
 			return \rest_ensure_response(
 				$this->getIntegrationApiOutput(
-					$response,
-					$this->labels->getLabel($response['message'], $formId),
+					$fakeResponse,
+					$this->labels->getLabel($fakeResponse['message'], $formId),
 				)
 			);
 		}

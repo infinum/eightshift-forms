@@ -107,6 +107,9 @@ trait ApiHelper
 	 */
 	public function getIntegrationApiErrorOutput(array $details, string $msg, array $additional = []): array
 	{
+		unset($details['status']);
+		unset($details['message']);
+
 		return \array_merge(
 			[
 				'status' => AbstractBaseRoute::STATUS_ERROR,
@@ -128,6 +131,9 @@ trait ApiHelper
 	public function getIntegrationApiSuccessOutput(array $details, array $additional = []): array
 	{
 		$integration = $details['integration'] ?? '';
+
+		unset($details['status']);
+		unset($details['message']);
 
 		return \array_merge(
 			[
