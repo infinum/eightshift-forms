@@ -8,6 +8,7 @@
 
 use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\Encryption;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

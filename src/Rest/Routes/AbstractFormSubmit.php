@@ -16,6 +16,7 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Validation\Validator;
 use WP_REST_Request;
 
@@ -33,6 +34,11 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use FiltersOuputMock;
 
 	/**
 	 * Instance variable of CaptchaInterface data.
@@ -58,8 +64,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	protected const ROUTE_TYPE_FILE = 'file';
 	protected const ROUTE_TYPE_SETTINGS = 'settings';
 	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
-
-	protected const VARIATION_OUTPUT_KEY = 'variation';
 
 	/**
 	 * Get callback arguments array

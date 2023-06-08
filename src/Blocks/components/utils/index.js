@@ -122,24 +122,6 @@ export const clearTransientCache = (type) => {
 };
 
 /**
- * Get settings page url.
- *
- * @param {string} postId Post ID to get data from.
- *
- * @returns {string}
- */
-export const getSettingsPageUrl = () => {
-	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
-	const postId = select('core/editor').getCurrentPostId();
-
-	const {
-		settingsPageUrl,
-	} = select(STORE_NAME).getSettings();
-
-	return `${wpAdminUrl}${settingsPageUrl}&formId=${postId}`;
-};
-
-/**
  * Create new inner blocks from provided template.
  *
  * @param {int} clientId Client ID from block editor.
@@ -419,14 +401,46 @@ export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
  *
  * @returns Component
  */
-export const SettingsButton = () => {
+export const FormEditButton = ({formId}) => {
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
+	const {
+		editFormUrl,
+	} = select(STORE_NAME).getSettings();
+
 	return (
 		<Button
-			href={getSettingsPageUrl()}
+			href={`${wpAdminUrl}${editFormUrl}&post=${formId}`}
+			icon={icons.edit}
+			className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+		>
+			{__('Edit fields', 'eightshift-forms')}
+		</Button>
+	)
+}
+
+/**
+ * Returns setting button component.
+ *
+ * @returns Component
+ */
+export const SettingsButton = ({formId}) => {
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const postId = select('core/editor').getCurrentPostId();
+
+	const id = formId ?? postId;
+
+	const {
+		settingsPageUrl,
+	} = select(STORE_NAME).getSettings();
+
+	return (
+		<Button
+			href={`${wpAdminUrl}${settingsPageUrl}&formId=${id}`}
 			icon={icons.options}
 			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition es-mb-5'
 		>
-			{__('Form settings', 'eightshift-forms')}
+			{__('Edit settings', 'eightshift-forms')}
 		</Button>
 	)
 }

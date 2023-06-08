@@ -1,7 +1,6 @@
 /* global esFormsLocalization */
 
 import React, { useEffect } from 'react';
-import { uniq } from 'lodash';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';

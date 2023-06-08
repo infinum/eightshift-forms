@@ -27,18 +27,12 @@ import {
 	Collapsable,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
-import { getSettingsJsonOptions } from '../../../components/utils';
+import { FormEditButton, SettingsButton, getSettingsJsonOptions } from '../../../components/utils';
 import manifest from '../manifest.json';
 import { ROUTES, getRestUrl } from '../../../components/form/assets/state';
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const {
-		editFormUrl,
-		settingsPageUrl
-	} = select(STORE_NAME).getSettings();
-
-	const {
-		wpAdminUrl,
 		settings: {
 			successRedirectVariations,
 		}
@@ -117,21 +111,8 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 				{formsFormPostId &&
 					<Control>
 						<div className='es-fifty-fifty-h es-gap-2!'>
-							<Button
-								icon={icons.edit}
-								href={`${wpAdminUrl}${editFormUrl}&post=${formsFormPostId}`}
-								className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
-							>
-								{__('Edit fields', 'eightshift-forms')}
-							</Button>
-
-							<Button
-								icon={icons.options}
-								href={`${wpAdminUrl}${settingsPageUrl}&formId=${formsFormPostId}`}
-								className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
-							>
-								{__('Settings', 'eightshift-forms')}
-							</Button>
+							<FormEditButton formId={formsFormPostId} />
+							<SettingsButton formId={formsFormPostId} />
 						</div>
 					</Control>
 				}
@@ -161,60 +142,61 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						clearable
 					/>
 
-					<TextControl
-						label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
-						help={__('Additional url and file downloads that will be passed to the "Thank you" page.', 'eightshift-forms')}
-						value={formsSuccessRedirectVariationUrl}
-						onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
-					/>
-
 					<Collapsable
 						icon={icons.fileDownload}
-						label={__('File downloads', 'eightshift-forms')}
+						label={__('Enrichment', 'eightshift-forms')}
 						subtitle={formsDownloads?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), formsDownloads?.length)}
 						noBottomSpacing
 					>
-						<Control reducedBottomSpacing={formsDownloads?.length > 0} noBottomSpacing={formsDownloads?.length < 1}>
-							<MediaPlaceholder
-								icon={icons.image}
-								multiple
-								onSelect={(value) => {
-									const items = value.map((item) => {
-										const mimeType = item?.mime_type ?? item?.mime ?? '';
-
-										return {
-											title: item?.filename ?? item?.slug ?? 'UNKNOWN',
-											id: item.id,
-											isImage: mimeType?.startsWith('image/'),
-										};
-									});
-									setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
-								}}
+						<>
+							<TextControl
+								label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
+								help={__('Additional url and file downloads that will be passed to the "Thank you" page.', 'eightshift-forms')}
+								value={formsSuccessRedirectVariationUrl}
+								onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
 							/>
-						</Control>
+							<Control reducedBottomSpacing={formsDownloads?.length > 0} noBottomSpacing={formsDownloads?.length < 1}>
+								<MediaPlaceholder
+									icon={icons.image}
+									multiple
+									onSelect={(value) => {
+										const items = value.map((item) => {
+											const mimeType = item?.mime_type ?? item?.mime ?? '';
 
-						{formsDownloads.map((item, index) => {
-							return (
-								<Control
-									key={index}
-									icon={item?.isImage ? icons.image : icons.file}
-									label={truncateMiddle(item.title, 28)}
-									inlineLabel
-									reducedBottomSpacing={index < formsDownloads.length - 1}
-									noBottomSpacing={index === formsDownloads.length - 1}
-								>
-									<Button
-										onClick={() => {
-											delete formsDownloads[index];
-											const item = formsDownloads.filter((_, i) => i !== index);
-											setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
-										}}
-										icon={icons.trash}
-										className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
-									/>
-								</Control>
-							);
-						})}
+											return {
+												title: item?.filename ?? item?.slug ?? 'UNKNOWN',
+												id: item.id,
+												isImage: mimeType?.startsWith('image/'),
+											};
+										});
+										setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
+									}}
+								/>
+							</Control>
+
+							{formsDownloads.map((item, index) => {
+								return (
+									<Control
+										key={index}
+										icon={item?.isImage ? icons.image : icons.file}
+										label={truncateMiddle(item.title, 28)}
+										inlineLabel
+										reducedBottomSpacing={index < formsDownloads.length - 1}
+										noBottomSpacing={index === formsDownloads.length - 1}
+									>
+										<Button
+											onClick={() => {
+												delete formsDownloads[index];
+												const item = formsDownloads.filter((_, i) => i !== index);
+												setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
+											}}
+											icon={icons.trash}
+											className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
+										/>
+									</Control>
+								);
+							})}
+						</>
 					</Collapsable>
 
 				</Section>
