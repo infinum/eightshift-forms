@@ -24,18 +24,8 @@ export const ConditionalTagsOptions = (attributes) => {
 
 	const postId = select('core/editor').getCurrentPostId();
 
-	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
-	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
-	const conditionalTagsBlockName = checkAttr('conditionalTagsBlockName', attributes, manifest);
-
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
-
-	// Reset old conditional tags to new one, object based.
-	if (isEmpty(conditionalTagsRules)) {
-		setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: false });
-		setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
-	}
 
 	useEffect(() => {
 		apiFetch({ path: `${getRestUrl(ROUTES.FORM_FIELDS, true)}?id=${postId}` }).then((response) => {
@@ -44,6 +34,16 @@ export const ConditionalTagsOptions = (attributes) => {
 			}
 		});
 	}, [isModalOpen, postId]);
+
+	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
+	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
+	const conditionalTagsBlockName = checkAttr('conditionalTagsBlockName', attributes, manifest);
+
+	// Reset old conditional tags to new one, object based.
+	if (isEmpty(conditionalTagsRules)) {
+		setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: false });
+		setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
+	}
 
 	const ConditionalTagsType = () => {
 		if (!formFields) {

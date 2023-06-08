@@ -32,7 +32,7 @@ export const StepMultiflowOptions = (attributes) => {
 				setFormFields(response.data.steps);
 			}
 		});
-	}, [stepMultiflowPostId, isModalOpen]);
+	}, [stepMultiflowPostId]);
 
 	const MultiflowType = () => {
 		return (

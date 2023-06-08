@@ -420,7 +420,7 @@ class Helper
 				break;
 		}
 
-		$ignoreBlocks = array_flip([
+		$ignoreBlocks = \array_flip([
 			'step',
 			'submit',
 		]);
@@ -444,7 +444,7 @@ class Helper
 		}
 
 		// Check if this form uses steps.
-		$hasSteps = \array_search($namespace . '/step', \array_column($output['fieldsOnly'] ?? '', 'blockName'));
+		$hasSteps = \array_search($namespace . '/step', \array_column($output['fieldsOnly'] ?? '', 'blockName'), true);
 		$hasSteps = $hasSteps !== false;
 
 		if ($hasSteps) {
@@ -458,7 +458,7 @@ class Helper
 						'blockName' => "{$namespace}/step",
 						'attrs' => [
 							'stepStepName' => $stepCurrent,
-							'stepStepLabel' => __('Step init', 'eightshift-forms'),
+							'stepStepLabel' => \__('Step init', 'eightshift-forms'),
 							'stepStepContent' => '',
 						],
 						'innerBlocks' => [],

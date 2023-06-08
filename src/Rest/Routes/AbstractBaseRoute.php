@@ -39,6 +39,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * List of all custom form params used.
 	 */
 	public const CUSTOM_FORM_PARAMS = [
+		'formId' => 'es-form-form-id',
 		'postId' => 'es-form-post-id',
 		'type' => 'es-form-type',
 		'name' => 'es-form-field-name',
@@ -64,7 +65,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'formType' => 'data-form-type',
 		'stepId' => 'data-step-id',
 		'submitStepDirection' => 'data-step-direction',
-		'formPostId' => 'data-form-post-id',
+		'postId' => 'data-post-id',
+		'formId' => 'data-form-id',
 		'fieldId' => 'data-field-id',
 		'fieldName' => 'data-field-name',
 		'fieldType' => 'data-field-type',
@@ -282,8 +284,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 		foreach ($paramsOutput as $key => $value) {
 			switch ($key) {
-				case self::CUSTOM_FORM_PARAMS['postId']:
+				case self::CUSTOM_FORM_PARAMS['formId']:
 					$output['formId'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['postId']:
+					$output['postId'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['type']:
@@ -434,6 +440,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 		// Get form captcha from params.
 		$formDataReference['captcha'] = $params['captcha'] ?? [];
+
+		// Get form post Id from params.
+		$formDataReference['postId'] = $params['postId'] ?? '';
 
 		// Get form storage from params.
 		$formDataReference['storage'] = \json_decode($params['storage'] ?? '', true) ?? [];

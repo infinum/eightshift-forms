@@ -129,7 +129,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		$data = \apply_filters($filter, $formId);
 
 		$formAdditionalProps['formAttrs'] = [
-			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formPostId'] => $formId,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formId'] => $formId,
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType'] => $internalType,
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['settingsType'] => $type,
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirect'] => Helper::getCurrentUrl(),

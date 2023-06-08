@@ -60,7 +60,7 @@ export class Form {
 	initOnlyForms() {
 		// Loop all forms on the page.
 		[...document.querySelectorAll(this.state.getStateSelectorsForm())].forEach((element) => {
-			const formId = element.getAttribute(this.state.getStateAttribute('formPostId')) || 0;
+			const formId = element.getAttribute(this.state.getStateAttribute('formId')) || 0;
 
 			this.state.setFormStateInitial(formId);
 
@@ -563,8 +563,12 @@ export class Form {
 	setFormDataCommon(formId) {
 		this.buildFormDataItems([
 			{
-				name: this.state.getStateParam('postId'),
+				name: this.state.getStateParam('formId'),
 				value: formId,
+			},
+			{
+				name: this.state.getStateParam('postId'),
+				value: this.state.getStateFormPostId(formId),
 			},
 			{
 				name: this.state.getStateParam('type'),
@@ -965,8 +969,12 @@ export class Form {
 				// Add common items like formID and type.
 				this.buildFormDataItems([
 					{
-						name: this.state.getStateParam('postId'),
+						name: this.state.getStateParam('formId'),
 						value: formId,
+					},
+					{
+						name: this.state.getStateParam('postId'),
+						value: this.state.getStateFormPostId(formId),
 					},
 					{
 						name: this.state.getStateParam('type'),
@@ -1034,7 +1042,7 @@ export class Form {
 		// 	// Regular submit.
 		// 	element.removeEventListener('submit', this.onFormSubmitEvent);
 
-		// 	const formId = element.getAttribute(this.state.getStateAttribute('formPostId'));
+		// 	const formId = element.getAttribute(this.state.getStateAttribute('formId'));
 
 		// 	const inputs = element.querySelectorAll(this.data.inputSelector);
 		// 	const textareas = element.querySelectorAll(this.data.textareaSelector);

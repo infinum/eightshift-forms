@@ -165,7 +165,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				}
 
 				// Check if this form uses steps.
-				$hasSteps = \array_search($formsNamespace . '/step', \array_column($innerBlock['innerBlocks'] ?? '', 'blockName'));
+				$hasSteps = \array_search($formsNamespace . '/step', \array_column($innerBlock['innerBlocks'] ?? '', 'blockName'), true);
 				$hasSteps = $hasSteps !== false;
 
 				// Get block name details.
@@ -242,7 +242,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						// Change the original output of the custom block.
 						$inBlock = [
 							'blockName' => "{$formsNamespace}/field",
-							'attrs' => array_merge(
+							'attrs' => \array_merge(
 								$customUsedAttrs,
 								[
 									// Build string of custom blocks.

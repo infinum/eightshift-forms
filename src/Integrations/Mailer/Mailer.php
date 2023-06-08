@@ -14,7 +14,6 @@ use CURLFile;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use Parsedown;

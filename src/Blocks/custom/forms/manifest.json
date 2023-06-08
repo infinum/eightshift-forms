@@ -20,6 +20,9 @@
 		"formsConditionalTagsRulesForms": {
 			"type": "array"
 		},
+		"formsConditionalTagsRules": {
+			"type": "array"
+		},
 		"formsFormGeolocation": {
 			"type": "array"
 		},

@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
-import { select } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
@@ -15,7 +14,6 @@ import {
 	checkAttr,
 	getFetchWpApi,
 	unescapeHTML,
-	STORE_NAME,
 	props,
 	AsyncSelect,
 	MultiSelect,
@@ -57,8 +55,18 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsSuccessRedirectVariation = checkAttr('formsSuccessRedirectVariation', attributes, manifest);
 	const formsSuccessRedirectVariationUrl = checkAttr('formsSuccessRedirectVariationUrl', attributes, manifest);
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [formFields, setFormFields] = useState([]);
+	const [isGeoModalOpen, setIsGeoModalOpen] = useState(false);
+	const [geoFormFields, setGeoFormFields] = useState([]);
+
+	useEffect(() => {
+		apiFetch({
+			path: getRestUrl(ROUTES.COUNTRIES_GEOLOCATION, true),
+		}).then((response) => {
+			if (response.code === 200) {
+				setGeoFormFields(response.data);
+			}
+		});
+	}, []);
 
 	let formsStyleOptions = [];
 	let formsUseGeolocation = false;
@@ -82,18 +90,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 			processLabel: ({ title: { rendered: renderedTitle } }) => unescapeHTML(renderedTitle)
 		}
 	);
-
-	useEffect(() => {
-		apiFetch({
-			path: getRestUrl(ROUTES.COUNTRIES_GEOLOCATION, true),
-		}).then((response) => {
-			if (response.code === 200) {
-				setFormFields(response.data);
-			}
-		});
-	}, []);
-
-
 
 	return (
 		<>
@@ -127,82 +123,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					/>
 				</Section>
 
-				<Section icon={icons.file} label={__('"Thank you" page', 'eightshift-forms')} noBottomSpacing>
-					<Select
-						icon={icons.paletteColor}
-						label={__('Variant', 'eightshift-forms')}
-						value={formsSuccessRedirectVariation}
-						options={getSettingsJsonOptions(successRedirectVariations)}
-						onChange={(value) => {
-							setAttributes({ [getAttrKey('formsSuccessRedirectVariation', attributes, manifest)]: value });
-						}}
-						additionalSelectClasses='es-w-36'
-						simpleValue
-						inlineLabel
-						clearable
-					/>
-
-					<Collapsable
-						icon={icons.fileDownload}
-						label={__('Enrichment', 'eightshift-forms')}
-						subtitle={formsDownloads?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), formsDownloads?.length)}
-						noBottomSpacing
-					>
-						<>
-							<TextControl
-								label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
-								help={__('Additional url and file downloads that will be passed to the "Thank you" page.', 'eightshift-forms')}
-								value={formsSuccessRedirectVariationUrl}
-								onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
-							/>
-							<Control reducedBottomSpacing={formsDownloads?.length > 0} noBottomSpacing={formsDownloads?.length < 1}>
-								<MediaPlaceholder
-									icon={icons.image}
-									multiple
-									onSelect={(value) => {
-										const items = value.map((item) => {
-											const mimeType = item?.mime_type ?? item?.mime ?? '';
-
-											return {
-												title: item?.filename ?? item?.slug ?? 'UNKNOWN',
-												id: item.id,
-												isImage: mimeType?.startsWith('image/'),
-											};
-										});
-										setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
-									}}
-								/>
-							</Control>
-
-							{formsDownloads.map((item, index) => {
-								return (
-									<Control
-										key={index}
-										icon={item?.isImage ? icons.image : icons.file}
-										label={truncateMiddle(item.title, 28)}
-										inlineLabel
-										reducedBottomSpacing={index < formsDownloads.length - 1}
-										noBottomSpacing={index === formsDownloads.length - 1}
-									>
-										<Button
-											onClick={() => {
-												delete formsDownloads[index];
-												const item = formsDownloads.filter((_, i) => i !== index);
-												setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
-											}}
-											icon={icons.trash}
-											className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
-										/>
-									</Control>
-								);
-							})}
-						</>
-					</Collapsable>
-
-				</Section>
-
-
-
 				{formsStyleOptions?.length > 0 &&
 					<Select
 						icon={icons.paletteColor}
@@ -215,6 +135,98 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						isClearable={false}
 					/>
 				}
+			</PanelBody>
+
+			<PanelBody title={__('"Thank you" page', 'eightshift-forms')} initialOpen={true}>
+				<Select
+					icon={icons.paletteColor}
+					label={__('Variant', 'eightshift-forms')}
+					value={formsSuccessRedirectVariation}
+					options={getSettingsJsonOptions(successRedirectVariations)}
+					onChange={(value) => {
+						setAttributes({ [getAttrKey('formsSuccessRedirectVariation', attributes, manifest)]: value });
+					}}
+					additionalSelectClasses='es-w-36'
+					simpleValue
+					inlineLabel
+					clearable
+				/>
+
+				<Collapsable
+					icon={icons.fileDownload}
+					label={__('Enrichment', 'eightshift-forms')}
+					subtitle={formsDownloads?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), formsDownloads?.length)}
+					noBottomSpacing
+				>
+					<>
+						<TextControl
+							label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
+							help={__('Additional url and file downloads that will be passed to the "Thank you" page.', 'eightshift-forms')}
+							value={formsSuccessRedirectVariationUrl}
+							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
+						/>
+						<Control reducedBottomSpacing={formsDownloads?.length > 0} noBottomSpacing={formsDownloads?.length < 1}>
+							<MediaPlaceholder
+								icon={icons.image}
+								multiple
+								onSelect={(value) => {
+									const items = value.map((item) => {
+										const mimeType = item?.mime_type ?? item?.mime ?? '';
+
+										return {
+											title: item?.filename ?? item?.slug ?? 'UNKNOWN',
+											id: item.id,
+											isImage: mimeType?.startsWith('image/'),
+											condition: 'all',
+										};
+									});
+									setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
+								}}
+							/>
+						</Control>
+
+						{formsDownloads.length > 0 &&
+							<>
+								<div className='es-text-3 es-color-cool-gray-450 es-mb-5'>
+									{__('Add conditional tag to limit the usage of this file. Example: "field_name=field_value".', 'eightshift-forms')}
+								</div>
+
+								{formsDownloads.map((item, index) => {
+									return (
+										<>
+											<Control
+												key={index}
+												icon={item?.isImage ? icons.image : icons.file}
+												label={truncateMiddle(item.title, 28)}
+												noBottomSpacing
+												actions={
+													<Button
+														onClick={() => {
+															delete formsDownloads[index];
+															const item = formsDownloads.filter((_, i) => i !== index);
+															setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
+														}}
+														icon={icons.trash}
+														className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
+													/>
+												}
+											>
+												<TextControl
+													value={item?.condition}
+													onChange={(value) => {
+														formsDownloads[index].condition = value;
+														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] })
+													}}
+												/>
+											</Control>
+										</>
+									);
+								})}
+							</>
+
+						}
+					</>
+				</Collapsable>
 			</PanelBody>
 
 			<ConditionalTagsFormsOptions
@@ -230,7 +242,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						label={__('Show form only if in these countries:', 'eightshift-forms')}
 						help={formsFormGeolocationAlternatives?.length < 1 && __('If you can\'t find a country, start typing its name while the dropdown is open.', 'eightshift-forms')}
 						value={formsFormGeolocationAlternatives?.length > 0 ? [] : formsFormGeolocation}
-						options={formFields}
+						options={geoFormFields}
 						onChange={(value) => setAttributes({ [getAttrKey('formsFormGeolocation', attributes, manifest)]: value })}
 						cacheOptions={false}
 						simpleValue
@@ -249,7 +261,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					>
 						<Button
 							variant='tertiary'
-							onClick={() => setIsModalOpen(true)}
+							onClick={() => setIsGeoModalOpen(true)}
 							className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
 						>
 							{formsFormGeolocationAlternatives?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
@@ -266,12 +278,12 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						/>
 					}
 
-					{isModalOpen && (
+					{isGeoModalOpen && (
 						<Modal
 							overlayClassName='es-geolocation-modal'
 							className='es-modal-max-width-xxl es-rounded-3!'
 							title={<IconLabel icon={icons.locationSettings} label={__('Advanced rules', 'eightshift-forms')} standalone />}
-							onRequestClose={() => setIsModalOpen(false)}
+							onRequestClose={() => setIsGeoModalOpen(false)}
 						>
 							<p>{__('Geolocation rules allow you to display alternate forms based on the user\'s location.', 'eightshift-forms')}</p>
 							<p>{__('If no rules are added and the "Show form only if in countries" field is populated, the form will only be shown in these countries. Otherwise, the form is shown everywhere.', 'eightshift-forms')}</p>
@@ -307,7 +319,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 
 										<MultiSelect
 											value={formsFormGeolocationAlternatives?.[index]?.geoLocation}
-											options={formFields}
+											options={geoFormFields}
 											onChange={(value) => {
 												const newData = [...formsFormGeolocationAlternatives];
 												newData[index].geoLocation = value;
@@ -342,7 +354,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 							<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-end es-gap-8!'>
 								<Button
 									variant='primary'
-									onClick={() => setIsModalOpen(false)}
+									onClick={() => setIsGeoModalOpen(false)}
 									className='es-rounded-1.5!'
 								>
 									{__('Close', 'eightshift-forms')}

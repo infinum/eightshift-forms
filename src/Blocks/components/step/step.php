@@ -35,7 +35,7 @@ if (!$stepContent) {
 <div class="<?php echo esc_attr($stepClass); ?>" data-step-id="<?php echo esc_attr($stepName); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php echo esc_attr($stepName); ?>
-		<?php echo $stepContent; ?>
+		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 
 		<div class="<?php echo esc_attr("{$componentFieldClass} {$componentClass}__navigation"); ?>">
 			<?php

@@ -8,7 +8,6 @@
 
 use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\Encryption;
-use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -92,8 +91,10 @@ if ($formPhoneDisablePicker) {
 }
 
 if ($formPostId) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formPostId']] = esc_attr($formPostId);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formId']] = esc_attr($formPostId);
 }
+
+$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['postId']] = esc_attr(get_the_ID());
 
 if ($formType) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType']] = esc_html($formType);
@@ -111,15 +112,35 @@ if ($formConditionalTags) {
 }
 
 if ($formDownloads || $formSuccessRedirectVariationUrl) {
+
 	$downloadsOutput = [];
-	if ($formSuccessRedirectVariationUrl) {
-		$downloadsOutput['url'] = $formSuccessRedirectVariationUrl;
-	}
-	if ($formDownloads) {
-		$downloadsOutput['files'] = array_map(fn ($item) => $item['id'], $formDownloads);
+
+	foreach ($formDownloads as $file) {
+		$condition = $file['condition'] ?: 'all';
+		$id = $file['id'] ?? '';
+
+		if (!$id) {
+			continue;
+		}
+
+		$downloadsOutput[$condition]['files'][] = $id;
 	}
 
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = Helper::encryptor(wp_json_encode($downloadsOutput));
+	if (!$downloadsOutput) {
+		if ($formSuccessRedirectVariationUrl) {
+			$downloadsOutput['all'] = Encryption::encryptor(wp_json_encode(['url' => $formSuccessRedirectVariationUrl]));
+		}
+	} else {
+		foreach ($downloadsOutput as $key => $item) {
+			if ($formSuccessRedirectVariationUrl) {
+				$downloadsOutput[$key]['url'] = $formSuccessRedirectVariationUrl;
+			}
+
+			$downloadsOutput[$key] = Encryption::encryptor(wp_json_encode($downloadsOutput[$key]));
+		}
+	}
+
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = wp_json_encode($downloadsOutput);
 }
 
 if ($formId) {

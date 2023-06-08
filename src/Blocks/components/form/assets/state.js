@@ -13,6 +13,7 @@ export class State {
 		this.ELEMENTS = 'elements';
 		this.FORM = 'form';
 
+		this.POST_ID = 'postId';
 		this.METHOD = 'method';
 		this.ACTION = 'action';
 		this.ACTION_EXTERNAL = 'actionExternal';
@@ -259,9 +260,10 @@ export class State {
 		if (formId === 0) {
 			formElement = document.querySelector(this.getStateSelectorsForm());
 		} else {
-			formElement = document.querySelector(`${this.getStateSelectorsForm()}[${this.getStateAttribute('formPostId')}="${formId}"]`);
+			formElement = document.querySelector(`${this.getStateSelectorsForm()}[${this.getStateAttribute('formId')}="${formId}"]`);
 		}
 
+		this.setState([this.FORM, this.POST_ID],formElement.getAttribute(this.getStateAttribute('postId')), formId);
 		this.setState([this.FORM, this.ISLOADED], false, formId);
 		this.setState([this.FORM, this.IS_SINGLE_SUBMIT], false, formId);
 		this.setState([this.FORM, this.ELEMENT], formElement, formId);
@@ -279,7 +281,7 @@ export class State {
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement.getAttribute(this.getStateAttribute('phoneSync'))), formId);
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT], formElement.getAttribute(this.getStateAttribute('successRedirect')), formId);
 		this.setState([this.FORM, this.CONFIG, this.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement.getAttribute(this.getStateAttribute('successRedirectVariation')), formId);
-		this.setState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formElement.getAttribute(this.getStateAttribute('downloads')), formId);
+		this.setState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], JSON.parse(formElement.getAttribute(this.getStateAttribute('downloads'))), formId);
 
 		const globalMsg = formElement.querySelector(this.getStateSelectorsGlobalMsg());
 		this.setState([this.FORM, this.GLOBAL_MSG, this.ELEMENT], globalMsg, formId);
@@ -656,6 +658,10 @@ export class State {
 	// Form
 	getStateForm(formId) {
 		return this.getState([this.FORM], formId);
+	}
+
+	getStateFormPostId(formId) {
+		return this.getState([this.FORM, this.POST_ID], formId);
 	}
 
 	getStateFormIsSingleSubmit(formId) {
@@ -1096,7 +1102,7 @@ export class State {
 	}
 
 	getFormIdByElement(element) {
-		return this.getFormElementByChild(element).getAttribute(this.getStateAttribute('formPostId'));
+		return this.getFormElementByChild(element).getAttribute(this.getStateAttribute('formId'));
 	}
 
 	getRestUrl(value) {

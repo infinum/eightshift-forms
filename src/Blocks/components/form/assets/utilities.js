@@ -350,7 +350,30 @@ export class Utils {
 
 		const downloads = this.state.getStateFormConfigDownloads(formId);
 		if (downloads) {
-			url.searchParams.append('es-downloads', downloads);
+			let downloadsName = 'all';
+
+			for(const key of Object.keys(downloads)) {
+				if (key === 'all') {
+					continue;
+				}
+
+				const keyFull = key.split("=");
+
+				if (keyFull <= 1) {
+					continue;
+				}
+
+				const value = this.state.getStateElementValue(keyFull[0], formId);
+
+				if (value === keyFull[1]) {
+					downloadsName = key;
+					continue;
+				}
+			}
+
+			if (downloads?.[downloadsName]) {
+				url.searchParams.append('es-downloads', downloads[downloadsName]);
+			}
 		}
 
 		const variation = this.state.getStateFormConfigSuccessRedirectVariation(formId);

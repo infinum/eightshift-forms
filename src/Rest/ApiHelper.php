@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
