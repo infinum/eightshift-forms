@@ -7,9 +7,9 @@ import { Utils } from './utilities';
  * Captcha class.
  */
 export class Captcha {
-	constructor(options = {}) {
-		this.state = new State(options);
-		this.utils = new Utils(options);
+	constructor() {
+		this.state = new State();
+		this.utils = new Utils();
 
 		// Set all public methods.
 		this.publicMethods();

@@ -19,9 +19,7 @@ domReady(() => {
 		console.warn('Your project is missing global variable esFormsLocalization called from the enqueue script in the forms. Forms will work but they will not get the admin settings configuration.');
 	}
 
-	new Form({
-		formIsAdmin: true,
-	}).init();
+	new Form().init();
 
 	////////////////////////////////////////////////////////////////
 	// Cache
@@ -33,7 +31,6 @@ domReady(() => {
 	if (elementsCache.length) {
 		import('./cache').then(({ Cache }) => {
 			new Cache({
-				formIsAdmin: true,
 				selector: selectorCache,
 			}).init();
 		});
@@ -84,7 +81,6 @@ domReady(() => {
 	if (elementsTestApi.length) {
 		import('./test-api').then(({ TestApi }) => {
 			new TestApi({
-				formIsAdmin: true,
 				selector: selectorTestApi,
 			}).init();
 		});

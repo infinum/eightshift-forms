@@ -10,8 +10,8 @@ import {
  * Main conditon tags class.
  */
 export class ConditionalTags {
-	constructor(options = {}) {
-		this.state = new State(options);
+	constructor() {
+		this.state = new State();
 
 		// Simplify usage of constants
 		this.SHOW = CONDITIONAL_TAGS_ACTIONS.SHOW;
@@ -148,7 +148,7 @@ export class ConditionalTags {
 	 */
 	initFields(formId) {
 		for(const [name] of this.state.getStateElements(formId)) {
-			this.setField(name, formId);
+			this.setField(formId, name);
 		}
 	}
 
@@ -162,10 +162,10 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	setField(name, formId) {
+	setField(formId, name) {
 		// Check and set top level events and set rules.
 		this.state.getStateFormConditionalTagsEvents(formId)?.[name]?.forEach((eventName) => {
-			this.setFieldsRules(eventName, formId);
+			this.setFieldsRules(formId, eventName);
 		});
 
 		// Set top level fields state.
@@ -173,7 +173,7 @@ export class ConditionalTags {
 
 		// Check and set inner level events and set rules.
 		this.state.getStateFormConditionalTagsInnerEvents(formId)?.[name]?.forEach((eventName) => {
-			this.setFieldsRulesInner(eventName, formId);
+			this.setFieldsRulesInner(formId, eventName);
 		});
 
 		// Set inner level fields state.
@@ -370,7 +370,7 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	setFieldsRulesInner(name, formId) {
+	setFieldsRulesInner(formId, name) {
 		// Explode name because we can have inner items that have parent prefix.
 		const nameData = name.split('---');
 		const topName = nameData[0];
@@ -432,7 +432,7 @@ export class ConditionalTags {
 	 *
 	 * @returns void
 	 */
-	setFieldsRules(name, formId) {
+	setFieldsRules(formId, name) {
 		// Opulate current ref state.
 		let output = this.state.getStateElementConditionalTagsRef(name, formId);
 
@@ -546,8 +546,8 @@ export class ConditionalTags {
 			initFields: (formId) => {
 				this.initFields(formId);
 			},
-			setField: (name, formId) => {
-				this.setField(name, formId);
+			setField: (formId, name) => {
+				this.setField(formId, name);
 			},
 			setFieldTopLevel: (formId) => {
 				this.setFieldTopLevel(formId);
@@ -558,11 +558,11 @@ export class ConditionalTags {
 			setFieldInnerSelect: (formId) => {
 				this.setFieldInnerSelect(formId);
 			},
-			setFieldsRulesInner: (name, formId) => {
-				this.setFieldsRulesInner(name, formId);
+			setFieldsRulesInner: (formId, name) => {
+				this.setFieldsRulesInner(formId, name);
 			},
-			setFieldsRules: (name, formId) => {
-				this.setFieldsRules(name, formId);
+			setFieldsRules: (formId, name) => {
+				this.setFieldsRules(formId, name);
 			},
 			onInitEvent: (event) => {
 				this.onInitEvent(event);

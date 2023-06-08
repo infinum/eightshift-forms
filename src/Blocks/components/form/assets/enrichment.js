@@ -5,8 +5,8 @@ import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
  * Enrichment class.
  */
 export class Enrichment {
-	constructor(options = {}) {
-		this.state = new State(options);
+	constructor() {
+		this.state = new State();
 
 		// Set all public methods.
 		this.publicMethods();

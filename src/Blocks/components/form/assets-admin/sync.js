@@ -3,8 +3,8 @@ import { State, ROUTES } from "./../../form/assets/state";
 
 export class Sync {
 	constructor(options = {}) {
-		this.utils = new Utils(options);
-		this.state = new State(options);
+		this.utils = new Utils();
+		this.state = new State();
 
 		this.selector = options.selector;
 	}

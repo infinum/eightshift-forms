@@ -3,8 +3,8 @@ import { State, ROUTES } from "../assets/state";
 
 export class Migration {
 	constructor(options = {}) {
-		this.utils = new Utils(options);
-		this.state = new State(options);
+		this.utils = new Utils();
+		this.state = new State();
 
 		this.selector = options.selector;
 		this.outputSelector = options.outputSelector;

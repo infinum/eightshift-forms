@@ -240,6 +240,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			];
 		}
 
+		$output['isAdmin'] = false;
+
 		$output = \wp_json_encode($output);
 
 		\wp_add_inline_script($this->getBlockFrontentScriptHandle(), "const esFormsLocalization = {$output}", 'before');
@@ -301,6 +303,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');
 		$output['isDeveloperMode'] =  $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$output['isAdmin'] = true;
 
 		$output = \wp_json_encode($output);
 

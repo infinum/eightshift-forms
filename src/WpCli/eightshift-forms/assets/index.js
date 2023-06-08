@@ -9,9 +9,7 @@ export default function() {
 
 		if (elements.length && typeof esFormsLocalization !== 'undefined') {
 			import('./form').then(({ Form }) => {
-				const form = new Form({
-					formSelector: selector,
-				});
+				const form = new Form();
 
 				form.init();
 			});

@@ -4,13 +4,12 @@ import { State, prefix } from './state';
  * Main Utilities class.
  */
 export class Utils {
-	constructor(options = {}) {
-		this.state = new State(options);
+	constructor() {
+		this.state = new State();
 
 		// Set all public methods.
 		this.publicMethods();
 	}
-
 
 	////////////////////////////////////////////////////////////////
 	// Public methods
@@ -19,7 +18,7 @@ export class Utils {
 	// Reset form in general.
 	resetErrors(formId) {
 		for (const [name] of this.state.getStateElements(formId)) {
-			this.unsetFieldError(name, formId)
+			this.unsetFieldError(formId, name)
 		};
 
 		this.unsetGlobalMsg(formId);
@@ -50,7 +49,7 @@ export class Utils {
 	}
 
 	// Scroll to specific element.
-	scrollToElement(name, formId) {
+	scrollToElement(formId, name) {
 		this.state.getStateElementField(name, formId).scrollIntoView({block: 'start', behavior: 'smooth'});
 	}
 
@@ -65,7 +64,7 @@ export class Utils {
 	}
 
 	// Remove one field error by name.
-	unsetFieldError(name, formId) {
+	unsetFieldError(formId, name) {
 		const error = this.state.getStateElementError(name, formId);
 
 		error.classList.remove(this.state.getStateSelectorsClassHasError());
@@ -73,8 +72,7 @@ export class Utils {
 		error.innerHTML = '';
 	}
 
-	
-	setFieldError(name, msg, formId) {
+	setFieldError(formId, name, msg) {
 		const error = this.state.getStateElementError(name, formId);
 
 		error.classList.add(this.state.getStateSelectorsClassHasError());
@@ -85,13 +83,13 @@ export class Utils {
 	// Output all error for fields.
 	outputErrors(formId, data) {
 		for (const [name, msg] of Object.entries(data)) {
-			this.setFieldError(name, msg, formId);
+			this.setFieldError(formId, name, msg);
 		};
 
 		// Scroll to element if the condition is right.
 		const firstItemWithErrorName = this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.HAS_ERROR, true, formId)?.[0]?.[this.state.NAME];
 		if (firstItemWithErrorName && !this.state.getStateSettingsDisableScrollToFieldOnError()) {
-			this.scrollToElement(firstItemWithErrorName, formId);
+			this.scrollToElement(formId, firstItemWithErrorName);
 		}
 	}
 
@@ -235,7 +233,7 @@ export class Utils {
 	}
 
 	// Prefill inputs active/filled on init.
-	setFieldFilledState(name, formId) {
+	setFieldFilledState(formId, name) {
 		const type = this.state.getStateElementType(name, formId);
 		const value = this.state.getStateElementValue(name, formId);
 
@@ -251,27 +249,27 @@ export class Utils {
 		}
 
 		if (condition) {
-			this.unsetActiveState(name, formId);
-			this.setFilledState(name, formId);
+			this.unsetActiveState(formId, name);
+			this.setFilledState(formId, name);
 		} else {
-			this.unsetActiveState(name, formId);
-			this.unsetFilledState(name, formId);
+			this.unsetActiveState(formId, name);
+			this.unsetFilledState(formId, name);
 		}
 	}
 
-	setFieldActiveState(name, formId) {
+	setFieldActiveState(formId, name) {
 		this.state.getStateElementField(name, formId).classList.add(this.state.getStateSelectorsClassActive());
 	}
 
-	unsetActiveState(name, formId) {
+	unsetActiveState(formId, name) {
 		this.state.getStateElementField(name, formId).classList.remove(this.state.getStateSelectorsClassActive());
 	}
 
-	setFilledState(name, formId) {
+	setFilledState(formId, name) {
 		this.state.getStateElementField(name, formId).classList.add(this.state.getStateSelectorsClassFilled());
 	}
 
-	unsetFilledState(name, formId) {
+	unsetFilledState(formId, name) {
 		this.state.getStateElementField(name, formId).classList.remove(this.state.getStateSelectorsClassFilled());
 	}
 
@@ -325,8 +323,8 @@ export class Utils {
 					break;
 			}
 
-			this.setFieldFilledState(name, formId);
-			this.unsetFieldError(name, formId);
+			this.setFieldFilledState(formId, name);
+			this.unsetFieldError(formId, name);
 		}
 
 		// Remove focus from last input.
@@ -360,11 +358,11 @@ export class Utils {
 			url.searchParams.append('es-variation', variation);
 		}
 
-		this.redirectToUrlByRefference(url.href, formId);
+		this.redirectToUrlByRefference(formId, url.href);
 	}
 
 	// Redirect to url by provided path.
-	redirectToUrlByRefference(redirectUrl, formId, reload = false) {
+	redirectToUrlByRefference(formId, redirectUrl, reload = false) {
 		this.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccessBeforeRedirect(), redirectUrl);
 
 		if (!this.state.getStateSettingsDisableNativeRedirectOnSuccess(formId)) {
@@ -393,7 +391,7 @@ export class Utils {
 		}, 100);
 	}
 
-	getSaveAsJsonFormatOutput(name, formId) {
+	getSaveAsJsonFormatOutput(formId, name) {
 		const output = [];
 		const items = this.state.getStateElementValue(name, formId).split(/\r\n|\r|\n/);
 

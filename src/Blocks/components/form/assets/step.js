@@ -5,9 +5,9 @@ import { Utils } from './utilities';
  * Main step class.
  */
 export class Steps {
-	constructor(options = {}) {
-		this.state = new State(options);
-		this.utils = new Utils(options);
+	constructor() {
+		this.state = new State();
+		this.utils = new Utils();
 
 		this.STEP_DIRECTION_PREV = 'prev';
 		this.STEP_DIRECTION_NEXT = 'next';
@@ -51,17 +51,18 @@ export class Steps {
 		} = response;
 
 		if (status === 'success') {
-			this.goToNextStep(data?.nextStep, formId);
+			this.goToNextStep(formId, data?.nextStep);
 		} else {
 			if (data?.validation !== undefined) {
 				this.utils.outputErrors(formId, data?.validation);
+				this.goToStepWithError()
 				this.utils.setGlobalMsg(formId, message, status);
 			} else {
 			}
 		}
 	}
 
-	goToNextStep(nextStep, formId) {
+	goToNextStep(formId, nextStep) {
 		if (!nextStep) {
 			return;
 		}
@@ -72,7 +73,7 @@ export class Steps {
 			currentStep,
 		];
 
-		this.setChangeStep(nextStep, flow, formId);
+		this.setChangeStep(formId, nextStep, flow);
 
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
@@ -90,9 +91,25 @@ export class Steps {
 			...flow,
 		];
 
-		this.setChangeStep(nextStep, newFlow, formId);
+		this.setChangeStep(formId, nextStep, newFlow);
 
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToPrevStep());
+	}
+
+	goToStepWithError(formId, errors) {
+		const firstError = Object.keys(errors)[0];
+
+		const findStep = Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) => arr.includes(Object.keys(errors)[0]))?.[0] || null;
+
+		const flow = this.state.getStateFormStepsFlow(formId);
+
+		const findStepIndex = flow.findIndex((item) => item === findStep);
+		
+		console.log(flow);
+		console.log(findStepIndex);
+		console.log(findStep);
+
+		console.log(firstError);
 	}
 
 	resetSteps(formId) {
@@ -101,12 +118,12 @@ export class Steps {
 			return;
 		}
 
-		this.setChangeStep(firstStep, [], formId);
+		this.setChangeStep(formId, firstStep, []);
 
 		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`).closest(this.state.getStateSelectorsField()).classList.add(this.state.getStateSelectorsClassHidden());
 	}
 
-	setChangeStep(nextStep, flow, formId) {
+	setChangeStep(formId, nextStep, flow) {
 		if (!nextStep) {
 			return;
 		}

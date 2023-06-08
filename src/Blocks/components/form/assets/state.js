@@ -7,10 +7,7 @@ import { CONDITIONAL_TAGS_ACTIONS } from '../../conditional-tags/assets/utils';
 export const prefix = 'esForms';
 
 export class State {
-	constructor(options = {}) {
-		// Detect if form is used in admin for settings or on the frontend.
-		this.formIsAdmin = options.formIsAdmin ?? false;
-
+	constructor() {
 		// State names.
 		this.ISLOADED = 'isloaded';
 		this.ELEMENTS = 'elements';
@@ -178,7 +175,7 @@ export class State {
 			this.setState([key], item, this.PARAMS);
 		}
 
-		this.setState([this.IS_ADMIN], this.formIsAdmin, this.CONFIG);
+		this.setState([this.IS_ADMIN], esFormsLocalization.isAdmin, this.CONFIG);
 		this.setState([this.NONCE], esFormsLocalization.nonce, this.CONFIG);
 
 		// Global settings.

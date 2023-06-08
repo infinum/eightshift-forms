@@ -12,13 +12,13 @@ import { ConditionalTags } from './conditional-tags';
  * Main Forms class.
  */
 export class Form {
-	constructor(options = {}) {
-		this.state = new State(options);
-		this.utils = new Utils(options);
-		this.enrichment = new Enrichment(options);
-		this.captcha = new Captcha(options);
-		this.conditionalTags = new ConditionalTags(options);
-		this.steps = new Steps(options);
+	constructor() {
+		this.state = new State();
+		this.utils = new Utils();
+		this.enrichment = new Enrichment();
+		this.captcha = new Captcha();
+		this.conditionalTags = new ConditionalTags();
+		this.steps = new Steps();
 
 		this.FORM_DATA = new FormData();
 
@@ -85,47 +85,47 @@ export class Form {
 
 		// Setup select inputs.
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'select', formId)].forEach((select) => {
-			this.setupSelectField(select.name, formId);
+			this.setupSelectField(formId, select.name);
 		});
 
 		// Setup file single inputs.
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'file', formId)].forEach((file) => {
-			this.setupFileField(file.name, formId);
+			this.setupFileField(formId, file.name);
 		});
 
 		// Setup regular inputs.
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'text', formId)].forEach((input) => {
-			this.setupInputField(input.name, formId);
+			this.setupInputField(formId, input.name);
 		});
 
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'number', formId)].forEach((input) => {
-			this.setupInputField(input.name, formId);
+			this.setupInputField(formId, input.name);
 		});
 
 		// Date.
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'date', formId)].forEach((input) => {
-			this.setupDateField(input.name, formId);
+			this.setupDateField(formId, input.name);
 		});
 
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'tel', formId)].forEach((tel) => {
-			this.setupTelField(tel.name, formId);
+			this.setupTelField(formId, tel.name);
 		});
 
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'checkbox', formId)].forEach((checkbox) => {
 			[...Object.values(checkbox.items)].forEach((checkboxItem) => {
-				this.setupRadioCheckboxField(checkboxItem.value, checkboxItem.name, formId);
+				this.setupRadioCheckboxField(formId, checkboxItem.value, checkboxItem.name);
 			});
 		});
 
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'radio', formId)].forEach((radio) => {
 			[...Object.values(radio.items)].forEach((radioItem) => {
-				this.setupRadioCheckboxField(radioItem.value, radioItem.name, formId);
+				this.setupRadioCheckboxField(formId, radioItem.value, radioItem.name);
 			});
 		});
 
 		// Setup textarea inputs.
 		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'textarea', formId)].forEach((textarea) => {
-			this.setupTextareaField(textarea.name, formId);
+			this.setupTextareaField(formId, textarea.name);
 		});
 
 		// Form loaded.
@@ -262,7 +262,7 @@ export class Form {
 			this.utils.setGlobalMsg(formId, message, status);
 
 			if (this.state.getStateFormIsSingleSubmit(formId)) {
-				this.utils.redirectToUrlByRefference(window.location.href, formId, true);
+				this.utils.redirectToUrlByRefference(formId, window.location.href, true);
 			}
 		} else {
 			// Send GTM.
@@ -454,7 +454,7 @@ export class Form {
 				case 'textarea':
 					// Convert textarea to json format with : as delimiter.
 					if (saveAsJson) {
-						data.value = this.utils.getSaveAsJsonFormatOutput(name, formId);
+						data.value = this.utils.getSaveAsJsonFormatOutput(formId, name);
 					}
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
@@ -670,12 +670,12 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupInputField(name, formId) {
+	setupInputField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
 
 		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
 
-		this.utils.setFieldFilledState(name, formId);
+		this.utils.setFieldFilledState(formId, name);
 
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
@@ -691,13 +691,13 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupTelField(name, formId) {
-		this.setupInputField(name, formId);
+	setupTelField(formId, name) {
+		this.setupInputField(formId, name);
 
 		if (this.state.getStateFormConfigPhoneDisablePicker(formId)) {
 			this.state.getStateElementField(name, formId).querySelector('select').remove();
 		} else {
-			this.setupSelectField(name, formId);
+			this.setupSelectField(formId, name);
 		}
 	}
 
@@ -709,12 +709,12 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupRadioCheckboxField(value, name, formId) {
+	setupRadioCheckboxField(formId, value, name) {
 		const input = this.state.getStateElementItemsInput(name, value, formId);
 
 		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
 
-		this.utils.setFieldFilledState(name, formId);
+		this.utils.setFieldFilledState(formId, name);
 
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
@@ -730,7 +730,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupDateField(name, formId) {
+	setupDateField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
 
 		import('flatpickr').then((flatpickr) => {
@@ -749,16 +749,16 @@ export class Form {
 					state.setState([state.ELEMENTS, name, state.VALUE], value, formId);
 					state.setState([state.ELEMENTS, name, state.CUSTOM], this, formId);
 
-					utils.setFieldFilledState(name, formId);
+					utils.setFieldFilledState(formId, name);
 				},
 				onOpen: function () {
-					utils.setFieldActiveState(name, formId);
+					utils.setFieldActiveState(formId, name);
 				},
 				onChange: function (selectedDates, value) {
 					state.setState([state.ELEMENTS, name, state.VALUE], value, formId);
 
-					utils.setFieldFilledState(name, formId);
-					conditionalTags.setField(name, formId);
+					utils.setFieldFilledState(formId, name);
+					conditionalTags.setField(formId, name);
 				},
 			});
 		});
@@ -771,7 +771,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupSelectField(name, formId) {
+	setupSelectField(formId, name) {
 		let input = this.state.getStateElementInput(name, formId);
 		const type = this.state.getStateElementType(name, formId);
 
@@ -877,7 +877,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupTextareaField(name, formId) {
+	setupTextareaField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
 
 		import('autosize').then((autosize) => {
@@ -889,7 +889,7 @@ export class Form {
 
 		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
 
-		this.utils.setFieldFilledState(name, formId);
+		this.utils.setFieldFilledState(formId, name);
 
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
@@ -906,7 +906,7 @@ export class Form {
 	 *
 	 * @public
 	 */
-	setupFileField(name, formId) {
+	setupFileField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
 		const field = this.state.getStateElementField(name, formId);
 
@@ -942,7 +942,7 @@ export class Form {
 				this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], 'true', formId);
 
 				// Remove main filed validation error.
-				this.utils.unsetFieldError(name, formId);
+				this.utils.unsetFieldError(formId, name);
 			});
 
 			dropzone.on('removedfile', () => {
@@ -1206,7 +1206,7 @@ export class Form {
 			}
 		}
 
-		this.conditionalTags.setField(name, formId);
+		this.conditionalTags.setField(formId, name);
 
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
@@ -1225,7 +1225,7 @@ export class Form {
 
 		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
 
-		this.conditionalTags.setField(name, formId);
+		this.conditionalTags.setField(formId, name);
 
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
@@ -1243,7 +1243,7 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const formId = this.state.getFormIdByElement(event.target);
 
-		this.utils.setFieldFilledState(name, formId);
+		this.utils.setFieldFilledState(formId, name);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -1258,7 +1258,7 @@ export class Form {
 	publicMethods() {
 		this.state.setStateWindow();
 
-		window[prefix].form = {}
+		// window[prefix].form = new State(this.options);
 		// window[prefix].form = {
 		// 	initOnlyForms: () => {
 		// 		this.initOnlyForms();
