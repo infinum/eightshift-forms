@@ -742,7 +742,6 @@ export class State {
 		return this.getState([this.FORM, this.CONFIG, this.CONFIG_DOWNLOADS], formId);
 	}
 
-
 	getStateFormStepsFlow(formId) {
 		return this.getState([this.FORM, this.STEPS, this.STEPS_FLOW], formId);
 	}

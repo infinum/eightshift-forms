@@ -55,9 +55,7 @@ export class Steps {
 		} else {
 			if (data?.validation !== undefined) {
 				this.utils.outputErrors(formId, data?.validation);
-				this.goToStepWithError()
 				this.utils.setGlobalMsg(formId, message, status);
-			} else {
 			}
 		}
 	}
@@ -97,19 +95,17 @@ export class Steps {
 	}
 
 	goToStepWithError(formId, errors) {
-		const firstError = Object.keys(errors)[0];
-
-		const findStep = Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) => arr.includes(Object.keys(errors)[0]))?.[0] || null;
-
 		const flow = this.state.getStateFormStepsFlow(formId);
+		const nextStep = Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) => arr.includes(Object.keys(errors)[0]))?.[0] || null;
+		const nextStepIndex = flow.findIndex((item) => item === nextStep);
 
-		const findStepIndex = flow.findIndex((item) => item === findStep);
-		
-		console.log(flow);
-		console.log(findStepIndex);
-		console.log(findStep);
+		const newFlow = [
+			...this.state.getStateFormStepsFlow(formId),
+		];
 
-		console.log(firstError);
+		newFlow.splice(nextStepIndex, flow.length);
+
+		this.setChangeStep(formId, nextStep, newFlow);
 	}
 
 	resetSteps(formId) {
@@ -138,7 +134,9 @@ export class Steps {
 	}
 
 	getIgnoreFields(formId) {
-		const flow = this.state.getStateFormStepsFlow(formId);
+		const flow = [
+			...this.state.getStateFormStepsFlow(formId),
+		];
 
 		flow.push(this.state.getStateFormStepsLastStep(formId));
 

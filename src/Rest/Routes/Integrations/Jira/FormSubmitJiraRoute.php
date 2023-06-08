@@ -178,7 +178,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 
 		// Send email if it is configured in the backend.
 		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
-			$this->formSubmitMailer->sendEmails($formDataRefrerence);
+			$this->formSubmitMailer->sendEmails($formDataReference);
 		}
 
 		// Output fake success and send fallback email.

@@ -181,13 +181,9 @@ export class Form {
 
 				// On success state.
 				if (response.status === 'success') {
-					this.formSubmitSuccess(formId, response);
-
-					if (filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]) {
-						this.steps.resetSteps(formId);
-					}
+					this.formSubmitSuccess(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
 				} else {
-					this.formSubmitError(formId, response);
+					this.formSubmitError(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
 				}
 
 				this.formSubmitAfter(formId, response);
@@ -248,7 +244,7 @@ export class Form {
 		this.utils.hideLoader(formId);
 	}
 
-	formSubmitSuccess(formId, response) {
+	formSubmitSuccess(formId, response, isFinalStep = false) {
 		const {
 			status,
 			message,
@@ -287,9 +283,13 @@ export class Form {
 				}
 			}
 		}
+
+		if (isFinalStep) {
+			this.steps.resetSteps(formId);
+		}
 	}
 
-	formSubmitError(formId, response) {
+	formSubmitError(formId, response, isFinalStep = false) {
 		const {
 			status,
 			message,
@@ -305,6 +305,10 @@ export class Form {
 			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitErrorValidation(), response);
 
 			this.utils.outputErrors(formId, data?.validation);
+
+			if (isFinalStep) {
+				this.steps.goToStepWithError(formId, data?.validation);
+			}
 		} else {
 			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitError(), response);
 		}
@@ -1177,8 +1181,8 @@ export class Form {
 	// On Focus event for regular fields.
 	onFocusEvent = (event) => {
 		this.utils.setFieldActiveState(
-			this.state.getFormFieldElementByChild(event.target).getAttribute(this.state.getStateAttribute('fieldName')),
-			this.state.getFormIdByElement(event.target)
+			this.state.getFormIdByElement(event.target),
+			this.state.getFormFieldElementByChild(event.target).getAttribute(this.state.getStateAttribute('fieldName'))
 		);
 	};
 
