@@ -48,19 +48,14 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
 	apiFetch({
 		path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATION_EDITOR, ROUTES.INTEGRATIONS_EDITOR_CREATE, true)}?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}`,
 	}).then((response) => {
+		resetInnerBlocks(clientId);
 
-		const parentId = select('core/block-editor').getBlockParents(clientId)?.[0];
+		if (response.code === 200) {
+			const builtBlocks = createBlocksFromInnerBlocksTemplate(response?.data?.data?.output);
 
-		if (parentId) {
-			resetInnerBlocks(parentId);
-	
-			if (response.code === 200) {
-				const builtBlocks = createBlocksFromInnerBlocksTemplate(response?.data?.data?.output);
-	
-				updateInnerBlocks(parentId, builtBlocks);
-	
-				dispatch('core/editor').savePost();
-			}
+			updateInnerBlocks(clientId, builtBlocks);
+
+			dispatch('core/editor').savePost();
 		}
 	});
 };
@@ -87,6 +82,12 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 			if (parentId) {
 				resetInnerBlocks(parentId);
 				updateInnerBlocks(parentId, createBlocksFromInnerBlocksTemplate(response?.data?.data?.output));
+
+				const blocks = select('core/block-editor').getBlocks(parentId);
+
+				if (blocks) {
+					dispatch('core/block-editor').selectBlock(blocks?.[0].clientId);
+				}
 			}
 		}
 
@@ -183,11 +184,17 @@ export const updateInnerBlocks = (clientId, blocks) => {
  *
  * @returns {void}
  */
-export const resetInnerBlocks = (clientId) => {
-	const parentId = select('core/block-editor').getBlockParents(clientId)?.[0];
-
-	if (parentId) {
-		updateInnerBlocks(parentId, []);
+export const resetInnerBlocks = (clientId, useParent = false) => {
+	if (useParent) {
+		const parentId = select('core/block-editor').getBlockParents(clientId)?.[0];
+	
+		console.log(select('core/block-editor').getBlockParents(clientId));
+	
+		if (parentId) {
+			updateInnerBlocks(parentId, []);
+		}
+	} else {
+		updateInnerBlocks(clientId, []);
 	}
 };
 

@@ -181,28 +181,24 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			$this->formSubmitMailer->sendEmails($formDataReference);
 		}
 
+		$labelsOutput = $this->labels->getLabel($response['message'], $formId);
+		$responseOutput = $response;
+
 		// Output fake success and send fallback email.
 		if ($response['isDisabled'] && !isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
 			$this->formSubmitMailer->sendFallbackEmail($response);
 
 			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
 
-			return \rest_ensure_response(
-				$this->getIntegrationApiOutput(
-					$fakeResponse,
-					$this->labels->getLabel($fakeResponse['message'], $formId),
-				)
-			);
+			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
+			$responseOutput = $fakeResponse;
 		}
 
 		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(
-				$response,
-				$this->labels->getLabel($response['message'], $formId),
-				[
-					Validator::VALIDATOR_OUTPUT_KEY
-				]
+				$responseOutput,
+				$labelsOutput,
 			)
 		);
 	}

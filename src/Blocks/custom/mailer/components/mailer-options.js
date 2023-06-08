@@ -5,6 +5,7 @@ import { IntegrationsInternalOptions } from '../../../components/integrations/co
 export const MailerOptions = ({
 	attributes,
 	setAttributes,
+	clientId,
 }) => {
 	
 	const {
@@ -14,6 +15,7 @@ export const MailerOptions = ({
 	return (
 		<IntegrationsInternalOptions
 			title={title}
+			clientId={clientId}
 			attributes={attributes}
 			setAttributes={setAttributes}
 		/>

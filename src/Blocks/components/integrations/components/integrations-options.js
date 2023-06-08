@@ -247,7 +247,7 @@ export const IntegrationsOptions = ({
 							icon={icons.reset}
 							onClick={() => {
 								// Reset block to original state.
-								resetInnerBlocks(clientId);
+								resetInnerBlocks(clientId, true);
 							}}
 							className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 						>

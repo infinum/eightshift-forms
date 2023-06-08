@@ -59,6 +59,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	protected const ROUTE_TYPE_SETTINGS = 'settings';
 	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
 
+	protected const VARIATION_OUTPUT_KEY = 'variation';
+
 	/**
 	 * Get callback arguments array
 	 *
