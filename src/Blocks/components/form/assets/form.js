@@ -1,12 +1,22 @@
 /* global grecaptcha */
 
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import { State, prefix, ROUTES } from './state';
+import { State, ROUTES } from './state';
 import { Utils } from './utilities';
 import { Steps } from './step';
 import { Enrichment } from './enrichment';
 import { Captcha } from './captcha';
 import { ConditionalTags } from './conditional-tags';
+import selectManifest from './../../select/manifest.json';
+import {
+	StateEnum,
+	prefix,
+	setStateFormInitial,
+	setStateInitial,
+	setStateWindow,
+	setStateValues,
+	setStateConditionalTagsItems,
+} from './state/init';
 
 /**
  * Main Forms class.
@@ -37,7 +47,7 @@ export class Form {
 	 * @public
 	 */
 	init() {
-		this.state.setStateInitial();
+		setStateInitial();
 
 		// Set all public methods.
 		this.publicMethods();
@@ -62,7 +72,7 @@ export class Form {
 		[...document.querySelectorAll(this.state.getStateSelectorsForm())].forEach((element) => {
 			const formId = element.getAttribute(this.state.getStateAttribute('formId')) || 0;
 
-			this.state.setFormStateInitial(formId);
+			setStateFormInitial(formId);
 
 			this.initOne(formId);
 
@@ -84,47 +94,47 @@ export class Form {
 		this.state.getStateFormElement(formId).addEventListener('submit', this.onFormSubmitEvent);
 
 		// Setup select inputs.
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'select', formId)].forEach((select) => {
+		[...this.state.getStateElementByType('select', formId)].forEach((select) => {
 			this.setupSelectField(formId, select.name);
 		});
 
 		// Setup file single inputs.
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'file', formId)].forEach((file) => {
+		[...this.state.getStateElementByType('file', formId)].forEach((file) => {
 			this.setupFileField(formId, file.name);
 		});
 
 		// Setup regular inputs.
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'text', formId)].forEach((input) => {
+		[...this.state.getStateElementByType('text', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
 
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'number', formId)].forEach((input) => {
+		[...this.state.getStateElementByType('number', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
 
 		// Date.
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'date', formId)].forEach((input) => {
+		[...this.state.getStateElementByType('date', formId)].forEach((input) => {
 			this.setupDateField(formId, input.name);
 		});
 
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'tel', formId)].forEach((tel) => {
+		[...this.state.getStateElementByType('tel', formId)].forEach((tel) => {
 			this.setupTelField(formId, tel.name);
 		});
 
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'checkbox', formId)].forEach((checkbox) => {
+		[...this.state.getStateElementByType('checkbox', formId)].forEach((checkbox) => {
 			[...Object.values(checkbox.items)].forEach((checkboxItem) => {
 				this.setupRadioCheckboxField(formId, checkboxItem.value, checkboxItem.name);
 			});
 		});
 
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'radio', formId)].forEach((radio) => {
+		[...this.state.getStateElementByType('radio', formId)].forEach((radio) => {
 			[...Object.values(radio.items)].forEach((radioItem) => {
 				this.setupRadioCheckboxField(formId, radioItem.value, radioItem.name);
 			});
 		});
 
 		// Setup textarea inputs.
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'textarea', formId)].forEach((textarea) => {
+		[...this.state.getStateElementByType('textarea', formId)].forEach((textarea) => {
 			this.setupTextareaField(formId, textarea.name);
 		});
 
@@ -391,7 +401,7 @@ export class Form {
 
 		// Used for single submit.
 		const useOnlyFields = filter?.[this.FILTER_USE_ONLY_FIELDS] ?? [];
-		this.state.setState([this.state.FORM, this.state.IS_SINGLE_SUBMIT], Boolean(useOnlyFields.length), formId);
+		this.state.setStateFormIsSingleSubmit(Boolean(useOnlyFields.length), formId);
 
 		// Used for group submit.
 		const skipFields = filter?.[this.FILTER_SKIP_FIELDS] ?? [];
@@ -681,7 +691,7 @@ export class Form {
 	setupInputField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
 
-		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+		this.state.setStateElementLoaded(name, true, formId);
 
 		this.utils.setFieldFilledState(formId, name);
 
@@ -720,7 +730,7 @@ export class Form {
 	setupRadioCheckboxField(formId, value, name) {
 		const input = this.state.getStateElementItemsInput(name, value, formId);
 
-		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+		this.state.setStateElementLoaded(name, true, formId);
 
 		this.utils.setFieldFilledState(formId, name);
 
@@ -752,10 +762,10 @@ export class Form {
 				altFormat: input.getAttribute(this.state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
 				onReady: function(selectedDates, value) {
-					state.setState([state.ELEMENTS, name, state.LOADED], true, formId);
-					state.setState([state.ELEMENTS, name, state.INITIAL], value, formId);
-					state.setState([state.ELEMENTS, name, state.VALUE], value, formId);
-					state.setState([state.ELEMENTS, name, state.CUSTOM], this, formId);
+					state.setStateElementInitial(name, value, formId);
+					state.setStateElementLoaded(name, true, formId);
+					state.setStateElementValue(name, value, formId);
+					state.setStateElementCustom(name, this, formId);
 
 					utils.setFieldFilledState(formId, name);
 				},
@@ -763,7 +773,7 @@ export class Form {
 					utils.setFieldActiveState(formId, name);
 				},
 				onChange: function (selectedDates, value) {
-					state.setState([state.ELEMENTS, name, state.VALUE], value, formId);
+					state.setStateElementValue(name, value, formId);
 
 					utils.setFieldFilledState(formId, name);
 					conditionalTags.setField(formId, name);
@@ -799,16 +809,16 @@ export class Form {
 			];
  
 			const choices = new Choices.default(input, {
-				searchEnabled: this.state.getStateElementConfig(name, this.state.CONFIG_SELECT_USE_SEARCH, formId),
+				searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
 				duplicateItemsAllowed: false,
-				placeholder: this.state.getStateElementConfig(name, this.state.CONFIG_SELECT_USE_PLACEHOLDER, formId),
+				placeholder: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_PLACEHOLDER, formId),
 				searchFields: ['label', 'value', 'customProperties'],
 				itemSelectText: '',
 				classNames: {
-					containerOuter: `choices ${this.state.selectClassName}`,
+					containerOuter: `choices ${selectManifest.componentClass}`,
 				},
 				callbackOnCreateTemplates: function() {
 					return {
@@ -864,11 +874,11 @@ export class Form {
 				choices.setChoiceByValue(countryCookie);
 			}
 
-			this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
-			this.state.setState([this.state.ELEMENTS, name, this.state.CUSTOM], choices, formId);
+			this.state.setStateElementLoaded(name, true, formId);
+			this.state.setStateElementCustom(name, choices, formId);
 
 			choices.config.choices.map((item) => {
-				this.state.setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
+				setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
 			});
 
 			choices.containerOuter.element.addEventListener('focus', this.onFocusEvent);
@@ -895,7 +905,7 @@ export class Form {
 			autosize.default(input);
 		});
 
-		this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
+		this.state.setStateElementLoaded(name, true, formId);
 
 		this.utils.setFieldFilledState(formId, name);
 
@@ -932,8 +942,8 @@ export class Form {
 			);
 
 			// Set data to internal state.
-			this.state.setState([this.state.ELEMENTS, name, this.state.LOADED], true, formId);
-			this.state.setState([this.state.ELEMENTS, name, this.state.CUSTOM], dropzone, formId);
+			this.state.setStateElementLoaded(name, true, formId);
+			this.state.setStateElementCustom(name, dropzone, formId);
 
 			// On add one file add selectors for UX.
 			dropzone.on("addedfile", (file) => {
@@ -947,7 +957,7 @@ export class Form {
 
 				field.classList.remove(this.state.getStateSelectorsClassActive());
 
-				this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], 'true', formId);
+				this.state.setStateElementValue(name, 'true', formId);
 
 				// Remove main filed validation error.
 				this.utils.unsetFieldError(formId, name);
@@ -961,7 +971,7 @@ export class Form {
 				}
 
 				field.classList.remove(this.state.getStateSelectorsClassActive());
-				this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], '', formId);
+				this.state.setStateElementValue(name, '', formId);
 			})
 
 			// Add data formData to the api call for the file upload.
@@ -1200,20 +1210,20 @@ export class Form {
 		const type = field.getAttribute(this.state.getStateAttribute('fieldType'));
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
-		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
+		setStateValues(event.target, this.state.getFormIdByElement(event.target));
 
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
 			if (type === 'country') {
 				const country = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE_INTERNAL, 'tel', formId)].forEach((tel) => {
-					tel[this.state.CUSTOM].setChoiceByValue(country.number);
+				[...this.state.getStateElementByTypeInternal('tel', formId)].forEach((tel) => {
+					tel[StateEnum.CUSTOM].setChoiceByValue(country.number);
 				});
 			}
 
 			if (type === 'phone') {
 				const phone = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE_INTERNAL, 'country', formId)].forEach((country) => {
-					country[this.state.CUSTOM].setChoiceByValue(phone.label);
+				[...this.state.getStateElementByTypeInternal('country', formId)].forEach((country) => {
+					country[StateEnum.CUSTOM].setChoiceByValue(phone.label);
 				});
 			}
 		}
@@ -1235,7 +1245,7 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
-		this.state.setValues(event.target, this.state.getFormIdByElement(event.target));
+		setStateValues(event.target, this.state.getFormIdByElement(event.target));
 
 		this.conditionalTags.setField(formId, name);
 
@@ -1268,9 +1278,10 @@ export class Form {
 	 * @private
 	 */
 	publicMethods() {
-		this.state.setStateWindow();
+		setStateWindow();
+		this.state.publicMethods();
 
-		// window[prefix].form = new State(this.options);
+		window[prefix].form = {};
 		// window[prefix].form = {
 		// 	initOnlyForms: () => {
 		// 		this.initOnlyForms();

@@ -1,6 +1,7 @@
 /* global grecaptcha */
 
-import { State, prefix , ROUTES} from './state';
+import { State, ROUTES} from './state';
+import { prefix, setStateWindow } from './state/init';
 import { Utils } from './utilities';
 
 /**
@@ -121,7 +122,7 @@ export class Captcha {
 	 * @private
 	 */
 	publicMethods() {
-		this.state.setStateWindow();
+		setStateWindow();
 
 		window[prefix].captcha = {}
 		// window[prefix].captcha = {

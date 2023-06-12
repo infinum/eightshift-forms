@@ -1,10 +1,11 @@
 
-import { State, prefix } from './state';
+import { State } from './state';
 import {
 	CONDITIONAL_TAGS_OPERATORS,
 	CONDITIONAL_TAGS_ACTIONS,
 	CONDITIONAL_TAGS_LOGIC,
 } from '../../conditional-tags/assets/utils';
+import { prefix, setStateWindow } from './state/init';
 
 /**
  * Main conditon tags class.
@@ -271,7 +272,7 @@ export class ConditionalTags {
 	 */
 	setFieldInnerSelect(formId) {
 		// Loop all select elements.
-		[...this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.TYPE, 'select', formId)].forEach(({name}) => {
+		[...this.state.getStateElementByType('select', formId)].forEach(({name}) => {
 			// Find parent field.
 			const parentField = this.state.getStateElementField(name, formId);
 
@@ -524,7 +525,7 @@ export class ConditionalTags {
 	 * @private
 	 */
 	publicMethods() {
-		this.state.setStateWindow();
+		setStateWindow();
 
 		window[prefix].conditionalTags = {}
 		window[prefix].conditionalTags = {

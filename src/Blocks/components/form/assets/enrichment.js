@@ -1,5 +1,6 @@
-import { State, prefix } from './state';
+import { State } from './state';
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+import { prefix, setStateWindow } from './state/init';
 
 /**
  * Enrichment class.
@@ -196,7 +197,7 @@ export class Enrichment {
 	 * @private
 	 */
 	publicMethods() {
-		this.state.setStateWindow();
+		setStateWindow();
 
 		window[prefix].enrichment = {}
 		window[prefix].enrichment = {

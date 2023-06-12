@@ -1,4 +1,5 @@
-import { State, prefix } from './state';
+import { State } from './state';
+import { StateEnum, prefix, setStateWindow } from './state/init';
 
 /**
  * Main Utilities class.
@@ -68,7 +69,7 @@ export class Utils {
 		const error = this.state.getStateElementError(name, formId);
 
 		error.classList.remove(this.state.getStateSelectorsClassHasError());
-		this.state.setState([this.state.ELEMENTS, name, this.state.HAS_ERROR], false, formId);
+		this.state.setStateElementHasError(name, false, formId);
 		error.innerHTML = '';
 	}
 
@@ -76,7 +77,7 @@ export class Utils {
 		const error = this.state.getStateElementError(name, formId);
 
 		error.classList.add(this.state.getStateSelectorsClassHasError());
-		this.state.setState([this.state.ELEMENTS, name, this.state.HAS_ERROR], true, formId);
+		this.state.setStateElementHasError(name, true, formId);
 		error.innerHTML = msg;
 	}
 
@@ -87,7 +88,7 @@ export class Utils {
 		};
 
 		// Scroll to element if the condition is right.
-		const firstItemWithErrorName = this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.HAS_ERROR, true, formId)?.[0]?.[this.state.NAME];
+		const firstItemWithErrorName = this.state.getStateElementByHasError(true, formId)?.[0]?.[StateEnum.NAME];
 		if (firstItemWithErrorName && !this.state.getStateSettingsDisableScrollToFieldOnError()) {
 			this.scrollToElement(formId, firstItemWithErrorName);
 		}
@@ -279,23 +280,23 @@ export class Utils {
 			return;
 		}
 
-		for (const [name, item] of this.state.getStateElements(formId)) {
-			const type = item[this.state.TYPE];
-			const custom = item[this.state.CUSTOM];
-			const input = item[this.state.INPUT];
-			const items = item[this.state.ITEMS];
-			const initial = item[this.state.INITIAL]
+		for (const [name] of this.state.getStateElements(formId)) {
+			const type = this.state.getStateElementType(name, formId);
+			const custom = this.state.getStateElementCustom(name, formId);
+			const input = this.state.getStateElementInput(name, formId);
+			const items = this.state.getStateElementItems(name, formId);
+			const initial = this.state.getStateElementInitial(name, formId);
 
 			switch (type) {
 				case 'checkbox':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], {...initial}, formId);
+					this.state.setStateElementValue(name, {...initial}, formId);
 
 					for(const [innerName, innerValue] of Object.entries(initial)) {
 						items[innerName].input.checked = innerValue !== '';
 					};
 					break;
 				case 'radio':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
+					this.state.setStateElementValue(name, initial, formId);
 
 					if (initial === '') {
 						Object.values(items).forEach((inner) => {
@@ -306,19 +307,19 @@ export class Utils {
 					}
 					break;
 				case 'file':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
+					this.state.setStateElementValue(name, initial, formId);
 					custom.removeAllFiles();
 					break;
 				case 'select':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
+					this.state.setStateElementValue(name, initial, formId);
 					custom.setChoiceByValue(initial);
 					break;
 				case 'date':
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
+					this.state.setStateElementValue(name, initial, formId);
 					custom.setDate(initial);
 					break;
 				default:
-					this.state.setState([this.state.ELEMENTS, name, this.state.VALUE], initial, formId);
+					this.state.setStateElementValue(name, initial, formId);
 					input.value = initial;
 					break;
 			}
@@ -403,10 +404,10 @@ export class Utils {
 	// Check if form is fully loaded.
 	isFormLoaded(formId) {
 		const interval = setInterval(() => {
-			if (this.state.getStateFilteredBykey(this.state.ELEMENTS, this.state.LOADED, false, formId).length === 0) {
+			if (this.state.getStateElementByLoaded(false, formId).length === 0) {
 				clearInterval(interval);
 
-				this.state.setState([this.state.FORM, this.state.ISLOADED], true, formId);
+				this.state.setStateFormIsLoaded(true, formId);
 
 				// Triger event that form is fully loaded.
 				this.dispatchFormEvent(formId, this.state.getStateEventsFormJsLoaded());
@@ -467,7 +468,7 @@ export class Utils {
 	 * @private
 	 */
 	publicMethods() {
-		this.state.setStateWindow();
+		setStateWindow();
 
 		window[prefix].utils = {}
 	}

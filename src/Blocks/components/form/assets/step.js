@@ -1,4 +1,5 @@
-import { State, prefix } from './state';
+import { State } from './state';
+import { prefix, setStateWindow } from './state/init';
 import { Utils } from './utilities';
 
 /**
@@ -129,8 +130,8 @@ export class Steps {
 		this.state.getStateFormStepsElement(currentStep, formId).classList.remove(this.state.getStateSelectorsClassActive());
 		this.state.getStateFormStepsElement(nextStep, formId).classList.add(this.state.getStateSelectorsClassActive());
 
-		this.state.setState([this.state.FORM, this.state.STEPS, this.state.STEPS_CURRENT], nextStep, formId);
-		this.state.setState([this.state.FORM, this.state.STEPS, this.state.STEPS_FLOW], flow, formId);
+		this.state.setStateFormStepsCurrent(nextStep, formId);
+		this.state.setStateFormStepsFlow(flow, formId);
 	}
 
 	getIgnoreFields(formId) {
@@ -181,7 +182,7 @@ export class Steps {
 	 * @private
 	 */
 	publicMethods() {
-		this.state.setStateWindow();
+		setStateWindow();
 
 		window[prefix].step = {}
 	}

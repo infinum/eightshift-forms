@@ -2,7 +2,7 @@
 
 import domReady from '@wordpress/dom-ready';
 import manifest from './../manifest.json';
-import { prefix } from './state';
+import { prefix } from './state/init';
 
 if (typeof esFormsLocalization === 'undefined') {
 	console.warn('Your project is missing global variable esFormsLocalization called from the enqueue script in the forms. Forms will work but they will not get the admin settings configuration.');
