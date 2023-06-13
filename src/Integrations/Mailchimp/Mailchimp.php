@@ -273,7 +273,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'radiosIsRequired' => (bool) $isRequired,
 						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
-							function ($radio) use ($name) {
+							function ($radio) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio,

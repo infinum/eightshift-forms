@@ -145,7 +145,7 @@ export const StateEnum = {
 
 export function setStateWindow() {
 	if (!window[prefix]) {
-		window[prefix] = {}
+		window[prefix] = {};
 	}
 }
 
@@ -162,7 +162,7 @@ export function setStateInitial() {
 		[StateEnum.ATTRIBUTES]: {},
 		[StateEnum.PARAMS]: {},
 		[StateEnum.CONFIG]: {},
-	}
+	};
 
 	// Attributes.
 	for (const [key, item] of Object.entries(esFormsLocalization.customFormDataAttributes ?? {})) {
@@ -246,11 +246,11 @@ export function setStateInitial() {
 
 export function setStateFormInitial(formId) {
 	setStateWindow();
-	window[prefix].state[`form_${formId}`] = {}
+	window[prefix].state[`form_${formId}`] = {};
 	window[prefix].state[`form_${formId}`] = {
 		[StateEnum.ELEMENTS]: {},
 		[StateEnum.FORM]: {},
-	}
+	};
 
 	let formElement = '';
 
@@ -313,7 +313,7 @@ export function setStateFormInitial(formId) {
 				if (stepFieldName) {
 					stepOutput.push(stepFieldName);
 				}
-			})
+			});
 
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS, stepId], item, formId);
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS, stepId], stepOutput, formId);
@@ -325,7 +325,7 @@ export function setStateFormInitial(formId) {
 	}
 
 	// Loop all fields.
-	for (const [key, item] of Object.entries(formElement.querySelectorAll('input, select, textarea'))) {
+	for (const item of Object.values(formElement.querySelectorAll('input, select, textarea'))) {
 		const {
 			value,
 			name,
@@ -373,8 +373,8 @@ export function setStateFormInitial(formId) {
 				break;
 			case 'select-one':
 				// Combined fields like phone can have field null.
-				const customField = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
-				const typeTemp = customField.getAttribute(getStateAttribute('fieldType'));
+				const customField = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)); // eslint-disable-line no-case-declarations
+				const typeTemp = customField.getAttribute(getStateAttribute('fieldType')); // eslint-disable-line no-case-declarations
 
 				if (item.options.length) {
 					const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(getStateAttribute('selectCustomProperties')));
@@ -474,9 +474,9 @@ export function setStateValues(item, formId) {
 			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE, value], checked ? value : '', formId);
 			break;
 		case 'select-one':
-			const customField = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
-			const typeCustom = customField.getAttribute(getStateAttribute('fieldType'));
-			const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(getStateAttribute('selectCustomProperties')));
+			const customField = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)); // eslint-disable-line no-case-declarations
+			const typeCustom = customField.getAttribute(getStateAttribute('fieldType')); // eslint-disable-line no-case-declarations
+			const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(getStateAttribute('selectCustomProperties'))); // eslint-disable-line no-case-declarations
 
 			switch (typeCustom) {
 				case 'phone':
@@ -556,7 +556,7 @@ export function setStateConditionalTagsInner(name, formId, tags, innerName = '')
 
 	const isInner = Boolean(innerName);
 
-	const events = isInner ? getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], formId) : getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], formId)
+	const events = isInner ? getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], formId) : getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], formId);
 
 	const eventsOutput = {
 		...events ?? {},
@@ -612,11 +612,6 @@ export function setState(keyArray, value, formId) {
 	}
 }
 
-// Delete state item by key
-export function deleteState(key, formId) {
-	// this.setFormStateByKey(key, [], formId);
-}
-
 export function getState(keys, formId) {
 	const formKey = isNaN(formId) ? formId : `form_${formId}`;
 	let stateObject = window?.[prefix]?.state?.[formKey];
@@ -625,7 +620,7 @@ export function getState(keys, formId) {
 		return undefined;
 	}
 
-	keys.forEach((key) => {
+	keys.forEach((key) => { // eslint-disable-line consistent-return
 		stateObject = stateObject?.[key];
 		if (!stateObject) {
 			return undefined;

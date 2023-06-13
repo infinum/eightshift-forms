@@ -41,8 +41,8 @@ export const CountryOptions = (attributes) => {
 						value={countryName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}
 					/>
 					<NameChangeWarning isChanged={isNameChanged} />

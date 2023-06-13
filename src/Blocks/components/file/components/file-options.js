@@ -37,8 +37,8 @@ export const FileOptions = (attributes) => {
 						value={fileName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('fileName', attributes, manifest), fileDisabledOptions)}
 						className='es-no-field-spacing'
 					/>

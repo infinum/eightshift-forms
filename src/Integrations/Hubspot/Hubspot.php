@@ -460,7 +460,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
 							'radiosContent' => \array_map(
-								function ($radio) use ($name, $selectedOption) {
+								function ($radio) use ($selectedOption) {
 									return [
 										'component' => 'radio',
 										'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
@@ -541,7 +541,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 				$output[] = [
 					'component' => 'checkboxes',
 					'checkboxesFieldBeforeContent' => $processingText && !$processingIsHidden ? $processingText : '',
-					'checkboxesFieldAfterContent' => !$legitimate['isActive'] ?? false ? $legitimate['text'] ?? '' : '',
+					'checkboxesFieldAfterContent' => !$legitimate['isActive'] ? $legitimate['text'] ?? '' : '',
 					'checkboxesFieldHideLabel' => true,
 					'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_PROCESSING,
 					'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_PROCESSING,
@@ -571,45 +571,45 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					]),
 				];
 			}
-		}
 
-		if ($legitimate) {
-			$legitimateText = $legitimate['text'] ?? '';
-			$legitimateIsActive = $legitimate['isActive'] ?? false;
+			if ($legitimate) {
+				$legitimateText = $legitimate['text'] ?? '';
+				$legitimateIsActive = $legitimate['isActive'] ?? false;
 
-			if ($legitimateIsActive) {
-				$output[] = [
-					'component' => 'checkboxes',
-					'checkboxesFieldBeforeContent' => $legitimateText,
-					'checkboxesFieldHideLabel' => true,
-					'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
-					'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
-					'checkboxesIsRequired' => true,
-					'checkboxesContent' => [
-						[
-							'component' => 'checkbox',
-							'checkboxLabel' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
-							'checkboxIsChecked' => true,
-							'checkboxIsDisabled' => true,
-							'checkboxHideLabel' => true,
-							'checkboxValue' => 'true',
-							'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-								'checkboxLabel',
-								'checkboxValue',
-								'checkboxIsChecked',
-								'checkboxIsDisabled',
-								'checkboxHideLabel',
-							], false),
+				if ($legitimateIsActive) {
+					$output[] = [
+						'component' => 'checkboxes',
+						'checkboxesFieldBeforeContent' => $legitimateText,
+						'checkboxesFieldHideLabel' => true,
+						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
+						'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
+						'checkboxesIsRequired' => true,
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
+								'checkboxIsChecked' => true,
+								'checkboxIsDisabled' => true,
+								'checkboxHideLabel' => true,
+								'checkboxValue' => 'true',
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxLabel',
+									'checkboxValue',
+									'checkboxIsChecked',
+									'checkboxIsDisabled',
+									'checkboxHideLabel',
+								], false),
+							],
 						],
-					],
-					'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-						'checkboxesIsRequired',
-						'checkboxesFieldBeforeContent',
-						'checkboxHideLabel',
-						'checkboxIsDisabled',
-						'checkboxesTypeCustom',
-					]),
-				];
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesIsRequired',
+							'checkboxesFieldBeforeContent',
+							'checkboxHideLabel',
+							'checkboxIsDisabled',
+							'checkboxesTypeCustom',
+						]),
+					];
+				}
 			}
 		}
 

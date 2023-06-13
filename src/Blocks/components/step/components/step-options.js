@@ -26,8 +26,8 @@ export const StepOptions = (attributes) => {
 						value={stepName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('stepName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('stepName', attributes, manifest)]: value });
+						}}
 					/>
 
 					<NameChangeWarning isChanged={isNameChanged} type={'step'} />

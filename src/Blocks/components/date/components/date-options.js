@@ -57,8 +57,8 @@ export const DateOptions = (attributes) => {
 						value={dateName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('dateName', attributes, manifest), dateDisabledOptions)}
 					/>
 					<NameChangeWarning isChanged={isNameChanged} />

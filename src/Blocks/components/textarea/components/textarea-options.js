@@ -65,8 +65,8 @@ export const TextareaOptions = (attributes) => {
 						value={textareaName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('textareaName', attributes, manifest), textareaDisabledOptions)}
 					/>
 

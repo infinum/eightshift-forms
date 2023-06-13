@@ -23,7 +23,6 @@ export const CheckboxEditor = (attributes) => {
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
 	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
-	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
 
 	const checkboxClass = classnames([
 		selector(componentClass, componentClass),

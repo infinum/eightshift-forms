@@ -136,14 +136,22 @@ class FormFieldsRoute extends AbstractBaseRoute
 		);
 	}
 
-	private function getSteps($items, $data): array
+	/**
+	 * Get steps output
+	 *
+	 * @param array<mixed> $items Fields output.
+	 * @param array<mixed> $data Steps output.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getSteps(array $items, array $data): array
 	{
 		$output = [];
 
 		foreach ($data as $step) {
 			$value = $step['value'] ?? '';
 
-			if(!$value) {
+			if (!$value) {
 				continue;
 			}
 
@@ -164,6 +172,13 @@ class FormFieldsRoute extends AbstractBaseRoute
 		return $output;
 	}
 
+	/**
+	 * Get fields items output.
+	 *
+	 * @param array<mixed> $items Field data.
+	 *
+	 * @return array<mixed>
+	 */
 	private function getItems(array $items): array
 	{
 		$output = [];

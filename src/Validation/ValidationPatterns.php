@@ -132,9 +132,9 @@ class ValidationPatterns implements ValidationPatternsInterface
 				};
 
 				$output[] = [
-					'value' => $pattern[1] ?? '',
-					'label' => $pattern[0] ?? '',
-					'output' => $pattern[2] ?? '',
+					'value' => $pattern[1],
+					'label' => $pattern[0],
+					'output' => $pattern[2],
 				];
 			}
 		}

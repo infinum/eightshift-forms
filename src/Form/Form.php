@@ -125,7 +125,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 * @param array<string, mixed> $blocks Blocks from the core.
 	 * @param array<string, mixed> $attributes Attributes to update.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, mixed>>
 	 */
 	public function updateFormsBlockOutput(array $blocks, array $attributes): array
 	{

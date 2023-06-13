@@ -37,7 +37,7 @@ class Encryption
 	 * @param string $payload Payload used to export.
 	 * @param string $key Key used.
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 */
 	public static function decodeJwt(string $payload, string $key)
 	{

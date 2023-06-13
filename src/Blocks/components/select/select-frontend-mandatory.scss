@@ -4,7 +4,7 @@ div.es-select {
 	.choices__list--dropdown {
 		.choices__placeholder,
 		[data-visibility='is-hidden'] {
-			display: none !important; // stylelint-enable declaration-no-important
+			display: none !important; // stylelint-disable-line declaration-no-important
 		}
 	}
 }

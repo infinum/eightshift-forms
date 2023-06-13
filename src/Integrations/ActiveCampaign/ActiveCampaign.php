@@ -280,7 +280,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'radiosIsRequired' => (bool) $isRequired,
 						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
-							function ($radio) use ($name) {
+							function ($radio) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio['value'],

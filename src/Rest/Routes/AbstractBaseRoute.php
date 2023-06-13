@@ -389,7 +389,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	/**
 	 * Prepare array for later check like validation and etc...
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
+	 * @param mixed $request Data got from endpoint url.
 	 *
 	 * @return array<string, mixed>
 	 */

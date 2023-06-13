@@ -199,7 +199,7 @@ export class Enrichment {
 	publicMethods() {
 		setStateWindow();
 
-		window[prefix].enrichment = {}
+		window[prefix].enrichment = {};
 		window[prefix].enrichment = {
 			init: () => {
 				this.init();

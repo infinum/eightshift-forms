@@ -38,7 +38,7 @@ class FileUploadJob implements ServiceInterface
 	public function register(): void
 	{
 		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
-		\add_filter('cron_schedules', [$this, 'addJobToSchedule']);
+		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
 		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
 	}
 

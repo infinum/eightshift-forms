@@ -490,7 +490,7 @@ export class ConditionalTags {
 			}
 
 			output.push(name);
-		};
+		}
 
 		return output;
 	}
@@ -513,7 +513,7 @@ export class ConditionalTags {
 
 		// Set forms logic.
 		this.initForms(formId);
-	}
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
@@ -527,7 +527,7 @@ export class ConditionalTags {
 	publicMethods() {
 		setStateWindow();
 
-		window[prefix].conditionalTags = {}
+		window[prefix].conditionalTags = {};
 		window[prefix].conditionalTags = {
 			SHOW: this.SHOW,
 			HIDE: this.HIDE,
@@ -568,6 +568,6 @@ export class ConditionalTags {
 			onInitEvent: (event) => {
 				this.onInitEvent(event);
 			},
-		}
+		};
 	}
 }

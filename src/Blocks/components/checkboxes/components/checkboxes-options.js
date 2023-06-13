@@ -51,8 +51,8 @@ export const CheckboxesOptions = (attributes) => {
 						value={checkboxesName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('checkboxesName', attributes, manifest), checkboxesDisabledOptions)}
 						className='es-no-field-spacing'
 					/>

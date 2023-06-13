@@ -35,6 +35,7 @@ export class Form {
 		this.FILTER_IS_STEPS_FINAL_SUBMIT = 'isStepsFinalSubmit';
 		this.FILTER_SKIP_FIELDS = 'skipFields';
 		this.FILTER_USE_ONLY_FIELDS = 'useOnlyFields';
+		this.GLOBAL_MSG_TIMEOUT_ID = undefined;
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -325,8 +326,13 @@ export class Form {
 	}
 
 	formSubmitAfter(formId, response) {
+		// Reset timeout for after each submit.
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+		}
+
 		// Hide global msg in any case after some time.
-		setTimeout(() => {
+		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
 			this.utils.unsetGlobalMsg(formId);
 		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
 
@@ -373,10 +379,12 @@ export class Form {
 	////////////////////////////////////////////////////////////////
 
 	setFormData(formId, filter = {}) {
+		let internalFilter = filter;
+
 		if (this.state.getStateConfigIsAdmin()) {
 			this.setFormDataAdmin(formId);
-			filter = {
-				...filter,
+			internalFilter = {
+				...internalFilter,
 				[this.FILTER_SKIP_FIELDS]: this.setFormDataGroup(formId) ?? [],
 			};
 		} else {
@@ -384,7 +392,7 @@ export class Form {
 			this.setFormDataEnrichment();
 		}
 
-		this.setFormDataFields(formId, filter);
+		this.setFormDataFields(formId, internalFilter);
 		this.setFormDataCommon(formId);
 	}
 
@@ -446,24 +454,24 @@ export class Form {
 
 			switch (internalType) {
 				case 'checkbox':
-					let indexCheck = 0;
+					let indexCheck = 0; // eslint-disable-line no-case-declarations
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						data.value = checkValue;
 						data.innerName = checkName;
 
 						this.FORM_DATA.append(`${name}[${indexCheck}]`, JSON.stringify(data));
 						indexCheck++;
-					};
+					}
 					break;
 				case 'radio':
-					let indexRadio = 0;
+					let indexRadio = 0; // eslint-disable-line no-case-declarations
 					for(const [radioName, radioValue] of Object.entries(items)) {
 						data.value = radioValue.input.checked ? radioValue.value : '';
 						data.innerName = radioName;
 
 						this.FORM_DATA.append(`${name}[${indexRadio}]`, JSON.stringify(data));
 						indexRadio++;
-					};
+					}
 					break;
 				case 'textarea':
 					// Convert textarea to json format with : as delimiter.
@@ -512,7 +520,7 @@ export class Form {
 
 		// Check if we are saving group items in one key.
 		if (!groups.length) {
-			return;
+			return output;
 		}
 
 		for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
@@ -972,7 +980,7 @@ export class Form {
 
 				field.classList.remove(this.state.getStateSelectorsClassActive());
 				this.state.setStateElementValue(name, '', formId);
-			})
+			});
 
 			// Add data formData to the api call for the file upload.
 			dropzone.on("sending", (file, xhr, formData) => {
@@ -1131,7 +1139,7 @@ export class Form {
 				case this.steps.STEP_DIRECTION_NEXT:
 					this.utils.showLoader(formId);
 
-					const filterNext = {
+					const filterNext = { // eslint-disable-line no-case-declarations
 						[this.FILTER_SKIP_FIELDS]: [
 							...this.conditionalTags.getIgnoreFields(formId),
 						],
@@ -1145,7 +1153,7 @@ export class Form {
 				default:
 					this.utils.showLoader(formId);
 
-					const filterFinal = {
+					const filterFinal = { // eslint-disable-line no-case-declarations
 						[this.FILTER_SKIP_FIELDS]: [
 							...this.steps.getIgnoreFields(formId),
 							...this.conditionalTags.getIgnoreFields(formId),
@@ -1191,7 +1199,7 @@ export class Form {
 
 		const field = this.state.getFormFieldElementByChild(event.target);
 
-		this.state.getStateElementCustom(field.getAttribute(this.state.getStateAttribute('fieldName')), this.state.getFormIdByElement(event.target)).hiddenFileInput.click()
+		this.state.getStateElementCustom(field.getAttribute(this.state.getStateAttribute('fieldName')), this.state.getFormIdByElement(event.target)).hiddenFileInput.click();
 
 		field.classList.add(this.state.getStateSelectorsClassActive());
 	};
@@ -1249,7 +1257,7 @@ export class Form {
 					}
 			), 100);
 		}
-	}
+	};
 
 	onInputEvent = (event) => {
 		const formId = this.state.getFormIdByElement(event.target);
@@ -1268,7 +1276,7 @@ export class Form {
 					}
 			), 100);
 		}
-	}
+	};
 
 	// On Blur generic method. Check for length of value.
 	onBlurEvent = (event) => {

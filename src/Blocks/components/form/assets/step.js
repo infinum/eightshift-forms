@@ -97,7 +97,7 @@ export class Steps {
 
 	goToStepWithError(formId, errors) {
 		const flow = this.state.getStateFormStepsFlow(formId);
-		const nextStep = Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) => arr.includes(Object.keys(errors)[0]))?.[0] || null;
+		const nextStep = Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) => arr.includes(Object.keys(errors)[0]))?.[0] || null; // eslint-disable-line no-unused-vars
 		const nextStepIndex = flow.findIndex((item) => item === nextStep);
 
 		const newFlow = [
@@ -170,7 +170,7 @@ export class Steps {
 
 		// Set fields logic.
 		this.resetSteps(formId);
-	}
+	};
 
 		////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
@@ -184,6 +184,6 @@ export class Steps {
 	publicMethods() {
 		setStateWindow();
 
-		window[prefix].step = {}
+		window[prefix].step = {};
 	}
 }

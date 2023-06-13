@@ -1,5 +1,3 @@
-/* global esFormsLocalization */
-
 import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
@@ -39,7 +37,7 @@ export const StepMultiflowOptions = (attributes) => {
 			<>
 				{stepMultiflowRules?.map((_, index) => {
 					return (
-						<div className='es-border-b-cool-gray-100 es-pb-7 es-mb-7'>
+						<div key={index} className='es-border-b-cool-gray-100 es-pb-7 es-mb-7'>
 							<div className='es-h-spaced es-mb-3'>
 								<span>{__('Go to from step', 'eightshift-forms')}</span>
 								<Select
@@ -95,8 +93,8 @@ export const StepMultiflowOptions = (attributes) => {
 					{__('Add flow', 'eightshift-forms')}
 				</Button>
 			</>
-		)
-	}
+		);
+	};
 
 	const ConditionalTagsType = ({topParent}) => {
 		if (!formFields) {
@@ -113,7 +111,7 @@ export const StepMultiflowOptions = (attributes) => {
 							<>
 								{stepMultiflowRules?.[topParent]?.[2]?.[index]?.map((_, innerIndex) => {
 										return (
-											<ConditionalTagsItem topParent={topParent} parent={index} index={innerIndex} total={stepMultiflowRules[topParent][2][index].length} />
+											<ConditionalTagsItem key={innerIndex} topParent={topParent} parent={index} index={innerIndex} total={stepMultiflowRules[topParent][2][index].length} />
 										);
 									})
 								}
@@ -140,7 +138,7 @@ export const StepMultiflowOptions = (attributes) => {
 				</div>
 			</>
 		);
-	}
+	};
 
 	const ConditionalTagsItem = ({ topParent, parent, index, total }) => {
 		const operatorValue = stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[1] ?? CONDITIONAL_TAGS_OPERATORS.IS;
@@ -331,4 +329,4 @@ export const StepMultiflowOptions = (attributes) => {
 		}
 		</PanelBody>
 	);
-}
+};

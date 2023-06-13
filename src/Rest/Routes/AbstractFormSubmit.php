@@ -101,7 +101,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				case self::ROUTE_TYPE_FILE:
 					// Validate files.
 					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-						$validate = $this->getValidator()->validateFiles($formDataReference);
+						$validate = $this->getValidator()->validateFiles($formDataReference); // @phpstan-ignore-line
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
@@ -116,7 +116,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					break;
 				case self::ROUTE_TYPE_SETTINGS:
 					// Validate params.
-					$validate = $this->getValidator()->validateParams($formDataReference);
+					$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
 
 					if ($validate) {
 						throw new UnverifiedRequestException(
@@ -128,7 +128,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				case self::ROUTE_TYPE_STEP_VALIDATION:
 					// Validate params.
 					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-						$validate = $this->getValidator()->validateParams($formDataReference);
+						$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
@@ -141,7 +141,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				default:
 					// Validate params.
 					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-						$validate = $this->getValidator()->validateParams($formDataReference);
+						$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
@@ -191,7 +191,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 *
 	 * @return string
 	 */
-	protected function routeGetType(): string {
+	protected function routeGetType(): string
+	{
 		return self::ROUTE_TYPE_DEFAULT;
 	}
 

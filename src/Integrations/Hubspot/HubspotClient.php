@@ -604,7 +604,7 @@ class HubspotClient implements HubspotClientInterface
 	 *
 	 * @param array<string, mixed> $item Form data got from the api.
 	 *
-	 * @return array<int, array<string, array<int, array<string, mixed>>>>
+	 * @return array<string, array<string, mixed>>
 	 */
 	private function getConsentData(array $item): array
 	{
@@ -665,7 +665,7 @@ class HubspotClient implements HubspotClientInterface
 	 * @param array<string, mixed> $params Params.
 	 * @param string $itemId ItemID.
 	 *
-	 * @return array<int, array<string, mixed>>
+	 * @return array<string, array<string, mixed>>
 	 */
 	private function prepareConsent(array $params, string $itemId): array
 	{

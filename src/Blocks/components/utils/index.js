@@ -373,7 +373,7 @@ export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
 	let text = '';
 
 	if (!isChanged) {
-		return null
+		return null;
 	}
 
 	switch (type) {
@@ -416,8 +416,8 @@ export const FormEditButton = ({formId}) => {
 		>
 			{__('Edit fields', 'eightshift-forms')}
 		</Button>
-	)
-}
+	);
+};
 
 /**
  * Returns setting button component.
@@ -442,5 +442,5 @@ export const SettingsButton = ({formId}) => {
 		>
 			{__('Edit settings', 'eightshift-forms')}
 		</Button>
-	)
-}
+	);
+};

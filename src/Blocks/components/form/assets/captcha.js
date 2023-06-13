@@ -124,7 +124,7 @@ export class Captcha {
 	publicMethods() {
 		setStateWindow();
 
-		window[prefix].captcha = {}
+		window[prefix].captcha = {};
 		// window[prefix].captcha = {
 		// 	init: () => {
 		// 		this.init();

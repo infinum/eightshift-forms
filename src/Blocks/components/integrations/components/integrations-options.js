@@ -1,5 +1,3 @@
-/* global esFormsLocalization */
-
 import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';

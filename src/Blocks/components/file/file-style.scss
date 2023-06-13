@@ -101,7 +101,7 @@
 					duration: 1s;
 				}
 
-				@include media(large up) {
+				@include media(large up) { // stylelint-disable-line max-nesting-depth
 					--dz-progress-scoped-height: 6px;
 				}
 			}

@@ -71,8 +71,7 @@ class GreenhouseClient implements ClientInterface
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
 	 *
-	 * @return array<str
-	 * ing, mixed>
+	 * @return array<string, mixed>
 	 */
 	public function getItems(bool $hideUpdateTime = true): array
 	{

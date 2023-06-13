@@ -54,9 +54,7 @@ $checkboxInputClass = Components::classnames([
 	Components::selector($checkboxSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-if ($checkboxValue) {
-	$checkboxAttrs['value'] = esc_attr($checkboxValue);
-}
+$checkboxAttrs['value'] = esc_attr($checkboxValue);
 
 $checkboxAttrsOutput = '';
 if ($checkboxAttrs) {
@@ -79,9 +77,7 @@ if ($conditionalTags) {
 	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
 }
 
-if ($checkboxValue) {
-	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $checkboxValue;
-}
+$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $checkboxValue;
 
 if ($componentName) {
 	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;

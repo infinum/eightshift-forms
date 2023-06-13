@@ -34,8 +34,8 @@ export const SelectOptions = (attributes) => {
 						value={selectName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
 					/>
 

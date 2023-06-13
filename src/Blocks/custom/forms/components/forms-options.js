@@ -215,7 +215,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 													value={item?.condition}
 													onChange={(value) => {
 														formsDownloads[index].condition = value;
-														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] })
+														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
 													}}
 												/>
 											</Control>

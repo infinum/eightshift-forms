@@ -1,5 +1,3 @@
-/* global esFormsLocalization */
-
 import React, { useState, useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
@@ -77,10 +75,8 @@ export const ConditionalTagsOptions = (attributes) => {
 					return (
 						<>
 							{conditionalTagsRules?.[1]?.[index]?.map((_, innerIndex) => {
-								return (
-									<ConditionalTagsItem parent={index} index={innerIndex} total={conditionalTagsRules[1][index].length} />
-								)})
-							}
+								return (<ConditionalTagsItem key={innerIndex} parent={index} index={innerIndex} total={conditionalTagsRules[1][index].length} />);
+							})}
 
 							{(conditionalTagsRules?.[1]?.length > 1 && (index + 1) < total) &&
 								<div className='es-font-weight-700'>
@@ -103,7 +99,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				</Button>
 			</>
 		);
-	}
+	};
 
 	const ConditionalTagsItem = ({ parent, index, total }) => {
 		if (!formFields) {
@@ -128,8 +124,10 @@ export const ConditionalTagsOptions = (attributes) => {
 						options={formFields.filter((item) => {
 							// Remove current field from selection.
 							if (item.value !== conditionalTagsBlockName) {
-								return item
+								return item;
 							}
+
+							return null;
 						})}
 						onChange={(value) => {
 							conditionalTagsRules[1][parent][index][0] = value;

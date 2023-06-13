@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section, props } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, props } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
@@ -29,8 +29,8 @@ export const RadioOptions = (attributes) => {
 					value={radioValue}
 					onChange={(value) => {
 						setIsNameChanged(true);
-						setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value })}
-					}
+						setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value });
+					}}
 					disabled={isOptionDisabled(getAttrKey('radioValue', attributes, manifest), radioDisabledOptions)}
 				/>
 

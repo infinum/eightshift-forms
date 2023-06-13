@@ -90,7 +90,7 @@ export const InputOptions = (attributes) => {
 								value={inputName}
 								onChange={(value) => {
 									setIsNameChanged(true);
-									setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })
+									setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value });
 								}}
 								disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}
 							/>

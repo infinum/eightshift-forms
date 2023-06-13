@@ -47,8 +47,8 @@ export const PhoneOptions = (attributes) => {
 						value={phoneName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('phoneName', attributes, manifest), phoneDisabledOptions)}
 					/>
 					<NameChangeWarning isChanged={isNameChanged} />

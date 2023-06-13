@@ -40,9 +40,7 @@ $radioInputClass = Components::classnames([
 	Components::selector($radioSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-if ($radioValue) {
-	$radioAttrs['value'] = esc_attr($radioValue);
-}
+$radioAttrs['value'] = esc_attr($radioValue);
 
 $radioAttrsOutput = '';
 if ($radioAttrs) {
@@ -60,9 +58,7 @@ if ($conditionalTags) {
 	$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
 }
 
-if ($radioValue) {
-	$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $radioValue;
-}
+$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $radioValue;
 
 if ($componentName) {
 	$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;

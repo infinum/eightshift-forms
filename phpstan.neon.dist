@@ -16,5 +16,4 @@ parameters:
 		# Block templates
 		- '#^Variable \$attributes might not be defined\.#'
 		- '#^Variable \$innerBlockContent might not be defined\.#'
-		- '#^Variable \$this might not be defined\.#'
 	checkGenericClassInNonGenericObjectType: false

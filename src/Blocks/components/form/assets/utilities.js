@@ -19,8 +19,8 @@ export class Utils {
 	// Reset form in general.
 	resetErrors(formId) {
 		for (const [name] of this.state.getStateElements(formId)) {
-			this.unsetFieldError(formId, name)
-		};
+			this.unsetFieldError(formId, name);
+		}
 
 		this.unsetGlobalMsg(formId);
 	}
@@ -39,7 +39,7 @@ export class Utils {
 		}
 
 		if (additional) {
-			options.detail.additional = additional
+			options.detail.additional = additional;
 		}
 
 		if (!isNaN(formId)) {
@@ -85,7 +85,7 @@ export class Utils {
 	outputErrors(formId, data) {
 		for (const [name, msg] of Object.entries(data)) {
 			this.setFieldError(formId, name, msg);
-		};
+		}
 
 		// Scroll to element if the condition is right.
 		const firstItemWithErrorName = this.state.getStateElementByHasError(true, formId)?.[0]?.[StateEnum.NAME];
@@ -166,14 +166,14 @@ export class Utils {
 					}
 					break;
 				case 'tel':
-					let telValue = value;
+					let telValue = value; // eslint-disable-line no-case-declarations
 
 					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
 						telValue = `${valueCountry.number}${value}`;
 					}
 
 					output[trackingName] = value ? telValue : '';
-					break
+					break;
 				default:
 					output[trackingName] = value ?? '';
 					break;
@@ -293,7 +293,7 @@ export class Utils {
 
 					for(const [innerName, innerValue] of Object.entries(initial)) {
 						items[innerName].input.checked = innerValue !== '';
-					};
+					}
 					break;
 				case 'radio':
 					this.state.setStateElementValue(name, initial, formId);
@@ -474,6 +474,6 @@ export class Utils {
 	publicMethods() {
 		setStateWindow();
 
-		window[prefix].utils = {}
+		window[prefix].utils = {};
 	}
 }

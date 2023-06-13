@@ -94,7 +94,7 @@ if ($formPostId) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formId']] = esc_attr($formPostId);
 }
 
-$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['postId']] = esc_attr(get_the_ID());
+$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['postId']] = esc_attr((string) get_the_ID());
 
 if ($formType) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType']] = esc_html($formType);
@@ -112,18 +112,17 @@ if ($formConditionalTags) {
 }
 
 if ($formDownloads || $formSuccessRedirectVariationUrl) {
-
 	$downloadsOutput = [];
 
 	foreach ($formDownloads as $file) {
-		$condition = $file['condition'] ?: 'all';
-		$id = $file['id'] ?? '';
+		$condition = $file['condition'] ?: 'all'; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$fileId = $file['id'] ?? '';
 
-		if (!$id) {
+		if (!$fileId) {
 			continue;
 		}
 
-		$downloadsOutput[$condition]['files'][] = $id;
+		$downloadsOutput[$condition]['files'][] = $fileId;
 	}
 
 	if (!$downloadsOutput) {

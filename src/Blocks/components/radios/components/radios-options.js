@@ -31,8 +31,8 @@ export const RadiosOptions = (attributes) => {
 						value={radiosName}
 						onChange={(value) => {
 							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
-						}
+							setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
 						className='es-no-field-spacing'
 					/>

@@ -205,7 +205,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 					continue;
 				}
 
-				if ($this->checkFlowConditions($flowConditions, $submittedNames, $params)) {
+				if ($this->checkFlowConditions($flowConditions, $params)) {
 					$nextStep = $flowNext;
 				}
 			}
@@ -214,7 +214,6 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			if (!$nextStep) {
 				$nextStep = $this->getNextStepRegular($steps, $currentStep);
 			}
-
 		} else {
 			$nextStep = $this->getNextStepRegular($steps, $currentStep);
 			$type = 'multistep';
@@ -231,13 +230,29 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		);
 	}
 
-	private function getNextStepRegular(array $steps, string $currentStep): string
+	/**
+	 * Get next step ID in the regular (steps) flow.
+	 *
+	 * @param array<int, string> $steps Available steps.
+	 * @param string $currentStep Current step ID.
+	 *
+	 * @return int
+	 */
+	private function getNextStepRegular(array $steps, string $currentStep): int
 	{
 		$keys = \array_keys($steps);
-		return $keys[array_search($currentStep, $keys) +1];
+		return $keys[\array_search($currentStep, $keys, true) + 1];
 	}
 
-	private function checkFlowConditions(array $flowConditions, array $submittedNames, $params): bool
+	/**
+	 * Check if conditons are met to go to next step.
+	 *
+	 * @param array<int, mixed> $flowConditions Flow conditions that we need to check.
+	 * @param array<string, mixed> $params Params array.
+	 *
+	 * @return boolean
+	 */
+	private function checkFlowConditions(array $flowConditions, array $params): bool
 	{
 		$output = [];
 
@@ -263,8 +278,8 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			}
 		}
 
-		return array_reduce($output, function ($carry, $validItem) {
-			return $carry || (bool) array_reduce($validItem, function ($subcarry, $item) {
+		return \array_reduce($output, function ($carry, $validItem) {
+			return $carry || (bool) \array_reduce($validItem, function ($subcarry, $item) {
 					return $subcarry && (bool) $item;
 			}, true);
 		}, false);

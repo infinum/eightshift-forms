@@ -31,8 +31,8 @@ export const CheckboxOptions = (attributes) => {
 					value={checkboxValue}
 					onChange={(value) => {
 						setIsNameChanged(true);
-						setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value })}
-					}
+						setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value });
+					}}
 					disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
 				/>
 				<NameChangeWarning isChanged={isNameChanged} type={'value'} />
