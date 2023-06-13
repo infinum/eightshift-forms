@@ -174,9 +174,11 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 			$formId
 		);
 
+		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
+
 		// Output integrations validation issues.
-		if (isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
-			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($response[Validator::VALIDATOR_OUTPUT_KEY], $formId);
+		if ($validation) {
+			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($validation, $formId);
 		}
 
 		// Skip fallback email if integration is disabled.
@@ -194,7 +196,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 		$responseOutput = $response;
 
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !$response[Validator::VALIDATOR_OUTPUT_KEY] ?? []) {
+		if ($response['isDisabled'] && !$validation) {
 			$this->formSubmitMailer->sendFallbackEmail($response);
 
 			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);

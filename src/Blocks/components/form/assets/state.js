@@ -9,6 +9,7 @@ import {
 	prefix,
 	setState,
 	setStateWindow,
+	getStateTop,
 } from './state/init';
 
 export class State {
@@ -494,7 +495,7 @@ export class State {
 		return getStateTop(StateEnum.PARAMS);
 	}
 	getStateParam = (name) => {
-		return getStateParams()[name];
+		return this.getStateParams()[name];
 	}
 
 	////////////////////////////////////////////////////////////////

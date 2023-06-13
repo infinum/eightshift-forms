@@ -168,6 +168,10 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			$formId
 		);
 
+		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
+
+		// There is no need to utput integrations validation issues because Jira doesn't control the form.
+
 		// Skip fallback email if integration is disabled.
 		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
@@ -185,7 +189,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 		$responseOutput = $response;
 
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !$response[Validator::VALIDATOR_OUTPUT_KEY] ?? []) {
+		if ($response['isDisabled'] && !$validation) {
 			$this->formSubmitMailer->sendFallbackEmail($response);
 
 			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);

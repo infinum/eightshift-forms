@@ -347,6 +347,8 @@ export class Utils {
 			}
 		}
 
+		console.log(redirectUrl);
+
 		const url = new URL(redirectUrl);
 
 		const downloads = this.state.getStateFormConfigDownloads(formId);

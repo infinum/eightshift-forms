@@ -1217,26 +1217,26 @@ export class Form {
 				const country = this.state.getStateElementValueCountry(name, formId);
 				[...this.state.getStateElementByTypeInternal('tel', formId)].forEach((tel) => {
 					const name = tel[StateEnum.NAME];
-
 					const value = this.state.getStateElementValue(name, formId);
 
 					this.state.getStateElementCustom(name, formId).setChoiceByValue(country.number);
-
-
 					this.state.setStateElementValueCountry(name, country, formId);
-					this.state.setStateElementValueCombined(name, `${country.number}${value}`, formId);
-					this.state.setStateElementValue(name, country.number, formId);
+					if (value) {
+						this.state.setStateElementValueCombined(name, `${country.number}${value}`, formId);
+					}
 				});
 			}
 
-			// if (type === 'phone') {
-			// 	const phone = this.state.getStateElementValueCountry(name, formId);
-			// 	[...this.state.getStateElementByTypeInternal('country', formId)].forEach((country) => {
-			// 		country[StateEnum.CUSTOM].setChoiceByValue(phone.label);
-			// 		this.state.setStateElementValueCountry(country[StateEnum.NAME], phone, formId);
-			// 		this.state.setStateElementValue(country[StateEnum.NAME], phone.label, formId);
-			// 	});
-			// }
+			if (type === 'phone') {
+				const phone = this.state.getStateElementValueCountry(name, formId);
+				[...this.state.getStateElementByTypeInternal('country', formId)].forEach((country) => {
+					const name = country[StateEnum.NAME];
+
+					this.state.getStateElementCustom(name, formId).setChoiceByValue(phone.label);
+					this.state.setStateElementValueCountry(name, phone, formId);
+					this.state.setStateElementValue(name, phone.label, formId);
+				});
+			}
 		}
 
 		this.conditionalTags.setField(formId, name);

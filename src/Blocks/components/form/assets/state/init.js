@@ -64,9 +64,9 @@ export const StateEnum = {
 	CONFIG_SELECT_USE_SEARCH: 'useSearch',
 	CONFIG_PHONE_DISABLE_PICKER: 'disablePicker',
 	CONFIG_PHONE_USE_PHONE_SYNC: 'usePhoneSync',
-	CONFIG_SUCCESS_REDIREC: 'successRedirect',
-	CONFIG_SUCCESS_REDIRECT_VARIATIO: 'successRedirectVariation',
-	CONFIG_DOWNLOAD: 'downloads',
+	CONFIG_SUCCESS_REDIRECT: 'successRedirect',
+	CONFIG_SUCCESS_REDIRECT_VARIATION: 'successRedirectVariation',
+	CONFIG_DOWNLOADS: 'downloads',
 
 	SETTINGS: 'settings',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
