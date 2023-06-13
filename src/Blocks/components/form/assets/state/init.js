@@ -466,43 +466,51 @@ export function setStateValues(item, formId) {
 
  // Datepicker and dropzone are set using native lib events.
 
- switch (type) {
-	 case 'radio':
-		 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], checked ? value : '', formId);
-		 break;
-	 case 'checkbox':
-		 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE, value], checked ? value : '', formId);
-		 break;
-	 case 'select-one':
-		 const customField = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
-		 const typeCustom = customField.getAttribute(getStateAttribute('fieldType'));
-		 const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(getStateAttribute('selectCustomProperties')));
+	switch (type) {
+		case 'radio':
+			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], checked ? value : '', formId);
+			break;
+		case 'checkbox':
+			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE, value], checked ? value : '', formId);
+			break;
+		case 'select-one':
+			const customField = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
+			const typeCustom = customField.getAttribute(getStateAttribute('fieldType'));
+			const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(getStateAttribute('selectCustomProperties')));
 
-		 switch (typeCustom) {
-			 case 'phone':
-			 case 'country':
-				 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData[getStateAttribute('selectCountryCode')], formId);
-				 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData[getStateAttribute('selectCountryLabel')], formId);
-				 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData[getStateAttribute('selectCountryNumber')], formId);
-				 break;
-		 }
+			switch (typeCustom) {
+				case 'phone':
+				case 'country':
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData[getStateAttribute('selectCountryCode')], formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData[getStateAttribute('selectCountryLabel')], formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData[getStateAttribute('selectCountryNumber')], formId);
+					break;
+			}
 
-		 if (typeCustom !== 'phone') {
-			 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-		 }
+			if (typeCustom !== 'phone') {
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+			}
 
-		 if (typeCustom === 'phone') {
-			 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId).number}${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)}`, formId);
-		 }
-		 break;
-	 case 'tel':
-		 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-		 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId).number}${value}`, formId);
-		 break;
-	 default:
-		 setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-		 break;
- }
+			if (typeCustom === 'phone') {
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
+
+				if (getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)) {
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId).number}${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)}`, formId);
+				}
+			}
+		break;
+		case 'tel':
+			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
+
+			if (value) {
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId).number}${value}`, formId);
+			}
+			break;
+		default:
+			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+			break;
+	}
 }
 
 export function setStateConditionalTags(field, name, formId) {

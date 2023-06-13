@@ -203,14 +203,14 @@ export class ConditionalTags {
 			const defaults = this.state.getStateElementConditionalTagsDefaults(name, formId);
 
 			// Check if conditions are valid or not. This is where the magic happens.
-			const isValid = this.state.getStateElementConditionalTagsRef(name, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
+			const isValid = this.state.getStateElementConditionalTagsRef(name, formId)?.map((validItem) => validItem.every(Boolean)).some(Boolean);
 
 			// Reset to original state.
-			(defaults !== this.HIDE) ? field.classList.remove(this.state.getStateSelectorsClassHidden()) : field.classList.add(this.state.getStateSelectorsClassHidden());
+			(defaults !== this.HIDE) ? field?.classList?.remove(this.state.getStateSelectorsClassHidden()) : field?.classList?.add(this.state.getStateSelectorsClassHidden());
 
 			if (isValid) {
 				// Change state if valid.
-				(defaults !== this.HIDE) ? field.classList.add(this.state.getStateSelectorsClassHidden()) : field.classList.remove(this.state.getStateSelectorsClassHidden());
+				(defaults !== this.HIDE) ? field?.classList?.add(this.state.getStateSelectorsClassHidden()) : field?.classList?.remove(this.state.getStateSelectorsClassHidden());
 			}
 		}
 	}

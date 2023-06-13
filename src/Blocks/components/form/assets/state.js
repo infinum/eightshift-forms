@@ -296,6 +296,9 @@ export class State {
 	getStateElementValue = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId);
 	}
+	getStateElementValueCombined = (name, formId) => {
+		return getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], formId);
+	}
 	getStateElementError = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.ERROR], formId);
 	}
@@ -311,6 +314,12 @@ export class State {
 
 	setStateElementValue = (name, value, formId) => {
 		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+	}
+	setStateElementValueCountry = (name, value, formId) => {
+		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], value, formId);
+	}
+	setStateElementValueCombined = (name, value, formId) => {
+		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], value, formId);
 	}
 	setStateElementLoaded = (name, value, formId) => {
 		setState([StateEnum.ELEMENTS, name, StateEnum.LOADED], value, formId);
