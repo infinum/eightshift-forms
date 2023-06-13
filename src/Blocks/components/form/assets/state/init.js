@@ -6,8 +6,10 @@ import { CONDITIONAL_TAGS_ACTIONS } from '../../../conditional-tags/assets/utils
 // Constants
 ////////////////////////////////////////////////////////////////
 
+// Prefix all forms JS with this string.
 export const prefix = 'esForms';
 
+// Enum object for all state items.
 export const StateEnum = {
 	// State names.
 	ISLOADED: 'isloaded',
@@ -143,12 +145,22 @@ export const StateEnum = {
 // Initial states.
 ////////////////////////////////////////////////////////////////
 
+/**
+ * Set state initial window if it doesn't exist.
+ *
+ * @returns {void}
+ */
 export function setStateWindow() {
 	if (!window[prefix]) {
 		window[prefix] = {};
 	}
 }
 
+/**
+ * Set state initial values.
+ *
+ * @returns {void}
+ */
 export function setStateInitial() {
 	setStateWindow();
 
@@ -244,6 +256,13 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_FIELD], `.${manifest.componentJsClass}-field`, StateEnum.SELECTORS);
 }
 
+/**
+ * Set state initial form values.
+ *
+ * @param {string} formId Form ID.
+ *
+ * @returns {void}
+ */
 export function setStateFormInitial(formId) {
 	setStateWindow();
 	window[prefix].state[`form_${formId}`] = {};
@@ -456,6 +475,14 @@ export function setStateFormInitial(formId) {
 	}
 }
 
+/**
+ * Set state values when the field changes.
+ *
+ * @param {object} item Item/field to check.
+ * @param {string} formId Form ID.
+ *
+ * * @returns {void}
+ */
 export function setStateValues(item, formId) {
  const {
 	 name,
@@ -513,6 +540,15 @@ export function setStateValues(item, formId) {
 	}
 }
 
+/**
+ * Set state conditional tags on one field.
+ *
+ * @param {object} field Field object.
+ * @param {string} name Field name.
+ * @param {string} formId Form ID.
+ * 
+ * @returns {void}
+ */
 export function setStateConditionalTags(field, name, formId) {
 	const conditionalTags = field.getAttribute(getStateAttribute('conditionalTags'));
 
@@ -530,6 +566,17 @@ export function setStateConditionalTags(field, name, formId) {
 	}
 }
 
+
+/**
+ * Set state conditional tags inner items on one field.
+ *
+ * @param {object} conditionalTags Field object.
+ * @param {string} name Field name.
+ * @param {string} innerName Conditional tag inner name.
+ * @param {string} formId Form ID.
+ * 
+ * @returns {void}
+ */
 export function setStateConditionalTagsItems(conditionalTags, name, innerName, formId) {
 	if (!innerName) {
 		return;
@@ -551,6 +598,16 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 	setStateConditionalTagsInner(name, formId, tag[1], innerName);
 }
 
+/**
+ * Set state conditional tags inner item on one field.
+ *
+ * @param {string} name Field name.
+ * @param {string} formId Form ID.
+ * @param {array} tags Tags array.
+ * @param {string} innerName Conditional tag inner name.
+ * 
+ * @returns {void}
+ */
 export function setStateConditionalTagsInner(name, formId, tags, innerName = '') {
 	const refOutput = [];
 
@@ -587,6 +644,15 @@ export function setStateConditionalTagsInner(name, formId, tags, innerName = '')
 // Helpers.
 ////////////////////////////////////////////////////////////////
 
+/**
+ * Set state helper.
+ *
+ * @param {array} keyArray Array of keys of object.
+ * @param {mixed} value Any mixed value to store.
+ * @param {string} formId Form Id.
+ *
+ * @returns {void}
+ */
 export function setState(keyArray, value, formId) {
 	const formKey = isNaN(formId) ? formId : `form_${formId}`;
 	let stateObject = window[prefix].state[formKey];
@@ -612,6 +678,14 @@ export function setState(keyArray, value, formId) {
 	}
 }
 
+/**
+ * Get state helper.
+ *
+ * @param {array} keys Array of keys of object.
+ * @param {string} formId Form Id.
+ *
+ * @returns {mixed}
+ */
 export function getState(keys, formId) {
 	const formKey = isNaN(formId) ? formId : `form_${formId}`;
 	let stateObject = window?.[prefix]?.state?.[formKey];
@@ -630,20 +704,44 @@ export function getState(keys, formId) {
 	return stateObject;
 }
 
+/**
+ * Get state top level key.
+ *
+ * @param {string} name Name key to get.
+ *
+ * @returns {mixed}
+ */
 export function getStateTop(name) {
 	return window?.[prefix]?.state?.[name];
 }
 
+/**
+ * Get state event name with prefix.
+ *
+ * @param {string} name Name key to get.
+ *
+ * @returns {string}
+ */
 export function getStateEventName(name) {
 	const output = name.charAt(0).toUpperCase() + name.slice(1);
 
 	return `${prefix}${output}`;
 }
 
+/**
+ * Get state attributes.
+ *
+ * @returns {object}
+ */
 export function getStateAttributes() {
 	return getStateTop(StateEnum.ATTRIBUTES);
 }
 
+/**
+ * Get state attribute.
+ *
+ * @returns {string}
+ */
 export function getStateAttribute(name) {
 	return getStateAttributes()[name];
 }

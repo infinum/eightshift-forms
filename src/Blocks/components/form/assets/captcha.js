@@ -23,7 +23,7 @@ export class Captcha {
 	/**
 	 * Init all actions.
 	 * 
-	 * @public
+	 * @returns {void}
 	 */
 	init() {
 		// Load captcha on init.
@@ -36,7 +36,7 @@ export class Captcha {
 	/**
 	 * Initi captcha on load.
 	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	initCaptchaOnLoad() {
 		if (!this.state.getStateCaptchaIsUsed() || !this.state.getStateCaptchaLoadOnInit()) {
@@ -69,8 +69,10 @@ export class Captcha {
 	 *  Handle form submit and all logic in case we have captcha in place for init load.
 	 * 
 	 * @param {string} token Captcha token from api.
+	 * @param {bool} isEnterprise Is enterprise setup.
+	 * @param {string} action Action to use.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	formSubmitCaptchaInvisible(token, isEnterprise, action) {
 		// Populate body data.
@@ -102,7 +104,7 @@ export class Captcha {
 	/**
 	 * Hide captcha badge.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	initHideCaptchaBadge() {
 		if (!this.state.getStateCaptchaIsUsed()) {
@@ -119,25 +121,25 @@ export class Captcha {
 	/**
 	 * Set all public methods.
 	 * 
-	 * @private
+	 * @returns {void}
 	 */
 	publicMethods() {
 		setStateWindow();
 
 		window[prefix].captcha = {};
-		// window[prefix].captcha = {
-		// 	init: () => {
-		// 		this.init();
-		// 	},
-		// 	initCaptchaOnLoad: () => {
-		// 		this.initCaptchaOnLoad();
-		// 	},
-		// 	formSubmitCaptchaInvisible: (token, payed, action) => {
-		// 		this.formSubmitCaptchaInvisible(token, payed, action);
-		// 	},
-		// 	initHideCaptchaBadge: () => {
-		// 		this.initHideCaptchaBadge();
-		// 	}
-		// };
+		window[prefix].captcha = {
+			init: () => {
+				this.init();
+			},
+			initCaptchaOnLoad: () => {
+				this.initCaptchaOnLoad();
+			},
+			formSubmitCaptchaInvisible: (token, isEnterprise, action) => {
+				this.formSubmitCaptchaInvisible(token, isEnterprise, action);
+			},
+			initHideCaptchaBadge: () => {
+				this.initHideCaptchaBadge();
+			}
+		};
 	}
 }

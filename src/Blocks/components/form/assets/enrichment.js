@@ -19,10 +19,8 @@ export class Enrichment {
 
 	/**
 	 * Init all actions.
-	 * 
-	 * @public
 	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	init() {
 		// Check if enrichment is used.
@@ -36,10 +34,8 @@ export class Enrichment {
 
 	/**
 	 * Set localStorage value.
-	 * 
-	 * @public
 	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	setLocalStorage() {
 		// Check if enrichment is used.
@@ -125,8 +121,6 @@ export class Enrichment {
 	/**
 	 * Get localStorage value.
 	 *
-	 * @public
-	 *
 	 * @returns {string}
 	 */
 	getLocalStorage() {
@@ -137,8 +131,6 @@ export class Enrichment {
 	 * Filter all url params based on the allowed tags list.
 	 *
 	 * @param {array} allowedTags List of allowed tags from config.
-	 *
-	 * @public
 	 *
 	 * @returns {object}
 	 */
@@ -170,8 +162,6 @@ export class Enrichment {
 	 * @param {array} allowedTags List of allowed tags from config.
 	 *
 	 * @returns {object}
-	 *
-	 * @public
 	 */
 	getCookiesAllowedParams(allowedTags) {
 		const output = {};
@@ -193,8 +183,8 @@ export class Enrichment {
 
 	/**
 	 * Set all public methods.
-	 * 
-	 * @private
+	 *
+	 * @returns {void}
 	 */
 	publicMethods() {
 		setStateWindow();

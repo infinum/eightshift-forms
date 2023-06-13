@@ -45,9 +45,7 @@ export class ConditionalTags {
 	 * 
 	 * @param {string} fromId Form Id.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	initOne(formId) {
 		if (this.state.getStateConfigIsAdmin(formId)) {
@@ -65,9 +63,7 @@ export class ConditionalTags {
 	 *
 	 * @param {string} fromId Form Id.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	initForms(formId) {
 		// Get all tags from state.
@@ -143,9 +139,7 @@ export class ConditionalTags {
 	 *
 	 * @param {string} fromId Form Id.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	initFields(formId) {
 		for(const [name] of this.state.getStateElements(formId)) {
@@ -159,9 +153,7 @@ export class ConditionalTags {
 	 * @param {string} name Field name.
 	 * @param {string} fromId Form Id.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	setField(formId, name) {
 		// Check and set top level events and set rules.
@@ -189,9 +181,7 @@ export class ConditionalTags {
 	 *
 	 * @param {string} fromId Form Id.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	setFieldTopLevel(formId) {
 		// Loop all elements.
@@ -220,9 +210,7 @@ export class ConditionalTags {
 	 *
 	 * @param {string} fromId Form Id.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	setFieldInner(formId) {
 		// Loop all elements.
@@ -266,9 +254,7 @@ export class ConditionalTags {
 	 *
 	 * @param {string} fromId Form Id.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	setFieldInnerSelect(formId) {
 		// Loop all select elements.
@@ -364,12 +350,10 @@ export class ConditionalTags {
 	/**
 	 * Do the actual logic of checking conditions for rule - inner item.
 	 *
-	 * @param {string} name Field name.
 	 * @param {string} fromId Form Id.
+	 * @param {string} name Field name.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	setFieldsRulesInner(formId, name) {
 		// Explode name because we can have inner items that have parent prefix.
@@ -426,12 +410,10 @@ export class ConditionalTags {
 	/**
 	 * Do the actual logic of checking conditions for rule - top level item.
 	 *
-	 * @param {string} name Field name.
 	 * @param {string} fromId Form Id.
+	 * @param {string} name Field name.
 	 *
-	 * @public
-	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	setFieldsRules(formId, name) {
 		// Opulate current ref state.
@@ -480,6 +462,13 @@ export class ConditionalTags {
 		});
 	}
 
+	/**
+	 * Get ignore fields like hidden fields used when sending data to api.
+	 *
+	 * @param {string} formId Form Id
+	 *
+	 * @returns {array}
+	 */
 	getIgnoreFields(formId) {
 		const output = [];
 		for(const [name] of this.state.getStateElements(formId)) {
@@ -503,7 +492,7 @@ export class ConditionalTags {
 	 *
 	 * @param {CustomEvent} event Event object.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	onInitEvent = (event) => {
 		const { formId } = event.detail;
@@ -522,7 +511,7 @@ export class ConditionalTags {
 	/**
 	 * Set all public methods.
 	 * 
-	 * @private
+	 * @returns {void}
 	 */
 	publicMethods() {
 		setStateWindow();
@@ -535,9 +524,6 @@ export class ConditionalTags {
 			AND: this.AND,
 			OPERATORS: this.OPERATORS,
 
-			init: () => {
-				this.init();
-			},
 			initOne: (formId) => {
 				this.initOne(formId);
 			},
@@ -564,6 +550,9 @@ export class ConditionalTags {
 			},
 			setFieldsRules: (formId, name) => {
 				this.setFieldsRules(formId, name);
+			},
+			getIgnoreFields: (formId) => {
+				return this.getIgnoreFields(formId);
 			},
 			onInitEvent: (event) => {
 				this.onInitEvent(event);

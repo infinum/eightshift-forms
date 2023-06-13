@@ -527,8 +527,8 @@ export class State {
 
 	/**
 	 * Set all public methods.
-	 * 
-	 * @private
+	 *
+	 * @returns {void}
 	 */
 	publicMethods() {
 		setStateWindow();
@@ -537,6 +537,9 @@ export class State {
 	}
 }
 
+/**
+ * Routes enum connected to enqueu object.
+ */
 export const ROUTES = {
 	// Common.
 	PREFIX: esFormsLocalization.restRoutes.prefix,
@@ -566,6 +569,14 @@ export const ROUTES = {
 	VALIDATION_STEP: esFormsLocalization.restRoutes.validationStep,
 };
 
+/**
+ * Get rest api url link.
+ *
+ * @param {string} value Value to get
+ * @param {bool} isPartial Is relative or absolute url.
+ *
+ * @returns {string}
+ */
 export function getRestUrl(value, isPartial = false) {
 	const prefix = isPartial ? ROUTES.PREFIX_PROJECT : ROUTES.PREFIX;
 
@@ -575,6 +586,15 @@ export function getRestUrl(value, isPartial = false) {
 	return `${url}/${sufix}`;
 }
 
+/**
+ * Get rest api url link with integration prefix.
+ *
+ * @param {string} type Integration type.
+ * @param {string} value Value to get
+ * @param {bool} isPartial Is relative or absolute url.
+ *
+ * @returns {string}
+ */
 export function getRestUrlByType(type, value, isPartial = false) {
 	const prefix = isPartial ? ROUTES.PREFIX_PROJECT : ROUTES.PREFIX;
 

@@ -45,7 +45,7 @@ export class Form {
 	/**
 	 * Init all actions.
 	 * 
-	 * @public
+	 * @returns {void}
 	 */
 	init() {
 		setStateInitial();
@@ -64,9 +64,9 @@ export class Form {
 	}
 
 	/**
-	 * Init all forms.
+	 * Init only forms.
 	 * 
-	 * @public
+	 * @returns {void}
 	 */
 	initOnlyForms() {
 		// Loop all forms on the page.
@@ -84,11 +84,11 @@ export class Form {
 	}
 
 	/**
-	 * Init one form by element.
+	 * Init one form by form Id.
 	 * 
-	 * @param {object} element Form element.
+	 * @param {string} formId Form Id.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	initOne(formId) {
 		// Regular submit.
@@ -146,12 +146,10 @@ export class Form {
 	/**
 	 * Handle form submit and all logic.
 	 * 
-	 * @param {object} element Form element.
-	 * @param {boolean|object} singleSubmit Is form single submit, used in admin if yes pass element.
-	 * @param {boolean} isStepValidation Is form single submit, used in admin.
-	 * @param {boolean} isStepSubmit Check if is step submit.
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	formSubmit(formId, filter = {}) {
 		// Dispatch event.
@@ -203,47 +201,53 @@ export class Form {
 			this.FORM_DATA = new FormData();
 	}
 
-		/**
-	 * Handle form submit and all logic.
+	/**
+	 * Handle form submit and all logic for steps form.
 	 * 
-	 * @param {object} element Form element.
-	 * @param {boolean|object} singleSubmit Is form single submit, used in admin if yes pass element.
-	 * @param {boolean} isStepValidation Is form single submit, used in admin.
-	 * @param {boolean} isStepSubmit Check if is step submit.
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
-		formSubmitStep(formId, filter = {}) {
-			this.setFormData(formId, filter);
-			this.setFormDataStep(formId);
+	formSubmitStep(formId, filter = {}) {
+		this.setFormData(formId, filter);
+		this.setFormDataStep(formId);
 
-			// Populate body data.
-			const body = {
-				method: this.state.getStateFormMethod(formId),
-				mode: 'same-origin',
-				headers: {
-					Accept: 'multipart/form-data',
-				},
-				body: this.FORM_DATA,
-				credentials: 'same-origin',
-				redirect: 'follow',
-				referrer: 'no-referrer',
-			};
-	
-			const url = this.state.getRestUrl(ROUTES.VALIDATION_STEP);
-	
-			fetch(url, body)
-				.then((response) => {
-					return response.json();
-				})
-				.then((response) => {
-					this.formSubmitBefore(formId, response);
-					this.steps.formStepSubmit(formId, response);
-				});
+		// Populate body data.
+		const body = {
+			method: this.state.getStateFormMethod(formId),
+			mode: 'same-origin',
+			headers: {
+				Accept: 'multipart/form-data',
+			},
+			body: this.FORM_DATA,
+			credentials: 'same-origin',
+			redirect: 'follow',
+			referrer: 'no-referrer',
+		};
 
-				this.FORM_DATA = new FormData();
-		}
+		const url = this.state.getRestUrl(ROUTES.VALIDATION_STEP);
 
+		fetch(url, body)
+			.then((response) => {
+				return response.json();
+			})
+			.then((response) => {
+				this.formSubmitBefore(formId, response);
+				this.steps.formStepSubmit(formId, response);
+			});
+
+			this.FORM_DATA = new FormData();
+	}
+
+	/**
+	 * Actions to run before form submit.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 *
+	 * @returns {void}
+	 */
 	formSubmitBefore(formId, response) {
 		// Dispatch event.
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmit(), response);
@@ -255,6 +259,15 @@ export class Form {
 		this.utils.hideLoader(formId);
 	}
 
+	/**
+	 * Actions to run after form submit on success.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 * @param {bool} isFinalStep Check in steps if we are on final step.
+	 *
+	 * @returns {void}
+	 */
 	formSubmitSuccess(formId, response, isFinalStep = false) {
 		const {
 			status,
@@ -300,6 +313,15 @@ export class Form {
 		}
 	}
 
+	/**
+	 * Actions to run after form submit on error.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 * @param {bool} isFinalStep Check in steps if we are on final step.
+	 *
+	 * @returns {void}
+	 */
 	formSubmitError(formId, response, isFinalStep = false) {
 		const {
 			status,
@@ -325,6 +347,14 @@ export class Form {
 		}
 	}
 
+	/**
+	 * Actions to run after form submit.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 *
+	 * @returns {void}
+	 */
 	formSubmitAfter(formId, response) {
 		// Reset timeout for after each submit.
 		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
@@ -340,6 +370,14 @@ export class Form {
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitEnd(), response);
 	}
 
+	/**
+	 * Handle form submit on captcha.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
+	 *
+	 * @returns {void}
+	 */
 	runFormCaptcha(formId, filter = {}) {
 		if (!this.state.getStateCaptchaIsUsed()) {
 			return;
@@ -378,6 +416,14 @@ export class Form {
 	// Form Data
 	////////////////////////////////////////////////////////////////
 
+	/**
+	 * Set form data object for all forms.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
+	 *
+	 * @returns {void}
+	 */
 	setFormData(formId, filter = {}) {
 		let internalFilter = filter;
 
@@ -385,7 +431,7 @@ export class Form {
 			this.setFormDataAdmin(formId);
 			internalFilter = {
 				...internalFilter,
-				[this.FILTER_SKIP_FIELDS]: this.setFormDataGroup(formId) ?? [],
+				[this.FILTER_SKIP_FIELDS]: this.getFormDataGroup(formId) ?? [],
 			};
 		} else {
 			this.setFormDataPerType(formId);
@@ -397,13 +443,13 @@ export class Form {
 	}
 
 	/**
- * Build form data object.
- * 
- * @param {object} element Form element.
- * @param {boolean} singleSubmit Is form single submit, used in admin.
- *
- * @public
- */
+	 * Set form data object for all forms - fields.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
+	 *
+	 * @returns {void}
+	 */
 	setFormDataFields(formId, filter = {}) {
 		const formType = this.state.getStateFormType(formId);
 
@@ -514,7 +560,14 @@ export class Form {
 		}
 	}
 
-	setFormDataGroup(formId) {
+	/**
+	 * Set form data object for all forms - group.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
+	getFormDataGroup(formId) {
 		const output = [];
 		const groups = this.state.getStateFormElement(formId).querySelectorAll(`${this.state.getStateSelectorsGroup()}`);
 
@@ -568,6 +621,13 @@ export class Form {
 		return output;
 	}
 
+	/**
+	 * Set form data object for all forms - steps.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	setFormDataStep(formId) {
 		this.buildFormDataItems([
 			{
@@ -578,6 +638,13 @@ export class Form {
 		]);
 	}
 
+	/**
+	 * Set form data object for all forms - common.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	setFormDataCommon(formId) {
 		this.buildFormDataItems([
 			{
@@ -603,6 +670,13 @@ export class Form {
 		]);
 	}
 
+	/**
+	 * Set form data object for all forms - enrichment.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	setFormDataEnrichment() {
 		if (!this.state.getStateEnrichmentIsUsed()) {
 			return;
@@ -620,6 +694,13 @@ export class Form {
 		}
 	}
 
+	/**
+	 * Set form data object for all forms - admin.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	setFormDataAdmin(formId) {
 		this.buildFormDataItems([
 			{
@@ -629,6 +710,13 @@ export class Form {
 		]);
 	}
 
+	/**
+	 * Set form data object for all forms - per form type.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	setFormDataPerType(formId) {
 		let output = [];
 
@@ -655,6 +743,13 @@ export class Form {
 		this.buildFormDataItems(output);
 	}
 
+	/**
+	 * Set form data object for all forms - captcha.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	setFormDataCaptcha(data) {
 		this.buildFormDataItems([
 			{
@@ -664,6 +759,14 @@ export class Form {
 		]);
 	}
 
+	/**
+	 * Build helper for form data object.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {object} dataSet Object to build.
+	 *
+	 * @returns {void}
+	 */
 	buildFormDataItems(data, dataSet = this.FORM_DATA) {
 		data.forEach((item) => {
 			const {
@@ -691,10 +794,10 @@ export class Form {
 	/**
 	 * Setup text field.
 	 *
-	 * @param {object} input Input element.
-	 * @param {string} formId Form Id specific to one form.
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	setupInputField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
@@ -710,12 +813,12 @@ export class Form {
 	}
 
 	/**
-	 * Setup text field.
+	 * Setup tel field.
 	 *
-	 * @param {object} input Input element.
-	 * @param {string} formId Form Id specific to one form.
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	setupTelField(formId, name) {
 		this.setupInputField(formId, name);
@@ -728,12 +831,13 @@ export class Form {
 	}
 
 	/**
-	 * Setup radio field.
+	 * Setup radio/checkbox field.
 	 *
-	 * @param {object} input Input element.
-	 * @param {string} formId Form Id specific to one form.
+	 * @param {string} formId Form Id.
+	 * @param {string} value Field value.
+	 * @param {string} name Field name.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	setupRadioCheckboxField(formId, value, name) {
 		const input = this.state.getStateElementItemsInput(name, value, formId);
@@ -749,12 +853,12 @@ export class Form {
 	}
 
 	/**
-	 * Setup Date time field.
-	 * 
-	 * @param {object} date Input element.
-	 * @param {string} formId Form Id specific to one form.
+	 * Setup date field.
 	 *
-	 * @public
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
 	 */
 	setupDateField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
@@ -791,11 +895,12 @@ export class Form {
 	}
 
 	/**
-	 * Setup Select field.
-	 * 
-	 * @param {object} select Input element.
+	 * Setup select field.
 	 *
-	 * @public
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
 	 */
 	setupSelectField(formId, name) {
 		let input = this.state.getStateElementInput(name, formId);
@@ -896,12 +1001,12 @@ export class Form {
 	}
 
 	/**
-	 * Setup Textarea field.
-	 * 
-	 * @param {object} textarea Input element.
-	 * @param {string} formId Form Id specific to one form.
+	 * Setup textarea field.
 	 *
-	 * @public
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
 	 */
 	setupTextareaField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
@@ -924,13 +1029,12 @@ export class Form {
 	}
 
 	/**
-	 * Setup file single field.
-	 * 
-	 * @param {object} file Input element.
-	 * @param {string} formId Form Id specific to one form.
-	 * @param {number} index Loop index.
+	 * Setup file field.
 	 *
-	 * @public
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
 	 */
 	setupFileField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
@@ -1051,7 +1155,7 @@ export class Form {
 	/**
 	 * Remove all event listeners from elements.
 	 * 
-	 * @public
+	 * @returns {vodi}
 	 */
 	removeEvents() {
 		// const elements = document.querySelectorAll(this.data.formSelector);
@@ -1118,7 +1222,7 @@ export class Form {
 	 * 
 	 * @param {object} event Event callback.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	onFormSubmitEvent = (event) => {
 		event.preventDefault();
@@ -1191,7 +1295,7 @@ export class Form {
 	 *
 	 * @param {object} event Event callback.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	onFileWrapClickEvent = (event) => {
 		event.preventDefault();
@@ -1204,7 +1308,13 @@ export class Form {
 		field.classList.add(this.state.getStateSelectorsClassActive());
 	};
 
-	// On Focus event for regular fields.
+	/**
+	 * On focus event for regular fields.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
 	onFocusEvent = (event) => {
 		this.utils.setFieldActiveState(
 			this.state.getFormIdByElement(event.target),
@@ -1212,6 +1322,13 @@ export class Form {
 		);
 	};
 
+	/**
+	 * On Select change event.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
 	onSelectChangeEvent = (event) => {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const formId = this.state.getFormIdByElement(event.target);
@@ -1259,6 +1376,13 @@ export class Form {
 		}
 	};
 
+	/**
+	 * On input event for regular fields.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
 	onInputEvent = (event) => {
 		const formId = this.state.getFormIdByElement(event.target);
 		const field = this.state.getFormFieldElementByChild(event.target);
@@ -1278,7 +1402,13 @@ export class Form {
 		}
 	};
 
-	// On Blur generic method. Check for length of value.
+	/**
+	 * On blur event for regular fields.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
 	onBlurEvent = (event) => {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
@@ -1294,20 +1424,117 @@ export class Form {
 	/**
 	 * Set all public methods.
 	 * 
-	 * @private
+	 * @returns {void}
 	 */
 	publicMethods() {
 		setStateWindow();
 		this.state.publicMethods();
 
 		window[prefix].form = {};
-		// window[prefix].form = {
-		// 	initOnlyForms: () => {
-		// 		this.initOnlyForms();
-		// 	},
-		// 	initOne: (element) => {
-		// 		this.initOne(element);
-		// 	},
+		window[prefix].form = {
+			FILTER_IS_STEPS_FINAL_SUBMIT: this.FILTER_IS_STEPS_FINAL_SUBMIT,
+			FILTER_SKIP_FIELDS: this.FILTER_SKIP_FIELDS,
+			FILTER_USE_ONLY_FIELDS: this.FILTER_USE_ONLY_FIELDS,
+			GLOBAL_MSG_TIMEOUT_ID: this.GLOBAL_MSG_TIMEOUT_ID,
+
+			FORM_DATA: this.FORM_DATA,
+
+			init: () => {
+				this.init();
+			},
+			initOnlyForms: () => {
+				this.initOnlyForms();
+			},
+			initOne: (element) => {
+				this.initOne(element);
+			},
+			formSubmit: (formId, filter) => {
+				this.formSubmit(formId, filter);
+			},
+			formSubmitStep: (formId, filter) => {
+				this.formSubmitStep(formId, filter);
+			},
+			formSubmitBefore: (formId, response) => {
+				this.formSubmitBefore(formId, response);
+			},
+			formSubmitSuccess: (formId, response, isFinalStep) => {
+				this.formSubmitSuccess(formId, response, isFinalStep);
+			},
+			formSubmitError: (formId, response, isFinalStep) => {
+				this.formSubmitError(formId, response, isFinalStep);
+			},
+			formSubmitAfter: (formId, response) => {
+				this.formSubmitAfter(formId, response);
+			},
+			runFormCaptcha: (formId, filter) => {
+				this.runFormCaptcha(formId, filter);
+			},
+			setFormData: (formId, filter) => {
+				this.setFormData(formId, filter);
+			},
+			getFormDataGroup: (formId) => {
+				return this.getFormDataGroup(formId);
+			},
+			setFormDataCommon: (formId) => {
+				this.setFormDataCommon(formId);
+			},
+			setFormDataEnrichment: () => {
+				this.setFormDataEnrichment();
+			},
+			setFormDataAdmin: (formId) => {
+				this.setFormDataAdmin(formId);
+			},
+			setFormDataPerType: (formId) => {
+				this.setFormDataPerType(formId);
+			},
+			setFormDataCaptcha: (data) => {
+				this.setFormDataCaptcha(data);
+			},
+			buildFormDataItems: (data, dataSet) => {
+				this.buildFormDataItems(data, dataSet);
+			},
+			setupInputField: (formId, name) => {
+				this.setupInputField(formId, name);
+			},
+			setupTelField: (formId, name) => {
+				this.setupTelField(formId, name);
+			},
+			setupRadioCheckboxField: (formId, value, name) => {
+				this.setupRadioCheckboxField(formId, value, name);
+			},
+			setupDateField: (formId, name) => {
+				this.setupDateField(formId, name);
+			},
+			setupSelectField: (formId, name) => {
+				this.setupSelectField(formId, name);
+			},
+			setupTextareaField: (formId, name) => {
+				this.setupTextareaField(formId, name);
+			},
+			setupFileField: (formId, name) => {
+				this.setupFileField(formId, name);
+			},
+			removeEvents: () => {
+				this.removeEvents();
+			},
+			onFormSubmitEvent: (event) => {
+				this.onFormSubmitEvent(event);
+			},
+			onFileWrapClickEvent: (event) => {
+				this.onFileWrapClickEvent(event);
+			},
+			onFocusEvent: (event) => {
+				this.onFocusEvent(event);
+			},
+			onSelectChangeEvent: (event) => {
+				this.onSelectChangeEvent(event);
+			},
+			onInputEvent: (event) => {
+				this.onInputEvent(event);
+			},
+			onBlurEvent: (event) => {
+				this.onBlurEvent(event);
+			},
 		// 	formSubmitCaptcha: (element, token, payed, action) => {
 		// 		this.formSubmitCaptcha(element, token, payed, action);
 		// 	},
@@ -1347,6 +1574,6 @@ export class Form {
 		// 	onFileWrapClickEvent: (event) => {
 		// 		this.onFileWrapClickEvent(event);
 		// 	},
-		// };
+		};
 	}
 }

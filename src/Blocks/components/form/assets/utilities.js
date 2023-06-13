@@ -16,7 +16,13 @@ export class Utils {
 	// Public methods
 	////////////////////////////////////////////////////////////////
 
-	// Reset form in general.
+	/**
+	 * Reset form in general.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	resetErrors(formId) {
 		for (const [name] of this.state.getStateElements(formId)) {
 			this.unsetFieldError(formId, name);
@@ -25,7 +31,15 @@ export class Utils {
 		this.unsetGlobalMsg(formId);
 	}
 
-	// Dispatch custom event.
+	/**
+	 * Dispatch custom event.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Event name.
+	 * @param {object} additional Additional data to add to event.
+	 *
+	 * @returns {void}
+	 */
 	dispatchFormEvent(formId, name, additional) {
 		const options = {
 			bubbles: true,
@@ -49,22 +63,62 @@ export class Utils {
 		}
 	}
 
-	// Scroll to specific element.
+	/**
+	 * Scroll to specific element.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
 	scrollToElement(formId, name) {
 		this.state.getStateElementField(name, formId).scrollIntoView({block: 'start', behavior: 'smooth'});
 	}
 
+	/**
+	 * Scroll to global msg.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	scrollToGlobalMsg(formId) {
 		this.state.getStateFormGlobalMsgElement(formId).scrollIntoView({block: 'start', behavior: 'smooth'});
 	}
 
-	// Show loader.
+	/**
+	 * Show loader.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	showLoader(formId) {
 		this.state.getStateFormElement(formId).classList.add(this.state.getStateSelectorsClassLoading());
 		this.state.getStateFormLoader(formId).classList.add(this.state.getStateSelectorsClassActive());
 	}
 
+	/**
+	 * Hide loader.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
+	hideLoader(formId) {
+		this.state.getStateFormElement(formId).classList.remove(this.state.getStateSelectorsClassLoading());
+		this.state.getStateFormLoader(formId).classList.remove(this.state.getStateSelectorsClassActive());
+	}
+
 	// Remove one field error by name.
+	/**
+	 * Unset all error for fields.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
 	unsetFieldError(formId, name) {
 		const error = this.state.getStateElementError(name, formId);
 
@@ -73,6 +127,15 @@ export class Utils {
 		error.innerHTML = '';
 	}
 
+	/**
+	 * Set all error for fields.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {string} msg Error msg.
+	 *
+	 * @returns {void}
+	 */
 	setFieldError(formId, name, msg) {
 		const error = this.state.getStateElementError(name, formId);
 
@@ -81,7 +144,14 @@ export class Utils {
 		error.innerHTML = msg;
 	}
 
-	// Output all error for fields.
+	/**
+	 * Output all error for fields.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} data Form response data.
+	 *
+	 * @returns {void}
+	 */
 	outputErrors(formId, data) {
 		for (const [name, msg] of Object.entries(data)) {
 			this.setFieldError(formId, name, msg);
@@ -94,13 +164,13 @@ export class Utils {
 		}
 	}
 
-	// Hide loader.
-	hideLoader(formId) {
-		this.state.getStateFormElement(formId).classList.remove(this.state.getStateSelectorsClassLoading());
-		this.state.getStateFormLoader(formId).classList.remove(this.state.getStateSelectorsClassActive());
-	}
-
-	// Unset global message.
+	/**
+	 * Unset global msg.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	unsetGlobalMsg(formId) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
@@ -109,7 +179,13 @@ export class Utils {
 		messageContainer.innerHTML = '';
 	}
 
-	// Set global message.
+	/**
+	 * Set global msg.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	setGlobalMsg(formId, msg, status) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
@@ -140,7 +216,13 @@ export class Utils {
 		}
 	}
 
-	// Build GTM data for the data layer.
+	/**
+	 *  Build GTM data for the data layer.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {object}
+	 */
 	getGtmData(formId) {
 		const output = {};
 		for (const [name] of this.state.getStateElements(formId)) {
@@ -183,7 +265,16 @@ export class Utils {
 		return Object.assign({}, { event: this.state.getStateFormTrackingEventName(formId), ...output });
 	}
 
-	// Submit GTM event.
+	// 
+	/**
+	 * Get GTM event with data and push to dataLayer.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} status Response status.
+	 * @param {object} errors Errors object.
+	 *
+	 * @returns {void}
+	 */
 	gtmSubmit(formId, status, errors) {
 		const eventName = this.state.getStateFormTrackingEventName(formId);
 
@@ -233,7 +324,14 @@ export class Utils {
 		}
 	}
 
-	// Prefill inputs active/filled on init.
+	/**
+	 * Prefill inputs active/filled.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
 	setFieldFilledState(formId, name) {
 		const type = this.state.getStateElementType(name, formId);
 		const value = this.state.getStateElementValue(name, formId);
@@ -258,23 +356,61 @@ export class Utils {
 		}
 	}
 
+	/**
+	 * Set active state.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
 	setFieldActiveState(formId, name) {
 		this.state.getStateElementField(name, formId).classList.add(this.state.getStateSelectorsClassActive());
 	}
 
+	/**
+	 * Unset active state.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
 	unsetActiveState(formId, name) {
 		this.state.getStateElementField(name, formId).classList.remove(this.state.getStateSelectorsClassActive());
 	}
 
+	/**
+	 * Set filled state.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
 	setFilledState(formId, name) {
 		this.state.getStateElementField(name, formId).classList.add(this.state.getStateSelectorsClassFilled());
 	}
 
+	/**
+	 * Unset filled state.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
 	unsetFilledState(formId, name) {
 		this.state.getStateElementField(name, formId).classList.remove(this.state.getStateSelectorsClassFilled());
 	}
 
-	// Reset form values if the condition is right.
+	/**
+	 *  Reset form values to the initi state.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	resetForm(formId) {
 		if (!this.state.getStateSettingsResetOnSuccess(formId)) {
 			return;
@@ -335,7 +471,14 @@ export class Utils {
 		this.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitReset());
 	}
 
-	// Redirect to url and update url params from from data.
+	/**
+	 * Redirect to url and update url params from from data.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} formData Form Data object.
+	 *
+	 * @returns {void}
+	 */
 	redirectToUrl(formId, formData) {
 		let redirectUrl = this.state.getStateFormConfigSuccessRedirect(formId);
 
@@ -389,7 +532,15 @@ export class Utils {
 		this.redirectToUrlByRefference(formId, url.href);
 	}
 
-	// Redirect to url by provided path.
+	/**
+	 * Redirect to url by provided path.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} redirectUrl Redirect url.
+	 * @param {bool} reload Do we reload or not.
+	 *
+	 * @returns {void}
+	 */
 	redirectToUrlByRefference(formId, redirectUrl, reload = false) {
 		this.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccessBeforeRedirect(), redirectUrl);
 
@@ -405,7 +556,13 @@ export class Utils {
 		}
 	}
 
-	// Check if form is fully loaded.
+	/**
+	 * Check if form is fully loaded.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	isFormLoaded(formId) {
 		const interval = setInterval(() => {
 			if (this.state.getStateElementByLoaded(false, formId).length === 0) {
@@ -419,6 +576,14 @@ export class Utils {
 		}, 100);
 	}
 
+	/**
+	 * Get textarea json object to save.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {object}
+	 */
 	getSaveAsJsonFormatOutput(formId, name) {
 		const output = [];
 		const items = this.state.getStateElementValue(name, formId).split(/\r\n|\r|\n/);
@@ -452,9 +617,11 @@ export class Utils {
 	}
 
 	/**
-	 * 
-	 * @param {*} file 
-	 * @returns 
+	 * Check if form is fully loaded.
+	 *
+	 * @param {object} file File object.
+	 *
+	 * @returns {string}
 	 */
 	getFileNameFromFileObject(file) {
 		const fileExt = file.upload.filename.split('.').slice(-1)?.[0];
@@ -469,11 +636,85 @@ export class Utils {
 	/**
 	 * Set all public methods.
 	 *
-	 * @private
+	 * @returns {string}
 	 */
 	publicMethods() {
 		setStateWindow();
 
 		window[prefix].utils = {};
+		window[prefix].utils = {
+			resetErrors: (formId) => {
+				this.resetErrors(formId);
+			},
+			dispatchFormEvent: (formId, name, additional) => {
+				this.dispatchFormEvent(formId, name, additional);
+			},
+			scrollToElement: (formId, name) => {
+				this.scrollToElement(formId, name);
+			},
+			scrollToGlobalMsg: (formId) => {
+				this.scrollToGlobalMsg(formId);
+			},
+			showLoader: (formId) => {
+				this.showLoader(formId);
+			},
+			unsetFieldError: (formId, name) => {
+				this.unsetFieldError(formId, name);
+			},
+			setFieldError: (formId, name, msg) => {
+				this.setFieldError(formId, name, msg);
+			},
+			outputErrors: (formId, data) => {
+				this.outputErrors(formId, data);
+			},
+			hideLoader: (formId) => {
+				this.hideLoader(formId);
+			},
+			unsetGlobalMsg: (formId) => {
+				this.unsetGlobalMsg(formId);
+			},
+			setGlobalMsg: (formId, msg, status) => {
+				this.setGlobalMsg(formId, msg, status);
+			},
+			getGtmData: (formId) => {
+				this.getGtmData(formId);
+			},
+			gtmSubmit: (formId, status, errors) => {
+				this.gtmSubmit(formId, status, errors);
+			},
+			setFieldFilledState: (formId, name) => {
+				this.setFieldFilledState(formId, name);
+			},
+			setFieldActiveState: (formId, name) => {
+				this.setFieldActiveState(formId, name);
+			},
+			unsetActiveState: (formId, name) => {
+				this.unsetActiveState(formId, name);
+			},
+			setFilledState: (formId, name) => {
+				this.setFilledState(formId, name);
+			},
+			unsetFilledState: (formId, name) => {
+				this.unsetFilledState(formId, name);
+			},
+			resetForm: (formId) => {
+				this.resetForm(formId);
+			},
+			redirectToUrl: (formId, formData) => {
+				this.redirectToUrl(formId, formData);
+			},
+			redirectToUrlByRefference: (formId, redirectUrl, reload) => {
+				this.redirectToUrlByRefference(formId, redirectUrl, reload);
+			},
+			isFormLoaded: (formId) => {
+				this.isFormLoaded(formId);
+			},
+			getSaveAsJsonFormatOutput: (formId, name) => {
+				this.getSaveAsJsonFormatOutput(formId, name);
+			},
+			getFileNameFromFileObject: (file) => {
+				this.getFileNameFromFileObject(file);
+			},
+		};
 	}
 }

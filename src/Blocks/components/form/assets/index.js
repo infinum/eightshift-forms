@@ -11,7 +11,7 @@ if (typeof esFormsLocalization === 'undefined') {
 /**
  * Init all functionality with one function.
  *
- * @public
+ * @returns {void}
  */
 function initAll() {
 	import('./form').then(({ Form }) => {
