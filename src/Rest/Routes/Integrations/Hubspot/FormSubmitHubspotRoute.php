@@ -210,7 +210,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		}
 
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
+		if ($response['isDisabled'] && !$response[Validator::VALIDATOR_OUTPUT_KEY] ?? []) {
 			$this->formSubmitMailer->sendFallbackEmail($response);
 
 			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
