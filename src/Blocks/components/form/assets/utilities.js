@@ -339,6 +339,10 @@ export class Utils {
 	redirectToUrl(formId, formData) {
 		let redirectUrl = this.state.getStateFormConfigSuccessRedirect(formId);
 
+		if (!redirectUrl) {
+			return;
+		}
+
 		// Replace string templates used for passing data via url.
 		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
 			if (typeof val === 'string') {
@@ -346,8 +350,6 @@ export class Utils {
 				redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
 			}
 		}
-
-		console.log(redirectUrl);
 
 		const url = new URL(redirectUrl);
 
