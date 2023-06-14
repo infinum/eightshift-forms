@@ -436,9 +436,35 @@ export const SettingsButton = ({formId}) => {
 		<Button
 			href={`${wpAdminUrl}${settingsPageUrl}&formId=${id}`}
 			icon={icons.options}
-			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition es-mb-5'
+			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 		>
 			{__('Edit settings', 'eightshift-forms')}
+		</Button>
+	);
+};
+
+/**
+ * Returns location button component.
+ *
+ * @returns Component
+ */
+export const LocationsButton = ({formId}) => {
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const postId = select('core/editor').getCurrentPostId();
+
+	const id = formId ?? postId;
+
+	const {
+		locationsPageUrl,
+	} = select(STORE_NAME).getSettings();
+
+	return (
+		<Button
+			href={`${wpAdminUrl}${locationsPageUrl}&formId=${id}`}
+			icon={icons.notebook}
+			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+		>
+			{__('Locations', 'eightshift-forms')}
 		</Button>
 	);
 };

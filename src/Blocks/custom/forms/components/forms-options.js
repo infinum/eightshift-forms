@@ -25,7 +25,7 @@ import {
 	Collapsable,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
-import { FormEditButton, SettingsButton, getSettingsJsonOptions } from '../../../components/utils';
+import { FormEditButton, LocationsButton, SettingsButton, getSettingsJsonOptions } from '../../../components/utils';
 import manifest from '../manifest.json';
 import { ROUTES, getRestUrl } from '../../../components/form/assets/state';
 
@@ -109,6 +109,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 						<div className='es-fifty-fifty-h es-gap-2!'>
 							<FormEditButton formId={formsFormPostId} />
 							<SettingsButton formId={formsFormPostId} />
+							<LocationsButton formId={formsFormPostId} />
 						</div>
 					</Control>
 				}

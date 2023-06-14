@@ -12,6 +12,7 @@ import {
 	syncIntegrationBlocks,
 	clearTransientCache,
 	SettingsButton,
+	LocationsButton,
 } from '../../utils';
 import { getRestUrlByType, ROUTES } from '../../form/assets/state';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
@@ -178,7 +179,12 @@ export const IntegrationsOptions = ({
 					/>
 				}
 
-				<SettingsButton />
+				<Control>
+					<div className='es-fifty-fifty-h es-gap-2!'>
+						<SettingsButton />
+						<LocationsButton />
+					</div>
+				</Control>
 
 				<Section showIf={hasInnerBlocks && block !== 'mailer'} icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
 					<Control help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}>

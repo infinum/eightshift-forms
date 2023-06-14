@@ -305,11 +305,12 @@ export class Form {
 						this.state.getStateFormElement().submit();
 					}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
 				}
-			}
-		}
 
-		if (isFinalStep) {
-			this.steps.resetSteps(formId);
+				// Return to original first step.
+				if (isFinalStep) {
+					this.steps.resetSteps(formId);
+				}
+			}
 		}
 	}
 

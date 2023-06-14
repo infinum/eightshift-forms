@@ -4,6 +4,7 @@
 	"foreground": "#29A3A3",
 	"blockClassPrefix": "es-block",
 	"settingsPageUrl": "admin.php?page=es-settings",
+	"locationsPageUrl": "admin.php?page=es-settings&type=location",
 	"editFormUrl": "post.php?action=edit",
 	"config": {
 		"outputCssGlobally": true,

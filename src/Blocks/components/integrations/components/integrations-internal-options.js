@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import { PanelBody, Button } from '@wordpress/components';
 import { props, Section, Control, icons } from '@eightshift/frontend-libs/scripts';
-import { SettingsButton, resetInnerBlocks } from '../../utils';
+import { LocationsButton, SettingsButton, resetInnerBlocks } from '../../utils';
 import { FormOptions } from '../../../components/form/components/form-options';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
 
@@ -19,7 +19,12 @@ export const IntegrationsInternalOptions = ({
 	return (
 		<>
 			<PanelBody title={title}>
-				<SettingsButton />
+				<Control>
+					<div className='es-fifty-fifty-h es-gap-2!'>
+						<SettingsButton />
+						<LocationsButton />
+					</div>
+				</Control>
 
 				<FormOptions
 					{...props('form', attributes, {

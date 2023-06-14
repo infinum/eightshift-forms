@@ -236,12 +236,12 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	 * @param array<int, string> $steps Available steps.
 	 * @param string $currentStep Current step ID.
 	 *
-	 * @return int
+	 * @return string
 	 */
-	private function getNextStepRegular(array $steps, string $currentStep): int
+	private function getNextStepRegular(array $steps, string $currentStep): string
 	{
 		$keys = \array_keys($steps);
-		return $keys[\array_search($currentStep, $keys, true) + 1];
+		return (string) $keys[\array_search($currentStep, $keys, true) + 1];
 	}
 
 	/**
