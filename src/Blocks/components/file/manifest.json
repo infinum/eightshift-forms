@@ -63,6 +63,10 @@
 		},
 		"fileTypeCustom": {
 			"type": "string"
+		},
+		"fileIsDisabled": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

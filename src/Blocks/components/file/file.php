@@ -29,6 +29,7 @@ $fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $a
 $fileTypeCustom = Components::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Components::checkAttr('fileAttrs', $attributes, $manifest);
 $fileFieldAttrs = Components::checkAttr('fileFieldAttrs', $attributes, $manifest);
+$fileIsDisabled = Components::checkAttr('fileIsDisabled', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
@@ -74,6 +75,7 @@ $file = '
 		class="' . esc_attr($fileClass) . '"
 		name="' . esc_attr($fileName) . '"
 		id="' . esc_attr($fileName) . '"
+		' . disabled($fileIsDisabled, true, false) . '
 		type="file"
 		' . $fileIsMultiple . '
 		' . $fileAttrsOutput . '

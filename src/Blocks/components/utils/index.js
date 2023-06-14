@@ -169,9 +169,7 @@ export const updateInnerBlocks = (clientId, blocks) => {
 export const resetInnerBlocks = (clientId, useParent = false) => {
 	if (useParent) {
 		const parentId = select('core/block-editor').getBlockParents(clientId)?.[0];
-	
-		console.log(select('core/block-editor').getBlockParents(clientId));
-	
+
 		if (parentId) {
 			updateInnerBlocks(parentId, []);
 		}

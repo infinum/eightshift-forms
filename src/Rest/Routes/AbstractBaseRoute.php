@@ -56,6 +56,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'hubspotPageUrl' => 'es-form-hubspot-page-url',
 		'mailchimpTags' => 'es-form-mailchimp-tags',
 		'captcha' => 'es-form-captcha',
+		'direct' => 'es-form-direct',
+		'itemId' => 'es-form-item-id',
+		'innerId' => 'es-form-inner-id',
 	];
 
 	/**
@@ -70,6 +73,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'fieldId' => 'data-field-id',
 		'fieldName' => 'data-field-name',
 		'fieldType' => 'data-field-type',
+		'fieldPreventSubmit' => 'data-field-prevent-submit',
 		'trackingEventName' => 'data-tracking-event-name',
 		'trackingAdditionalData' => 'data-tracking-additional-data',
 		'tracking' => 'data-tracking',
@@ -226,6 +230,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function prepareParams(array $params): array
 	{
+		// Skip any manipulations if direct param is set.
 		$paramsOutput = \array_map(
 			static function ($item) {
 				// Check if array then output only value that is not empty.
@@ -284,6 +289,18 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 		foreach ($paramsOutput as $key => $value) {
 			switch ($key) {
+				// Used for direct import from settings.
+				case self::CUSTOM_FORM_PARAMS['direct']:
+					$output['directImport'] = (bool) $value['value'];
+					break;
+				// Used for direct import from settings.
+				case self::CUSTOM_FORM_PARAMS['itemId']:
+					$output['itemId'] = $value['value'];
+					break;
+				// Used for direct import from settings.
+				case self::CUSTOM_FORM_PARAMS['innerId']:
+					$output['innerId'] = $value['value'];
+					break;
 				case self::CUSTOM_FORM_PARAMS['formId']:
 					$output['formId'] = $value['value'];
 					$output['params'][$key] = $value;
@@ -398,54 +415,71 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		// Get params from request.
 		$params = $this->prepareParams($request->get_body_params());
 
-		// Get form id from params.
-		$formId = $params['formId'] ?? '';
-
-		// Get form type from params.
-		$type = $params['type'] ?? '';
-
-		// Get form settings for admin from params.
-		$formSettingsType = $params['settingsType'] ?? '';
-
-		// Manual populate output it admin settings our build it from form Id.
-		if ($type === Settings::SETTINGS_TYPE_NAME || $type === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
-			$formDataReference = [
-				'formId' => $formId,
-				'type' => $type,
-				'itemId' => '',
-				'innerId' => '',
-				'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$type]) ? \apply_filters(Filters::ALL[$formSettingsType][$type], $formId) : [],
-			];
-		} else {
-			$formDataReference = Helper::getFormDetailsById($formId);
-		}
-
-		// Populare files on upload.
-		$formDataReference['filesUpload'] = $this->prepareFile($request->get_file_params(), $params['params'] ?? []);
+		// Populare params.
+		$formDataReference['params'] = $params['params'] ?? [];
 
 		// Populate files from uploaded ID.
 		$formDataReference['files'] = $params['files'] ?? [];
 
-		// Populare params.
-		$formDataReference['params'] = $params['params'] ?? [];
+		// Get form directImport from params.
+		if (isset($params['directImport'])) {
+			$formDataReference['directImport'] = true;
+			$formDataReference['itemId'] = $params['itemId'] ?? '';
+			$formDataReference['innerId'] = $params['innerId'] ?? '';
+			$formDataReference['type'] = $params['type'] ?? '';
+			$formDataReference['formId'] = $params['formId'] ?? '';
+			$formDataReference['params'] = $params['params'] ?? [];
+			$formDataReference['files'] = $params['files'] ?? [];
+		} else {
+			// Get form id from params.
+			$formId = $params['formId'] ?? '';
 
-		// Populare action.
-		$formDataReference['action'] = $params['action'] ?? '';
+			// Get form type from params.
+			$type = $params['type'] ?? '';
 
-		// Populare action external.
-		$formDataReference['actionExternal'] = $params['actionExternal'] ?? '';
+			// Get form settings for admin from params.
+			$formSettingsType = $params['settingsType'] ?? '';
 
-		// Populare step fields.
-		$formDataReference['apiSteps'] = $params['apiSteps'] ?? [];
+			// Manual populate output it admin settings our build it from form Id.
+			if ($type === Settings::SETTINGS_TYPE_NAME || $type === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+				$formDataReference = [
+					'formId' => $formId,
+					'type' => $type,
+					'itemId' => '',
+					'innerId' => '',
+					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$type]) ? \apply_filters(Filters::ALL[$formSettingsType][$type], $formId) : [],
+				];
+			} else {
+				$formDataReference = Helper::getFormDetailsById($formId);
+			}
 
-		// Get form captcha from params.
-		$formDataReference['captcha'] = $params['captcha'] ?? [];
+			// Populare params.
+			$formDataReference['params'] = $params['params'] ?? [];
 
-		// Get form post Id from params.
-		$formDataReference['postId'] = $params['postId'] ?? '';
+			// Populate files from uploaded ID.
+			$formDataReference['files'] = $params['files'] ?? [];
 
-		// Get form storage from params.
-		$formDataReference['storage'] = \json_decode($params['storage'] ?? '', true) ?? [];
+			// Populare files on upload.
+			$formDataReference['filesUpload'] = $this->prepareFile($request->get_file_params(), $params['params'] ?? []);
+
+			// Populare action.
+			$formDataReference['action'] = $params['action'] ?? '';
+
+			// Populare action external.
+			$formDataReference['actionExternal'] = $params['actionExternal'] ?? '';
+
+			// Populare step fields.
+			$formDataReference['apiSteps'] = $params['apiSteps'] ?? [];
+
+			// Get form captcha from params.
+			$formDataReference['captcha'] = $params['captcha'] ?? [];
+
+			// Get form post Id from params.
+			$formDataReference['postId'] = $params['postId'] ?? '';
+
+			// Get form storage from params.
+			$formDataReference['storage'] = \json_decode($params['storage'] ?? '', true) ?? [];
+		}
 
 		return $formDataReference;
 	}

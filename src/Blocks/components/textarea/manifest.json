@@ -53,6 +53,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"textareaLimitHeight": {
+			"type": "boolean",
+			"default": false
+		},
 		"textareaTracking": {
 			"type": "string"
 		},
@@ -73,6 +77,14 @@
 		},
 		"textareaTypeCustom": {
 			"type": "string"
+		},
+		"textareaSize": {
+			"type": "string",
+			"default": "default"
+		},
+		"textareaIsPreventSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {

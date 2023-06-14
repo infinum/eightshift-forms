@@ -7,6 +7,7 @@ import {
 	componentMigrationJsClass,
 	componentTransferJsClass,
 	componentTestApiJsClass,
+	componentManualImportApiJsClass,
 } from './../manifest.json';
 import {
 	componentJsFilterClass,
@@ -118,6 +119,25 @@ domReady(() => {
 			});
 
 			sync.init();
+		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Sync
+	////////////////////////////////////////////////////////////////
+
+	const selectorManualImportApi = `.${componentManualImportApiJsClass}`;
+	const elementsManualImportApi = document.querySelector(selectorManualImportApi);
+
+	if (elementsManualImportApi) {
+		import('./manual-import-api').then(({ ManualImportApi }) => {
+			const manualImportApi = new ManualImportApi({
+				selector: selectorManualImportApi,
+				outputSelector: `.${componentManualImportApiJsClass}-output`,
+				dataSelector: `.${componentManualImportApiJsClass}-data`,
+			});
+
+			manualImportApi.init();
 		});
 	}
 });

@@ -255,6 +255,9 @@ export class State {
 	getStateElementField = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.FIELD], formId);
 	};
+	getStateElementIsDisabled = (name, formId) => {
+		return getState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], formId);
+	};
 	getStateElementLoaded = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.LOADED], formId);
 	};

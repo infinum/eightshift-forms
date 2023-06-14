@@ -471,6 +471,7 @@ export class Form {
 			const items = this.state.getStateElementItems(key, formId);
 			const field = this.state.getStateElementField(key, formId);
 			const valueCountry = this.state.getStateElementValueCountry(key, formId);
+			const disabled = this.state.getStateElementIsDisabled(key, formId);
 
 			// Used for single submit.
 			if (useOnlyFields.length && !useOnlyFields.includes(name)) {
@@ -502,6 +503,10 @@ export class Form {
 				case 'checkbox':
 					let indexCheck = 0; // eslint-disable-line no-case-declarations
 					for(const [checkName, checkValue] of Object.entries(value)) {
+						if (disabled[checkName]) {
+							continue;
+						}
+
 						data.value = checkValue;
 						data.innerName = checkName;
 
@@ -512,6 +517,10 @@ export class Form {
 				case 'radio':
 					let indexRadio = 0; // eslint-disable-line no-case-declarations
 					for(const [radioName, radioValue] of Object.entries(items)) {
+						if (disabled[radioName]) {
+							continue;
+						}
+
 						data.value = radioValue.input.checked ? radioValue.value : '';
 						data.innerName = radioName;
 
@@ -520,6 +529,10 @@ export class Form {
 					}
 					break;
 				case 'textarea':
+					if (disabled) {
+						break;
+					}
+
 					// Convert textarea to json format with : as delimiter.
 					if (saveAsJson) {
 						data.value = this.utils.getSaveAsJsonFormatOutput(formId, name);
@@ -528,6 +541,10 @@ export class Form {
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 				case 'tel':
+					if (disabled) {
+						break;
+					}
+
 					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
 						data.value = `${valueCountry.number}${value}`;
 					}
@@ -535,6 +552,10 @@ export class Form {
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 				case 'file':
+					if (disabled) {
+						break;
+					}
+
 					// If custom file use files got from the global object of files uploaded.
 					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? []; // eslint-disable-line no-case-declarations
 
@@ -554,6 +575,10 @@ export class Form {
 					}
 					break;
 				default:
+					if (disabled) {
+						break;
+					}
+
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 			}

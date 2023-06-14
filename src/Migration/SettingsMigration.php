@@ -124,7 +124,8 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'textarea',
 						'textareaName' => 'log',
-						'textareaFieldLabel' => \__('Log output', 'eightshift-forms'),
+						'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
+						'textareaIsPreventSubmit' => true,
 						'textareaIsReadOnly' => true,
 						'additionalClass' => "{$manifestForm['componentMigrationJsClass']}-output",
 					],

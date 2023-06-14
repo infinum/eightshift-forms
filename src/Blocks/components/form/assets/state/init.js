@@ -30,6 +30,7 @@ export const StateEnum = {
 	INPUT_SELECT: 'inputSelect',
 	ITEMS: 'items',
 	CUSTOM: 'custom',
+	IS_DISABLED: 'disabled',
 	TYPE: 'type',
 	TYPE_SETTINGS: 'typeSettings',
 	TYPE_INTERNAL: 'typeInternal',
@@ -349,6 +350,7 @@ export function setStateFormInitial(formId) {
 			value,
 			name,
 			type,
+			disabled,
 		} = item;
 
 		if (name === 'search_terms') {
@@ -368,6 +370,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.FIELD], item.parentNode.parentNode, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.NAME], name, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED, value], disabled, formId);
 
 				if (type === 'radio') {
 					if (!getState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], formId)) {
@@ -413,6 +416,7 @@ export function setStateFormInitial(formId) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
 				}
 
+				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], typeTemp, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], 'select', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
@@ -426,6 +430,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], type, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], 'tel', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], field.querySelector('select'), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 
@@ -442,6 +447,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], type, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], type, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 
 				if (type === 'datetime-local') {
@@ -455,6 +461,11 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], type, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], type, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
+
+				if (field.getAttribute(getStateAttribute('fieldPreventSubmit'))) {
+					setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], Boolean(field.getAttribute(getStateAttribute('fieldPreventSubmit'))), formId);
+				}
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 		}

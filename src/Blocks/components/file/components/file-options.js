@@ -26,6 +26,7 @@ export const FileOptions = (attributes) => {
 	const fileCustomInfoText = checkAttr('fileCustomInfoText', attributes, manifest);
 	const fileCustomInfoButtonText = checkAttr('fileCustomInfoButtonText', attributes, manifest);
 	const fileDisabledOptions = checkAttr('fileDisabledOptions', attributes, manifest);
+	const fileIsDisabled = checkAttr('fileIsDisabled', attributes, manifest);
 
 	return (
 		<>
@@ -100,6 +101,17 @@ export const FileOptions = (attributes) => {
 							/>
 						</div>
 					</Control>
+				</Section>
+
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<IconToggle
+						icon={icons.cursorDisabled}
+						label={__('Disabled', 'eightshift-forms')}
+						checked={fileIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('fileIsDisabled', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('fileIsDisabled', attributes, manifest), fileDisabledOptions)}
+						noBottomSpacing
+					/>
 				</Section>
 
 				<Section icon={icons.upload} label={__('Custom uploader', 'eightshift-forms')}>

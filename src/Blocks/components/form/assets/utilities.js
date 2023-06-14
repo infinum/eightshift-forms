@@ -624,6 +624,9 @@ export class Utils {
 	 * @returns {string}
 	 */
 	getFileNameFromFileObject(file) {
+		if (!file) {
+			return '';
+		}
 		const fileExt = file.upload.filename.split('.').slice(-1)?.[0];
 
 		return `${file.upload.uuid}.${fileExt}`;

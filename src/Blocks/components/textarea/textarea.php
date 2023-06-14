@@ -31,6 +31,9 @@ $textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes,
 $textareaSaveAsJson = Components::checkAttr('textareaSaveAsJson', $attributes, $manifest);
 $textareaTypeCustom = Components::checkAttr('textareaTypeCustom', $attributes, $manifest);
 $textareaFieldAttrs = Components::checkAttr('textareaFieldAttrs', $attributes, $manifest);
+$textareaSize = Components::checkAttr('textareaSize', $attributes, $manifest);
+$textareaLimitHeight = Components::checkAttr('textareaLimitHeight', $attributes, $manifest);
+$textareaIsPreventSubmit = Components::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
@@ -39,10 +42,17 @@ $textareaClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
+	Components::selector($textareaSize, $componentClass, 'size', $textareaSize),
+	Components::selector($textareaLimitHeight, $componentClass, '', 'limit-height'),
 ]);
 
 if ($textareaSaveAsJson) {
 	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['saveAsJson']] = esc_attr($textareaSaveAsJson);
+}
+
+// Set to use in settings for preventing field submit.
+if ($textareaIsPreventSubmit) {
+	$textareaFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldPreventSubmit']] = esc_attr($textareaIsPreventSubmit);
 }
 
 if ($textareaPlaceholder) {

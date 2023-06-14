@@ -139,6 +139,11 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					}
 					break;
 				default:
+					// Skip any validation if direct import.
+					if (isset($formDataReference['directImport'])) {
+						break;
+					}
+
 					// Validate params.
 					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 						$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
