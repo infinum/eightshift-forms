@@ -116,22 +116,58 @@ export const ConditionalTagsOptions = (attributes) => {
 		const showRuleValuePicker = formFieldOptions?.length > 0 && (operatorValue === CONDITIONAL_TAGS_OPERATORS.IS || operatorValue === CONDITIONAL_TAGS_OPERATORS.ISN);
 
 		return (
-			<>
-				<div className='es-h-spaced'>
+			<div className='es-h-spaced'>
 
-					<Select
-						value={fieldValue}
-						options={formFields.filter((item) => {
-							// Remove current field from selection.
-							if (item.value !== conditionalTagsBlockName) {
-								return item;
-							}
+				<Select
+					value={fieldValue}
+					options={formFields.filter((item) => {
+						// Remove current field from selection.
+						if (item.value !== conditionalTagsBlockName) {
+							return item;
+						}
 
-							return null;
-						})}
+						return null;
+					})}
+					onChange={(value) => {
+						conditionalTagsRules[1][parent][index][0] = value;
+						conditionalTagsRules[1][parent][index][2] = '';
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+					}}
+					noBottomSpacing
+					simpleValue
+					noSearch
+					additionalSelectClasses='es-w-40'
+				/>
+
+				<Select
+					value={operatorValue}
+					options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_LABELS)}
+					onChange={(value) => {
+						conditionalTagsRules[1][parent][index][1] = value;
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+					}}
+					noBottomSpacing
+					simpleValue
+					noSearch
+					additionalSelectClasses='es-w-40'
+				/>
+
+				<span>{'='}</span>
+				{!showRuleValuePicker ?
+					<TextControl
+						value={inputCheck}
+						onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] })}
 						onChange={(value) => {
-							conditionalTagsRules[1][parent][index][0] = value;
-							conditionalTagsRules[1][parent][index][2] = '';
+							conditionalTagsRules[1][parent][index][2] = value;
+							setInputCheck(value);
+						}}
+						className='es-w-40 es-m-0-bcf!'
+					/> :
+					<Select
+						value={conditionalTagsRules?.[1]?.[parent]?.[index]?.[2]}
+						options={formFieldOptions}
+						onChange={(value) => {
+							conditionalTagsRules[1][parent][index][2] = value;
 							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
 						}}
 						noBottomSpacing
@@ -139,73 +175,35 @@ export const ConditionalTagsOptions = (attributes) => {
 						noSearch
 						additionalSelectClasses='es-w-40'
 					/>
+				}
 
-					<Select
-						value={operatorValue}
-						options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_LABELS)}
-						onChange={(value) => {
-							conditionalTagsRules[1][parent][index][1] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-						}}
-						noBottomSpacing
-						simpleValue
-						noSearch
-						additionalSelectClasses='es-w-40'
-					/>
-
-					<span>{'='}</span>
-					{!showRuleValuePicker ?
-						<TextControl
-							value={inputCheck}
-							onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] })}
-							onChange={(value) => {
-								conditionalTagsRules[1][parent][index][2] = value;
-								setInputCheck(value);
-							}}
-							className='es-w-40 es-m-0-bcf!'
-						/> :
-						<Select
-							value={conditionalTagsRules?.[1]?.[parent]?.[index]?.[2]}
-							options={formFieldOptions}
-							onChange={(value) => {
-								conditionalTagsRules[1][parent][index][2] = value;
-								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-							}}
-							noBottomSpacing
-							simpleValue
-							noSearch
-							additionalSelectClasses='es-w-40'
-						/>
-					}
-
-					{(total === index + 1) &&
-						<Button
-							icon={icons.plusCircleFillAlt}
-							onClick={() => {
-								conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, ''];
-								setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
-							}}
-							className='es-rounded-1'
-						>
-							{__('AND', 'eightshift-forms')}
-						</Button>
-					}
-
+				{(total === index + 1) &&
 					<Button
-						icon={icons.trash}
+						icon={icons.plusCircleFillAlt}
 						onClick={() => {
-							conditionalTagsRules[1][parent].splice(index, 1);
-
-							if (conditionalTagsRules[1][parent].length === 0) {
-								conditionalTagsRules[1].splice(parent, 1);
-							}
+							conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, ''];
 							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
 						}}
-						label={__('Remove', 'eightshift-forms')}
-						className='es-ml-auto es-rounded-1!'
-					/>
-				</div>
-			</>
+						className='es-rounded-1'
+					>
+						{__('AND', 'eightshift-forms')}
+					</Button>
+				}
+
+				<Button
+					icon={icons.trash}
+					onClick={() => {
+						conditionalTagsRules[1][parent].splice(index, 1);
+
+						if (conditionalTagsRules[1][parent].length === 0) {
+							conditionalTagsRules[1].splice(parent, 1);
+						}
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+					}}
+					label={__('Remove', 'eightshift-forms')}
+					className='es-ml-auto es-rounded-1!'
+				/>
+			</div>
 		);
 	};
 
@@ -224,7 +222,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					<IconLabel
 						icon={icons.warningFillTransparent}
 						label={__('Feature unavailable', 'eightshift-forms')}
-						subtitle={__('No fields have a name set', 'eightshift-forms')}
+						subtitle={__('It looks like your field has a missing name.', 'eightshift-forms')}
 						additionalClasses='es-nested-color-yellow-500!'
 						addSubtitleGap
 						standalone

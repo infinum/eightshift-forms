@@ -249,7 +249,7 @@ export const StepMultiflowOptions = (attributes) => {
 					<IconLabel
 						icon={icons.warningFillTransparent}
 						label={__('Feature unavailable', 'eightshift-forms')}
-						subtitle={__('No fields have a name set or you are missing step blocks.', 'eightshift-forms')}
+						subtitle={__('It looks like you are missing step blocks.', 'eightshift-forms')}
 						additionalClasses='es-nested-color-yellow-500!'
 						addSubtitleGap
 						standalone

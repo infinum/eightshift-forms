@@ -1,8 +1,8 @@
 /**
  * Conditional tags operators constants.
  *
- * show - show item it conditions is set, hidden by default.
- * hide - hide item it conditions is set, visible by default.
+ * show - show item if conditions is set, hidden by default.
+ * hide - hide item if conditions is set, visible by default.
  *
  * all - activate condition if all conditions in rules array are met.
  * any - activate condition if at least one condition in rules array is met.
@@ -32,8 +32,8 @@ export const CONDITIONAL_TAGS_OPERATORS = {
 /**
  * Conditional tags actions constants.
  *
- * show - show item it conditions is set, hidden by default.
- * hide - hide item it conditions is set, visible by default.
+ * show - show item if conditions is set, hidden by default.
+ * hide - hide item if conditions is set, visible by default.
  */
 export const CONDITIONAL_TAGS_ACTIONS = {
 	SHOW: 'show',
