@@ -4,9 +4,10 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
-import { Tooltip } from '@wordpress/components';
+import { Tooltip, Button } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { AnimatedContentVisibility, camelize, classnames, IconLabel, icons, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { AnimatedContentVisibility, camelize, classnames, IconLabel, icons, STORE_NAME, Notification } from '@eightshift/frontend-libs/scripts';
+import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -44,7 +45,9 @@ export const isOptionDisabled = (key, options) => {
  * @returns {void}
  */
 export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId = '') => {
-	apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsEditorCreate}/?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}` }).then((response) => {
+	apiFetch({
+		path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATION_EDITOR, ROUTES.INTEGRATIONS_EDITOR_CREATE, true)}?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}`,
+	}).then((response) => {
 		resetInnerBlocks(clientId);
 
 		if (response.code === 200) {
@@ -66,14 +69,26 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
  * @returns {void}
  */
 export const syncIntegrationBlocks = (clientId, postId) => {
-	return apiFetch({ path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.integrationsEditorSync}/?id=${postId}` }).then((response) => {
+	return apiFetch({
+		path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATION_EDITOR, ROUTES.INTEGRATIONS_EDITOR_SYNC, true)}?id=${postId}`,
+	}).then((response) => {
 		if (isDeveloperMode()) {
 			console.log(response);
 		}
 
 		if (response.code === 200) {
-			resetInnerBlocks(clientId);
-			updateInnerBlocks(clientId, createBlocksFromInnerBlocksTemplate(response?.data?.data?.output));
+			const parentId = select('core/block-editor').getBlockParents(clientId)?.[0];
+
+			if (parentId) {
+				resetInnerBlocks(parentId);
+				updateInnerBlocks(parentId, createBlocksFromInnerBlocksTemplate(response?.data?.data?.output));
+
+				const blocks = select('core/block-editor').getBlocks(parentId);
+
+				if (blocks) {
+					dispatch('core/block-editor').selectBlock(blocks?.[0].clientId);
+				}
+			}
 		}
 
 		return {
@@ -98,29 +113,12 @@ export const syncIntegrationBlocks = (clientId, postId) => {
  */
 export const clearTransientCache = (type) => {
 	return apiFetch({
-		path: `${esFormsLocalization.restPrefixProject}${esFormsLocalization.restRoutes.cacheClear}/`,
+		path: getRestUrl(ROUTES.CACHE_CLEAR, true),
 		method: 'POST',
 		data: { type },
 	}).then((response) => {
 		return response.message;
 	});
-};
-
-/**
- * Get settings page url.
- *
- * @param {string} postId Post ID to get data from.
- *
- * @returns {string}
- */
-export const getSettingsPageUrl = (postId) => {
-	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
-
-	const {
-		settingsPageUrl,
-	} = select(STORE_NAME).getSettings();
-
-	return `${wpAdminUrl}${settingsPageUrl}&formId=${postId}`;
 };
 
 /**
@@ -168,8 +166,16 @@ export const updateInnerBlocks = (clientId, blocks) => {
  *
  * @returns {void}
  */
-export const resetInnerBlocks = (clientId) => {
-	updateInnerBlocks(clientId, []);
+export const resetInnerBlocks = (clientId, useParent = false) => {
+	if (useParent) {
+		const parentId = select('core/block-editor').getBlockParents(clientId)?.[0];
+
+		if (parentId) {
+			updateInnerBlocks(parentId, []);
+		}
+	} else {
+		updateInnerBlocks(clientId, []);
+	}
 };
 
 /**
@@ -243,17 +249,6 @@ export const getFilteredAttributes = (attributes, filterAttributes, appendItems 
 };
 
 /**
- * Get active integration block name by checking the paren item.
- *
- * @param {string} clientId Client Id to check.
- *
- * @returns {string}
- */
-export const getActiveIntegrationBlockName = (clientId) => {
-	return select('core/block-editor').getBlocksByClientId(clientId)?.[0]?.innerBlocks?.[0]?.attributes?.blockName;
-};
-
-/**
  * Get additional block name content from filter.
  *
  * @param {string} blockName Block name.
@@ -324,16 +319,17 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
  * Outputs notification if name is missing.
  *
  * @param {string} value Field name value.
+ * @param {string} className Additional class name to add.
  *
  * @returns Component
  */
-export const MissingName = ({ value }) => {
-	if (value) {
+export const MissingName = ({ value, asPlaceholder, className }) => {
+	if (value || asPlaceholder) {
 		return null;
 	}
 
 	return (
-		<div className='es-position-absolute es-right-2 es-top-0 es-nested-color-pure-white es-bg-red-500 es-nested-w-6 es-nested-h-6 es-w-10 es-h-10 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
+		<div className={`es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-bg-red-500 es-nested-w-6 es-nested-h-6 es-w-10 es-h-10 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center ${className}`}>
 		<Tooltip text={__('Name not set!', 'eightshift-forms')}>
 			{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
 		</Tooltip>
@@ -345,13 +341,14 @@ export const MissingName = ({ value }) => {
  * "Name" option label with optional "Required" notification.
  *
  * @param {string} value Field value.
+ * @param {string} label Field label.
  *
  * @returns Component
  */
-export const NameFieldLabel = ({ value }) => {
+export const NameFieldLabel = ({ value, label }) => {
 	return (
 		<div className='es-h-between es-w-full'>
-			<IconLabel icon={icons.idCard} label={__('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
+			<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
 
 			<AnimatedContentVisibility showIf={!value}>
 				<Tooltip text={__('The form may not work correctly.', 'eightshift-forms')}>
@@ -359,5 +356,115 @@ export const NameFieldLabel = ({ value }) => {
 				</Tooltip>
 			</AnimatedContentVisibility>
 		</div>
+	);
+};
+
+/**
+ * Show warning if name value is changed.
+ *
+ * @param {bool} isChanged Is name changed.
+ * @param {string} type Is this value.
+ *
+ * @returns Component
+ */
+export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
+	let text = '';
+
+	if (!isChanged) {
+		return null;
+	}
+
+	switch (type) {
+		case 'value':
+			text = __('After changing the field value, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			break;
+		case 'step':
+			text = __('After changing the step name, ensure that you review forms multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			break;
+		default:
+			text = __('After changing the field name, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			break;
+	}
+
+	return (
+		<Notification
+			text={text}
+			type={'warning'}
+		/>
+	);
+};
+
+/**
+ * Returns setting button component.
+ *
+ * @returns Component
+ */
+export const FormEditButton = ({formId}) => {
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
+	const {
+		editFormUrl,
+	} = select(STORE_NAME).getSettings();
+
+	return (
+		<Button
+			href={`${wpAdminUrl}${editFormUrl}&post=${formId}`}
+			icon={icons.edit}
+			className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+		>
+			{__('Edit fields', 'eightshift-forms')}
+		</Button>
+	);
+};
+
+/**
+ * Returns setting button component.
+ *
+ * @returns Component
+ */
+export const SettingsButton = ({formId}) => {
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const postId = select('core/editor').getCurrentPostId();
+
+	const id = formId ?? postId;
+
+	const {
+		settingsPageUrl,
+	} = select(STORE_NAME).getSettings();
+
+	return (
+		<Button
+			href={`${wpAdminUrl}${settingsPageUrl}&formId=${id}`}
+			icon={icons.options}
+			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+		>
+			{__('Edit settings', 'eightshift-forms')}
+		</Button>
+	);
+};
+
+/**
+ * Returns location button component.
+ *
+ * @returns Component
+ */
+export const LocationsButton = ({formId}) => {
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+	const postId = select('core/editor').getCurrentPostId();
+
+	const id = formId ?? postId;
+
+	const {
+		locationsPageUrl,
+	} = select(STORE_NAME).getSettings();
+
+	return (
+		<Button
+			href={`${wpAdminUrl}${locationsPageUrl}&formId=${id}`}
+			icon={icons.notebook}
+			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+		>
+			{__('Locations', 'eightshift-forms')}
+		</Button>
 	);
 };

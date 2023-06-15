@@ -16,6 +16,10 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $dateName = Components::checkAttr('dateName', $attributes, $manifest);
+if (!$dateName) {
+	return;
+}
+
 $dateValue = Components::checkAttr('dateValue', $attributes, $manifest);
 $datePlaceholder = Components::checkAttr('datePlaceholder', $attributes, $manifest);
 $dateIsDisabled = Components::checkAttr('dateIsDisabled', $attributes, $manifest);
@@ -23,9 +27,11 @@ $dateIsReadOnly = Components::checkAttr('dateIsReadOnly', $attributes, $manifest
 $dateIsRequired = Components::checkAttr('dateIsRequired', $attributes, $manifest);
 $dateTracking = Components::checkAttr('dateTracking', $attributes, $manifest);
 $dateType = Components::checkAttr('dateType', $attributes, $manifest);
+$dateTypeCustom = Components::checkAttr('dateTypeCustom', $attributes, $manifest);
 $dateAttrs = Components::checkAttr('dateAttrs', $attributes, $manifest);
 $datePreviewFormat = Components::checkAttr('datePreviewFormat', $attributes, $manifest);
 $dateOutputFormat = Components::checkAttr('dateOutputFormat', $attributes, $manifest);
+$dateFieldAttrs = Components::checkAttr('dateFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $dateFieldLabel = $attributes[Components::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
@@ -34,10 +40,6 @@ $dateClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 ]);
-
-if ($dateTracking) {
-	$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($dateTracking);
-}
 
 if ($dateValue) {
 	$dateAttrs['value'] = esc_attr($dateValue);
@@ -54,8 +56,6 @@ if ($datePreviewFormat) {
 if ($dateOutputFormat) {
 	$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['dateOutputFormat']] = esc_attr($dateOutputFormat);
 }
-
-$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal']] = esc_attr($dateType);
 
 $dateAttrsOutput = '';
 if ($dateAttrs) {
@@ -89,10 +89,13 @@ echo Components::render(
 			'fieldName' => $dateName,
 			'fieldIsRequired' => $dateIsRequired,
 			'fieldDisabled' => !empty($dateIsDisabled),
+			'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $dateTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => $dateFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

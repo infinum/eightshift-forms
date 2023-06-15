@@ -110,8 +110,9 @@ class FormFieldsRoute extends AbstractBaseRoute
 		}
 
 		$data = Helper::getFormDetailsById($formId);
+		$fieldsOnly = $data['fieldsOnly'] ?? [];
 
-		if (!$data['fieldsOnly']) {
+		if (!$fieldsOnly) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
@@ -119,9 +120,76 @@ class FormFieldsRoute extends AbstractBaseRoute
 			);
 		}
 
+		$fieldsOutput = $this->getItems($fieldsOnly);
+
+		$steps = $data['stepsSetup'] ?? [];
+
+		return \rest_ensure_response(
+			$this->getApiSuccessOutput(
+				\esc_html__('Success.', 'eightshift-forms'),
+				[
+					'fields' => \array_values($fieldsOutput),
+					'steps' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'])) : [],
+					'names' => $data['fieldNamesFull'],
+				]
+			)
+		);
+	}
+
+	/**
+	 * Get steps output
+	 *
+	 * @param array<mixed> $items Fields output.
+	 * @param array<mixed> $data Steps output.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getSteps(array $items, array $data): array
+	{
 		$output = [];
 
-		foreach ($data['fieldsOnly'] as $value) {
+		foreach ($data as $step) {
+			$value = $step['value'] ?? '';
+
+			if (!$value) {
+				continue;
+			}
+
+			$item = $step;
+
+			$item['subItems'] = \array_values(\array_filter(\array_map(
+				static function ($item) use ($items) {
+					if (isset($items[$item])) {
+						return $items[$item];
+					}
+				},
+				$step['subItems']
+			)));
+
+			$output[] = $item;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get fields items output.
+	 *
+	 * @param array<mixed> $items Field data.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getItems(array $items): array
+	{
+		$output = [];
+
+		$ignore = \array_flip([
+			'file',
+			'step',
+			'submit',
+		]);
+
+		foreach ($items as $value) {
 			$blockName = Helper::getBlockNameDetails($value['blockName']);
 			$prefix = Components::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
 
@@ -131,7 +199,9 @@ class FormFieldsRoute extends AbstractBaseRoute
 				continue;
 			}
 
-			if ($blockName['name'] === 'submit') {
+			$type = $blockName['name'];
+
+			if (isset($ignore[$type])) {
 				continue;
 			}
 
@@ -141,50 +211,60 @@ class FormFieldsRoute extends AbstractBaseRoute
 				$label = $name;
 			}
 
-			$outputItem = [
+			$output[$name] = [
 				'label' => $label,
 				'value' => $name,
-				'type' => $blockName['name'],
-				'subItems' => [],
+				'type' => $type,
+				'subItems' => $this->getInnerItems($value['innerBlocks'], $type),
 			];
-
-			if ($value['innerBlocks']) {
-				$outputItem['subItems'][] = [
-					'label' => \__('Empty', 'eightshift-forms'),
-					'value' => '',
-				];
-
-				foreach ($value['innerBlocks'] as $valueInner) {
-					$blockNameInner = Helper::getBlockNameDetails($valueInner['blockName']);
-					$prefixInner = Components::kebabToCamelCase("{$blockNameInner['nameAttr']}-{$blockNameInner['nameAttr']}");
-
-					$innerKeyValue =  $valueInner['attrs']["{$prefixInner}Value"] ?? '';
-
-					if (!$innerKeyValue) {
-						continue;
-					}
-
-					$innerLabel = $valueInner['attrs']["{$prefixInner}Label"] ?? '';
-
-					if (!$innerLabel) {
-						$innerLabel = $innerKeyValue;
-					}
-
-					$outputItem['subItems'][] = [
-						'label' => $innerLabel,
-						'value' => $innerKeyValue,
-					];
-				}
-			}
-
-			$output[] = $outputItem;
 		}
 
-		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
-				\esc_html__('Success.', 'eightshift-forms'),
-				$output
-			)
-		);
+		return $output;
+	}
+
+	/**
+	 * Get inner items with details
+	 *
+	 * @param array<mixed> $items Items to find in the block.
+	 * @param string $parentType Parent type for the block.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getInnerItems(array $items, string $parentType): array
+	{
+		$output = [];
+
+		if (!$items) {
+			return $output;
+		}
+
+		$output[] = [
+			'label' => $parentType === 'radios' ? \__('Unchecked', 'eightshift-forms') : \__('Unselected', 'eightshift-forms'),
+			'value' => '',
+		];
+
+		foreach ($items as $item) {
+			$blockName = Helper::getBlockNameDetails($item['blockName']);
+			$prefix = Components::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
+
+			$innerKeyValue =  $item['attrs']["{$prefix}Value"] ?? '';
+
+			if (!$innerKeyValue) {
+				continue;
+			}
+
+			$innerLabel = $item['attrs']["{$prefix}Label"] ?? '';
+
+			if (!$innerLabel) {
+				$innerLabel = $innerKeyValue;
+			}
+
+			$output[] = [
+				'label' => $innerLabel,
+				'value' => "{$innerKeyValue}",
+			];
+		}
+
+		return $output;
 	}
 }

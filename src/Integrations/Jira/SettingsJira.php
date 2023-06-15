@@ -226,25 +226,17 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'selectName' => $this->getSettingsName(self::SETTINGS_JIRA_PROJECT_KEY),
 								'selectFieldLabel' => \__('Project', 'eightshift-forms'),
 								'selectSingleSubmit' => true,
-								'selectContent' => \array_merge(
-									[
-										[
+								'selectPlaceholder' => \__('Select project', 'eightshift-forms'),
+								'selectContent' => \array_map(
+									static function ($option) use ($selectedProject) {
+										return [
 											'component' => 'select-option',
-											'selectOptionLabel' => '',
-											'selectOptionValue' => '',
-										],
-									],
-									\array_map(
-										static function ($option) use ($selectedProject) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => $option['title'],
-												'selectOptionValue' => $option['key'],
-												'selectOptionIsSelected' => $selectedProject === $option['key'],
-											];
-										},
-										$this->jiraClient->getProjects()
-									)
+											'selectOptionLabel' => $option['title'],
+											'selectOptionValue' => $option['key'],
+											'selectOptionIsSelected' => $selectedProject === $option['key'],
+										];
+									},
+									$this->jiraClient->getProjects()
 								),
 							],
 							$selectedProject ? [
@@ -252,25 +244,17 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'selectSingleSubmit' => true,
 								'selectName' => $this->getSettingsName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
 								'selectFieldLabel' => \__('Issue type', 'eightshift-forms'),
-								'selectContent' => \array_merge(
-									[
-										[
+								'selectPlaceholder' => \__('Select issue type', 'eightshift-forms'),
+								'selectContent' => \array_map(
+									static function ($option) use ($selectedIssueType) {
+										return [
 											'component' => 'select-option',
-											'selectOptionLabel' => '',
-											'selectOptionValue' => '',
-										],
-									],
-									\array_map(
-										static function ($option) use ($selectedIssueType) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => $option['title'],
-												'selectOptionValue' => $option['id'],
-												'selectOptionIsSelected' => $selectedIssueType === $option['id'],
-											];
-										},
-										$this->jiraClient->getIssueType($selectedProject)
-									)
+											'selectOptionLabel' => $option['title'],
+											'selectOptionValue' => $option['id'],
+											'selectOptionIsSelected' => $selectedIssueType === $option['id'],
+										];
+									},
+									$this->jiraClient->getIssueType($selectedProject)
 								),
 							] : [],
 						],
@@ -317,7 +301,6 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 										'checkboxLabel' => \__('Disable auto output to description table.', 'eightshift-forms'),
 										'checkboxIsChecked' => $manualMapParams,
 										'checkboxValue' => self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY,
-										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 										'checkboxAsToggleSize' => 'medium',
 									],

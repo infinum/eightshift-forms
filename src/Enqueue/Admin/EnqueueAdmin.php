@@ -11,13 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\AbstractTestApi;
-use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncDirectRoute;
-use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
-use EightshiftForms\Rest\Routes\Settings\FormSettingsSubmitRoute;
-use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
-use EightshiftForms\Rest\Routes\Settings\TransferRoute;
+use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
@@ -28,6 +22,11 @@ use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
  */
 class EnqueueAdmin extends AbstractEnqueueAdmin
 {
+	/**
+	 * Use shared helper trait.
+	 */
+	use SharedEnqueue;
+
 	/**
 	 * Create a new admin instance.
 	 *
@@ -79,25 +78,14 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	{
 		parent::enqueueScripts();
 
-		$restRoutesPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
-		$restRoutesPrefix = \get_rest_url(\get_current_blog_id()) . $restRoutesPrefixProject;
-
-		$output = [
-			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
-			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
-			'restPrefixProject' => $restRoutesPrefixProject,
-			'restPrefix' => $restRoutesPrefix,
-			'nonce' => \wp_create_nonce('wp_rest'),
-			'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
-			'restRoutes' => [
-				'formSubmit' => FormSettingsSubmitRoute::ROUTE_SLUG,
-				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
-				'migration' => MigrationRoute::ROUTE_SLUG,
-				'transform' => TransferRoute::ROUTE_SLUG,
-				'syncDirect' => IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
-				'testApi' => AbstractTestApi::ROUTE_PREFIX_TEST_API,
+		$output = \array_merge(
+			$this->getEnqueueSharedInlineCommonItems(),
+			[
+				'nonce' => \wp_create_nonce('wp_rest'),
+				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
+				'isAdmin' => true,
 			],
-		];
+		);
 
 		$output = \wp_json_encode($output);
 

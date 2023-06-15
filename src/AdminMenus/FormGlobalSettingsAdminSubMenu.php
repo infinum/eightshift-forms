@@ -178,7 +178,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsPageTitle' => \esc_html__('Global settings', 'eightshift-forms'),
 			'adminSettingsBackLink' => Helper::getListingPageUrl(),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar(),
-			'adminSettingsForm' => $this->settings->getSettingsForm($type),
+			'adminSettingsForm' => $this->settings->getSettingsForm($type, '0'),
 			'adminSettingsType' => $type,
 			'adminSettingsIsGlobal' => true,
 		];

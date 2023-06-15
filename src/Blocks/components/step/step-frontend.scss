@@ -1,0 +1,16 @@
+@import './../form/form-style.scss';
+
+.es-step {
+	&__inner {
+		> .es-field {
+			@include form-fields-children-styles;
+		}
+	}
+
+	&__navigation {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+}

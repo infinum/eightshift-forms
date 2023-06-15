@@ -15,6 +15,7 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -172,13 +173,14 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputPlaceholder' => $placeholder,
 							'inputIsRequired' => $isRequired,
 							'inputValue' => $value,
-							'inputAttrs' => [
-								'data-object-type-id' => $objectTypeId,
+							'inputFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$isRequired ? 'inputIsRequired' : '',
 								$min ? 'inputMinLength' : '',
 								$max ? 'inputMaxLength' : '',
+								'inputFieldAttrs',
 							]),
 						];
 
@@ -212,14 +214,15 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'dateIsRequired' => $isRequired,
 							'dateValue' => $value,
 							'datePreviewFormat' => Helper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
-							'dateAttrs' => [
-								'data-object-type-id' => $objectTypeId,
+							'dateFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
 							'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 								$isRequired ? 'dateIsRequired' : '',
 								$min ? 'dateMinLength' : '',
 								$max ? 'dateMaxLength' : '',
 								'dateOutputFormat',
+								'dateFieldAttrs',
 							]),
 						];
 
@@ -240,14 +243,15 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputType' => 'number',
 							'inputIsRequired' => $isRequired,
 							'inputValue' => $value,
-							'inputAttrs' => [
-								'data-object-type-id' => $objectTypeId,
+							'inputFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$isRequired ? 'inputIsRequired' : '',
 								$min ? 'inputMin' : '',
 								$max ? 'inputMax' : '',
 								'inputType',
+								'inputFieldAttrs',
 							]),
 						];
 
@@ -271,11 +275,12 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'phoneFieldLabel' => $label,
 							'phoneIsRequired' => $isRequired,
 							'phoneValue' => $value,
-							'phoneAttrs' => [
-								'data-object-type-id' => $objectTypeId,
+							'phoneFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 								$isRequired ? 'phoneIsRequired' : '',
+								'phoneFieldAttrs',
 							]),
 						];
 
@@ -292,11 +297,12 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'textareaPlaceholder' => $placeholder,
 							'textareaIsRequired' => $isRequired,
 							'textareaValue' => $value,
-							'textareaAttrs' => [
-								'data-object-type-id' => $objectTypeId,
+							'textareaFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$isRequired ? 'textareaIsRequired' : '',
+								'textareaFieldAttrs',
 							]),
 						];
 						break;
@@ -321,12 +327,13 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'fileIsRequired' => $isRequired,
 							'fileValue' => $value,
 							'fileIsMultiple' => !empty($isMultiple),
-							'fileAttrs' => [
-								'data-object-type-id' => $objectTypeId,
+							'fileFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 								$isRequired ? 'fileIsRequired' : '',
 								$allowedFileTypes ? 'fileAccept' : '',
+								'fileFieldAttrs',
 							]),
 						];
 
@@ -349,8 +356,8 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'selectPlaceholder' => $placeholder,
 							'selectIsRequired' => $isRequired,
 							'selectValue' => $value,
-							'selectAttrs' => [
-								'data-object-type-id' => $objectTypeId,
+							'selectFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
 							'selectContent' => \array_values(
 								\array_map(
@@ -370,6 +377,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							),
 							'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 								$isRequired ? 'selectIsRequired' : '',
+								'selectFieldAttrs'
 							]),
 						];
 						break;
@@ -382,6 +390,9 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesFieldHelp' => $description,
 							'checkboxesName' => $name,
 							'checkboxesIsRequired' => $isRequired,
+							'checkboxesFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
+							],
 							'checkboxesContent' => [
 								[
 									'component' => 'checkbox',
@@ -389,9 +400,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									'checkboxTracking' => $name,
 									'checkboxValue' => 'on',
 									'checkboxIsChecked' => (bool) $selectedOption,
-									'checkboxAttrs' => [
-										'data-object-type-id' => $objectTypeId,
-									],
 									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 										'checkboxValue',
 									], false),
@@ -399,6 +407,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 								$isRequired ? 'checkboxesIsRequired' : '',
+								'checkboxesFieldAttrs',
 							]),
 						];
 						break;
@@ -412,17 +421,17 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesName' => $name,
 							'checkboxesFieldLabel' => $label,
 							'checkboxesIsRequired' => $isRequired,
+							'checkboxesFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
+							],
 							'checkboxesContent' => \array_map(
-								function ($checkbox) use ($name, $objectTypeId, $selectedOption) {
+								function ($checkbox) use ($name, $selectedOption) {
 									return [
 										'component' => 'checkbox',
 										'checkboxLabel' => $checkbox['label'],
 										'checkboxValue' => $checkbox['value'],
 										'checkboxIsChecked' => \in_array($checkbox['value'], $selectedOption, true),
 										'checkboxTracking' => $name,
-										'checkboxAttrs' => [
-											'data-object-type-id' => $objectTypeId,
-										],
 										'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 											'checkboxValue',
 										], false),
@@ -432,6 +441,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							),
 							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 								$isRequired ? 'checkboxesIsRequired' : '',
+								'checkboxesFieldAttrs',
 							]),
 						];
 						break;
@@ -445,17 +455,17 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'radiosName' => $name,
 							'radiosFieldLabel' => $label,
 							'radiosIsRequired' => $isRequired,
+							'radiosTracking' => $name,
+							'radiosFieldAttrs' => [
+								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
+							],
 							'radiosContent' => \array_map(
-								function ($radio) use ($name, $objectTypeId, $selectedOption) {
+								function ($radio) use ($selectedOption) {
 									return [
 										'component' => 'radio',
 										'radioIsChecked' => \in_array($radio['value'], $selectedOption, true),
 										'radioLabel' => $radio['label'],
 										'radioValue' => $radio['value'],
-										'radioTracking' => $name,
-										'radioAttrs' => [
-											'data-object-type-id' => $objectTypeId,
-										],
 										'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
 											'radioValue',
 										], false),
@@ -465,42 +475,140 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							),
 							'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
 								$isRequired ? 'radiosIsRequired' : '',
+								'radiosFieldAttrs',
 							]),
 						];
 						break;
-					case 'consent':
-						$output[] = [
-							'component' => 'checkboxes',
-							'checkboxesFieldHidden' => $isHidden,
-							'checkboxesFieldBeforeContent' => $field['beforeText'] ?? '',
-							'checkboxesFieldAfterContent' => $field['afterText'] ?? '',
-							'checkboxesFieldHideLabel' => true,
-							'checkboxesFieldHelp' => $description,
-							'checkboxesName' => $name,
-							'checkboxesIsRequired' => $isRequired,
-							'checkboxesContent' => \array_map(
-								function ($checkbox) use ($name, $objectTypeId) {
-									return [
-										'component' => 'checkbox',
-										'checkboxLabel' => $checkbox['label'],
-										'checkboxValue' => $checkbox['label'],
-										'checkboxTracking' => $name,
-										'checkboxAttrs' => [
-											'data-object-type-id' => $objectTypeId,
-										],
-										'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-											'checkboxValue',
-										], false),
-									];
-								},
-								$options
-							),
-							'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-								$isRequired ? 'checkboxesIsRequired' : '',
-							]),
-						];
+				}
+			}
+		}
 
-						break;
+		$consent = $data['consent'] ?? [];
+
+		if ($consent) {
+			$communication = $consent[HubspotClient::HUBSPOT_CONSENT_COMMUNICATION];
+			$processing = $consent[HubspotClient::HUBSPOT_CONSENT_PROCESSING];
+			$legitimate = $consent[HubspotClient::HUBSPOT_CONSENT_LEGITIMATE];
+
+			$communicationItems = $communication['items'] ?? [];
+
+			if ($communicationItems) {
+				foreach ($communicationItems as $communicationIndex => $communicationItem) {
+					$communicationIsRequired = $communicationItem['isRequired'] ?? false;
+					$communicationText = $communication['text'] ?? '';
+					$communicationLabel = $communicationItem['label'] ?? '';
+					$communicationId = $communicationItem['id'] ?? '';
+					$communicationIsHidden = $communication['isHidden'] ?? false;
+
+					$output[] = [
+						'component' => 'checkboxes',
+						'checkboxesFieldBeforeContent' => $communicationIndex === 0 && !$communicationIsHidden ? $communicationText : '',
+						'checkboxesFieldHideLabel' => true,
+						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION . AbstractBaseRoute::DELIMITER . $communicationId,
+						'checkboxesIsRequired' => $communicationIsRequired,
+						'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION,
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => $communicationLabel,
+								'checkboxValue' => \wp_strip_all_tags($communicationLabel),
+								'checkboxIsChecked' => $communicationIsHidden,
+								'checkboxIsDisabled' => $communicationIsHidden,
+								'checkboxHideLabel' => $communicationIsHidden,
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxLabel',
+									'checkboxValue',
+									'checkboxIsChecked',
+									'checkboxIsDisabled',
+									'checkboxHideLabel',
+								], false),
+							],
+						],
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesIsRequired',
+							'checkboxesFieldBeforeContent',
+							'checkboxesTypeCustom',
+						]),
+					];
+				}
+			}
+
+			if ($processing) {
+				$processingText = $processing['text'] ?? '';
+				$processingLabel = $processing['label'] ?? '';
+				$processingIsHidden = $processing['isHidden'] ?? false;
+
+				$output[] = [
+					'component' => 'checkboxes',
+					'checkboxesFieldBeforeContent' => $processingText && !$processingIsHidden ? $processingText : '',
+					'checkboxesFieldAfterContent' => !$legitimate['isActive'] ? $legitimate['text'] ?? '' : '',
+					'checkboxesFieldHideLabel' => true,
+					'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_PROCESSING,
+					'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_PROCESSING,
+					'checkboxesIsRequired' => true,
+					'checkboxesContent' => [
+						[
+							'component' => 'checkbox',
+							'checkboxLabel' => $processingLabel,
+							'checkboxValue' => \wp_strip_all_tags($processingLabel),
+							'checkboxIsChecked' => $processingIsHidden,
+							'checkboxIsDisabled' => $processingIsHidden,
+							'checkboxHideLabel' => $processingIsHidden,
+							'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+								'checkboxLabel',
+								'checkboxValue',
+								'checkboxIsChecked',
+								'checkboxIsDisabled',
+								'checkboxHideLabel',
+							], false),
+						],
+					],
+					'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+						'checkboxesFieldBeforeContent',
+						'checkboxesFieldAfterContent',
+						'checkboxesIsRequired',
+						'checkboxesTypeCustom',
+					]),
+				];
+			}
+
+			if ($legitimate) {
+				$legitimateText = $legitimate['text'] ?? '';
+				$legitimateIsActive = $legitimate['isActive'] ?? false;
+
+				if ($legitimateIsActive) {
+					$output[] = [
+						'component' => 'checkboxes',
+						'checkboxesFieldBeforeContent' => $legitimateText,
+						'checkboxesFieldHideLabel' => true,
+						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
+						'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
+						'checkboxesIsRequired' => true,
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => HubspotClient::HUBSPOT_CONSENT_LEGITIMATE,
+								'checkboxIsChecked' => true,
+								'checkboxIsDisabled' => true,
+								'checkboxHideLabel' => true,
+								'checkboxValue' => 'true',
+								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+									'checkboxLabel',
+									'checkboxValue',
+									'checkboxIsChecked',
+									'checkboxIsDisabled',
+									'checkboxHideLabel',
+								], false),
+							],
+						],
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesIsRequired',
+							'checkboxesFieldBeforeContent',
+							'checkboxHideLabel',
+							'checkboxIsDisabled',
+							'checkboxesTypeCustom',
+						]),
+					];
 				}
 			}
 		}

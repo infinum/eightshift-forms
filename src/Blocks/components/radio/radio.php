@@ -11,18 +11,23 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
+$componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
+$radioValue = Components::checkAttr('radioValue', $attributes, $manifest);
+if (!$radioValue) {
+	return;
+}
+
 $radioLabel = Components::checkAttr('radioLabel', $attributes, $manifest);
 $radioName = Components::checkAttr('radioName', $attributes, $manifest);
-$radioValue = Components::checkAttr('radioValue', $attributes, $manifest);
 $radioIsChecked = Components::checkAttr('radioIsChecked', $attributes, $manifest);
 $radioIsDisabled = Components::checkAttr('radioIsDisabled', $attributes, $manifest);
-$radioTracking = Components::checkAttr('radioTracking', $attributes, $manifest);
 $radioSingleSubmit = Components::checkAttr('radioSingleSubmit', $attributes, $manifest);
 $radioAttrs = Components::checkAttr('radioAttrs', $attributes, $manifest);
+$radioFieldAttrs = Components::checkAttr('radioFieldAttrs', $attributes, $manifest);
 
 $radioClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -35,17 +40,7 @@ $radioInputClass = Components::classnames([
 	Components::selector($radioSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-if (empty($radioLabel)) {
-	return;
-}
-
-if ($radioTracking) {
-	$radioAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($radioTracking);
-}
-
-if ($radioValue) {
-	$radioAttrs['value'] = esc_attr($radioValue);
-}
+$radioAttrs['value'] = esc_attr($radioValue);
 
 $radioAttrsOutput = '';
 if ($radioAttrs) {
@@ -54,9 +49,31 @@ if ($radioAttrs) {
 	}
 }
 
+$conditionalTags = Components::render(
+	'conditional-tags',
+	Components::props('conditionalTags', $attributes)
+);
+
+if ($conditionalTags) {
+	$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
+}
+
+$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $radioValue;
+
+if ($componentName) {
+	$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;
+}
+
+$radioFieldAttrsOutput = '';
+if ($radioFieldAttrs) {
+	foreach ($radioFieldAttrs as $key => $value) {
+		$radioFieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
+	}
+}
+
 ?>
 
-<div class="<?php echo esc_attr($radioClass); ?>">
+<div class="<?php echo esc_attr($radioClass); ?>" <?php echo $radioFieldAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<input
 			class="<?php echo esc_attr($radioInputClass); ?>"

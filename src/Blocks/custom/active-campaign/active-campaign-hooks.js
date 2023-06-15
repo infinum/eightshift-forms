@@ -17,8 +17,16 @@ export const hooks = () => {
 
 	// All adding additional blocks to the custom form builder.
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
-		if (name === `${namespace}/${blockName}` && typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
-			esFormsLocalization.additionalBlocks.forEach((element) => {
+		if (name === `${namespace}/${blockName}`) {
+			if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
+				esFormsLocalization.additionalBlocks.forEach((element) => {
+					if (!settings.attributes.activeCampaignAllowedBlocks.default.includes(element)) {
+						settings.attributes.activeCampaignAllowedBlocks.default.push(element);
+					}
+				});
+			}
+
+			select(STORE_NAME).getSettings().fieldsAlways.forEach((element) => {
 				if (!settings.attributes.activeCampaignAllowedBlocks.default.includes(element)) {
 					settings.attributes.activeCampaignAllowedBlocks.default.push(element);
 				}
@@ -27,6 +35,5 @@ export const hooks = () => {
 
 		return settings;
 	});
-
-
 };
+

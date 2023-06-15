@@ -19,6 +19,10 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $phoneName = Components::checkAttr('phoneName', $attributes, $manifest);
+if (!$phoneName) {
+	return;
+}
+
 $phoneValue = Components::checkAttr('phoneValue', $attributes, $manifest);
 $phonePlaceholder = Components::checkAttr('phonePlaceholder', $attributes, $manifest);
 $phoneIsDisabled = Components::checkAttr('phoneIsDisabled', $attributes, $manifest);
@@ -28,6 +32,8 @@ $phoneTracking = Components::checkAttr('phoneTracking', $attributes, $manifest);
 $phoneAttrs = Components::checkAttr('phoneAttrs', $attributes, $manifest);
 $phoneUseSearch = Components::checkAttr('phoneUseSearch', $attributes, $manifest);
 $phoneFormPostId = Components::checkAttr('phoneFormPostId', $attributes, $manifest);
+$phoneTypeCustom = Components::checkAttr('phoneTypeCustom', $attributes, $manifest);
+$phoneFieldAttrs = Components::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $phoneFieldLabel = $attributes[Components::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
@@ -41,10 +47,6 @@ $phoneSelectClass = Components::classnames([
 	Components::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Components::selector($componentClass, $componentClass, 'select'),
 ]);
-
-if ($phoneTracking) {
-	$phoneAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($phoneTracking);
-}
 
 if ($phoneValue) {
 	$phoneAttrs['value'] = esc_attr($phoneValue);
@@ -63,8 +65,6 @@ if ($phoneAttrs) {
 
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attributes);
-
-$selectShowCountryIcons = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectShowCountryIcons'];
 $phoneSelectUseSearchAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch'];
 
 $options = [];
@@ -79,13 +79,20 @@ if (has_filter($filterName)) {
 	}
 
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
+		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
+
+		$customProperties = [
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryCode'] => $code,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryLabel'] => $label,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryNumber'] => $value,
+		];
 
 		$options[] = '
 			<option
 				value="' . $value . '"
-				data-custom-properties="' . $code . '"
+				' . AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCustomProperties'] . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $settings['phone']['preselectedValue'], false) . '
 			>+' . $value . '</option>';
 	}
@@ -94,8 +101,8 @@ if (has_filter($filterName)) {
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
+		name="' . esc_attr($phoneName) . '"
 		' . $phoneSelectUseSearchAttr . '=' . $phoneUseSearch . '
-		' . $selectShowCountryIcons . '=true
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
@@ -119,10 +126,13 @@ echo Components::render(
 			'fieldName' => $phoneName,
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),
+			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $phoneTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => $phoneFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

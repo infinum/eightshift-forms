@@ -136,7 +136,7 @@ class MomentsClient implements ClientInterface
 		$response = \wp_remote_post(
 			$url,
 			[
-				'headers' => $this->getHeaders('api'),
+				'headers' => $this->getHeaders(),
 				'body' => \wp_json_encode($body),
 			]
 		);
@@ -334,27 +334,15 @@ class MomentsClient implements ClientInterface
 	/**
 	 * Set headers used for fetching data.
 	 *
-	 * @param string $isPostType Type of post. Options: default, api, ibsso.
-	 * @param string $token Auth token.
-	 *
 	 * @return array<string, mixed>
 	 */
-	private function getHeaders(string $isPostType = 'default', string $token = ''): array
+	private function getHeaders(): array
 	{
-		$output = [
+		return [
 			'Content-Type' => 'application/json',
 			'Accept' => 'application/json',
+			'Authorization' => "App {$this->getApiKey()}",
 		];
-
-		if ($isPostType === 'api') {
-			$output['Authorization'] = "App {$this->getApiKey()}";
-		}
-
-		if ($isPostType === 'ibsso') {
-			$output['Authorization'] = "IBSSO {$token}";
-		}
-
-		return $output;
 	}
 
 	/**
@@ -364,14 +352,12 @@ class MomentsClient implements ClientInterface
 	 */
 	public function getTestApi(): array
 	{
-		$token = $this->getIbssoToken();
-
 		$url = "{$this->getBaseUrl()}/forms/1/forms?limit=1";
 
 		$response = \wp_remote_get(
 			$url,
 			[
-				'headers' => $this->getHeaders('ibsso', $token),
+				'headers' => $this->getHeaders(),
 			]
 		);
 
@@ -390,14 +376,12 @@ class MomentsClient implements ClientInterface
 	 */
 	private function getMomentsLists()
 	{
-		$token = $this->getIbssoToken();
-
 		$url = "{$this->getBaseUrl()}/forms/1/forms?limit=100";
 
 		$response = \wp_remote_get(
 			$url,
 			[
-				'headers' => $this->getHeaders('ibsso', $token),
+				'headers' => $this->getHeaders(),
 			]
 		);
 
@@ -417,58 +401,6 @@ class MomentsClient implements ClientInterface
 		}
 
 		return [];
-	}
-
-	/**
-	 * Create and api call to get a IBSSO token or get it from transient.
-	 *
-	 * @return string
-	 */
-	private function getIbssoToken(): string
-	{
-		$token = \get_transient(self::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		if ($token) {
-			return $token;
-		}
-
-		$url = "{$this->getBaseUrl()}auth/1/session";
-
-		$response = \wp_remote_post(
-			$url,
-			[
-				'headers' => $this->getHeaders(),
-				'body' => \wp_json_encode([
-					'username' => $this->getApiUsername(),
-					'password' => $this->getApiPassword(),
-					'unsafe' => false,
-				]),
-			]
-		);
-
-		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
-			SettingsMoments::SETTINGS_TYPE_KEY,
-			$response,
-			$url,
-		);
-
-		$code = $details['code'];
-		$body = $details['body'];
-
-		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			$token = $body['token'] ?? '';
-
-			if (!$token) {
-				return '';
-			}
-
-			\set_transient(self::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME, $token, SettingsCache::CACHE_TRANSIENTS_TIMES['momentsToken']);
-			return $token;
-		}
-
-		return '';
 	}
 
 	/**
@@ -516,6 +448,13 @@ class MomentsClient implements ClientInterface
 					break;
 			}
 
+			$typeCustom = $param['typeCustom'] ?? '';
+			switch ($typeCustom) {
+				case 'email':
+					$value = \strtolower($value);
+					break;
+			}
+
 			$output[$name] = $value;
 		}
 
@@ -556,29 +495,5 @@ class MomentsClient implements ClientInterface
 		$apiUrl = Variables::getApiUrlMoments();
 
 		return !empty($apiUrl) ? $apiUrl : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY);
-	}
-
-	/**
-	 * Return Api Username from settings or global vairaible.
-	 *
-	 * @return string
-	 */
-	private function getApiUsername(): string
-	{
-		$apiUsername = Variables::getApiUsernameMoments();
-
-		return !empty($apiUsername) ? $apiUsername : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_USERNAME_KEY);
-	}
-
-	/**
-	 * Return Api Password from settings or global vairaible.
-	 *
-	 * @return string
-	 */
-	private function getApiPassword(): string
-	{
-		$apiPAssword = Variables::getApiPasswordMoments();
-
-		return !empty($apiPAssword) ? $apiPAssword : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_PASSWORD_KEY);
 	}
 }

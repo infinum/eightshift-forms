@@ -453,7 +453,7 @@ class MailchimpClient implements MailchimpClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params, ['email_address']);
+		$params = Helper::removeUneceseryParamFields($params);
 
 		$filterName = Filters::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
@@ -468,6 +468,10 @@ class MailchimpClient implements MailchimpClientInterface
 
 			$name = $param['name'] ?? '';
 			if (!$name) {
+				continue;
+			}
+
+			if ($name === 'email_address') {
 				continue;
 			}
 

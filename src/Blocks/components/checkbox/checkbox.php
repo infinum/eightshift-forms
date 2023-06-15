@@ -11,14 +11,19 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
+$componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
+$checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
+if (!$checkboxValue) {
+	return;
+}
+
 $checkboxLabel = Components::checkAttr('checkboxLabel', $attributes, $manifest);
 $checkboxName = Components::checkAttr('checkboxName', $attributes, $manifest);
-$checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
 $checkboxUncheckedValue = Components::checkAttr('checkboxUncheckedValue', $attributes, $manifest);
 $checkboxIsChecked = Components::checkAttr('checkboxIsChecked', $attributes, $manifest);
 $checkboxIsDisabled = Components::checkAttr('checkboxIsDisabled', $attributes, $manifest);
@@ -29,7 +34,9 @@ $checkboxAttrs = Components::checkAttr('checkboxAttrs', $attributes, $manifest);
 $checkboxAsToggle = Components::checkAttr('checkboxAsToggle', $attributes, $manifest);
 $checkboxAsToggleSize = Components::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
 $checkboxHideLabelText = Components::checkAttr('checkboxHideLabelText', $attributes, $manifest);
+$checkboxHideLabel = Components::checkAttr('checkboxHideLabel', $attributes, $manifest);
 $checkboxHelp = Components::checkAttr('checkboxHelp', $attributes, $manifest);
+$checkboxFieldAttrs = Components::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
@@ -47,13 +54,7 @@ $checkboxInputClass = Components::classnames([
 	Components::selector($checkboxSingleSubmit, $componentJsSingleSubmitClass),
 ]);
 
-if ($checkboxTracking) {
-	$checkboxAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($checkboxTracking);
-}
-
-if ($checkboxValue) {
-	$checkboxAttrs['value'] = esc_attr($checkboxValue);
-}
+$checkboxAttrs['value'] = esc_attr($checkboxValue);
 
 $checkboxAttrsOutput = '';
 if ($checkboxAttrs) {
@@ -67,9 +68,35 @@ if (strlen($checkboxUncheckedValue) !== 0) {
 	$checkboxAttrsOutput .= wp_kses_post(" data-unchecked-value='" . $checkboxUncheckedValue . "'");
 }
 
+$conditionalTags = Components::render(
+	'conditional-tags',
+	Components::props('conditionalTags', $attributes)
+);
+
+if ($conditionalTags) {
+	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
+}
+
+$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $checkboxValue;
+
+if ($componentName) {
+	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;
+}
+
+if ($checkboxTracking) {
+	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($checkboxTracking);
+}
+
+$checkboxFieldAttrsOutput = '';
+if ($checkboxFieldAttrs) {
+	foreach ($checkboxFieldAttrs as $key => $value) {
+		$checkboxFieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
+	}
+}
+
 ?>
 
-<div class="<?php echo esc_attr($checkboxClass); ?>">
+<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"
@@ -81,16 +108,18 @@ if (strlen($checkboxUncheckedValue) !== 0) {
 			<?php disabled($checkboxIsDisabled); ?>
 			<?php wp_readonly($checkboxIsReadOnly); ?>
 		/>
-		<label
-			for="<?php echo esc_attr($checkboxName); ?>"
-			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
-		>
-			<?php if (!$checkboxHideLabelText) { ?>
-				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
-					<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
-				</span>
-			<?php } ?>
-		</label>
+		<?php if (!$checkboxHideLabel) { ?>
+			<label
+				for="<?php echo esc_attr($checkboxName); ?>"
+				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+			>
+				<?php if (!$checkboxHideLabelText) { ?>
+					<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+						<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
+					</span>
+				<?php } ?>
+			</label>
+		<?php } ?>
 	</div>
 	<?php if ($checkboxHelp) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">

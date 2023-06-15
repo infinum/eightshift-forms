@@ -84,7 +84,7 @@ class MigrationRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_SETTINGS . '-migration/';
+	public const ROUTE_SLUG = 'migration';
 
 	/**
 	 * Get the base url of the route
@@ -204,6 +204,7 @@ class MigrationRoute extends AbstractBaseRoute
 		]);
 
 		if (!$theQuery->have_posts()) {
+			\wp_reset_postdata();
 			return $this->getApiErrorOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
 		}
 

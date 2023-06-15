@@ -39,6 +39,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isEmail(string $email): bool
 	{
+		$email = \strtolower($email);
 		return (bool) \filter_var($email, \FILTER_VALIDATE_EMAIL);
 	}
 
@@ -52,6 +53,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isEmailTlValid(string $email, array $db): bool
 	{
+		$email = \strtolower($email);
 		$email = \explode('.', $email);
 		$email = \end($email);
 

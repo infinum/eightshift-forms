@@ -20,12 +20,18 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $countryName = Components::checkAttr('countryName', $attributes, $manifest);
+if (!$countryName) {
+	return;
+}
+
 $countryIsDisabled = Components::checkAttr('countryIsDisabled', $attributes, $manifest);
 $countryIsRequired = Components::checkAttr('countryIsRequired', $attributes, $manifest);
 $countryTracking = Components::checkAttr('countryTracking', $attributes, $manifest);
 $countryAttrs = Components::checkAttr('countryAttrs', $attributes, $manifest);
 $countryUseSearch = Components::checkAttr('countryUseSearch', $attributes, $manifest);
 $countryFormPostId = Components::checkAttr('countryFormPostId', $attributes, $manifest);
+$countryTypeCustom = Components::checkAttr('countryTypeCustom', $attributes, $manifest);
+$countryFieldAttrs = Components::checkAttr('countryFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $countryFieldLabel = $attributes[Components::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
@@ -36,15 +42,9 @@ $countryClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-if ($countryTracking) {
-	$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($countryTracking);
-}
-
 if ($countryUseSearch) {
 	$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($countryUseSearch);
 }
-
-$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectShowCountryIcons']] = true;
 
 $countryAttrsOutput = '';
 if ($countryAttrs) {
@@ -72,10 +72,16 @@ if (has_filter($filterName)) {
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
 
+		$customProperties = [
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryCode'] => $code,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryLabel'] => $label,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryNumber'] => $value,
+		];
+
 		$options[] = '
 			<option
 				value="' . $label . '"
-				data-custom-properties="' . $code . '"
+				' . AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCustomProperties'] . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $settings['country']['preselectedValue'], false) . '
 			>' . $label . '</option>';
 	}
@@ -103,10 +109,13 @@ echo Components::render(
 			'fieldName' => $countryName,
 			'fieldIsRequired' => $countryIsRequired,
 			'fieldDisabled' => !empty($countryIsDisabled),
+			'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $countryTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => $countryFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

@@ -324,25 +324,17 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 										'selectFieldLabel' => '<code>' . $item . '</code>',
 										'selectFieldBeforeContent' => '&rarr;',
 										'selectFieldIsFiftyFiftyHorizontal' => true,
-										'selectContent' => \array_merge(
-											[
-												[
+										'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+										'selectContent' => \array_map(
+											static function ($option) use ($selectedValue) {
+												return [
 													'component' => 'select-option',
-													'selectOptionLabel' => '',
-													'selectOptionValue' => '',
-												],
-											],
-											\array_map(
-												static function ($option) use ($selectedValue) {
-													return [
-														'component' => 'select-option',
-														'selectOptionLabel' => $option,
-														'selectOptionValue' => $option,
-														'selectOptionIsSelected' => $selectedValue === $option,
-													];
-												},
-												$properties
-											)
+													'selectOptionLabel' => $option,
+													'selectOptionValue' => $option,
+													'selectOptionIsSelected' => $selectedValue === $option,
+												];
+											},
+											$properties
 										),
 									];
 								},

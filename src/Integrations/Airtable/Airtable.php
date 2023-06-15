@@ -14,7 +14,6 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -148,11 +147,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputIsEmail' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsEmail',
-							'inputType'
+							'inputType',
+							'inputTypeCustom',
 						]),
-						'inputAttrs' => [
-							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'email',
-						],
+						'inputTypeCustom' => 'email',
 					];
 					break;
 				case 'url':
@@ -165,11 +163,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputIsUrl' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsUrl',
-							'inputType'
+							'inputType',
+							'inputTypeCustom',
 						]),
-						'inputAttrs' => [
-							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'url',
-						],
+						'inputTypeCustom' => 'url',
 					];
 					break;
 				case 'phoneNumber':
@@ -178,10 +175,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'phoneName' => $name,
 						'phoneTracking' => $name,
 						'phoneFieldLabel' => $label,
-						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone'),
-						'phoneAttrs' => [
-							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'phone',
-						],
+						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
+							'phoneTypeCustom',
+						]),
+						'phoneTypeCustom' => 'phone',
 					];
 					break;
 				case 'dateTime':
@@ -224,11 +221,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputIsNumber' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsNumber',
-							'inputType'
+							'inputType',
+							'inputTypeCustom',
 						]),
-						'inputAttrs' => [
-							AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'number',
-						],
+						'inputTypeCustom' => 'number',
 					];
 					break;
 				case 'multilineText':
@@ -274,9 +270,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 									'component' => 'checkbox',
 									'checkboxLabel' => $checkbox['name'],
 									'checkboxValue' => $checkbox['id'],
-									'checkboxAttrs' => [
-										AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'multiCheckbox',
-									],
 									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 										'checkboxValue'
 									], false),
@@ -284,7 +277,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							},
 							$options['choices'] ?? []
 						),
-						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes'),
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesTypeCustom',
+						]),
+						'checkboxesTypeCustom' => 'multiCheckbox',
 					];
 					break;
 				case 'checkbox':
@@ -298,15 +294,15 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 								'component' => 'checkbox',
 								'checkboxLabel' => $label,
 								'checkboxValue' => 'true',
-								'checkboxAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'singleCheckbox',
-								],
 								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 									'checkboxValue',
 								], false),
 							]
 						],
-						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes'),
+						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+							'checkboxesTypeCustom',
+						]),
+						'checkboxesTypeCustom' => 'singleCheckbox',
 					];
 					break;
 			}

@@ -12,11 +12,10 @@ namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Parsedown;
 
 /**
@@ -24,6 +23,11 @@ use Parsedown;
  */
 class Mailer implements MailerInterface
 {
+	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
+
 	/**
 	 * Use general helper trait.
 	 */
@@ -51,6 +55,8 @@ class Mailer implements MailerInterface
 		array $fields = [],
 		array $responseFields = []
 	): bool {
+
+		$fields = Helper::removeUneceseryParamFields($fields);
 
 		// Send email.
 		return \wp_mail(
@@ -146,7 +152,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return string
 	 */
-	protected function getType(): string
+	private function getType(): string
 	{
 		return 'Content-Type: text/html; charset=UTF-8';
 	}
@@ -159,7 +165,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return string
 	 */
-	protected function getFrom(string $email, string $name): string
+	private function getFrom(string $email, string $name): string
 	{
 		if (empty($email)) {
 			return '';
@@ -180,7 +186,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return array<int, string>
 	 */
-	protected function getHeader(string $email, string $name = ''): array
+	private function getHeader(string $email, string $name = ''): array
 	{
 		return [
 			$this->getType(),
@@ -198,10 +204,10 @@ class Mailer implements MailerInterface
 	 *
 	 * @return string
 	 */
-	protected function getTemplate(string $type, array $items, string $template = '', array $responseFields = []): string
+	private function getTemplate(string $type, array $items, string $template = '', array $responseFields = []): string
 	{
 		$params = \array_merge(
-			$this->prepareFields($items),
+			$this->prepareParams($items),
 			$responseFields
 		);
 
@@ -219,24 +225,17 @@ class Mailer implements MailerInterface
 	}
 
 	/**
-	 * Prepare email fields.
+	 * Prepare params.
 	 *
-	 * @param array<string, mixed> $fields Fields to prepare.
+	 * @param array<string, mixed> $params Params to prepare.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	protected function prepareFields(array $fields): array
+	private function prepareParams(array $params): array
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
-
-		foreach ($fields as $key => $param) {
-			// Remove unnecessary fields.
-			if (isset($customFields[$key])) {
-				continue;
-			}
-
+		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 
@@ -257,7 +256,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return array<string>
 	 */
-	protected function prepareFiles(array $files): array
+	private function prepareFiles(array $files): array
 	{
 		$output = [];
 
@@ -265,20 +264,17 @@ class Mailer implements MailerInterface
 			return $output;
 		}
 
-		foreach ($files as $items) {
-			if (!$items) {
+		foreach ($files as $file) {
+			$value = $file['value'] ?? [];
+
+			if (!$value) {
 				continue;
 			}
 
-			foreach ($items as $file) {
-				$path = $file['path'] ?? '';
-
-				if (!$path) {
-					continue;
-				}
-
-				$output[] = $path;
-			}
+			$output = [
+				...$output,
+				...$value,
+			];
 		}
 
 		return $output;

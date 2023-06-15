@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Form\Form;
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\Encryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -22,7 +22,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 $attributes = apply_filters(
-	Form::FILTER_FORM_SETTINGS_OPTIONS_NAME,
+	Form::FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS,
 	$attributes
 );
 
@@ -45,6 +45,7 @@ $formConditionalTags = Components::checkAttr('formConditionalTags', $attributes,
 $formDownloads = Components::checkAttr('formDownloads', $attributes, $manifest);
 $formSuccessRedirectVariationUrl = Components::checkAttr('formSuccessRedirectVariationUrl', $attributes, $manifest);
 $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
+$formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -70,7 +71,7 @@ if ($formSuccessRedirect) {
 }
 
 if ($formSuccessRedirectVariation) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirectVariation']] = Helper::encryptor($formSuccessRedirectVariation);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirectVariation']] = Encryption::encryptor($formSuccessRedirectVariation);
 }
 
 if ($formTrackingEventName) {
@@ -90,8 +91,10 @@ if ($formPhoneDisablePicker) {
 }
 
 if ($formPostId) {
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formPostId']] = esc_attr($formPostId);
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formId']] = esc_attr($formPostId);
 }
+
+$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['postId']] = esc_attr((string) get_the_ID());
 
 if ($formType) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType']] = esc_html($formType);
@@ -110,14 +113,33 @@ if ($formConditionalTags) {
 
 if ($formDownloads || $formSuccessRedirectVariationUrl) {
 	$downloadsOutput = [];
-	if ($formSuccessRedirectVariationUrl) {
-		$downloadsOutput['url'] = $formSuccessRedirectVariationUrl;
-	}
-	if ($formDownloads) {
-		$downloadsOutput['files'] = array_map(fn ($item) => $item['id'], $formDownloads);
+
+	foreach ($formDownloads as $file) {
+		$condition = $file['condition'] ?: 'all'; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$fileId = $file['id'] ?? '';
+
+		if (!$fileId) {
+			continue;
+		}
+
+		$downloadsOutput[$condition]['files'][] = $fileId;
 	}
 
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = Helper::encryptor(wp_json_encode($downloadsOutput));
+	if (!$downloadsOutput) {
+		if ($formSuccessRedirectVariationUrl) {
+			$downloadsOutput['all'] = Encryption::encryptor(wp_json_encode(['url' => $formSuccessRedirectVariationUrl]));
+		}
+	} else {
+		foreach ($downloadsOutput as $key => $item) {
+			if ($formSuccessRedirectVariationUrl) {
+				$downloadsOutput[$key]['url'] = $formSuccessRedirectVariationUrl;
+			}
+
+			$downloadsOutput[$key] = Encryption::encryptor(wp_json_encode($downloadsOutput[$key]));
+		}
+	}
+
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['downloads']] = wp_json_encode($downloadsOutput);
 }
 
 if ($formId) {

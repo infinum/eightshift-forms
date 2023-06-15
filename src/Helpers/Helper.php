@@ -31,43 +31,6 @@ use RecursiveIteratorIterator;
 class Helper
 {
 	/**
-	 * Encript method.
-	 *
-	 * @param string $value Value used.
-	 * @param string $action Action used.
-	 *
-	 * @return string|bool
-	 */
-	public static function encryptor(string $value, string $action = 'encrypt')
-	{
-		$encryptMethod = "AES-256-CBC";
-		$secretKey = \wp_salt(); // user define private key.
-		$secretIv = \wp_salt('SECURE_AUTH_KEY'); // user define secret key.
-		$key = \hash('sha256', $secretKey);
-		$iv = \substr(\hash('sha256', $secretIv), 0, 16); // sha256 is hash_hmac_algo.
-
-		if ($action === 'encrypt') {
-			$output = \openssl_encrypt($value, $encryptMethod, $key, 0, $iv);
-
-			return \base64_encode((string) $output); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-		}
-
-		return \openssl_decrypt(\base64_decode($value), $encryptMethod, $key, 0, $iv); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-	}
-
-	/**
-	 * Decrypt method.
-	 *
-	 * @param string $value Value used.
-	 *
-	 * @return string|bool
-	 */
-	public static function decryptor(string $value)
-	{
-		return self::encryptor($value, 'decryptor');
-	}
-
-	/**
 	 * Method that returns listing page url.
 	 *
 	 * @return string
@@ -386,6 +349,9 @@ class Helper
 			'innerId' => '',
 			'fields' => [],
 			'fieldsOnly' => [],
+			'fieldNames' => [],
+			'fieldNamesFull' => [],
+			'stepsSetup' => [],
 		];
 
 		$form = \get_post_field('post_content', (int) $formId);
@@ -409,7 +375,10 @@ class Helper
 		}
 
 		$blockName = self::getBlockNameDetails($blockName);
+		$namespace = $blockName['namespace'];
 		$type = $blockName['nameAttr'];
+
+		$fieldsOnly = $blocks['innerBlocks'][0]['innerBlocks'] ?? [];
 
 		$output['type'] = $type;
 		$output['typeFilter'] = $blockName['name'];
@@ -418,7 +387,7 @@ class Helper
 		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';
 		$output['innerId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"] ?? '';
 		$output['fields'] = $blocks;
-		$output['fieldsOnly'] = $blocks['innerBlocks'][0]['innerBlocks'] ?? [];
+		$output['fieldsOnly'] = $fieldsOnly;
 
 		switch ($output['typeFilter']) {
 			case SettingsActiveCampaign::SETTINGS_TYPE_KEY:
@@ -451,17 +420,88 @@ class Helper
 				break;
 		}
 
-		$output['fieldNames'] = \array_values(\array_filter(\array_map(
-			static function ($item) {
-				$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
-				$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
+		$ignoreBlocks = \array_flip([
+			'step',
+			'submit',
+		]);
 
-				if ($value) {
-					return $value;
+		foreach ($output['fieldsOnly'] as $item) {
+			$blockItemName = self::getBlockNameDetails($item['blockName'])['nameAttr'];
+
+			$value = $item['attrs'][Components::kebabToCamelCase("{$blockItemName}-{$blockItemName}-Name")] ?? '';
+
+			if (!$value) {
+				continue;
+			}
+
+			$output['fieldNamesFull'][] = $value;
+
+			if (isset($ignoreBlocks[$blockItemName])) {
+				continue;
+			}
+
+			$output['fieldNames'][] = $value;
+		}
+
+		// Check if this form uses steps.
+		$hasSteps = \array_search($namespace . '/step', \array_column($output['fieldsOnly'] ?? '', 'blockName'), true);
+		$hasSteps = $hasSteps !== false;
+
+		if ($hasSteps) {
+			$stepCurrent = 'step-init';
+
+			// If the users don't add first step add it to the list.
+			if ($output['fieldsOnly'][0]['blockName'] !== "{$namespace}/step") {
+				\array_unshift(
+					$output['fieldsOnly'],
+					[
+						'blockName' => "{$namespace}/step",
+						'attrs' => [
+							'stepStepName' => $stepCurrent,
+							'stepStepLabel' => \__('Step init', 'eightshift-forms'),
+							'stepStepContent' => '',
+						],
+						'innerBlocks' => [],
+						'innerHTML' => '',
+						'innerContent' => [],
+					],
+				);
+			}
+
+			foreach ($output['fieldsOnly'] as $block) {
+				$blockName = self::getBlockNameDetails($block['blockName']);
+				$name = $blockName['name'];
+
+				if ($name === 'step') {
+					$stepCurrent = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Name")] ?? '';
+					$stepLabel = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Label")] ?? '';
+
+					if (!$stepLabel) {
+						$stepLabel = $stepCurrent;
+					}
+					$output['stepsSetup']['steps'][$stepCurrent] = [
+						'label' => $stepLabel,
+						'value' => $stepCurrent,
+					];
+
+					continue;
 				}
-			},
-			$output['fieldsOnly']
-		)));
+
+				if ($name === 'submit') {
+					continue;
+				}
+
+				$itemName = $block['attrs'][Components::kebabToCamelCase("{$name}-{$name}Name")] ?? '';
+				if (!$itemName) {
+					continue;
+				}
+
+				$output['stepsSetup']['steps'][$stepCurrent]['subItems'][] = $itemName;
+				$output['stepsSetup']['relations'][$itemName] = $stepCurrent;
+			}
+
+			$output['stepsSetup']['multiflow'] = $output['fields']['innerBlocks'][0]['attrs']["{$type}StepMultiflowRules"] ?? [];
+		}
 
 		return $output;
 	}
@@ -516,35 +556,6 @@ class Helper
 	}
 
 	/**
-	 * Remove unecesery custom params.
-	 *
-	 * @param array<string, mixed> $params Params to check.
-	 * @param array<int, string> $additional Additional keys to remove.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function removeUneceseryParamFields(array $params, array $additional = []): array
-	{
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
-		$additional = \array_flip($additional);
-
-		return \array_filter(
-			$params,
-			static function ($item) use ($customFields, $additional) {
-				if (isset($customFields[$item['name'] ?? ''])) {
-					return false;
-				}
-
-				if ($additional && isset($additional[$item['name'] ?? ''])) {
-					return false;
-				}
-
-				return true;
-			}
-		);
-	}
-
-	/**
 	 * Convert date formats to libs formats.
 	 *
 	 * @param string $date Date to convert.
@@ -575,14 +586,17 @@ class Helper
 	 * Prepare generic params output. Used if no specific configurations are needed.
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param array<string> $exclude Exclude params.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function prepareGenericParamsOutput(array $params): array
+	public static function prepareGenericParamsOutput(array $params, array $exclude = []): array
 	{
 		$output = [];
 
-		foreach ($params as $key => $param) {
+		$exclude = \array_flip($exclude);
+
+		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
 			if (!$value) {
 				continue;
@@ -590,6 +604,10 @@ class Helper
 
 			$name = $param['name'] ?? '';
 			if (!$name) {
+				continue;
+			}
+
+			if (isset($exclude[$name])) {
 				continue;
 			}
 
@@ -757,5 +775,48 @@ class Helper
 	public static function isBlockEditor(): bool
 	{
 		return \function_exists('get_current_screen') && \get_current_screen()->is_block_editor();
+	}
+
+	/**
+	 * Get current url with params.
+	 *
+	 * @return string
+	 */
+	public static function getCurrentUrl(): string
+	{
+		$port = isset($_SERVER['HTTPS']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTPS'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$host = isset($_SERVER['HTTP_HOST']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_HOST'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		return ($port ? "https" : "http") . "://{$host}{$request}";
+	}
+
+	/**
+	 * Remove unecesery custom params.
+	 *
+	 * @param array<string, mixed> $params Params to check.
+	 * @param array<int, string> $additional Additional keys to remove.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function removeUneceseryParamFields(array $params, array $additional = []): array
+	{
+		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$additional = \array_flip($additional);
+
+		return \array_filter(
+			$params,
+			static function ($item) use ($customFields, $additional) {
+				if (isset($customFields[$item['name'] ?? ''])) {
+					return false;
+				}
+
+				if ($additional && isset($additional[$item['name'] ?? ''])) {
+					return false;
+				}
+
+				return true;
+			}
+		);
 	}
 }

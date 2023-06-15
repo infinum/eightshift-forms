@@ -17,14 +17,12 @@ $manifestUtils = Components::getComponent('utils');
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $submitName = Components::checkAttr('submitName', $attributes, $manifest);
 $submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
 $submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
 $submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
 $submitAttrs = Components::checkAttr('submitAttrs', $attributes, $manifest);
-$submitSingleSubmit = Components::checkAttr('submitSingleSubmit', $attributes, $manifest);
 $submitServerSideRender = Components::checkAttr('submitServerSideRender', $attributes, $manifest);
 $submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest);
 $submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
@@ -34,7 +32,6 @@ $submitVariant = Components::checkAttr('submitVariant', $attributes, $manifest);
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($submitSingleSubmit, $componentJsSingleSubmitClass),
 	Components::selector($submitIcon, $componentClass, '', 'with-icon'),
 	Components::selector($submitIsLayoutFree, $componentClass, '', 'layout-free'),
 	Components::selector($submitVariant, $componentClass, '', $submitVariant),

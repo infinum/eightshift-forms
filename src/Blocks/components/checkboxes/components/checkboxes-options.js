@@ -7,7 +7,7 @@ import { checkAttr, getAttrKey, props, icons, Section, IconToggle, AnimatedConte
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CheckboxesOptions = (attributes) => {
@@ -19,6 +19,8 @@ export const CheckboxesOptions = (attributes) => {
 		setAttributes,
 		clientId,
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
 	const checkboxesIsRequired = checkAttr('checkboxesIsRequired', attributes, manifest);
@@ -47,10 +49,14 @@ export const CheckboxesOptions = (attributes) => {
 						label={<NameFieldLabel value={checkboxesName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={checkboxesName}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('checkboxesName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('checkboxesName', attributes, manifest), checkboxesDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
+					<NameChangeWarning isChanged={isNameChanged} />
 				</Section>
 
 				<FieldOptions
@@ -96,7 +102,7 @@ export const CheckboxesOptions = (attributes) => {
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: checkboxesName,
+					conditionalTagsBlockName: checkboxesName,
 				})}
 			/>
 		</>

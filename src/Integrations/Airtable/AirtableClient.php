@@ -351,7 +351,7 @@ class AirtableClient implements ClientInterface
 				continue;
 			}
 
-			switch ($param['internalType'] ?? '') {
+			switch ($param['typeCustom'] ?? '') {
 				case 'singleCheckbox':
 					$value = \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
 					break;

@@ -12,6 +12,7 @@ namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -86,144 +87,203 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
-				'layoutContent' => [
+				'component' => 'tabs',
+				'tabsContent' => [
 					[
-						'component' => 'intro',
-						'introTitle' => \__('Export', 'eightshift-forms'),
-					],
-					[
-						'component' => 'card',
-						'cardTitle' => \__('Global settings'),
-						'cardIcon' => Helper::getProjectIcons('settings'),
-						'cardContent' => [
+						'component' => 'tab',
+						'tabLabel' => \__('Export', 'eightshift-forms'),
+						'tabContent' => [
 							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Export', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::TYPE_EXPORT_GLOBAL_SETTINGS,
-								],
-								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+								'component' => 'layout',
+								'layoutType' => 'layout-v-stack',
+								'layoutContent' => [
+									[
+										'component' => 'intro',
+										'introTitle' => \__('Export', 'eightshift-forms'),
+									],
+									[
+										'component' => 'card',
+										'cardTitle' => \__('Global settings'),
+										'cardIcon' => Helper::getProjectIcons('settings'),
+										'cardContent' => [
+											[
+												'component' => 'submit',
+												'submitFieldSkip' => true,
+												'submitValue' => \__('Export', 'eightshift-forms'),
+												'submitVariant' => 'outline',
+												'submitAttrs' => [
+													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_GLOBAL_SETTINGS,
+												],
+												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+											],
+										],
+									],
+									[
+										'component' => 'divider',
+									],
+									[
+										'component' => 'card',
+										'cardTitle' => \__('Everything'),
+										'cardIcon' => Helper::getProjectIcons('allChecked'),
+										'cardContent' => [
+											[
+												'component' => 'submit',
+												'submitFieldSkip' => true,
+												'submitValue' => \__('Export', 'eightshift-forms'),
+												'submitVariant' => 'outline',
+												'submitAttrs' => [
+													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_ALL,
+												],
+												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+											],
+										],
+									],
+									[
+										'component' => 'divider',
+									],
+									[
+										'component' => 'card',
+										'cardTitle' => \__('Forms', 'eightshift-forms'),
+										'cardIcon' => Helper::getProjectIcons('form'),
+									],
+									$this->getFormsList(),
+									[
+										'component' => 'card',
+										'cardVertical' => true,
+										'cardContent' => [
+											[
+												'component' => 'submit',
+												'submitFieldSkip' => true,
+												'submitValue' => \__('Export selected', 'eightshift-forms'),
+												'submitIsDisabled' => true,
+												'submitVariant' => 'outline',
+												'submitAttrs' => [
+													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_FORMS,
+													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationExportItems'] => '',
+												],
+												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+											],
+										],
+									],
+								]
 							],
 						],
 					],
 					[
-						'component' => 'divider',
-					],
-					[
-						'component' => 'card',
-						'cardTitle' => \__('Everything'),
-						'cardIcon' => Helper::getProjectIcons('allChecked'),
-						'cardContent' => [
+						'component' => 'tab',
+						'tabLabel' => \__('Import', 'eightshift-forms'),
+						'tabContent' => [
 							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Export', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::TYPE_EXPORT_ALL,
+								'component' => 'layout',
+								'layoutType' => 'layout-v-stack',
+								'layoutContent' => [
+									[
+										'component' => 'intro',
+										'introTitle' => \__('Import', 'eightshift-forms'),
+										'introSubtitle' => \__('
+										<span>Imported global settings will <strong>override</strong> all settings set in your project.</span>
+										<span>By default, imported forms will <strong>not override</strong> existing forms. This can be changed with the toggle below. In case slugs are the same, a new form will be created.</span>', 'eightshift-forms'),
+									],
+									[
+										'component' => 'intro',
+										'introIsHighlighted' => true,
+										'introIsHighlightedImportant' => true,
+										'introTitleSize' => 'small',
+										'introSubtitle' => \__('Backup your database before running any imports.<br />This process is not reversible.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkboxes',
+										'checkboxesName' => 'override',
+										'checkboxesFieldLabel' => '',
+										'checkboxesContent' => [
+											[
+												'component' => 'checkbox',
+												'checkboxValue' => 'override',
+												'checkboxAsToggle' => true,
+												'checkboxAsToggleSize' => 'medium',
+												'checkboxLabel' => \__('Override existing forms', 'eightshift-forms'),
+												'additionalClass' => "{$manifestForm['componentTransferJsClass']}-existing",
+											],
+										],
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'file',
+										'fileName' => 'upload',
+										'fileIsRequired' => true,
+										'fileFieldLabel' => \__('Backup file (JSON)', 'eightshift-forms'),
+										'fileAccept' => 'json',
+										'additionalClass' => $manifestForm['componentTransferJsClass'] . '-upload',
+									],
+									[
+										'component' => 'card',
+										'cardVertical' => 'true',
+										'cardContent' => [
+											[
+												'component' => 'submit',
+												'submitFieldSkip' => true,
+												'submitValue' => \__('Import JSON', 'eightshift-forms'),
+												'submitVariant' => 'outline',
+												'submitAttrs' => [
+													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_IMPORT,
+												],
+												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+											],
+										],
+									],
 								],
-								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 							],
 						],
 					],
 					[
-						'component' => 'divider',
-					],
-					[
-						'component' => 'card',
-						'cardTitle' => \__('Forms', 'eightshift-forms'),
-						'cardIcon' => Helper::getProjectIcons('form'),
-					],
-					$this->getFormsList(),
-					[
-						'component' => 'card',
-						'cardVertical' => true,
-						'cardContent' => [
+						'component' => 'tab',
+						'tabLabel' => \__('Manual import', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introTitle' => \__('Manual import', 'eightshift-forms'),
+								'introSubtitle' => \__('
+								<span>Manual import JSON data thay you get from the failed integration.</span>
+								<span>Paste the JSON data from you email in the <strong>Import data field</strong>.</span>', 'eightshift-forms'),
+							],
+							[
+								'component' => 'textarea',
+								'textareaName' => 'log',
+								'textareaFieldLabel' => \__('Import data', 'eightshift-forms'),
+								'textareaSize' => 'big',
+								'textareaLimitHeight' => true,
+								'textareaIsPreventSubmit' => true,
+								'additionalClass' => "{$manifestForm['componentManualImportApiJsClass']}-data",
+							],
 							[
 								'component' => 'submit',
 								'submitFieldSkip' => true,
-								'submitValue' => \__('Export selected', 'eightshift-forms'),
-								'submitIsDisabled' => true,
+								'submitValue' => \__('Manual import', 'eightshift-forms'),
 								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::TYPE_EXPORT_FORMS,
-									'data-items' => '',
-								],
-								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+								'additionalClass' => "{$manifestForm['componentManualImportApiJsClass']} es-submit--manual-import-api",
 							],
-						],
-					],
-				]
-			],
-			[
-				'component' => 'intro',
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
-				'introTitleSize' => 'small',
-				'introSubtitle' => \__('Backup your database before running any imports.<br />This process is not reversible.', 'eightshift-forms'),
-			],
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
-				'layoutContent' => [
-					[
-						'component' => 'intro',
-						'introTitle' => \__('Import', 'eightshift-forms'),
-						'introSubtitle' => \__('
-						<span>Imported global settings will <strong>override</strong> all settings set in your project.</span>
-						<span>By default, imported forms will <strong>not override</strong> existing forms. This can be changed with the toggle below. In case slugs are the same, a new form will be created.</span>', 'eightshift-forms'),
-					],
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => 'true',
-					],
-					[
-						'component' => 'checkboxes',
-						'checkboxesName' => 'override',
-						'checkboxesFieldLabel' => '',
-						'checkboxesContent' => [
 							[
-								'component' => 'checkbox',
-								'checkboxAsToggle' => true,
-								'checkboxAsToggleSize' => 'medium',
-								'checkboxLabel' => \__('Override existing forms', 'eightshift-forms'),
-								'additionalClass' => "{$manifestForm['componentTransferJsClass']}-existing",
-							],
-						],
-					],
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => 'true',
-					],
-					[
-						'component' => 'file',
-						'fileIsRequired' => true,
-						'fileFieldLabel' => \__('Backup file (JSON)', 'eightshift-forms'),
-						'fileAccept' => 'json',
-						'additionalClass' => $manifestForm['componentTransferJsClass'] . '-upload',
-					],
-					[
-						'component' => 'card',
-						'cardVertical' => 'true',
-						'cardContent' => [
-							[
-								'component' => 'submit',
-								'submitFieldSkip' => true,
-								'submitValue' => \__('Import JSON', 'eightshift-forms'),
-								'submitVariant' => 'outline',
-								'submitAttrs' => [
-									'data-type' => self::TYPE_IMPORT,
-								],
-								'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+								'component' => 'textarea',
+								'textareaName' => 'log',
+								'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
+								'textareaSize' => 'big',
+								'textareaIsPreventSubmit' => true,
+								'textareaLimitHeight' => true,
+								'textareaIsReadOnly' => true,
+								'additionalClass' => "{$manifestForm['componentManualImportApiJsClass']}-output",
 							],
 						],
 					],
 				],
 			],
+
 		];
 	}
 

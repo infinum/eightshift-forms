@@ -1,0 +1,40 @@
+.es-form:not([data-block-ssr='true']) {
+	.es-step {
+		text-align: center;
+		transform: translateY(50%);
+
+		&::before {
+			content: '';
+			width: 100%;
+			height: 1px;
+			display: block;
+			background-color: var(--global-colors-esf-gray-300);
+		}
+
+		&__inner {
+			border: 1px solid var(--global-colors-esf-gray-300);
+			padding: 0.3125rem 1.25rem;
+			display: inline-block;
+			border-radius: var(--es-input-radius);
+			font-weight: 500;
+			transform: translateY(-50%);
+			background-color: var(--global-colors-esf-white);
+		}
+
+		&__missing {
+			transform: translateY(-50%);
+		}
+	}
+}
+
+.es-form {
+	&__fields {
+		.es-step:first-child {
+			display: block;
+		}
+	}
+
+	.es-step {
+		display: none;
+	}
+}

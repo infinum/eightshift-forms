@@ -33,5 +33,5 @@ interface SettingsInterface
 	 *
 	 * @return string
 	 */
-	public function getSettingsForm(string $type, string $formId = ''): string;
+	public function getSettingsForm(string $type, string $formId): string;
 }

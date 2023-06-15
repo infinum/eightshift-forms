@@ -8,7 +8,6 @@
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -17,13 +16,20 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $fileName = Components::checkAttr('fileName', $attributes, $manifest);
+if (!$fileName) {
+	return;
+}
+
 $fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
 $fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
 $fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
 $fileCustomInfoText = Components::checkAttr('fileCustomInfoText', $attributes, $manifest);
 $fileCustomInfoTextUse = Components::checkAttr('fileCustomInfoTextUse', $attributes, $manifest);
 $fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
+$fileTypeCustom = Components::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Components::checkAttr('fileAttrs', $attributes, $manifest);
+$fileFieldAttrs = Components::checkAttr('fileFieldAttrs', $attributes, $manifest);
+$fileIsDisabled = Components::checkAttr('fileIsDisabled', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
@@ -54,10 +60,6 @@ $customFile = '
 	</div>
 ';
 
-if ($fileTracking) {
-	$fileAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($fileTracking);
-}
-
 $fileAttrsOutput = '';
 if ($fileAttrs) {
 	foreach ($fileAttrs as $key => $value) {
@@ -73,6 +75,7 @@ $file = '
 		class="' . esc_attr($fileClass) . '"
 		name="' . esc_attr($fileName) . '"
 		id="' . esc_attr($fileName) . '"
+		' . disabled($fileIsDisabled, true, false) . '
 		type="file"
 		' . $fileIsMultiple . '
 		' . $fileAttrsOutput . '
@@ -89,10 +92,13 @@ echo Components::render(
 			'fieldId' => $fileName,
 			'fieldName' => $fileName,
 			'fieldIsRequired' => $fileIsRequired,
+			'fieldTypeCustom' => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $fileTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => $fileFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

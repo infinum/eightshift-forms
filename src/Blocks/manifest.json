@@ -4,6 +4,7 @@
 	"foreground": "#29A3A3",
 	"blockClassPrefix": "es-block",
 	"settingsPageUrl": "admin.php?page=es-settings",
+	"locationsPageUrl": "admin.php?page=es-settings&type=location",
 	"editFormUrl": "post.php?action=edit",
 	"config": {
 		"outputCssGlobally": true,
@@ -12,6 +13,9 @@
 		"outputCssGloballyAdditionalStyles": [],
 		"useWrapper": false
 	},
+	"fieldsAlways": [
+		"eightshift-forms/step"
+	],
 	"fields": [
 		"eightshift-forms/file",
 		"eightshift-forms/input",
@@ -22,7 +26,8 @@
 		"eightshift-forms/checkboxes",
 		"eightshift-forms/phone",
 		"eightshift-forms/date",
-		"eightshift-forms/country"
+		"eightshift-forms/country",
+		"eightshift-forms/step"
 	],
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",

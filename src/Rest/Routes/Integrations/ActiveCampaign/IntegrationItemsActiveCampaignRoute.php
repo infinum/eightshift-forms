@@ -30,7 +30,7 @@ class IntegrationItemsActiveCampaignRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '-active-campaign/';
+	public const ROUTE_SLUG = SettingsActiveCampaign::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Get the base url of the route
@@ -39,7 +39,7 @@ class IntegrationItemsActiveCampaignRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

@@ -4,7 +4,10 @@ import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
+	props,
 } from '@eightshift/frontend-libs/scripts';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { MissingName } from './../../utils';
 import manifest from '../manifest.json';
 
 export const CheckboxEditor = (attributes) => {
@@ -19,7 +22,7 @@ export const CheckboxEditor = (attributes) => {
 	} = attributes;
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
-	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
+	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
 
 	const checkboxClass = classnames([
 		selector(componentClass, componentClass),
@@ -32,24 +35,20 @@ export const CheckboxEditor = (attributes) => {
 		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
 	]);
 
-	const Label = () => {
-		return (
-			<label className={checkboxLabelClass} htmlFor="id">
-				<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}} />
-			</label>
-		);
-	};
-
 	return (
 		<div className={checkboxClass}>
 			<div className={`${componentClass}__content`}>
-				<input
-					className={`${componentClass}__input`}
-					type='checkbox'
-					readOnly
-					checked={checkboxIsChecked}
-				/>
-				<Label />
+				<label className={checkboxLabelClass} htmlFor="id">
+					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}} />
+				</label>
+
+				<MissingName value={checkboxValue} />
+
+				{checkboxValue &&
+					<ConditionalTagsEditor
+						{...props('conditionalTags', attributes)}
+					/>
+				}
 			</div>
 		</div>
 	);

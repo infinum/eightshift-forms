@@ -346,14 +346,14 @@ class MailerliteClient implements ClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params, ['email']);
+		$params = Helper::removeUneceseryParamFields($params);
 
 		$filterName = Filters::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params) ?? [];
 		}
 
-		return Helper::prepareGenericParamsOutput($params);
+		return Helper::prepareGenericParamsOutput($params, ['email']);
 	}
 
 	/**

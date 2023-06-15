@@ -1,0 +1,25 @@
+@import './../form/form-style.scss';
+
+.es-step {
+	width: 100%;
+	display: none;
+
+	&.is-active {
+		display: block;
+	}
+
+	&__inner {
+		@include form-fields-mandatory-styles;
+		width: 100%;
+
+		> .es-field {
+			@include form-fields-children-mandatory-styles;
+		}
+
+		.es-field--submit.is-hidden {
+			button {
+				pointer-events: none;
+			}
+		}
+	}
+}

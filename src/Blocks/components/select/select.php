@@ -17,6 +17,10 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
+if (!$selectName) {
+	return;
+}
+
 $selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
 $selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
 $selectContent = Components::checkAttr('selectContent', $attributes, $manifest);
@@ -25,6 +29,8 @@ $selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $
 $selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
 $selectUseSearch = Components::checkAttr('selectUseSearch', $attributes, $manifest);
 $selectPlaceholder = Components::checkAttr('selectPlaceholder', $attributes, $manifest);
+$selectTypeCustom = Components::checkAttr('selectTypeCustom', $attributes, $manifest);
+$selectFieldAttrs = Components::checkAttr('selectFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
@@ -34,10 +40,6 @@ $selectClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($selectSingleSubmit, $componentJsSingleSubmitClass),
 ]);
-
-if ($selectTracking) {
-	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($selectTracking);
-}
 
 if ($selectUseSearch) {
 	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($selectUseSearch);
@@ -57,13 +59,13 @@ if ($selectAttrs) {
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
 
-$placeholder = $selectPlaceholder ? Components::render(
+$placeholder = Components::render(
 	'select-option',
 	[
-		'selectOptionLabel' => $selectPlaceholder,
+		'selectOptionLabel' => $selectPlaceholder ?: esc_html__('Select option', 'eightshift-forms'), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 		'selectOptionAsPlaceholder' => true,
 	]
-) : '';
+);
 
 $select = '
 	<select
@@ -88,10 +90,13 @@ echo Components::render(
 			'fieldName' => $selectName,
 			'fieldIsRequired' => $selectIsRequired,
 			'fieldDisabled' => !empty($selectIsDisabled),
+			'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $selectTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => $selectFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

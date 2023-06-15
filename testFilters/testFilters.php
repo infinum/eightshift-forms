@@ -791,7 +791,7 @@ class Testfilters implements ServiceInterface
 			'name' => 'domain',
 			'value' => "{$medium}{$source}",
 			'type' => 'text',
-			'internalType' => '',
+			'typeCustom' => '',
 		];
 
 		unset($params['utm_source']);

@@ -1,23 +1,41 @@
-/* global grecaptcha, esFormsLocalization */
+/* global grecaptcha */
 
-import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-import { ConditionalTags } from './../../conditional-tags/assets';
-import { Enrichment } from './enrichment';
+import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
+import { State, ROUTES } from './state';
 import { Utils } from './utilities';
+import { Steps } from './step';
+import { Enrichment } from './enrichment';
+import { Captcha } from './captcha';
+import { ConditionalTags } from './conditional-tags';
+import selectManifest from './../../select/manifest.json';
+import {
+	StateEnum,
+	prefix,
+	setStateFormInitial,
+	setStateInitial,
+	setStateWindow,
+	setStateValues,
+	setStateConditionalTagsItems,
+} from './state/init';
 
 /**
  * Main Forms class.
  */
 export class Form {
-	constructor(options = {}) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor() {
+		this.state = new State();
+		this.utils = new Utils();
+		this.enrichment = new Enrichment();
+		this.captcha = new Captcha();
+		this.conditionalTags = new ConditionalTags();
+		this.steps = new Steps();
 
-		/** @type Enrichment */
-		this.enrichment = new Enrichment(this.utils);
+		this.FORM_DATA = new FormData();
 
-		/** @type ConditionalTags */
-		this.conditionalTags = new ConditionalTags(this.utils);
+		this.FILTER_IS_STEPS_FINAL_SUBMIT = 'isStepsFinalSubmit';
+		this.FILTER_SKIP_FIELDS = 'skipFields';
+		this.FILTER_USE_ONLY_FIELDS = 'useOnlyFields';
+		this.GLOBAL_MSG_TIMEOUT_ID = undefined;
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -27,216 +45,140 @@ export class Form {
 	/**
 	 * Init all actions.
 	 * 
-	 * @public
+	 * @returns {void}
 	 */
 	init() {
+		setStateInitial();
+
 		// Set all public methods.
 		this.publicMethods();
 
 		// Init all forms.
 		this.initOnlyForms();
 
-		// Init conditional tags.
-		this.conditionalTags.init();
+		// Init captcha.
+		this.captcha.init();
 
 		// Init enrichment.
 		this.enrichment.init();
-
-		// Triger event that forms are fully loaded.
-		this.utils.dispatchFormEvent(window, this.utils.EVENTS.FORMS_JS_LOADED);
 	}
 
 	/**
-	 * Init all forms.
+	 * Init only forms.
 	 * 
-	 * @public
+	 * @returns {void}
 	 */
 	initOnlyForms() {
-		const elements = document.querySelectorAll(this.utils.formSelector);
-
 		// Loop all forms on the page.
-		[...elements].forEach((element) => {
-			this.initOne(element);
+		[...document.querySelectorAll(this.state.getStateSelectorsForm())].forEach((element) => {
+			const formId = element.getAttribute(this.state.getStateAttribute('formId')) || 0;
+
+			setStateFormInitial(formId);
+
+			this.initOne(formId);
+
+			this.conditionalTags.initOne(formId);
+
+			this.steps.initOne(formId);
 		});
 	}
 
 	/**
-	 * Init one form by element.
+	 * Init one form by form Id.
 	 * 
-	 * @param {object} element Form element.
+	 * @param {string} formId Form Id.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
-	initOne(element) {
+	initOne(formId) {
 		// Regular submit.
-		element.addEventListener('submit', this.onFormSubmitEvent);
-
-		// Single submit for admin settings.
-		if (this.utils.formIsAdmin) {
-			const items = element.querySelectorAll(this.utils.submitSingleSelector);
-
-			// Look all internal items for single submit option.
-			[...items].forEach((item) => {
-				if (item.type === 'submit') {
-					item.addEventListener('click', this.onFormSubmitSingleEvent);
-				} else {
-					item.addEventListener('change', this.onFormSubmitSingleEvent);
-				}
-			});
-		}
-
-		// Get form ID.
-		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
-
-		// Form loading started.
-		this.utils.FORMS[formId] = false;
-
-		// All fields selectors.
-		const inputs = element.querySelectorAll(this.utils.inputSelector);
-		const textareas = element.querySelectorAll(this.utils.textareaSelector);
-		const selects = element.querySelectorAll(this.utils.selectSelector);
-		const files = element.querySelectorAll(this.utils.fileSelector);
-
-		// Setup regular inputs.
-		this.utils.CUSTOM_DATES[formId] = [];
-		[...inputs].forEach((input) => {
-			switch (input.type) {
-				case 'date':
-				case 'datetime-local':
-					this.setupDateField(input, formId);
-					break;
-			}
-
-			this.setupInputField(input);
-		});
+		this.state.getStateFormElement(formId).addEventListener('submit', this.onFormSubmitEvent);
 
 		// Setup select inputs.
-		this.utils.CUSTOM_SELECTS[formId] = [];
-		[...selects].forEach((select) => {
-			this.setupSelectField(select, formId);
-		});
-
-		// Setup textarea inputs.
-		this.utils.CUSTOM_TEXTAREAS[formId] = [];
-		[...textareas].forEach((textarea) => {
-			this.setupTextareaField(textarea, formId);
+		[...this.state.getStateElementByType('select', formId)].forEach((select) => {
+			this.setupSelectField(formId, select.name);
 		});
 
 		// Setup file single inputs.
-		this.utils.CUSTOM_FILES[formId] = [];
-		[...files].forEach((file, index) => {
-			this.setupFileField(file, formId, index, element);
+		[...this.state.getStateElementByType('file', formId)].forEach((file) => {
+			this.setupFileField(formId, file.name);
+		});
+
+		// Setup regular inputs.
+		[...this.state.getStateElementByType('text', formId)].forEach((input) => {
+			this.setupInputField(formId, input.name);
+		});
+
+		[...this.state.getStateElementByType('number', formId)].forEach((input) => {
+			this.setupInputField(formId, input.name);
+		});
+
+		// Date.
+		[...this.state.getStateElementByType('date', formId)].forEach((input) => {
+			this.setupDateField(formId, input.name);
+		});
+
+		[...this.state.getStateElementByType('tel', formId)].forEach((tel) => {
+			this.setupTelField(formId, tel.name);
+		});
+
+		[...this.state.getStateElementByType('checkbox', formId)].forEach((checkbox) => {
+			[...Object.values(checkbox.items)].forEach((checkboxItem) => {
+				this.setupRadioCheckboxField(formId, checkboxItem.value, checkboxItem.name);
+			});
+		});
+
+		[...this.state.getStateElementByType('radio', formId)].forEach((radio) => {
+			[...Object.values(radio.items)].forEach((radioItem) => {
+				this.setupRadioCheckboxField(formId, radioItem.value, radioItem.name);
+			});
+		});
+
+		// Setup textarea inputs.
+		[...this.state.getStateElementByType('textarea', formId)].forEach((textarea) => {
+			this.setupTextareaField(formId, textarea.name);
 		});
 
 		// Form loaded.
-		this.utils.isFormLoaded(
-			formId,
-			element,
-			selects.length,
-			textareas.length,
-			files.length
-		);
-
-		// Setup phone sync.
-		this.setupPhoneSync(element, formId);
-	}
-
-	/**
-	 *  Handle form submit and all logic in case we have captcha in place.
-	 * 
-	 * @param {object} element Form element.
-	 * @param {string} token Captcha token from api.
-	 *
-	 * @public
-	 */
-	formSubmitCaptcha(element, token, payed, action) {
-		// Loader show.
-		this.utils.showLoader(element);
-
-		// Populate body data.
-		const body = {
-			method: element.getAttribute('method'),
-			mode: 'same-origin',
-			headers: {
-				Accept: 'application/json',
-			},
-			body: JSON.stringify({
-				token,
-				payed,
-				action,
-			}),
-			credentials: 'same-origin',
-			redirect: 'follow',
-			referrer: 'no-referrer',
-		};
-
-		fetch(`${this.utils.formSubmitRestApiUrl}-captcha`, body)
-		.then((response) => {
-			return response.json();
-		})
-		.then((response) => {
-			// On success state.
-			if (response.status === 'success') {
-				this.formSubmit(element);
-			} else {
-				// Clear all errors.
-				this.utils.reset(element);
-
-				// Remove loader.
-				this.utils.hideLoader(element);
-
-				// Set global msg.
-				this.utils.setGlobalMsg(element, response.message, 'error');
-
-				// Hide global msg in any case after some time.
-				setTimeout(() => {
-					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
-			}
-		});
+		this.utils.isFormLoaded(formId);
 	}
 
 	/**
 	 * Handle form submit and all logic.
 	 * 
-	 * @param {object} element Form element.
-	 * @param {boolean} singleSubmit Is form single submit, used in admin.
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
-	formSubmit(element, singleSubmit = false) {
+	formSubmit(formId, filter = {}) {
 		// Dispatch event.
-		this.utils.dispatchFormEvent(element, this.utils.EVENTS.BEFORE_FORM_SUBMIT);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsBeforeFormSubmit());
 
-		// Loader show.
-		if (!this.utils.isCaptchaUsed()) {
-			this.utils.showLoader(element);
-		}
+		this.setFormData(formId, filter);
 
-		const formData = this.getFormData(element, singleSubmit);
-
-		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
+		const formType = this.state.getStateFormType(formId);
 
 		// Populate body data.
 		const body = {
-			method: element.getAttribute('method'),
+			method: this.state.getStateFormMethod(formId),
 			mode: 'same-origin',
 			headers: {
 				Accept: 'multipart/form-data',
 			},
-			body: formData,
+			body: this.FORM_DATA,
 			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
 
 		// Url for frontend forms.
-		let url = `${this.utils.formSubmitRestApiUrl}-${formType}`;
+		let url = this.state.getRestUrlByType(ROUTES.PREFIX_SUBMIT, formType);
 
 		// For admin settings use different url and add nonce.
-		if (this.utils.formIsAdmin) {
-			url = this.utils.formSubmitRestApiUrl;
-			body.headers['X-WP-Nonce'] = esFormsLocalization.nonce;
+		if (this.state.getStateConfigIsAdmin()) {
+			url = this.state.getRestUrl(ROUTES.SETTINGS);
+			body.headers['X-WP-Nonce'] = this.state.getStateConfigNonce();
 		}
 
 		fetch(url, body)
@@ -244,447 +186,820 @@ export class Form {
 				return response.json();
 			})
 			.then((response) => {
-				// Dispatch event.
-				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT);
-
-				// Clear all errors.
-				this.utils.reset(element);
-
-				// Remove loader.
-				this.utils.hideLoader(element);
+				this.formSubmitBefore(formId, response);
 
 				// On success state.
 				if (response.status === 'success') {
-					// Send GTM.
-					this.utils.gtmSubmit(element, formData, response.status);
-
-					// Dispatch event.
-					this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_SUCCESS);
-
-					// Redirect on success.
-					if (element.hasAttribute(this.utils.DATA_ATTRIBUTES.successRedirect) || singleSubmit) {
-
-						// Set global msg.
-						this.utils.setGlobalMsg(element, response.message, 'success');
-
-						// Redirect to url and update url params from from data.
-						if (singleSubmit) {
-							this.utils.redirectToUrlByRefference(window.location.href, element, true);
-						} else {
-							this.utils.redirectToUrl(element, formData);
-						}
-					} else {
-						// Do normal success without redirect.
-
-						// Do the actual redirect after some time for custom form processed externally.
-						if (response?.data?.processExternaly) {
-							setTimeout(() => {
-								element.submit();
-							}, parseInt(this.utils.SETTINGS.REDIRECTION_TIMEOUT, 10));
-						}
-
-						// Set global msg.
-						this.utils.setGlobalMsg(element, response.message, 'success');
-
-						// Clear form values.
-						this.utils.resetForm(element);
-					}
+					this.formSubmitSuccess(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
 				} else {
-					this.utils.gtmSubmit(element, formData, response.status, response?.data?.validation);
-					const isValidationError = response?.data?.validation !== undefined;
-
-					// Dispatch event.
-					if (isValidationError) {
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR_VALIDATION);
-					} else {
-						this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_ERROR);
-					}
-
-					this.utils.outputErrors(element, response?.data?.validation);
-
-					// Set global msg.
-					this.utils.setGlobalMsg(element, response.message, 'error');
+					this.formSubmitError(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
 				}
 
-				// Hide global msg in any case after some time.
-				setTimeout(() => {
-					this.utils.hideGlobalMsg(element);
-				}, parseInt(this.utils.SETTINGS.HIDE_GLOBAL_MESSAGE_TIMEOUT, 10));
-
-				// Dispatch event.
-				this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_SUBMIT_END);
+				this.formSubmitAfter(formId, response);
 			});
+
+			this.FORM_DATA = new FormData();
 	}
 
 	/**
-	 * Build form data object.
+	 * Handle form submit and all logic for steps form.
 	 * 
-	 * @param {object} element Form element.
-	 * @param {boolean} singleSubmit Is form single submit, used in admin.
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
-	getFormData(element, singleSubmit = false) {
-		const formData = new FormData();
-		const selectors = 'input, select, textarea';
+	formSubmitStep(formId, filter = {}) {
+		this.setFormData(formId, filter);
+		this.setFormDataStep(formId);
 
-		const groups = element.querySelectorAll(`${this.utils.groupSelector}`);
-		const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
-		const formType = element.getAttribute(this.utils.DATA_ATTRIBUTES.formType);
-		let items = element.querySelectorAll(selectors);
+		// Populate body data.
+		const body = {
+			method: this.state.getStateFormMethod(formId),
+			mode: 'same-origin',
+			headers: {
+				Accept: 'multipart/form-data',
+			},
+			body: this.FORM_DATA,
+			credentials: 'same-origin',
+			redirect: 'follow',
+			referrer: 'no-referrer',
+		};
 
-		// If single submit override items and pass only one item to submit.
-		if (singleSubmit) {
-			items = [
-				singleSubmit
-			];
+		const url = this.state.getRestUrl(ROUTES.VALIDATION_STEP);
+
+		fetch(url, body)
+			.then((response) => {
+				return response.json();
+			})
+			.then((response) => {
+				this.formSubmitBefore(formId, response);
+				this.steps.formStepSubmit(formId, response);
+			});
+
+			this.FORM_DATA = new FormData();
+	}
+
+	/**
+	 * Actions to run before form submit.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitBefore(formId, response) {
+		// Dispatch event.
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmit(), response);
+
+		// Clear all errors.
+		this.utils.resetErrors(formId);
+
+		// Remove loader.
+		this.utils.hideLoader(formId);
+	}
+
+	/**
+	 * Actions to run after form submit on success.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 * @param {bool} isFinalStep Check in steps if we are on final step.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitSuccess(formId, response, isFinalStep = false) {
+		const {
+			status,
+			message,
+			data,
+		} = response;
+
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccess(), response);
+
+		if (this.state.getStateConfigIsAdmin()) {
+			// Set global msg.
+			this.utils.setGlobalMsg(formId, message, status);
+
+			if (this.state.getStateFormIsSingleSubmit(formId)) {
+				this.utils.redirectToUrlByRefference(formId, window.location.href, true);
+			}
 		} else {
-			// Check if we are saving group items in one key.
-			if (groups.length) {
-				for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
-					const groupSaveAsOneField = Boolean(group.getAttribute(this.utils.DATA_ATTRIBUTES.groupSaveAsOneField));
+			// Send GTM.
+			this.utils.gtmSubmit(formId, status);
 
-					if (!groupSaveAsOneField) {
-						continue;
-					}
+			if (this.state.getStateFormConfigSuccessRedirect(formId)) {
+				// Redirect to url and update url params from from data.
+				this.utils.redirectToUrl(formId, this.FORM_DATA);
+			} else {
+				// Clear form values.
+				this.utils.resetForm(formId);
 
-					const groupInner = group.querySelectorAll(selectors);
+				// Set global msg.
+				this.utils.setGlobalMsg(formId, message, status);
 
-					if (groupInner.length) {
-						const groupInnerItems = {};
+				// Do normal success without redirect.
+				// Do the actual redirect after some time for custom form processed externally.
+				if (data?.processExternaly) {
+					setTimeout(() => {
+						this.state.getStateFormElement().submit();
+					}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
+				}
 
-						for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
-							const {
-								id,
-								value,
-								disabled,
-							} = groupInnerItem;
-
-							if (disabled) {
-								continue;
-							}
-
-							groupInnerItems[id] = value;
-						}
-
-						const groupId = group.getAttribute(this.utils.DATA_ATTRIBUTES.fieldId);
-
-						if (groupId) {
-							formData.append(groupId, JSON.stringify({
-								value: groupInnerItems,
-								type: 'group',
-							}));
-						}
-					}
-
-					// Remove group items from the original items.
-					items = Array.prototype.slice.call(items).filter((item) => Array.prototype.slice.call(groupInner).indexOf(item) == -1);
+				// Return to original first step.
+				if (isFinalStep) {
+					this.steps.resetSteps(formId);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Actions to run after form submit on error.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 * @param {bool} isFinalStep Check in steps if we are on final step.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitError(formId, response, isFinalStep = false) {
+		const {
+			status,
+			message,
+			data,
+		} = response;
+
+		this.utils.setGlobalMsg(formId, message, status);
+
+		this.utils.gtmSubmit(formId, status, data?.validation);
+
+		// Dispatch event.
+		if (data?.validation !== undefined) {
+			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitErrorValidation(), response);
+
+			this.utils.outputErrors(formId, data?.validation);
+
+			if (isFinalStep) {
+				this.steps.goToStepWithError(formId, data?.validation);
+			}
+		} else {
+			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitError(), response);
+		}
+	}
+
+	/**
+	 * Actions to run after form submit.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitAfter(formId, response) {
+		// Reset timeout for after each submit.
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+		}
+
+		// Hide global msg in any case after some time.
+		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
+			this.utils.unsetGlobalMsg(formId);
+		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+
+		// Dispatch event.
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitEnd(), response);
+	}
+
+	/**
+	 * Handle form submit on captcha.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
+	 *
+	 * @returns {void}
+	 */
+	runFormCaptcha(formId, filter = {}) {
+		if (!this.state.getStateCaptchaIsUsed()) {
+			return;
+		}
+
+		const actionName = this.state.getStateCaptchaSubmitAction();
+		const siteKey = this.state.getStateCaptchaSiteKey();
+
+		if (this.state.getStateCaptchaIsEnterprise()) {
+			grecaptcha.enterprise.ready(async () => {
+				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
+					this.setFormDataCaptcha({
+						token,
+						isEnterprise: true,
+						action: actionName,
+					});
+
+					this.formSubmit(formId, filter);
+				});
+			});
+		} else {
+			grecaptcha.ready(async () => {
+				await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
+					this.setFormDataCaptcha({
+						token,
+						isEnterprise: false,
+						action: actionName,
+					});
+					this.formSubmit(formId, filter);
+				});
+			});
+		}
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Form Data
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Set form data object for all forms.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
+	 *
+	 * @returns {void}
+	 */
+	setFormData(formId, filter = {}) {
+		let internalFilter = filter;
+
+		if (this.state.getStateConfigIsAdmin()) {
+			this.setFormDataAdmin(formId);
+			internalFilter = {
+				...internalFilter,
+				[this.FILTER_SKIP_FIELDS]: this.getFormDataGroup(formId) ?? [],
+			};
+		} else {
+			this.setFormDataPerType(formId);
+			this.setFormDataEnrichment();
+		}
+
+		this.setFormDataFields(formId, internalFilter);
+		this.setFormDataCommon(formId);
+	}
+
+	/**
+	 * Set form data object for all forms - fields.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {object} filter Additional filter to pass.
+	 *
+	 * @returns {void}
+	 */
+	setFormDataFields(formId, filter = {}) {
+		const formType = this.state.getStateFormType(formId);
+
+		// Used for single submit.
+		const useOnlyFields = filter?.[this.FILTER_USE_ONLY_FIELDS] ?? [];
+		this.state.setStateFormIsSingleSubmit(Boolean(useOnlyFields.length), formId);
+
+		// Used for group submit.
+		const skipFields = filter?.[this.FILTER_SKIP_FIELDS] ?? [];
 
 		// Iterate all form items.
-		for (const [key, item] of Object.entries(items)) { // eslint-disable-line no-unused-vars
-			const {
-				type,
-				name,
-				id,
-				disabled,
-				checked,
-				dataset: {
-					objectTypeId, // Used for HubSpot only
-				}
-			} = item;
-			if (disabled) {
+		for (const [key] of this.state.getStateElements(formId)) { // eslint-disable-line no-unused-vars
+
+			const name = key;
+			const internalType = this.state.getStateElementTypeInternal(key, formId);
+			const value = this.state.getStateElementValue(key, formId);
+			const typeCustom = this.state.getStateElementTypeCustom(key, formId);
+			const saveAsJson = this.state.getStateElementSaveAsJson(key, formId);
+			const items = this.state.getStateElementItems(key, formId);
+			const field = this.state.getStateElementField(key, formId);
+			const valueCountry = this.state.getStateElementValueCountry(key, formId);
+			const disabled = this.state.getStateElementIsDisabled(key, formId);
+
+			// Used for single submit.
+			if (useOnlyFields.length && !useOnlyFields.includes(name)) {
 				continue;
 			}
 
-			let {
-				value,
-			} = item;
+			// Used for group submit.
+			if (skipFields.length && skipFields.includes(name)) {
+				continue;
+			}
 
 			// Build data object.
 			const data = {
 				name,
 				value,
-				type,
+				type: internalType,
+				typeCustom,
+				custom: '',
+				innerName: '',
 			};
 
-			// Adde internal type for additional logic in some integrations.
-			data.internalType = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldTypeInternal);
-
-			if (formType === 'hubspot') {
-				data.objectTypeId = objectTypeId ?? '';
+			switch (formType) {
+				case 'hubspot':
+						data.custom = field.getAttribute(this.state.getStateAttribute('hubspotTypeId')) ?? '';
+					break;
 			}
 
-			if (data.internalType === 'date' || data.internalType === 'datetime-local') {
-				data.type = data.internalType;
-			}
-
-			switch (type) {
+			switch (internalType) {
 				case 'checkbox':
+					let indexCheck = 0; // eslint-disable-line no-case-declarations
+					for(const [checkName, checkValue] of Object.entries(value)) {
+						if (disabled[checkName]) {
+							continue;
+						}
+
+						data.value = checkValue;
+						data.innerName = checkName;
+
+						this.FORM_DATA.append(`${name}[${indexCheck}]`, JSON.stringify(data));
+						indexCheck++;
+					}
+					break;
 				case 'radio':
-					// If checkbox/radio on empty change to empty value.
-					if (!checked) {
-						// If unchecked value attribute is added use that if not send an empty value.
-						data.value = item.getAttribute(this.utils.DATA_ATTRIBUTES.fieldUncheckedValue) ?? '';
+					let indexRadio = 0; // eslint-disable-line no-case-declarations
+					for(const [radioName, radioValue] of Object.entries(items)) {
+						if (disabled[radioName]) {
+							continue;
+						}
+
+						data.value = radioValue.input.checked ? radioValue.value : '';
+						data.innerName = radioName;
+
+						this.FORM_DATA.append(`${name}[${indexRadio}]`, JSON.stringify(data));
+						indexRadio++;
+					}
+					break;
+				case 'textarea':
+					if (disabled) {
+						break;
 					}
 
-					formData.append(id, JSON.stringify(data));
+					// Convert textarea to json format with : as delimiter.
+					if (saveAsJson) {
+						data.value = this.utils.getSaveAsJsonFormatOutput(formId, name);
+					}
 
+					this.FORM_DATA.append(name, JSON.stringify(data));
+					break;
+				case 'tel':
+					if (disabled) {
+						break;
+					}
+
+					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
+						data.value = `${valueCountry.number}${value}`;
+					}
+
+					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 				case 'file':
+					if (disabled) {
+						break;
+					}
+
 					// If custom file use files got from the global object of files uploaded.
-					const fileList = this.utils.FILES[formId][id] ?? []; // eslint-disable-line no-case-declarations
+					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? []; // eslint-disable-line no-case-declarations
 
 					// Loop files and append.
 					if (fileList.length) {
 						for (const [key, file] of Object.entries(fileList)) {
-							formData.append(`${id}[${key}]`, file);
+							const status = file?.xhr?.response ? JSON.parse(file.xhr.response)?.status : 'error';
+
+							// Check if the file is ok.
+							if (status === 'success') {
+								data.value = this.utils.getFileNameFromFileObject(file);
+								this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
+							}
 						}
 					} else {
-						formData.append(`${id}[0]`, JSON.stringify({}));
+						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
 					}
-					break;
-				case 'select-one':
-					// Bailout if select is part of the phone.
-					if (item.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType) === 'phone') {
-						break;
-					}
-
-					formData.append(id, JSON.stringify(data));
-					break;
-				case 'text':
-					// Skip alt text input created by date time picker lib.
-					if (item?.previousElementSibling?.classList?.contains('flatpickr-input')) {
-						break;
-					}
-
-					formData.append(id, JSON.stringify(data));
-					break;
-				case 'tel':
-					const phoneDisablePicker = Boolean(element.getAttribute(this.utils.DATA_ATTRIBUTES.phoneDisablePicker)); // eslint-disable-line no-case-declarations
-					if (phoneDisablePicker) {
-						formData.append(id, JSON.stringify(data));
-						break;
-					}
-
-					const prefix = item.previousElementSibling.querySelector('select'); // eslint-disable-line no-case-declarations
-					const selectedPrefix = prefix.options[prefix.selectedIndex].value; // eslint-disable-line no-case-declarations
-
-					if (item.value) {
-						data.value = `${selectedPrefix}${item.value}`;
-					}
-
-					formData.append(id, JSON.stringify(data));
-
-					break;
-				case 'textarea':
-					const saveAsJson = Boolean(item.getAttribute(this.utils.DATA_ATTRIBUTES.saveAsJson)); // eslint-disable-line no-case-declarations
-
-					// Convert textarea to json format with : as delimiter.
-					if (saveAsJson) {
-						const textareaOutput = [];
-						const regexItems = data.value.split(/\r\n|\r|\n/);
-
-						if (regexItems.length) {
-							regexItems.forEach((element) => {
-								if (!element) {
-									return;
-								}
-
-								const innerItem = element.split(':');
-								const innerOutput = [];
-
-								if (innerItem) {
-									innerItem.forEach((inner) => {
-										const innerItem = inner.trim();
-
-										if (!innerItem) {
-											return;
-										}
-
-										innerOutput.push(innerItem.trim());
-									});
-								}
-
-								textareaOutput.push(innerOutput);
-							});
-						}
-
-						data.value = textareaOutput;
-					}
-
-					formData.append(id, JSON.stringify(data));
-					break;
-				case 'search':
-					// Skip search field from dropdown.
 					break;
 				default:
-					formData.append(id, JSON.stringify(data));
+					if (disabled) {
+						break;
+					}
 
+					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 			}
 		}
-
-		// Add form ID field.
-		formData.append(this.utils.FORM_PARAMS.postId, JSON.stringify({
-			name: this.utils.FORM_PARAMS.postId,
-			value: formId,
-			type: 'hidden',
-		}));
-
-		// Add form type field.
-		formData.append(this.utils.FORM_PARAMS.type, JSON.stringify({
-			name: this.utils.FORM_PARAMS.type,
-			value: formType,
-			type: 'hidden',
-		}));
-
-		// Add form action field.
-		formData.append(this.utils.FORM_PARAMS.action, JSON.stringify({
-			name: this.utils.FORM_PARAMS.action,
-			value: element.getAttribute('action'),
-			type: 'hidden',
-		}));
-
-		// Add action external field.
-		formData.append(this.utils.FORM_PARAMS.actionExternal, JSON.stringify({
-			name: this.utils.FORM_PARAMS.actionExternal,
-			value: element.getAttribute(this.utils.DATA_ATTRIBUTES.actionExternal),
-			type: 'hidden',
-		}));
-
-		// Add additional options for HubSpot only.
-		if (formType === 'hubspot' && !this.utils.formIsAdmin) {
-			formData.append(this.utils.FORM_PARAMS.hubspotCookie, JSON.stringify({
-				name: this.utils.FORM_PARAMS.hubspotCookie,
-				value: cookies.getCookie('hubspotutk'),
-				type: 'hidden',
-			}));
-
-			formData.append(this.utils.FORM_PARAMS.hubspotPageName, JSON.stringify({
-				name: this.utils.FORM_PARAMS.hubspotPageName,
-				value: document.title,
-				type: 'hidden',
-			}));
-
-			formData.append(this.utils.FORM_PARAMS.hubspotPageUrl, JSON.stringify({
-				name: this.utils.FORM_PARAMS.hubspotPageUrl,
-				value: window.location.href,
-				type: 'hidden',
-			}));
-		}
-
-		if (this.utils.formIsAdmin) {
-			formData.append(this.utils.FORM_PARAMS.settingsType, JSON.stringify({
-				name: this.utils.FORM_PARAMS.settingsType,
-				value: element.getAttribute(this.utils.DATA_ATTRIBUTES.settingsType),
-				type: 'hidden',
-			}));
-
-			if (singleSubmit) {
-				formData.append(this.utils.FORM_PARAMS.singleSubmit, JSON.stringify({
-					name: this.utils.FORM_PARAMS.singleSubmit,
-					value: 'true',
-					type: 'hidden',
-				}));
-			}
-	
-		}
-
-		// Set localStorage to hidden field.
-		if (this.enrichment.isEnrichmentUsed()) {
-			const storage = this.enrichment.getLocalStorage();
-
-			if (storage) {
-				formData.append(this.utils.FORM_PARAMS.storage, JSON.stringify({
-					name: this.utils.FORM_PARAMS.storage,
-					value: storage,
-					type: 'hidden',
-				}));
-			}
-		}
-
-		return formData;
 	}
 
 	/**
-	 * Setup Regular field.
-	 *
-	 * @param {object} input Input element.
-	 *
-	 * @public
-	 */
-	setupInputField(input) {
-		this.utils.preFillOnInit(input, input.type);
-
-		input.addEventListener('keydown', this.utils.onFocusEvent);
-		input.addEventListener('focus', this.utils.onFocusEvent);
-		input.addEventListener('blur', this.utils.onBlurEvent);
-	}
-
-	/**
-	 * Setup Date time field.
+	 * Set form data object for all forms - group.
 	 * 
-	 * @param {object} date Input element.
-	 * @param {string} formId Form Id specific to one form.
+	 * @param {string} formId Form Id.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
-	setupDateField(date, formId) {
+	getFormDataGroup(formId) {
+		const output = [];
+		const groups = this.state.getStateFormElement(formId).querySelectorAll(`${this.state.getStateSelectorsGroup()}`);
+
+		// Check if we are saving group items in one key.
+		if (!groups.length) {
+			return output;
+		}
+
+		for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
+			const groupSaveAsOneField = Boolean(group.getAttribute(this.state.getStateAttribute('groupSaveAsOneField')));
+
+			if (!groupSaveAsOneField) {
+				continue;
+			}
+
+			const groupInner = group.querySelectorAll('input, select, textarea');
+
+			if (!groupInner.length) {
+				continue;
+			}
+
+			const groupInnerItems = {};
+
+			for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
+				const {
+					name,
+					value,
+					disabled,
+				} = groupInnerItem;
+
+				if (disabled) {
+					continue;
+				}
+
+				groupInnerItems[name] = value;
+				output.push(name);
+			}
+
+			const groupId = group.getAttribute(this.state.getStateAttribute('fieldId'));
+
+			if (groupId) {
+				this.FORM_DATA.append(groupId, JSON.stringify({
+					name: groupId,
+					value: groupInnerItems,
+					type: 'group',
+					typeCustom: 'group',
+				}));
+			}
+		}
+
+		return output;
+	}
+
+	/**
+	 * Set form data object for all forms - steps.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
+	setFormDataStep(formId) {
+		this.buildFormDataItems([
+			{
+				name: this.state.getStateParam('steps'),
+				value: this.state.getStateFormStepsItem(this.state.getStateFormStepsCurrent(formId), formId),
+				custom: this.state.getStateFormStepsCurrent(formId),
+			},
+		]);
+	}
+
+	/**
+	 * Set form data object for all forms - common.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
+	setFormDataCommon(formId) {
+		this.buildFormDataItems([
+			{
+				name: this.state.getStateParam('formId'),
+				value: formId,
+			},
+			{
+				name: this.state.getStateParam('postId'),
+				value: this.state.getStateFormPostId(formId),
+			},
+			{
+				name: this.state.getStateParam('type'),
+				value: this.state.getStateFormType(formId),
+			},
+			{
+				name: this.state.getStateParam('action'),
+				value: this.state.getStateFormAction(formId),
+			},
+			{
+				name: this.state.getStateParam('actionExternal'),
+				value: this.state.getStateFormActionExternal(formId),
+			},
+		]);
+	}
+
+	/**
+	 * Set form data object for all forms - enrichment.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
+	setFormDataEnrichment() {
+		if (!this.state.getStateEnrichmentIsUsed()) {
+			return;
+		}
+
+		const data = this.enrichment.getLocalStorage();
+
+		if (data) {
+			this.buildFormDataItems([
+				{
+					name: this.state.getStateParam('storage'),
+					value: this.enrichment.getLocalStorage(),
+				},
+			]);
+		}
+	}
+
+	/**
+	 * Set form data object for all forms - admin.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
+	setFormDataAdmin(formId) {
+		this.buildFormDataItems([
+			{
+				name: this.state.getStateParam('settingsType'),
+				value: this.state.getStateFormTypeSettings(formId),
+			},
+		]);
+	}
+
+	/**
+	 * Set form data object for all forms - per form type.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
+	setFormDataPerType(formId) {
+		let output = [];
+
+		switch (this.state.getStateFormType(formId)) {
+			case 'hubspot':
+				output = [
+					...output,
+					{
+						name: this.state.getStateParam('hubspotCookie'),
+						value: cookies.getCookie('hubspotutk'),
+					},
+					{
+						name: this.state.getStateParam('hubspotPageName'),
+						value: document.title,
+					},
+					{
+						name: this.state.getStateParam('hubspotPageUrl'),
+						value: window.location.href,
+					},
+				];
+				break;
+		}
+
+		this.buildFormDataItems(output);
+	}
+
+	/**
+	 * Set form data object for all forms - captcha.
+	 * 
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
+	setFormDataCaptcha(data) {
+		this.buildFormDataItems([
+			{
+				name: this.state.getStateParam('captcha'),
+				value: data,
+			},
+		]);
+	}
+
+	/**
+	 * Build helper for form data object.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {object} dataSet Object to build.
+	 *
+	 * @returns {void}
+	 */
+	buildFormDataItems(data, dataSet = this.FORM_DATA) {
+		data.forEach((item) => {
+			const {
+				name,
+				value,
+				type = 'hidden',
+				typeCustom = 'hidden',
+				custom = '',
+			} = item;
+
+			dataSet.append(name, JSON.stringify({
+				name,
+				value,
+				type,
+				typeCustom,
+				custom,
+			}));
+		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Fields
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Setup text field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	setupInputField(formId, name) {
+		const input = this.state.getStateElementInput(name, formId);
+
+		this.state.setStateElementLoaded(name, true, formId);
+
+		this.utils.setFieldFilledState(formId, name);
+
+		input.addEventListener('keydown', this.onFocusEvent);
+		input.addEventListener('focus', this.onFocusEvent);
+		input.addEventListener('blur', this.onBlurEvent);
+		input.addEventListener('input', this.onInputEvent);
+	}
+
+	/**
+	 * Setup tel field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	setupTelField(formId, name) {
+		this.setupInputField(formId, name);
+
+		if (this.state.getStateFormConfigPhoneDisablePicker(formId)) {
+			this.state.getStateElementField(name, formId).querySelector('select').remove();
+		} else {
+			this.setupSelectField(formId, name);
+		}
+	}
+
+	/**
+	 * Setup radio/checkbox field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} value Field value.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	setupRadioCheckboxField(formId, value, name) {
+		const input = this.state.getStateElementItemsInput(name, value, formId);
+
+		this.state.setStateElementLoaded(name, true, formId);
+
+		this.utils.setFieldFilledState(formId, name);
+
+		input.addEventListener('keydown', this.onFocusEvent);
+		input.addEventListener('focus', this.onFocusEvent);
+		input.addEventListener('blur', this.onBlurEvent);
+		input.addEventListener('input', this.onInputEvent);
+	}
+
+	/**
+	 * Setup date field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	setupDateField(formId, name) {
+		const input = this.state.getStateElementInput(name, formId);
+
 		import('flatpickr').then((flatpickr) => {
-			const {type} = date;
+			const state = this.state;
+			const utils = this.utils;
+			const conditionalTags = this.conditionalTags;
 
-			const previewFormat = date.getAttribute(this.utils.DATA_ATTRIBUTES.datePreviewFormat);
-			const outputFormat = date.getAttribute(this.utils.DATA_ATTRIBUTES.dateOutputFormat);
-
-			const datePicker = flatpickr.default(date, {
-				enableTime: type === 'datetime-local',
-				dateFormat: outputFormat,
-				altFormat: previewFormat,
+			flatpickr.default(input, {
+				enableTime: this.state.getStateElementTypeInternal(name, formId) === 'datetime',
+				dateFormat: input.getAttribute(this.state.getStateAttribute('dateOutputFormat')),
+				altFormat: input.getAttribute(this.state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
-			});
+				onReady: function(selectedDates, value) {
+					state.setStateElementInitial(name, value, formId);
+					state.setStateElementLoaded(name, true, formId);
+					state.setStateElementValue(name, value, formId);
+					state.setStateElementCustom(name, this, formId);
 
-			this.utils.CUSTOM_DATES[formId].push(datePicker);
+					utils.setFieldFilledState(formId, name);
+				},
+				onOpen: function () {
+					utils.setFieldActiveState(formId, name);
+				},
+				onChange: function (selectedDates, value) {
+					state.setStateElementValue(name, value, formId);
+
+					utils.setFieldFilledState(formId, name);
+					conditionalTags.setField(formId, name);
+				},
+			});
 		});
 	}
 
 	/**
-	 * Setup Select field.
-	 * 
-	 * @param {object} select Input element.
-	 * @param {string} formId Form Id specific to one form.
+	 * Setup select field.
 	 *
-	 * @public
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
 	 */
-	setupSelectField(select, formId) {
-		import('choices.js').then((Choices) => {
-			const selectShowCountryIcons = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectShowCountryIcons);
-			const selectPlaceholder = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectPlaceholder);
-			const selectAllowSearch = select.getAttribute(this.utils.DATA_ATTRIBUTES.selectAllowSearch);
+	setupSelectField(formId, name) {
+		let input = this.state.getStateElementInput(name, formId);
+		const type = this.state.getStateElementType(name, formId);
 
-			const choices = new Choices.default(select, {
-				searchEnabled: Boolean(selectAllowSearch),
+		 if (type === 'tel') {
+			 input = this.state.getStateElementInputSelect(name, formId);
+		 }
+
+		import('choices.js').then((Choices) => {
+			const state = this.state;
+
+			const customProperties = [
+				this.state.getStateAttribute('selectCountryCode'),
+				this.state.getStateAttribute('selectCountryLabel'),
+				this.state.getStateAttribute('selectCountryNumber'),
+				this.state.getStateAttribute('conditionalTags'),
+				this.state.getStateAttribute('selectVisibility'),
+			];
+ 
+			const choices = new Choices.default(input, {
+				searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-				placeholder: Boolean(selectPlaceholder),
+				duplicateItemsAllowed: false,
+				placeholder: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_PLACEHOLDER, formId),
 				searchFields: ['label', 'value', 'customProperties'],
 				itemSelectText: '',
 				classNames: {
-					containerOuter: `choices ${this.utils.selectClassName}`,
+					containerOuter: `choices ${selectManifest.componentClass}`,
 				},
 				callbackOnCreateTemplates: function() {
 					return {
+						// Fake select option.
+						option: (...args) => {
+							const element = Choices.default.defaults.templates.option.call(this, ...args);
+							const properties = args?.[0]?.customProperties;
+
+							if (properties) {
+								element.setAttribute(state.getStateAttribute('selectCustomProperties'), JSON.stringify(properties));
+							}
+
+							return element;
+						},
+						// Dropdown items.
 						choice: (...args) => {
 							const element = Choices.default.defaults.templates.choice.call(this, ...args);
+							const properties = !state.getStateElementLoaded(name, formId) ? args?.[1]?.customProperties : this.config?.choices[args?.[1]?.id - 1]?.customProperties;
 
-							// Implement changes for phone picker.
-							if (selectShowCountryIcons) {
-								const findItem = this.config.choices.find((item) => item.label === element.innerHTML).customProperties;
-								element.dataset.customProperties = findItem;
-								return element;
+							if (properties) {
+								customProperties.forEach((property) => {
+									const check = properties?.[property];
+									if (check) {
+										element.setAttribute(property, check);
+									}
+								});
+							}
+
+							return element;
+						},
+						// Selected item.
+						item: (...args) => {
+							const element = Choices.default.defaults.templates.item.call(this, ...args);
+							const properties = args?.[1]?.customProperties;
+
+							if (properties) {
+								customProperties.forEach((property) => {
+									const check = properties?.[property];
+									if (check) {
+										element.setAttribute(property, check);
+									}
+								});
 							}
 
 							return element;
@@ -693,291 +1008,235 @@ export class Form {
 				},
 			});
 
-			select.setAttribute(this.utils.DATA_ATTRIBUTES.selectInitial, choices.config.choices.find((item) => item.selected === true)?.value);
+			const countryCookie = cookies.getCookie('esForms-country').toLocaleLowerCase();
+			if (countryCookie) {
+				choices.setChoiceByValue(countryCookie);
+			}
 
-			Object.assign(choices, {
-				esFormsFieldType: select.closest(this.utils.fieldSelector).getAttribute(this.utils.DATA_ATTRIBUTES.fieldType),
+			this.state.setStateElementLoaded(name, true, formId);
+			this.state.setStateElementCustom(name, choices, formId);
+
+			choices.config.choices.map((item) => {
+				setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
 			});
 
-			this.utils.preFillOnInit(choices, 'select');
-
-			this.utils.CUSTOM_SELECTS[formId].push(choices);
-
-			select.closest('.choices').addEventListener('focus', this.utils.onFocusEvent);
-			select.closest('.choices').addEventListener('blur', this.utils.onBlurEvent);
+			choices.containerOuter.element.addEventListener('focus', this.onFocusEvent);
+			choices.containerOuter.element.addEventListener('blur', this.onBlurEvent);
+			choices.containerOuter.element.addEventListener('change', this.onSelectChangeEvent);
 		});
 	}
 
 	/**
-	 * Setup Textarea field.
-	 * 
-	 * @param {object} textarea Input element.
-	 * @param {string} formId Form Id specific to one form.
+	 * Setup textarea field.
 	 *
-	 * @public
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
 	 */
-	setupTextareaField(textarea, formId) {
-		this.utils.preFillOnInit(textarea, 'textarea');
-
-		textarea.addEventListener('keydown', this.utils.onFocusEvent);
-		textarea.addEventListener('focus', this.utils.onFocusEvent);
-		textarea.addEventListener('blur', this.utils.onBlurEvent);
+	setupTextareaField(formId, name) {
+		const input = this.state.getStateElementInput(name, formId);
 
 		import('autosize').then((autosize) => {
-			textarea.setAttribute('rows', '1');
-			textarea.setAttribute('cols', '');
+			input.setAttribute('rows', '1');
+			input.setAttribute('cols', '');
 
-			autosize.default(textarea);
-
-			this.utils.CUSTOM_TEXTAREAS[formId].push(autosize.default);
+			autosize.default(input);
 		});
+
+		this.state.setStateElementLoaded(name, true, formId);
+
+		this.utils.setFieldFilledState(formId, name);
+
+		input.addEventListener('keydown', this.onFocusEvent);
+		input.addEventListener('focus', this.onFocusEvent);
+		input.addEventListener('blur', this.onBlurEvent);
+		input.addEventListener('input', this.onInputEvent);
 	}
 
 	/**
-	 * Setup file single field.
-	 * 
-	 * @param {object} file Input element.
-	 * @param {string} formId Form Id specific to one form.
-	 * @param {number} index Loop index.
+	 * Setup file field.
 	 *
-	 * @public
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
 	 */
-	setupFileField(file, formId, index) {
-		const fileId = file?.id;
-
-		if (typeof this.utils.FILES[formId] === 'undefined') {
-			this.utils.FILES[formId] = {};
-		}
-
-		if (typeof this.utils.FILES[formId][fileId] === 'undefined') {
-			this.utils.FILES[formId][fileId] = [];
-		}
+	setupFileField(formId, name) {
+		const input = this.state.getStateElementInput(name, formId);
+		const field = this.state.getStateElementField(name, formId);
 
 		import('dropzone').then((Dropzone) => {
-			// Init dropzone.
-			const myDropzone = new Dropzone.default(
-				file.closest(this.utils.fieldSelector),
+			const dropzone = new Dropzone.default(
+				field,
 				{
-					url: "/",
+					url: this.state.getRestUrl(ROUTES.FILES),
 					addRemoveLinks: true,
-					autoProcessQueue: false,
 					autoDiscover: false,
-					maxFiles: !file.multiple ? 1 : null,
-					dictRemoveFile: this.utils.SETTINGS.FILE_CUSTOM_REMOVE_LABEL,
+					parallelUploads: 1,
+					maxFiles: !input.multiple ? 1 : null,
+					dictRemoveFile: this.state.getStateSettingsFileRemoveLabel(formId),
 				}
 			);
 
-			this.utils.CUSTOM_FILES[formId].push(myDropzone);
+			// Set data to internal state.
+			this.state.setStateElementLoaded(name, true, formId);
+			this.state.setStateElementCustom(name, dropzone, formId);
 
-			// On add one file.
-			myDropzone.on("addedfile", (file) => {
+			// On add one file add selectors for UX.
+			dropzone.on("addedfile", (file) => {
 				setTimeout(() => {
-					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_ACTIVE);
+					file.previewTemplate.classList.add(this.state.getStateSelectorsClassActive());
 				}, 200);
 
 				setTimeout(() => {
-					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_FILLED);
+					file.previewTemplate.classList.add(this.state.getStateSelectorsClassFilled());
 				}, 1200);
 
-				this.utils.FILES[formId][fileId].push(file);
+				field.classList.remove(this.state.getStateSelectorsClassActive());
+
+				this.state.setStateElementValue(name, 'true', formId);
+
+				// Remove main filed validation error.
+				this.utils.unsetFieldError(formId, name);
 			});
 
-			// On max file size reached.
-			myDropzone.on('maxfilesreached', () => {
-				myDropzone.removeEventListeners();
+			dropzone.on('removedfile', () => {
+				const custom = this.state.getStateElementCustom(name, formId);
+
+				if (custom.files.length === 0) {
+					field.classList.remove(this.state.getStateSelectorsClassFilled());
+				}
+
+				field.classList.remove(this.state.getStateSelectorsClassActive());
+				this.state.setStateElementValue(name, '', formId);
 			});
 
-			// On error while upload.
-			myDropzone.on("error", (file) => {
-				setTimeout(() => {
-					file.previewTemplate.classList.add(this.utils.SELECTORS.CLASS_HAS_ERROR);
-				}, 1500);
-
-				const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
-
-				this.utils.FILES[formId][fileId] = [...itemsLeft];
+			// Add data formData to the api call for the file upload.
+			dropzone.on("sending", (file, xhr, formData) => {
+				// Add common items like formID and type.
+				this.buildFormDataItems([
+					{
+						name: this.state.getStateParam('formId'),
+						value: formId,
+					},
+					{
+						name: this.state.getStateParam('postId'),
+						value: this.state.getStateFormPostId(formId),
+					},
+					{
+						name: this.state.getStateParam('type'),
+						value: 'fileUpload', // Not connected to anything just here for reference.
+					},
+					{
+						// Add field name to know where whas this file upload to.
+						name: this.state.getStateParam('name'),
+						value: name,
+					},
+					{
+						// Add file ID to know the file.
+						name: this.state.getStateParam('fileId'),
+						value: file?.upload?.uuid,
+					},
+				], formData);
 			});
 
-			// On remove files.
-			myDropzone.on("removedfile", (file) => {
-				const itemsLeft = this.utils.FILES[formId][fileId].filter((item) => item.upload.uuid !== file.upload.uuid);
+			// Once data is outputed from uplaod.
+			dropzone.on("success", (file) => {
+				const response = JSON.parse(file.xhr.response);
 
-				this.utils.FILES[formId][fileId] = [...itemsLeft];
+				// Output errors if ther is any.
+				if (response?.data?.validation !== undefined) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.validation?.[file?.upload?.uuid];
 
-				myDropzone.setupEventListeners();
+					// Remove faulty files.
+					setTimeout(() => {
+						dropzone.removeFile(file);
+					}, 2500);
+				}
+
+				field.classList.add(this.state.getStateSelectorsClassFilled());
 			});
 
-			// Trigger on wrap click.
-			file.nextElementSibling.setAttribute('dropzone-index', index);
-			file.nextElementSibling.setAttribute('dropzone-form-id', formId);
-			file.nextElementSibling.addEventListener('click', this.onCustomFileWrapClickEvent);
+			// On max file size reached output error and remove files.
+			dropzone.on('maxfilesreached', (files) => {
+				files.forEach((file) => {
+					if (file.status === 'error') {
+						setTimeout(() => {
+							dropzone.removeFile(file);
+						}, 2500);
+					}
+				});
+			});
 
-			// Button inside wrap element.
-			const button = file.parentNode.querySelector('a');
-
-			button.addEventListener('focus', this.utils.onFocusEvent);
-			button.addEventListener('blur', this.utils.onBlurEvent);
+		// 	// Trigger on wrap click.
+			field.addEventListener('click', this.onFileWrapClickEvent);
 		});
 	}
 
-	/**
-	 * Sync phone and country fields on change.
-	 *
-	 * @param {object} form Form element
-	 * @param {string} formId Form Id.
-	 *
-	 * @returns void
-	 */
-	setupPhoneSync(form, formId) {
-		const phoneDisablePicker = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneDisablePicker));
-		if (phoneDisablePicker) {
-			return;
-		}
-
-		const phoneSync = Boolean(form.getAttribute(this.utils.DATA_ATTRIBUTES.phoneSync));
-
-		if (!phoneSync) {
-			return;
-		}
-
-		// Set interval because of dynamic import of choices.
-		const interval = setInterval(() => {
-			if (window[this.utils.prefix].utils.FORMS?.[formId]) {
-				clearInterval(interval);
-
-				const selects = window[this.utils.prefix].utils.CUSTOM_SELECTS[formId];
-
-				if (selects.length !== 0) {
-					// Find all countries.
-					const country = selects.find((element) => element.esFormsFieldType === 'country');
-
-					// Find all phones.
-					const phones = selects.filter((element) => element.esFormsFieldType === 'phone');
-
-					if (country) {
-						// Loop all phones.
-						phones.map((element) => {
-							// Set phone init value by checking the contry.
-							element.setChoiceByValue(country.getValue()?.customProperties);
-
-							// Set contry value on any phone change.
-							// TODO: Remove events.
-							element.passedElement.element.addEventListener(
-								'change',
-								function(event) {
-									country.setChoiceByValue(country.config.choices.find((item) => item.customProperties === event.srcElement[0].dataset.customProperties).value);
-								},
-								false,
-							);
-						});
-
-						// Set phones value on country change.
-						// TODO: Remove events.
-						country.passedElement.element.addEventListener(
-							'change',
-							function(event) {
-								phones.map((element) => {
-									element.setChoiceByValue(element.config.choices.find((item) => item.customProperties === event.srcElement[0].dataset.customProperties).value);
-								});
-							},
-							false,
-						);
-					}
-				}
-			}
-		}, 100);
-	}
+	////////////////////////////////////////////////////////////////
+	// Other
+	////////////////////////////////////////////////////////////////
 
 	/**
 	 * Remove all event listeners from elements.
 	 * 
-	 * @public
+	 * @returns {vodi}
 	 */
 	removeEvents() {
-		const elements = document.querySelectorAll(this.utils.formSelector);
+		// const elements = document.querySelectorAll(this.data.formSelector);
 
-		[...elements].forEach((element) => {
-			// Regular submit.
-			element.removeEventListener('submit', this.onFormSubmitEvent);
+		// [...elements].forEach((element) => {
+		// 	// Regular submit.
+		// 	element.removeEventListener('submit', this.onFormSubmitEvent);
 
-			const formId = element.getAttribute(this.utils.DATA_ATTRIBUTES.formPostId);
+		// 	const formId = element.getAttribute(this.state.getStateAttribute('formId'));
 
-			const inputs = element.querySelectorAll(this.utils.inputSelector);
-			const textareas = element.querySelectorAll(this.utils.textareaSelector);
-			const selects = element.querySelectorAll(this.utils.selectSelector);
-			const files = element.querySelectorAll(this.utils.fileSelector);
+		// 	const inputs = element.querySelectorAll(this.data.inputSelector);
+		// 	const textareas = element.querySelectorAll(this.data.textareaSelector);
+		// 	const selects = element.querySelectorAll(this.data.selectSelector);
+		// 	const files = element.querySelectorAll(this.data.fileSelector);
 
-			[...inputs].forEach((input) => {
-				switch (input.type) {
-					case 'date':
-					case 'datetime-local':
-						if (typeof this.utils.CUSTOM_DATES?.[formId] !== 'undefined') {
-							delete this.utils.CUSTOM_DATES[formId];
-						}
-						break;
-				}
+		// 	[...inputs].forEach((input) => {
+		// 		switch (input.type) {
+		// 			case 'date':
+		// 			case 'datetime-local':
+		// 				// this.state.deleteState(this.state.DATES, formId);
+		// 				break;
+		// 		}
 
-				input.removeEventListener('keydown', this.utils.onFocusEvent);
-				input.removeEventListener('focus', this.utils.onFocusEvent);
-				input.removeEventListener('blur', this.utils.onBlurEvent);
-			});
+		// 		input.removeEventListener('keydown', this.onFocusEvent);
+		// 		input.removeEventListener('focus', this.onFocusEvent);
+		// 		input.removeEventListener('blur', this.onBlurEvent);
+		// 	});
 
-			[...selects].forEach(() => {
-				if (typeof this.utils.CUSTOM_SELECTS?.[formId] !== 'undefined') {
-					delete this.utils.CUSTOM_SELECTS[formId];
-				}
-			});
+		// 	[...selects].forEach(() => {
+		// 		this.state.deleteState(this.state.SELECTS, formId);
+		// 	});
 
-			// Setup textarea inputs.
-			[...textareas].forEach((textarea) => {
-				textarea.removeEventListener('keydown', this.utils.onFocusEvent);
-				textarea.removeEventListener('focus', this.utils.onFocusEvent);
-				textarea.removeEventListener('blur', this.utils.onBlurEvent);
+		// 	// Setup textarea inputs.
+		// 	[...textareas].forEach((textarea) => {
+		// 		textarea.removeEventListener('keydown', this.onFocusEvent);
+		// 		textarea.removeEventListener('focus', this.onFocusEvent);
+		// 		textarea.removeEventListener('blur', this.onBlurEvent);
 
-				if (typeof this.utils.CUSTOM_TEXTAREAS?.[formId] !== 'undefined') {
-					delete this.utils.CUSTOM_TEXTAREAS[formId];
-				}
-			});
+		// 		// this.state.deleteState(this.state.TEXTAREAS, formId);
+		// 	});
 
-			// Setup file single inputs.
-			[...files].forEach((file) => {
-				if (typeof this.utils.CUSTOM_FILES?.[formId] !== 'undefined') {
-					delete this.utils.CUSTOM_FILES[formId];
-				}
+		// 	// Setup file single inputs.
+		// 	[...files].forEach((file) => {
+		// 		this.state.deleteState(this.state.FILES, formId);
 
-				file.nextElementSibling.removeEventListener('click', this.onCustomFileWrapClickEvent);
+		// 		file.nextElementSibling.removeEventListener('click', this.onFileWrapClickEvent);
 
-				const button = file.parentNode.querySelector('a');
+		// 		const button = file.parentNode.querySelector('a');
 
-				button.removeEventListener('focus', this.utils.onFocusEvent);
-				button.removeEventListener('blur', this.utils.onBlurEvent);
-			});
+		// 		button.removeEventListener('focus', this.onFocusEvent);
+		// 		button.removeEventListener('blur', this.onBlurEvent);
+		// 	});
 
-			this.utils.dispatchFormEvent(element, this.utils.EVENTS.AFTER_FORM_EVENTS_CLEAR);
-		});
-	}
-
-	runFormCaptcha(element = '') {
-		if (!this.utils.isCaptchaUsed()) {
-			return;
-		}
-
-		const actionName = this.utils.SETTINGS.CAPTCHA['submitAction'];
-		const siteKey = this.utils.SETTINGS.CAPTCHA['siteKey'];
-
-		if (this.utils.isCaptchaEnterprise()) {
-			grecaptcha.enterprise.ready(async () => {
-				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
-					this.formSubmitCaptcha(element, token, 'enterprise', actionName);
-				});
-			});
-		} else {
-			grecaptcha.ready(async () => {
-				await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
-					this.formSubmitCaptcha(element, token, 'free', actionName);
-				});
-			});
-		}
+		// 	this.state.dispatchFormEvent(element, this.state.getStateEventsAfterFormSubmitReset(), formId);
+		// });
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -989,17 +1248,71 @@ export class Form {
 	 * 
 	 * @param {object} event Event callback.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	onFormSubmitEvent = (event) => {
 		event.preventDefault();
 
-		const element = event.target;
+		const formId = this.state.getFormIdByElement(event.target);
 
-		if (this.utils.isCaptchaUsed()) {
-			this.runFormCaptcha(element);
+		if (this.state.getStateFormStepsIsUsed(formId)) {
+			const button = event.submitter;
+			const field = this.state.getFormFieldElementByChild(button);
+			// Steps flow.
+			let direction = button.getAttribute(this.state.getStateAttribute('submitStepDirection'));
+
+			if (field.classList.contains(this.state.getStateSelectorsClassHidden())) {
+				direction = this.steps.STEP_DIRECTION_NEXT;
+			}
+
+			switch (direction) {
+				case this.steps.STEP_DIRECTION_NEXT:
+					this.utils.showLoader(formId);
+
+					const filterNext = { // eslint-disable-line no-case-declarations
+						[this.FILTER_SKIP_FIELDS]: [
+							...this.conditionalTags.getIgnoreFields(formId),
+						],
+					};
+
+					debounce(this.formSubmitStep(formId, filterNext), 100);
+					break;
+				case this.steps.STEP_DIRECTION_PREV:
+					this.steps.goToPrevStep(formId);
+					break;
+				default:
+					this.utils.showLoader(formId);
+
+					const filterFinal = { // eslint-disable-line no-case-declarations
+						[this.FILTER_SKIP_FIELDS]: [
+							...this.steps.getIgnoreFields(formId),
+							...this.conditionalTags.getIgnoreFields(formId),
+						],
+						[this.FILTER_IS_STEPS_FINAL_SUBMIT]: true,
+					};
+
+					if (this.state.getStateCaptchaIsUsed()) {
+						this.runFormCaptcha(formId, filterFinal);
+					} else {
+						debounce(this.formSubmit(formId, filterFinal), 100);
+					}
+					break;
+			}
 		} else {
-			this.formSubmit(element);
+			// Normal flow.
+			this.utils.showLoader(formId);
+
+			const filterNormal = {
+				[this.FILTER_SKIP_FIELDS]: [
+					...this.conditionalTags.getIgnoreFields(formId),
+				],
+			};
+
+			if (this.state.getStateCaptchaIsUsed()) {
+				this.runFormCaptcha(formId, filterNormal);
+			} else {
+				debounce(this.formSubmit(formId, filterNormal), 100);
+			}
 		}
 	};
 
@@ -1008,30 +1321,126 @@ export class Form {
 	 *
 	 * @param {object} event Event callback.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
-	onCustomFileWrapClickEvent = (event) => {
+	onFileWrapClickEvent = (event) => {
 		event.preventDefault();
 		event.stopPropagation();
 
-		const index = event.currentTarget.getAttribute('dropzone-index');
-		const formId = event.currentTarget.getAttribute('dropzone-form-id');
+		const field = this.state.getFormFieldElementByChild(event.target);
 
-		this.utils.CUSTOM_FILES[formId][index].hiddenFileInput.click();
+		this.state.getStateElementCustom(field.getAttribute(this.state.getStateAttribute('fieldName')), this.state.getFormIdByElement(event.target)).hiddenFileInput.click();
+
+		field.classList.add(this.state.getStateSelectorsClassActive());
 	};
 
 	/**
-	 * Handle form submit and all logic for only one field click.
+	 * On focus event for regular fields.
 	 *
 	 * @param {object} event Event callback.
 	 *
-	 * @private
+	 * @returns {void}
 	 */
-	onFormSubmitSingleEvent = (event) => {
-		event.preventDefault();
-		const {target} = event;
+	onFocusEvent = (event) => {
+		this.utils.setFieldActiveState(
+			this.state.getFormIdByElement(event.target),
+			this.state.getFormFieldElementByChild(event.target).getAttribute(this.state.getStateAttribute('fieldName'))
+		);
+	};
 
-		this.formSubmit(target.closest(this.utils.formSelector), target);
+	/**
+	 * On Select change event.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onSelectChangeEvent = (event) => {
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const formId = this.state.getFormIdByElement(event.target);
+		const type = field.getAttribute(this.state.getStateAttribute('fieldType'));
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+
+		setStateValues(event.target, this.state.getFormIdByElement(event.target));
+
+		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
+			if (type === 'country') {
+				const country = this.state.getStateElementValueCountry(name, formId);
+				[...this.state.getStateElementByTypeInternal('tel', formId)].forEach((tel) => {
+					const name = tel[StateEnum.NAME];
+					const value = this.state.getStateElementValue(name, formId);
+
+					this.state.getStateElementCustom(name, formId).setChoiceByValue(country.number);
+					this.state.setStateElementValueCountry(name, country, formId);
+					if (value) {
+						this.state.setStateElementValueCombined(name, `${country.number}${value}`, formId);
+					}
+				});
+			}
+
+			if (type === 'phone') {
+				const phone = this.state.getStateElementValueCountry(name, formId);
+				[...this.state.getStateElementByTypeInternal('country', formId)].forEach((country) => {
+					const name = country[StateEnum.NAME];
+
+					this.state.getStateElementCustom(name, formId).setChoiceByValue(phone.label);
+					this.state.setStateElementValueCountry(name, phone, formId);
+					this.state.setStateElementValue(name, phone.label, formId);
+				});
+			}
+		}
+
+		this.conditionalTags.setField(formId, name);
+
+		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
+			debounce(
+				this.formSubmit(
+					formId, {
+						[this.FILTER_USE_ONLY_FIELDS]: [name]
+					}
+			), 100);
+		}
+	};
+
+	/**
+	 * On input event for regular fields.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onInputEvent = (event) => {
+		const formId = this.state.getFormIdByElement(event.target);
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+
+		setStateValues(event.target, this.state.getFormIdByElement(event.target));
+
+		this.conditionalTags.setField(formId, name);
+
+		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
+			debounce(
+				this.formSubmit(
+					formId, {
+						[this.FILTER_USE_ONLY_FIELDS]: [name]
+					}
+			), 100);
+		}
+	};
+
+	/**
+	 * On blur event for regular fields.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onBlurEvent = (event) => {
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		const formId = this.state.getFormIdByElement(event.target);
+
+		this.utils.setFieldFilledState(formId, name);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -1041,60 +1450,156 @@ export class Form {
 	/**
 	 * Set all public methods.
 	 * 
-	 * @private
+	 * @returns {void}
 	 */
 	publicMethods() {
-		if (typeof window[this.prefix]?.form === 'undefined') {
-			window[this.utils.prefix].form = {
-				init: () => {
-					this.init();
-				},
-				initOnlyForms: () => {
-					this.initOnlyForms();
-				},
-				initOne: (element) => {
-					this.initOne(element);
-				},
-				onFormSubmitEvent: (event) => {
-					this.onFormSubmitEvent(event);
-				},
-				formSubmitCaptcha: (element, token, type) => {
-					this.formSubmitCaptcha(element, token, type);
-				},
-				formSubmit: (element) => {
-					this.formSubmit(element);
-				},
-				getFormData: (element) => {
-					this.getFormData(element);
-				},
-				setupInputField: (input) => {
-					this.setupInputField(input);
-				},
-				setupSelectField: (select, formId) => {
-					this.setupSelectField(select, formId);
-				},
-				setupTextareaField: (textarea, formId) => {
-					this.setupTextareaField(textarea, formId);
-				},
-				setupFileField: (file, formId, index) => {
-					this.setupFileField(file, formId, index);
-				},
-				setupPhoneSync: (form, formId) => {
-					this.setupPhoneSync(form, formId);
-				},
-				onCustomFileWrapClickEvent: (event) => {
-					this.onCustomFileWrapClickEvent(event);
-				},
-				removeEvents: () => {
-					this.removeEvents();
-				},
-				phoneSync: () => {
-					this.phoneSync();
-				},
-				runFormCaptcha: (element) => {
-					this.runFormCaptcha(element);
-				},
-			};
-		}
+		setStateWindow();
+		this.state.publicMethods();
+
+		window[prefix].form = {};
+		window[prefix].form = {
+			FILTER_IS_STEPS_FINAL_SUBMIT: this.FILTER_IS_STEPS_FINAL_SUBMIT,
+			FILTER_SKIP_FIELDS: this.FILTER_SKIP_FIELDS,
+			FILTER_USE_ONLY_FIELDS: this.FILTER_USE_ONLY_FIELDS,
+			GLOBAL_MSG_TIMEOUT_ID: this.GLOBAL_MSG_TIMEOUT_ID,
+
+			FORM_DATA: this.FORM_DATA,
+
+			init: () => {
+				this.init();
+			},
+			initOnlyForms: () => {
+				this.initOnlyForms();
+			},
+			initOne: (element) => {
+				this.initOne(element);
+			},
+			formSubmit: (formId, filter) => {
+				this.formSubmit(formId, filter);
+			},
+			formSubmitStep: (formId, filter) => {
+				this.formSubmitStep(formId, filter);
+			},
+			formSubmitBefore: (formId, response) => {
+				this.formSubmitBefore(formId, response);
+			},
+			formSubmitSuccess: (formId, response, isFinalStep) => {
+				this.formSubmitSuccess(formId, response, isFinalStep);
+			},
+			formSubmitError: (formId, response, isFinalStep) => {
+				this.formSubmitError(formId, response, isFinalStep);
+			},
+			formSubmitAfter: (formId, response) => {
+				this.formSubmitAfter(formId, response);
+			},
+			runFormCaptcha: (formId, filter) => {
+				this.runFormCaptcha(formId, filter);
+			},
+			setFormData: (formId, filter) => {
+				this.setFormData(formId, filter);
+			},
+			getFormDataGroup: (formId) => {
+				return this.getFormDataGroup(formId);
+			},
+			setFormDataCommon: (formId) => {
+				this.setFormDataCommon(formId);
+			},
+			setFormDataEnrichment: () => {
+				this.setFormDataEnrichment();
+			},
+			setFormDataAdmin: (formId) => {
+				this.setFormDataAdmin(formId);
+			},
+			setFormDataPerType: (formId) => {
+				this.setFormDataPerType(formId);
+			},
+			setFormDataCaptcha: (data) => {
+				this.setFormDataCaptcha(data);
+			},
+			buildFormDataItems: (data, dataSet) => {
+				this.buildFormDataItems(data, dataSet);
+			},
+			setupInputField: (formId, name) => {
+				this.setupInputField(formId, name);
+			},
+			setupTelField: (formId, name) => {
+				this.setupTelField(formId, name);
+			},
+			setupRadioCheckboxField: (formId, value, name) => {
+				this.setupRadioCheckboxField(formId, value, name);
+			},
+			setupDateField: (formId, name) => {
+				this.setupDateField(formId, name);
+			},
+			setupSelectField: (formId, name) => {
+				this.setupSelectField(formId, name);
+			},
+			setupTextareaField: (formId, name) => {
+				this.setupTextareaField(formId, name);
+			},
+			setupFileField: (formId, name) => {
+				this.setupFileField(formId, name);
+			},
+			removeEvents: () => {
+				this.removeEvents();
+			},
+			onFormSubmitEvent: (event) => {
+				this.onFormSubmitEvent(event);
+			},
+			onFileWrapClickEvent: (event) => {
+				this.onFileWrapClickEvent(event);
+			},
+			onFocusEvent: (event) => {
+				this.onFocusEvent(event);
+			},
+			onSelectChangeEvent: (event) => {
+				this.onSelectChangeEvent(event);
+			},
+			onInputEvent: (event) => {
+				this.onInputEvent(event);
+			},
+			onBlurEvent: (event) => {
+				this.onBlurEvent(event);
+			},
+		// 	formSubmitCaptcha: (element, token, payed, action) => {
+		// 		this.formSubmitCaptcha(element, token, payed, action);
+		// 	},
+		// 	formSubmit: (element, singleSubmit = false, isStepSubmit = false) => {
+		// 		this.formSubmit(element, singleSubmit, isStepSubmit);
+		// 	},
+		// 	setFormData: (element, singleSubmit = false) => {
+		// 		this.setFormData(element, singleSubmit);
+		// 	},
+		// 	setupInputField: (input, formId) => {
+		// 		this.setupInputField(input, formId);
+		// 	},
+		// 	setupDateField: (date, formId) => {
+		// 		this.setupDateField(date, formId);
+		// 	},
+		// 	setupSelectField: (select, formId) => {
+		// 		this.setupSelectField(select, formId);
+		// 	},
+		// 	setupTextareaField: (textarea, formId) => {
+		// 		this.setupTextareaField(textarea, formId);
+		// 	},
+		// 	setupFileField: (file, formId, index, element) => {
+		// 		this.setupFileField(file, formId, index, element);
+		// 	},
+		// 	setupPhoneSync: (form, formId) => {
+		// 		this.setupPhoneSync(form, formId);
+		// 	},
+		// 	removeEvents: () => {
+		// 		this.removeEvents();
+		// 	},
+		// 	runFormCaptcha: (element = '') => {
+		// 		this.runFormCaptcha(element);
+		// 	},
+		// 	onFormSubmitEvent: (event) => {
+		// 		this.onFormSubmitEvent(event);
+		// 	},
+		// 	onFileWrapClickEvent: (event) => {
+		// 		this.onFileWrapClickEvent(event);
+		// 	},
+		};
 	}
 }

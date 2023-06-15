@@ -38,12 +38,18 @@
 		"countryAttrs": {
 			"type": "object"
 		},
+		"countryFieldAttrs": {
+			"type": "object"
+		},
 		"countryDisabledOptions": {
 			"type": "array"
 		},
 		"countryUseSearch": {
 			"type": "boolean",
 			"default": true
+		},
+		"countryTypeCustom": {
+			"type": "string"
 		}
 	}
 }

@@ -22,7 +22,7 @@ class TestApiGreenhouseRoute extends AbstractTestApi
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractTestApi::ROUTE_PREFIX_TEST_API . '-' . SettingsGreenhouse::SETTINGS_TYPE_KEY . '/';
+	public const ROUTE_SLUG = SettingsGreenhouse::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable for Greenhouse data.
@@ -48,7 +48,7 @@ class TestApiGreenhouseRoute extends AbstractTestApi
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractTestApi::ROUTE_PREFIX_TEST_API . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

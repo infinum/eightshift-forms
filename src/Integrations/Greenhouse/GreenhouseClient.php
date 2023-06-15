@@ -417,21 +417,18 @@ class GreenhouseClient implements ClientInterface
 		$output = [];
 
 		foreach ($files as $items) {
-			if (!$items) {
+			$name = $items['name'] ?? '';
+			if (!$name) {
 				continue;
 			}
 
-			foreach ($items as $file) {
-				$fileName = $file['fileName'] ?? '';
-				$path = $file['path'] ?? '';
-				$id = $file['id'] ?? '';
-				$type = $file['type'] ?? '';
+			$value = $items['value'] ?? [];
+			if (!$value) {
+				continue;
+			}
 
-				if (!$path) {
-					continue;
-				}
-
-				$output[$id] = new CURLFile(\realpath($path), $type, $fileName); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			foreach ($value as $file) {
+				$output[$name] = new CURLFile($file); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			}
 		}
 

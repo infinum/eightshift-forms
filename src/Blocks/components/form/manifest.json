@@ -8,6 +8,7 @@
 	"componentMigrationJsClass": "js-es-migration",
 	"componentTransferJsClass": "js-es-transfer",
 	"componentTestApiJsClass": "js-es-api-test",
+	"componentManualImportApiJsClass": "js-es-manual-import-api",
 	"components": {
 		"loader": "loader",
 		"field": "field",
@@ -37,6 +38,10 @@
 			"type": "string"
 		},
 		"formActionExternal": {
+			"type": "boolean",
+			"default": false
+		},
+		"formHasSteps": {
 			"type": "boolean",
 			"default": false
 		},

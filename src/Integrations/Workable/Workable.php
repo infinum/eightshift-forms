@@ -189,13 +189,12 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'phoneTracking' => $name,
 							'phoneFieldLabel' => $label,
 							'phoneIsRequired' => $required,
-							'inputMaxLength' => 255,
-							'phoneAttrs' => [
-								'data-type-internal' => 'phone',
-							],
+							'phoneMaxLength' => 255,
+							'phoneTypeCustom' => 'phone',
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 								$required ? 'phoneIsRequired' : '',
-								'inputMaxLength',
+								'phoneMaxLength',
+								'phoneTypeCustom',
 							]),
 						];
 					} else {
@@ -207,12 +206,12 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'inputType' => 'text',
 							'inputIsRequired' => $required,
 							'inputMaxLength' => 255,
-							'inputAttrs' => [
-								'data-type-internal' => $type,
-							],
+							'inputTypeCustom' => $type,
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$required ? 'inputIsRequired' : '',
 								'inputMaxLength',
+								'inputAttrs',
+								'inputTypeCustom',
 							]),
 						];
 					}
@@ -229,14 +228,13 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'fileAccept' => 'pdf,doc,docx,rtf',
 						'fileMinSize' => '1',
 						'fileMaxSize' => \strval((int) $maxFileSize * 1000),
-						'fileAttrs' => [
-							'data-type-internal' => $type,
-						],
+						'fileTypeCustom' => $type,
 						'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 							$required ? 'fileIsRequired' : '',
 							'fileAccept',
 							'fileMinSize',
 							'fileMaxSize',
+							'fileTypeCustom',
 						]),
 					];
 					break;
@@ -268,11 +266,11 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 								$fields
 							),
 						],
-						'selectAttrs' => [
-							'data-type-internal' => $type,
-						],
+						'selectTypeCustom' => $type,
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 							$required ? 'selectIsRequired' : '',
+							'selectAttrs',
+							'selectTypeCustom',
 						]),
 					];
 					break;
@@ -283,11 +281,11 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'textareaTracking' => $name,
 							'textareaFieldLabel' => $label,
 							'textareaIsRequired' => $required,
-							'textareaAttrs' => [
-								'data-type-internal' => $type,
-							],
+							'textareaTypeCustom' => $type,
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$required ? 'textareaIsRequired' : '',
+								'textareaAttrs',
+								'textareaTypeCustom',
 							]),
 						];
 					break;
@@ -304,16 +302,15 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 								'checkboxTracking' => $name,
 								'checkboxValue' => 'true',
 								'checkboxUncheckedValue' => 'false',
-								'checkboxAttrs' => [
-									'data-type-internal' => $type,
-								],
 								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
 									'checkboxValue',
 								], false),
 							]
 						],
+						'checkboxesTypeCustom' => $type,
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 							$required ? 'checkboxesIsRequired' : '',
+							'checkboxesTypeCustom',
 						]),
 					];
 					break;

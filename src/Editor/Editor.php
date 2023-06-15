@@ -12,6 +12,7 @@ namespace EightshiftForms\Editor;
 
 use EightshiftForms\AdminMenus\FormAdminMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -36,16 +37,7 @@ class Editor implements ServiceInterface
 	 */
 	public function getEditorBackLink(): void
 	{
-		$port = isset($_SERVER['HTTPS']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTPS'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$host = isset($_SERVER['HTTP_HOST']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_HOST'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		$actialUrl = ($port ? "https" : "http") . "://{$host}{$request}";
-
-		if (\getenv('test_force_request_uri')) {
-			$request = \getenv('test_force_request_uri');
-		}
-
+		$actialUrl = Helper::getCurrentUrl();
 		$postType = Forms::POST_TYPE_SLUG;
 		$page = FormAdminMenu::ADMIN_MENU_SLUG;
 

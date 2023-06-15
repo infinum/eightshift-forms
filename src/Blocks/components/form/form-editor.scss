@@ -32,7 +32,8 @@
 		#{$this}__fields {
 			@include form-fields-styles;
 
-			> .es-field {
+			> .es-field,
+			> .es-step > .es-step__inner > .es-field {
 				@include form-fields-children-styles;
 			}
 		}

@@ -78,9 +78,11 @@ class StylesheetSet implements ServiceCliInterface
 	{
 		$path = $argsAsoc['additional-path'] ?? '';
 
-		$targetPath = __DIR__ . \DIRECTORY_SEPARATOR . Config::getProjectName();
-		$destinationPath = \get_template_directory() . \DIRECTORY_SEPARATOR . $path;
-		$destinationPathWithFolder = $destinationPath . \DIRECTORY_SEPARATOR . Config::getProjectName();
+		$sep = \DIRECTORY_SEPARATOR;
+
+		$targetPath = __DIR__ . $sep . Config::getProjectName();
+		$destinationPath = \get_template_directory() . $sep . $path;
+		$destinationPathWithFolder = $destinationPath . $sep . Config::getProjectName();
 
 		if (\file_exists($destinationPathWithFolder)) {
 			WP_CLI::error(

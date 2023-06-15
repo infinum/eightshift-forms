@@ -1,16 +1,16 @@
-import { Utils } from "./utilities";
+import { State } from './state';
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+import { prefix, setStateWindow } from './state/init';
 
 /**
  * Enrichment class.
  */
 export class Enrichment {
-	constructor(options = {}) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor() {
+		this.state = new State();
 
-		// LocalStorage name.
-		this.STORAGE_NAME = options.STORAGE_NAME ?? 'es-storage';
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -19,100 +19,32 @@ export class Enrichment {
 
 	/**
 	 * Init all actions.
-	 * 
-	 * @public
+	 *
+	 * @returns {void}
 	 */
 	init() {
-		// Set all public methods.
-		this.publicMethods();
+		// Check if enrichment is used.
+		if (!this.state.getStateEnrichmentIsUsed()) {
+			return;
+		}
 
 		// Set local storage data.
 		this.setLocalStorage();
 	}
 
 	/**
-	 * Check if enrichment is used.
-	 * 
-	 * @public
-	 */
-	isEnrichmentUsed() {
-		if (this.utils.SETTINGS.ENRICHMENT_CONFIG !== '[]') {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Filter all url params based on the allowed tags list.
-	 *
-	 * @param {array} allowedTags List of allowed tags from config.
-	 *
-	 * @returns {object}
-	 *
-	 * @public
-	 */
-	getUrlAllowedParams(allowedTags) {
-		const output = {};
-
-		// Bailout if nothing is set in the url.
-		if (!window.location.search) {
-			return output;
-		}
-
-		// Find url params.
-		const searchParams = new URLSearchParams(window.location.search);
-
-		allowedTags.forEach((element) => {
-			const item = searchParams.get(element);
-
-			if (item) {
-				output[element] = item;
-			}
-		});
-
-		return output;
-	}
-
-	/**
-	 * Filter all set cookies based on the allowed tags list.
-	 *
-	 * @param {array} allowedTags List of allowed tags from config.
-	 *
-	 * @returns {object}
-	 *
-	 * @public
-	 */
-	getCookiesAllowedParams(allowedTags) {
-		const output = {};
-
-		allowedTags.forEach((element) => {
-			const item = cookies.getCookie(element);
-
-			if (item) {
-				output[element] = item;
-			}
-		});
-
-		return output;
-	}
-
-	/**
 	 * Set localStorage value.
-	 * 
-	 * @public
+	 *
+	 * @returns {void}
 	 */
 	setLocalStorage() {
 		// Check if enrichment is used.
-		if (!this.isEnrichmentUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed()) {
 			return;
 		}
 
-		// Get config data.
-		const config = JSON.parse(this.utils.SETTINGS.ENRICHMENT_CONFIG);
-
-		const allowedTags = config?.allowed;
-		const expiration = config?.expiration ?? '30';
+		const allowedTags = this.state.getStateEnrichmentAllowed();
+		const expiration = this.state.getStateEnrichmentExpiration();
 
 		// Missing data from backend, bailout.
 		if (!allowedTags) {
@@ -147,14 +79,14 @@ export class Enrichment {
 
 			// Remove expired storage if it exists.
 			if (expirationDate.getTime() < currentStorage.timestamp) {
-				localStorage.removeItem(this.STORAGE_NAME);
+				localStorage.removeItem(this.state.getStateEnrichmentStorageName());
 			}
 		}
 
 		// Create new storage if this is the first visit or it was expired.
 		if (this.getLocalStorage() === null) {
 			localStorage.setItem(
-				this.STORAGE_NAME,
+				this.state.getStateEnrichmentStorageName(),
 				JSON.stringify(newStorage)
 			);
 			return;
@@ -183,16 +115,66 @@ export class Enrichment {
 		};
 
 		// Update localStorage with the new item.
-		localStorage.setItem(this.STORAGE_NAME, JSON.stringify(finalOutput));
+		localStorage.setItem(this.state.getStateEnrichmentStorageName(), JSON.stringify(finalOutput));
 	}
 
 	/**
 	 * Get localStorage value.
-	 * 
-	 * @public
+	 *
+	 * @returns {string}
 	 */
 	getLocalStorage() {
-		return localStorage.getItem(this.STORAGE_NAME);
+		return localStorage.getItem(this.state.getStateEnrichmentStorageName());
+	}
+
+	/**
+	 * Filter all url params based on the allowed tags list.
+	 *
+	 * @param {array} allowedTags List of allowed tags from config.
+	 *
+	 * @returns {object}
+	 */
+	getUrlAllowedParams(allowedTags) {
+		const output = {};
+
+		// Bailout if nothing is set in the url.
+		if (!window.location.search) {
+			return output;
+		}
+
+		// Find url params.
+		const searchParams = new URLSearchParams(window.location.search);
+
+		allowedTags.forEach((element) => {
+			const item = searchParams.get(element);
+
+			if (item) {
+				output[element] = item;
+			}
+		});
+
+		return output;
+	}
+
+	/**
+	 * Filter all set cookies based on the allowed tags list.
+	 *
+	 * @param {array} allowedTags List of allowed tags from config.
+	 *
+	 * @returns {object}
+	 */
+	getCookiesAllowedParams(allowedTags) {
+		const output = {};
+
+		allowedTags.forEach((element) => {
+			const item = cookies.getCookie(element);
+
+			if (item) {
+				output[element] = item;
+			}
+		});
+
+		return output;
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -201,32 +183,29 @@ export class Enrichment {
 
 	/**
 	 * Set all public methods.
-	 * 
-	 * @private
+	 *
+	 * @returns {void}
 	 */
 	publicMethods() {
-		if (typeof window[this.prefix]?.enrichment === 'undefined') {
-			window[this.utils.prefix].enrichment = {
-				STORAGE_NAME: this.STORAGE_NAME,
-				init: () => {
-					this.init();
-				},
-				isEnrichmentUsed: () => {
-					this.isEnrichmentUsed();
-				},
-				getUrlAllowedParams: (allowedTags) => {
-					this.getUrlAllowedParams(allowedTags);
-				},
-				getCookiesAllowedParams: (allowedTags) => {
-					this.getCookiesAllowedParams(allowedTags);
-				},
-				setLocalStorage: () => {
-					this.setLocalStorage();
-				},
-				getLocalStorage: () => {
-					this.getLocalStorage();
-				},
-			};
-		}
+		setStateWindow();
+
+		window[prefix].enrichment = {};
+		window[prefix].enrichment = {
+			init: () => {
+				this.init();
+			},
+			setLocalStorage: () => {
+				this.setLocalStorage();
+			},
+			getLocalStorage: () => {
+				return this.getLocalStorage();
+			},
+			getUrlAllowedParams: (allowedTags) => {
+				return this.getUrlAllowedParams(allowedTags);
+			},
+			getCookiesAllowedParams: (allowedTags) => {
+				return this.getCookiesAllowedParams(allowedTags);
+			},
+		};
 	}
 }

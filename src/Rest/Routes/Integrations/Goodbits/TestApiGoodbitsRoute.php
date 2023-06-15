@@ -22,7 +22,7 @@ class TestApiGoodbitsRoute extends AbstractTestApi
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractTestApi::ROUTE_PREFIX_TEST_API . '-' . SettingsGoodbits::SETTINGS_TYPE_KEY . '/';
+	public const ROUTE_SLUG = SettingsGoodbits::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable for Goodbits data.
@@ -48,7 +48,7 @@ class TestApiGoodbitsRoute extends AbstractTestApi
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractTestApi::ROUTE_PREFIX_TEST_API . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

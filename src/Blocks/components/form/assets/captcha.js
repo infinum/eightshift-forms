@@ -1,14 +1,19 @@
 /* global grecaptcha */
 
-import { Utils } from "./utilities";
+import { State, ROUTES} from './state';
+import { prefix, setStateWindow } from './state/init';
+import { Utils } from './utilities';
 
 /**
  * Captcha class.
  */
 export class Captcha {
-	constructor(options = {}) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor() {
+		this.state = new State();
+		this.utils = new Utils();
+
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -18,42 +23,43 @@ export class Captcha {
 	/**
 	 * Init all actions.
 	 * 
-	 * @public
+	 * @returns {void}
 	 */
 	init() {
-		// Set all public methods.
-		this.publicMethods();
-
 		// Load captcha on init.
 		this.initCaptchaOnLoad();
 
-		// Hide badge.
+		// // Hide badge.
 		this.initHideCaptchaBadge();
 	}
 
 	/**
 	 * Initi captcha on load.
 	 *
-	 * @returns void
+	 * @returns {void}
 	 */
 	initCaptchaOnLoad() {
-		if (!this.utils.isCaptchaUsed() || !this.utils.isCaptchaInitUsed()) {
+		if (!this.state.getStateCaptchaIsUsed() || !this.state.getStateCaptchaLoadOnInit()) {
 			return;
 		}
 
-		const actionName = this.utils.SETTINGS.CAPTCHA['initAction'];
-		const siteKey = this.utils.SETTINGS.CAPTCHA['siteKey'];
+		const actionName = this.state.getStateCaptchaInitAction();
+		const siteKey = this.state.getStateCaptchaSiteKey();
 
-		if (this.utils.isCaptchaEnterprise()) {
+		if (typeof grecaptcha === 'undefined') {
+			return;
+		}
+
+		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
 				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
-					this.formSubmitCaptchaInvisible(token, 'enterprise', actionName);
+					this.formSubmitCaptchaInvisible(token, true, actionName);
 				});
 			});
 		} else {
 			grecaptcha.ready(async () => {
 				await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
-					this.formSubmitCaptchaInvisible(token, 'free', actionName);
+					this.formSubmitCaptchaInvisible(token, false, actionName);
 				});
 			});
 		}
@@ -63,10 +69,12 @@ export class Captcha {
 	 *  Handle form submit and all logic in case we have captcha in place for init load.
 	 * 
 	 * @param {string} token Captcha token from api.
+	 * @param {bool} isEnterprise Is enterprise setup.
+	 * @param {string} action Action to use.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
-	formSubmitCaptchaInvisible(token, payed, action) {
+	formSubmitCaptchaInvisible(token, isEnterprise, action) {
 		// Populate body data.
 		const body = {
 			method: 'POST',
@@ -76,7 +84,7 @@ export class Captcha {
 			},
 			body: JSON.stringify({
 				token,
-				payed,
+				isEnterprise,
 				action,
 			}),
 			credentials: 'same-origin',
@@ -84,26 +92,26 @@ export class Captcha {
 			referrer: 'no-referrer',
 		};
 
-		fetch(`${this.utils.formSubmitRestApiUrl}-captcha`, body)
+		fetch(this.state.getRestUrl(ROUTES.CAPTCHA), body)
 		.then((response) => {
 			return response.json();
 		})
 		.then((response) => {
-			this.utils.dispatchFormEvent(window, this.utils.EVENTS.AFTER_CAPTCHA_INIT, response?.data?.response);
+			this.utils.dispatchFormEvent(window, this.state.getStateEventsAfterCaptchaInit(), response);
 		});
 	}
 
 	/**
 	 * Hide captcha badge.
 	 *
-	 * @public
+	 * @returns {void}
 	 */
 	initHideCaptchaBadge() {
-		if (!this.utils.isCaptchaUsed() || !this.utils.isCaptchaHideBadgeUsed()) {
+		if (!this.state.getStateCaptchaIsUsed()) {
 			return;
 		}
 
-		document.querySelector('body').setAttribute(this.utils.DATA_ATTRIBUTES.hideCaptchaBadge, this.utils.isCaptchaHideBadgeUsed());
+		document.querySelector('body').setAttribute(this.state.getStateAttribute('hideCaptchaBadge'), this.state.getStateCaptchaHideBadge());
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -113,24 +121,25 @@ export class Captcha {
 	/**
 	 * Set all public methods.
 	 * 
-	 * @private
+	 * @returns {void}
 	 */
 	publicMethods() {
-		if (typeof window[this.prefix]?.captcha === 'undefined') {
-			window[this.utils.prefix].captcha = {
-				init: () => {
-					this.init();
-				},
-				initCaptchaOnLoad: () => {
-					this.initCaptchaOnLoad();
-				},
-				formSubmitCaptchaInvisible: (token, type) => {
-					this.formSubmitCaptchaInvisible(token, type);
-				},
-				initHideCaptchaBadge: () => {
-					this.initHideCaptchaBadge();
-				}
-			};
-		}
+		setStateWindow();
+
+		window[prefix].captcha = {};
+		window[prefix].captcha = {
+			init: () => {
+				this.init();
+			},
+			initCaptchaOnLoad: () => {
+				this.initCaptchaOnLoad();
+			},
+			formSubmitCaptchaInvisible: (token, isEnterprise, action) => {
+				this.formSubmitCaptchaInvisible(token, isEnterprise, action);
+			},
+			initHideCaptchaBadge: () => {
+				this.initHideCaptchaBadge();
+			}
+		};
 	}
 }

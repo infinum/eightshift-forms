@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
@@ -32,7 +33,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-hubspot/';
+	public const ROUTE_SLUG = SettingsHubspot::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -77,6 +78,13 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	public $formSubmitMailer;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -85,6 +93,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -92,7 +101,8 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		HubspotClientInterface $hubspotClient,
 		ClearbitClientInterface $clearbitClient,
-		FormSubmitMailerInterface $formSubmitMailer
+		FormSubmitMailerInterface $formSubmitMailer,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
@@ -100,6 +110,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;
 		$this->formSubmitMailer = $formSubmitMailer;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -109,7 +120,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -143,18 +154,28 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
+	}
+
+	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
-		$itemId = $formDataRefrerence['itemId'];
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
-		$files = $formDataRefrerence['files'];
+		$itemId = $formDataReference['itemId'];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
+		$files = $formDataReference['files'];
 
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication(
@@ -164,9 +185,11 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 			$formId
 		);
 
+		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
+
 		// Output integrations validation issues.
-		if (isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
-			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($response[Validator::VALIDATOR_OUTPUT_KEY], $formId);
+		if ($validation) {
+			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($validation, $formId);
 		}
 
 		// Check if Hubspot is using Clearbit.
@@ -206,36 +229,27 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 
 		// Send email if it is configured in the backend.
 		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
-			$this->formSubmitMailer->sendEmails($formDataRefrerence);
+			$this->formSubmitMailer->sendEmails($formDataReference);
 		}
 
+		$labelsOutput = $this->labels->getLabel($response['message'], $formId);
+		$responseOutput = $response;
+
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !$response[Validator::VALIDATOR_OUTPUT_KEY] ?? []) {
+		if ($response['isDisabled'] && !$validation) {
 			$this->formSubmitMailer->sendFallbackEmail($response);
 
 			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
 
-			return \rest_ensure_response(
-				$this->getIntegrationApiOutput(
-					$fakeResponse,
-					$this->labels->getLabel($fakeResponse['message'], $formId),
-				)
-			);
-		}
-
-		// Always delete the files from the disk.
-		if ($files) {
-			$this->deleteFiles($files);
+			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
+			$responseOutput = $fakeResponse;
 		}
 
 		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(
-				$response,
-				$this->labels->getLabel($response['message'], $formId),
-				[
-					Validator::VALIDATOR_OUTPUT_KEY
-				]
+				$responseOutput,
+				$labelsOutput,
 			)
 		);
 	}

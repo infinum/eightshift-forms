@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
@@ -23,6 +24,11 @@ use WP_REST_Request;
  */
 class TransferRoute extends AbstractBaseRoute
 {
+	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
+
 	/**
 	 * Use general helper trait.
 	 */
@@ -58,7 +64,7 @@ class TransferRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_SETTINGS . '-transfer/';
+	public const ROUTE_SLUG = 'transfer';
 
 	/**
 	 * Get the base url of the route
@@ -144,9 +150,9 @@ class TransferRoute extends AbstractBaseRoute
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_IMPORT:
-				$files = $request->get_file_params();
+				$upload = $params['upload'] ?? '';
 
-				if (!$files) {
+				if (!$upload) {
 					return \rest_ensure_response(
 						$this->getApiErrorOutput(
 							\esc_html__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
@@ -154,9 +160,10 @@ class TransferRoute extends AbstractBaseRoute
 					);
 				}
 
-				$override = isset($params['override']) ? \filter_var($params['override'], \FILTER_VALIDATE_BOOLEAN) : false;
-
-				$uploadStatus = $this->getImport($files['upload'] ?? [], $override) ;
+				$uploadStatus = $this->getImport(
+					$upload,
+					isset($params['override']) ? \filter_var($params['override'], \FILTER_VALIDATE_BOOLEAN) : false
+				);
 
 				if (!$uploadStatus) {
 					return \rest_ensure_response(
@@ -293,14 +300,20 @@ class TransferRoute extends AbstractBaseRoute
 	/**
 	 * Import uploaded file.
 	 *
-	 * @param array<string, mixed> $upload Upload file.
+	 * @param string $upload Upload file.
 	 * @param bool $override Override existing form.
 	 *
 	 * @return boolean
 	 */
-	private function getImport(array $upload, bool $override): bool
+	private function getImport(string $upload, bool $override): bool
 	{
-		$data = \json_decode(\implode(' ', (array)\file($upload['tmp_name'])), true);
+		$filePath = $this->getFilePath($upload);
+
+		if (!$filePath) {
+			return false;
+		}
+
+		$data = \json_decode(\implode(' ', (array)\file($filePath)), true);
 
 		if (!$data) {
 			return false;

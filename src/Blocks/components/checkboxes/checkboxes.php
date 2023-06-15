@@ -11,9 +11,15 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
-$checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $manifest);
 $checkboxesName = Components::checkAttr('checkboxesName', $attributes, $manifest);
+if (!$checkboxesName) {
+	return;
+}
+
+$checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $manifest);
 $checkboxesIsRequired = Components::checkAttr('checkboxesIsRequired', $attributes, $manifest);
+$checkboxesTypeCustom = Components::checkAttr('checkboxesTypeCustom', $attributes, $manifest);
+$checkboxesFieldAttrs = Components::checkAttr('checkboxesFieldAttrs', $attributes, $manifest);
 
 // Add internal counter name key.
 $checkboxesContent = (string) preg_replace_callback('/name=""/', function () use ($checkboxesName) {
@@ -48,10 +54,12 @@ echo Components::render(
 			'fieldId' => $checkboxesName,
 			'fieldName' => $checkboxesName,
 			'fieldIsRequired' => $checkboxesIsRequired,
+			'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => $checkboxesFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

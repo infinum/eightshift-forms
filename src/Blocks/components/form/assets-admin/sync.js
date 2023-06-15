@@ -1,21 +1,16 @@
-/* global esFormsLocalization */
-
-import { Utils } from './../../form/assets/utilities';
+import { Utils } from "./../../form/assets/utilities";
+import { State, ROUTES } from "./../../form/assets/state";
 
 export class Sync {
-	constructor(options) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor(options = {}) {
+		this.utils = new Utils();
+		this.state = new State();
 
 		this.selector = options.selector;
-
-		this.syncRestUrl = options.syncRestUrl;
 	}
 
 	init() {
-		const elements = document.querySelectorAll(this.selector);
-
-		[...elements].forEach((element) => {
+		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
 	}
@@ -24,11 +19,13 @@ export class Sync {
 	onClick = (event) => {
 		event.preventDefault();
 
-		const element = event.target;
+		const item = event.target;
+
+		const formId = 0;
 
 		const formData = new FormData();
 
-		formData.append('id', element.getAttribute('data-id'));
+		formData.append('id', item.getAttribute(this.state.getStateAttribute('syncId')));
 
 		// Populate body data.
 		const body = {
@@ -36,7 +33,7 @@ export class Sync {
 			mode: 'same-origin',
 			headers: {
 				Accept: 'application/json',
-				'X-WP-Nonce': esFormsLocalization.nonce,
+				'X-WP-Nonce': this.state.getStateConfigNonce(),
 			},
 			body: formData,
 			credentials: 'same-origin',
@@ -44,12 +41,18 @@ export class Sync {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.syncRestUrl, body)
+		fetch(this.state.getRestUrl(ROUTES.SYNC_DIRECT), body)
 			.then((response) => {
 				return response.json();
 			})
 			.then((response) => {
-				this.utils.setGlobalMsg(document, response.message, response.status);
+				const {
+					message,
+					status,
+				} = response;
+
+				this.utils.setGlobalMsg(formId, message, status);
+
 				if (response.status === 'success') {
 					setTimeout(() => {
 						location.reload();
@@ -57,7 +60,7 @@ export class Sync {
 				}
 
 				setTimeout(() => {
-					this.utils.hideGlobalMsg(document);
+					this.utils.unsetGlobalMsg(formId);
 				}, 6000);
 			});
 	};

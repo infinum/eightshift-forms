@@ -41,9 +41,8 @@ export const SelectEditor = (attributes) => {
 				{selectPlaceholder &&
 					<div className={`${componentClass}__placeholder`}>
 						<SelectOptionEditor
-							selectOptionLabel={
-								selectPlaceholder
-							}
+							selectOptionLabel={selectPlaceholder}
+							selectOptionAsPlaceholder={true}
 						/>
 					</div>
 				}

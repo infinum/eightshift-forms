@@ -8,7 +8,6 @@
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -16,9 +15,14 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $inputName = Components::checkAttr('inputName', $attributes, $manifest);
+if (!$inputName) {
+	return;
+}
+
 $inputValue = Components::checkAttr('inputValue', $attributes, $manifest);
 $inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $manifest);
 $inputType = Components::checkAttr('inputType', $attributes, $manifest);
+$inputTypeCustom = Components::checkAttr('inputTypeCustom', $attributes, $manifest);
 $inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
 $inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
 $inputIsRequired = Components::checkAttr('inputIsRequired', $attributes, $manifest);
@@ -27,6 +31,7 @@ $inputMin = Components::checkAttr('inputMin', $attributes, $manifest);
 $inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
 $inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
 $inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
+$inputFieldAttrs = Components::checkAttr('inputFieldAttrs', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
@@ -51,10 +56,6 @@ if ($inputType === 'number') {
 // Override types.
 if ($inputType === 'email' || $inputType === 'url') {
 	$inputType = 'text';
-}
-
-if ($inputTracking) {
-	$inputAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($inputTracking);
 }
 
 if ($inputValue) {
@@ -99,13 +100,13 @@ echo Components::render(
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldHideLabel' => $inputType === 'hidden',
 			'fieldUseError' => $inputType !== 'hidden',
+			'fieldTypeCustom' => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $inputTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => [
-				'data-input-type' => $inputType,
-			],
+			'fieldAttrs' => $inputFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

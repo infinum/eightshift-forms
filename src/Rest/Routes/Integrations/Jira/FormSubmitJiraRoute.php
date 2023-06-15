@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Jira;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\Jira\JiraClientInterface;
+use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -27,7 +29,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-jira/';
+	public const ROUTE_SLUG = SettingsJira::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -65,6 +67,13 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	public $formSubmitMailer;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -72,19 +81,22 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param JiraClientInterface $jiraClient Inject Jira which holds Jira connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		JiraClientInterface $jiraClient,
-		FormSubmitMailerInterface $formSubmitMailer
+		FormSubmitMailerInterface $formSubmitMailer,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->jiraClient = $jiraClient;
 		$this->formSubmitMailer = $formSubmitMailer;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -94,7 +106,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -128,17 +140,27 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
+	}
+
+	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
 
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
 
 		// Send application to Hubspot.
 		$response = $this->jiraClient->postIssue(
@@ -146,41 +168,41 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			$formId
 		);
 
+		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
+
+		// There is no need to utput integrations validation issues because Jira doesn't control the form.
+
 		// Skip fallback email if integration is disabled.
 		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
 			// Send fallback email.
 			$this->formSubmitMailer->sendFallbackEmail($response);
 		}
 
-		$formDataRefrerence['emailResponseTags'] = $this->getEmailResponseTags($response);
+		$formDataReference['emailResponseTags'] = $this->getEmailResponseTags($response);
 
 		// Send email if it is configured in the backend.
 		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
-			$this->formSubmitMailer->sendEmails($formDataRefrerence);
+			$this->formSubmitMailer->sendEmails($formDataReference);
 		}
 
+		$labelsOutput = $this->labels->getLabel($response['message'], $formId);
+		$responseOutput = $response;
+
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !$response[Validator::VALIDATOR_OUTPUT_KEY] ?? []) {
+		if ($response['isDisabled'] && !$validation) {
 			$this->formSubmitMailer->sendFallbackEmail($response);
 
 			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
 
-			return \rest_ensure_response(
-				$this->getIntegrationApiOutput(
-					$fakeResponse,
-					$this->labels->getLabel($fakeResponse['message'], $formId),
-				)
-			);
+			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
+			$responseOutput = $fakeResponse;
 		}
 
 		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(
-				$response,
-				$this->labels->getLabel($response['message'], $formId),
-				[
-					Validator::VALIDATOR_OUTPUT_KEY
-				]
+				$responseOutput,
+				$labelsOutput,
 			)
 		);
 	}

@@ -109,7 +109,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 *
 	 * @return string
 	 */
-	public function getSettingsForm(string $type, string $formId = ''): string
+	public function getSettingsForm(string $type, string $formId): string
 	{
 		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
 
@@ -129,9 +129,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		$data = \apply_filters($filter, $formId);
 
 		$formAdditionalProps['formAttrs'] = [
-			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formPostId'] => $formId,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formId'] => $formId,
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formType'] => $internalType,
 			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['settingsType'] => $type,
+			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['successRedirect'] => Helper::getCurrentUrl(),
 		];
 
 		// Populate and build form.

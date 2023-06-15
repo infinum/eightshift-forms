@@ -234,25 +234,17 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								'selectName' => $this->getSettingsName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
 								'selectFieldHelp' => \__('You must select what field is used as an e-mail.', 'eightshift-forms'),
 								'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
-								'selectContent' => \array_merge(
-									[
-										[
+								'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
+								'selectContent' => \array_map(
+									static function ($option) use ($emailField) {
+										return [
 											'component' => 'select-option',
-											'selectOptionLabel' => '',
-											'selectOptionValue' => '',
-										],
-									],
-									\array_map(
-										static function ($option) use ($emailField) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => $option,
-												'selectOptionValue' => $option,
-												'selectOptionIsSelected' => $emailField === $option,
-											];
-										},
-										$fieldNames
-									)
+											'selectOptionLabel' => $option,
+											'selectOptionValue' => $option,
+											'selectOptionIsSelected' => $emailField === $option,
+										];
+									},
+									$fieldNames
 								),
 							],
 						],

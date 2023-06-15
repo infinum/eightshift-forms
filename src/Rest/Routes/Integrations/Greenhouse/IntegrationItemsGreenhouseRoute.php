@@ -30,7 +30,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '-greenhouse/';
+	public const ROUTE_SLUG = SettingsGreenhouse::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Get the base url of the route
@@ -39,7 +39,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

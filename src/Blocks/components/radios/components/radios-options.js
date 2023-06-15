@@ -1,11 +1,12 @@
 import React from 'react';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, icons, Section, IconToggle } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, icons, Section, IconToggle, IconLabel } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const RadiosOptions = (attributes) => {
@@ -13,9 +14,12 @@ export const RadiosOptions = (attributes) => {
 		setAttributes,
 	} = attributes;
 
+	const [isNameChanged, setIsNameChanged] = useState(false);
+
 	const radiosName = checkAttr('radiosName', attributes, manifest);
 	const radiosIsRequired = checkAttr('radiosIsRequired', attributes, manifest);
 	const radiosDisabledOptions = checkAttr('radiosDisabledOptions', attributes, manifest);
+	const radiosTracking = checkAttr('radiosTracking', attributes, manifest);
 
 	return (
 		<>
@@ -25,10 +29,14 @@ export const RadiosOptions = (attributes) => {
 						label={<NameFieldLabel value={radiosName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={radiosName}
-						onChange={(value) => setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
+					<NameChangeWarning isChanged={isNameChanged} />
 				</Section>
 
 				<FieldOptions
@@ -48,11 +56,20 @@ export const RadiosOptions = (attributes) => {
 						noBottomSpacing
 					/>
 				</Section>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+					<TextControl
+						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+						value={radiosTracking}
+						onChange={(value) => setAttributes({ [getAttrKey('radiosTracking', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radiosTracking', attributes, manifest), radiosDisabledOptions)}
+						className='es-no-field-spacing'
+					/>
+				</Section>
 			</PanelBody>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: radiosName,
+					conditionalTagsBlockName: radiosName,
 				})}
 			/>
 		</>

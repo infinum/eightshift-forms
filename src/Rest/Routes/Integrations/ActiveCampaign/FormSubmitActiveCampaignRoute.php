@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
+use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -27,7 +29,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-active-campaign/';
+	public const ROUTE_SLUG = SettingsActiveCampaign::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -65,6 +67,13 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	public $formSubmitMailer;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -72,19 +81,22 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		ActiveCampaignClientInterface $activeCampaignClient,
-		FormSubmitMailerInterface $formSubmitMailer
+		FormSubmitMailerInterface $formSubmitMailer,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->activeCampaignClient = $activeCampaignClient;
 		$this->formSubmitMailer = $formSubmitMailer;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -94,7 +106,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -128,18 +140,28 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
+	}
+
+	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
-		$itemId = $formDataRefrerence['itemId'];
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
-		$files = $formDataRefrerence['files'];
+		$itemId = $formDataReference['itemId'];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
+		$files = $formDataReference['files'];
 
 		// Send application to ActiveCampaign.
 		$response = $this->activeCampaignClient->postApplication(
@@ -184,9 +206,11 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			}
 		}
 
+		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
+
 		// Output integrations validation issues.
-		if (isset($response[Validator::VALIDATOR_OUTPUT_KEY])) {
-			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($response[Validator::VALIDATOR_OUTPUT_KEY], $formId);
+		if ($validation) {
+			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($validation, $formId);
 		}
 
 		// Skip fallback email if integration is disabled.
@@ -197,27 +221,27 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 
 		// Send email if it is configured in the backend.
 		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
-			$this->formSubmitMailer->sendEmails($formDataRefrerence);
+			$this->formSubmitMailer->sendEmails($formDataReference);
 		}
 
+		$labelsOutput = $this->labels->getLabel($response['message'], $formId);
+		$responseOutput = $response;
+
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !$response[Validator::VALIDATOR_OUTPUT_KEY] ?? []) {
+		if ($response['isDisabled'] && !$validation) {
 			$this->formSubmitMailer->sendFallbackEmail($response);
 
 			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
 
-			return \rest_ensure_response(
-				$this->getIntegrationApiOutput(
-					$fakeResponse,
-					$this->labels->getLabel($fakeResponse['message'], $formId),
-				)
-			);
+			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
+			$responseOutput = $fakeResponse;
 		}
 
+		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationApiOutput(
-				$response,
-				$this->labels->getLabel($response['message'], $formId)
+				$responseOutput,
+				$labelsOutput,
 			)
 		);
 	}

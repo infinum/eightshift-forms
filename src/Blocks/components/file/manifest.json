@@ -55,8 +55,18 @@
 		"fileAttrs": {
 			"type": "object"
 		},
+		"fileFieldAttrs": {
+			"type": "object"
+		},
 		"fileDisabledOptions": {
 			"type": "array"
+		},
+		"fileTypeCustom": {
+			"type": "string"
+		},
+		"fileIsDisabled": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

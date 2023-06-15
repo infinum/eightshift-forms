@@ -1,6 +1,7 @@
 /* global esFormsLocalization */
 
 import React from 'react';
+import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
@@ -20,7 +21,7 @@ import {
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from './../manifest.json';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const InputOptions = (attributes) => {
@@ -51,6 +52,8 @@ export const InputOptions = (attributes) => {
 		title = __('Input', 'eightshift-forms'),
 	} = attributes;
 
+	const [isNameChanged, setIsNameChanged] = useState(false);
+
 	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
@@ -80,13 +83,19 @@ export const InputOptions = (attributes) => {
 			<PanelBody title={title}>
 				<Section showIf={showInputPlaceholder || showInputType || showInputName} icon={icons.options} label={__('General', 'eightshift-forms')}>
 					{showInputName &&
-						<TextControl
-							label={<NameFieldLabel value={inputName} />}
-							help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-							value={inputName}
-							onChange={(value) => setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value })}
-							disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}
-						/>
+						<>
+							<TextControl
+								label={<NameFieldLabel value={inputName} />}
+								help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+								value={inputName}
+								onChange={(value) => {
+									setIsNameChanged(true);
+									setAttributes({ [getAttrKey('inputName', attributes, manifest)]: value });
+								}}
+								disabled={isOptionDisabled(getAttrKey('inputName', attributes, manifest), inputDisabledOptions)}
+							/>
+							<NameChangeWarning isChanged={isNameChanged} />
+						</>
 					}
 
 					{showInputType &&
@@ -368,7 +377,7 @@ export const InputOptions = (attributes) => {
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: inputName,
+					conditionalTagsBlockName: inputName,
 				})}
 			/>
 		</>

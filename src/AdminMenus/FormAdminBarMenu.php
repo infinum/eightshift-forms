@@ -66,6 +66,11 @@ class FormAdminBarMenu implements ServiceInterface
 	 */
 	public function getTopBarMenu(WP_Admin_Bar $adminBar): void
 	{
+		// Dont use in multisite.
+		if (\is_network_admin()) {
+			return;
+		}
+
 		if (Helper::isBlockEditor()) {
 			return;
 		}

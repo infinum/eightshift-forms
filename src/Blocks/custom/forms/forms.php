@@ -8,10 +8,10 @@
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Form\Form;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsSettings;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getComponent('invalid');
@@ -19,22 +19,14 @@ $manifestUtils = Components::getComponent('utils');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
-$checkStyleEnqueue = $this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
-
 $blockClass = $attributes['blockClass'] ?? '';
 
 // Check formPost ID prop.
 $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
 $formsStyle = Components::checkAttr('formsStyle', $attributes, $manifest);
 $formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
-$formsFormDataTypeSelector = Components::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 $formsFormGeolocation = Components::checkAttr('formsFormGeolocation', $attributes, $manifest);
 $formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
-$formsConditionalTagsRules = Components::checkAttr('formsConditionalTagsRules', $attributes, $manifest);
-$formsDownloads = Components::checkAttr('formsDownloads', $attributes, $manifest);
-$formsSuccessRedirectVariation = Components::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
-$formsSuccessRedirectVariationUrl = Components::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
-$formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
 
 // Override form ID in case we use geo location but use this feature only on frontend.
 if (!$formsServerSideRender) {
@@ -109,81 +101,14 @@ if ($formsServerSideRender) {
 		return;
 	}
 
-	$formsNamespace = Components::getSettingsNamespace();
-
-	// Iterate blocks an children by passing them form ID.
-	foreach ($blocks as $key => $block) {
-		if ($block['blockName'] === "{$formsNamespace}/form-selector") {
-			$blocks[$key]['attrs']['formSelectorFormPostId'] = $formsFormPostId;
-
-			if (isset($block['innerBlocks'])) {
-				foreach ($block['innerBlocks'] as $innerKey => $innerBlock) {
-					$blockName = Helper::getBlockNameDetails($innerBlock['blockName'])['name'];
-
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormSuccessRedirectVariation"] = $formsSuccessRedirectVariation;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormSuccessRedirectVariationUrl"] = $formsSuccessRedirectVariationUrl;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDownloads"] = $formsDownloads;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormType"] = $blockName;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormConditionalTags"] = wp_json_encode($formsConditionalTagsRules);
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
-					$blocks[$key]['innerBlocks'][$innerKey]['attrs']["blockSsr"] = $formsServerSideRender;
-
-					if (isset($innerBlock['innerBlocks'])) {
-						foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
-							$nameDetails = Helper::getBlockNameDetails($inBlock['blockName']);
-							$name = $nameDetails['name'];
-							$namespace = $nameDetails['namespace'];
-
-							switch ($name) {
-								case 'submit':
-									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
-									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs']["blockSsr"] = $formsServerSideRender;
-									break;
-								case 'phone':
-								case 'country':
-									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'][Components::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
-									break;
-							}
-
-							// Add custom field block around none forms block to be able to use positioning.
-							if ($namespace !== $formsNamespace) {
-								$customUsedAttrsDiff = array_intersect_key(
-									$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'] ?? [],
-									Components::getComponent('field')['attributes']
-								);
-
-								$customUsedAttrs = [];
-
-								if ($customUsedAttrsDiff) {
-									foreach ($customUsedAttrsDiff as $customDiffKey => $customDiffValue) {
-										$customUsedAttrs["field" . ucfirst($customDiffKey)] = $customDiffValue;
-									}
-								}
-
-								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey] = [];
-								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['blockName'] = "{$formsNamespace}/field";
-								$blocks[$key]['innerBlocks'][$innerKey]['innerBlocks'][$inKey]['attrs'] = array_merge(
-									[
-										'fieldFieldContent' => apply_filters('the_content', render_block($inBlock)),
-										'fieldFieldHideLabel' => true,
-										'fieldFieldUseError' => false,
-									],
-									$customUsedAttrs
-								);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	$output = apply_filters(
+		Form::FILTER_FORMS_BLOCK_MODIFICATIONS,
+		$blocks,
+		$attributes,
+	);
 
 	// Render blocks.
-	foreach ($blocks as $block) {
+	foreach ($output as $block) {
 		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		echo apply_filters('the_content', render_block($block));
 	}

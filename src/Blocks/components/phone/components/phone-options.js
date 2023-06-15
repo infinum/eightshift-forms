@@ -1,6 +1,7 @@
 /* global esFormsLocalization */
 
 import React from 'react';
+import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
@@ -8,7 +9,7 @@ import {icons,checkAttr,getAttrKey,IconLabel,props,IconToggle,Section,Select} fr
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, NameFieldLabel } from '../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const PhoneOptions = (attributes) => {
@@ -16,6 +17,8 @@ export const PhoneOptions = (attributes) => {
 		setAttributes,
 		title = __('Phone', 'eightshift-forms'),
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const phoneName = checkAttr('phoneName', attributes, manifest);
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
@@ -42,9 +45,13 @@ export const PhoneOptions = (attributes) => {
 						label={<NameFieldLabel value={phoneName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={phoneName}
-						onChange={(value) => setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('phoneName', attributes, manifest), phoneDisabledOptions)}
 					/>
+					<NameChangeWarning isChanged={isNameChanged} />
 
 					<TextControl
 						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
@@ -134,7 +141,7 @@ export const PhoneOptions = (attributes) => {
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: phoneName,
+					conditionalTagsBlockName: phoneName,
 				})}
 			/>
 		</>

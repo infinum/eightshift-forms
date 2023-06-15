@@ -17,6 +17,9 @@
 		"formsFormPostIdRaw": {
 			"type": "object"
 		},
+		"formsConditionalTagsRulesForms": {
+			"type": "array"
+		},
 		"formsConditionalTagsRules": {
 			"type": "array"
 		},

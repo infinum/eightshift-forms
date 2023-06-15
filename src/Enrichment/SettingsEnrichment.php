@@ -158,7 +158,6 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'textareaName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
 								'textareaFieldLabel' => \__('Custom parameters', 'eightshift-forms'),
 								'textareaIsMonospace' => true,
-								'textareaSingleSubmit' => true,
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('

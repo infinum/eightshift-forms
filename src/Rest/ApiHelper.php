@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -165,6 +166,11 @@ trait ApiHelper
 		if ($isDeveloperMode) {
 			$additionalOutput['debug'] = $details;
 		}
+
+		$additional = [
+			Validator::VALIDATOR_OUTPUT_KEY,
+			...$additional,
+		];
 
 		foreach ($additional as $value) {
 			if (isset($details[$value])) {

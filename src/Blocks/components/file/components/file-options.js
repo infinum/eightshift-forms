@@ -1,17 +1,20 @@
 import React from 'react';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, Control } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const FileOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const fileName = checkAttr('fileName', attributes, manifest);
 	const fileAccept = checkAttr('fileAccept', attributes, manifest);
@@ -23,6 +26,7 @@ export const FileOptions = (attributes) => {
 	const fileCustomInfoText = checkAttr('fileCustomInfoText', attributes, manifest);
 	const fileCustomInfoButtonText = checkAttr('fileCustomInfoButtonText', attributes, manifest);
 	const fileDisabledOptions = checkAttr('fileDisabledOptions', attributes, manifest);
+	const fileIsDisabled = checkAttr('fileIsDisabled', attributes, manifest);
 
 	return (
 		<>
@@ -32,10 +36,14 @@ export const FileOptions = (attributes) => {
 						label={<NameFieldLabel value={fileName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={fileName}
-						onChange={(value) => setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('fileName', attributes, manifest), fileDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
+					<NameChangeWarning isChanged={isNameChanged} />
 
 					<IconToggle
 						icon={icons.files}
@@ -95,6 +103,17 @@ export const FileOptions = (attributes) => {
 					</Control>
 				</Section>
 
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<IconToggle
+						icon={icons.cursorDisabled}
+						label={__('Disabled', 'eightshift-forms')}
+						checked={fileIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('fileIsDisabled', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('fileIsDisabled', attributes, manifest), fileDisabledOptions)}
+						noBottomSpacing
+					/>
+				</Section>
+
 				<Section icon={icons.upload} label={__('Custom uploader', 'eightshift-forms')}>
 					<TextControl
 						value={fileCustomInfoText}
@@ -133,7 +152,7 @@ export const FileOptions = (attributes) => {
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: fileName,
+					conditionalTagsBlockName: fileName,
 				})}
 			/>
 		</>

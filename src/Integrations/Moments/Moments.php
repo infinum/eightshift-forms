@@ -14,7 +14,6 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -149,10 +148,9 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'countryIsRequired' => $isRequired,
 								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
 									$isRequired ? 'countryIsRequired' : '',
+									'countryTypeCustom',
 								]),
-								'countryAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'country',
-								],
+								'countryTypeCustom' => 'country',
 							];
 							break;
 						default:
@@ -246,12 +244,14 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'inputIsEmail' => true,
 						'inputIsRequired' => $isRequired,
 						'inputValidationPattern' => $validationPattern ? 'momentsEmail' : '',
+						'inputTypeCustom' => 'email',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$isRequired ? 'inputIsRequired' : '',
 							$validationMaxLength ? 'inputMaxLength' : '',
 							$validationPattern ? 'inputValidationPattern' : '',
 							'inputIsEmail',
 							'inputType',
+							'inputTypeCustom',
 						]),
 					];
 
@@ -312,10 +312,9 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'countryIsRequired' => $isRequired,
 								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
 									$isRequired ? 'countryIsRequired' : '',
+									'countryTypeCustom',
 								]),
-								'countryAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeInternal'] => 'country',
-								],
+								'countryTypeCustom' => 'country',
 							];
 							break;
 						default:
@@ -358,13 +357,13 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'radiosFieldLabel' => $label,
 						'radiosFieldHidden' => $isHidden,
 						'radiosIsRequired' => $isRequired,
+						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
-							function ($radio) use ($name) {
+							function ($radio) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio['name'],
 									'radioValue' => $radio['value'],
-									'radioTracking' => $name,
 									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
 										'radioValue',
 									], false),

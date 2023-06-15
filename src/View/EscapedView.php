@@ -48,16 +48,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	 */
 	private function setForm(): array
 	{
-		$form = self::FORM;
-
-		$form['input'] = \array_merge(
-			$form['input'],
-			[
-				'data-object-type-id' => true,
-			]
-		);
-
-		return $form;
+		return self::FORM;
 	}
 
 	/**

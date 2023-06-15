@@ -12,8 +12,11 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
-use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\UploadHelper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 
@@ -28,21 +31,34 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	use ApiHelper;
 
 	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
+
+	/**
 	 * List of all custom form params used.
 	 */
 	public const CUSTOM_FORM_PARAMS = [
+		'formId' => 'es-form-form-id',
 		'postId' => 'es-form-post-id',
 		'type' => 'es-form-type',
+		'name' => 'es-form-field-name',
+		'steps' => 'es-form-steps',
 		'settingsType' => 'es-form-settings-type',
 		'singleSubmit' => 'es-form-single-submit',
 		'storage' => 'es-form-storage',
 		'action' => 'es-form-action',
 		'actionExternal' => 'es-form-action-external',
 		'conditionalTags' => 'es-form-conditional-tags',
+		'fileId' => 'es-form-file-id',
 		'hubspotCookie' => 'es-form-hubspot-cookie',
 		'hubspotPageName' => 'es-form-hubspot-page-name',
 		'hubspotPageUrl' => 'es-form-hubspot-page-url',
 		'mailchimpTags' => 'es-form-mailchimp-tags',
+		'captcha' => 'es-form-captcha',
+		'direct' => 'es-form-direct',
+		'itemId' => 'es-form-item-id',
+		'innerId' => 'es-form-inner-id',
 	];
 
 	/**
@@ -50,28 +66,41 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	public const CUSTOM_FORM_DATA_ATTRIBUTES = [
 		'formType' => 'data-form-type',
-		'formPostId' => 'data-form-post-id',
+		'stepId' => 'data-step-id',
+		'submitStepDirection' => 'data-step-direction',
+		'postId' => 'data-post-id',
+		'formId' => 'data-form-id',
 		'fieldId' => 'data-field-id',
 		'fieldName' => 'data-field-name',
 		'fieldType' => 'data-field-type',
+		'fieldPreventSubmit' => 'data-field-prevent-submit',
 		'trackingEventName' => 'data-tracking-event-name',
 		'trackingAdditionalData' => 'data-tracking-additional-data',
 		'tracking' => 'data-tracking',
+		'cacheType' => 'data-cache-type',
+		'syncId' => 'data-sync-id',
+		'migrationType' => 'data-migration-type',
+		'migrationExportItems' => 'data-migration-export-items',
 		'successRedirect' => 'data-success-redirect',
 		'successRedirectVariation' => 'data-success-redirect-variation',
 		'conditionalTags' => 'data-conditional-tags',
 		'typeSelector' => 'data-type-selector',
 		'actionExternal' => 'data-action-external',
-		'fieldTypeInternal' => 'data-type-internal',
+		'fieldTypeCustom' => 'data-type-custom',
 		'fieldUncheckedValue' => 'data-unchecked-value',
 		'settingsType' => 'data-settings-type',
 		'groupSaveAsOneField' => 'data-group-save-as-one-field',
 		'datePreviewFormat' => 'data-preview-format',
 		'dateOutputFormat' => 'data-output-format',
-		'selectShowCountryIcons' => 'data-select-show-country-icons',
 		'selectAllowSearch' => 'data-allow-search',
-		'selectInitial' => 'data-initial',
 		'selectPlaceholder' => 'data-placeholder',
+		'selectCustomProperties' => 'data-custom-properties',
+		'selectCountryCode' => 'data-country-code',
+		'selectCountryLabel' => 'data-country-label',
+		'selectCountryNumber' => 'data-country-number',
+		'selectVisibility' => 'data-visibility',
+		'selectId' => 'data-id',
+		'selectValue' => 'data-value',
 		'phoneSync' => 'data-phone-sync',
 		'phoneDisablePicker' => 'data-phone-disable-picker',
 		'saveAsJson' => 'data-save-as-json',
@@ -81,6 +110,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'globalMsgHeadingSuccess' => 'data-msg-heading-success',
 		'globalMsgHeadingError' => 'data-msg-heading-error',
 		'hideCaptchaBadge' => 'data-hide-captcha-badge',
+		'reload' => 'data-reload',
+		'hubspotTypeId' => 'data-hubspot-type-id'
 	];
 
 	/**
@@ -130,14 +161,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @var string
 	 */
-	public const ROUTE_PREFIX_FORM_SUBMIT = 'form-submit';
-
-	/**
-	 * Dynamic name route prefix for settings.
-	 *
-	 * @var string
-	 */
-	public const ROUTE_PREFIX_SETTINGS = 'settings';
+	public const ROUTE_PREFIX_FORM_SUBMIT = 'submit';
 
 	/**
 	 * Dynamic name route prefix for integration editor.
@@ -206,7 +230,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	protected function prepareParams(array $params): array
 	{
-		return \array_map(
+		// Skip any manipulations if direct param is set.
+		$paramsOutput = \array_map(
 			static function ($item) {
 				// Check if array then output only value that is not empty.
 				if (\is_array($item)) {
@@ -259,114 +284,107 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			},
 			$params
 		);
-	}
 
-	/**
-	 * Return form Type from form params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @throws UnverifiedRequestException Wrong request response.
-	 *
-	 * @return string
-	 */
-	protected function getFormType(array $params): string
-	{
-		$formType = $params[self::CUSTOM_FORM_PARAMS['type']] ?? '';
+		$output = [];
 
-		if (!$formType) {
-			throw new UnverifiedRequestException(
-				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
-			);
+		foreach ($paramsOutput as $key => $value) {
+			switch ($key) {
+				// Used for direct import from settings.
+				case self::CUSTOM_FORM_PARAMS['direct']:
+					$output['directImport'] = (bool) $value['value'];
+					break;
+				// Used for direct import from settings.
+				case self::CUSTOM_FORM_PARAMS['itemId']:
+					$output['itemId'] = $value['value'];
+					break;
+				// Used for direct import from settings.
+				case self::CUSTOM_FORM_PARAMS['innerId']:
+					$output['innerId'] = $value['value'];
+					break;
+				case self::CUSTOM_FORM_PARAMS['formId']:
+					$output['formId'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['postId']:
+					$output['postId'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['type']:
+					$output['type'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['action']:
+					$output['action'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['captcha']:
+					$output['captcha'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['actionExternal']:
+					$output['actionExternal'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['settingsType']:
+					$output['settingsType'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['storage']:
+					$output['storage'] = $value['value'];
+					$value['value'] = \json_decode($value['value'], true);
+					$output['params'][$key] = $value;
+					break;
+				case self::CUSTOM_FORM_PARAMS['steps']:
+					$output['apiSteps'] = [
+						'fields' => $value['value'],
+						'current' => $value['custom'],
+					];
+					break;
+				default:
+					if ($value['type'] === 'file') {
+						$output['files'][$key] = $value['value'] ? \array_merge(
+							$value,
+							[
+								'value' => \array_map(
+									function ($item) {
+										return $this->getFilePath($item);
+									},
+									\explode(self::DELIMITER, $value['value'])
+								),
+							]
+						) : [];
+					} else {
+						$output['params'][$key] = $value;
+					}
+					break;
+			}
 		}
 
-		return $formType['value'] ?? '';
+		return $output;
 	}
 
 	/**
-	 * Return mailer for sender email field params.
+	 * Prepare file from request for later usage. Attach custom data to file array.
 	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return string
-	 */
-	protected function getFormCustomAction(array $params): string
-	{
-		return $params[self::CUSTOM_FORM_PARAMS['action']]['value'] ?? '';
-	}
-
-	/**
-	 * Return mailer for sender email field params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @return string
-	 */
-	protected function getFormCustomActionExternal(array $params): string
-	{
-		return $params[self::CUSTOM_FORM_PARAMS['actionExternal']]['value'] ?? '';
-	}
-
-	/**
-	 * Return form settings type from form params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @throws UnverifiedRequestException Wrong request response.
-	 *
-	 * @return string
-	 */
-	protected function getFormSettingsType(array $params): string
-	{
-		return $params[self::CUSTOM_FORM_PARAMS['settingsType']]['value'] ?? '';
-	}
-
-	/**
-	 * Return form ID from form params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
-	 * @throws UnverifiedRequestException Wrong request response.
-	 *
-	 * @return string
-	 */
-	protected function getFormId(array $params): string
-	{
-		$formId = $params[self::CUSTOM_FORM_PARAMS['postId']] ?? '';
-
-		if (!$formId) {
-			throw new UnverifiedRequestException(
-				\__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms')
-			);
-		}
-
-		return $formId['value'] ?? '';
-	}
-
-	/**
-	 * Extract storage parameters from params.
-	 *
-	 * @param array<string, mixed> $params Array of params got from form.
-	 *
+	 * @param array<string, mixed> $file File array from reuqest.
+	 * @param array<string, mixed> $params Params to use.
 	 * @return array<string, mixed>
 	 */
-	protected function extractStorageParams(array $params): array
+	protected function prepareFile(array $file, array $params): array
 	{
-		if (!isset($params[self::CUSTOM_FORM_PARAMS['storage']])) {
-			return $params;
+		$file = $file['file'] ?? [];
+
+		if (!$file) {
+			return [];
 		}
 
-		$storage = $params[self::CUSTOM_FORM_PARAMS['storage']]['value'] ?? [];
-
-		if (!$storage) {
-			return $params;
-		}
-
-		$storage = \json_decode($storage, true);
-
-		$params[self::CUSTOM_FORM_PARAMS['storage']]['value'] = $storage;
-
-		return $params;
+		return \array_merge(
+			$file,
+			[
+				'id' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['fileId']]['value'] ?? '',
+				'fieldName' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '',
+			]
+		);
 	}
 
 	/**
@@ -383,5 +401,86 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		}
 
 		return $this->getApiPermissionsErrorOutput();
+	}
+
+	/**
+	 * Prepare array for later check like validation and etc...
+	 *
+	 * @param mixed $request Data got from endpoint url.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getFormDataReference($request): array
+	{
+		// Get params from request.
+		$params = $this->prepareParams($request->get_body_params());
+
+		// Populare params.
+		$formDataReference['params'] = $params['params'] ?? [];
+
+		// Populate files from uploaded ID.
+		$formDataReference['files'] = $params['files'] ?? [];
+
+		// Get form directImport from params.
+		if (isset($params['directImport'])) {
+			$formDataReference['directImport'] = true;
+			$formDataReference['itemId'] = $params['itemId'] ?? '';
+			$formDataReference['innerId'] = $params['innerId'] ?? '';
+			$formDataReference['type'] = $params['type'] ?? '';
+			$formDataReference['formId'] = $params['formId'] ?? '';
+			$formDataReference['params'] = $params['params'] ?? [];
+			$formDataReference['files'] = $params['files'] ?? [];
+		} else {
+			// Get form id from params.
+			$formId = $params['formId'] ?? '';
+
+			// Get form type from params.
+			$type = $params['type'] ?? '';
+
+			// Get form settings for admin from params.
+			$formSettingsType = $params['settingsType'] ?? '';
+
+			// Manual populate output it admin settings our build it from form Id.
+			if ($type === Settings::SETTINGS_TYPE_NAME || $type === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+				$formDataReference = [
+					'formId' => $formId,
+					'type' => $type,
+					'itemId' => '',
+					'innerId' => '',
+					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$type]) ? \apply_filters(Filters::ALL[$formSettingsType][$type], $formId) : [],
+				];
+			} else {
+				$formDataReference = Helper::getFormDetailsById($formId);
+			}
+
+			// Populare params.
+			$formDataReference['params'] = $params['params'] ?? [];
+
+			// Populate files from uploaded ID.
+			$formDataReference['files'] = $params['files'] ?? [];
+
+			// Populare files on upload.
+			$formDataReference['filesUpload'] = $this->prepareFile($request->get_file_params(), $params['params'] ?? []);
+
+			// Populare action.
+			$formDataReference['action'] = $params['action'] ?? '';
+
+			// Populare action external.
+			$formDataReference['actionExternal'] = $params['actionExternal'] ?? '';
+
+			// Populare step fields.
+			$formDataReference['apiSteps'] = $params['apiSteps'] ?? [];
+
+			// Get form captcha from params.
+			$formDataReference['captcha'] = $params['captcha'] ?? [];
+
+			// Get form post Id from params.
+			$formDataReference['postId'] = $params['postId'] ?? '';
+
+			// Get form storage from params.
+			$formDataReference['storage'] = \json_decode($params['storage'] ?? '', true) ?? [];
+		}
+
+		return $formDataReference;
 	}
 }

@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Workable;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
@@ -25,6 +26,11 @@ use EightshiftForms\Validation\Validator;
  */
 class WorkableClient implements ClientInterface
 {
+	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
+
 	/**
 	 * Use general helper trait.
 	 */
@@ -400,10 +406,10 @@ class WorkableClient implements ClientInterface
 			}
 
 			$value = $param['value'] ?? '';
-			$internalType = $param['internalType'] ?? '';
+			$typeCustom = $param['typeCustom'] ?? '';
 
 			// Skip empty check if bool.
-			if ($internalType !== 'boolean') {
+			if ($typeCustom !== 'boolean') {
 				if (!$value) {
 					continue;
 				}
@@ -413,7 +419,7 @@ class WorkableClient implements ClientInterface
 				continue;
 			}
 
-			switch ($internalType) {
+			switch ($typeCustom) {
 				case 'free_text':
 				case 'short_text':
 					if ($name === 'summary' || $name === 'cover_letter') {
@@ -463,37 +469,35 @@ class WorkableClient implements ClientInterface
 		$output = [];
 		$answers = [];
 
-		foreach ($files as $key => $items) {
-			if (!$items) {
+		foreach ($files as $items) {
+			$name = $items['name'] ?? '';
+			if (!$name) {
 				continue;
 			}
 
-			foreach ($items as $file) {
-				$fileName = $file['fileName'] ?? '';
-				$path = $file['path'] ?? '';
-				$id = $file['id'] ?? '';
+			$value = $items['value'] ?? [];
+			if (!$value) {
+				continue;
+			}
 
-				if (!$path) {
-					continue;
-				}
+			foreach ($value as $file) {
+				$fileName = $this->getFileNameFromPath($file);
 
-				if ($key === 'resume') {
-					$output[$id] = [
+				if ($name === 'resume') {
+					$output[$name] = [
 						'name' => $fileName,
 						// phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-						'data' => \base64_encode(\file_get_contents($path)),
+						'data' => \base64_encode(\file_get_contents($file)),
 						// phpcs:enable
-						'path' => $path,
 					];
 				} else {
 					$answers[] = [
-						'question_key' => $key,
+						'question_key' => $name,
 						'file' => [
 							'name' => $fileName,
 							// phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-							'data' => \base64_encode(\file_get_contents($path)),
+							'data' => \base64_encode(\file_get_contents($file)),
 							// phpcs:enable
-							'path' => $path,
 						]
 					];
 				}

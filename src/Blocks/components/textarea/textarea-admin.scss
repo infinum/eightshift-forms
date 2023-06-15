@@ -1,14 +1,40 @@
 @import './textarea-style.scss';
 
 textarea.es-textarea {
+	$this: &;
+
+	--textarea-size: 3;
+	--textarea-size-max: initial;
+
+	max-height: calc(var(--esf-input-height) * var(--textarea-size-max)) !important; // stylelint-disable-line declaration-no-important
+	min-height: calc(var(--esf-input-height) * var(--textarea-size));
+	height: calc(var(--esf-input-height) * var(--textarea-size));
+	border-radius: var(--global-es-radius-8);
+
 	&--monospace {
 		font-family: monospace;
 	}
 
 	&--limit-height {
-		min-height: 500px;
-		max-height: 500px;
+		overflow: auto !important; // stylelint-disable-line declaration-no-important
+		resize: none !important; // stylelint-disable-line declaration-no-important
 	}
 
-	border-radius: var(--global-es-radius-8);
+	&__size {
+		&--big {
+			--textarea-size: 8;
+
+			&.es-textarea--limit-height {
+				--textarea-size-max: 8;
+			}
+		}
+
+		&--huge {
+			--textarea-size: 16;
+
+			&.es-textarea--limit-height {
+				--textarea-size-max: 16;
+			}
+		}
+	}
 }

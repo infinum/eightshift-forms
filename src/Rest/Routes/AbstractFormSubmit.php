@@ -10,14 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Validation\Validator;
 use WP_REST_Request;
 
@@ -35,6 +34,36 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	/**
+	 * Use general helper trait.
+	 */
+	use FiltersOuputMock;
+
+	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
+	 * Create a new instance that injects classes
+	 *
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
+	 */
+	public function __construct(CaptchaInterface $captcha)
+	{
+		$this->captcha = $captcha;
+	}
+
+	/**
+	 * Route types.
+	 */
+	protected const ROUTE_TYPE_DEFAULT = 'default';
+	protected const ROUTE_TYPE_FILE = 'file';
+	protected const ROUTE_TYPE_SETTINGS = 'settings';
+	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
 
 	/**
 	 * Get callback arguments array
@@ -65,55 +94,90 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	{
 		// Try catch request.
 		try {
-			$params = $this->prepareParams($request->get_body_params());
-			$files = $request->get_file_params();
+			// Prepare all data.
+			$formDataReference = $this->getFormDataReference($request);
 
-			// Get form ID.
-			$formId = $this->getFormId($params);
-			$formType = $this->getFormType($params);
-			$formSettingsType = $this->getFormSettingsType($params);
+			switch ($this->routeGetType()) {
+				case self::ROUTE_TYPE_FILE:
+					// Validate files.
+					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+						$validate = $this->getValidator()->validateFiles($formDataReference); // @phpstan-ignore-line
 
-			if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
-				$formDataRefrerence = [
-					'formId' => $formId,
-					'type' => $formType,
-					'itemId' => '',
-					'innerId' => '',
-					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$formType]) ? \apply_filters(Filters::ALL[$formSettingsType][$formType], $formId) : [],
-				];
-			} else {
-				$formDataRefrerence = Helper::getFormDetailsById($formId);
+						if ($validate) {
+							throw new UnverifiedRequestException(
+								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$validate
+							);
+						}
+					}
+
+					// Upload files to temp folder.
+					$formDataReference['filesUpload'] = $this->uploadFile($formDataReference['filesUpload']);
+					break;
+				case self::ROUTE_TYPE_SETTINGS:
+					// Validate params.
+					$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
+
+					if ($validate) {
+						throw new UnverifiedRequestException(
+							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+							$validate
+						);
+					}
+					break;
+				case self::ROUTE_TYPE_STEP_VALIDATION:
+					// Validate params.
+					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+						$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
+
+						if ($validate) {
+							throw new UnverifiedRequestException(
+								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$validate
+							);
+						}
+					}
+					break;
+				default:
+					// Skip any validation if direct import.
+					if (isset($formDataReference['directImport'])) {
+						break;
+					}
+
+					// Validate params.
+					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+						$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
+
+						if ($validate) {
+							throw new UnverifiedRequestException(
+								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$validate
+							);
+						}
+					}
+
+					// Validate captcha.
+					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+						$captchaParams = $formDataReference['captcha'];
+
+						if (!$captchaParams) {
+							throw new UnverifiedRequestException(
+								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$captchaParams
+							);
+						}
+
+						$captcha = $this->captcha->check($captchaParams['token'], $captchaParams['action'], $captchaParams['isEnterprise'] ?? false);
+
+						if ($captcha['status'] === AbstractBaseRoute::STATUS_ERROR) {
+							return \rest_ensure_response($captcha);
+						}
+					}
+					break;
 			}
-
-			$formDataRefrerence['params'] = $params;
-			$formDataRefrerence['files'] = $files;
-
-			// Validate request.
-			if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-				// @phpstan-ignore-next-line.
-				$validate = $this->getValidator()->validate($formDataRefrerence);
-				if ($validate) {
-					throw new UnverifiedRequestException(
-						\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-						$validate
-					);
-				}
-			}
-
-			// Extract hidden params from localStorage set on the frontend.
-			$formDataRefrerence['params'] = $this->extractStorageParams($formDataRefrerence['params']);
-
-			// Attach some special keys for specific types.
-			if ($formType === SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY) {
-				$formDataRefrerence['action'] = $this->getFormCustomAction($formDataRefrerence['params']);
-				$formDataRefrerence['actionExternal'] = $this->getFormCustomActionExternal($formDataRefrerence['params']);
-			}
-
-			// Upload files to temp folder.
-			$formDataRefrerence['files'] = $this->uploadFiles($formDataRefrerence['files']);
 
 			// Do Action.
-			return $this->submitAction($formDataRefrerence);
+			return $this->submitAction($formDataReference);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
@@ -125,6 +189,16 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				)
 			);
 		}
+	}
+
+	/**
+	 * Detect what type of route it is.
+	 *
+	 * @return string
+	 */
+	protected function routeGetType(): string
+	{
+		return self::ROUTE_TYPE_DEFAULT;
 	}
 
 	/**
@@ -142,6 +216,13 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	abstract protected function getValidatorPatterns();
 
 	/**
+	 * Returns captcha class.
+	 *
+	 * @return $this
+	 */
+	abstract protected function getCaptcha();
+
+	/**
 	 * Returns validator labels class.
 	 *
 	 * @return $this
@@ -151,9 +232,9 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	abstract protected function submitAction(array $formDataRefrerence);
+	abstract protected function submitAction(array $formDataReference);
 }

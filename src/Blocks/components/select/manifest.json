@@ -47,12 +47,18 @@
 		"selectAttrs": {
 			"type": "object"
 		},
+		"selectFieldAttrs": {
+			"type": "object"
+		},
 		"selectDisabledOptions": {
 			"type": "array"
 		},
 		"selectUseSearch": {
 			"type": "boolean",
 			"default": true
+		},
+		"selectTypeCustom": {
+			"type": "string"
 		}
 	}
 }

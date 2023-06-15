@@ -32,6 +32,9 @@
 			"type": "string",
 			"default": "text"
 		},
+		"inputTypeCustom": {
+			"type": "string"
+		},
 		"inputIsDisabled": {
 			"type": "boolean",
 			"default": false
@@ -81,6 +84,9 @@
 			"type": "string"
 		},
 		"inputAttrs": {
+			"type": "object"
+		},
+		"inputFieldAttrs": {
 			"type": "object"
 		},
 		"inputDisabledOptions": {

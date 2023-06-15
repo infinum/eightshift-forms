@@ -5,7 +5,8 @@
 	"componentClass": "es-checkbox",
 	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"components": {
-		"error": "error"
+		"error": "error",
+		"conditionalTags": "conditionalTags"
 	},
 	"example": {
 		"attributes": {
@@ -23,6 +24,10 @@
 			"type": "string"
 		},
 		"checkboxHideLabelText": {
+			"type": "boolean",
+			"default": false
+		},
+		"checkboxHideLabel": {
 			"type": "boolean",
 			"default": false
 		},
@@ -63,6 +68,9 @@
 			"default": false
 		},
 		"checkboxAttrs": {
+			"type": "object"
+		},
+		"checkboxFieldAttrs": {
 			"type": "object"
 		},
 		"checkboxAsToggle": {

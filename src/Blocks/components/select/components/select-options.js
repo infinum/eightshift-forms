@@ -1,10 +1,11 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 
@@ -12,6 +13,8 @@ export const SelectOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const selectName = checkAttr('selectName', attributes, manifest);
 	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
@@ -29,9 +32,14 @@ export const SelectOptions = (attributes) => {
 						label={<NameFieldLabel value={selectName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={selectName}
-						onChange={(value) => setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
 					/>
+
+					<NameChangeWarning isChanged={isNameChanged} />
 
 					<TextControl
 						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
@@ -93,7 +101,7 @@ export const SelectOptions = (attributes) => {
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: selectName,
+					conditionalTagsBlockName: selectName,
 				})}
 			/>
 		</>

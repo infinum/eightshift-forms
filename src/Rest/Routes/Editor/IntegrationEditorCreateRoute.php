@@ -28,7 +28,7 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_EDITOR . '-create/';
+	public const ROUTE_SLUG = 'create';
 
 	/**
 	 * Instance variable for HubSpot form data.
@@ -54,7 +54,7 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_EDITOR . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

@@ -59,16 +59,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_MOMENTS_API_KEY_KEY = 'moments-api-key';
 
 	/**
-	 * API user name.
-	 */
-	public const SETTINGS_MOMENTS_API_USERNAME_KEY = 'moments-api-username';
-
-	/**
-	 * API password.
-	 */
-	public const SETTINGS_MOMENTS_API_PASSWORD_KEY = 'moments-api-password';
-
-	/**
 	 * Skip integration.
 	 */
 	public const SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY = 'moments-skip-integration';
@@ -109,10 +99,8 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyMoments()) ? Variables::getApiKeyMoments() : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY);
 		$url = !empty(Variables::getApiUrlMoments()) ? Variables::getApiUrlMoments() : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY);
-		$username = !empty(Variables::getApiUsernameMoments()) ? Variables::getApiUsernameMoments() : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_USERNAME_KEY);
-		$password = !empty(Variables::getApiPasswordMoments()) ? Variables::getApiPasswordMoments() : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_PASSWORD_KEY);
 
-		if (!$isUsed || empty($apiKey) || empty($url) || empty($username) || empty($password)) {
+		if (!$isUsed || empty($apiKey) || empty($url)) {
 			return false;
 		}
 
@@ -133,8 +121,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 
 		$apiKey = Variables::getApiKeyMoments();
 		$apiUrl = Variables::getApiUrlMoments();
-		$apiUsername = Variables::getApiUsernameMoments();
-		$apiPassword = Variables::getApiPasswordMoments();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 
 		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY);
@@ -191,26 +177,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 									'inputIsRequired' => true,
 									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY),
 									'inputIsDisabled' => !empty($apiKey),
-								],
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
-									'inputFieldLabel' => \__('API username', 'eightshift-forms'),
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_USERNAME_MOMENTS', !empty($apiUsername)),
-									'inputType' => 'text',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiUsername) ? $apiUsername : $this->getOptionValue(self::SETTINGS_MOMENTS_API_USERNAME_KEY),
-									'inputIsDisabled' => !empty($apiUsername),
-								],
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
-									'inputFieldLabel' => \__('API password', 'eightshift-forms'),
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_PASSWORD_MOMENTS', !empty($apiPassword)),
-									'inputType' => 'password',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiPassword) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_PASSWORD_KEY),
-									'inputIsDisabled' => !empty($apiPassword),
 								],
 								[
 									'component' => 'divider',

@@ -3,7 +3,6 @@
 	"componentName": "textarea",
 	"title": "Textarea",
 	"componentClass": "es-textarea",
-	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
 			"textareaName": "Name",
@@ -54,6 +53,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"textareaLimitHeight": {
+			"type": "boolean",
+			"default": false
+		},
 		"textareaTracking": {
 			"type": "string"
 		},
@@ -66,10 +69,20 @@
 		"textareaAttrs": {
 			"type": "object"
 		},
+		"textareaFieldAttrs": {
+			"type": "object"
+		},
 		"textareaDisabledOptions": {
 			"type": "array"
 		},
-		"textareaSingleSubmit": {
+		"textareaTypeCustom": {
+			"type": "string"
+		},
+		"textareaSize": {
+			"type": "string",
+			"default": "default"
+		},
+		"textareaIsPreventSubmit": {
 			"type": "boolean",
 			"default": false
 		}

@@ -30,7 +30,6 @@ if ($fieldSkip) {
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$blockJsClass = $attributes['blockJsClass'] ?? '';
 $blockName = $attributes['blockName'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
@@ -72,6 +71,8 @@ $fieldIsRequired = Components::checkAttr('fieldIsRequired', $attributes, $manife
 $fieldConditionalTags = Components::checkAttr('fieldConditionalTags', $attributes, $manifest);
 $fieldInlineBeforeAfterContent = Components::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
 $fieldIsFiftyFiftyHorizontal = Components::checkAttr('fieldIsFiftyFiftyHorizontal', $attributes, $manifest);
+$fieldTypeCustom = Components::checkAttr('fieldTypeCustom', $attributes, $manifest);
+$fieldTracking = Components::checkAttr('fieldTracking', $attributes, $manifest);
 
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -79,7 +80,6 @@ $fieldClass = Components::classnames([
 	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
 	Components::selector($fieldHidden, $componentClass, '', 'hidden'),
-	Components::selector($blockJsClass, $blockJsClass),
 	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($fieldStyle && $componentClass, $componentClass, '', $fieldStyle),
 	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
@@ -109,6 +109,14 @@ if ($fieldName) {
 
 if ($blockName) {
 	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $blockName;
+}
+
+if ($fieldTypeCustom) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom']] = $fieldTypeCustom;
+}
+
+if ($fieldTracking) {
+	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = $fieldTracking;
 }
 
 $fieldAttrsOutput = '';

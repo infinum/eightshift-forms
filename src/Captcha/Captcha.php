@@ -1,38 +1,36 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Captcha
+ * Class that holds Captcha check.
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Captcha
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Captcha;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Validation\SettingsCaptcha;
+use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Throwable;
-use WP_REST_Request;
 
 /**
- * Class FormSubmitCaptchaRoute
+ * Captcha class.
  */
-class FormSubmitCaptchaRoute extends AbstractBaseRoute
+class Captcha implements CaptchaInterface
 {
+	/**
+	 * Use API helper trait.
+	 */
+	use ApiHelper;
+
 	/**
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
-
-	/**
-	 * Route slug.
-	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-captcha/';
 
 	/**
 	 * Instance variable of LabelsInterface data.
@@ -52,88 +50,32 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Get the base url of the route
+	 * Check captcha request.
 	 *
-	 * @return string The base URL for route you are adding.
+	 * @param string $token Token from frontend.
+	 * @param string $action Action to check.
+	 * @param boolean $isEnterprise Type of captcha.
+	 *
+	 * @return array<mixed>
 	 */
-	protected function getRouteName(): string
+	public function check(string $token, string $action, bool $isEnterprise): array
 	{
-		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
-	 * Method that returns rest response
-	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
-	 */
-	public function routeCallback(WP_REST_Request $request)
-	{
-		// Bailout if troubleshooting skip captcha is on.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-			return \rest_ensure_response(
-				$this->getApiSuccessOutput(
-					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms')
-				)
-			);
-		}
-
-		try {
-			$params = \json_decode($request->get_body(), true, 512, JSON_THROW_ON_ERROR); // phpcs:ignore
-		} catch (Throwable $t) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel('captchaBadRequest'),
-				)
-			);
-		}
-
-		$token = $params['token'] ?? '';
-		$action = $params['action'] ?? '';
-
 		if (!$token) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel('captchaBadRequest'),
-				)
+			return $this->getApiErrorOutput(
+				$this->labels->getLabel('captchaBadRequest'),
 			);
 		}
 
-		switch ($params['payed'] ?? '') {
-			case 'enterprise':
-				$response = $this->onEnterprise($token, $action);
-				break;
-			case 'free':
-				$response = $this->onFree($token);
-				break;
-			default:
-				$response = [];
-				break;
+		if ($isEnterprise) {
+			$response = $this->onEnterprise($token, $action);
+		} else {
+			$response = $this->onFree($token);
 		}
 
 		// Generic error msg from WP.
 		if (\is_wp_error($response)) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel('submitWpError')
-				)
+			return $this->getApiErrorOutput(
+				$this->labels->getLabel('submitWpError')
 			);
 		}
 
@@ -141,18 +83,15 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 		try {
 			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		} catch (Throwable $t) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel('captchaBadRequest')
-				)
+			return $this->getApiErrorOutput(
+				$this->labels->getLabel('captchaBadRequest')
 			);
 		}
 
-		switch ($params['payed'] ?? '') {
-			case 'enterprise':
-				return $this->getEnterpriseOutput($responseBody, $action);
-			case 'free':
-				return $this->getFreeOutput($responseBody, $action);
+		if ($isEnterprise) {
+			return $this->getEnterpriseOutput($responseBody, $action);
+		} else {
+			return $this->getFreeOutput($responseBody, $action);
 		}
 	}
 
@@ -226,13 +165,11 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 		// If error status returns error.
 		if ($error) {
 			// Bailout on error.
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$error['message'] ?? '',
-					[
-						'response' => $responseBody,
-					]
-				)
+			return $this->getApiErrorOutput(
+				$error['message'] ?? '',
+				[
+					'response' => $responseBody,
+				]
 			);
 		}
 
@@ -258,13 +195,11 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 			$errorCode = $responseBody['error-codes'][0] ?? '';
 
 			// Bailout on error.
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel("captcha" . \ucfirst(Components::kebabToCamelCase($errorCode))),
-					[
-						'response' => $responseBody,
-					]
-				)
+			return $this->getApiErrorOutput(
+				$this->labels->getLabel("captcha" . \ucfirst(Components::kebabToCamelCase($errorCode))),
+				[
+					'response' => $responseBody,
+				]
 			);
 		}
 
@@ -285,13 +220,11 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 	{
 		// Bailout if action is not correct.
 		if ($actionResponse !== $action) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel('captchaWrongAction'),
-					[
-						'response' => $responseBody,
-					]
-				)
+			return $this->getApiErrorOutput(
+				$this->labels->getLabel('captchaWrongAction'),
+				[
+					'response' => $responseBody,
+				]
 			);
 		}
 
@@ -299,23 +232,19 @@ class FormSubmitCaptchaRoute extends AbstractBaseRoute
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					$this->labels->getLabel('captchaScoreSpam'),
-					[
-						'response' => $responseBody,
-					]
-				)
-			);
-		}
-
-		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
-				'',
+			return $this->getApiErrorOutput(
+				$this->labels->getLabel('captchaScoreSpam'),
 				[
 					'response' => $responseBody,
 				]
-			)
+			);
+		}
+
+		return $this->getApiSuccessOutput(
+			'',
+			[
+				'response' => $responseBody,
+			]
 		);
 	}
 }

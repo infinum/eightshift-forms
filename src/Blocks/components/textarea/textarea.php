@@ -15,9 +15,11 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $textareaName = Components::checkAttr('textareaName', $attributes, $manifest);
+if (!$textareaName) {
+	return;
+}
 $textareaValue = Components::checkAttr('textareaValue', $attributes, $manifest);
 $textareaPlaceholder = Components::checkAttr('textareaPlaceholder', $attributes, $manifest);
 $textareaIsDisabled = Components::checkAttr('textareaIsDisabled', $attributes, $manifest);
@@ -26,8 +28,12 @@ $textareaIsRequired = Components::checkAttr('textareaIsRequired', $attributes, $
 $textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
 $textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
 $textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
-$textareaSingleSubmit = Components::checkAttr('textareaSingleSubmit', $attributes, $manifest);
 $textareaSaveAsJson = Components::checkAttr('textareaSaveAsJson', $attributes, $manifest);
+$textareaTypeCustom = Components::checkAttr('textareaTypeCustom', $attributes, $manifest);
+$textareaFieldAttrs = Components::checkAttr('textareaFieldAttrs', $attributes, $manifest);
+$textareaSize = Components::checkAttr('textareaSize', $attributes, $manifest);
+$textareaLimitHeight = Components::checkAttr('textareaLimitHeight', $attributes, $manifest);
+$textareaIsPreventSubmit = Components::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
@@ -36,15 +42,17 @@ $textareaClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
-	Components::selector($textareaSingleSubmit, $componentJsSingleSubmitClass),
+	Components::selector($textareaSize, $componentClass, 'size', $textareaSize),
+	Components::selector($textareaLimitHeight, $componentClass, '', 'limit-height'),
 ]);
-
-if ($textareaTracking) {
-	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($textareaTracking);
-}
 
 if ($textareaSaveAsJson) {
 	$textareaAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['saveAsJson']] = esc_attr($textareaSaveAsJson);
+}
+
+// Set to use in settings for preventing field submit.
+if ($textareaIsPreventSubmit) {
+	$textareaFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldPreventSubmit']] = esc_attr($textareaIsPreventSubmit);
 }
 
 if ($textareaPlaceholder) {
@@ -81,10 +89,13 @@ echo Components::render(
 			'fieldName' => $textareaName,
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),
+			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTracking' => $textareaTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => $textareaFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

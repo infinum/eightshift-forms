@@ -55,7 +55,7 @@ use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
-use EightshiftForms\Validation\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
 
@@ -283,7 +283,6 @@ class Filters
 			'form' => [
 				'redirectionTimeout' => 'redirection_timeout',
 				'hideGlobalMsgTimeout' => 'hide_global_msg_timeout',
-				'hideLoadingStateTimeout' => 'hide_loading_state_timeout',
 				'successRedirectUrl' => 'success_redirect_url',
 				'successRedirectVariation' => 'success_redirect_variation',
 				'trackingEventName' => 'tracking_event_name',

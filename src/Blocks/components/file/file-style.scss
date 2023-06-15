@@ -81,10 +81,30 @@
 		}
 
 		.dz-success-mark,
-		.dz-error-message,
-		.dz-progress,
 		.dz-error-mark {
 			display: none;
+		}
+
+		.dz-progress {
+			margin-top: calc(var(--base-font-size) * 0.5rem);
+
+			span {
+				--dz-progress-scoped-height: 4px; // px because there can be multiple items at one point.
+				display: block;
+				width: 0;
+				background-color: var(--global-colors-es-matisse);
+				border-radius: var(--dz-progress-scoped-height);
+				height: var(--dz-progress-scoped-height);
+				transition: {
+					property: background-color, width;
+					timing-function: cubic-bezier(0.55, 0, 0.45, 1);
+					duration: 1s;
+				}
+
+				@include media(large up) { // stylelint-disable-line max-nesting-depth
+					--dz-progress-scoped-height: 6px;
+				}
+			}
 		}
 
 		&.dz-error {

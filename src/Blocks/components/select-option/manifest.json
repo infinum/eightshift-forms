@@ -11,6 +11,9 @@
 			"selectOptionIsDisabled": false
 		}
 	},
+	"components": {
+		"conditionalTags": "conditionalTags"
+	},
 	"attributes": {
 		"selectOptionLabel": {
 			"type": "string"

@@ -1,21 +1,16 @@
-/* global esFormsLocalization */
-
 import { Utils } from "../assets/utilities";
+import { State, ROUTES } from "../assets/state";
 
 export class Cache {
-	constructor(options) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor(options = {}) {
+		this.utils = new Utils();
+		this.state = new State();
 
 		this.selector = options.selector;
-
-		this.clearCacheRestUrl = options.clearCacheRestUrl;
 	}
 
 	init() {
-		const elements = document.querySelectorAll(this.selector);
-
-		[...elements].forEach((element) => {
+		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
 	}
@@ -24,11 +19,11 @@ export class Cache {
 	onClick = (event) => {
 		event.preventDefault();
 
-		const element = event.target;
+		const formId = this.state.getFormIdByElement(event.target);
 
 		const formData = new FormData();
 
-		formData.append('type', element.getAttribute('data-type'));
+		formData.append('type', event.target.getAttribute(this.state.getStateAttribute('cacheType')));
 
 		// Populate body data.
 		const body = {
@@ -36,7 +31,7 @@ export class Cache {
 			mode: 'same-origin',
 			headers: {
 				Accept: 'application/json',
-				'X-WP-Nonce': esFormsLocalization.nonce,
+				'X-WP-Nonce': this.state.getStateConfigNonce(),
 			},
 			body: formData,
 			credentials: 'same-origin',
@@ -44,21 +39,25 @@ export class Cache {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.clearCacheRestUrl, body)
+		fetch(this.state.getRestUrl(ROUTES.CACHE_CLEAR), body)
 			.then((response) => {
 				return response.json();
 			})
 			.then((response) => {
-				const formElement = element.closest(this.utils.formSelector);
-				this.utils.setGlobalMsg(formElement, response.message, response.status);
+				const {
+					message,
+					status,
+				} = response;
 
-				if (element.getAttribute('data-reload') === 'true') {
+				this.utils.setGlobalMsg(formId, message, status);
+
+				if (this.state.getStateFormElement(formId).getAttribute(this.state.getStateAttribute('reload')) === 'true') {
 					setTimeout(() => {
 						location.reload();
 					}, 1000);
 				} else {
 					setTimeout(() => {
-						this.utils.hideGlobalMsg(formElement);
+						this.utils.unsetGlobalMsg(formId);
 					}, 6000);
 				}
 			});

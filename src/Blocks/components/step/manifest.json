@@ -1,0 +1,30 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "step",
+	"title": "Step",
+	"componentClass": "es-step",
+	"componentJsClass": "js-es-block-step",
+	"componentJsTriggerClass": "js-es-block-step-trigger",
+	"attributes": {
+		"stepName": {
+			"type": "string"
+		},
+		"stepLabel": {
+			"type": "string",
+			"default": "Step - ???"
+		},
+		"stepContent": {
+			"type": "string"
+		},
+		"stepMultiflowPostId": {
+			"type": "string"
+		},
+		"stepMultiflowUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"stepMultiflowRules": {
+			"type": "array"
+		}
+	}
+}

@@ -14,18 +14,14 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
-use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
-use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
-use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
-use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
+use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Validation\SettingsCaptcha;
+use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -36,6 +32,11 @@ use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
  */
 class EnqueueBlocks extends AbstractEnqueueBlocks
 {
+	/**
+	 * Use shared helper trait.
+	 */
+	use SharedEnqueue;
+
 	/**
 	 * Use general helper trait.
 	 */
@@ -179,22 +180,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	{
 		parent::enqueueBlockFrontendScript();
 
-		$output = $this->getInlineScriptCommon();
+		$output = $this->getEnqueueSharedInlineCommonItems();
 
 		// Frontend part.
 		$hideGlobalMessageTimeout = Filters::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
 		$redirectionTimeout = Filters::getFilterName(['block', 'form', 'redirectionTimeout']);
-		$hideLoadingStateTimeout = Filters::getFilterName(['block', 'form', 'hideLoadingStateTimeout']);
-		$fileCustomRemoveLabel = Filters::getFilterName(['block', 'file', 'previewRemoveLabel']);
-
-		$output['restRoutes'] = [
-			'formSubmit' => AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,
-		];
+		$fileRemoveLabel = Filters::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
-		$output['hideLoadingStateTimeout'] = \apply_filters($hideLoadingStateTimeout, 600);
-		$output['fileCustomRemoveLabel'] = \apply_filters($fileCustomRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
+		$output['fileRemoveLabel'] = \apply_filters($fileRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
 		$output['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
@@ -215,24 +210,37 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 
 		// Enrichment config.
-		$output['enrichmentConfig'] = \wp_json_encode($this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['data']['config']);
-
-		$output['delimiter'] = AbstractBaseRoute::DELIMITER;
-		$output['captcha'] = [];
+		if (\apply_filters(SettingsEnrichment::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			$output['enrichment'] = \array_merge(
+				[
+					'isUsed' => true,
+				],
+				$this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['data']['config'] ?? [],
+			);
+		} else {
+			$output['enrichment'] = [
+				'isUsed' => false,
+			];
+		}
 
 		// Check if Captcha data is set and valid.
-		$isCaptchaSettingsGlobalValid = \apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-
-		if ($isCaptchaSettingsGlobalValid) {
+		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output['captcha'] = [
+				'isUsed' => true,
 				'isEnterprise' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
 				'siteKey' => !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
 				'submitAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				'initAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'loadOnInit' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY) ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'hideBadge' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY) ?: false, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				'loadOnInit' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+				'hideBadge' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+			];
+		} else {
+			$output['captcha'] = [
+				'isUsed' => false,
 			];
 		}
+
+		$output['isAdmin'] = false;
 
 		$output = \wp_json_encode($output);
 
@@ -253,7 +261,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		parent::enqueueBlockEditorScript();
 
-		$output = $this->getInlineScriptCommon();
+		$output = $this->getEnqueueSharedInlineCommonItems();
 
 		$additionalBlocksFilterName = Filters::getFilterName(['blocks', 'additionalBlocks']);
 		$formsStyleOptionsFilterName = Filters::getFilterName(['block', 'forms', 'styleOptions']);
@@ -292,40 +300,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['countryDataset'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 
-		$output['restRoutes'] = [
-			'countriesGeolocation' => GeolocationCountriesRoute::ROUTE_SLUG,
-			'integrationsItemsInner' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
-			'integrationsItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
-			'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
-			'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
-			'formFields' => FormFieldsRoute::ROUTE_SLUG,
-			'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
-		];
-
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');
 		$output['isDeveloperMode'] =  $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$output['isAdmin'] = true;
 
 		$output = \wp_json_encode($output);
 
 		\wp_add_inline_script($this->getBlockEditorScriptsHandle(), "const esFormsLocalization = {$output}", 'before');
-	}
-
-	/**
-	 * Get common inline scripts details for frontend and editor.
-	 *
-	 * @return array<string, string>
-	 */
-	private function getInlineScriptCommon(): array
-	{
-		$restRoutesPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
-		$restRoutesPrefix = \get_rest_url(\get_current_blog_id()) . $restRoutesPrefixProject;
-
-		return [
-			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
-			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
-			'restPrefixProject' => $restRoutesPrefixProject,
-			'restPrefix' => $restRoutesPrefix,
-		];
 	}
 }

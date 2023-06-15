@@ -610,6 +610,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Remove item if block is not present on integration, output nothing.
 		if (!$integration) {
+			// Skip removing step block because it doesn't exist on the integration.
+			if (isset($content['component']) && $content['component'] === Components::getBlock('step')['blockName']) {
+				$output['update'] = false;
+				$output['output'] = $content;
+				return $output;
+			}
+
 			$output['update'] = true;
 			$output['removed'] = $key;
 			return $output;

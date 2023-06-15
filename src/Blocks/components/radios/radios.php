@@ -11,9 +11,16 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
-$radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
+if (!$radiosName) {
+	return;
+}
+
+$radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
 $radiosIsRequired = Components::checkAttr('radiosIsRequired', $attributes, $manifest);
+$radiosTypeCustom = Components::checkAttr('radiosTypeCustom', $attributes, $manifest);
+$radiosFieldAttrs = Components::checkAttr('radiosFieldAttrs', $attributes, $manifest);
+$radiosTracking = Components::checkAttr('radiosTracking', $attributes, $manifest);
 
 // Add internal counter name key.
 $radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
@@ -48,10 +55,13 @@ echo Components::render(
 			'fieldName' => $radiosName,
 			'fieldIsRequired' => $radiosIsRequired,
 			'fieldId' => $radiosName,
+			'fieldTracking' => $radiosTracking,
+			'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
 			),
+			'fieldAttrs' => $radiosFieldAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

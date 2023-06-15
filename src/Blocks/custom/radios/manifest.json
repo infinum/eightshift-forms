@@ -32,13 +32,15 @@
 		[
 			"eightshift-forms/radio",
 			{
-				"radioRadioLabel": "Radio 1"
+				"radioRadioLabel": "Radio 1",
+				"radioRadioValue": "radio-1"
 			}
 		],
 		[
 			"eightshift-forms/radio",
 			{
-				"radioRadioLabel": "Radio 2"
+				"radioRadioLabel": "Radio 2",
+				"radioRadioValue": "radio-2"
 			}
 		]
 	]

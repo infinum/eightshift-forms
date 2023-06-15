@@ -271,13 +271,13 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'radiosName' => $name,
 						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => (bool) $isRequired,
+						'radiosTracking' => $name,
 						'radiosContent' => \array_map(
-							function ($radio) use ($name) {
+							function ($radio) {
 								return [
 									'component' => 'radio',
 									'radioLabel' => $radio,
 									'radioValue' => $radio,
-									'radioTracking' => $name,
 									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
 										'radioValue',
 									], false),
@@ -429,15 +429,15 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'component' => 'radios',
 						'radiosFieldLabel' => \__('Tags', 'eightshift-forms'),
 						'radiosName' => $customTagParamName,
+						'radiosTracking' => $customTagParamName,
 						'radiosContent' => \array_map(
-							function ($option) use ($customTagParamName) {
+							function ($option) {
 								$name = $option['name'] ?? '';
 
 								return [
 									'component' => 'radio',
 									'radioLabel' => $name,
 									'radioValue' => $name,
-									'radioTracking' => $customTagParamName,
 									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
 										'radioValue',
 									], false),

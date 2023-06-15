@@ -54,6 +54,13 @@ class HubspotClient implements HubspotClientInterface
 	public const HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY = 'esforms';
 
 	/**
+	 * Consent constants.
+	 */
+	public const HUBSPOT_CONSENT_COMMUNICATION = 'communication';
+	public const HUBSPOT_CONSENT_PROCESSING = 'processing';
+	public const HUBSPOT_CONSENT_LEGITIMATE = 'legitimateInterest';
+
+	/**
 	 * Instance variable of enrichment data.
 	 *
 	 * @var EnrichmentInterface
@@ -95,13 +102,6 @@ class HubspotClient implements HubspotClientInterface
 
 					$fields = $item['formFieldGroups'] ?? [];
 
-					// Find and populate consent data.
-					$consentData = $this->getConsentData($item);
-
-					if ($consentData) {
-						$fields = \array_merge($fields, $consentData);
-					}
-
 					$portalId = $item['portalId'] ?? '';
 					$delimiter = AbstractBaseRoute::DELIMITER;
 					$value = "{$id}{$delimiter}{$portalId}";
@@ -111,6 +111,7 @@ class HubspotClient implements HubspotClientInterface
 						'title' => $item['name'] ?? '',
 						'fields' => $fields,
 						'submitButtonText' => $item['submitText'] ?? '',
+						'consent' => $this->getConsentData($item),
 					];
 				}
 
@@ -200,17 +201,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$itemId = \explode(AbstractBaseRoute::DELIMITER, $itemId);
-
-		$consent = \array_filter(
-			$params,
-			static function ($item) {
-				$name = $item['name'] ?? '';
-				return \strpos($name, 'CONSENT_') === 0;
-			}
-		);
-
-		$outputConsent = [];
+		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
 
 		$body = [
 			'context' => [
@@ -221,33 +212,9 @@ class HubspotClient implements HubspotClientInterface
 			],
 		];
 
-		if ($consent) {
-			$outputConsent = [];
-
-			foreach ($consent as $key => $value) {
-				$name = \explode('.', $value['name']);
-				$type = $name[0];
-				$id = $name[1] ?? '';
-
-				if ($type === 'CONSENT_PROCESSING' && $value['value']) {
-					$outputConsent['consentToProcess'] = true;
-					$outputConsent['text'] = $value['value'];
-				}
-
-				if ($type === 'CONSENT_COMMUNICATION' && $value['value']) {
-					$outputConsent['communications'][] = [
-						'value' => true,
-						'subscriptionTypeId' => $id,
-						'text' => $value['value'],
-					];
-				}
-
-				unset($params[$key]);
-			}
-
-			if ($outputConsent) {
-				$body['legalConsentOptions']['consent'] = $outputConsent;
-			}
+		$paramsConsent = $this->prepareConsent($params, $itemId);
+		if ($paramsConsent) {
+			$body['legalConsentOptions'] = $paramsConsent;
 		}
 
 		$paramsPrepared = $this->prepareParams($params);
@@ -258,7 +225,7 @@ class HubspotClient implements HubspotClientInterface
 			$paramsFiles
 		);
 
-		$url = $this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemId[1]}/{$itemId[0]}");
+		$url = $this->getBaseUrl("submissions/v3/integration/secure/submit/{$itemIdExploded[1]}/{$itemIdExploded[0]}");
 
 		$response = \wp_remote_post(
 			$url,
@@ -275,7 +242,7 @@ class HubspotClient implements HubspotClientInterface
 			$url,
 			$paramsPrepared,
 			$paramsFiles,
-			\implode(AbstractBaseRoute::DELIMITER, $itemId),
+			$itemId,
 			$formId
 		);
 
@@ -365,23 +332,13 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Get post file media sent to HubSpot file manager.
 	 *
-	 * @param array<string> $file File to send.
+	 * @param string $file File to send.
 	 * @param string $formId FormId value.
 	 *
 	 * @return string
 	 */
-	private function postFileMedia(array $file, string $formId): string
+	private function postFileMedia(string $file, string $formId): string
 	{
-		if (!$file) {
-			return '';
-		}
-
-		$path = $file['path'] ?? '';
-
-		if (!$path) {
-			return '';
-		}
-
 		$folder = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
 
 		if (!$folder) {
@@ -403,7 +360,7 @@ class HubspotClient implements HubspotClientInterface
 
 		$postData = \array_merge(
 			[
-				'file' => new CURLFile($path, 'application/octet-stream'),
+				'file' => new CURLFile($file, 'application/octet-stream'),
 			],
 			$options
 		);
@@ -647,90 +604,118 @@ class HubspotClient implements HubspotClientInterface
 	 *
 	 * @param array<string, mixed> $item Form data got from the api.
 	 *
-	 * @return array<int, array<string, array<int, array<string, mixed>>>>
+	 * @return array<string, array<string, mixed>>
 	 */
 	private function getConsentData(array $item): array
 	{
-		$output = [];
 
 		// Find consent data from meta.
-		$consentData = \array_filter(
+		$consentData = \array_values(\array_filter(
 			$item['metaData'],
 			static function ($item) {
 				return $item['name'] === 'legalConsentOptions';
 			}
-		);
+		));
 
 		// Check for consent data.
-		if ($consentData) {
-			$consentData = \array_values($consentData);
+		if (!$consentData) {
+			return [];
+		}
 
-			// Decode consent data.
-			$consentOptions = \json_decode($consentData[0]['value'], true);
+		$output = [];
 
-			$isLegitimateInterest = $consentOptions['isLegitimateInterest'] ?? false;
-			$privacyPolicyText = $consentOptions['privacyPolicyText'] ?? '';
-			$communicationConsentCheckboxes = $consentOptions['communicationConsentCheckboxes'] ?? '';
-			$communicationConsentText = $consentOptions['communicationConsentText'] ?? '';
-			$processingConsentCheckboxLabel = $consentOptions['processingConsentCheckboxLabel'] ?? '';
-			$processingConsentType = $consentOptions['processingConsentType'] ?? '';
-			$processingConsentText = $consentOptions['processingConsentText'] ?? '';
+		$consentData = \json_decode($consentData[0]['value'], true);
 
-			if (!$isLegitimateInterest) {
-				// Populate checkbox for communication consent.
-				$consentCommunicationOptions = [];
-				$communicationTypeId = '';
+		$output[self::HUBSPOT_CONSENT_COMMUNICATION] = [
+			'items' => \array_map(
+				static function ($item) {
+					return [
+						'id' => (string) $item['communicationTypeId'],
+						'label' => $item['label'],
+						'isRequired' => $item['required'],
+					];
+				},
+				$consentData['communicationConsentCheckboxes']
+			),
+			'text' => $consentData['communicationConsentText'],
+			'isHidden' => $consentData['processingConsentType'] === 'IMPLICIT' && $consentData['isLegitimateInterest'],
+		];
 
-				foreach ($communicationConsentCheckboxes as $key => $value) {
-					$communicationTypeId = $value['communicationTypeId'] ?? '';
-					$consentCommunicationOptions[] = [
-						'label' => $value['label'] ?? '',
-						'required' => $value['required'] ?? false,
+		$output[self::HUBSPOT_CONSENT_PROCESSING] = [
+			'type' => $consentData['processingConsentType'],
+			'text' => $consentData['processingConsentText'],
+			'label' => $consentData['processingConsentCheckboxLabel'],
+			'isHidden' => ($consentData['processingConsentType'] === 'IMPLICIT' && $consentData['isLegitimateInterest']) || ($consentData['processingConsentType'] === 'IMPLICIT' && !$consentData['isLegitimateInterest']),
+		];
+
+		$output[self::HUBSPOT_CONSENT_LEGITIMATE] = [
+			'typeId' => $consentData['legitimateInterestSubscriptionTypes'][0] ?? '',
+			'basis' => 'CUSTOMER',
+			'isActive' => !!$consentData['isLegitimateInterest'],
+			'text' => $consentData['privacyPolicyText'],
+			'isHidden' => true,
+		];
+
+		return $output;
+	}
+
+	/**
+	 * Prepare params
+	 *
+	 * @param array<string, mixed> $params Params.
+	 * @param string $itemId ItemID.
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function prepareConsent(array $params, string $itemId): array
+	{
+		$output = [];
+
+		$data = $this->getItem($itemId)['consent'] ?? [];
+
+		if (!$data) {
+			return $output;
+		}
+
+		$communicationOutput = [];
+
+		foreach ($params as $param) {
+			$typeCustom = $param['typeCustom'] ?? '';
+			$value = $param['value'] ?? '';
+			$name = $param['name'] ? \explode(AbstractBaseRoute::DELIMITER, $param['name']) : [];
+
+			if ($data[self::HUBSPOT_CONSENT_LEGITIMATE]['isActive']) {
+				$output['legitimateInterest'] = [
+					'value' => true,
+					'subscriptionTypeId' => $data[self::HUBSPOT_CONSENT_LEGITIMATE]['typeId'],
+					'legalBasis' => $data[self::HUBSPOT_CONSENT_LEGITIMATE]['basis'],
+					'text' => $data[self::HUBSPOT_CONSENT_LEGITIMATE]['text'],
+				];
+			} else {
+				if ($typeCustom === self::HUBSPOT_CONSENT_PROCESSING) {
+					$output['consent'] = [
+						'consentToProcess' => !!$value,
+						'text' => $value,
 					];
 				}
 
-				$output[]['fields'][0] = [
-					'name' => "CONSENT_COMMUNICATION.{$communicationTypeId}",
-					'id' => "CONSENT_COMMUNICATION.{$communicationTypeId}",
-					'options' => $consentCommunicationOptions,
-					'fieldType' => 'consent',
-					'beforeText' => $communicationConsentText,
-				];
-
-				// Populate checkbox for processing consent.
-				if ($processingConsentCheckboxLabel) {
-					$consentProcessingOptions = [];
-
-					if ($processingConsentType === 'REQUIRED_CHECKBOX') {
-						$consentProcessingOptions = [
-							[
-								'label' => \wp_strip_all_tags($processingConsentCheckboxLabel),
-								'required' => true,
-								'communicationTypeId' => '', // Empty on purpose.
-							]
-						];
-					}
-
-					$output[]['fields'][0] = [
-						'name' => "CONSENT_PROCESSING",
-						'id' => "CONSENT_PROCESSING",
-						'options' => $consentProcessingOptions,
-						'fieldType' => 'consent',
-						'beforeText' => $processingConsentText,
+				if ($typeCustom === self::HUBSPOT_CONSENT_COMMUNICATION) {
+					$communicationOutput[] = [
+						'value' => !!$value,
+						'subscriptionTypeId' => \end($name),
+						'text' => \array_values(\array_filter(
+							$data[self::HUBSPOT_CONSENT_COMMUNICATION]['items'],
+							static function ($item) use ($name) {
+								return $item['id'] === \end($name);
+							}
+						))[0]['label'],
 					];
 				}
 			}
+		}
 
-			// Populate checbox for legal text.
-			if ($privacyPolicyText) {
-				$consentLegal['fields'][0] = [
-					'options' => [],
-					'fieldType' => 'consent',
-					'beforeText' => $privacyPolicyText,
-				];
-
-				$output[] = $consentLegal;
-			}
+		if ($communicationOutput) {
+			$output['consent']['communications'] = $communicationOutput;
 		}
 
 		return $output;
@@ -759,6 +744,17 @@ class HubspotClient implements HubspotClientInterface
 		}
 
 		foreach ($params as $param) {
+			$typeCustom = $param['typeCustom'] ?? '';
+
+			// Remove consent data.
+			if (
+				$typeCustom === self::HUBSPOT_CONSENT_COMMUNICATION ||
+				$typeCustom === self::HUBSPOT_CONSENT_LEGITIMATE ||
+				$typeCustom === self::HUBSPOT_CONSENT_PROCESSING
+			) {
+				continue;
+			}
+
 			$type = $param['type'] ?? '';
 
 			$value = $param['value'] ?? '';
@@ -787,7 +783,7 @@ class HubspotClient implements HubspotClientInterface
 			$output[] = [
 				'name' => $name,
 				'value' => $value,
-				'objectTypeId' => $param['objectTypeId'] ?? '',
+				'objectTypeId' => $param['custom'] ?? '',
 			];
 		}
 
@@ -806,18 +802,14 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$output = [];
 
-		if (!$files) {
-			return [];
-		}
-
 		foreach ($files as $items) {
 			if (!$items) {
 				continue;
 			}
 
-			foreach ($items as $file) {
-				$id = $file['id'] ?? '';
+			$name = $items['name'] ?? '';
 
+			foreach ($items['value'] as $file) {
 				$fileUrl = $this->postFileMedia($file, $formId);
 
 				if (!$fileUrl) {
@@ -825,8 +817,9 @@ class HubspotClient implements HubspotClientInterface
 				}
 
 				$output[] = [
-					'name' => $id,
+					'name' => $name,
 					'value' => $fileUrl,
+					'objectTypeId' => $items['custom'] ?? '',
 				];
 			}
 		}

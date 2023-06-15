@@ -27,7 +27,7 @@ export const FormSelectorEditor = ({
 					label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'productive')}</span>}
 					className='es-max-w-108 es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
 				>
-					<h4 className='es-mb-0! es-mx-0! es-mt-1! es-text-5 es-font-weight-500 es-color-pure-black'>{__('Create a form', 'productive')}</h4>
+					<h4 className='es-mb-0! es-mx-0! es-mt-1! es-text-5 es-font-weight-500 es-color-pure-black'>{__('What type is your new form?', 'productive')}</h4>
 					<div className='es-h-spaced-wrap es-gap-2!'>
 						{forms.map((form, index) => {
 							const { label, slug } = form;

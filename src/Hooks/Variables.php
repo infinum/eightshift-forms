@@ -248,26 +248,6 @@ class Variables
 	}
 
 	/**
-	 * Get API username for Moments.
-	 *
-	 * @return string
-	 */
-	public static function getApiUsernameMoments(): string
-	{
-		return \defined('ES_API_USERNAME_MOMENTS') ? \ES_API_USERNAME_MOMENTS : '';
-	}
-
-	/**
-	 * Get API password for Moments.
-	 *
-	 * @return string
-	 */
-	public static function getApiPasswordMoments(): string
-	{
-		return \defined('ES_API_PASSWORD_MOMENTS') ? \ES_API_PASSWORD_MOMENTS : '';
-	}
-
-	/**
 	 * Get API Key for Workable.
 	 *
 	 * @return string

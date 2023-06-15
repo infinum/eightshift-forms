@@ -13,7 +13,8 @@
 	"example": {
 	},
 	"components": {
-		"form": "form"
+		"form": "form",
+		"step": "step"
 	},
 	"hasInnerBlocks": true,
 	"attributes": {

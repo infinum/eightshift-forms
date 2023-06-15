@@ -8,13 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$checkboxesName = $attributes['checkboxesCheckboxesName'] ?? '';
-$props = [];
-
-if (empty($checkboxesName)) {
-	$props['checkboxesName'] = Components::getUnique();
-}
-
 $props['checkboxesContent'] = $innerBlockContent;
 
 echo Components::render(

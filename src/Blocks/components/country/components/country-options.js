@@ -1,5 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
 import { TextControl, PanelBody } from '@wordpress/components';
 import {
 	icons,
@@ -13,13 +14,15 @@ import {
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, NameFieldLabel } from '../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CountryOptions = (attributes) => {
 	const {
 		setAttributes,
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const countryName = checkAttr('countryName', attributes, manifest);
 	const countryIsDisabled = checkAttr('countryIsDisabled', attributes, manifest);
@@ -36,9 +39,13 @@ export const CountryOptions = (attributes) => {
 						label={<NameFieldLabel value={countryName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={countryName}
-						onChange={(value) => setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('countryName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}
 					/>
+					<NameChangeWarning isChanged={isNameChanged} />
 				</Section>
 
 				<FieldOptions
@@ -91,7 +98,7 @@ export const CountryOptions = (attributes) => {
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: countryName,
+					conditionalTagsBlockName: countryName,
 				})}
 			/>
 		</>

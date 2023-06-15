@@ -60,12 +60,18 @@
 		"phoneAttrs": {
 			"type": "object"
 		},
+		"phoneFieldAttrs": {
+			"type": "object"
+		},
 		"phoneDisabledOptions": {
 			"type": "array"
 		},
 		"phoneUseSearch": {
 			"type": "boolean",
 			"default": true
+		},
+		"phoneTypeCustom": {
+			"type": "string"
 		}
 	}
 }

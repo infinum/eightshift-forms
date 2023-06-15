@@ -1,58 +1,51 @@
-/* global esFormsLocalization */
-
 import { Utils } from "../assets/utilities";
+import { State, ROUTES } from "../assets/state";
 
 export class Transfer {
-	constructor(options) {
-		/** @type Utils */
-		this.utils = options.utils ?? new Utils();
+	constructor(options = {}) {
+		this.utils = new Utils();
+		this.state = new State();
 
 		this.selector = options.selector;
 		this.itemSelector = options.itemSelector;
 		this.uploadSelector = options.uploadSelector;
 		this.overrideExistingSelector = options.overrideExistingSelector;
 		this.uploadConfirmMsg = options.uploadConfirmMsg;
-
-		this.transferRestUrl = options.transferRestUrl;
 	}
 
 	init () {
-		const elements = document.querySelectorAll(this.selector);
+		[...document.querySelectorAll(this.selector)].forEach((element) => {
+			element.addEventListener('click', this.onClick, true);
+		});
 
-		if (elements.length) {
-			[...elements].forEach((element) => {
-				element.addEventListener('click', this.onClick, true);
-			});
-		}
-
-		const items = document.querySelectorAll(`${this.itemSelector} input`);
-			if (items.length) {
-			[...items].forEach((element) => {
-				element.addEventListener('click', this.onClickItem, true);
-			});
-		}
+		[...document.querySelectorAll(`${this.itemSelector} input`)].forEach((element) => {
+			element.addEventListener('click', this.onClickItem, true);
+		});
 	}
 
 	// Handle form submit and all logic.
 	onClick = (event) => {
 		event.preventDefault();
 
-		const element = event.target;
-		const type = element.getAttribute('data-type');
+		const item = event.target;
+		const formId = this.state.getFormIdByElement(item);
+		const type = item.getAttribute(this.state.getStateAttribute('migrationType'));
 
 		const formData = new FormData();
 
 		formData.append('type', type);
-		formData.append('items', element.getAttribute('data-items'));
 
 		if (type === 'import') {
-			const upload = document.querySelector(this.uploadSelector);
-			formData.append('upload', upload.files[0]);
+			const { name } = document.querySelector(this.uploadSelector);
 
-			const existing = document.querySelector(`${this.overrideExistingSelector} input`);
-			formData.append('override', existing.checked);
+			const file = this.state.getStateElementCustom(name, formId)?.files?.[0];
+
+			formData.append('upload', this.utils.getFileNameFromFileObject(file));
+			formData.append('override', document.querySelector(`${this.overrideExistingSelector} input`).checked);
 
 			confirm(this.uploadConfirmMsg);
+		} else {
+			formData.append('items', item.getAttribute(this.state.getStateAttribute('migrationExportItems')));
 		}
 
 		// Populate body data.
@@ -61,7 +54,7 @@ export class Transfer {
 			mode: 'same-origin',
 			headers: {
 				Accept: 'multipart/form-data',
-				'X-WP-Nonce': esFormsLocalization.nonce,
+				'X-WP-Nonce': this.state.getStateConfigNonce(),
 			},
 			body: formData,
 			credentials: 'same-origin',
@@ -69,43 +62,47 @@ export class Transfer {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.transferRestUrl, body)
+		fetch(this.state.getRestUrl(ROUTES.TRANSFER), body)
 			.then((response) => {
 				return response.json();
 			})
 			.then((response) => {
-				const formElement = element.closest(this.utils.formSelector);
+				const {
+					message,
+					status,
+					data,
+				} = response;
 
-				this.utils.setGlobalMsg(formElement, response.message, response.status);
+				this.utils.setGlobalMsg(formId, message, status);
 
-				if (response.code >= 200 && response.code <= 299) {
-
+				if (status === 'success') {
 					if (type === 'import') {
 						setTimeout(() => {
 							location.reload();
 						}, 1000);
 					} else {
-						this.createFile(response.data.content, response.data.name);
+						this.createFile(data.content, data.name);
 					}
 				}
 
 				setTimeout(() => {
-					this.utils.hideGlobalMsg(formElement);
+					this.utils.unsetGlobalMsg(formId);
 				}, 6000);
 			});
 	};
 
 	onClickItem = (event) => {
-		const element = event.target;
-
-		const button = document.querySelector(`${this.selector}[data-type='export-forms']`);
-		const items = button.getAttribute('data-items');
+		const button = document.querySelector(`${this.selector}[${this.state.getStateAttribute('migrationType')}='export-forms']`);
+		const items = button.getAttribute(this.state.getStateAttribute('migrationExportItems'));
 
 		let output = items ? items.split(",") : [];
 
-		const {value} = element;
+		const {
+			value,
+			checked,
+		} = event.target;
 
-		if (element.checked) {
+		if (checked) {
 			output.push(value);
 		} else {
 			output = output.filter((item) => item !== value);
@@ -113,7 +110,7 @@ export class Transfer {
 
 		button.disabled = !output.length;
 
-		button.setAttribute('data-items', output);
+		button.setAttribute(this.state.getStateAttribute('migrationExportItems'), output);
 	};
 
 	createFile(data, exportName) {

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
+use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
@@ -25,7 +26,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '-custom/';
+	public const ROUTE_SLUG = 'custom';
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -49,20 +50,30 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	protected $labels;
 
 	/**
+	 * Instance variable of CaptchaInterface data.
+	 *
+	 * @var CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
+	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
-		LabelsInterface $labels
+		LabelsInterface $labels,
+		CaptchaInterface $captcha
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
+		$this->captcha = $captcha;
 	}
 
 	/**
@@ -72,7 +83,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return self::ROUTE_SLUG;
+		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -106,18 +117,28 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Returns captcha class.
+	 *
+	 * @return CaptchaInterface
+	 */
+	protected function getCaptcha()
+	{
+		return $this->captcha;
+	}
+
+	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataRefrerence Form refference got from abstract helper.
+	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataRefrerence)
+	protected function submitAction(array $formDataReference)
 	{
-		$formId = $formDataRefrerence['formId'];
-		$params = $formDataRefrerence['params'];
-		$action = $formDataRefrerence['action'];
-		$actionExternal = $formDataRefrerence['actionExternal'];
+		$formId = $formDataReference['formId'];
+		$params = $formDataReference['params'];
+		$action = $formDataReference['action'];
+		$actionExternal = $formDataReference['actionExternal'];
 
 		// If form action is not set or empty.
 		if (!$action) {
@@ -138,9 +159,6 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 				)
 			);
 		}
-
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
 
 		// Prepare params for output.
 		$params = Helper::prepareGenericParamsOutput($params);

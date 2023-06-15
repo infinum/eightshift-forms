@@ -2,12 +2,23 @@
 
 import React from 'react';
 import { isArray } from 'lodash';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, props, Section, Select, IconToggle } from '@eightshift/frontend-libs/scripts';
+import {
+	icons,
+	checkAttr,
+	getAttrKey,
+	IconLabel,
+	props,
+	Section,
+	Select,
+	IconToggle,
+	getOption,
+} from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import { isOptionDisabled, NameFieldLabel } from '../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
 
@@ -16,6 +27,8 @@ export const DateOptions = (attributes) => {
 		setAttributes,
 		title = __('Date', 'eightshift-forms'),
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const dateName = checkAttr('dateName', attributes, manifest);
 	const dateValue = checkAttr('dateValue', attributes, manifest);
@@ -26,6 +39,7 @@ export const DateOptions = (attributes) => {
 	const dateTracking = checkAttr('dateTracking', attributes, manifest);
 	const dateValidationPattern = checkAttr('dateValidationPattern', attributes, manifest);
 	const dateDisabledOptions = checkAttr('dateDisabledOptions', attributes, manifest);
+	const dateType = checkAttr('dateType', attributes, manifest);
 
 	let dateValidationPatternOptions = [];
 
@@ -41,8 +55,25 @@ export const DateOptions = (attributes) => {
 						label={<NameFieldLabel value={dateName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={dateName}
-						onChange={(value) => setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('dateName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('dateName', attributes, manifest), dateDisabledOptions)}
+					/>
+					<NameChangeWarning isChanged={isNameChanged} />
+
+					<Select
+						icon={icons.optionListAlt}
+						label={__('Type', 'eightshift-forms')}
+						value={dateType}
+						options={getOption('dateType', attributes, manifest)}
+						disabled={isOptionDisabled(getAttrKey('dateType', attributes, manifest), dateDisabledOptions)}
+						onChange={(value) => setAttributes({ [getAttrKey('dateType', attributes, manifest)]: value })}
+						additionalSelectClasses='es-w-32'
+						simpleValue
+						inlineLabel
+						noSearch
 					/>
 
 					<TextControl
@@ -125,7 +156,7 @@ export const DateOptions = (attributes) => {
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: dateName,
+					conditionalTagsBlockName: dateName,
 				})}
 			/>
 		</>

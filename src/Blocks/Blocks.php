@@ -33,20 +33,6 @@ class Blocks extends AbstractBlocks
 	public const BLOCKS_UNIQUE_STRING_FILTER_NAME = 'es_blocks_unique_string';
 
 	/**
-	 * Blocks string to value filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCKS_STRING_TO_VALUE_FILTER_NAME = 'es_blocks_string_to_filter';
-
-	/**
-	 * Blocks option checkbox is checked name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME = 'es_blocks_options_checkbox_is_checked_filter';
-
-	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -62,12 +48,6 @@ class Blocks extends AbstractBlocks
 
 		// Create new custom category for custom blocks.
 		\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
-
-		// Blocks string to value filter name constant.
-		\add_filter(static::BLOCKS_STRING_TO_VALUE_FILTER_NAME, [$this, 'getStringToValue']);
-
-		// Blocks option checkbox is checked name constant.
-		\add_filter(static::BLOCKS_OPTION_CHECKBOX_IS_CHECKED_FILTER_NAME, [$this, 'isCheckboxOptionChecked'], 10, 2);
 	}
 
 	/**
@@ -94,22 +74,5 @@ class Blocks extends AbstractBlocks
 				],
 			]
 		);
-	}
-
-	/**
-	 * Convert string to value.
-	 * Remove unecesery spaces, underscores or special chars.
-	 *
-	 * @param string $string String to convert.
-	 *
-	 * @return string
-	 */
-	public function getStringToValue(string $string): string
-	{
-		$string = \strtolower($string);
-		$string = \str_replace(' ', '-', $string);
-		$string = \str_replace('_', '-', $string);
-
-		return \preg_replace('/[^A-Za-z0-9\-]/', '', $string) ?? '';
 	}
 }

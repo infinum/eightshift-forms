@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import {
@@ -19,7 +20,7 @@ import {
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import manifest from '../manifest.json';
-import { isOptionDisabled, NameFieldLabel } from './../../utils';
+import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const TextareaOptions = (attributes) => {
@@ -33,6 +34,8 @@ export const TextareaOptions = (attributes) => {
 		showTextareaMinLength = true,
 		showTextareaMaxLength = true,
 	} = attributes;
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const textareaName = checkAttr('textareaName', attributes, manifest);
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
@@ -60,9 +63,14 @@ export const TextareaOptions = (attributes) => {
 						label={<NameFieldLabel value={textareaName} />}
 						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
 						value={textareaName}
-						onChange={(value) => setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value });
+						}}
 						disabled={isOptionDisabled(getAttrKey('textareaName', attributes, manifest), textareaDisabledOptions)}
 					/>
+
+					<NameChangeWarning isChanged={isNameChanged} />
 
 					<TextControl
 						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
@@ -207,7 +215,7 @@ export const TextareaOptions = (attributes) => {
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
-					conditionalTagsParentName: textareaName,
+					conditionalTagsBlockName: textareaName,
 				})}
 			/>
 		</>
