@@ -65,7 +65,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				/>
 
 				<div className='es-font-weight-700 es-mt-5'>
-					{__('Set fields exception rules', 'eightshift-forms')}
+					{__('Set field exception rules', 'eightshift-forms')}
 				</div>
 
 				<div className='es-mb-2'>{sprintf(__('%s "%s" field if:', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS[conditionalTagsRules[0]], conditionalTagsBlockName)}</div>
