@@ -342,7 +342,7 @@ class MomentsClient implements ClientInterface
 			'Content-Type' => 'application/json',
 			'Accept' => 'application/json',
 			'Authorization' => "App {$this->getApiKey()}",
-		];;
+		];
 	}
 
 	/**
