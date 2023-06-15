@@ -237,11 +237,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					onChange={(value) => {
 						setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: value });
 
-						if (!value) {
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
-						} else {
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [CONDITIONAL_TAGS_ACTIONS.HIDE, []]});
-						}
+							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: !value ? undefined : [CONDITIONAL_TAGS_ACTIONS.HIDE, []]});
 					}}
 					noBottomSpacing={!conditionalTagsUse}
 					additionalClasses='es-font-weight-500'
