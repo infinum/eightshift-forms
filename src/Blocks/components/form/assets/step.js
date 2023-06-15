@@ -86,7 +86,7 @@ export class Steps {
 
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
-			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`).closest(this.state.getStateSelectorsField()).classList.add(this.state.getStateSelectorsClassHidden());
+			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`).closest(this.state.getStateSelectorsField())?.classList?.add(this.state.getStateSelectorsClassHidden());
 		}
 
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToNextStep());
@@ -149,7 +149,7 @@ export class Steps {
 
 		this.setChangeStep(formId, firstStep, []);
 
-		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`).closest(this.state.getStateSelectorsField()).classList.add(this.state.getStateSelectorsClassHidden());
+		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`).closest(this.state.getStateSelectorsField())?.classList?.add(this.state.getStateSelectorsClassHidden());
 	}
 
 	/**
@@ -168,8 +168,8 @@ export class Steps {
 
 		const currentStep = this.state.getStateFormStepsCurrent(formId);
 
-		this.state.getStateFormStepsElement(currentStep, formId).classList.remove(this.state.getStateSelectorsClassActive());
-		this.state.getStateFormStepsElement(nextStep, formId).classList.add(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormStepsElement(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormStepsElement(nextStep, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
 
 		this.state.setStateFormStepsCurrent(nextStep, formId);
 		this.state.setStateFormStepsFlow(flow, formId);

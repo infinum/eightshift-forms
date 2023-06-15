@@ -1086,14 +1086,14 @@ export class Form {
 			// On add one file add selectors for UX.
 			dropzone.on("addedfile", (file) => {
 				setTimeout(() => {
-					file.previewTemplate.classList.add(this.state.getStateSelectorsClassActive());
+					file?.previewTemplate?.classList?.add(this.state.getStateSelectorsClassActive());
 				}, 200);
 
 				setTimeout(() => {
-					file.previewTemplate.classList.add(this.state.getStateSelectorsClassFilled());
+					file?.previewTemplate?.classList?.add(this.state.getStateSelectorsClassFilled());
 				}, 1200);
 
-				field.classList.remove(this.state.getStateSelectorsClassActive());
+				field?.classList?.remove(this.state.getStateSelectorsClassActive());
 
 				this.state.setStateElementValue(name, 'true', formId);
 
@@ -1105,10 +1105,10 @@ export class Form {
 				const custom = this.state.getStateElementCustom(name, formId);
 
 				if (custom.files.length === 0) {
-					field.classList.remove(this.state.getStateSelectorsClassFilled());
+					field?.classList?.remove(this.state.getStateSelectorsClassFilled());
 				}
 
-				field.classList.remove(this.state.getStateSelectorsClassActive());
+				field?.classList?.remove(this.state.getStateSelectorsClassActive());
 				this.state.setStateElementValue(name, '', formId);
 			});
 
@@ -1155,7 +1155,7 @@ export class Form {
 					}, 2500);
 				}
 
-				field.classList.add(this.state.getStateSelectorsClassFilled());
+				field?.classList?.add(this.state.getStateSelectorsClassFilled());
 			});
 
 			// On max file size reached output error and remove files.
@@ -1261,7 +1261,7 @@ export class Form {
 			// Steps flow.
 			let direction = button.getAttribute(this.state.getStateAttribute('submitStepDirection'));
 
-			if (field.classList.contains(this.state.getStateSelectorsClassHidden())) {
+			if (field?.classList?.contains(this.state.getStateSelectorsClassHidden())) {
 				direction = this.steps.STEP_DIRECTION_NEXT;
 			}
 
@@ -1331,7 +1331,7 @@ export class Form {
 
 		this.state.getStateElementCustom(field.getAttribute(this.state.getStateAttribute('fieldName')), this.state.getFormIdByElement(event.target)).hiddenFileInput.click();
 
-		field.classList.add(this.state.getStateSelectorsClassActive());
+		field?.classList?.add(this.state.getStateSelectorsClassActive());
 	};
 
 	/**

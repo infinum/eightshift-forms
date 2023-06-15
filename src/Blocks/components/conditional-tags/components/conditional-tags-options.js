@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { isEmpty } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
@@ -36,12 +35,6 @@ export const ConditionalTagsOptions = (attributes) => {
 	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
 	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
 	const conditionalTagsBlockName = checkAttr('conditionalTagsBlockName', attributes, manifest);
-
-	// Reset old conditional tags to new one, object based.
-	if (isEmpty(conditionalTagsRules)) {
-		setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: false });
-		setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: undefined });
-	}
 
 	const ConditionalTagsType = () => {
 		if (!formFields) {

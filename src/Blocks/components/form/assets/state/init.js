@@ -475,7 +475,7 @@ export function setStateFormInitial(formId) {
 		setState([StateEnum.ELEMENTS, name, StateEnum.NAME], name, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.FIELD], field, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.ERROR], field?.querySelector(getState([StateEnum.SELECTORS_ERROR], StateEnum.SELECTORS)), formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], item.classList.contains(getState([StateEnum.SELECTORS_SUBMIT_SINGLE], StateEnum.SELECTORS).substring(1)), formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], item?.classList?.contains(getState([StateEnum.SELECTORS_SUBMIT_SINGLE], StateEnum.SELECTORS).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.SAVE_AS_JSON], Boolean(item.getAttribute(getStateAttribute('saveAsJson'))), formId);
 

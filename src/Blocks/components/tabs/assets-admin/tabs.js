@@ -53,20 +53,20 @@ export class Tabs {
 
 		if (elements.length) {
 			elements.forEach((item) => {
-				item.classList.remove(this.CLASS_ACTIVE);
+				item?.classList?.remove(this.CLASS_ACTIVE);
 			});
 		}
 	};
 
 	addActive = (element) => {
 		if (element) {
-			element.classList.add(this.CLASS_ACTIVE);
+			element?.classList?.add(this.CLASS_ACTIVE);
 		}
 	};
 
 	addLoadedParent = (element) => {
 		if (element) {
-			element.classList.add(this.CLASS_LOADED);
+			element?.classList?.add(this.CLASS_LOADED);
 		}
 	};
 

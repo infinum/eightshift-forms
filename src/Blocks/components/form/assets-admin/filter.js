@@ -50,14 +50,14 @@ export class Filter {
 	filterItems = (selectedValue) => {
 		[...this.items].forEach((item) => {
 			if (item.getAttribute('data-integration-type') !== selectedValue) {
-				item.classList.add(this.CLASS_HIDDEN);
+				item?.classList?.add(this.CLASS_HIDDEN);
 			}
 		});
 	};
 
 	filterResetItems = () => {
 		[...this.items].forEach((item) => {
-			item.classList.remove(this.CLASS_HIDDEN);
+			item?.classList?.remove(this.CLASS_HIDDEN);
 		});
 	};
 

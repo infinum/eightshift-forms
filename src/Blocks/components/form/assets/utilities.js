@@ -94,8 +94,8 @@ export class Utils {
 	 * @returns {void}
 	 */
 	showLoader(formId) {
-		this.state.getStateFormElement(formId).classList.add(this.state.getStateSelectorsClassLoading());
-		this.state.getStateFormLoader(formId).classList.add(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormElement(formId)?.classList?.add(this.state.getStateSelectorsClassLoading());
+		this.state.getStateFormLoader(formId)?.classList?.add(this.state.getStateSelectorsClassActive());
 	}
 
 	/**
@@ -106,8 +106,8 @@ export class Utils {
 	 * @returns {void}
 	 */
 	hideLoader(formId) {
-		this.state.getStateFormElement(formId).classList.remove(this.state.getStateSelectorsClassLoading());
-		this.state.getStateFormLoader(formId).classList.remove(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormElement(formId)?.classList?.remove(this.state.getStateSelectorsClassLoading());
+		this.state.getStateFormLoader(formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
 	}
 
 	// Remove one field error by name.
@@ -122,7 +122,7 @@ export class Utils {
 	unsetFieldError(formId, name) {
 		const error = this.state.getStateElementError(name, formId);
 
-		error.classList.remove(this.state.getStateSelectorsClassHasError());
+		error?.classList?.remove(this.state.getStateSelectorsClassHasError());
 		this.state.setStateElementHasError(name, false, formId);
 		error.innerHTML = '';
 	}
@@ -139,7 +139,7 @@ export class Utils {
 	setFieldError(formId, name, msg) {
 		const error = this.state.getStateElementError(name, formId);
 
-		error.classList.add(this.state.getStateSelectorsClassHasError());
+		error?.classList?.add(this.state.getStateSelectorsClassHasError());
 		this.state.setStateElementHasError(name, true, formId);
 		error.innerHTML = msg;
 	}
@@ -174,7 +174,7 @@ export class Utils {
 	unsetGlobalMsg(formId) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
-		messageContainer.classList.remove(this.state.getStateSelectorsClassActive());
+		messageContainer?.classList?.remove(this.state.getStateSelectorsClassActive());
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
 	}
@@ -189,7 +189,7 @@ export class Utils {
 	setGlobalMsg(formId, msg, status) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
-		messageContainer.classList.add(this.state.getStateSelectorsClassActive());
+		messageContainer?.classList?.add(this.state.getStateSelectorsClassActive());
 		messageContainer.dataset.status = status;
 
 		// Scroll to msg if the condition is right.
@@ -365,7 +365,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	setFieldActiveState(formId, name) {
-		this.state.getStateElementField(name, formId).classList.add(this.state.getStateSelectorsClassActive());
+		this.state.getStateElementField(name, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
 	}
 
 	/**
@@ -377,7 +377,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	unsetActiveState(formId, name) {
-		this.state.getStateElementField(name, formId).classList.remove(this.state.getStateSelectorsClassActive());
+		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
 	}
 
 	/**
@@ -389,7 +389,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	setFilledState(formId, name) {
-		this.state.getStateElementField(name, formId).classList.add(this.state.getStateSelectorsClassFilled());
+		this.state.getStateElementField(name, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
 	}
 
 	/**
@@ -401,7 +401,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	unsetFilledState(formId, name) {
-		this.state.getStateElementField(name, formId).classList.remove(this.state.getStateSelectorsClassFilled());
+		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelectorsClassFilled());
 	}
 
 	/**
