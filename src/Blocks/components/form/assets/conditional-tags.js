@@ -73,8 +73,8 @@ export class ConditionalTags {
 		}
 
 		// Loop tags.
-		tags.forEach((tag) => {
-			const field = this.state.getStateElementField(tag[0], formId);
+		tags.forEach(([tagName, tagVisibility, tagInner]) => {
+			const field = this.state.getStateElementField(tagName, formId);
 
 			// Bailout if field doesn't exist.
 			if (!field) {
@@ -82,23 +82,23 @@ export class ConditionalTags {
 			}
 
 			// Get field type.
-			const type = this.state.getStateElementType(tag[0], formId);
+			const type = this.state.getStateElementType(tagName, formId);
 
 			// Prepare element placeholder.
 			let innerItem = '';
 
 			// If tag has inner items items.
-			if (tag[2]) {
+			if (tagInner) {
 				if (type === 'select') {
 					// Use for select.
-					innerItem = field.querySelector(`.choices__item--choice[data-value="${tag[2]}"]`);
+					innerItem = field.querySelector(`.choices__item--choice[data-value="${tagInner}"]`);
 				} else {
 					// Use for radio and checkbox.
-					innerItem = this.state.getStateElementItemsField(tag[0], tag[2], formId);
+					innerItem = this.state.getStateElementItemsField(tagName, tagInner, formId);
 				}
 			} else {
 				// input/textarea, etc.
-				innerItem = this.state.getStateElementField(tag[0], formId);
+				innerItem = this.state.getStateElementField(tagName, formId);
 			}
 
 			// Bailout if we have no element to apply.
@@ -106,13 +106,13 @@ export class ConditionalTags {
 				return;
 			}
 
-			if (tag[1] === this.HIDE) {
+			if (tagVisibility === this.HIDE) {
 				// Handle hide state.
 				innerItem.classList.add(this.state.getStateSelectorsClassHidden());
 
 				// Select must set internal state for attributes due to rerendering in the choices lib.
-				if (tag[2] && type === 'select') {
-					const customItem = this.state.getStateElementCustom(tag[0], formId).config.choices.filter((item) => item.value === tag[2])?.[0];
+				if (tagInner && type === 'select') {
+					const customItem = this.state.getStateElementCustom(tagName, formId).config.choices.filter((item) => item.value === tagInner)?.[0];
 
 					if (customItem) {
 						customItem.customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHidden();
@@ -123,8 +123,8 @@ export class ConditionalTags {
 				innerItem.classList.add(this.state.getStateSelectorsClassVisible());
 
 				// Select must set internal state for attributes due to rerendering in the choices lib.
-				if (tag[2] && type === 'select') {
-					const customItem = this.state.getStateElementCustom(tag[0], formId).config.choices.filter((item) => item.value === tag[2])?.[0];
+				if (tagInner && type === 'select') {
+					const customItem = this.state.getStateElementCustom(tagName, formId).config.choices.filter((item) => item.value === tagInner)?.[0];
 
 					if (customItem) {
 						customItem.customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisible();
@@ -365,12 +365,12 @@ export class ConditionalTags {
 		// Loop all conditional tags.
 		this.state.getStateElementConditionalTagsTagsInner(topName, innerName, formId).forEach((items, parent) => {
 			// Loop all inner fields.
-			items.forEach((inner, index) => {
+			items.forEach(([innerName, innerCondition, innerValue], index) => {
 				// Placeholder value to chack later.
 				let value = '';
 
 				// Get element type.
-				const type = this.state.getStateElementType(inner[0], formId);
+				const type = this.state.getStateElementType(innerName, formId);
 
 				// Bailout if type is missing.
 				if (!type) {
@@ -380,9 +380,9 @@ export class ConditionalTags {
 				switch (type) {
 					case 'checkbox':
 						// If check box inner items are missing this applys to parent element not children.
-						if (inner[2] === '') {
+						if (innerValue === '') {
 							// If all inner items are empty and not set this will output value to empty.
-							if (Object.values(this.state.getStateElementValue(inner[0], formId)).map((inner) => !inner).every(Boolean)) {
+							if (Object.values(this.state.getStateElementValue(innerName, formId)).map((inner) => !inner).every(Boolean)) {
 								value = '';
 							} else {
 								// If we don't care about value just need to have not empty any item, value is set to something random.
@@ -390,17 +390,17 @@ export class ConditionalTags {
 							}
 						} else {
 							// If we selected inner item in options use the value of that item.
-							value = this.state.getStateElementValue(inner[0], formId)[inner[2]] === inner[2] ? inner[2] : '';
+							value = this.state.getStateElementValue(innerName, formId)[innerValue] === innerValue ? innerValue : '';
 						}
 						break;
 					default:
 						// Get element value by name.
-						value = this.state.getStateElementValue(inner[0], formId);
+						value = this.state.getStateElementValue(innerName, formId);
 						break;
 				}
 
 				// Do the check based on the operator and set reference data with the correct state.
-				output[parent][index] = this.OPERATORS[inner[1]](value, inner[2]);
+				output[parent][index] = this.OPERATORS[innerCondition](value, innerValue);
 			});
 		});
 	}

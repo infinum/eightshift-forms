@@ -75,8 +75,6 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					/>
 				}
 
-				{hasSubFields && optionsItem?.length < 1 && <span className='es-w-40'>&nbsp;</span>}
-
 				<OptionSelector
 					value={conditionalTagsRulesForms?.[index]?.[1]}
 					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_LABELS)}
@@ -101,8 +99,6 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 			</>
 		);
 	};
-
-	const hasSubFields = conditionalTagsRulesForms?.map(([fieldData]) => fieldData).some(({ subItems }) => subItems?.length > 0) ?? [];
 
 	return (
 		<PanelBody>
