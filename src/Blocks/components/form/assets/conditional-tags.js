@@ -357,9 +357,7 @@ export class ConditionalTags {
 	 */
 	setFieldsRulesInner(formId, name) {
 		// Explode name because we can have inner items that have parent prefix.
-		const nameData = name.split('---');
-		const topName = nameData[0];
-		const innerName = nameData[1];
+		const [topName, innerName] = name.split('---');
 
 		// Opulate current ref state.
 		let output = this.state.getStateElementConditionalTagsRefInner(topName, innerName, formId);
