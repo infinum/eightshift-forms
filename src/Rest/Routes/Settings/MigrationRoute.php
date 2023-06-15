@@ -204,6 +204,7 @@ class MigrationRoute extends AbstractBaseRoute
 		]);
 
 		if (!$theQuery->have_posts()) {
+			\wp_reset_postdata();
 			return $this->getApiErrorOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
 		}
 

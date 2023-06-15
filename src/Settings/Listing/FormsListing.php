@@ -39,7 +39,7 @@ class FormsListing implements FormListingInterface
 		$args = [
 			'post_type' => Forms::POST_TYPE_SLUG,
 			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
-			'post_status' => $status
+			'post_status' => $status,
 		];
 
 		$theQuery = new WP_Query($args);
@@ -49,6 +49,7 @@ class FormsListing implements FormListingInterface
 		$permanent = $status === 'trash';
 
 		if (!$theQuery->have_posts()) {
+			\wp_reset_postdata();
 			return [];
 		}
 
