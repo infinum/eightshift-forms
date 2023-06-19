@@ -28,12 +28,12 @@
 	},
 	"require-dev": {
 		"brain/faker": "dev-master",
-		"brain/monkey": "^2.6",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+		"brain/monkey": "^2.6.1",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
 		"infinum/eightshift-coding-standards": "^1.6",
-		"pestphp/pest": "^1.2",
+		"pestphp/pest": "^1.23.0",
 		"php-stubs/wordpress-stubs": "^6.2.0",
-		"phpunit/phpunit": "^9.5",
+		"phpunit/phpunit": "^9.6.8",
 		"szepeviktor/phpstan-wordpress": "^1.3.0",
 		"wp-cli/wp-cli": "^2.7.1"
 	},
@@ -45,9 +45,9 @@
 	],
 	"require": {
 		"php": "^7.4 || <8.0",
-		"firebase/php-jwt": "^6.4",
-		"erusev/parsedown": "^1.7",
-		"infinum/eightshift-libs": "^6.4.0",
+		"firebase/php-jwt": "^6.5.0",
+		"erusev/parsedown": "^1.7.4",
+		"infinum/eightshift-libs": "^6.5.1",
 		"typisttech/imposter-plugin": "^0.6.2"
 	},
 	"suggest": {
