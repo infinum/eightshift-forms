@@ -29,7 +29,7 @@ export class Captcha {
 		// Load captcha on init.
 		this.initCaptchaOnLoad();
 
-		// // Hide badge.
+		// Hide badge.
 		this.initHideCaptchaBadge();
 	}
 

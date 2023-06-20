@@ -85,6 +85,12 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				'component' => 'card',
 				'cardTitle' => Filters::getSettingsLabels($key),
 				'cardIcon' => $icon,
+				'cardTrailingButtons' => [
+					[
+						'label' => \__('edit', 'eightshift-forms'),
+						'url' => Helper::getSettingsGlobalPageUrl($key),
+					],
+				],
 				'cardContent' => [
 					[
 						'component' => 'checkboxes',

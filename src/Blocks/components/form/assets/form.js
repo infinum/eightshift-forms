@@ -5,14 +5,12 @@ import { State, ROUTES } from './state';
 import { Utils } from './utilities';
 import { Steps } from './step';
 import { Enrichment } from './enrichment';
-import { Captcha } from './captcha';
 import { ConditionalTags } from './conditional-tags';
 import selectManifest from './../../select/manifest.json';
 import {
 	StateEnum,
 	prefix,
 	setStateFormInitial,
-	setStateInitial,
 	setStateWindow,
 	setStateValues,
 	setStateConditionalTagsItems,
@@ -26,7 +24,6 @@ export class Form {
 		this.state = new State();
 		this.utils = new Utils();
 		this.enrichment = new Enrichment();
-		this.captcha = new Captcha();
 		this.conditionalTags = new ConditionalTags();
 		this.steps = new Steps();
 
@@ -48,16 +45,11 @@ export class Form {
 	 * @returns {void}
 	 */
 	init() {
-		setStateInitial();
-
 		// Set all public methods.
 		this.publicMethods();
 
 		// Init all forms.
 		this.initOnlyForms();
-
-		// Init captcha.
-		this.captcha.init();
 
 		// Init enrichment.
 		this.enrichment.init();

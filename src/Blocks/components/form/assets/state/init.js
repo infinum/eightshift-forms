@@ -165,6 +165,10 @@ export function setStateWindow() {
 export function setStateInitial() {
 	setStateWindow();
 
+	if (window[prefix].state) {
+		return;
+	}
+
 	window[prefix].state = {};
 	window[prefix].state = {
 		[StateEnum.CAPTCHA]: {},
@@ -198,6 +202,7 @@ export function setStateInitial() {
 	setState([StateEnum.SETTINGS_REDIRECTION_TIMEOUT], esFormsLocalization.redirectionTimeout ?? 600, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT], esFormsLocalization.hideGlobalMessageTimeout ?? 6000, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FILE_REMOVE_LABEL], esFormsLocalization.fileRemoveLabel ?? '', StateEnum.SETTINGS);
+	setState([StateEnum.SETTINGS_FORM_DISABLE_AUTO_INIT], Boolean(esFormsLocalization.formDisableAutoInit), StateEnum.SETTINGS);
 
 	// Captcha.
 	const captcha = esFormsLocalization.captcha ?? {};

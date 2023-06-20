@@ -212,6 +212,9 @@ export class State {
 	getStateSettingsFileRemoveLabel = () => {
 		return getState([StateEnum.SETTINGS_FILE_REMOVE_LABEL], StateEnum.SETTINGS);
 	};
+	getStateSettingsFormDisableAutoInit = () => {
+		return getState([StateEnum.SETTINGS_FORM_DISABLE_AUTO_INIT], StateEnum.SETTINGS);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Element getters.

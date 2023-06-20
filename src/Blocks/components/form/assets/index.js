@@ -1,11 +1,25 @@
 /* global esFormsLocalization */
 
 import domReady from '@wordpress/dom-ready';
-import manifest from './../manifest.json';
-import { prefix } from './state/init';
+import { prefix, setStateInitial } from './state/init';
+import { State } from './state';
+
 
 if (typeof esFormsLocalization === 'undefined') {
 	console.warn('Your project is missing global variable esFormsLocalization called from the enqueue script in the forms. Forms will work but they will not get the admin settings configuration.');
+}
+
+// Set initial state.
+setStateInitial();
+
+// Load state helpers.
+const state = new State();
+
+// Load captcha if using initial.
+if (state.getStateCaptchaIsUsed()) {
+	import('./captcha').then(({ Captcha }) => {
+		new Captcha().init();
+	});
 }
 
 /**
@@ -20,16 +34,12 @@ function initAll() {
 }
 
 // You can disable auto init from the admin.
-const disableAutoInit = Boolean(esFormsLocalization.formDisableAutoInit);
+const disableAutoInit = state.getStateSettingsFormDisableAutoInit();
 
 // Load normal forms on dom ready event otherwise use manual trigger from the window object.
 if (!disableAutoInit) {
 	domReady(() => {
-		const {
-			componentJsClass,
-		} = manifest;
-
-		const elements = document.querySelectorAll(`.${componentJsClass}`);
+		const elements = state.getStateSelectorsForm();
 
 		if (elements.length) {
 			initAll();
