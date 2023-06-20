@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f16cfbd4bd6d4d3e8b4b89779cf87b4a",
+    "content-hash": "7f19e8c1fd13a8fbeaaf0a5a0f86f900",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -121,16 +121,16 @@
         },
         {
             "name": "infinum/eightshift-libs",
-            "version": "6.5.1",
+            "version": "6.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "03726837538eefd6bbdc7792ec929788864ccb46"
+                "reference": "cf8e25da8dc2e1ec0fe0b9c6683fd7c5b0bd03b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/03726837538eefd6bbdc7792ec929788864ccb46",
-                "reference": "03726837538eefd6bbdc7792ec929788864ccb46",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/cf8e25da8dc2e1ec0fe0b9c6683fd7c5b0bd03b3",
+                "reference": "cf8e25da8dc2e1ec0fe0b9c6683fd7c5b0bd03b3",
                 "shasum": ""
             },
             "require": {
@@ -219,7 +219,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2023-06-19T09:35:47+00:00"
+            "time": "2023-06-20T09:40:02+00:00"
         },
         {
             "name": "laravel/serializable-closure",

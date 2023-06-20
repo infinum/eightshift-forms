@@ -47,7 +47,7 @@
 		"php": "^7.4 || <8.0",
 		"firebase/php-jwt": "^6.5.0",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-libs": "^6.5.1",
+		"infinum/eightshift-libs": "^6.5.2",
 		"typisttech/imposter-plugin": "^0.6.2"
 	},
 	"suggest": {
