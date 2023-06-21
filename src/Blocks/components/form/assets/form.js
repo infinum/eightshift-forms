@@ -946,7 +946,13 @@ export class Form {
 				allowHTML: true,
 				duplicateItemsAllowed: false,
 				placeholder: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_PLACEHOLDER, formId),
-				searchFields: ['label', 'value', 'customProperties'],
+				searchFields: [
+					'label',
+					'value',
+					`customProperties.${this.state.getStateAttribute('selectCountryCode')}`,
+					`customProperties.${this.state.getStateAttribute('selectCountryLabel')}`,
+					`customProperties.${this.state.getStateAttribute('selectCountryNumber')}`,
+				],
 				itemSelectText: '',
 				classNames: {
 					containerOuter: `choices ${selectManifest.componentClass}`,

@@ -513,6 +513,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			'type' => $integration['type'] ?? '',
 			'itemId' => $integration['itemId'] ?? '',
 			'innerId' => $integration['innerId'] ?? '',
+			'typeAttrs' => $content['fields']['innerBlocks'][0]['attrs'] ?? [],
 			'update' => false,
 			'removed' => [],
 			'added' => [],
@@ -563,6 +564,21 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 						break;
 				}
 			}
+		}
+
+		// Loop top level block and output attributes but ignore IDs for integration.
+		if ($output['typeAttrs']) {
+			$typeAttrs = [];
+
+			foreach ($output['typeAttrs'] as $attrKey => $attrValue) {
+				if ($attrKey === "{$output['type']}IntegrationId" || $attrKey === "{$output['type']}IntegrationInnerId") {
+					continue;
+				}
+
+				$typeAttrs[$attrKey] = $attrValue;
+			}
+
+			$output['typeAttrs'] = $typeAttrs;
 		}
 
 		// If output is missing create a flag and bailout.
@@ -929,14 +945,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		return [
 			[
-				$blockNameKey => "{$namespace}/" . $data['type'],
+				$blockNameKey => "{$namespace}/{$data['type']}",
 				$attrsKey => \array_merge(
 					[
-						$data['type'] . "IntegrationId" => $data['itemId'],
+						"{$data['type']}IntegrationId" => $data['itemId'],
 					],
 					$data['innerId'] ? [
-						$data['type'] . "IntegrationInnerId" => $data['innerId'],
-					] : []
+						"{$data['type']}IntegrationInnerId" => $data['innerId'],
+					] : [],
+					$data['typeAttrs']
 				),
 				$innerBlocksKey => $fieldsOutput,
 				$innerContentKey => $fieldsOutput,

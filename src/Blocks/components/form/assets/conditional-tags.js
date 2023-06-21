@@ -243,7 +243,9 @@ export class ConditionalTags {
 				if (parentField.querySelectorAll(`.${this.state.getStateSelectorsClassHidden()}`).length === items.length && items.length > 0) {
 					parentField?.classList?.add(this.state.getStateSelectorsClassHidden());
 				} else {
-					parentField?.classList?.remove(this.state.getStateSelectorsClassHidden());
+					if (defaults === this.HIDE) {
+						parentField?.classList?.remove(this.state.getStateSelectorsClassHidden());
+					}
 				}
 			});
 		}
@@ -341,7 +343,9 @@ export class ConditionalTags {
 					parentField?.classList?.add(this.state.getStateSelectorsClassHidden());
 					custom.setChoiceByValue('');
 				} else {
-					parentField?.classList?.remove(this.state.getStateSelectorsClassHidden());
+					if (defaults === this.HIDE) {
+						parentField?.classList?.remove(this.state.getStateSelectorsClassHidden());
+					}
 				}
 			});
 		});

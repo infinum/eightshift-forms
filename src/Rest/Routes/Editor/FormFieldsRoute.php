@@ -155,6 +155,12 @@ class FormFieldsRoute extends AbstractBaseRoute
 				continue;
 			}
 
+			$subItems = $step['subItems'] ?? [];
+
+			if (!$subItems) {
+				continue;
+			}
+
 			$item = $step;
 
 			$item['subItems'] = \array_values(\array_filter(\array_map(
@@ -163,7 +169,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 						return $items[$item];
 					}
 				},
-				$step['subItems']
+				$subItems
 			)));
 
 			$output[] = $item;
