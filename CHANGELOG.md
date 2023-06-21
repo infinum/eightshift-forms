@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
-## [2.3.6]
+## [2.3.8]
+
+### Fixed
+- Workable integration jobs fetch optimizations.
+
+## [2.3.7]
 
 ### Added
 - Workable, domain data from source and medium.
@@ -208,6 +213,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[2.3.8]: https://github.com/infinum/eightshift-forms/compare/2.3.7...2.3.8
+[2.3.7]: https://github.com/infinum/eightshift-forms/compare/2.3.6...2.3.7
 [2.3.6]: https://github.com/infinum/eightshift-forms/compare/2.3.5...2.3.6
 [2.3.5]: https://github.com/infinum/eightshift-forms/compare/2.3.4...2.3.5
 [2.3.4]: https://github.com/infinum/eightshift-forms/compare/2.3.3...2.3.4
