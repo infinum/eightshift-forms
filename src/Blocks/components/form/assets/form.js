@@ -96,12 +96,18 @@ export class Form {
 			this.setupFileField(formId, file.name);
 		});
 
-		// Setup regular inputs.
+		// Setup text inputs.
 		[...this.state.getStateElementByType('text', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
 
+		// Setup number inputs.
 		[...this.state.getStateElementByType('number', formId)].forEach((input) => {
+			this.setupInputField(formId, input.name);
+		});
+
+		// Setup password inputs.
+		[...this.state.getStateElementByType('password', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
 
