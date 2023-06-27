@@ -32,8 +32,11 @@ $countryUseSearch = Components::checkAttr('countryUseSearch', $attributes, $mani
 $countryFormPostId = Components::checkAttr('countryFormPostId', $attributes, $manifest);
 $countryTypeCustom = Components::checkAttr('countryTypeCustom', $attributes, $manifest);
 $countryFieldAttrs = Components::checkAttr('countryFieldAttrs', $attributes, $manifest);
+$countryPlaceholder = Components::checkAttr('countryPlaceholder', $attributes, $manifest);
+$countryUseLabelAsPlaceholder = Components::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
+$countryHideLabel = false;
 $countryFieldLabel = $attributes[Components::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
 
 $countryClass = Components::classnames([
@@ -46,6 +49,11 @@ if ($countryUseSearch) {
 	$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($countryUseSearch);
 }
 
+if ($countryUseLabelAsPlaceholder) {
+	$countryPlaceholder = esc_attr($countryFieldLabel) ?: esc_html__('Select country', 'eightshift-forms');
+	$countryHideLabel = true;
+}
+
 $countryAttrsOutput = '';
 if ($countryAttrs) {
 	foreach ($countryAttrs as $key => $value) {
@@ -55,6 +63,14 @@ if ($countryAttrs) {
 
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('country', $attributes);
+
+$placeholder = $countryPlaceholder ? Components::render(
+	'select-option',
+	[
+		'selectOptionLabel' => $countryPlaceholder, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		'selectOptionAsPlaceholder' => true,
+	]
+) : '';
 
 $options = [];
 $filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['settingsValuesOutput'];
@@ -95,6 +111,7 @@ $country = '
 		' . disabled($countryIsDisabled, true, false) . '
 		' . $countryAttrsOutput . '
 	>
+	' . $placeholder . '
 	' . implode('', $options) . '
 	</select>
 	' . $additionalContent . '
@@ -111,6 +128,7 @@ echo Components::render(
 			'fieldDisabled' => !empty($countryIsDisabled),
 			'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $countryTracking,
+			'fieldHideLabel' => $countryHideLabel,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

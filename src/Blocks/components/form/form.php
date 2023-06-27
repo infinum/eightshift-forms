@@ -183,6 +183,11 @@ if ($formAttrs) {
 		'global-msg',
 		Components::props('globalMsg', $attributes)
 	);
+
+	echo Components::render(
+		'progress-bar',
+		Components::props('progressBar', $attributes)
+	);
 	?>
 
 	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">

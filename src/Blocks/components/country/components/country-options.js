@@ -30,6 +30,8 @@ export const CountryOptions = (attributes) => {
 	const countryTracking = checkAttr('countryTracking', attributes, manifest);
 	const countryDisabledOptions = checkAttr('countryDisabledOptions', attributes, manifest);
 	const countryUseSearch = checkAttr('countryUseSearch', attributes, manifest);
+	const countryPlaceholder = checkAttr('countryPlaceholder', attributes, manifest);
+	const countryUseLabelAsPlaceholder = checkAttr('countryUseLabelAsPlaceholder', attributes, manifest);
 
 	return (
 		<>
@@ -46,6 +48,23 @@ export const CountryOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('countryName', attributes, manifest), countryDisabledOptions)}
 					/>
 					<NameChangeWarning isChanged={isNameChanged} />
+
+					{!countryUseLabelAsPlaceholder &&
+						<TextControl
+							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={countryPlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('countryPlaceholder', attributes, manifest), countryDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Use label as placeholder', 'eightshift-forms')}
+						checked={countryUseLabelAsPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('countryUseLabelAsPlaceholder', attributes, manifest)]: value })}
+					/>
 				</Section>
 
 				<FieldOptions

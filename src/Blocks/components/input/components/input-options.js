@@ -71,6 +71,7 @@ export const InputOptions = (attributes) => {
 	const inputMax = checkAttr('inputMax', attributes, manifest);
 	const inputStep = checkAttr('inputStep', attributes, manifest);
 	const inputDisabledOptions = checkAttr('inputDisabledOptions', attributes, manifest);
+	const inputUseLabelAsPlaceholder = checkAttr('inputUseLabelAsPlaceholder', attributes, manifest);
 
 	let inputValidationPatternOptions = [];
 
@@ -132,14 +133,24 @@ export const InputOptions = (attributes) => {
 					}
 
 					{showInputPlaceholder &&
-						<TextControl
-							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-							help={__('Shown when the field is empty', 'eightshift-forms')}
-							value={inputPlaceholder}
-							onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
-							disabled={isOptionDisabled(getAttrKey('inputPlaceholder', attributes, manifest), inputDisabledOptions)}
-							className='es-no-field-spacing'
-						/>
+						<>
+							{!inputUseLabelAsPlaceholder &&
+								<TextControl
+									label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+									help={__('Shown when the field is empty', 'eightshift-forms')}
+									value={inputPlaceholder}
+									onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
+									disabled={isOptionDisabled(getAttrKey('inputPlaceholder', attributes, manifest), inputDisabledOptions)}
+									className='es-no-field-spacing'
+								/>
+							}
+							<IconToggle
+								icon={icons.fieldPlaceholder}
+								label={__('Use label as placeholder', 'eightshift-forms')}
+								checked={inputUseLabelAsPlaceholder}
+								onChange={(value) => setAttributes({ [getAttrKey('inputUseLabelAsPlaceholder', attributes, manifest)]: value })}
+							/>
+						</>
 					}
 				</Section>
 

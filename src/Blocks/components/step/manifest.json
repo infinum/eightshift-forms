@@ -16,7 +16,16 @@
 		"stepContent": {
 			"type": "string"
 		},
+		"stepSubmit": {
+			"type": "string"
+		},
 		"stepMultiflowPostId": {
+			"type": "string"
+		},
+		"stepPrevLabel": {
+			"type": "string"
+		},
+		"stepNextLabel": {
 			"type": "string"
 		},
 		"stepMultiflowUse": {

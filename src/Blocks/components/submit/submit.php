@@ -8,8 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');
@@ -26,27 +24,15 @@ $submitAttrs = Components::checkAttr('submitAttrs', $attributes, $manifest);
 $submitServerSideRender = Components::checkAttr('submitServerSideRender', $attributes, $manifest);
 $submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest);
 $submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
-$submitIsLayoutFree = Components::checkAttr('submitIsLayoutFree', $attributes, $manifest);
 $submitVariant = Components::checkAttr('submitVariant', $attributes, $manifest);
+$submitButtonComponent = Components::checkAttr('submitButtonComponent', $attributes, $manifest);
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($submitIcon, $componentClass, '', 'with-icon'),
-	Components::selector($submitIsLayoutFree, $componentClass, '', 'layout-free'),
 	Components::selector($submitVariant, $componentClass, '', $submitVariant),
 ]);
-
-if ($submitTracking) {
-	$submitAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($submitTracking);
-}
-
-$submitAttrsOutput = '';
-if ($submitAttrs) {
-	foreach ($submitAttrs as $key => $value) {
-		$submitAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
 
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('submit', $attributes);
@@ -56,31 +42,17 @@ if ($submitIcon) {
 	$submitIconContent = $manifestUtils['icons'][$submitIcon];
 }
 
-
 $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
-		' . $submitAttrsOutput . '
 	><span class="' . $componentClass . '__inner">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
 	' . $additionalContent . '
 ';
 
-// With this filder you can override default submit component and provide your own.
-$filterNameComponent = Filters::getFilterName(['block', 'submit', 'component']);
-if (has_filter($filterNameComponent) && !Helper::isSettingsPage()) {
-	$button = apply_filters($filterNameComponent, [
-		'value' => $submitValue,
-		'isDisabled' => $submitIsDisabled,
-		'class' => $submitClass,
-		'attrs' => $submitAttrs,
-		'attributes' => $attributes,
-	]);
-}
-
-if ($submitIsLayoutFree) {
-	echo $button; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	return;
+// Used if you want to provide external component for button.
+if ($submitButtonComponent) {
+	$button = "{$submitButtonComponent}{$additionalContent}";
 }
 
 echo Components::render(
@@ -91,7 +63,9 @@ echo Components::render(
 			'fieldId' => $submitName,
 			'fieldUseError' => false,
 			'fieldDisabled' => !empty($submitIsDisabled),
+			'fieldTracking' => $submitTracking,
 			'fieldUniqueId' => $submitUniqueId,
+			'fieldAttrs' => $submitAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

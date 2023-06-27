@@ -27,6 +27,10 @@
 		"textareaPlaceholder": {
 			"type": "string"
 		},
+		"textareaUseLabelAsPlaceholder": {
+			"type": "boolean",
+			"default": false
+		},
 		"textareaIsDisabled": {
 			"type": "boolean",
 			"default": false

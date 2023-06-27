@@ -341,7 +341,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					];
 					break;
 				default:
-					if ($value['type'] === 'file') {
+					if ($value['type'] ?? '' === 'file') {
 						$output['files'][$key] = $value['value'] ? \array_merge(
 							$value,
 							[

@@ -12,7 +12,8 @@
 	"components": {
 		"loader": "loader",
 		"field": "field",
-		"globalMsg": "globalMsg"
+		"globalMsg": "globalMsg",
+		"progressBar": "progressBar"
 	},
 	"example": {
 		"attributes": {

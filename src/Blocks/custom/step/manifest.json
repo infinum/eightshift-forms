@@ -15,11 +15,6 @@
 	"components": {
 		"step": "step"
 	},
-	"attributes": {
-		"stepContent": {
-			"type": "string"
-		}
-	},
 	"parent": [
 		"eightshift-forms/form"
 	]

@@ -34,8 +34,10 @@ $phoneUseSearch = Components::checkAttr('phoneUseSearch', $attributes, $manifest
 $phoneFormPostId = Components::checkAttr('phoneFormPostId', $attributes, $manifest);
 $phoneTypeCustom = Components::checkAttr('phoneTypeCustom', $attributes, $manifest);
 $phoneFieldAttrs = Components::checkAttr('phoneFieldAttrs', $attributes, $manifest);
+$phoneUseLabelAsPlaceholder = Components::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
+$phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Components::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
 $phoneClass = Components::classnames([
@@ -54,6 +56,11 @@ if ($phoneValue) {
 
 if ($phonePlaceholder) {
 	$phoneAttrs['placeholder'] = esc_attr($phonePlaceholder);
+}
+
+if ($phoneUseLabelAsPlaceholder) {
+	$phoneAttrs['placeholder'] = esc_attr($phoneFieldLabel);
+	$phoneHideLabel = true;
 }
 
 $phoneAttrsOutput = '';
@@ -128,6 +135,7 @@ echo Components::render(
 			'fieldDisabled' => !empty($phoneIsDisabled),
 			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $phoneTracking,
+			'fieldHideLabel' => $phoneHideLabel,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

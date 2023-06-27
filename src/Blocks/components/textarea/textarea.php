@@ -34,8 +34,10 @@ $textareaFieldAttrs = Components::checkAttr('textareaFieldAttrs', $attributes, $
 $textareaSize = Components::checkAttr('textareaSize', $attributes, $manifest);
 $textareaLimitHeight = Components::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Components::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
+$textareaUseLabelAsPlaceholder = Components::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
+$textareaHideLabel = false;
 $textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
 
 $textareaClass = Components::classnames([
@@ -57,6 +59,11 @@ if ($textareaIsPreventSubmit) {
 
 if ($textareaPlaceholder) {
 	$textareaAttrs['placeholder'] = esc_attr($textareaPlaceholder);
+}
+
+if ($textareaUseLabelAsPlaceholder) {
+	$textareaAttrs['placeholder'] = esc_attr($textareaFieldLabel);
+	$textareaHideLabel = true;
 }
 
 $textareaAttrsOutput = '';
@@ -91,6 +98,7 @@ echo Components::render(
 			'fieldDisabled' => !empty($textareaIsDisabled),
 			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $textareaTracking,
+			'fieldHideLabel' => $textareaHideLabel,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

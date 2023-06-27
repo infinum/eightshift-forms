@@ -1,0 +1,12 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "progress-bar",
+	"title": "Progress bar",
+	"componentClass": "es-progress-bar",
+	"componentJsClass": "js-es-block-step-progress-bar",
+	"attributes": {
+		"progressBarSteps": {
+			"type": "array"
+		}
+	}
+}

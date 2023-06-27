@@ -23,6 +23,7 @@ export const SelectOptions = (attributes) => {
 	const selectDisabledOptions = checkAttr('selectDisabledOptions', attributes, manifest);
 	const selectUseSearch = checkAttr('selectUseSearch', attributes, manifest);
 	const selectPlaceholder = checkAttr('selectPlaceholder', attributes, manifest);
+	const selectUseLabelAsPlaceholder = checkAttr('selectUseLabelAsPlaceholder', attributes, manifest);
 
 	return (
 		<>
@@ -41,13 +42,21 @@ export const SelectOptions = (attributes) => {
 
 					<NameChangeWarning isChanged={isNameChanged} />
 
-					<TextControl
-						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={selectPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('selectPlaceholder', attributes, manifest), selectDisabledOptions)}
-						className='es-no-field-spacing'
+					{!selectUseLabelAsPlaceholder &&
+						<TextControl
+							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={selectPlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('selectPlaceholder', attributes, manifest), selectDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Use label as placeholder', 'eightshift-forms')}
+						checked={selectUseLabelAsPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('selectUseLabelAsPlaceholder', attributes, manifest)]: value })}
 					/>
 				</Section>
 

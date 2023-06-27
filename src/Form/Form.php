@@ -181,6 +181,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 				$innerBlock['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
 				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = \wp_json_encode($formsConditionalTagsRulesForms);
+				$innerBlock['attrs']["{$blockName}FormProgressBarSteps"] = [];
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
 				$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
 
@@ -189,6 +190,11 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 				// If the users don't add first step add it to the list.
 				if ($hasSteps && $innerBlock['innerBlocks'][0]['blockName'] !== "{$formsNamespace}/step") {
+					$innerBlock['attrs']["{$blockName}FormProgressBarSteps"][] = [
+						'name' => 'step-init',
+						'label' => __('Init', 'eightshift-forms'),
+					];
+
 					\array_unshift(
 						$innerBlock['innerBlocks'],
 						[
@@ -266,12 +272,18 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 							// Output key is insite the step key and this changes everytime we have step in the loop.
 							$stepKey = $inKey;
 
+							$innerBlock['attrs']["{$blockName}FormProgressBarSteps"][] = [
+								'name' => $inBlock['attrs']['stepStepName'] ?? '',
+								'label' => $inBlock['attrs']['stepStepLabel'] ?? '',
+							];
+
 							$inBlockOutput[$stepKey] = [
 								'blockName' => $inBlock['blockName'],
 								'attrs' => \array_merge(
 									$inBlock['attrs'],
 									[
 										'stepStepContent' => '',
+										'stepStepSubmit' => '',
 									]
 								),
 								'innerBlocks' => [],
@@ -281,8 +293,14 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 							continue;
 						}
 
-						// Blocks in steps are passed as an attribute and we need to convert block to HTML string and append to the previous.
-						$inBlockOutput[$stepKey]['attrs']['stepStepContent'] = $inBlockOutput[$stepKey]['attrs']['stepStepContent'] . \apply_filters('the_content', \render_block($inBlock));
+						// Remove submit button from the flow and push it to step to be used in the navigation bar.
+						if ($name === 'submit') {
+							$inBlockOutput[$stepKey]['attrs']['stepStepSubmit'] = \apply_filters('the_content', \render_block($inBlock));
+						} else {
+							// Blocks in steps are passed as an attribute and we need to convert block to HTML string and append to the previous.
+							$inBlockOutput[$stepKey]['attrs']['stepStepContent'] = $inBlockOutput[$stepKey]['attrs']['stepStepContent'] . \apply_filters('the_content', \render_block($inBlock));
+						}
+
 					} else {
 						// Just populate normal blocks if there are no steps here.
 						$inBlockOutput[$inKey] = [
@@ -319,6 +337,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				'innerContent' => $innerBlockOutput,
 			];
 		}
+
+		// error_log( print_r( ( $output ), true ) );
+		
 
 		return \array_values($output);
 	}

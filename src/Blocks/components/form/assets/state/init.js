@@ -63,7 +63,6 @@ export const StateEnum = {
 	CONDITIONAL_TAGS_INNER_EVENTS: 'conditionalTagsInnerEvents',
 
 	CONFIG: 'config',
-	CONFIG_SELECT_USE_PLACEHOLDER: 'usePlaceholder',
 	CONFIG_SELECT_USE_SEARCH: 'useSearch',
 	CONFIG_PHONE_DISABLE_PICKER: 'disablePicker',
 	CONFIG_PHONE_USE_PHONE_SYNC: 'usePhoneSync',
@@ -117,20 +116,22 @@ export const StateEnum = {
 	SELECTORS_CLASS_HAS_ERROR: 'hasError',
 
 	TRACKING: 'tracking',
-	TRACKING_EVENT_NAME: 'event_name',
-	TRACKING_EVENT_ADDITIONAL_DATA: 'event_additional_data',
+	TRACKING_EVENT_NAME: 'eventName',
+	TRACKING_EVENT_ADDITIONAL_DATA: 'eventAdditionalData',
 
 	STEPS: 'steps',
 	STEPS_FLOW: 'flow',
 	STEPS_CURRENT: 'current',
 	STEPS_ITEMS: 'items',
 	STEPS_ELEMENTS: 'elements',
+	STEPS_ELEMENTS_PROGRESS_BAR: 'elementsProgressBar',
 
 	// Specific selectors.
 	SELECTORS_PREFIX: 'prefix',
 	SELECTORS_FORM: 'form',
 	SELECTORS_SUBMIT_SINGLE: 'singleSubmit',
 	SELECTORS_STEP: `step`,
+	SELECTORS_STEP_PROGRESS_BAR: `stepProgressBar`,
 	SELECTORS_STEP_SUBMIT: `stepSubmit`,
 	SELECTORS_ERROR: `error`,
 	SELECTORS_LOADER: `loader`,
@@ -254,6 +255,7 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_FORM], `.${manifest.componentJsClass}`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_SUBMIT_SINGLE], `.${manifest.componentJsClass}-single-submit`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_STEP], `.${manifest.componentJsClass}-step`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], `.${manifest.componentJsClass}-step-progress-bar`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_STEP_SUBMIT], `.${manifest.componentJsClass}-step-trigger`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_ERROR], `.${manifest.componentJsClass}-error`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_LOADER], `.${manifest.componentJsClass}-loader`, StateEnum.SELECTORS);
@@ -347,6 +349,16 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], stepId, formId);
 			}
 		});
+
+		const stepsProgressBar = formElement.querySelectorAll(getState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], StateEnum.SELECTORS));
+		if (stepsProgressBar.length) {
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR], {}, formId);
+
+			Object.values(stepsProgressBar).forEach((item, index) => {
+				const stepId = item.getAttribute(getStateAttribute('stepId'));
+				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR, stepId], item, formId);
+			});
+		}
 	}
 
 	// Loop all fields.
@@ -425,7 +437,6 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], typeTemp, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], 'select', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_PLACEHOLDER], Boolean(item.getAttribute(getStateAttribute('selectPlaceholder'))), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(getStateAttribute('selectAllowSearch'))), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;

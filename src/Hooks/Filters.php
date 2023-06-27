@@ -335,6 +335,10 @@ class Filters
 				'component' => 'component',
 				'additionalContent' => 'additional_content',
 			],
+			'step' => [
+				'componentPrev' => 'component_prev',
+				'componentNext' => 'component_next',
+			],
 		],
 		'blocks' => [
 			'additionalBlocks' => 'additional_blocks',

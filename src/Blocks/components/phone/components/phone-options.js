@@ -30,6 +30,7 @@ export const PhoneOptions = (attributes) => {
 	const phoneValidationPattern = checkAttr('phoneValidationPattern', attributes, manifest);
 	const phoneDisabledOptions = checkAttr('phoneDisabledOptions', attributes, manifest);
 	const phoneUseSearch = checkAttr('phoneUseSearch', attributes, manifest);
+	const phoneUseLabelAsPlaceholder = checkAttr('phoneUseLabelAsPlaceholder', attributes, manifest);
 
 	let phoneValidationPatternOptions = [];
 
@@ -53,13 +54,21 @@ export const PhoneOptions = (attributes) => {
 					/>
 					<NameChangeWarning isChanged={isNameChanged} />
 
-					<TextControl
-						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={phonePlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('phonePlaceholder', attributes, manifest), phoneDisabledOptions)}
-						className='es-no-field-spacing'
+					{!phoneUseLabelAsPlaceholder &&
+						<TextControl
+							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={phonePlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('phonePlaceholder', attributes, manifest), phoneDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Use label as placeholder', 'eightshift-forms')}
+						checked={phoneUseLabelAsPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('phoneUseLabelAsPlaceholder', attributes, manifest)]: value })}
 					/>
 				</Section>
 

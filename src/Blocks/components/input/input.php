@@ -32,8 +32,10 @@ $inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
 $inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
 $inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
 $inputFieldAttrs = Components::checkAttr('inputFieldAttrs', $attributes, $manifest);
+$inputUseLabelAsPlaceholder = Components::checkAttr('inputUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
+$inputHideLabel = false;
 $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
 
 $inputClass = Components::classnames([
@@ -64,6 +66,11 @@ if ($inputValue) {
 
 if ($inputPlaceholder) {
 	$inputAttrs['placeholder'] = esc_attr($inputPlaceholder);
+}
+
+if ($inputUseLabelAsPlaceholder) {
+	$inputAttrs['placeholder'] = esc_attr($inputFieldLabel);
+	$inputHideLabel = true;
 }
 
 $inputAttrsOutput = '';
@@ -102,6 +109,7 @@ echo Components::render(
 			'fieldUseError' => $inputType !== 'hidden',
 			'fieldTypeCustom' => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $inputTracking,
+			'fieldHideLabel' => $inputHideLabel,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

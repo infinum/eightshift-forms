@@ -31,8 +31,10 @@ $selectUseSearch = Components::checkAttr('selectUseSearch', $attributes, $manife
 $selectPlaceholder = Components::checkAttr('selectPlaceholder', $attributes, $manifest);
 $selectTypeCustom = Components::checkAttr('selectTypeCustom', $attributes, $manifest);
 $selectFieldAttrs = Components::checkAttr('selectFieldAttrs', $attributes, $manifest);
+$selectUseLabelAsPlaceholder = Components::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
+$selectHideLabel = false;
 $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
 
 $selectClass = Components::classnames([
@@ -45,8 +47,9 @@ if ($selectUseSearch) {
 	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($selectUseSearch);
 }
 
-if ($selectPlaceholder) {
-	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectPlaceholder']] = esc_attr($selectPlaceholder);
+if ($selectUseLabelAsPlaceholder) {
+	$selectPlaceholder = esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms');
+	$selectHideLabel = true;
 }
 
 $selectAttrsOutput = '';
@@ -59,13 +62,13 @@ if ($selectAttrs) {
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
 
-$placeholder = Components::render(
+$placeholder = $selectPlaceholder ? Components::render(
 	'select-option',
 	[
-		'selectOptionLabel' => $selectPlaceholder ?: esc_html__('Select option', 'eightshift-forms'), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		'selectOptionLabel' => $selectPlaceholder, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 		'selectOptionAsPlaceholder' => true,
 	]
-);
+) : '';
 
 $select = '
 	<select
@@ -92,6 +95,7 @@ echo Components::render(
 			'fieldDisabled' => !empty($selectIsDisabled),
 			'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $selectTracking,
+			'fieldHideLabel' => $selectHideLabel,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

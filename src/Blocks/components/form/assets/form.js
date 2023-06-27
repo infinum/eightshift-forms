@@ -472,6 +472,11 @@ export class Form {
 			const valueCountry = this.state.getStateElementValueCountry(key, formId);
 			const disabled = this.state.getStateElementIsDisabled(key, formId);
 
+			// Skip select search field.
+			if (name === 'search_terms') {
+				continue;
+			}
+
 			// Used for single submit.
 			if (useOnlyFields.length && !useOnlyFields.includes(name)) {
 				continue;
@@ -577,6 +582,8 @@ export class Form {
 					if (disabled) {
 						break;
 					}
+
+					console.log(name);
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
@@ -951,7 +958,6 @@ export class Form {
 				position: 'bottom',
 				allowHTML: true,
 				duplicateItemsAllowed: false,
-				placeholder: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_PLACEHOLDER, formId),
 				searchFields: [
 					'label',
 					'value',
@@ -1263,7 +1269,7 @@ export class Form {
 			const button = event.submitter;
 			const field = this.state.getFormFieldElementByChild(button);
 			// Steps flow.
-			let direction = button.getAttribute(this.state.getStateAttribute('submitStepDirection'));
+			let direction = field.getAttribute(this.state.getStateAttribute('submitStepDirection'));
 
 			if (field?.classList?.contains(this.state.getStateSelectorsClassHidden())) {
 				direction = this.steps.STEP_DIRECTION_NEXT;

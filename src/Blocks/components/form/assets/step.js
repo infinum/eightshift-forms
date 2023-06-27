@@ -86,7 +86,7 @@ export class Steps {
 
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
-			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`).closest(this.state.getStateSelectorsField())?.classList?.add(this.state.getStateSelectorsClassHidden());
+			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelectorsClassHidden());
 		}
 
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToNextStep());
@@ -149,7 +149,8 @@ export class Steps {
 
 		this.setChangeStep(formId, firstStep, []);
 
-		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelectorsStepSubmit()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`).closest(this.state.getStateSelectorsField())?.classList?.add(this.state.getStateSelectorsClassHidden());
+		// Hide prev button.
+		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`)?.classList?.add(this.state.getStateSelectorsClassHidden());
 	}
 
 	/**
@@ -169,8 +170,18 @@ export class Steps {
 		const currentStep = this.state.getStateFormStepsCurrent(formId);
 
 		this.state.getStateFormStepsElement(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormStepsElementProgressBar(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
 		this.state.getStateFormStepsElement(nextStep, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormStepsElementProgressBar(nextStep, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
 
+		this.state.getStateFormStepsElements(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelectorsClassFilled()));
+		this.state.getStateFormStepsElementsProgressBar(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelectorsClassFilled()));
+
+		flow.forEach((item) => {
+			this.state.getStateFormStepsElement(item, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
+			this.state.getStateFormStepsElementProgressBar(item, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
+		});
+		
 		this.state.setStateFormStepsCurrent(nextStep, formId);
 		this.state.setStateFormStepsFlow(flow, formId);
 	}

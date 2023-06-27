@@ -48,6 +48,7 @@ export const TextareaOptions = (attributes) => {
 	const textareaDisabledOptions = checkAttr('textareaDisabledOptions', attributes, manifest);
 	const textareaMinLength = checkAttr('textareaMinLength', attributes, manifest);
 	const textareaMaxLength = checkAttr('textareaMaxLength', attributes, manifest);
+	const textareaUseLabelAsPlaceholder = checkAttr('textareaUseLabelAsPlaceholder', attributes, manifest);
 
 	let textareaValidationPatternOptions = [];
 
@@ -72,13 +73,21 @@ export const TextareaOptions = (attributes) => {
 
 					<NameChangeWarning isChanged={isNameChanged} />
 
-					<TextControl
-						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={textareaPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('textareaPlaceholder', attributes, manifest), textareaDisabledOptions)}
-						className='es-no-field-spacing'
+					{!textareaUseLabelAsPlaceholder &&
+						<TextControl
+							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={textareaPlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('textareaPlaceholder', attributes, manifest), textareaDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Use label as placeholder', 'eightshift-forms')}
+						checked={textareaUseLabelAsPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value })}
 					/>
 				</Section>
 

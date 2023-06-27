@@ -20,13 +20,12 @@
 		"submitName": {
 			"type": "string"
 		},
+		"submitButtonComponent": {
+			"type": "string"
+		},
 		"submitValue": {
 			"type": "string",
 			"default": "Submit"
-		},
-		"submitIsLayoutFree": {
-			"type": "boolean",
-			"default": false
 		},
 		"submitIsDisabled": {
 			"type": "boolean",

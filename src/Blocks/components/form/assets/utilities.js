@@ -122,6 +122,10 @@ export class Utils {
 	unsetFieldError(formId, name) {
 		const error = this.state.getStateElementError(name, formId);
 
+		if (!error) {
+			return;
+		}
+
 		error?.classList?.remove(this.state.getStateSelectorsClassHasError());
 		this.state.setStateElementHasError(name, false, formId);
 		error.innerHTML = '';

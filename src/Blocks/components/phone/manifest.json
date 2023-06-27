@@ -27,6 +27,10 @@
 		"phonePlaceholder": {
 			"type": "string"
 		},
+		"phoneUseLabelAsPlaceholder": {
+			"type": "boolean",
+			"default": false
+		},
 		"phoneIsDisabled": {
 			"type": "boolean",
 			"default": false

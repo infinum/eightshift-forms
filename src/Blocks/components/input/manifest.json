@@ -39,6 +39,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"inputUseLabelAsPlaceholder": {
+			"type": "boolean",
+			"default": false
+		},
 		"inputIsReadOnly": {
 			"type": "boolean",
 			"default": false

@@ -173,8 +173,17 @@ export class State {
 	getStateFormStepsItems = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
 	};
+	getStateFormStepsElements = (formId) => {
+		return Object.values(getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], formId));
+	};
 	getStateFormStepsElement = (stepId, formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS, stepId], formId);
+	};
+	getStateFormStepsElementsProgressBar = (formId) => {
+		return Object.values(getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR], formId));
+	};
+	getStateFormStepsElementProgressBar = (stepId, formId) => {
+		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR, stepId], formId);
 	};
 	getStateFormStepsIsUsed = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.IS_USED], formId);

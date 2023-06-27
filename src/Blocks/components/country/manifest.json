@@ -21,6 +21,13 @@
 		"countryName": {
 			"type": "string"
 		},
+		"countryPlaceholder": {
+			"type": "string"
+		},
+		"countryUseLabelAsPlaceholder": {
+			"type": "boolean",
+			"default": false
+		},
 		"countryIsDisabled": {
 			"type": "boolean",
 			"default": false
