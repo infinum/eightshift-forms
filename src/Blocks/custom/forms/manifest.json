@@ -34,7 +34,11 @@
 			"default": []
 		},
 		"formsStyle": {
-			"type": "string"
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
 		},
 		"formsDownloads": {
 			"type": "array",

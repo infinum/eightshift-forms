@@ -36,5 +36,9 @@
 
 	.es-step {
 		display: none;
+
+		&__navigation {
+			display: none;
+		}
 	}
 }

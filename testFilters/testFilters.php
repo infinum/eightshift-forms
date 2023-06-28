@@ -129,7 +129,7 @@ class Testfilters implements ServiceInterface
 	 *
 	 * This filter will add new options to the style select dropdown in the forms block. Forms style option selector will not show unless a filter is provided. This option is shown in Block Editor.
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int, array<string, string>>
 	 */
 	public function getBlockFormsStyleOptions(): array
 	{
@@ -386,6 +386,9 @@ class Testfilters implements ServiceInterface
 	 * - radios
 	 * - select
 	 * - file
+	 * - phone
+	 * - date
+	 * - country
 	 * - submit
 	 *
 	 * @return array<string, mixed>
@@ -411,7 +414,6 @@ class Testfilters implements ServiceInterface
 				[
 					'label' => 'Custom Style',
 					'value' => 'custom-style',
-					'useCustom' => false, // This key can be used only on select, file and textarea and it removes the custom JS library from the component.
 				],
 			]
 		];

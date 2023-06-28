@@ -1,9 +1,5 @@
 @import './input-style.scss';
 
 input.es-input {
-	@include input-styles-disabled;
-
-	background-color: var(--es-input-disabled-background-color) !important;
-	border-radius: var(--es-input-radius) !important;
-	padding: 0 var(--es-input-spacing) !important;
+	@include input-styles-editor;
 }

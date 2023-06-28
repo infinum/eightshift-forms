@@ -105,11 +105,10 @@ echo Components::render(
 			'fieldName' => $inputName,
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
-			'fieldHideLabel' => $inputType === 'hidden',
 			'fieldUseError' => $inputType !== 'hidden',
 			'fieldTypeCustom' => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $inputTracking,
-			'fieldHideLabel' => $inputHideLabel,
+			'fieldHideLabel' => $inputHideLabel || $inputType === 'hidden',
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

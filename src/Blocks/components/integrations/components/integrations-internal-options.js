@@ -26,13 +26,7 @@ export const IntegrationsInternalOptions = ({
 					</div>
 				</Control>
 
-				<FormOptions
-					{...props('form', attributes, {
-						setAttributes,
-					})}
-				/>
-
-				<Section icon={icons.warning} label={__('Danger zone', 'eightshift-forms')} noBottomSpacing>
+				<Section icon={icons.warning} label={__('Danger zone', 'eightshift-forms')}>
 					<Control help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')} noBottomSpacing>
 						<Button
 							icon={icons.reset}
@@ -46,6 +40,12 @@ export const IntegrationsInternalOptions = ({
 						</Button>
 					</Control>
 				</Section>
+
+				<FormOptions
+					{...props('form', attributes, {
+						setAttributes,
+					})}
+				/>
 
 			</PanelBody>
 

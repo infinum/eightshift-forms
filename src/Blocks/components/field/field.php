@@ -74,6 +74,16 @@ $fieldIsFiftyFiftyHorizontal = Components::checkAttr('fieldIsFiftyFiftyHorizonta
 $fieldTypeCustom = Components::checkAttr('fieldTypeCustom', $attributes, $manifest);
 $fieldTracking = Components::checkAttr('fieldTracking', $attributes, $manifest);
 
+$fieldStyleOutput = [];
+if ($fieldStyle && gettype($fieldStyle) === 'array') {
+	$fieldStyleOutput = array_map(
+		static function ($item) use ($componentClass) {
+			return Components::selector(true, $componentClass, '', $item);
+		},
+		$fieldStyle
+	);
+}
+
 $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentClass, $componentClass, '', $selectorClass),
@@ -81,9 +91,9 @@ $fieldClass = Components::classnames([
 	Components::selector($fieldDisabled, $componentClass, '', 'disabled'),
 	Components::selector($fieldHidden, $componentClass, '', 'hidden'),
 	Components::selector($componentJsClass, $componentJsClass),
-	Components::selector($fieldStyle && $componentClass, $componentClass, '', $fieldStyle),
 	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
 	Components::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
+	...$fieldStyleOutput,
 ]);
 
 $labelClass = Components::classnames([

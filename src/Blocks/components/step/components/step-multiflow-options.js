@@ -3,12 +3,13 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { icons, getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel } from '@eightshift/frontend-libs/scripts';
 import { CONDITIONAL_TAGS_OPERATORS } from '../../conditional-tags/assets/utils';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import manifest from '../manifest.json';
 import { ROUTES, getRestUrl } from '../../form/assets/state';
+import { ProgressBarOptions } from '../../progress-bar/components/progress-bar-options';
 
 export const StepMultiflowOptions = (attributes) => {
 	const {
@@ -238,95 +239,90 @@ export const StepMultiflowOptions = (attributes) => {
 	};
 
 	return (
-		<PanelBody title={__('Multiflow form', 'eightshift-forms')}>
-			{(formFields?.length < 1) ? 
-				<Control
-					icon={icons.anchor}
-					label={__('Multi-flow setup', 'eightshift-forms')}
-					additionalLabelClasses='es-font-weight-500'
-					noBottomSpacing
-				>
-					<IconLabel
-						icon={icons.warningFillTransparent}
-						label={__('Feature unavailable', 'eightshift-forms')}
-						subtitle={__('It looks like you are missing step blocks.', 'eightshift-forms')}
-						additionalClasses='es-nested-color-yellow-500!'
-						addSubtitleGap
-						standalone
-					/>
-				</Control> :
-			 <>
-				<IconToggle
-					icon={icons.anchor}
-					label={__('Use steps multi-flow', 'eightshift-forms')}
-					checked={stepMultiflowUse}
-					onChange={(value) => {
-						setAttributes({ [getAttrKey('stepMultiflowUse', attributes, manifest)]: value });
+		<PanelBody title={__('Multi step/flow form', 'eightshift-forms')}>
+			{(formFields?.length > 1) ?
+				<>
+					<ProgressBarOptions {...props('progressBar', attributes)} />
 
-						if (!value) {
-							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: undefined });
-						} else {
-							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [] });
-						}
-					}}
-					noBottomSpacing={!stepMultiflowUse}
-					additionalClasses='es-font-weight-500'
-				/>
+					<IconToggle
+						icon={icons.anchor}
+						label={__('Use steps multi-flow', 'eightshift-forms')}
+						checked={stepMultiflowUse}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('stepMultiflowUse', attributes, manifest)]: value });
 
-				<Section showIf={stepMultiflowUse} noBottomSpacing>
-					<Control
-						icon={icons.conditionH}
-						label={__('Rules', 'eightshift-forms')}
-						// Translators: %d refers to the number of active rules
-						subtitle={stepMultiflowRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), stepMultiflowRules.length)}
-						noBottomSpacing
-						inlineLabel
-					>
-						<Button
-							variant='tertiary'
-							onClick={() => setIsModalOpen(true)}
-							className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
-						>
-							{stepMultiflowRules?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
-						</Button>
-					</Control>
-				</Section>
-
-				{isModalOpen &&
-					<Modal
-						overlayClassName='es-conditional-tags-modal es-geolocation-modal'
-						className='es-modal-max-width-5xl es-rounded-3!'
-						title={<IconLabel icon={icons.anchor} label={__('Multi-flow setup', 'eightshift-forms')} standalone />}
-						onRequestClose={() => {
-							setIsModalOpen(false);
+							if (!value) {
+								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: undefined });
+							} else {
+								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [] });
+							}
 						}}
-					>
-						<div className='es-v-spaced'>
-							<MultiflowType />
-						</div>
+						noBottomSpacing={!stepMultiflowUse}
+						additionalClasses='es-font-weight-500'
+					/>
 
-						<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
-							<IconLabel
-								icon={icons.lightBulb}
-								label={__('If you can\'t find a field, make sure the form is saved, and all fields have a name set.', 'eightshift-forms')}
-								additionalClasses='es-nested-color-yellow-500!'
-								standalone
-							/>
-
+					<Section showIf={stepMultiflowUse} noBottomSpacing>
+						<Control
+							icon={icons.conditionH}
+							label={__('Rules', 'eightshift-forms')}
+							// Translators: %d refers to the number of active rules
+							subtitle={stepMultiflowRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), stepMultiflowRules.length)}
+							noBottomSpacing
+							inlineLabel
+						>
 							<Button
-								variant='primary'
-								onClick={() => {
-									setIsModalOpen(false);
-								}}
-								className='es-rounded-1.5!'
+								variant='tertiary'
+								onClick={() => setIsModalOpen(true)}
+								className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
 							>
-								{__('Save', 'eightshift-forms')}
+								{stepMultiflowRules?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
 							</Button>
-						</div>
-					</Modal>
-				}
-			</>
-		}
+						</Control>
+					</Section>
+
+					{isModalOpen &&
+						<Modal
+							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
+							className='es-modal-max-width-5xl es-rounded-3!'
+							title={<IconLabel icon={icons.anchor} label={__('Multi-flow setup', 'eightshift-forms')} standalone />}
+							onRequestClose={() => {
+								setIsModalOpen(false);
+							}}
+						>
+							<div className='es-v-spaced'>
+								<MultiflowType />
+							</div>
+
+							<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
+								<IconLabel
+									icon={icons.lightBulb}
+									label={__('If you can\'t find a field, make sure the form is saved, and all fields have a name set.', 'eightshift-forms')}
+									additionalClasses='es-nested-color-yellow-500!'
+									standalone
+								/>
+
+								<Button
+									variant='primary'
+									onClick={() => {
+										setIsModalOpen(false);
+									}}
+									className='es-rounded-1.5!'
+								>
+									{__('Save', 'eightshift-forms')}
+								</Button>
+							</div>
+						</Modal>
+					}
+				</> :
+				<IconLabel
+					icon={icons.warningFillTransparent}
+					label={__('Feature unavailable', 'eightshift-forms')}
+					subtitle={__('It looks like you are missing step blocks.', 'eightshift-forms')}
+					additionalClasses='es-nested-color-yellow-500!'
+					addSubtitleGap
+					standalone
+				/>
+			}
 		</PanelBody>
 	);
 };

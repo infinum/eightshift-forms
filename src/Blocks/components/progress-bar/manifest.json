@@ -7,6 +7,14 @@
 	"attributes": {
 		"progressBarSteps": {
 			"type": "array"
+		},
+		"progressBarUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"progressBarMultiflowUse": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

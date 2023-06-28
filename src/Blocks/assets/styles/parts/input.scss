@@ -75,3 +75,9 @@
 	cursor: default;
 	background-color: var(--es-input-disabled-background-color);
 }
+
+@mixin input-styles-editor {
+	background-color: var(--es-input-disabled-background-color) !important; // stylelint-disable-line declaration-no-important
+	border-radius: var(--es-input-radius) !important; // stylelint-disable-line declaration-no-important
+	padding: 0 var(--es-input-spacing) !important; // stylelint-disable-line declaration-no-important
+}

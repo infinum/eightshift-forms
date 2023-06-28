@@ -37,7 +37,9 @@ if (!$stepContent) {
 
 $stepAttrs = [];
 
-$stepAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['stepId']] = esc_attr($stepName);
+if ($stepName) {
+	$stepAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['stepId']] = esc_attr($stepName);
+}
 
 $stepAttrsOutput = '';
 if ($stepAttrs) {
@@ -53,7 +55,7 @@ $nextButtonComponent = '';
 
 ?>
 
-<div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput ?>>
+<div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 
@@ -65,7 +67,7 @@ $nextButtonComponent = '';
 
 				if (has_filter($filterNameComponentPrev)) {
 					$prevButtonComponent = apply_filters($filterNameComponentPrev, [
-						'value' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')),
+						'value' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 						'jsSelector' => $jsSelector,
 						'attributes' => $attributes,
 					]);
@@ -76,7 +78,7 @@ $nextButtonComponent = '';
 					array_merge(
 						Components::props('submit', $attributes, [
 							'submitFieldHideLabel' => true,
-							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')),
+							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $prevButtonComponent,
 							'submitAttrs' => [
 								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['submitStepDirection'] => 'prev',
@@ -95,7 +97,7 @@ $nextButtonComponent = '';
 
 				if (has_filter($filterNameComponentNext)) {
 					$nextButtonComponent = apply_filters($filterNameComponentNext, [
-						'value' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')),
+						'value' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 						'jsSelector' => $jsSelector,
 						'attributes' => $attributes,
 					]);
@@ -106,7 +108,7 @@ $nextButtonComponent = '';
 					array_merge(
 						Components::props('submit', $attributes, [
 							'submitFieldHideLabel' => true,
-							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')),
+							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $nextButtonComponent,
 							'submitAttrs' => [
 								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['submitStepDirection'] => 'next',

@@ -10,8 +10,8 @@ import {
 	ResponsiveNumberPicker,
 	getDefaultBreakpointNames,
 	ucfirst,
-	Select,
 	Collapsable,
+	MultiSelect,
 } from '@eightshift/frontend-libs/scripts';
 import { TextControl, PanelBody } from '@wordpress/components';
 import manifest from '../manifest.json';
@@ -109,15 +109,13 @@ export const FieldOptionsAdvanced = (attributes) => {
 			setAttributes={setAttributes}
 		>
 			<>
-				{fieldStyleOptions &&
-					<Select
-						inlineLabel
-						icon={icons.color}
+				{fieldStyleOptions?.length > 0 &&
+					<MultiSelect
+						icon={icons.paletteColor}
 						label={__('Style', 'eightshift-forms')}
 						value={fieldStyle}
 						options={fieldStyleOptions}
 						onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
-						additionalSelectClasses='es-w-40'
 						simpleValue
 					/>
 				}

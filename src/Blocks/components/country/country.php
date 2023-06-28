@@ -50,7 +50,7 @@ if ($countryUseSearch) {
 }
 
 if ($countryUseLabelAsPlaceholder) {
-	$countryPlaceholder = esc_attr($countryFieldLabel) ?: esc_html__('Select country', 'eightshift-forms');
+	$countryPlaceholder = esc_attr($countryFieldLabel) ?: esc_html__('Select country', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	$countryHideLabel = true;
 }
 

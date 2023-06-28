@@ -125,15 +125,13 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 				</Section>
 
 				{formsStyleOptions?.length > 0 &&
-					<Select
+					<MultiSelect
 						icon={icons.paletteColor}
 						label={__('Form style preset', 'eightshift-forms')}
 						value={formsStyle}
 						options={formsStyleOptions}
 						onChange={(value) => setAttributes({ [getAttrKey('formsStyle', attributes, manifest)]: value })}
 						simpleValue
-						isSearchable={false}
-						isClearable={false}
 					/>
 				}
 			</PanelBody>

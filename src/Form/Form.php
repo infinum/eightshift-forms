@@ -181,7 +181,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 				$innerBlock['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
 				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = \wp_json_encode($formsConditionalTagsRulesForms);
-				$innerBlock['attrs']["{$blockName}FormProgressBarSteps"] = [];
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
 				$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
 
@@ -192,7 +191,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				if ($hasSteps && $innerBlock['innerBlocks'][0]['blockName'] !== "{$formsNamespace}/step") {
 					$innerBlock['attrs']["{$blockName}FormProgressBarSteps"][] = [
 						'name' => 'step-init',
-						'label' => __('Init', 'eightshift-forms'),
+						'label' => \__('Init', 'eightshift-forms'),
 					];
 
 					\array_unshift(
@@ -300,7 +299,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 							// Blocks in steps are passed as an attribute and we need to convert block to HTML string and append to the previous.
 							$inBlockOutput[$stepKey]['attrs']['stepStepContent'] = $inBlockOutput[$stepKey]['attrs']['stepStepContent'] . \apply_filters('the_content', \render_block($inBlock));
 						}
-
 					} else {
 						// Just populate normal blocks if there are no steps here.
 						$inBlockOutput[$inKey] = [
@@ -315,6 +313,8 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 				if ($hasSteps) {
 					// Add attribute to form component.
+					$innerBlock['attrs']["{$blockName}FormProgressBarMultiflowUse"] = $innerBlock['attrs']["{$blockName}StepMultiflowUse"] ?? false;
+					$innerBlock['attrs']["{$blockName}FormProgressBarUse"] = $innerBlock['attrs']["{$blockName}StepProgressBarUse"] ?? false;
 					$innerBlock['attrs']["{$blockName}FormHasSteps"] = true;
 
 					$inBlockOutput = \array_values($inBlockOutput);
@@ -337,9 +337,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				'innerContent' => $innerBlockOutput,
 			];
 		}
-
-		// error_log( print_r( ( $output ), true ) );
-		
 
 		return \array_values($output);
 	}

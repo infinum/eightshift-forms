@@ -87,7 +87,11 @@
 			"default": false
 		},
 		"fieldStyle": {
-			"type": "string"
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
 		},
 		"fieldAttrs": {
 			"type": "object"

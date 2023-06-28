@@ -5,6 +5,9 @@
 	"componentClass": "es-step",
 	"componentJsClass": "js-es-block-step",
 	"componentJsTriggerClass": "js-es-block-step-trigger",
+	"components": {
+		"progressBar": "progressBar"
+	},
 	"attributes": {
 		"stepName": {
 			"type": "string"

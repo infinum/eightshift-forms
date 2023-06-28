@@ -48,7 +48,7 @@ if ($selectUseSearch) {
 }
 
 if ($selectUseLabelAsPlaceholder) {
-	$selectPlaceholder = esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms');
+	$selectPlaceholder = esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	$selectHideLabel = true;
 }
 

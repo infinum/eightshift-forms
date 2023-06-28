@@ -583,8 +583,6 @@ export class Form {
 						break;
 					}
 
-					console.log(name);
-
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 			}
@@ -1030,9 +1028,9 @@ export class Form {
 				setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
 			});
 
-			choices.containerOuter.element.addEventListener('focus', this.onFocusEvent);
-			choices.containerOuter.element.addEventListener('blur', this.onBlurEvent);
-			choices.containerOuter.element.addEventListener('change', this.onSelectChangeEvent);
+			choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
+			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
+			choices?.containerOuter?.element.addEventListener('change', this.onSelectChangeEvent);
 		});
 	}
 

@@ -33,10 +33,20 @@ if (!$formsServerSideRender) {
 	$formsFormPostId = apply_filters(Geolocation::GEOLOCATION_IS_USER_LOCATED, $formsFormPostId, $formsFormGeolocation, $formsFormGeolocationAlternatives);
 }
 
+$formsStyleOutput = [];
+if ($formsStyle && gettype($formsStyle) === 'array') {
+	$formsStyleOutput = array_map(
+		static function ($item) use ($blockClass) {
+			return Components::selector(true, $blockClass, '', $item);
+		},
+		$formsStyle
+	);
+}
+
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	Components::selector($formsStyle, $blockClass, '', $formsStyle),
 	$attributes['className'] ?? '',
+	...$formsStyleOutput,
 ]);
 
 // Return nothing if it is on frontend.
