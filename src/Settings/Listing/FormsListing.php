@@ -53,10 +53,8 @@ class FormsListing implements FormListingInterface
 			return [];
 		}
 
-		while ($theQuery->have_posts()) {
-			$theQuery->the_post();
-
-			$id = (int) \get_the_ID();
+		foreach ($theQuery->get_posts() as $post) {
+			$id = (int) $post->ID;
 
 			// Output predefined array of data.
 			$output[] = [
