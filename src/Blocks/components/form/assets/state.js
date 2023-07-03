@@ -460,6 +460,15 @@ export class State {
 	getStateSelectorsClassVisible = () => {
 		return getState([StateEnum.SELECTORS_CLASS_VISIBLE], StateEnum.SELECTORS);
 	};
+	getStateSelectorsClassHiddenConditionalTags = () => {
+		return getState([StateEnum.SELECTORS_CLASS_HIDDEN_CT], StateEnum.SELECTORS);
+	};
+	getStateSelectorsClassVisibleConditionalTags = () => {
+		return getState([StateEnum.SELECTORS_CLASS_VISIBLE_CT], StateEnum.SELECTORS);
+	};
+	getStateSelectorsClassDisabled = () => {
+		return getState([StateEnum.SELECTORS_CLASS_DISABLED], StateEnum.SELECTORS);
+	};
 	getStateSelectorsClassHasError = () => {
 		return getState([StateEnum.SELECTORS_CLASS_HAS_ERROR], StateEnum.SELECTORS);
 	};

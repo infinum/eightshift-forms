@@ -192,7 +192,7 @@
 			opacity: 0.85;
 		}
 
-		&.has-error::before {
+		&.es-form-has-error::before {
 			background: var(--global-colors-esf-red-50);
 
 			&:hover::before {
@@ -232,11 +232,11 @@
 		}
 	}
 
-	&.is-hidden {
+	&.es-form-is-hidden {
 		display: none;
 	}
 
-	&.has-error {
+	&.es-form-has-error {
 		--global-colors-esf-admin-accent: var(--global-colors-esf-red-500);
 		--global-colors-esf-admin-accent-30: var(--global-colors-esf-red-50);
 		--global-colors-esf-admin-accent-05: var(--global-colors-esf-red-100);

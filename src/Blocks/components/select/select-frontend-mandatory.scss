@@ -3,7 +3,7 @@
 div.es-select {
 	.choices__list--dropdown {
 		.choices__placeholder,
-		[data-visibility='is-hidden'] {
+		[data-visibility='es-form-is-hidden-ct'] {
 			display: none !important; // stylelint-disable-line declaration-no-important
 		}
 	}

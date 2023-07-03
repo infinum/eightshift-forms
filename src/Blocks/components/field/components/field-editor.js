@@ -89,7 +89,7 @@ export const FieldEditor = (attributes) => {
 		selector(componentClass, componentClass),
 		selector(componentClass, componentClass, '', selectorClass),
 		selector(additionalFieldClass, additionalFieldClass),
-		selector(fieldHidden, componentClass, '', 'hidden'),
+		selector(fieldHidden, 'es-form-is-hidden'),
 		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
 	]);
 

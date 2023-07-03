@@ -2,7 +2,7 @@ export class Form {
 	constructor(options) {
 		this.formSelector = options.formSelector;
 
-		this.CLASS_ACTIVE = 'is-active';
+		this.CLASS_ACTIVE = 'es-form-is-active';
 	}
 
 	// Init all actions.

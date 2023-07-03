@@ -121,7 +121,7 @@ if ($adminListingForms) {
 		$formCardsToDisplay[] = Components::render('card', [
 			'additionalClass' => Components::classnames([
 				'js-es-admin-listing-item',
-				!$isFormValid && $adminListingType !== 'trash' ? 'has-error' : '',
+				!$isFormValid && $adminListingType !== 'trash' ? 'es-form-has-error' : '',
 			]),
 			'additionalAttributes' => [
 				'data-integration-type' => esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED),

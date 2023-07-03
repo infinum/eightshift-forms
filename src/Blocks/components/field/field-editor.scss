@@ -23,8 +23,7 @@
 		}
 	}
 
-	&--hidden &__inner,
-	&.is-hidden &__inner {
+	&.es-form-is-hidden &__inner {
 		opacity: 0.4;
 	}
 }

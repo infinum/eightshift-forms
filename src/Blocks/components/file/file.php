@@ -91,6 +91,7 @@ echo Components::render(
 			'fieldContent' => $file,
 			'fieldId' => $fileName,
 			'fieldName' => $fileName,
+			'fieldDisabled' => !empty($fileIsDisabled),
 			'fieldIsRequired' => $fileIsRequired,
 			'fieldTypeCustom' => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $fileTracking,

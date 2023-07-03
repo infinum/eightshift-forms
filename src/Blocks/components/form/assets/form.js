@@ -1336,8 +1336,14 @@ export class Form {
 		event.stopPropagation();
 
 		const field = this.state.getFormFieldElementByChild(event.target);
+		const formId = this.state.getFormIdByElement(event.target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'), formId);
 
-		this.state.getStateElementCustom(field.getAttribute(this.state.getStateAttribute('fieldName')), this.state.getFormIdByElement(event.target)).hiddenFileInput.click();
+		if (this.state.getStateElementIsDisabled(name, formId)) {
+			return;
+		}
+
+		this.state.getStateElementCustom(name, formId).hiddenFileInput.click();
 
 		field?.classList?.add(this.state.getStateSelectorsClassActive());
 	};

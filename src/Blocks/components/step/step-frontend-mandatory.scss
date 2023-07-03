@@ -4,7 +4,7 @@
 	width: 100%;
 	display: none;
 
-	&.is-active {
+	&.es-form-is-active {
 		display: block;
 	}
 
@@ -16,7 +16,7 @@
 			@include form-fields-children-mandatory-styles;
 		}
 
-		.es-field--submit.is-hidden {
+		.es-field--submit.es-form-is-hidden {
 			button {
 				pointer-events: none;
 			}

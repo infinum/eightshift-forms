@@ -3,8 +3,8 @@ export class Tabs {
 		this.tabsSelector = options.tabsSelector;
 		this.tabSelector = options.tabSelector;
 
-		this.CLASS_ACTIVE = 'is-active';
-		this.CLASS_LOADED = 'is-loaded';
+		this.CLASS_ACTIVE = 'es-form-is-active';
+		this.CLASS_LOADED = 'es-form-is-loaded';
 	}
 
 	init = () => {

@@ -3,7 +3,7 @@ export class Filter {
 		this.filterSelector = options.filterSelector;
 		this.itemSelector = options.itemSelector;
 
-		this.CLASS_HIDDEN = 'is-hidden';
+		this.CLASS_HIDDEN = 'es-form-is-hidden';
 
 		this.items = document.querySelectorAll(this.itemSelector);
 	}

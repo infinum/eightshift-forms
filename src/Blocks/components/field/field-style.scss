@@ -22,7 +22,7 @@
 		}
 	}
 
-	&.is-active {
+	&.es-form-is-active {
 		#{$this}__label {
 			color: var(--global-colors-esf-admin-accent);
 		}

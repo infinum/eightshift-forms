@@ -46,7 +46,7 @@ $checkboxClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($checkboxIsDisabled, $componentClass, '', 'disabled'),
+	Components::selector($checkboxIsDisabled, 'es-form-is-disabled'),
 ]);
 
 $checkboxInputClass = Components::classnames([

@@ -108,26 +108,26 @@ export class ConditionalTags {
 
 			if (tagVisibility === this.HIDE) {
 				// Handle hide state.
-				innerItem?.classList?.add(this.state.getStateSelectorsClassHidden());
+				innerItem?.classList?.add(this.state.getStateSelectorsClassHiddenConditionalTags());
 
 				// Select must set internal state for attributes due to rerendering in the choices lib.
 				if (tagInner && type === 'select') {
 					const customItem = this.state.getStateElementCustom(tagName, formId).config.choices.filter((item) => item.value === tagInner)?.[0];
 
 					if (customItem) {
-						customItem.customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHidden();
+						customItem.customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHiddenConditionalTags();
 					}
 				}
 			} else {
 				// Handle show state.
-				innerItem?.classList?.add(this.state.getStateSelectorsClassVisible());
+				innerItem?.classList?.add(this.state.getStateSelectorsClassVisibleConditionalTags());
 
 				// Select must set internal state for attributes due to rerendering in the choices lib.
 				if (tagInner && type === 'select') {
 					const customItem = this.state.getStateElementCustom(tagName, formId).config.choices.filter((item) => item.value === tagInner)?.[0];
 
 					if (customItem) {
-						customItem.customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisible();
+						customItem.customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisibleConditionalTags();
 					}
 				}
 			}
@@ -196,11 +196,11 @@ export class ConditionalTags {
 			const isValid = this.state.getStateElementConditionalTagsRef(name, formId)?.map((validItem) => validItem.every(Boolean)).some(Boolean);
 
 			// Reset to original state.
-			(defaults !== this.HIDE) ? field?.classList?.remove(this.state.getStateSelectorsClassHidden()) : field?.classList?.add(this.state.getStateSelectorsClassHidden());
+			(defaults !== this.HIDE) ? field?.classList?.remove(this.state.getStateSelectorsClassHiddenConditionalTags()) : field?.classList?.add(this.state.getStateSelectorsClassHiddenConditionalTags());
 
 			if (isValid) {
 				// Change state if valid.
-				(defaults !== this.HIDE) ? field?.classList?.add(this.state.getStateSelectorsClassHidden()) : field?.classList?.remove(this.state.getStateSelectorsClassHidden());
+				(defaults !== this.HIDE) ? field?.classList?.add(this.state.getStateSelectorsClassHiddenConditionalTags()) : field?.classList?.remove(this.state.getStateSelectorsClassHiddenConditionalTags());
 			}
 		}
 	}
@@ -232,19 +232,19 @@ export class ConditionalTags {
 				const isValid = this.state.getStateElementConditionalTagsRefInner(name, innerName, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
 
 				// Reset to original state.
-				(defaults !== this.HIDE) ? field?.classList?.remove(this.state.getStateSelectorsClassHidden()) : field?.classList?.add(this.state.getStateSelectorsClassHidden());
+				(defaults !== this.HIDE) ? field?.classList?.remove(this.state.getStateSelectorsClassHiddenConditionalTags()) : field?.classList?.add(this.state.getStateSelectorsClassHiddenConditionalTags());
 
 				if (isValid) {
 					// Change state if valid.
-					(defaults !== this.HIDE) ? field?.classList?.add(this.state.getStateSelectorsClassHidden()) : field?.classList?.remove(this.state.getStateSelectorsClassHidden());
+					(defaults !== this.HIDE) ? field?.classList?.add(this.state.getStateSelectorsClassHiddenConditionalTags()) : field?.classList?.remove(this.state.getStateSelectorsClassHiddenConditionalTags());
 				}
 
 				// If all items in in parent are hidden, hide the top level field.
-				if (parentField.querySelectorAll(`.${this.state.getStateSelectorsClassHidden()}`).length === items.length && items.length > 0) {
-					parentField?.classList?.add(this.state.getStateSelectorsClassHidden());
+				if (parentField.querySelectorAll(`.${this.state.getStateSelectorsClassHiddenConditionalTags()}`).length === items.length && items.length > 0) {
+					parentField?.classList?.add(this.state.getStateSelectorsClassHiddenConditionalTags());
 				} else {
 					if (defaults === this.HIDE) {
-						parentField?.classList?.remove(this.state.getStateSelectorsClassHidden());
+						parentField?.classList?.remove(this.state.getStateSelectorsClassHiddenConditionalTags());
 					}
 				}
 			});
@@ -295,38 +295,39 @@ export class ConditionalTags {
 				// Reset to original state.
 				if (defaults !== this.HIDE) {
 					// Set attribute.
-					field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassVisible());
+					field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassVisibleConditionalTags());
 
 					// Set object config value due to rerendering issue.
-					custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisible();
+					custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisibleConditionalTags();
 				} else {
 					// Set attribute.
-					field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassHidden());
+					field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassHiddenConditionalTags());
 
 					// Set object config value due to rerendering issue.
-					custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHidden();
+					custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHiddenConditionalTags();
 				}
 
 				if (isValid) {
 					// Change state if valid.
 					if (defaults !== this.HIDE) {
 						// Set attribute.
-						field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassHidden());
+						field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassHiddenConditionalTags());
 
 						// Set object config value due to rerendering issue.
-						custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHidden();
+						custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassHiddenConditionalTags();
 
 						// If current item to change is selected, unset the choice.
 						if (innerName === activeItem) {
+							// Filed will be unable to unset unless we have placeholder set.
 							custom.setChoiceByValue('');
 						}
 
 					 } else {
 						// Set attribute.
-						field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassVisible());
+						field.setAttribute(this.state.getStateAttribute('selectVisibility'), this.state.getStateSelectorsClassVisibleConditionalTags());
 
 						// Set object config value due to rerendering issue.
-						custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisible();
+						custom.config.choices[index].customProperties[this.state.getStateAttribute('selectVisibility')] = this.state.getStateSelectorsClassVisibleConditionalTags();
 					 }
 				}
 
@@ -334,17 +335,18 @@ export class ConditionalTags {
 				if (!isValid && defaults === this.HIDE) {
 					// If current item to change is selected, unset the choice.
 					if (innerName === activeItem) {
+						// Filed will be unable to unset unless we have placeholder set.
 						custom.setChoiceByValue('');
 					}
 				}
 
 				// If all items in in parent are hidden, hide the top level field.
-				if (parentField.querySelectorAll(`[${this.state.getStateAttribute('selectVisibility')}="${this.state.getStateSelectorsClassHidden()}"]`).length === items.length - 1 && items.length - 1 > 0) {
-					parentField?.classList?.add(this.state.getStateSelectorsClassHidden());
+				if (parentField.querySelectorAll(`[${this.state.getStateAttribute('selectVisibility')}="${this.state.getStateSelectorsClassHiddenConditionalTags()}"]`).length === items.length && items.length > 0) {
+					parentField?.classList?.add(this.state.getStateSelectorsClassHiddenConditionalTags());
 					custom.setChoiceByValue('');
 				} else {
 					if (defaults === this.HIDE) {
-						parentField?.classList?.remove(this.state.getStateSelectorsClassHidden());
+						parentField?.classList?.remove(this.state.getStateSelectorsClassHiddenConditionalTags());
 					}
 				}
 			});
@@ -474,7 +476,7 @@ export class ConditionalTags {
 	getIgnoreFields(formId) {
 		const output = [];
 		for(const [name] of this.state.getStateElements(formId)) {
-			const isHidden = this.state.getStateElementField(name, formId)?.classList?.contains(this.state.getStateSelectorsClassHidden());
+			const isHidden = this.state.getStateElementField(name, formId)?.classList?.contains(this.state.getStateSelectorsClassHiddenConditionalTags());
 
 			if (!isHidden) {
 				continue;
