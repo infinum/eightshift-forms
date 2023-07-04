@@ -152,20 +152,11 @@ export class State {
 	getStateFormStepsFirstStep = (formId) => {
 		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
 
-		if (!items) {
-			return '';
-		}
-
-		return Object.keys(items)?.[0];
+		return items ? Object.keys(items)?.[0] : '';
 	};
 	getStateFormStepsLastStep = (formId) => {
 		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
-
-		if (!items) {
-			return '';
-		}
-
-		return Object.keys(items)?.pop();
+		return items ? Object.keys(items)?.pop() : '';
 	};
 	getStateFormStepsItem = (stepId, formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS, stepId], formId);
@@ -174,13 +165,15 @@ export class State {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
 	};
 	getStateFormStepsElements = (formId) => {
-		return Object.values(getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], formId));
+		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], formId);
+		return items ? Object.values(items) : [];
 	};
 	getStateFormStepsElement = (stepId, formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS, stepId], formId);
 	};
 	getStateFormStepsElementsProgressBar = (formId) => {
-		return Object.values(getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR], formId));
+		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR], formId);
+		return items ? Object.values(items) : [];
 	};
 	getStateFormStepsElementProgressBar = (stepId, formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR, stepId], formId);
@@ -241,7 +234,8 @@ export class State {
 		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.LOADED, type, formId);
 	};
 	getStateElements = (formId) => {
-		return Object.entries(getState([StateEnum.ELEMENTS], formId));
+		const items = getState([StateEnum.ELEMENTS], formId);
+		return items ? Object.entries(items) : [];
 	};
 	getStateElementConditionalTagsDefaults = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], formId);
