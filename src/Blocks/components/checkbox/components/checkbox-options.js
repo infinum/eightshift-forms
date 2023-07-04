@@ -1,7 +1,8 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
+import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { MediaPlaceholder } from '@wordpress/block-editor';
 import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section, props } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -21,6 +22,7 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxIsReadOnly = checkAttr('checkboxIsReadOnly', attributes, manifest);
 	const checkboxTracking = checkAttr('checkboxTracking', attributes, manifest);
 	const checkboxDisabledOptions = checkAttr('checkboxDisabledOptions', attributes, manifest);
+	const checkboxIcon = checkAttr('checkboxIcon', attributes, manifest);
 
 	return (
 		<>
@@ -64,6 +66,30 @@ export const CheckboxOptions = (attributes) => {
 					checked={checkboxIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
 				/>
+
+				<Section
+					icon={icons.image}
+					label={__('Field icon', 'eightshift-forms')}
+				>
+					{checkboxIcon ? 
+						<>
+							<img src={checkboxIcon} alt='' />
+							<Button
+								onClick={() => {
+									setAttributes({ [getAttrKey('checkboxIcon', attributes, manifest)]: undefined });
+								}}
+								icon={icons.trash}
+								className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
+							/>
+						</> :
+						<MediaPlaceholder
+							accept={'image/*'}
+							multiple = {false}
+							allowedTypes={['image']}
+							onSelect={({ url }) => setAttributes({ [getAttrKey('checkboxIcon', attributes, manifest)]: url })}
+						/>
+					}
+				</Section>
 
 				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
 					<TextControl

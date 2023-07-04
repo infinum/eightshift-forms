@@ -233,6 +233,7 @@ export class Form {
 			.then((response) => {
 				this.formSubmitBefore(formId, response);
 				this.steps.formStepSubmit(formId, response);
+				this.steps.formStepSubmitAfter(formId, response);
 			});
 
 			this.FORM_DATA = new FormData();

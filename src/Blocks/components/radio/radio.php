@@ -28,6 +28,7 @@ $radioIsDisabled = Components::checkAttr('radioIsDisabled', $attributes, $manife
 $radioSingleSubmit = Components::checkAttr('radioSingleSubmit', $attributes, $manifest);
 $radioAttrs = Components::checkAttr('radioAttrs', $attributes, $manifest);
 $radioFieldAttrs = Components::checkAttr('radioFieldAttrs', $attributes, $manifest);
+$radioIcon = Components::checkAttr('radioIcon', $attributes, $manifest);
 
 $radioClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -91,6 +92,10 @@ if ($radioFieldAttrs) {
 			<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
 				<?php echo wp_kses_post(apply_filters('the_content', $radioLabel)); ?>
 			</span>
+
+			<?php if ($radioIcon) { ?>
+				<img  class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" src="<?php echo esc_url($radioIcon); ?>" alt="<?php echo esc_attr($radioLabel); ?>" />
+			<?php } ?>
 		</label>
 	</div>
 </div>

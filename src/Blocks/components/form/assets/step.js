@@ -65,6 +65,29 @@ export class Steps {
 	}
 
 	/**
+	 * Actions to run after form submit.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 *
+	 * @returns {void}
+	 */
+	formStepSubmitAfter(formId, response) {
+		// Reset timeout for after each submit.
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+		}
+
+		// Hide global msg in any case after some time.
+		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
+			this.utils.unsetGlobalMsg(formId);
+		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+
+		// Dispatch event.
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitEnd(), response);
+	}
+
+	/**
 	 * Go to next step in the flow.
 	 *
 	 * @param {string} formId Form Id.

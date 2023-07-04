@@ -37,6 +37,7 @@ $checkboxHideLabelText = Components::checkAttr('checkboxHideLabelText', $attribu
 $checkboxHideLabel = Components::checkAttr('checkboxHideLabel', $attributes, $manifest);
 $checkboxHelp = Components::checkAttr('checkboxHelp', $attributes, $manifest);
 $checkboxFieldAttrs = Components::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
+$checkboxIcon = Components::checkAttr('checkboxIcon', $attributes, $manifest);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
@@ -117,6 +118,10 @@ if ($checkboxFieldAttrs) {
 					<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
 						<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
 					</span>
+				<?php } ?>
+
+				<?php if ($checkboxIcon) { ?>
+					<img  class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
 				<?php } ?>
 			</label>
 		<?php } ?>

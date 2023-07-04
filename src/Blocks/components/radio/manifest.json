@@ -24,6 +24,9 @@
 		"radioLabel": {
 			"type": "string"
 		},
+		"radioIcon": {
+			"type": "string"
+		},
 		"radioValue": {
 			"type": "string"
 		},

@@ -59,6 +59,9 @@
 		"checkboxTracking": {
 			"type": "string"
 		},
+		"checkboxIcon": {
+			"type": "string"
+		},
 		"checkboxFieldType": {
 			"type": "string",
 			"default": "fieldset"
