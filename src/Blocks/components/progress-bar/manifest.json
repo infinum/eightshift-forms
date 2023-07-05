@@ -4,6 +4,7 @@
 	"title": "Progress bar",
 	"componentClass": "es-progress-bar",
 	"componentJsClass": "js-es-block-step-progress-bar",
+	"componentJsMultiflowClass": "js-es-block-step-progress-bar-multiflow",
 	"attributes": {
 		"progressBarSteps": {
 			"type": "array"
@@ -15,6 +16,9 @@
 		"progressBarMultiflowUse": {
 			"type": "boolean",
 			"default": false
+		},
+		"progressBarMultiflowInitCount": {
+			"type": "string"
 		}
 	}
 }

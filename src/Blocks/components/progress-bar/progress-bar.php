@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -14,6 +13,7 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
+$componentJsMultiflowClass = $manifest['componentJsMultiflowClass'] ?? '';
 
 $progressBarUse = Components::checkAttr('progressBarUse', $attributes, $manifest);
 
@@ -28,42 +28,32 @@ if (!$progressBarSteps) {
 }
 
 $progressBarMultiflowUse = Components::checkAttr('progressBarMultiflowUse', $attributes, $manifest);
+$progressBarMultiflowInitCount = Components::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest);
 
 $progressBarClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($progressBarMultiflowUse, $componentClass, '', 'multiflow'),
+	Components::selector(!$progressBarMultiflowUse, $componentJsClass),
+	Components::selector($progressBarMultiflowUse, $componentJsMultiflowClass),
 	Components::selector(!$progressBarMultiflowUse, $componentClass, '', 'multistep'),
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$progressBarItemClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'item'),
-	Components::selector($componentJsClass, $componentJsClass),
-]);
-
 ?>
-
 <div class="<?php echo esc_attr($progressBarClass); ?>">
-	<?php foreach ($progressBarSteps as $step) { ?>
-		<?php
-		$name = $step['name'] ?? '';
-		$label = $step['label'] ?? '';
-
-		if (!$name || !$label) {
-			continue;
-		}
-
-		$progressBarAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['stepId']] = esc_attr($name);
-
-		$progressBarAttrsOutput = '';
-		foreach ($progressBarAttrs as $key => $value) {
-			$progressBarAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-		}
-		?>
-		<div class="<?php echo esc_attr($progressBarItemClass); ?>" <?php echo $progressBarAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
-			<div class="<?php echo esc_attr("{$componentClass}__item-inner"); ?>">
-				<?php echo esc_html($label); ?>
-			</div>
-		</div>
-	<?php } ?>
+	<?php
+	if (!$progressBarMultiflowUse) {
+		echo Components::renderPartial('component', $manifest['componentName'], 'multistep', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			'steps' => $progressBarSteps,
+			'componentClass' => $componentClass,
+			'componentJsClass' => $componentJsClass,
+		]);
+	} else {
+		echo Components::renderPartial('component', $manifest['componentName'], 'multiflow', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			'count' => $progressBarMultiflowInitCount,
+		]);
+	}
+	?>
 </div>
+
+

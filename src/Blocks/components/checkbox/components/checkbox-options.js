@@ -3,7 +3,16 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, Section, props } from '@eightshift/frontend-libs/scripts';
+import {
+	checkAttr,
+	getAttrKey,
+	icons,
+	IconLabel,
+	IconToggle,
+	Section,
+	props,
+	AnimatedContentVisibility,
+} from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import manifest from '../manifest.json';
@@ -23,6 +32,7 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxTracking = checkAttr('checkboxTracking', attributes, manifest);
 	const checkboxDisabledOptions = checkAttr('checkboxDisabledOptions', attributes, manifest);
 	const checkboxIcon = checkAttr('checkboxIcon', attributes, manifest);
+	const checkboxHideLabelText = checkAttr('checkboxHideLabelText', attributes, manifest);
 
 	return (
 		<>
@@ -39,12 +49,25 @@ export const CheckboxOptions = (attributes) => {
 				/>
 				<NameChangeWarning isChanged={isNameChanged} type={'value'} />
 
-				<TextControl
-					label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}
-					value={checkboxLabel}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
+				<IconToggle
+					icon={icons.tag}
+					label={__('Label', 'eightshift-forms')}
+					checked={!checkboxHideLabelText}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxHideLabelText', attributes, manifest)]: !value })}
+					reducedBottomSpacing
 				/>
+
+				{!checkboxHideLabelText &&
+					<TextControl
+						value={checkboxLabel}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
+					/>
+				}
+
+				<AnimatedContentVisibility showIf={checkboxHideLabelText}>
+					<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
+				</AnimatedContentVisibility>
 
 				<IconToggle
 					icon={icons.checkSquare}

@@ -178,6 +178,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		$multiflow = $formDataReference['stepsSetup']['multiflow'] ?? [];
 
 		$nextStep = '';
+		$progressBarItems = 0;
 
 		if ($multiflow) {
 			$type = 'multiflow';
@@ -193,9 +194,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			}
 
 			foreach ($multiflow as $flow) {
-				$flowCurrent = $flow[1] ?? '';
 				$flowNext = $flow[0] ?? '';
+				$flowCurrent = $flow[1] ?? '';
 				$flowConditions = $flow[2] ?? [];
+				$flowProgressBarItems = $flow[3] ?? 0;
 
 				if (!$flowNext || !$flowCurrent || !$flowConditions) {
 					continue;
@@ -207,6 +209,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 
 				if ($this->checkFlowConditions($flowConditions, $params)) {
 					$nextStep = $flowNext;
+					$progressBarItems = $flowProgressBarItems;
 				}
 			}
 
@@ -225,6 +228,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 				[
 					'type' => $type,
 					'nextStep' => $nextStep,
+					'progressBarItems' => $progressBarItems,
 				]
 			)
 		);

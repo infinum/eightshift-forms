@@ -24,6 +24,14 @@
 		"radioLabel": {
 			"type": "string"
 		},
+		"radioHideLabelText": {
+			"type": "boolean",
+			"default": false
+		},
+		"radioHideLabel": {
+			"type": "boolean",
+			"default": false
+		},
 		"radioIcon": {
 			"type": "string"
 		},

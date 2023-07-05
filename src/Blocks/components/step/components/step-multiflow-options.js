@@ -19,6 +19,7 @@ export const StepMultiflowOptions = (attributes) => {
 	const stepMultiflowUse = checkAttr('stepMultiflowUse', attributes, manifest);
 	const stepMultiflowRules = checkAttr('stepMultiflowRules', attributes, manifest);
 	const stepMultiflowPostId = checkAttr('stepMultiflowPostId', attributes, manifest);
+	const stepProgressBarUse = checkAttr('stepProgressBarUse', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
@@ -82,6 +83,22 @@ export const StepMultiflowOptions = (attributes) => {
 							</div>
 
 							<ConditionalTagsType topParent={index}/>
+
+							{stepProgressBarUse &&
+								<div className='es-h-spaced es-mt-3'>
+									<span>{__('and show', 'eightshift-forms')}</span>
+										<TextControl
+											type={'number'}
+											value={stepMultiflowRules?.[index]?.[3]}
+											onChange={(value) => {
+												stepMultiflowRules[index][3] = value;
+												setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+											}}
+											className='es-w-15 es-mb-0'
+										/>
+									<span>{__('steps in the progress bar.', 'eightshift-forms')}</span>
+								</div>
+							}
 						</div>
 					);
 				})}
@@ -242,7 +259,11 @@ export const StepMultiflowOptions = (attributes) => {
 		<PanelBody title={__('Multi step/flow form', 'eightshift-forms')}>
 			{(formFields?.length > 1) ?
 				<>
-					<ProgressBarOptions {...props('progressBar', attributes)} />
+					<ProgressBarOptions
+						{...props('progressBar', attributes, {
+							progressBarMultiflowUse: stepMultiflowUse,
+						})}
+					/>
 
 					<IconToggle
 						icon={icons.anchor}
@@ -257,17 +278,19 @@ export const StepMultiflowOptions = (attributes) => {
 								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [] });
 							}
 						}}
-						noBottomSpacing={!stepMultiflowUse}
-						additionalClasses='es-font-weight-500'
+						additionalClasses='es-font-weight-500 es-mb-5'
 					/>
 
-					<Section showIf={stepMultiflowUse} noBottomSpacing>
+					<Section
+						showIf={stepMultiflowUse}
+						noBottomSpacing
+						additionalClasses='es-pl-5'
+					>
 						<Control
 							icon={icons.conditionH}
 							label={__('Rules', 'eightshift-forms')}
 							// Translators: %d refers to the number of active rules
 							subtitle={stepMultiflowRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), stepMultiflowRules.length)}
-							noBottomSpacing
 							inlineLabel
 						>
 							<Button

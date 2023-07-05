@@ -22,6 +22,8 @@ if (!$radioValue) {
 }
 
 $radioLabel = Components::checkAttr('radioLabel', $attributes, $manifest);
+$radioHideLabel = Components::checkAttr('radioHideLabel', $attributes, $manifest);
+$radioHideLabelText = Components::checkAttr('radioHideLabelText', $attributes, $manifest);
 $radioName = Components::checkAttr('radioName', $attributes, $manifest);
 $radioIsChecked = Components::checkAttr('radioIsChecked', $attributes, $manifest);
 $radioIsDisabled = Components::checkAttr('radioIsDisabled', $attributes, $manifest);
@@ -85,17 +87,21 @@ if ($radioFieldAttrs) {
 			<?php disabled($radioIsDisabled); ?>
 			<?php echo $radioAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 		/>
-		<label
-			for="<?php echo esc_attr($radioName); ?>"
-			class="<?php echo esc_attr("{$componentClass}__label"); ?>"
-		>
-			<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
-				<?php echo wp_kses_post(apply_filters('the_content', $radioLabel)); ?>
-			</span>
+		<?php if (!$radioHideLabel) { ?>
+			<label
+				for="<?php echo esc_attr($radioName); ?>"
+				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+			>
+				<?php if ($radioIcon) { ?>
+					<img  class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" src="<?php echo esc_url($radioIcon); ?>" alt="<?php echo esc_attr($radioLabel); ?>" />
+				<?php } ?>
 
-			<?php if ($radioIcon) { ?>
-				<img  class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" src="<?php echo esc_url($radioIcon); ?>" alt="<?php echo esc_attr($radioLabel); ?>" />
-			<?php } ?>
-		</label>
+				<?php if (!$radioHideLabelText) { ?>
+					<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+						<?php echo wp_kses_post(apply_filters('the_content', $radioLabel)); ?>
+					</span>
+				<?php } ?>
+			</label>
+		<?php } ?>
 	</div>
 </div>

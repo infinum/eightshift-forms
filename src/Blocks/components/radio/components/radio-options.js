@@ -3,7 +3,16 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, props, Section } from '@eightshift/frontend-libs/scripts';
+import {
+	checkAttr,
+	getAttrKey,
+	icons,
+	IconLabel,
+	IconToggle,
+	props,
+	Section,
+	AnimatedContentVisibility,
+} from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
@@ -21,6 +30,7 @@ export const RadioOptions = (attributes) => {
 	const radioIsDisabled = checkAttr('radioIsDisabled', attributes, manifest);
 	const radioDisabledOptions = checkAttr('radioDisabledOptions', attributes, manifest);
 	const radioIcon = checkAttr('radioIcon', attributes, manifest);
+	const radioHideLabelText = checkAttr('radioHideLabelText', attributes, manifest);
 
 	return (
 		<>
@@ -38,12 +48,25 @@ export const RadioOptions = (attributes) => {
 
 				<NameChangeWarning isChanged={isNameChanged} type={'value'} />
 
-				<TextControl
-					label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}
-					value={radioLabel}
-					onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}
+				<IconToggle
+					icon={icons.tag}
+					label={__('Label', 'eightshift-forms')}
+					checked={!radioHideLabelText}
+					onChange={(value) => setAttributes({ [getAttrKey('radioHideLabelText', attributes, manifest)]: !value })}
+					reducedBottomSpacing
 				/>
+
+				{!radioHideLabelText &&
+					<TextControl
+						value={radioLabel}
+						onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}
+					/>
+				}
+
+				<AnimatedContentVisibility showIf={radioHideLabelText}>
+					<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
+				</AnimatedContentVisibility>
 
 				<IconToggle
 					icon={icons.checkCircle}

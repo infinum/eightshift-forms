@@ -127,6 +127,9 @@ export const StateEnum = {
 	STEPS_CURRENT: 'current',
 	STEPS_ITEMS: 'items',
 	STEPS_ELEMENTS: 'elements',
+	STEPS_IS_MULTIFLOW: 'isMultiflow',
+	STEPS_PROGRESS_BAR_COUNT: 'progressBarCount',
+	STEPS_PROGRESS_BAR: 'progressBar',
 	STEPS_ELEMENTS_PROGRESS_BAR: 'elementsProgressBar',
 
 	// Specific selectors.
@@ -135,6 +138,7 @@ export const StateEnum = {
 	SELECTORS_SUBMIT_SINGLE: 'singleSubmit',
 	SELECTORS_STEP: `step`,
 	SELECTORS_STEP_PROGRESS_BAR: `stepProgressBar`,
+	SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW: `stepProgressBarMultiflow`,
 	SELECTORS_STEP_SUBMIT: `stepSubmit`,
 	SELECTORS_ERROR: `error`,
 	SELECTORS_LOADER: `loader`,
@@ -262,6 +266,7 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_SUBMIT_SINGLE], `.${componentJsClass}-single-submit`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_STEP], `.${componentJsClass}-step`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], `.${componentJsClass}-step-progress-bar`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW], `.${componentJsClass}-step-progress-bar-multiflow`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_STEP_SUBMIT], `.${componentJsClass}-step-trigger`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_ERROR], `.${componentJsClass}-error`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_LOADER], `.${componentJsClass}-loader`, StateEnum.SELECTORS);
@@ -325,47 +330,7 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(formElement.getAttribute(getStateAttribute('conditionalTags'))), formId);
 
 	// Steps.
-	const steps = formElement.querySelectorAll(getState([StateEnum.SELECTORS_STEP], StateEnum.SELECTORS));
-	setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.IS_USED], false, formId);
-
-	if (steps.length) {
-		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.IS_USED], true, formId);
-		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_FLOW], [], formId);
-		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], '', formId);
-		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], {}, formId);
-		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], {}, formId);
-
-		Object.values(steps).forEach((item, index) => {
-			const stepFields = item.querySelectorAll(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
-			const stepId = item.getAttribute(getStateAttribute('stepId'));
-			const stepOutput = [];
-
-			stepFields.forEach((stepField) => {
-				const stepFieldName = stepField.getAttribute(getStateAttribute('fieldName'));
-
-				if (stepFieldName) {
-					stepOutput.push(stepFieldName);
-				}
-			});
-
-			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS, stepId], item, formId);
-			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS, stepId], stepOutput, formId);
-
-			if (index === 0) {
-				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], stepId, formId);
-			}
-		});
-
-		const stepsProgressBar = formElement.querySelectorAll(getState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], StateEnum.SELECTORS));
-		if (stepsProgressBar.length) {
-			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR], {}, formId);
-
-			Object.values(stepsProgressBar).forEach((item) => {
-				const stepId = item.getAttribute(getStateAttribute('stepId'));
-				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR, stepId], item, formId);
-			});
-		}
-	}
+	setSteps(formElement, formId);
 
 	// Loop all fields.
 	for (const item of Object.values(formElement.querySelectorAll('input, select, textarea'))) {
@@ -504,6 +469,69 @@ export function setStateFormInitial(formId) {
 		// Conditional tags.
 		if (field) {
 			setStateConditionalTags(field, name, formId);
+		}
+	}
+}
+
+/**
+ * Set state for steps.
+ *
+ * @param {object} formElement Form element.
+ * @param {string} formId Form ID.
+ *
+ * * @returns {void}
+ */
+export function setSteps(formElement, formId) {
+	const steps = formElement.querySelectorAll(getState([StateEnum.SELECTORS_STEP], StateEnum.SELECTORS));
+	setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.IS_USED], false, formId);
+
+	if (steps.length) {
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.IS_USED], true, formId);
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_FLOW], [], formId);
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], '', formId);
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], {}, formId);
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], {}, formId);
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_IS_MULTIFLOW], false, formId);
+
+		Object.values(steps).forEach((item, index) => {
+			const stepFields = item.querySelectorAll(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
+			const stepId = item.getAttribute(getStateAttribute('stepId'));
+			const stepOutput = [];
+
+			stepFields.forEach((stepField) => {
+				const stepFieldName = stepField.getAttribute(getStateAttribute('fieldName'));
+
+				if (stepFieldName) {
+					stepOutput.push(stepFieldName);
+				}
+			});
+
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS, stepId], item, formId);
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS, stepId], stepOutput, formId);
+
+			if (index === 0) {
+				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], stepId, formId);
+			}
+		});
+
+		const stepsProgressBarMultiflow = formElement.querySelector(getState([StateEnum.SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW], StateEnum.SELECTORS));
+
+		if (stepsProgressBarMultiflow) {
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR], stepsProgressBarMultiflow, formId);
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR_COUNT], stepsProgressBarMultiflow?.children?.length, formId);
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_IS_MULTIFLOW], true, formId);
+		}
+
+		const stepsProgressBar = formElement.querySelector(getState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], StateEnum.SELECTORS));
+
+		if (stepsProgressBar) {
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR], stepsProgressBar, formId);
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR], {}, formId);
+
+			Object.values(stepsProgressBar).forEach((item) => {
+				const stepId = item.getAttribute(getStateAttribute('stepId'));
+				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR, stepId], item, formId);
+			});
 		}
 	}
 }

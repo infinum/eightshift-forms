@@ -314,6 +314,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				if ($hasSteps) {
 					// Add attribute to form component.
 					$innerBlock['attrs']["{$blockName}FormProgressBarMultiflowUse"] = $innerBlock['attrs']["{$blockName}StepMultiflowUse"] ?? false;
+					$innerBlock['attrs']["{$blockName}FormProgressBarMultiflowInitCount"] = $innerBlock['attrs']["{$blockName}StepProgressBarMultiflowInitCount"] ?? '';
 					$innerBlock['attrs']["{$blockName}FormProgressBarUse"] = $innerBlock['attrs']["{$blockName}StepProgressBarUse"] ?? false;
 					$innerBlock['attrs']["{$blockName}FormHasSteps"] = true;
 

@@ -114,14 +114,14 @@ if ($checkboxFieldAttrs) {
 				for="<?php echo esc_attr($checkboxName); ?>"
 				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
 			>
+				<?php if ($checkboxIcon) { ?>
+					<img  class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
+				<?php } ?>
+
 				<?php if (!$checkboxHideLabelText) { ?>
 					<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
 						<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
 					</span>
-				<?php } ?>
-
-				<?php if ($checkboxIcon) { ?>
-					<img  class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
 				<?php } ?>
 			</label>
 		<?php } ?>

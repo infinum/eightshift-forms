@@ -55,7 +55,7 @@ export class Steps {
 		} = response;
 
 		if (status === 'success') {
-			this.goToNextStep(formId, data?.nextStep);
+			this.goToNextStep(formId, data?.nextStep, parseInt(data?.progressBarItems, 10));
 		} else {
 			if (data?.validation !== undefined) {
 				this.utils.outputErrors(formId, data?.validation);
@@ -94,7 +94,7 @@ export class Steps {
 	 *
 	 * @returns {void}
 	 */
-	goToNextStep(formId, nextStep) {
+	goToNextStep(formId, nextStep, progressBarItems = 0) {
 		if (!nextStep) {
 			return;
 		}
@@ -105,7 +105,7 @@ export class Steps {
 			currentStep,
 		];
 
-		this.setChangeStep(formId, nextStep, flow);
+		this.setChangeStep(formId, nextStep, flow, progressBarItems);
 
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
@@ -185,28 +185,82 @@ export class Steps {
 	 *
 	 * @returns {void}
 	 */
-	setChangeStep(formId, nextStep, flow) {
+	setChangeStep(formId, nextStep, flow, progressBarItems = 0) {
 		if (!nextStep) {
 			return;
 		}
 
+		// Find current step.
 		const currentStep = this.state.getStateFormStepsCurrent(formId);
 
+		// Remove active from current step.
 		this.state.getStateFormStepsElement(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
-		this.state.getStateFormStepsElementProgressBar(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
+
+		// Add active to new step.
 		this.state.getStateFormStepsElement(nextStep, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
-		this.state.getStateFormStepsElementProgressBar(nextStep, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
 
+		// Reset filled steps.
 		this.state.getStateFormStepsElements(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelectorsClassFilled()));
-		this.state.getStateFormStepsElementsProgressBar(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelectorsClassFilled()));
 
+		// Add filled to all filled steps.
 		flow.forEach((item) => {
 			this.state.getStateFormStepsElement(item, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
-			this.state.getStateFormStepsElementProgressBar(item, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
 		});
-		
+
+		// Set progress bar.
+		this.setProgressBar(formId, nextStep, flow, progressBarItems);
+
+		// Update state with the new current step.
 		this.state.setStateFormStepsCurrent(nextStep, formId);
+
+		// Update state with the new flow.
 		this.state.setStateFormStepsFlow(flow, formId);
+	}
+
+	setProgressBar(formId, nextStep, flow, progressBarItems = 0) {
+		if (this.state.getStateFormStepsIsMultiflow(formId)) {
+			// Multiflow setup.
+
+			// Update count state when we have something from api.
+			if (progressBarItems > 0) {
+				this.state.setStateFormStepsProgressBarCount(progressBarItems, formId);
+			}
+
+			// Clear current progress bar.
+			this.state.getStateFormStepsProgressBar(formId).innerHTML = '';
+
+			// Loop items count from state and output empty divs.
+			for (let index = 0; index < this.state.getStateFormStepsProgressBarCount(formId); index++) {
+				// Create div element.
+				const node = document.createElement("div");
+
+				// Output active elements.
+				if ((flow?.length === 0 && index === 0) || (flow?.length > 0 && index <= flow?.length)) {
+					node.classList.add(this.state.getStateSelectorsClassFilled());
+				}
+
+				// Append div element to progress bar.
+				this.state.getStateFormStepsProgressBar(formId).append(node);
+			}
+		} else {
+			// Multistep setup.
+			// Find current step.
+			const currentStep = this.state.getStateFormStepsCurrent(formId);
+	
+			// Remove active from current step.
+			this.state.getStateFormStepsElementProgressBar(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
+	
+			// Add active to new step.
+			this.state.getStateFormStepsElementProgressBar(nextStep, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
+	
+			// Reset filled steps.
+			this.state.getStateFormStepsElementsProgressBar(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelectorsClassFilled()));
+	
+			// Add filled to all filled steps.
+			flow.forEach((item) => {
+				this.state.getStateFormStepsElementProgressBar(item, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
+			});
+		}
 	}
 
 	/**
