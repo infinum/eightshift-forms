@@ -8,19 +8,14 @@ domReady(() => {
 		throw 'Your project is missing the global "esFormsLocalization" variable called from the enqueue script.';
 	}
 
-	const {
-		componentJsClass,
-		componentJsTabClass,
-	} = manifest;
-
-	const selector = `.${componentJsClass}`;
+	const selector = `.${manifest.componentJsClass}`;
 	const elements = document.querySelectorAll(selector);
 
 	if (elements.length) {
 		import('./tabs').then(({ Tabs }) => {
 			const tabs = new Tabs({
 				tabsSelector: selector,
-				tabSelector: `.${componentJsTabClass}`,
+				tabSelector: `.${manifest.componentJsTabClass}`,
 			});
 
 			tabs.init();

@@ -1,5 +1,5 @@
 /* global esFormsLocalization */
-import { componentJsClass, componentClass } from './../../manifest.json';
+import manifest from './../../manifest.json';
 import { CONDITIONAL_TAGS_ACTIONS } from '../../../conditional-tags/assets/utils';
 
 ////////////////////////////////////////////////////////////////
@@ -251,28 +251,28 @@ export function setStateInitial() {
 	setState([StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP], getStateEventName(StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP), StateEnum.EVENTS);
 
 	// Selectors.
-	setState([StateEnum.SELECTORS_CLASS_ACTIVE], `${componentClass}-is-active`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_FILLED], `${componentClass}-is-filled`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_LOADING], `${componentClass}-is-loading`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_HIDDEN], `${componentClass}-is-hidden`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_HIDDEN_CT], `${componentClass}-is-hidden-ct`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_VISIBLE], `${componentClass}-is-visible`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_VISIBLE_CT], `${componentClass}-is-visible-ct`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_DISABLED], `${componentClass}-is-disabled`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_HAS_ERROR], `${componentClass}-has-error`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_ACTIVE], `${manifest.componentClass}-is-active`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_FILLED], `${manifest.componentClass}-is-filled`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_LOADING], `${manifest.componentClass}-is-loading`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_HIDDEN], `${manifest.componentClass}-is-hidden`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_HIDDEN_CT], `${manifest.componentClass}-is-hidden-ct`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_VISIBLE], `${manifest.componentClass}-is-visible`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_VISIBLE_CT], `${manifest.componentClass}-is-visible-ct`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_DISABLED], `${manifest.componentClass}-is-disabled`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_HAS_ERROR], `${manifest.componentClass}-has-error`, StateEnum.SELECTORS);
 
-	setState([StateEnum.SELECTORS_PREFIX], `.${componentJsClass}`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_FORM], `.${componentJsClass}`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_SUBMIT_SINGLE], `.${componentJsClass}-single-submit`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_STEP], `.${componentJsClass}-step`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], `.${componentJsClass}-step-progress-bar`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW], `.${componentJsClass}-step-progress-bar-multiflow`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_STEP_SUBMIT], `.${componentJsClass}-step-trigger`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_ERROR], `.${componentJsClass}-error`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_LOADER], `.${componentJsClass}-loader`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_GLOBAL_MSG], `.${componentJsClass}-global-msg`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_GROUP], `.${componentJsClass}-group`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_FIELD], `.${componentJsClass}-field`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_PREFIX], `.${manifest.componentJsClass}`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_FORM], `.${manifest.componentJsClass}`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_SUBMIT_SINGLE], `.${manifest.componentJsClass}-single-submit`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_STEP], `.${manifest.componentJsClass}-step`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], `.${manifest.componentJsClass}-step-progress-bar`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW], `.${manifest.componentJsClass}-step-progress-bar-multiflow`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_STEP_SUBMIT], `.${manifest.componentJsClass}-step-trigger`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_ERROR], `.${manifest.componentJsClass}-error`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_LOADER], `.${manifest.componentJsClass}-loader`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_GLOBAL_MSG], `.${manifest.componentJsClass}-global-msg`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_GROUP], `.${manifest.componentJsClass}-group`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_FIELD], `.${manifest.componentJsClass}-field`, StateEnum.SELECTORS);
 }
 
 /**

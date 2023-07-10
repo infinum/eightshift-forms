@@ -2,18 +2,8 @@
 
 import domReady from '@wordpress/dom-ready';
 import { Form } from './../assets/form';
-import {
-	componentCacheJsClass,
-	componentMigrationJsClass,
-	componentTransferJsClass,
-	componentTestApiJsClass,
-	componentManualImportApiJsClass,
-} from './../manifest.json';
-import {
-	componentJsFilterClass,
-	componentJsItemClass,
-	componentJsSyncClass,
-} from './../../admin-listing/manifest.json';
+import manifest from './../manifest.json';
+import adminListingManifest from './../../admin-listing/manifest.json';
 import { setStateInitial } from '../assets/state/init';
 
 domReady(() => {
@@ -30,7 +20,7 @@ domReady(() => {
 	// Cache
 	////////////////////////////////////////////////////////////////
 
-	const selectorCache = `.${componentCacheJsClass}`;
+	const selectorCache = `.${manifest.componentCacheJsClass}`;
 	const elementsCache = document.querySelectorAll(selectorCache);
 
 	if (elementsCache.length) {
@@ -45,14 +35,14 @@ domReady(() => {
 	// Migration
 	////////////////////////////////////////////////////////////////
 
-	const selectorMigration = `.${componentMigrationJsClass}`;
+	const selectorMigration = `.${manifest.componentMigrationJsClass}`;
 	const elementsMigration = document.querySelectorAll(selectorMigration);
 
 	if (elementsMigration.length) {
 		import('./migration').then(({ Migration }) => {
 			new Migration({
 				selector: selectorMigration,
-				outputSelector: `.${componentMigrationJsClass}-output`,
+				outputSelector: `.${manifest.componentMigrationJsClass}-output`,
 			}).init();
 		});
 	}
@@ -61,16 +51,16 @@ domReady(() => {
 	// Transfer
 	////////////////////////////////////////////////////////////////
 
-	const selectorTransfer = `.${componentTransferJsClass}`;
+	const selectorTransfer = `.${manifest.componentTransferJsClass}`;
 	const elementsTransfer = document.querySelectorAll(selectorTransfer);
 
 	if (elementsTransfer.length) {
 		import('./transfer').then(({ Transfer }) => {
 			new Transfer({
 				selector: selectorTransfer,
-				itemSelector: `.${componentTransferJsClass}-item`,
-				uploadSelector: `.${componentTransferJsClass}-upload`,
-				overrideExistingSelector: `.${componentTransferJsClass}-existing`,
+				itemSelector: `.${manifest.componentTransferJsClass}-item`,
+				uploadSelector: `.${manifest.componentTransferJsClass}-upload`,
+				overrideExistingSelector: `.${manifest.componentTransferJsClass}-existing`,
 				uploadConfirmMsg: esFormsLocalization.uploadConfirmMsg,
 			}).init();
 		});
@@ -80,7 +70,7 @@ domReady(() => {
 	// Test api
 	////////////////////////////////////////////////////////////////
 
-	const selectorTestApi = `.${componentTestApiJsClass}`;
+	const selectorTestApi = `.${manifest.componentTestApiJsClass}`;
 	const elementsTestApi = document.querySelectorAll(selectorTestApi);
 
 	if (elementsTestApi.length) {
@@ -95,14 +85,14 @@ domReady(() => {
 	// Filter
 	////////////////////////////////////////////////////////////////
 
-	const selectorFilter = `.${componentJsFilterClass}`;
+	const selectorFilter = `.${adminListingManifest.componentJsFilterClass}`;
 	const elementsFilter = document.querySelector(selectorFilter);
 
 	if (elementsFilter) {
 		import('./filter').then(({ Filter }) => {
 			const filter = new Filter({
 				filterSelector: selectorFilter,
-				itemSelector: `.${componentJsItemClass}`,
+				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
 			});
 
 			filter.init();
@@ -113,7 +103,7 @@ domReady(() => {
 	// Sync
 	////////////////////////////////////////////////////////////////
 
-	const selectorSync = `.${componentJsSyncClass}`;
+	const selectorSync = `.${adminListingManifest.componentJsSyncClass}`;
 	const elementsSync = document.querySelector(selectorSync);
 
 	if (elementsSync) {
@@ -130,15 +120,15 @@ domReady(() => {
 	// Sync
 	////////////////////////////////////////////////////////////////
 
-	const selectorManualImportApi = `.${componentManualImportApiJsClass}`;
+	const selectorManualImportApi = `.${manifest.componentManualImportApiJsClass}`;
 	const elementsManualImportApi = document.querySelector(selectorManualImportApi);
 
 	if (elementsManualImportApi) {
 		import('./manual-import-api').then(({ ManualImportApi }) => {
 			const manualImportApi = new ManualImportApi({
 				selector: selectorManualImportApi,
-				outputSelector: `.${componentManualImportApiJsClass}-output`,
-				dataSelector: `.${componentManualImportApiJsClass}-data`,
+				outputSelector: `.${manifest.componentManualImportApiJsClass}-output`,
+				dataSelector: `.${manifest.componentManualImportApiJsClass}-data`,
 			});
 
 			manualImportApi.init();

@@ -11,13 +11,9 @@ export const hooks = () => {
 
 	const namespace = select(STORE_NAME).getSettingsNamespace();
 
-	const {
-		blockName,
-	} = manifest;
-
 	// All adding additional blocks to the custom form builder.
-	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
-		if (name === `${namespace}/${blockName}`) {
+	addFilter('blocks.registerBlockType', `${namespace}/${manifest.blockName}`, (settings, name) => {
+		if (name === `${namespace}/${manifest.blockName}`) {
 			if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
 				esFormsLocalization.additionalBlocks.forEach((element) => {
 					if (!settings.attributes.hubspotAllowedBlocks.default.includes(element)) {
