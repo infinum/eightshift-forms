@@ -20,10 +20,11 @@ export class Cache {
 		event.preventDefault();
 
 		const formId = this.state.getFormIdByElement(event.target);
+		const field = this.state.getFormFieldElementByChild(event.target);
 
 		const formData = new FormData();
 
-		formData.append('type', event.target.getAttribute(this.state.getStateAttribute('cacheType')));
+		formData.append('type', field.getAttribute(this.state.getStateAttribute('cacheType')));
 
 		// Populate body data.
 		const body = {

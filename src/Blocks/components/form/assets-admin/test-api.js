@@ -20,7 +20,8 @@ export class TestApi {
 		event.preventDefault();
 
 		const formId = this.state.getFormIdByElement(event.target);
-		const integrationType = this.state.getStateFormTypeSettings(formId);
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const integrationType = field.getAttribute(this.state.getStateAttribute('testApiType'));
 
 		const formData = new FormData();
 

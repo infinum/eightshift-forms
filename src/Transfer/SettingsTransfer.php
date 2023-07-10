@@ -108,7 +108,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'cardContent' => [
 											[
 												'component' => 'submit',
-												'submitFieldSkip' => true,
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
@@ -128,7 +127,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'cardContent' => [
 											[
 												'component' => 'submit',
-												'submitFieldSkip' => true,
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
@@ -153,9 +151,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'cardContent' => [
 											[
 												'component' => 'submit',
-												'submitFieldSkip' => true,
 												'submitValue' => \__('Export selected', 'eightshift-forms'),
-												'submitIsDisabled' => true,
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
 													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_FORMS,
@@ -228,7 +224,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'cardContent' => [
 											[
 												'component' => 'submit',
-												'submitFieldSkip' => true,
 												'submitValue' => \__('Import JSON', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
@@ -264,7 +259,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 							],
 							[
 								'component' => 'submit',
-								'submitFieldSkip' => true,
 								'submitValue' => \__('Manual import', 'eightshift-forms'),
 								'submitVariant' => 'outline',
 								'additionalClass' => "{$manifestForm['componentManualImportApiJsClass']} es-submit--manual-import-api",

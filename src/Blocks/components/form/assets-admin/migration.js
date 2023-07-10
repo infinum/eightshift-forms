@@ -20,11 +20,12 @@ export class Migration {
 	onClick = (event) => {
 		event.preventDefault();
 
+		const formId = this.state.getFormIdByElement(event.target);
+		const field = this.state.getFormFieldElementByChild(event.target);
+
 		const formData = new FormData();
 
-		const formId = this.state.getFormIdByElement(event.target);
-
-		formData.append('type', event.target.getAttribute(this.state.getStateAttribute('migrationType')));
+		formData.append('type', field.getAttribute(this.state.getStateAttribute('migrationType')));
 
 		document.querySelector(this.outputSelector).value = 'Please wait, this may take a few minutes...';
 

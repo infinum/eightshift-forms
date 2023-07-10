@@ -81,7 +81,6 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 						'cardContent' => [
 							[
 								'component' => 'submit',
-								'submitFieldSkip' => true,
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
@@ -117,7 +116,6 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 						'cardContent' => [
 							[
 								'component' => 'submit',
-								'submitFieldSkip' => true,
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [

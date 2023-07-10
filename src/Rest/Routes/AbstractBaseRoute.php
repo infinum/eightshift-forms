@@ -78,6 +78,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'trackingAdditionalData' => 'data-tracking-additional-data',
 		'tracking' => 'data-tracking',
 		'cacheType' => 'data-cache-type',
+		'testApiType' => 'data-test-api-type',
 		'syncId' => 'data-sync-id',
 		'migrationType' => 'data-migration-type',
 		'migrationExportItems' => 'data-migration-export-items',

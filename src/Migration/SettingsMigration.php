@@ -84,7 +84,6 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'cardContent' => [
 							[
 								'component' => 'submit',
-								'submitFieldSkip' => true,
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
@@ -105,7 +104,6 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'cardContent' => [
 							[
 								'component' => 'submit',
-								'submitFieldSkip' => true,
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [

@@ -564,11 +564,10 @@ trait SettingsHelper
 	{
 		return [
 			'component' => 'submit',
-			'submitFieldSkip' => true,
 			'submitValue' => \__('Test API connection', 'eightshift-forms'),
 			'submitVariant' => 'outline',
 			'submitAttrs' => [
-				'data-type' => $key,
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['testApiType'] => $key,
 			],
 			'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
 		];

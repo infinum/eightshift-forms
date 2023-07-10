@@ -27,9 +27,9 @@ export class Transfer {
 	onClick = (event) => {
 		event.preventDefault();
 
-		const item = event.target;
-		const formId = this.state.getFormIdByElement(item);
-		const type = item.getAttribute(this.state.getStateAttribute('migrationType'));
+		const formId = this.state.getFormIdByElement(event.target);
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const type = field.getAttribute(this.state.getStateAttribute('migrationType'));
 
 		const formData = new FormData();
 
@@ -45,7 +45,7 @@ export class Transfer {
 
 			confirm(this.uploadConfirmMsg);
 		} else {
-			formData.append('items', item.getAttribute(this.state.getStateAttribute('migrationExportItems')));
+			formData.append('items', field.getAttribute(this.state.getStateAttribute('migrationExportItems')));
 		}
 
 		// Populate body data.
@@ -92,7 +92,7 @@ export class Transfer {
 	};
 
 	onClickItem = (event) => {
-		const button = document.querySelector(`${this.selector}[${this.state.getStateAttribute('migrationType')}='export-forms']`);
+		const button = document.querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('migrationType')}='export-forms']`);
 		const items = button.getAttribute(this.state.getStateAttribute('migrationExportItems'));
 
 		let output = items ? items.split(",") : [];
@@ -107,8 +107,6 @@ export class Transfer {
 		} else {
 			output = output.filter((item) => item !== value);
 		}
-
-		button.disabled = !output.length;
 
 		button.setAttribute(this.state.getStateAttribute('migrationExportItems'), output);
 	};
