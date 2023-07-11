@@ -333,6 +333,9 @@ export class State {
 	getStateElementInputSelect = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], formId);
 	};
+	getStateElementHasChanged = (name, formId) => {
+		return getState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], formId);
+	};
 
 	setStateElementValue = (name, value, formId) => {
 		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);

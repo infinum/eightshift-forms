@@ -39,6 +39,7 @@ export const StateEnum = {
 	ERROR: 'error',
 	GLOBAL_MSG: 'globalMsg',
 	HAS_ERROR: 'hasError',
+	HAS_CHANGED: 'hasChanged',
 	LOADED: 'loaded',
 	LOADER: 'loader',
 	ELEMENT: 'element',
@@ -458,6 +459,7 @@ export function setStateFormInitial(formId) {
 		}
 
 		setState([StateEnum.ELEMENTS, name, StateEnum.HAS_ERROR], false, formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.LOADED], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.NAME], name, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.FIELD], field, formId);
@@ -553,6 +555,7 @@ export function setStateValues(item, formId) {
  } = item;
 
  // Datepicker and dropzone are set using native lib events.
+	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
 
 	switch (type) {
 		case 'radio':

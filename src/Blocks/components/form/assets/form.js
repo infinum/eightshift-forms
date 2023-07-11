@@ -914,8 +914,12 @@ export class Form {
 				onOpen: function () {
 					utils.setFieldActiveState(formId, name);
 				},
-				onChange: function (selectedDates, value) {
-					state.setStateElementValue(name, value, formId);
+				onChange: function () {
+					setStateValues(input, formId);
+
+					if (state.getStateElementHasChanged(name, formId)) {
+						utils.unsetFieldError(formId, name);
+					}
 
 					utils.setFieldFilledState(formId, name);
 					conditionalTags.setField(formId, name);
@@ -1378,6 +1382,10 @@ export class Form {
 
 		setStateValues(event.target, this.state.getFormIdByElement(event.target));
 
+		if (this.state.getStateElementHasChanged(name, formId)) {
+			this.utils.unsetFieldError(formId, name);
+		}
+
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
 			if (type === 'country') {
 				const country = this.state.getStateElementValueCountry(name, formId);
@@ -1430,6 +1438,10 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
 		setStateValues(event.target, this.state.getFormIdByElement(event.target));
+
+		if (this.state.getStateElementHasChanged(name, formId)) {
+			this.utils.unsetFieldError(formId, name);
+		}
 
 		this.conditionalTags.setField(formId, name);
 
