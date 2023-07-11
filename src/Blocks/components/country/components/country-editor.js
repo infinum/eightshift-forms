@@ -5,9 +5,10 @@ import {
 	props,
 	checkAttr,
 	STORE_NAME,
+	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName } from '../../utils';
+import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const CountryEditor = (attributes) => {
@@ -20,9 +21,12 @@ export const CountryEditor = (attributes) => {
 
 	const {
 		additionalFieldClass,
+		blockClientId,
 	} = attributes;
 
 	const countryName = checkAttr('countryName', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('countryName', attributes, manifest), countryName);
 
 	const country = (
 		<>

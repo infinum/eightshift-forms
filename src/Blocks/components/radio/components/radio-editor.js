@@ -2,9 +2,9 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import classnames from 'classnames';
-import { selector, checkAttr, props, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import { MissingName } from './../../utils';
+import { MissingName, preventSaveOnMissingProps } from './../../utils';
 
 export const RadioEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('radio');
@@ -17,10 +17,13 @@ export const RadioEditor = (attributes) => {
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
+		blockClientId,
 	} = attributes;
 
 	const radioLabel = checkAttr('radioLabel', attributes, manifest);
 	const radioValue = checkAttr('radioValue', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('radioValue', attributes, manifest), radioValue);
 
 	const radioClass = classnames([
 		selector(componentClass, componentClass),

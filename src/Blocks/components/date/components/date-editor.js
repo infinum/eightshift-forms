@@ -6,9 +6,10 @@ import {
 	checkAttr,
 	props,
 	STORE_NAME,
+	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const DateEditor = (attributes) => {
@@ -17,12 +18,15 @@ export const DateEditor = (attributes) => {
 	const {
 		additionalFieldClass,
 		additionalClass,
+		blockClientId,
 	} = attributes;
 
 	const dateValue = checkAttr('dateValue', attributes, manifest);
 	const datePlaceholder = checkAttr('datePlaceholder', attributes, manifest);
 	const dateType = checkAttr('dateType', attributes, manifest);
 	const dateName = checkAttr('dateName', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('dateName', attributes, manifest), dateName);
 
 	const dateClass = classnames([
 		selector(manifest.componentClass, manifest.componentClass),
