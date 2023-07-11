@@ -1,5 +1,6 @@
-import { icons } from '@eightshift/frontend-libs/scripts';
 import React from 'react';
+import { select } from '@wordpress/data';
+import { STORE_NAME, icons } from '@eightshift/frontend-libs/scripts';
 
 export const InvalidEditor = ({ icon, heading, text }) => {
 	const manifest = select(STORE_NAME).getComponent('utils');
