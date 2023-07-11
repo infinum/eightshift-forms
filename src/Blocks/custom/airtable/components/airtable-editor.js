@@ -1,7 +1,7 @@
 import React from 'react';
-import { checkAttr } from '@eightshift/frontend-libs/scripts';
+import { select } from '@wordpress/data';
+import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { IntegrationsEditor } from './../../../components/integrations/components/integrations-editor';
-import manifest from './../manifest.json';
 
 export const AirtableEditor = ({
 	attributes,
@@ -10,6 +10,7 @@ export const AirtableEditor = ({
 	innerIdKey,
 	clientId,
 }) => {
+	const manifest = select(STORE_NAME).getBlock('airtable');
 
 	const {
 		blockClass,

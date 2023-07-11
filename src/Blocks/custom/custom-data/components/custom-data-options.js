@@ -2,15 +2,17 @@
 
 import React from 'react';
 import { isArray } from 'lodash';
+import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
-import { icons, props, checkAttr, IconLabel, getAttrKey, getOption, Select } from '@eightshift/frontend-libs/scripts';
+import { icons, props, checkAttr, IconLabel, getAttrKey, getOption, Select, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { SelectOptions } from '../../../components/select/components/select-options';
 import { CheckboxesOptions } from '../../../components/checkboxes/components/checkboxes-options';
 import { RadiosOptions } from '../../../components/radios/components/radios-options';
-import manifest from '../manifest.json';
 
 export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
+	const manifest = select(STORE_NAME).getBlock('custom-data');
+
 	const customDataData = checkAttr('customDataData', attributes, manifest);
 	const customDataFieldType = checkAttr('customDataFieldType', attributes, manifest);
 

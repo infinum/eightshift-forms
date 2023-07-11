@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { isArray } from 'lodash';
+import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
@@ -15,14 +16,16 @@ import {
 	Select,
 	IconToggle,
 	getOption,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import manifest from '../manifest.json';
 
 export const DateOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('date');
+
 	const {
 		setAttributes,
 		title = __('Date', 'eightshift-forms'),

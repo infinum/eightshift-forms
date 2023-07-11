@@ -2,17 +2,19 @@
 
 import React from 'react';
 import { useState } from '@wordpress/element';
+import { select } from '@wordpress/data';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import {icons,checkAttr,getAttrKey,IconLabel,props,IconToggle,Section,Select} from '@eightshift/frontend-libs/scripts';
+import {icons,checkAttr,getAttrKey,IconLabel,props,IconToggle,Section,Select, STORE_NAME} from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from '../manifest.json';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const PhoneOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('phone');
+
 	const {
 		setAttributes,
 		title = __('Phone', 'eightshift-forms'),

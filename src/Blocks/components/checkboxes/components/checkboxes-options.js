@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
+import { useSelect, select } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, icons, Section, IconToggle, AnimatedContentVisibility } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, icons, Section, IconToggle, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from '../manifest.json';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CheckboxesOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('checkboxes');
+
 	const {
 		options,
 	} = manifest;

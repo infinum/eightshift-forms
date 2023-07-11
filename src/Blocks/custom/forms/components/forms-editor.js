@@ -1,12 +1,14 @@
 import React from 'react';
-import { ServerSideRender, checkAttr, props, icons, AsyncSelect, getFetchWpApi, unescapeHTML, getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { select } from '@wordpress/data';
+import { ServerSideRender, checkAttr, props, icons, AsyncSelect, getFetchWpApi, unescapeHTML, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { __ } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { ConditionalTagsEditor } from '../../../components/conditional-tags/components/conditional-tags-editor';
 import { getFilteredAttributes } from '../../../components/utils';
-import manifest from '../manifest.json';
 
 export const FormsEditor = ({ attributes, setAttributes, preview }) => {
+	const manifest = select(STORE_NAME).getBlock('forms');
+
 	const {
 		blockFullName
 	} = attributes;

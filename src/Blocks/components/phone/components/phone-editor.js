@@ -10,9 +10,10 @@ import {
 import { FieldEditor } from '../../field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import manifest from '../manifest.json';
 
 export const PhoneEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('phone');
+
 	const {
 		componentClass,
 		componentName

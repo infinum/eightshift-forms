@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
+import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector } from '@eightshift/frontend-libs/scripts';
+import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
-import manifest from '../manifest.json';
 import { ROUTES, getRestUrl } from '../../form/assets/state';
 
 export const ConditionalTagsFormsOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('conditional-tags');
+
 	const {
 		setAttributes,
 	} = attributes;

@@ -1,18 +1,20 @@
 import React from 'react';
 import { camelCase } from 'lodash';
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { checkAttr, icons } from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME, checkAttr, icons } from '@eightshift/frontend-libs/scripts';
 import { createBlockFromTemplate, getAdditionalContentFilterContent } from './../../../components/utils';
-import manifest from './../manifest.json';
-import utilsManifest from './../../../components/utils/manifest.json';
 
 export const FormSelectorEditor = ({
 	attributes,
 	clientId,
 	hasInnerBlocks,
 }) => {
+	const manifest = select(STORE_NAME).getBlock('form-selector');
+	const utilsManifest = select(STORE_NAME).getComponent('utils');
+
 	const {
 		forms,
 	} = manifest;

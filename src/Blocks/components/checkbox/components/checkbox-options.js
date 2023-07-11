@@ -1,4 +1,5 @@
 import React from 'react';
+import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
@@ -12,12 +13,14 @@ import {
 	Section,
 	props,
 	AnimatedContentVisibility,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import manifest from '../manifest.json';
 
 export const CheckboxOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('checkbox');
+
 	const {
 		setAttributes,
 	} = attributes;

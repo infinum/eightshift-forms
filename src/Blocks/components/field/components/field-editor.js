@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { isObject } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { Tooltip } from '@wordpress/components';
-import { dispatch } from '@wordpress/data';
+import { dispatch, select } from '@wordpress/data';
 import {
 	selector,
 	checkAttr,
@@ -13,9 +13,10 @@ import {
 	STORE_NAME,
 	icons,
 } from '@eightshift/frontend-libs/scripts';
-import manifest from '../manifest.json';
 
 export const FieldEditorExternalBlocks = (props) => {
+	const manifest = select(STORE_NAME).getComponent('field');
+
 	const {
 		componentClass,
 	} = manifest;
@@ -45,6 +46,8 @@ export const FieldEditorExternalBlocks = (props) => {
 };
 
 export const FieldEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('field');
+
 	const {
 		componentClass,
 	} = manifest;

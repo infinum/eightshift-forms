@@ -5,6 +5,7 @@ import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
+import { select } from '@wordpress/data';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import {
@@ -23,13 +24,15 @@ import {
 	Section,
 	truncateMiddle,
 	Collapsable,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { FormEditButton, LocationsButton, SettingsButton, getSettingsJsonOptions } from '../../../components/utils';
-import manifest from '../manifest.json';
 import { ROUTES, getRestUrl } from '../../../components/form/assets/state';
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
+	const manifest = select(STORE_NAME).getBlock('forms');
+
 	const {
 		settings: {
 			successRedirectVariations,

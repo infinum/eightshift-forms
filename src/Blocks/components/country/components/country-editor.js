@@ -1,15 +1,18 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import {
 	props,
 	checkAttr,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import manifest from '../manifest.json';
 
 export const CountryEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('country');
+
 	const {
 		componentClass,
 		componentName

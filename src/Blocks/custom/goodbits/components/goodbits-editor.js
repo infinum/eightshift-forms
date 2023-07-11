@@ -1,13 +1,14 @@
 import React from 'react';
-import { checkAttr } from '@eightshift/frontend-libs/scripts';
+import { select } from '@wordpress/data';
+import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { IntegrationsEditor } from './../../../components/integrations/components/integrations-editor';
-import manifest from './../manifest.json';
 
 export const GoodbitsEditor = ({
 	attributes,
 	setAttributes,
 	itemIdKey,
 }) => {
+	const manifest = select(STORE_NAME).getBlock('goodbits');
 
 	const {
 		blockClass,

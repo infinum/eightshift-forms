@@ -1,13 +1,16 @@
 import React from 'react';
 import classnames from 'classnames';
+import { select } from '@wordpress/data';
 import {
 	selector,
 	checkAttr,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { MissingName } from './../../utils';
-import manifest from '../manifest.json';
 
 export const StepEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('step');
+
 	const {
 		componentClass,
 	} = manifest;

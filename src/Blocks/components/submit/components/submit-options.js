@@ -1,13 +1,15 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, props, IconToggle, Section } from '@eightshift/frontend-libs/scripts';
+import { icons, checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from '../manifest.json';
 import { isOptionDisabled } from './../../utils';
 
 export const SubmitOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('submit');
+
 	const {
 		setAttributes,
 	} = attributes;

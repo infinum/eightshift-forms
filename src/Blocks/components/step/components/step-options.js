@@ -1,12 +1,14 @@
 import React from 'react';
+import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, Section } from '@eightshift/frontend-libs/scripts';
+import { icons, checkAttr, getAttrKey, IconLabel, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { NameFieldLabel, NameChangeWarning } from './../../utils';
-import manifest from '../manifest.json';
 
 export const StepOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('step');
+
 	const {
 		setAttributes,
 	} = attributes;

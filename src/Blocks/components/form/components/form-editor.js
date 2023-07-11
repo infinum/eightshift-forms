@@ -1,9 +1,11 @@
 import React from 'react';
+import { select } from '@wordpress/data';
 import classnames from 'classnames';
-import { selector, checkAttr } from '@eightshift/frontend-libs/scripts';
-import manifest from '../manifest.json';
+import { selector, checkAttr, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 export const FormEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('form');
+
 	const {
 		componentClass,
 	} = manifest;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import { TextControl } from '@wordpress/components';
 import {
 	icons,
@@ -9,11 +10,13 @@ import {
 	IconToggle,
 	Section,
 	AnimatedContentVisibility,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled } from './../../utils';
-import manifest from '../manifest.json';
 
 export const FieldOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('field');
+
 	const {
 		setAttributes,
 

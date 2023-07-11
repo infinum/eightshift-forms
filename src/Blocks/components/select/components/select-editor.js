@@ -1,17 +1,20 @@
 import React from 'react';
 import classnames from 'classnames';
+import { select } from '@wordpress/data';
 import {
 	selector,
 	checkAttr,
 	props,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import { SelectOptionEditor } from './../../select-option/components/select-option-editor';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import manifest from '../manifest.json';
 
 export const SelectEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('select');
+
 	const {
 		componentClass,
 		componentName
@@ -34,7 +37,7 @@ export const SelectEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
-	const select = (
+	const selectComponent = (
 		<>
 			<div className={selectClass}>
 
@@ -66,7 +69,7 @@ export const SelectEditor = (attributes) => {
 		<>
 			<FieldEditor
 				{...props('field', attributes, {
-					fieldContent: select,
+					fieldContent: selectComponent,
 					fieldIsRequired: checkAttr('selectIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}

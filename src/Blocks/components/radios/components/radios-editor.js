@@ -1,14 +1,17 @@
 import React from 'react';
+import { select } from '@wordpress/data';
 import {
+	STORE_NAME,
 	checkAttr,
 	props,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import manifest from '../manifest.json';
 
 export const RadiosEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('radios');
+
 	const {
 		componentName
 	} = manifest;

@@ -1,13 +1,15 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
+import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, props } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, props, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import manifest from '../manifest.json';
 
 export const SelectOptionOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('select-option');
+
 	const {
 		setAttributes,
 	} = attributes;

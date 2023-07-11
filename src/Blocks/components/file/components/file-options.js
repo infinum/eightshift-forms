@@ -1,15 +1,17 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
+import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, Control } from '@eightshift/frontend-libs/scripts';
+import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, Control, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from '../manifest.json';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const FileOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('file');
+
 	const {
 		setAttributes,
 	} = attributes;

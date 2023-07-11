@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useState } from '@wordpress/element';
+import { select } from '@wordpress/data';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
@@ -17,14 +18,16 @@ import {
 	NumberPicker,
 	IconToggle,
 	Control,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from './../manifest.json';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const InputOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('input');
+
 	const {
 		options,
 	} = manifest;

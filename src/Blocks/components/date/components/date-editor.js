@@ -1,20 +1,18 @@
 import React from 'react';
 import classnames from 'classnames';
+import { select } from '@wordpress/data';
 import {
 	selector,
 	checkAttr,
 	props,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import manifest from '../manifest.json';
 
 export const DateEditor = (attributes) => {
-	const {
-		componentClass,
-		componentName
-	} = manifest;
+	const manifest = select(STORE_NAME).getComponent('date');
 
 	const {
 		additionalFieldClass,
@@ -27,7 +25,7 @@ export const DateEditor = (attributes) => {
 	const dateName = checkAttr('dateName', attributes, manifest);
 
 	const dateClass = classnames([
-		selector(componentClass, componentClass),
+		selector(manifest.componentClass, manifest.componentClass),
 		selector(additionalClass, additionalClass),
 	]);
 
@@ -49,7 +47,7 @@ export const DateEditor = (attributes) => {
 				/>
 			}
 
-			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
+			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(manifest.componentName) }} />
 		</>
 	);
 
@@ -61,7 +59,7 @@ export const DateEditor = (attributes) => {
 					fieldIsRequired: checkAttr('dateIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
+				selectorClass={manifest.componentName}
 			/>
 		</>
 	);

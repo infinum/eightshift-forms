@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import {
 	icons,
 	checkAttr,
@@ -12,12 +13,14 @@ import {
 	ucfirst,
 	Collapsable,
 	MultiSelect,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { TextControl, PanelBody } from '@wordpress/components';
-import manifest from '../manifest.json';
 import { isObject } from 'lodash';
 
 const FieldPanelItem = ({props}) => {
+	const manifest = select(STORE_NAME).getComponent('field');
+
 	const {
 		attributes,
 		setAttributes,
@@ -87,6 +90,8 @@ export const FieldPanel = (props) => {
 };
 
 export const FieldOptionsAdvanced = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('field');
+
 	const {
 		blockName,
 		setAttributes,

@@ -4,6 +4,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
+import { select } from '@wordpress/data';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import {
 	icons,
@@ -16,14 +17,16 @@ import {
 	IconToggle,
 	NumberPicker,
 	Control,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../../components/field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from '../manifest.json';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const TextareaOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('textarea');
+
 	const {
 		options,
 	} = manifest;

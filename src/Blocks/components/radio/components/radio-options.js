@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import {
@@ -12,12 +13,14 @@ import {
 	props,
 	Section,
 	AnimatedContentVisibility,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
-import manifest from '../manifest.json';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 
 export const RadioOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('radio');
+
 	const {
 		setAttributes,
 	} = attributes;

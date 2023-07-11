@@ -1,10 +1,12 @@
 import React from 'react';
+import { select } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, checkAttr, BlockInserter } from '@eightshift/frontend-libs/scripts';
+import { props, checkAttr, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { RadiosEditor as RadiosEditorComponent } from '../../../components/radios/components/radios-editor';
-import manifest from '../manifest.json';
 
 export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
+	const manifest = select(STORE_NAME).getBlock('radios');
+
 	const {
 		template,
 	} = manifest;

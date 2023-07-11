@@ -1,12 +1,14 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import classnames from 'classnames';
-import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import { MissingName } from './../../utils';
-import manifest from '../manifest.json';
 
 export const RadioEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('radio');
+
 	const {
 		componentClass,
 	} = manifest;

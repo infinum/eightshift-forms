@@ -1,12 +1,14 @@
 import React from 'react';
 import classnames from 'classnames';
-import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { select } from '@wordpress/data';
+import { selector, checkAttr, props, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { getAdditionalContentFilterContent, MissingName } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import manifest from './../manifest.json';
 
 export const InputEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('input');
+
 	const {
 		componentClass,
 		componentName

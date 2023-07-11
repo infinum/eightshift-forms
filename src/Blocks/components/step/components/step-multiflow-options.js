@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { icons, getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { CONDITIONAL_TAGS_OPERATORS } from '../../conditional-tags/assets/utils';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
-import manifest from '../manifest.json';
 import { ROUTES, getRestUrl } from '../../form/assets/state';
 import { ProgressBarOptions } from '../../progress-bar/components/progress-bar-options';
 
 export const StepMultiflowOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('step');
+
 	const {
 		setAttributes,
 	} = attributes;

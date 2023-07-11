@@ -1,16 +1,19 @@
 import React  from 'react';
+import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
 	props,
+	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import { MissingName } from './../../utils';
-import manifest from '../manifest.json';
 
 export const CheckboxEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('checkbox');
+
 	const {
 		componentClass,
 	} = manifest;

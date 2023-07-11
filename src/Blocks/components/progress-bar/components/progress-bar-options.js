@@ -1,10 +1,12 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { select } from '@wordpress/data';
 import { TextControl } from '@wordpress/components';
-import { icons, checkAttr, IconToggle, getAttrKey } from '@eightshift/frontend-libs/scripts';
-import manifest from '../manifest.json';
+import { icons, checkAttr, IconToggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 export const ProgressBarOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('progress-bar');
+
 	const {
 		setAttributes,
 	} = attributes;

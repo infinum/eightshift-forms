@@ -1,15 +1,17 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
+import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, icons, Section, IconToggle, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, icons, Section, IconToggle, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions } from '../../field/components/field-options';
 import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
-import manifest from '../manifest.json';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const RadiosOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('radios');
+
 	const {
 		setAttributes,
 	} = attributes;

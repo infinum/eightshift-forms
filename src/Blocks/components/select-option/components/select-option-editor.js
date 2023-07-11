@@ -1,12 +1,14 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
-import { selector, checkAttr, props } from '@eightshift/frontend-libs/scripts';
+import { select } from '@wordpress/data';
+import { selector, checkAttr, props, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import { MissingName } from './../../utils';
-import manifest from '../manifest.json';
 
 export const SelectOptionEditor = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('select-option');
+
 	const {
 		componentClass,
 	} = manifest;

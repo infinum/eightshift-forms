@@ -3,9 +3,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, IconLabel, Select, Control, Section } from '@eightshift/frontend-libs/scripts';
+import { icons, getAttrKey, checkAttr, IconToggle, IconLabel, Select, Control, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { getConstantsOptions } from '../../utils';
-import manifest from '../manifest.json';
 import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../assets/utils';
 import {
 	CONDITIONAL_TAGS_ACTIONS_LABELS,
@@ -15,6 +14,8 @@ import {
 import { ROUTES, getRestUrl } from '../../form/assets/state';
 
 export const ConditionalTagsOptions = (attributes) => {
+	const manifest = select(STORE_NAME).getComponent('conditional-tags');
+
 	const {
 		setAttributes,
 	} = attributes;
