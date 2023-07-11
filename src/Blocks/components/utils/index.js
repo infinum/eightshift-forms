@@ -379,20 +379,18 @@ export const NameFieldLabel = ({ value, label }) => {
  * @returns void
  */
 export const preventSaveOnMissingProps = (blockClientId, key, value) => {
-	// Allows trigering this action only when the block is inserted in the editor.
-	if (!select('core/block-editor').getBlock(blockClientId)) {
-		return;
-	}
-
-	// Use this method to detect if the block has been deleted from the block editor.
 	useEffect(() => {
+		// Allows trigering this action only when the block is inserted in the editor.
+		if (select('core/block-editor').getBlock(blockClientId)) {
+			// Lock/unlock depending on the value.
+			(value === '') ? lockPostEditing(blockClientId, key) : unlockPostEditing(blockClientId, key);
+		}
+
+		// Use this method to detect if the block has been deleted from the block editor.
 		return () => {
 			unlockPostEditing(blockClientId, key);
 		};
-	}, [key, blockClientId]);
-
-	// Lock/unlock depending on the value.
-	(value === '') ? lockPostEditing(blockClientId, key) : unlockPostEditing(blockClientId, key);
+	}, [key, value, blockClientId]);
 };
 
 /**
