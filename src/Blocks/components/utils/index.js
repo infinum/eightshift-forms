@@ -1,12 +1,22 @@
 /* global esFormsLocalization */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { Tooltip, Button } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { AnimatedContentVisibility, camelize, classnames, IconLabel, icons, STORE_NAME, Notification } from '@eightshift/frontend-libs/scripts';
+import {
+	AnimatedContentVisibility,
+	camelize,
+	classnames,
+	IconLabel,
+	icons,
+	STORE_NAME,
+	Notification,
+	lockPostEditing,
+	unlockPostEditing,
+} from '@eightshift/frontend-libs/scripts';
 import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
 
 /**
@@ -360,6 +370,30 @@ export const NameFieldLabel = ({ value, label }) => {
 };
 
 /**
+ * Toggle save on missing prop.
+ *
+ * @param {string} blockClientId Block client Id.
+ * @param {string} key Manifest key to check.
+ * @param {string} value Value to check..
+ *
+ * @returns void
+ */
+export const preventSaveOnMissingProps = (blockClientId, key, value) => {
+	useEffect(() => {
+		// Allows trigering this action only when the block is inserted in the editor.
+		if (select('core/block-editor').getBlock(blockClientId)) {
+			// Lock/unlock depending on the value.
+			(value === '') ? lockPostEditing(blockClientId, key) : unlockPostEditing(blockClientId, key);
+		}
+
+		// Use this method to detect if the block has been deleted from the block editor.
+		return () => {
+			unlockPostEditing(blockClientId, key);
+		};
+	}, [key, value, blockClientId]);
+};
+
+/**
  * Show warning if name value is changed.
  *
  * @param {bool} isChanged Is name changed.
@@ -367,7 +401,10 @@ export const NameFieldLabel = ({ value, label }) => {
  *
  * @returns Component
  */
-export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
+export const NameChangeWarning = ({
+		isChanged = false,
+		type = 'default'
+	}) => {
 	let text = '';
 
 	if (!isChanged) {

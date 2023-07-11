@@ -7,9 +7,10 @@ import {
 	checkAttr,
 	props,
 	STORE_NAME,
+	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import { MissingName } from './../../utils';
+import { MissingName, preventSaveOnMissingProps } from './../../utils';
 
 export const CheckboxEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('checkbox');
@@ -22,10 +23,13 @@ export const CheckboxEditor = (attributes) => {
 		selectorClass = componentClass,
 		blockClass,
 		additionalClass,
+		blockClientId,
 	} = attributes;
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
 	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
 
 	const checkboxClass = classnames([
 		selector(componentClass, componentClass),

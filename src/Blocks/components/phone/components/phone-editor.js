@@ -6,9 +6,10 @@ import {
 	checkAttr,
 	props,
 	STORE_NAME,
+	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const PhoneEditor = (attributes) => {
@@ -22,6 +23,7 @@ export const PhoneEditor = (attributes) => {
 	const {
 		additionalFieldClass,
 		additionalClass,
+		blockClientId,
 	} = attributes;
 
 	const manifestSelect = select(STORE_NAME).getComponent('select');
@@ -29,6 +31,8 @@ export const PhoneEditor = (attributes) => {
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
 	const phoneName = checkAttr('phoneName', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
 
 	const phoneClass = classnames([
 		selector(componentClass, componentClass),

@@ -5,9 +5,10 @@ import {
 	props,
 	checkAttr,
 	STORE_NAME,
+	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const FileEditor = (attributes) => {
@@ -20,12 +21,15 @@ export const FileEditor = (attributes) => {
 
 	const {
 		additionalFieldClass,
+		blockClientId,
 	} = attributes;
 
 	const fileName = checkAttr('fileName', attributes, manifest);
 	const fileCustomInfoText = checkAttr('fileCustomInfoText', attributes, manifest);
 	const fileCustomInfoTextUse = checkAttr('fileCustomInfoTextUse', attributes, manifest);
 	const fileCustomInfoButtonText = checkAttr('fileCustomInfoButtonText', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('fileName', attributes, manifest), fileName);
 
 	const file = (
 		<>

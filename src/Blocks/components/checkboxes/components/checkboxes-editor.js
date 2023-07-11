@@ -4,9 +4,10 @@ import {
 	STORE_NAME,
 	checkAttr,
 	props,
+	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const CheckboxesEditor = (attributes) => {
@@ -18,10 +19,13 @@ export const CheckboxesEditor = (attributes) => {
 
 	const {
 		additionalFieldClass,
+		blockClientId,
 	} = attributes;
 
 	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
 	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxesName', attributes, manifest), checkboxesName);
 
 	const checkboxes = (
 		<>

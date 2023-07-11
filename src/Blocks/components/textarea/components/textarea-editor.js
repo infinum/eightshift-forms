@@ -6,9 +6,10 @@ import {
 	checkAttr,
 	props,
 	STORE_NAME,
+	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const TextareaEditor = (attributes) => {
@@ -22,11 +23,14 @@ export const TextareaEditor = (attributes) => {
 	const {
 		additionalFieldClass,
 		additionalClass,
+		blockClientId,
 	} = attributes;
 
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
 	const textareaName = checkAttr('textareaName', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
 
 	const textareaClass = classnames([
 		selector(componentClass, componentClass),

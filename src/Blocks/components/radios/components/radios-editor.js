@@ -4,9 +4,10 @@ import {
 	STORE_NAME,
 	checkAttr,
 	props,
+	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName } from './../../utils';
+import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const RadiosEditor = (attributes) => {
@@ -18,10 +19,13 @@ export const RadiosEditor = (attributes) => {
 
 	const {
 		additionalFieldClass,
+		blockClientId,
 	} = attributes;
 
 	const radiosContent = checkAttr('radiosContent', attributes, manifest);
 	const radiosName = checkAttr('radiosName', attributes, manifest);
+
+	preventSaveOnMissingProps(blockClientId, getAttrKey('radiosName', attributes, manifest), radiosName);
 
 	const radios = (
 		<>
