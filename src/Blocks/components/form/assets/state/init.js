@@ -74,7 +74,7 @@ export const StateEnum = {
 	SETTINGS: 'settings',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
 	SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR: 'disableScrollToFieldOnError',
-	SETTINGS_FORM_RESET_ON_SUCCES: 'formResetOnSuccess',
+	SETTINGS_FORM_RESET_ON_SUCCESS: 'formResetOnSuccess',
 	SETTINGS_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS: 'formDisableNativeRedirectOnSuccess',
 	SETTINGS_REDIRECTION_TIMEOUT: 'redirectionTimeout',
 	SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT: 'hideGlobalMessageTimeout',
