@@ -479,11 +479,10 @@ export class Utils {
 	 * Redirect to url and update url params from from data.
 	 *
 	 * @param {string} formId Form Id.
-	 * @param {object} formData Form Data object.
 	 *
 	 * @returns {void}
 	 */
-	redirectToUrl(formId, formData) {
+	redirectToUrl(formId) {
 		let redirectUrl = this.state.getStateFormConfigSuccessRedirect(formId);
 
 		if (!redirectUrl) {
@@ -491,11 +490,20 @@ export class Utils {
 		}
 
 		// Replace string templates used for passing data via url.
-		for (var [key, val] of formData.entries()) { // eslint-disable-line no-unused-vars
-			if (typeof val === 'string') {
-				const { value, name } = JSON.parse(val);
-				redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
+		for(const [name] of this.state.getStateElements(formId)) {
+			let value = this.state.getStateElementValue(name, formId);
+			const type = this.state.getStateElementTypeCustom(name, formId);
+
+			// If checkbox split multiple.
+			if (type === 'checkbox') {
+				value = Object.values(value)?.filter((n) => n);
 			}
+
+			if (!value) {
+				value = '';
+			}
+
+			redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
 		}
 
 		const url = new URL(redirectUrl);
@@ -707,8 +715,8 @@ export class Utils {
 			resetForm: (formId) => {
 				this.resetForm(formId);
 			},
-			redirectToUrl: (formId, formData) => {
-				this.redirectToUrl(formId, formData);
+			redirectToUrl: (formId) => {
+				this.redirectToUrl(formId);
 			},
 			redirectToUrlByRefference: (formId, redirectUrl, reload) => {
 				this.redirectToUrlByRefference(formId, redirectUrl, reload);

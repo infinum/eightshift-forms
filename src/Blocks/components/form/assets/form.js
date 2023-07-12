@@ -289,7 +289,7 @@ export class Form {
 
 			if (this.state.getStateFormConfigSuccessRedirect(formId)) {
 				// Redirect to url and update url params from from data.
-				this.utils.redirectToUrl(formId, this.FORM_DATA);
+				this.utils.redirectToUrl(formId);
 			} else {
 				// Clear form values.
 				this.utils.resetForm(formId);
