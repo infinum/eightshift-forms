@@ -71,7 +71,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 				'component' => 'intro',
 				'introIsHighlighted' => true,
 				'introIsHighlightedImportant' => true,
-				'introSubtitle' => \__('Backup the database before running a migration.<br /> The process is not reversible.', 'eightshift-forms'),
+				'introSubtitle' => \__('Backup the database before running a migration and clear all cache. <br /> The process is not reversible.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'layout',

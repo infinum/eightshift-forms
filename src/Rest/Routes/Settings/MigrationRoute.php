@@ -22,6 +22,7 @@ use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
+use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Migration\MigrationHelper;
 use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Rest\ApiHelper;
@@ -238,6 +239,7 @@ class MigrationRoute extends AbstractBaseRoute
 					];
 					break;
 				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
+				case SettingsWorkable::SETTINGS_TYPE_KEY:
 					$preCheck = $this->updateFormIntegration3To4($type, 'job-id', '', $id, $content);
 
 					$output[$id] = [
