@@ -1021,7 +1021,7 @@ export class Form {
 				},
 			});
 
-			const countryCookie = cookies.getCookie('esForms-country').toLocaleLowerCase();
+			const countryCookie = cookies.getCookie('esForms-country')?.toLocaleLowerCase();
 			if (countryCookie) {
 				choices.setChoiceByValue(countryCookie);
 			}
