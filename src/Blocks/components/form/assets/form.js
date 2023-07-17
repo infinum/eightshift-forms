@@ -1034,6 +1034,8 @@ export class Form {
 				setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
 			});
 
+			this.utils.setFieldFilledState(formId, name);
+
 			choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
 			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
 			choices?.containerOuter?.element.addEventListener('change', this.onSelectChangeEvent);
