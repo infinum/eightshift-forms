@@ -19,7 +19,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $blockSsr = $attributes['blockSsr'] ?? false;
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$componentJsClass = $manifest['componentJsClass'] ?? '';
+$componentFormJsClass = $manifest['componentFormJsClass'] ?? '';
 
 $attributes = apply_filters(
 	Form::FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS,
@@ -59,7 +59,7 @@ $formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($componentJsClass, $componentJsClass),
+	Components::selector($componentFormJsClass, $componentFormJsClass),
 ]);
 
 if ($formDataTypeSelector) {

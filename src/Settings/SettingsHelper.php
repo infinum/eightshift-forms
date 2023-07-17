@@ -251,7 +251,7 @@ trait SettingsHelper
 	public function getLocale(): string
 	{
 		$locale = \get_locale();
-		$filterName = Filters::getFilterName(['general', 'setLocale']);
+		$filterName = Filters::getFilterName(['general', 'locale']);
 
 		if (\has_filter($filterName)) {
 			$locale = \apply_filters($filterName, $locale);

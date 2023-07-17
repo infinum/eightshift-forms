@@ -374,7 +374,7 @@ export const NameFieldLabel = ({ value, label }) => {
  *
  * @param {string} blockClientId Block client Id.
  * @param {string} key Manifest key to check.
- * @param {string} value Value to check..
+ * @param {string} value Value to check.
  *
  * @returns void
  */

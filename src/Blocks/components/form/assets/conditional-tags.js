@@ -520,7 +520,10 @@ export class ConditionalTags {
 	publicMethods() {
 		setStateWindow();
 
-		window[prefix].conditionalTags = {};
+		if (window[prefix].conditionalTags) {
+			return;
+		}
+
 		window[prefix].conditionalTags = {
 			SHOW: this.SHOW,
 			HIDE: this.HIDE,

@@ -22,6 +22,7 @@ use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Enqueue\SharedEnqueue;
+use EightshiftForms\Enqueue\Theme\EnqueueTheme;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -169,6 +170,30 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	public function getAssetsVersion(): string
 	{
 		return Config::getProjectVersion();
+	}
+
+	/**
+	 * Get frontend script dependencies.
+	 *
+	 * @return array<int, string> List of all the script dependencies.
+	 */
+	protected function getFrontendScriptDependencies(): array
+	{
+		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return [];
+		}
+
+		$scriptsDependency = Filters::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependencyOutput = [];
+
+		if (\has_filter($scriptsDependency)) {
+			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+		}
+
+		return [
+			"{$this->getAssetsPrefix()}-" . EnqueueTheme::CAPTCHA_ENQUEUE_HANDLE,
+			...$scriptsDependencyOutput,
+		];
 	}
 
 	/**

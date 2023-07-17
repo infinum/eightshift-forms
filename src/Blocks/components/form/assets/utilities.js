@@ -110,9 +110,8 @@ export class Utils {
 		this.state.getStateFormLoader(formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
 	}
 
-	// Remove one field error by name.
 	/**
-	 * Unset all error for fields.
+	 * Unset all error for fields by name.
 	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
@@ -178,6 +177,10 @@ export class Utils {
 	unsetGlobalMsg(formId) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
+		if (!messageContainer) {
+			return;
+		}
+
 		messageContainer?.classList?.remove(this.state.getStateSelectorsClassActive());
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
@@ -192,6 +195,10 @@ export class Utils {
 	 */
 	setGlobalMsg(formId, msg, status) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
+
+		if (!messageContainer) {
+			return;
+		}
 
 		messageContainer?.classList?.add(this.state.getStateSelectorsClassActive());
 		messageContainer.dataset.status = status;
@@ -269,7 +276,6 @@ export class Utils {
 		return Object.assign({}, { event: this.state.getStateFormTrackingEventName(formId), ...output });
 	}
 
-	// 
 	/**
 	 * Get GTM event with data and push to dataLayer.
 	 *
@@ -576,8 +582,13 @@ export class Utils {
 	 * @returns {void}
 	 */
 	isFormLoaded(formId) {
+		var iterations = 0;
 		const interval = setInterval(() => {
-			if (this.state.getStateElementByLoaded(false, formId).length === 0) {
+			if (iterations >= 20) {
+				clearInterval(interval);
+			}
+
+			if (this.state.getStateElementByLoaded(false, formId)?.length === 0) {
 				clearInterval(interval);
 
 				this.state.setStateFormIsLoaded(true, formId);
@@ -585,6 +596,7 @@ export class Utils {
 				// Triger event that form is fully loaded.
 				this.dispatchFormEvent(formId, this.state.getStateEventsFormJsLoaded());
 			}
+			iterations++;
 		}, 100);
 	}
 
@@ -656,7 +668,10 @@ export class Utils {
 	publicMethods() {
 		setStateWindow();
 
-		window[prefix].utils = {};
+		if (window[prefix].utils) {
+			return;
+		}
+
 		window[prefix].utils = {
 			resetErrors: (formId) => {
 				this.resetErrors(formId);
@@ -673,6 +688,9 @@ export class Utils {
 			showLoader: (formId) => {
 				this.showLoader(formId);
 			},
+			hideLoader: (formId) => {
+				this.hideLoader(formId);
+			},
 			unsetFieldError: (formId, name) => {
 				this.unsetFieldError(formId, name);
 			},
@@ -682,9 +700,7 @@ export class Utils {
 			outputErrors: (formId, data) => {
 				this.outputErrors(formId, data);
 			},
-			hideLoader: (formId) => {
-				this.hideLoader(formId);
-			},
+
 			unsetGlobalMsg: (formId) => {
 				this.unsetGlobalMsg(formId);
 			},
@@ -718,7 +734,7 @@ export class Utils {
 			redirectToUrl: (formId) => {
 				this.redirectToUrl(formId);
 			},
-			redirectToUrlByRefference: (formId, redirectUrl, reload) => {
+			redirectToUrlByRefference: (formId, redirectUrl, reload = false) => {
 				this.redirectToUrlByRefference(formId, redirectUrl, reload);
 			},
 			isFormLoaded: (formId) => {

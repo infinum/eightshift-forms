@@ -13,6 +13,7 @@ import {
 	setStateFormInitial,
 	setStateWindow,
 	setStateValues,
+	removeStateForm,
 	setStateConditionalTagsItems,
 } from './state/init';
 
@@ -33,6 +34,9 @@ export class Form {
 		this.FILTER_SKIP_FIELDS = 'skipFields';
 		this.FILTER_USE_ONLY_FIELDS = 'useOnlyFields';
 		this.GLOBAL_MSG_TIMEOUT_ID = undefined;
+
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -45,9 +49,6 @@ export class Form {
 	 * @returns {void}
 	 */
 	init() {
-		// Set all public methods.
-		this.publicMethods();
-
 		// Init all forms.
 		this.initOnlyForms();
 
@@ -1080,6 +1081,11 @@ export class Form {
 		const field = this.state.getStateElementField(name, formId);
 
 		import('dropzone').then((Dropzone) => {
+			// Prevent double init.
+			if (field.dropzone) {
+				return;
+			}
+
 			const dropzone = new Dropzone.default(
 				field,
 				{
@@ -1197,59 +1203,17 @@ export class Form {
 	 * @returns {vodi}
 	 */
 	removeEvents() {
-		// const elements = document.querySelectorAll(this.data.formSelector);
+		const formIds = this.state.getStateForms();
 
-		// [...elements].forEach((element) => {
-		// 	// Regular submit.
-		// 	element.removeEventListener('submit', this.onFormSubmitEvent);
+		// Bailout if no forms.
+		if (!formIds?.length) {
+			return;
+		}
 
-		// 	const formId = element.getAttribute(this.state.getStateAttribute('formId'));
-
-		// 	const inputs = element.querySelectorAll(this.data.inputSelector);
-		// 	const textareas = element.querySelectorAll(this.data.textareaSelector);
-		// 	const selects = element.querySelectorAll(this.data.selectSelector);
-		// 	const files = element.querySelectorAll(this.data.fileSelector);
-
-		// 	[...inputs].forEach((input) => {
-		// 		switch (input.type) {
-		// 			case 'date':
-		// 			case 'datetime-local':
-		// 				// this.state.deleteState(this.state.DATES, formId);
-		// 				break;
-		// 		}
-
-		// 		input.removeEventListener('keydown', this.onFocusEvent);
-		// 		input.removeEventListener('focus', this.onFocusEvent);
-		// 		input.removeEventListener('blur', this.onBlurEvent);
-		// 	});
-
-		// 	[...selects].forEach(() => {
-		// 		this.state.deleteState(this.state.SELECTS, formId);
-		// 	});
-
-		// 	// Setup textarea inputs.
-		// 	[...textareas].forEach((textarea) => {
-		// 		textarea.removeEventListener('keydown', this.onFocusEvent);
-		// 		textarea.removeEventListener('focus', this.onFocusEvent);
-		// 		textarea.removeEventListener('blur', this.onBlurEvent);
-
-		// 		// this.state.deleteState(this.state.TEXTAREAS, formId);
-		// 	});
-
-		// 	// Setup file single inputs.
-		// 	[...files].forEach((file) => {
-		// 		this.state.deleteState(this.state.FILES, formId);
-
-		// 		file.nextElementSibling.removeEventListener('click', this.onFileWrapClickEvent);
-
-		// 		const button = file.parentNode.querySelector('a');
-
-		// 		button.removeEventListener('focus', this.onFocusEvent);
-		// 		button.removeEventListener('blur', this.onBlurEvent);
-		// 	});
-
-		// 	this.state.dispatchFormEvent(element, this.state.getStateEventsAfterFormSubmitReset(), formId);
-		// });
+		// Clear form state only.
+		[...formIds].forEach((formId) => {
+			removeStateForm(formId);
+		});
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -1481,16 +1445,18 @@ export class Form {
 	 */
 	publicMethods() {
 		setStateWindow();
-		this.state.publicMethods();
 
-		window[prefix].form = {};
+		if (window[prefix].form) {
+			return;
+		}
+
 		window[prefix].form = {
+			FORM_DATA: this.FORM_DATA,
+
 			FILTER_IS_STEPS_FINAL_SUBMIT: this.FILTER_IS_STEPS_FINAL_SUBMIT,
 			FILTER_SKIP_FIELDS: this.FILTER_SKIP_FIELDS,
 			FILTER_USE_ONLY_FIELDS: this.FILTER_USE_ONLY_FIELDS,
 			GLOBAL_MSG_TIMEOUT_ID: this.GLOBAL_MSG_TIMEOUT_ID,
-
-			FORM_DATA: this.FORM_DATA,
 
 			init: () => {
 				this.init();
@@ -1501,32 +1467,38 @@ export class Form {
 			initOne: (element) => {
 				this.initOne(element);
 			},
-			formSubmit: (formId, filter) => {
+			formSubmit: (formId, filter = {}) => {
 				this.formSubmit(formId, filter);
 			},
-			formSubmitStep: (formId, filter) => {
+			formSubmitStep: (formId, filter = {}) => {
 				this.formSubmitStep(formId, filter);
 			},
 			formSubmitBefore: (formId, response) => {
 				this.formSubmitBefore(formId, response);
 			},
-			formSubmitSuccess: (formId, response, isFinalStep) => {
+			formSubmitSuccess: (formId, response, isFinalStep = false) => {
 				this.formSubmitSuccess(formId, response, isFinalStep);
 			},
-			formSubmitError: (formId, response, isFinalStep) => {
+			formSubmitError: (formId, response, isFinalStep = false) => {
 				this.formSubmitError(formId, response, isFinalStep);
 			},
 			formSubmitAfter: (formId, response) => {
 				this.formSubmitAfter(formId, response);
 			},
-			runFormCaptcha: (formId, filter) => {
+			runFormCaptcha: (formId, filter = {}) => {
 				this.runFormCaptcha(formId, filter);
 			},
-			setFormData: (formId, filter) => {
+			setFormData: (formId, filter = {}) => {
 				this.setFormData(formId, filter);
+			},
+			setFormDataFields: (formId, filter = {}) => {
+				this.setFormDataFields(formId, filter);
 			},
 			getFormDataGroup: (formId) => {
 				return this.getFormDataGroup(formId);
+			},
+			setFormDataStep: (formId) => {
+				return this.setFormDataStep(formId);
 			},
 			setFormDataCommon: (formId) => {
 				this.setFormDataCommon(formId);
@@ -1543,7 +1515,7 @@ export class Form {
 			setFormDataCaptcha: (data) => {
 				this.setFormDataCaptcha(data);
 			},
-			buildFormDataItems: (data, dataSet) => {
+			buildFormDataItems: (data, dataSet = this.FORM_DATA) => {
 				this.buildFormDataItems(data, dataSet);
 			},
 			setupInputField: (formId, name) => {
@@ -1588,45 +1560,6 @@ export class Form {
 			onBlurEvent: (event) => {
 				this.onBlurEvent(event);
 			},
-		// 	formSubmitCaptcha: (element, token, payed, action) => {
-		// 		this.formSubmitCaptcha(element, token, payed, action);
-		// 	},
-		// 	formSubmit: (element, singleSubmit = false, isStepSubmit = false) => {
-		// 		this.formSubmit(element, singleSubmit, isStepSubmit);
-		// 	},
-		// 	setFormData: (element, singleSubmit = false) => {
-		// 		this.setFormData(element, singleSubmit);
-		// 	},
-		// 	setupInputField: (input, formId) => {
-		// 		this.setupInputField(input, formId);
-		// 	},
-		// 	setupDateField: (date, formId) => {
-		// 		this.setupDateField(date, formId);
-		// 	},
-		// 	setupSelectField: (select, formId) => {
-		// 		this.setupSelectField(select, formId);
-		// 	},
-		// 	setupTextareaField: (textarea, formId) => {
-		// 		this.setupTextareaField(textarea, formId);
-		// 	},
-		// 	setupFileField: (file, formId, index, element) => {
-		// 		this.setupFileField(file, formId, index, element);
-		// 	},
-		// 	setupPhoneSync: (form, formId) => {
-		// 		this.setupPhoneSync(form, formId);
-		// 	},
-		// 	removeEvents: () => {
-		// 		this.removeEvents();
-		// 	},
-		// 	runFormCaptcha: (element = '') => {
-		// 		this.runFormCaptcha(element);
-		// 	},
-		// 	onFormSubmitEvent: (event) => {
-		// 		this.onFormSubmitEvent(event);
-		// 	},
-		// 	onFileWrapClickEvent: (event) => {
-		// 		this.onFileWrapClickEvent(event);
-		// 	},
 		};
 	}
 }

@@ -71,7 +71,9 @@ class Testfilters implements ServiceInterface
 			// General filters.
 			'es_forms_general_http_request_timeout' => ['getHttpRequestTimeout'],
 
-			'es_forms_general_set_locale' => ['setFormsLocale'],
+			'es_forms_general_locale' => ['getFormsLocale'],
+
+			'es_forms_general_scripts_dependency' => ['getScriptsDependency'],
 
 			// ---------------------------------------------------------------------------------------------------------
 			// Geolocation filters.
@@ -598,10 +600,22 @@ class Testfilters implements ServiceInterface
 	 *
 	 * @return string
 	 */
-	public function setFormsLocale(string $locale): string
+	public function getFormsLocale(string $locale): string
 	{
 		// Get the custom locale (e.g. from WPML plugin).
 		return $locale;
+	}
+
+	/**
+	 * Provide custom scripts dependency.
+	 *
+	 * This filter will provide you with the ability to add custom scripts dependency so you can load your project scripts before the forms scripts.
+	 *
+	 * @return string<int, string>
+	 */
+	public function getScriptsDependency(): array
+	{
+		return [];
 	}
 
 	// -----------------------------------------------------------------------------------------------------------

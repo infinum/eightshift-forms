@@ -13,6 +13,10 @@ import {
 } from './state/init';
 
 export class State {
+	constructor() {
+		// Set all public methods.
+		this.publicMethods();
+	}
 	////////////////////////////////////////////////////////////////
 	// Helpers getters.
 	////////////////////////////////////////////////////////////////
@@ -39,6 +43,9 @@ export class State {
 	// Form getters.
 	////////////////////////////////////////////////////////////////
 
+	getStateForms = () => {
+		return getStateTop(StateEnum.FORMS);
+	};
 	getStateForm = (formId) => {
 		return getState([StateEnum.FORM], formId);
 	};
@@ -106,7 +113,7 @@ export class State {
 	};
 
 	////////////////////////////////////////////////////////////////
-	// global Msg getters.
+	// Global msg getters.
 	////////////////////////////////////////////////////////////////
 
 	getStateFormGlobalMsgElement = (formId) => {
@@ -440,6 +447,9 @@ export class State {
 	getStateEventsFormJsLoaded = () => {
 		return getState([StateEnum.EVENTS_FORM_JS_LOADED], StateEnum.EVENTS);
 	};
+	getStateEventsFormManualInitLoaded = () => {
+		return getState([StateEnum.EVENTS_FORM_MANUAL_INIT_LOADED], StateEnum.EVENTS);
+	};
 	getStateEventsAfterCaptchaInit = () => {
 		return getState([StateEnum.EVENTS_AFTER_CAPTCHA_INIT], StateEnum.EVENTS);
 	};
@@ -536,7 +546,7 @@ export class State {
 	////////////////////////////////////////////////////////////////
 
 	getStateFilteredBykey = (obj, targetKey, findItem, formId) => {
-		return Object.values(Object.fromEntries(Object.entries(getState([obj], formId)).filter(([key, value]) => value[targetKey] === findItem))); // eslint-disable-line no-unused-vars
+		return Object?.values(Object?.fromEntries(Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem))); // eslint-disable-line no-unused-vars
 	};
 	getFormElementByChild = (element) => {
 		return element.closest(this.getStateSelectorsForm());
@@ -565,6 +575,10 @@ export class State {
 	 */
 	publicMethods() {
 		setStateWindow();
+
+		if (window[prefix].store) {
+			return;
+		}
 
 		window[prefix].store = this;
 	}

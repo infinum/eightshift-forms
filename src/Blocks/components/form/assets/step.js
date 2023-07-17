@@ -182,6 +182,7 @@ export class Steps {
 	 * @param {string} formId Form Id.
 	 * @param {string} nextStep Next step Id.
 	 * @param {array} flow Flow to update.
+	 * @param {int} progressBarItems Progress bar number of items.
 	 *
 	 * @returns {void}
 	 */
@@ -217,6 +218,16 @@ export class Steps {
 		this.state.setStateFormStepsFlow(flow, formId);
 	}
 
+	/**
+	 * Set progress bar.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} nextStep Next step Id.
+	 * @param {array} flow Flow to update.
+	 * @param {int} progressBarItems Progress bar number of items.
+	 *
+	 * @returns {void}
+	 */
 	setProgressBar(formId, nextStep, flow, progressBarItems = 0) {
 		if (this.state.getStateFormStepsIsMultiflow(formId)) {
 			// Multiflow setup.
@@ -320,7 +331,10 @@ export class Steps {
 	publicMethods() {
 		setStateWindow();
 
-		window[prefix].step = {};
+		if (window[prefix].step) {
+			return;
+		}
+
 		window[prefix].step = {
 			STEP_DIRECTION_PREV: this.STEP_DIRECTION_PREV,
 			STEP_DIRECTION_NEXT: this.STEP_DIRECTION_NEXT,
@@ -331,8 +345,11 @@ export class Steps {
 			formStepSubmit: (formId, response) => {
 				this.formStepSubmit(formId, response);
 			},
-			goToNextStep: (formId, nextStep) => {
-				this.goToNextStep(formId, nextStep);
+			formStepSubmitAfter: (formId, response) => {
+				this.formStepSubmitAfter(formId, response);
+			},
+			goToNextStep: (formId, nextStep, progressBarItems = 0) => {
+				this.goToNextStep(formId, nextStep, progressBarItems);
 			},
 			goToPrevStep: (formId) => {
 				this.goToPrevStep(formId);
@@ -343,8 +360,11 @@ export class Steps {
 			resetSteps: (formId) => {
 				this.resetSteps(formId);
 			},
-			setChangeStep: (formId, nextStep, flow) => {
-				this.setChangeStep(formId, nextStep, flow);
+			setChangeStep: (formId, nextStep, flow, progressBarItems = 0) => {
+				this.setChangeStep(formId, nextStep, flow, progressBarItems);
+			},
+			setProgressBar: (formId, nextStep, flow, progressBarItems = 0) => {
+				this.setProgressBar(formId, nextStep, flow, progressBarItems);
 			},
 			getIgnoreFields: (formId) => {
 				return this.getIgnoreFields(formId);

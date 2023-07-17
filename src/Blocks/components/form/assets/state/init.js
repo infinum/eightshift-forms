@@ -15,6 +15,7 @@ export const StateEnum = {
 	ISLOADED: 'isloaded',
 	ELEMENTS: 'elements',
 	FORM: 'form',
+	FORMS: 'forms',
 
 	POST_ID: 'postId',
 	METHOD: 'method',
@@ -103,6 +104,7 @@ export const StateEnum = {
 	EVENTS_AFTER_FORM_SUBMIT_RESET: 'afterFormSubmitReset',
 	EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT: 'afterFormSubmitSuccessBeforeRedirect',
 	EVENTS_FORM_JS_LOADED: 'jsFormLoaded',
+	EVENTS_FORM_MANUAL_INIT_LOADED: 'manualInitLoaded',
 	EVENTS_AFTER_CAPTCHA_INIT: 'afterCaptchaInit',
 
 	EVENTS_STEPS_GO_TO_NEXT_STEP: 'goToNextStep',
@@ -174,12 +176,14 @@ export function setStateWindow() {
 export function setStateInitial() {
 	setStateWindow();
 
-	if (window[prefix].state) {
+	// Don't set initial state if it already exists.
+	if (window[prefix].state && Object.keys(window[prefix].state).length) {
 		return;
 	}
 
 	window[prefix].state = {};
 	window[prefix].state = {
+		[StateEnum.FORMS]: [],
 		[StateEnum.CAPTCHA]: {},
 		[StateEnum.ENRICHMENT]: {},
 		[StateEnum.SETTINGS]: {},
@@ -200,6 +204,7 @@ export function setStateInitial() {
 		setState([key], item, StateEnum.PARAMS);
 	}
 
+	// Config.
 	setState([StateEnum.IS_ADMIN], esFormsLocalization.isAdmin, StateEnum.CONFIG);
 	setState([StateEnum.NONCE], esFormsLocalization.nonce, StateEnum.CONFIG);
 
@@ -247,6 +252,7 @@ export function setStateInitial() {
 	setState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_END], getStateEventName(StateEnum.EVENTS_AFTER_FORM_SUBMIT_END), StateEnum.EVENTS);
 	setState([StateEnum.EVENTS_AFTER_GTM_DATA_PUSH], getStateEventName(StateEnum.EVENTS_AFTER_GTM_DATA_PUSH), StateEnum.EVENTS);
 	setState([StateEnum.EVENTS_FORM_JS_LOADED], getStateEventName(StateEnum.EVENTS_FORM_JS_LOADED), StateEnum.EVENTS);
+	setState([StateEnum.EVENTS_FORM_MANUAL_INIT_LOADED], getStateEventName(StateEnum.EVENTS_FORM_MANUAL_INIT_LOADED), StateEnum.EVENTS);
 	setState([StateEnum.EVENTS_AFTER_CAPTCHA_INIT], getStateEventName(StateEnum.EVENTS_AFTER_CAPTCHA_INIT), StateEnum.EVENTS);
 	setState([StateEnum.EVENTS_STEPS_GO_TO_NEXT_STEP], getStateEventName(StateEnum.EVENTS_STEPS_GO_TO_NEXT_STEP), StateEnum.EVENTS);
 	setState([StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP], getStateEventName(StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP), StateEnum.EVENTS);
@@ -263,7 +269,7 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_CLASS_HAS_ERROR], `${manifest.componentClass}-has-error`, StateEnum.SELECTORS);
 
 	setState([StateEnum.SELECTORS_PREFIX], `.${manifest.componentJsClass}`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_FORM], `.${manifest.componentJsClass}`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_FORM], `.${manifest.componentJsClass}-form`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_SUBMIT_SINGLE], `.${manifest.componentJsClass}-single-submit`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_STEP], `.${manifest.componentJsClass}-step`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], `.${manifest.componentJsClass}-step-progress-bar`, StateEnum.SELECTORS);
@@ -290,6 +296,11 @@ export function setStateFormInitial(formId) {
 		[StateEnum.ELEMENTS]: {},
 		[StateEnum.FORM]: {},
 	};
+
+	// Push only form ID if it doesn't exist.
+	if (window[prefix].state[StateEnum.FORMS].indexOf(formId) === -1) {
+		window[prefix].state[StateEnum.FORMS].push(formId);
+	}
 
 	let formElement = '';
 
@@ -739,6 +750,35 @@ export function setState(keyArray, value, formId) {
 		window[prefix].state[formKey] = {
 			...window[prefix].state[formKey],
 		};
+	}
+}
+
+/**
+ * Remove form state helper.
+ *
+ * @param {string} formId Form Id.
+ *
+ * @returns {void}
+ */
+export function removeStateForm(formId) {
+	const { state } = window[prefix];
+
+	if (state && `form_${formId}` in state) {
+		delete state[`form_${formId}`];
+
+		window[prefix].state = {
+			...state,
+		};
+	}
+
+	const index = state[StateEnum.FORMS].indexOf(formId);
+	const forms = state[StateEnum.FORMS];
+	if (index > -1) {
+		forms.splice(index, 1);
+
+		window[prefix].state[StateEnum.FORMS] = [
+			...forms,
+		];
 	}
 }
 

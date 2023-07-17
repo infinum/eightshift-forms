@@ -297,18 +297,20 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectFieldLabel' => $label,
 						'selectTracking' => $name,
 						'selectIsRequired' => (bool) $isRequired,
-						'selectContent' => \array_map(
-							function ($option) {
-								return [
-									'component' => 'select-option',
-									'selectOptionLabel' => $option,
-									'selectOptionValue' => $option,
-									'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-										'selectOptionValue',
-									], false),
-								];
-							},
-							$choices
+						'selectContent' => \array_values(
+							\array_map(
+								function ($option) {
+									return [
+										'component' => 'select-option',
+										'selectOptionLabel' => $option,
+										'selectOptionValue' => $option,
+										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+											'selectOptionValue',
+										], false),
+									];
+								},
+								$choices
+							),
 						),
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 							$isRequired ? 'selectIsRequired' : '',
@@ -367,13 +369,8 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
 						'selectName' => $customTagParamName,
 						'selectTracking' => $customTagParamName,
-						'selectContent' => [
-							[
-								'component' => 'select-option',
-								'selectOptionLabel' => '',
-								'selectOptionValue' => '',
-							],
-							...\array_map(
+						'selectContent' => \array_values(
+							\array_map(
 								function ($option) {
 									$name = $option['name'] ?? '';
 
@@ -388,7 +385,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 								},
 								$items
 							),
-						],
+						),
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 							'selectIsRequired',
 							'selectFieldHidden',

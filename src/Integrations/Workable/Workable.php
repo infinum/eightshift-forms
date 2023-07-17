@@ -246,13 +246,8 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'selectTracking' => $name,
 						'selectFieldLabel' => $label,
 						'selectIsRequired' => $required,
-						'selectContent' => [
-							[
-								'component' => 'select-option',
-								'selectOptionLabel' => '',
-								'selectOptionValue' => '',
-							],
-							...\array_map(
+						'selectContent' => \array_values(
+							\array_map(
 								function ($selectOption) {
 									return [
 										'component' => 'select-option',
@@ -265,7 +260,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 								},
 								$fields
 							),
-						],
+						),
 						'selectTypeCustom' => $type,
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 							$required ? 'selectIsRequired' : '',

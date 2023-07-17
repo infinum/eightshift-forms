@@ -346,7 +346,8 @@ class Filters
 		],
 		'general' => [
 			'httpRequestTimeout' => 'http_request_timeout',
-			'setLocale' => 'set_locale',
+			'locale' => 'locale',
+			'scriptsDependency' => 'scripts_dependency',
 		],
 		'geolocation' => [
 			'countries' => 'countries_list',

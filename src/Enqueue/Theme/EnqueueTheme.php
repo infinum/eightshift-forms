@@ -15,6 +15,7 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -27,6 +28,8 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 * Use general helper trait.
 	 */
 	use SettingsHelper;
+
+	public const CAPTCHA_ENQUEUE_HANDLE = 'captcha';
 
 	/**
 	 * Create a new admin instance.
@@ -78,6 +81,28 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	}
 
 	/**
+	 * Get frontend script dependencies.
+	 *
+	 * @return array<int, string> List of all the script dependencies.
+	 */
+	protected function getFrontendScriptDependencies(): array
+	{
+		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return [];
+		}
+
+		$scriptsDependency = Filters::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependencyOutput = [];
+
+		if (\has_filter($scriptsDependency)) {
+			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+		}
+
+		return $scriptsDependencyOutput;
+	}
+
+
+	/**
 	 * Method that returns frontend script for captcha if settings are correct.
 	 *
 	 * @return void
@@ -92,7 +117,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			return;
 		}
 
-		$handle = "{$this->getAssetsPrefix()}-captcha";
+		$handle = "{$this->getAssetsPrefix()}-" . self::CAPTCHA_ENQUEUE_HANDLE;
 
 		$siteKey = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
 
@@ -109,7 +134,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			$url,
 			$this->getFrontendScriptDependencies(),
 			$this->getAssetsVersion(),
-			false
+			true
 		);
 		\wp_script_add_data($handle, 'defer', true);
 		\wp_enqueue_script($handle);
