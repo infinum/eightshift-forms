@@ -93,6 +93,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
 										'checkboxHelp' => \__('Includes all frontend and block editor styles.', 'eightshift-forms'),
 									],
 									[
@@ -101,6 +102,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
 										'checkboxHelp' => \__('Includes all frontend logic, e.g. validation and form submission.', 'eightshift-forms'),
 									],
 									[
@@ -113,6 +115,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
 										'checkboxHelp' => \__('Don\'t auto-initialize scripts will load all the scripts, but not initialize them. To learn how to do it manually refer to the documentation.', 'eightshift-forms'),
 									],
 								],
@@ -134,6 +137,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
 									],
 									[
 										'component' => 'checkbox',
@@ -141,6 +145,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
 									],
 									[
 										'component' => 'divider',
@@ -152,6 +157,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
 										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
 									],
 								],
 							],

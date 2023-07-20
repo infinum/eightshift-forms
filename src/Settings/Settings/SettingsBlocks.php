@@ -219,6 +219,8 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		$disablePhoneCountryPicker = $this->isCheckboxOptionChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -266,26 +268,28 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Disable area code picker', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY),
+										'checkboxIsChecked' => $disablePhoneCountryPicker,
 										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									],
 								],
 							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'select',
-								'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
-								'selectName' => $this->getSettingsName(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY),
-								'selectContent' => $this->getCountrySettingsList(
-									$this->getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default'),
-									'items'
-								),
-							],
+							...(!$disablePhoneCountryPicker ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'select',
+									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
+									'selectName' => $this->getSettingsName(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY),
+									'selectContent' => $this->getCountrySettingsList(
+										$this->getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default'),
+										'items'
+									),
+								],
+							] : []),
 						],
 					],
 				],

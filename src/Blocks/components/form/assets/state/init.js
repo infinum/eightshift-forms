@@ -66,7 +66,7 @@ export const StateEnum = {
 
 	CONFIG: 'config',
 	CONFIG_SELECT_USE_SEARCH: 'useSearch',
-	CONFIG_PHONE_DISABLE_PICKER: 'disablePicker',
+	CONFIG_PHONE_DISABLE_PICKER: 'disablePhoneCountryPicker',
 	CONFIG_PHONE_USE_PHONE_SYNC: 'usePhoneSync',
 	CONFIG_SUCCESS_REDIRECT: 'successRedirect',
 	CONFIG_SUCCESS_REDIRECT_VARIATION: 'successRedirectVariation',
@@ -80,6 +80,7 @@ export const StateEnum = {
 	SETTINGS_REDIRECTION_TIMEOUT: 'redirectionTimeout',
 	SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT: 'hideGlobalMessageTimeout',
 	SETTINGS_FILE_REMOVE_LABEL: 'fileRemoveLabel',
+	SETTINGS_FORM_DISABLE_AUTO_INIT: 'formDisableAutoInit',
 
 	CAPTCHA: 'captcha',
 	CAPTCHA_SITE_KEY: 'site_key',

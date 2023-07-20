@@ -43,6 +43,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"phoneIsNumber": {
+			"type": "boolean",
+			"default": false
+		},
 		"phoneTracking": {
 			"type": "string"
 		},

@@ -84,6 +84,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 				'nonce' => \wp_create_nonce('wp_rest'),
 				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
 				'isAdmin' => true,
+				'redirectionTimeout' => 100,
 			],
 		);
 

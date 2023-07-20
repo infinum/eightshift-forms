@@ -42,10 +42,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"dateIsNumber": {
-			"type": "boolean",
-			"default": true
-		},
 		"dateIsRequired": {
 			"type": "boolean",
 			"default": false

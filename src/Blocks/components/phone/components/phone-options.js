@@ -25,6 +25,7 @@ export const PhoneOptions = (attributes) => {
 	const phoneName = checkAttr('phoneName', attributes, manifest);
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
+	const phoneIsNumber = checkAttr('phoneIsNumber', attributes, manifest);
 	const phoneIsDisabled = checkAttr('phoneIsDisabled', attributes, manifest);
 	const phoneIsReadOnly = checkAttr('phoneIsReadOnly', attributes, manifest);
 	const phoneIsRequired = checkAttr('phoneIsRequired', attributes, manifest);
@@ -103,6 +104,14 @@ export const PhoneOptions = (attributes) => {
 						checked={phoneIsDisabled}
 						onChange={(value) => setAttributes({ [getAttrKey('phoneIsDisabled', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('phoneIsDisabled', attributes, manifest), phoneDisabledOptions)}
+					/>
+
+					<IconToggle
+						icon={icons.order}
+						label={__('Number', 'eightshift-forms')}
+						checked={phoneIsNumber}
+						onChange={(value) => setAttributes({ [getAttrKey('phoneIsNumber', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('phoneIsNumber', attributes, manifest), phoneDisabledOptions)}
 					/>
 
 					<IconToggle
