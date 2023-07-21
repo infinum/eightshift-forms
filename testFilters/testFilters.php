@@ -28,7 +28,6 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_forms_style_options' => ['getBlockFormsStyleOptions'],
 			'es_forms_block_form_redirection_timeout' => ['getBlockFormRedirectionTimeout'],
 			'es_forms_block_form_hide_global_msg_timeout' => ['getBlockFormHideGlobalMsgTimeout'],
-			'es_forms_block_form_hide_loading_state_timeout' => ['getBlockFormHideLoadingStateTimeout'],
 			'es_forms_block_form_success_redirect_url' => ['getBlockFormSuccessRedirectUrl', 2],
 			'es_forms_block_form_success_redirect_variation' => ['getBlockFormSuccessRedirectVariation', 2],
 			'es_forms_block_form_success_redirect_variation_options' => ['getBlockFormSuccessRedirectVariationOptions'],
@@ -172,18 +171,6 @@ class Testfilters implements ServiceInterface
 	public function getBlockFormHideGlobalMsgTimeout(): string
 	{
 		return '10000'; // 10 seconds.
-	}
-
-	/**
-	 * Changing the default hide loading state wait time.
-	 *
-	 * This filter will override our default wait time before the loading state is removed. The time is calculated in milliseconds. *Example: 1000ms = 1s*.
-	 *
-	 * @return string
-	 */
-	public function getBlockFormHideLoadingStateTimeout(): string
-	{
-		return '600'; // 0.6 seconds.
 	}
 
 	/**

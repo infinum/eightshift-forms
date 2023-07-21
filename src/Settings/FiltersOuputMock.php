@@ -35,9 +35,10 @@ trait FiltersOuputMock
 		$settings = '';
 		$data = [
 			'config' => $config,
-			'allowedFilter' => [],
 			'mapFilter' => [],
 		];
+		$data['config']['allowedSettingsList'] = [];
+
 		$filterUsed = false;
 
 		$filterName = Filters::getFilterName(['enrichment', 'manualMap']);
@@ -52,6 +53,13 @@ trait FiltersOuputMock
 					$data['config']['allowed'][] = $key;
 					$data['config']['map'][$key] = \array_flip($value);
 				}
+
+				$data['config']['allowed'] = \array_unique($data['config']['allowed']);
+				foreach ($data['config']['allowed'] as $value) {
+					if (!isset($data['config']['map'][$value])) {
+						$data['config']['allowedSettingsList'][] = $value;
+					}
+				}
 			}
 
 			$settings .= \__('Additional parameters were provided through code', 'eightshift-forms');
@@ -62,6 +70,10 @@ trait FiltersOuputMock
 				$settings .= "<li><code>{$key}</code> : <code>{$settingsValue}</code></li>";
 			}
 			$settings .= '</ul>';
+		}
+
+		if (!$data['config']['allowedSettingsList']) {
+			$data['config']['allowedSettingsList'] = $data['config']['allowed'];
 		}
 
 		$settingsOutput = $this->getSettingsDivWrap($settings, $filterUsed, false);

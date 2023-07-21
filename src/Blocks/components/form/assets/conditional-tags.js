@@ -271,7 +271,7 @@ export class ConditionalTags {
 			const items = custom?.choiceList?.element?.children ?? [];
 
 			// Get active choice value.
-			const activeItem = custom.getValue(true);
+			const activeItem = custom?.getValue(true);
 
 			// Loop inner items.
 			[...items].forEach((field) => {

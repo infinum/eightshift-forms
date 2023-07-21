@@ -122,7 +122,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 
 		$enrichment = $this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
 
-		$allowed = $enrichment['data']['original']['allowed'] ?? '';
+		$allowed = $enrichment['data']['config']['allowedSettingsList'] ?? '';
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),

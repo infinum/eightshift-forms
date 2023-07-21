@@ -32,6 +32,7 @@ $selectPlaceholder = Components::checkAttr('selectPlaceholder', $attributes, $ma
 $selectTypeCustom = Components::checkAttr('selectTypeCustom', $attributes, $manifest);
 $selectFieldAttrs = Components::checkAttr('selectFieldAttrs', $attributes, $manifest);
 $selectUseLabelAsPlaceholder = Components::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
+$selectUseEmptyPlaceholder = Components::checkAttr('selectUseEmptyPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectHideLabel = false;
@@ -47,9 +48,38 @@ if ($selectUseSearch) {
 	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($selectUseSearch);
 }
 
+$placeholder = '';
+
+if ($selectPlaceholder) {
+	$placeholder = Components::render(
+		'select-option',
+		[
+			'selectOptionLabel' => $selectPlaceholder, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'selectOptionAsPlaceholder' => true,
+		]
+	);
+}
+
 if ($selectUseLabelAsPlaceholder) {
-	$selectPlaceholder = esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	$selectHideLabel = true;
+
+	$placeholder = Components::render(
+		'select-option',
+		[
+			'selectOptionLabel' => esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'selectOptionAsPlaceholder' => true,
+		]
+	);
+}
+
+if ($selectUseEmptyPlaceholder) {
+	$placeholder = Components::render(
+		'select-option',
+		[
+			'selectOptionLabel' => '', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'selectOptionAsPlaceholder' => true,
+		]
+	);
 }
 
 $selectAttrsOutput = '';
@@ -61,14 +91,6 @@ if ($selectAttrs) {
 
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
-
-$placeholder = $selectPlaceholder ? Components::render(
-	'select-option',
-	[
-		'selectOptionLabel' => $selectPlaceholder, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-		'selectOptionAsPlaceholder' => true,
-	]
-) : '';
 
 $select = '
 	<select

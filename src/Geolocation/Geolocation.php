@@ -200,7 +200,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getCountriesList(): array
 	{
-		$filterName = Filters::getFilterName(['geolocation', 'countries']);
+		$filterName = Filters::getFilterName(['geolocation', 'countriesList']);
 
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $this->getCountries());

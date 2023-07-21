@@ -350,7 +350,7 @@ class Filters
 			'scriptsDependency' => 'scripts_dependency',
 		],
 		'geolocation' => [
-			'countries' => 'countries_list',
+			'countriesList' => 'countries_list',
 			'disable' => 'disable',
 			'dbLocation' => 'db_location',
 			'pharLocation' => 'phar_location',
