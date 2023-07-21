@@ -11,6 +11,7 @@ use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftForms\Helpers\Encryption;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Outputs the forms custom unique name set in the settings by provided form ID.
@@ -65,4 +66,17 @@ function esFormsGeolocationCountriesList(): array
 function esFormsGetSelectOptionsArrayFromString(string $options): array
 {
 	return Helper::getSelectOptionsArrayFromString($options);
+}
+
+/**
+ * Renders a components and (optionally) passes some attributes to it.
+ *
+ * @param string $component Component's name or full path (ending with .php).
+ * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
+ *
+ * @return string
+ */
+function esFormsGetComponentsRender(string $component, array $attributes = []): string
+{
+	return Components::render($component, $attributes);
 }

@@ -150,7 +150,7 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 									$isRequired ? 'countryIsRequired' : '',
 									'countryTypeCustom',
 								]),
-								'countryTypeCustom' => 'country',
+								'countryTypeCustom' => 'country',3
 							];
 							break;
 						default:

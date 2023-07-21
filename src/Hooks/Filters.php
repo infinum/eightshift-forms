@@ -290,6 +290,7 @@ class Filters
 				'dataTypeSelector' => 'data_type_selector',
 				'phoneSync' => 'phone_sync',
 				'globalMsgHeadings' => 'global_msg_headings',
+				'additionalContent' => 'additional_content',
 			],
 			'formSelector' => [
 				'additionalContent' => 'additional_content',

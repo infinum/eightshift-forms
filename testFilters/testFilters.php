@@ -38,6 +38,7 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_form_global_msg_headings' => ['getGlobalMsgHeadings'],
 
 			'es_forms_block_form_selector_additional_content' => ['getBlockFormSelectorAdditionalContent'],
+			'es_forms_block_form_additional_content' => ['getBlockFormSelectorAdditionalContent'],
 			'es_forms_block_field_additional_content' => ['getBlockFormSelectorAdditionalContent'],
 			'es_forms_block_input_additional_content' => ['getBlockFormSelectorAdditionalContent'],
 			'es_forms_block_textarea_additional_content' => ['getBlockFormSelectorAdditionalContent'],
