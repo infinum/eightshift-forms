@@ -61,6 +61,9 @@ class Testfilters implements ServiceInterface
 
 			'es_forms_block_submit_component' => ['getBlockSubmitComponent'],
 
+			'es_forms_block_submit_component_prev' => ['getBlockSubmitComponentPrev'],
+			'es_forms_block_submit_component_next' => ['getBlockSubmitComponentNext'],
+
 			// ---------------------------------------------------------------------------------------------------------
 			// Blocks filters.
 			'es_forms_blocks_additional_blocks' => ['getAdditionalBlocks'],
@@ -534,11 +537,35 @@ class Testfilters implements ServiceInterface
 	 *
 	 * @param array<string, mixed> $data Data provided from the forms.
 	 *
-	 * @return array
+	 * @return string
 	 */
-	public function getBlockSubmitComponent(array $data): array
+	public function getBlockSubmitComponent(array $data): string
 	{
-		return [];
+		return '';
+	}
+
+	/**
+	 * Override default step prev submit button with your own component.
+	 *
+	 * @param array<string, mixed> $data Data provided from the forms.
+	 *
+	 * @return string
+	 */
+	public function getBlockStepComponentPrev(array $data): string
+	{
+		return 'Prev';
+	}
+
+	/**
+	 * Override default step next submit button with your own component.
+	 *
+	 * @param array<string, mixed> $data Data provided from the forms.
+	 *
+	 * @return string
+	 */
+	public function getBlockStepComponentNext(array $data): string
+	{
+		return 'Next';
 	}
 
 	// -----------------------------------------------------------------------------------------------------------
