@@ -186,7 +186,7 @@ export const IntegrationsOptions = ({
 					</div>
 				</Control>
 
-				<Section showIf={hasInnerBlocks && block !== 'mailer'} icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+				<Section showIf={hasInnerBlocks} icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
 					<Control help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}>
 						<Button
 							icon={icons.loopMode}

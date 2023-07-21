@@ -196,8 +196,6 @@ if ($formAttrs) {
 		<?php
 		$filterName = Filters::getFilterName(['block', 'form', 'additionalContent']);
 
-		error_log( print_r( ( is_front_page() ), true ) );
-
 		if (\has_filter($filterName)) {
 			echo \apply_filters($filterName, $formType, $formId); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		}
