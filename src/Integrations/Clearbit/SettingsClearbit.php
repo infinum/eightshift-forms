@@ -165,16 +165,13 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						'component' => 'tab',
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-								'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_CLEARBIT', !empty($apiKey)),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-								'inputIsDisabled' => !empty($apiKey),
-							],
+							$this->getSettingsPasswordFieldWithGlobalVariable(
+								$this->getSettingsName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+								\__('API key', 'eightshift-forms'),
+								!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+								'ES_API_KEY_CLEARBIT',
+								!empty($apiKey)
+							),
 						],
 					],
 					self::isSettingsGlobalValid() ? [

@@ -115,7 +115,7 @@ if ($formDownloads || $formSuccessRedirectVariationUrl) {
 	$downloadsOutput = [];
 
 	foreach ($formDownloads as $file) {
-		$condition = $file['condition'] ?: 'all'; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$condition = isset($file['condition']) ? $file['condition'] : 'all';
 		$fileId = $file['id'] ?? '';
 
 		if (!$fileId) {

@@ -186,10 +186,12 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		);
 
 		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
+		$disableFallbackEmail = false;
 
 		// Output integrations validation issues.
 		if ($validation) {
 			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($validation, $formId);
+			$disableFallbackEmail = true;
 		}
 
 		// Check if Hubspot is using Clearbit.
@@ -223,8 +225,11 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 
 		// Skip fallback email if integration is disabled.
 		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
-			// Send fallback email.
-			$this->formSubmitMailer->sendFallbackEmail($response);
+			// Prevent fallback email if we have validation errors parsed.
+			if (!$disableFallbackEmail) {
+				// Send fallback email.
+				$this->formSubmitMailer->sendFallbackEmail($response);
+			}
 		}
 
 		// Send email if it is configured in the backend.

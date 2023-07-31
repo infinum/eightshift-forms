@@ -572,4 +572,65 @@ trait SettingsHelper
 			'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
 		];
 	}
+
+	/**
+	 * Get settings password field with global variable.
+	 *
+	 * @param string $name Field name.
+	 * @param string $label Field label.
+	 * @param string $value Field value.
+	 * @param string $globalVariable Field global variable.
+	 * @param boolean $useGlobalVariable Is global variable used.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getSettingsPasswordFieldWithGlobalVariable(
+		string $name,
+		string $label,
+		string $value,
+		string $globalVariable,
+		$useGlobalVariable = false
+	): array {
+
+		$general = [
+			'component' => 'input',
+			'inputName' => $name,
+			'inputFieldLabel' => $label,
+			'inputIsRequired' => true,
+			'inputFieldHelp' => $this->getGlobalVariableOutput($globalVariable, $useGlobalVariable),
+			'inputIsDisabled' => $useGlobalVariable,
+		];
+
+		if ($useGlobalVariable) {
+			// Show only last 3 characters.
+			$visibleCharacters = 3;
+
+			// Remove the last 3 characters from the total length.
+			$valueLength = \strlen($value) - $visibleCharacters;
+
+			// By default use the number of visible characters.
+			$newValue = \str_repeat('*', \strlen($value));
+
+			// If the value is longer than the visible characters, show only the last 3 characters and add * before.
+			if ($valueLength >= $visibleCharacters) {
+				$newValue = \str_repeat('*', $valueLength) . \substr($value, -$visibleCharacters);
+			}
+
+			return \array_merge(
+				$general,
+				[
+					'inputType' => 'text',
+					'inputValue' => $newValue,
+				]
+			);
+		}
+
+		return \array_merge(
+			$general,
+			[
+				'inputType' => 'password',
+				'inputValue' => $value,
+			]
+		);
+	}
 }

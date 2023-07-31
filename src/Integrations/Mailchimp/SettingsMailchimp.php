@@ -241,16 +241,13 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_MAILCHIMP', !empty($apiKey)),
-									'inputType' => 'password',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-									'inputIsDisabled' => !empty($apiKey),
-								],
+								$this->getSettingsPasswordFieldWithGlobalVariable(
+									$this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+									\__('API key', 'eightshift-forms'),
+									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+									'ES_API_KEY_MAILCHIMP',
+									!empty($apiKey)
+								),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,

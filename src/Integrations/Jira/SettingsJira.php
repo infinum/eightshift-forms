@@ -421,19 +421,13 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_KEY_KEY),
-									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-									// translators: %s will be replaced with global variable name.
-									'inputFieldHelp' => \sprintf(\__('
-										Provided by the Jira user token. Check the <b>Help</b> tab for instructions on how to get it.<br/><br/>
-										%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_KEY_JIRA', !empty($apiKey))),
-									'inputType' => 'password',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY),
-									'inputIsDisabled' => !empty($apiKey),
-								],
+								$this->getSettingsPasswordFieldWithGlobalVariable(
+									$this->getSettingsName(self::SETTINGS_JIRA_API_KEY_KEY),
+									\__('API key', 'eightshift-forms'),
+									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY),
+									'ES_API_KEY_JIRA',
+									!empty($apiKey)
+								),
 								[
 									'component' => 'input',
 									'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_BOARD_KEY),
