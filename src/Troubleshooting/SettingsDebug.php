@@ -55,6 +55,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	public const SETTINGS_DEBUG_LOG_MODE_KEY = 'log-mode';
 	public const SETTINGS_DEBUG_DEVELOPER_MODE_KEY = 'developer-mode';
 	public const SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY = 'skip-forms-sync';
+	public const SETTINGS_DEBUG_SKIP_CACHE_KEY = 'skip-cache';
 
 	/**
 	 * Register all the hooks
@@ -201,6 +202,19 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
 								'checkboxHelp' => \__('Prevents syncing with integrations when a form is opened in edit mode.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
+							],
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Skip internal cache', 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CACHE_KEY,
+								'checkboxAsToggle' => true,
+								'checkboxSingleSubmit' => true,
+								'checkboxHelp' => \__('Prevents storing integration data to the temporary internal cache to optimize load time and API calls. Turning on this option can cause many API calls in a short time, which may cause a temporary ban from the external integration service. Use with caution.', 'eightshift-forms'),
 							],
 						]
 					],
