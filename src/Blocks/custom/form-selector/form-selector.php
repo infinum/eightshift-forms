@@ -6,12 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Helpers\Helper;
 
 // Add custom additional content filter.
-$filterName = Filters::getFilterName(['block', 'formSelector', 'additionalContent']);
-if (has_filter($filterName)) {
-	echo apply_filters($filterName, ''); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-}
+echo Helper::getBlockAdditionalContentViaFilter('formSelector', $attributes);
 
 echo $innerBlockContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

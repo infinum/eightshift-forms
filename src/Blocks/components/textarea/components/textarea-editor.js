@@ -9,7 +9,7 @@ import {
 	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
+import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const TextareaEditor = (attributes) => {
@@ -54,8 +54,6 @@ export const TextareaEditor = (attributes) => {
 					{...props('conditionalTags', attributes)}
 				/>
 			}
-
-			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 

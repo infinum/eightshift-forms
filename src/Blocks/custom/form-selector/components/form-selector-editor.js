@@ -5,7 +5,7 @@ import { select } from '@wordpress/data';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { STORE_NAME, checkAttr, icons } from '@eightshift/frontend-libs/scripts';
-import { createBlockFromTemplate, getAdditionalContentFilterContent } from './../../../components/utils';
+import { createBlockFromTemplate } from './../../../components/utils';
 
 export const FormSelectorEditor = ({
 	attributes,
@@ -48,8 +48,6 @@ export const FormSelectorEditor = ({
 					</div>
 				</Placeholder>
 			}
-
-			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent('formSelector') }} />
 
 			<InnerBlocks
 				allowedBlocks={(typeof formSelectorAllowedBlocks === 'undefined') || formSelectorAllowedBlocks}

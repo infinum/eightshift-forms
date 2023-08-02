@@ -680,6 +680,7 @@ class Helper
 
 	/**
 	 * Output additional content from filter by block.
+	 * Limited to front page only.
 	 *
 	 * @param string $name Name of the block/component.
 	 * @param array<string, mixed> $attributes To load in filter.
@@ -688,7 +689,16 @@ class Helper
 	 */
 	public static function getBlockAdditionalContentViaFilter(string $name, array $attributes): string
 	{
+		if (is_admin()) {
+			return '';
+		}
+
+		if (Helper::isBlockEditor()) {
+			return '';
+		}
+
 		$filterName = Filters::getFilterName(['block', $name, 'additionalContent']);
+
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $attributes);
 		}

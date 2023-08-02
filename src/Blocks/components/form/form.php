@@ -8,6 +8,7 @@
 
 use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\Encryption;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -193,13 +194,7 @@ if ($formAttrs) {
 	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 
-		<?php
-		$filterName = Filters::getFilterName(['block', 'form', 'additionalContent']);
-
-		if (has_filter($filterName)) {
-			echo apply_filters($filterName, $formType, $formId); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		}
-		?>
+		<?php echo Helper::getBlockAdditionalContentViaFilter('form', $attributes); ?>
 	</div>
 
 	<?php

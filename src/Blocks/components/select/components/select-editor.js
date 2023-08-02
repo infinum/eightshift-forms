@@ -9,7 +9,7 @@ import {
 	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
+import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { SelectOptionEditor } from './../../select-option/components/select-option-editor';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
@@ -63,8 +63,6 @@ export const SelectEditor = (attributes) => {
 					/>
 				}
 			</div>
-
-			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 

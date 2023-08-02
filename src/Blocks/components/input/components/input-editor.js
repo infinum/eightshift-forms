@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { select } from '@wordpress/data';
 import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
-import { getAdditionalContentFilterContent, MissingName, preventSaveOnMissingProps } from './../../utils';
+import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const InputEditor = (attributes) => {
@@ -54,8 +54,6 @@ export const InputEditor = (attributes) => {
 					{...props('conditionalTags', attributes)}
 				/>
 			}
-
-			<div dangerouslySetInnerHTML={{ __html: getAdditionalContentFilterContent(componentName) }} />
 		</>
 	);
 

@@ -259,21 +259,6 @@ export const getFilteredAttributes = (attributes, filterAttributes, appendItems 
 };
 
 /**
- * Get additional block name content from filter.
- *
- * @param {string} blockName Block name.
- *
- * @returns {string}
- */
-export const getAdditionalContentFilterContent = (blockName) => {
-	if (esFormsLocalization?.additionalContent?.[blockName]) {
-		return esFormsLocalization?.additionalContent[blockName];
-	}
-
-	return '';
-};
-
-/**
  * Output select options from array.
  *
  * @param {object} options
