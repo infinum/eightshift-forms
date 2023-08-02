@@ -18,7 +18,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsLocation class.
  */
-class SettingsLocation implements SettingInterface, ServiceInterface
+class SettingsLocation implements SettingInterface, ServiceInterface, SettingsLocationInterface
 {
 	/**
 	 * Use general helper trait.
@@ -90,7 +90,7 @@ class SettingsLocation implements SettingInterface, ServiceInterface
 	 *
 	 * @return array<int, mixed>
 	 */
-	private function getBlockLocations(string $formId): array
+	public function getBlockLocations(string $formId): array
 	{
 		global $wpdb;
 

@@ -90,12 +90,10 @@ domReady(() => {
 
 	if (elementsFilter) {
 		import('./filter').then(({ Filter }) => {
-			const filter = new Filter({
+			new Filter({
 				filterSelector: selectorFilter,
 				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
-			});
-
-			filter.init();
+			}).init();
 		});
 	}
 
@@ -108,11 +106,9 @@ domReady(() => {
 
 	if (elementsSync) {
 		import('./sync').then(({ Sync }) => {
-			const sync = new Sync({
+			new Sync({
 				selector: selectorSync,
-			});
-
-			sync.init();
+			}).init();
 		});
 	}
 
@@ -120,18 +116,31 @@ domReady(() => {
 	// Sync
 	////////////////////////////////////////////////////////////////
 
+	const selectorLocations = `.${adminListingManifest.componentJsLocationsClass}`;
+	const elementsLocations = document.querySelector(selectorLocations);
+
+	if (elementsLocations) {
+		import('./locations').then(({ Locations }) => {
+			new Locations({
+				selector: selectorLocations,
+			}).init();
+		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Manual import api
+	////////////////////////////////////////////////////////////////
+
 	const selectorManualImportApi = `.${manifest.componentManualImportApiJsClass}`;
 	const elementsManualImportApi = document.querySelector(selectorManualImportApi);
 
 	if (elementsManualImportApi) {
 		import('./manual-import-api').then(({ ManualImportApi }) => {
-			const manualImportApi = new ManualImportApi({
+			new ManualImportApi({
 				selector: selectorManualImportApi,
 				outputSelector: `.${manifest.componentManualImportApiJsClass}-output`,
 				dataSelector: `.${manifest.componentManualImportApiJsClass}-data`,
-			});
-
-			manualImportApi.init();
+			}).init();
 		});
 	}
 });

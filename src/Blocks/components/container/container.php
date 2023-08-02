@@ -21,6 +21,7 @@ $containerContent = Components::checkAttr('containerContent', $attributes, $mani
 $containerTag = Components::checkAttr('containerTag', $attributes, $manifest);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
+
 ?>
 
 <<?php echo esc_attr($containerTag); ?>

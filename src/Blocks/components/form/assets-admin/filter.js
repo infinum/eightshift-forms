@@ -4,12 +4,10 @@ export class Filter {
 		this.itemSelector = options.itemSelector;
 
 		this.CLASS_HIDDEN = 'es-form-is-hidden';
-
-		this.items = document.querySelectorAll(this.itemSelector);
 	}
 
 	init = () => {
-		if (!this.items) {
+		if (!document.querySelectorAll(this.itemSelector)) {
 			return;
 		}
 
@@ -48,7 +46,7 @@ export class Filter {
 	};
 
 	filterItems = (selectedValue) => {
-		[...this.items].forEach((item) => {
+		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
 			if (item.getAttribute('data-integration-type') !== selectedValue) {
 				item?.classList?.add(this.CLASS_HIDDEN);
 			}
@@ -56,7 +54,7 @@ export class Filter {
 	};
 
 	filterResetItems = () => {
-		[...this.items].forEach((item) => {
+		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
 			item?.classList?.remove(this.CLASS_HIDDEN);
 		});
 	};

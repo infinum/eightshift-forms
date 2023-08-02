@@ -90,12 +90,17 @@ export class Utils {
 	 * Show loader.
 	 *
 	 * @param {string} formId Form Id.
+	 * @param {boolean} disableOverlay Disable overlay.
 	 *
 	 * @returns {void}
 	 */
-	showLoader(formId) {
+	showLoader(formId, disableOverlay = true) {
 		this.state.getStateFormElement(formId)?.classList?.add(this.state.getStateSelectorsClassLoading());
 		this.state.getStateFormLoader(formId)?.classList?.add(this.state.getStateSelectorsClassActive());
+
+		if (!disableOverlay) {
+			this.state.getStateFormLoader(formId)?.classList?.add(this.state.getStateSelectorsClassLoaderDisableOverlay());
+		}
 	}
 
 	/**
@@ -108,6 +113,7 @@ export class Utils {
 	hideLoader(formId) {
 		this.state.getStateFormElement(formId)?.classList?.remove(this.state.getStateSelectorsClassLoading());
 		this.state.getStateFormLoader(formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormLoader(formId)?.classList?.remove(this.state.getStateSelectorsClassLoaderDisableOverlay());
 	}
 
 	/**

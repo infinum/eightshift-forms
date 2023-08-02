@@ -61,11 +61,6 @@
 		max-width: var(--global-esf-max-width);
 	}
 
-	&.es-form-is-hidden {
-		display: none;
-		user-select: none;
-	}
-
 	&--submit {
 		display: flex;
 		justify-content: flex-end;

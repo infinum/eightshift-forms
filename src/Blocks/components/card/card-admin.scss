@@ -9,6 +9,10 @@
 		padding: 1.5rem;
 	}
 
+	&--indented {
+		margin-bottom: 0.7rem;
+	}
+
 	&--vertical {
 		flex-direction: column;
 
@@ -230,10 +234,6 @@
 				transition-delay: 0;
 			}
 		}
-	}
-
-	&.es-form-is-hidden {
-		display: none;
 	}
 
 	&.es-form-has-error {

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
@@ -116,6 +117,11 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 
 				$id = \get_the_ID();
 
+				// Prevent non syncahble forms from syncing like mailer.
+				if (!Helper::canIntegrationUseSync(Helper::getFormTypeById((string) $id))) {
+					continue;
+				}
+
 				$item = $this->integrationSyncDiff->syncFormDirect((string) $id);
 
 				$output[$item['status']][] = \get_the_title($item['formId']);
@@ -123,9 +129,12 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 
 			\wp_reset_postdata();
 		} else {
-			$item = $this->integrationSyncDiff->syncFormDirect($formId);
+			// Prevent non syncahble forms from syncing like mailer.
+			if (Helper::canIntegrationUseSync(Helper::getFormTypeById((string) $formId))) {
+				$item = $this->integrationSyncDiff->syncFormDirect($formId);
 
-			$output[$item['status']][] = \get_the_title($item['formId']);
+				$output[$item['status']][] = \get_the_title($item['formId']);
+			}
 		}
 
 		if (isset($output['error'])) {

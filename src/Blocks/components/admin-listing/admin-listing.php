@@ -21,6 +21,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 $componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
 $componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
 $componentJsSyncClass = $manifest['componentJsSyncClass'] ?? '';
+$componentJsLocationsClass = $manifest['componentJsLocationsClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
@@ -153,17 +154,20 @@ if ($adminListingForms) {
 					],
 				]),
 				...($isFormValid ? [
-					$adminListingType !== 'trash' && $adminListingType !== 'locations' ? [
+					($adminListingType === 'trash' || $adminListingType === 'locations' || !Helper::canIntegrationUseSync($activeIntegration['value'])) ? [] : [
 						'label' => __('Sync', 'eightshift-forms'),
 						'internal' => true,
 						'isButton' => true,
 						'additionalAttrs' => [AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['syncId'] => $id],
 						'additionalClass' => $componentJsSyncClass,
-					] : [],
+					],
 					[
 						'label' => __('Locations', 'eightshift-forms'),
 						'url' => $settingsLocationLink,
 						'internal' => true,
+						'isButton' => true,
+						'additionalAttrs' => [AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['locationsId'] => $id],
+						'additionalClass' => $componentJsLocationsClass,
 					],
 					[
 						'label' => __('Settings', 'eightshift-forms'),
@@ -240,6 +244,9 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					'containerUse' => $adminListingType !== 'trash' && $adminListingTrashLink,
 					'containerClass' => "es-submit es-submit--outline {$componentJsSyncClass}",
 					'containerTag' => 'button',
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['syncId'] => 'all',
+					],
 					'containerContent' => esc_html__('Sync all', 'eightshift-forms'),
 				]),
 				Components::render('container', [
@@ -277,7 +284,13 @@ echo Components::render('layout', [
 ]);
 
 // This is fake form to be able to init state for global msg.
+
+$formClasses = Components::classnames([
+	Components::getComponent('form')['componentFormJsClass'],
+	Components::selector($componentClass, $componentClass, 'form'),
+]);
 ?>
-<form class="<?php echo esc_attr(Components::getComponent('form')['componentJsClass']); ?>">
+<form class="<?php echo esc_attr($formClasses); ?>">
 	<?php echo Components::render('global-msg', Components::props('globalMsg', $attributes)); ?>
+	<?php echo Components::render('loader', Components::props('loader', $attributes)); ?>
 </form>

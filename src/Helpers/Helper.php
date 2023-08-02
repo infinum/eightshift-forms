@@ -819,4 +819,16 @@ class Helper
 			}
 		);
 	}
+
+	/**
+	 * Check if integration can use sync feature.
+	 *
+	 * @param string $integrationName Integration name.
+	 *
+	 * @return boolean
+	 */
+	public static function canIntegrationUseSync(string $integrationName): bool
+	{
+		return isset(Filters::ALL[$integrationName]['fields']);
+	}
 }

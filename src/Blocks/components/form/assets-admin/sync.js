@@ -6,6 +6,9 @@ export class Sync {
 		this.utils = new Utils();
 		this.state = new State();
 
+		this.GLOBAL_MSG_TIMEOUT_ID = undefined;
+		this.FORM_ID = 0;
+
 		this.selector = options.selector;
 	}
 
@@ -13,6 +16,9 @@ export class Sync {
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
+
+		this.state.getStateFormGlobalMsgElement(this.FORM_ID).addEventListener('mouseenter', this.onGlobalMsgFocus);
+		this.state.getStateFormGlobalMsgElement(this.FORM_ID).addEventListener('mouseleave', this.onGlobalMsgBlur);
 	}
 
 	// Handle form submit and all logic.
@@ -21,11 +27,11 @@ export class Sync {
 
 		const item = event.target;
 
-		const formId = 0;
-
 		const formData = new FormData();
 
 		formData.append('id', item.getAttribute(this.state.getStateAttribute('syncId')));
+
+		this.utils.showLoader(this.FORM_ID);
 
 		// Populate body data.
 		const body = {
@@ -51,7 +57,8 @@ export class Sync {
 					status,
 				} = response;
 
-				this.utils.setGlobalMsg(formId, message, status);
+				this.utils.hideLoader(this.FORM_ID);
+				this.utils.setGlobalMsg(this.FORM_ID, message, status);
 
 				if (response.status === 'success') {
 					setTimeout(() => {
@@ -59,9 +66,23 @@ export class Sync {
 					}, 1000);
 				}
 
-				setTimeout(() => {
-					this.utils.unsetGlobalMsg(formId);
-				}, 6000);
+				this.hideGlobalMsg();
 			});
 	};
+
+	onGlobalMsgFocus = () => {
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+		}
+	};
+
+	onGlobalMsgBlur = () => {
+		this.hideGlobalMsg(this.FORM_ID);
+	};
+
+	hideGlobalMsg() {
+		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
+			this.utils.unsetGlobalMsg(this.FORM_ID);
+		}, 6000);
+	}
 }

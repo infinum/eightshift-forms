@@ -4,4 +4,8 @@
 	&::after {
 		background-color: #F0F0F1;
 	}
+
+	&.es-form-is-disable-overlay::after {
+		background-color: transparent;
+	}
 }

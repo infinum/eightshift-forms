@@ -25,11 +25,13 @@ $cardListItem = Components::checkAttr('cardListItem', $attributes, $manifest);
 $cardTrailingButtons = Components::checkAttr('cardTrailingButtons', $attributes, $manifest);
 $cardShowLinksOnHover = Components::checkAttr('cardShowLinksOnHover', $attributes, $manifest);
 $cardShowButtonsOnHover = Components::checkAttr('cardShowButtonsOnHover', $attributes, $manifest);
+$cardIndented = Components::checkAttr('cardIndented', $attributes, $manifest);
 
 $cardClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($cardPadded, $componentClass, '', 'padded'),
+	Components::selector($cardIndented, $componentClass, '', 'indented'),
 	Components::selector($cardVertical, $componentClass, '', 'vertical'),
 	Components::selector($cardListItem, $componentClass, '', 'list-item'),
 	Components::selector(!empty($cardTrailingButtons), $componentClass, '', 'with-trailing-buttons'),

@@ -4,19 +4,15 @@
 	bottom: 2rem;
 	z-index: 1;
 	max-width: 18rem;
-
+	max-height: 80vh;
+	overflow-x: hidden;
 	border-radius: 0.5rem;
-
 	padding: 0.75rem 1rem;
-
 	opacity: 0;
-
 	background-color: var(--global-colors-esf-sky-100);
 	border: 1px solid var(--global-colors-esf-sky-200);
 	color: var(--global-colors-esf-sky-950);
-
 	transform: translateX(2rem);
-
 	transition: {
 		property: transform, background-color, opacity;
 		timing-function: var(--global-esf-ease-out-cubic), linear, linear;

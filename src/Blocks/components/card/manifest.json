@@ -23,6 +23,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"cardIndented": {
+			"type": "boolean",
+			"default": false
+		},
 		"cardVertical": {
 			"type": "boolean",
 			"default": false

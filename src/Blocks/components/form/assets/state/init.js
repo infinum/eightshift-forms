@@ -121,6 +121,7 @@ export const StateEnum = {
 	SELECTORS_CLASS_VISIBLE_CT: 'isVisibleCt',
 	SELECTORS_CLASS_DISABLED: 'isDisabled',
 	SELECTORS_CLASS_HAS_ERROR: 'hasError',
+	SELECTORS_CLASS_LOADER_DISABLE_OVERLAY: 'isDisableOverlay',
 
 	TRACKING: 'tracking',
 	TRACKING_EVENT_NAME: 'eventName',
@@ -268,6 +269,7 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_CLASS_VISIBLE_CT], `${manifest.componentClass}-is-visible-ct`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_CLASS_DISABLED], `${manifest.componentClass}-is-disabled`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_CLASS_HAS_ERROR], `${manifest.componentClass}-has-error`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_LOADER_DISABLE_OVERLAY], `${manifest.componentClass}-is-disable-overlay`, StateEnum.SELECTORS);
 
 	setState([StateEnum.SELECTORS_PREFIX], `.${manifest.componentJsClass}`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_FORM], `.${manifest.componentJsClass}-form`, StateEnum.SELECTORS);

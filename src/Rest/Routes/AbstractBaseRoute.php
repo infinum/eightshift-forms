@@ -80,6 +80,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'cacheType' => 'data-cache-type',
 		'testApiType' => 'data-test-api-type',
 		'syncId' => 'data-sync-id',
+		'locationsId' => 'data-locations-id',
 		'migrationType' => 'data-migration-type',
 		'migrationExportItems' => 'data-migration-export-items',
 		'successRedirect' => 'data-success-redirect',

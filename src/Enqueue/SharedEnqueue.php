@@ -19,6 +19,7 @@ use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncDirectRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
 use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
 use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
+use EightshiftForms\Rest\Routes\Settings\LocationsRoute;
 use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
 use EightshiftForms\Rest\Routes\Settings\SettingsSubmitRoute;
 use EightshiftForms\Rest\Routes\Settings\TransferRoute;
@@ -59,6 +60,7 @@ trait SharedEnqueue
 				'migration' => MigrationRoute::ROUTE_SLUG,
 				'transfer' => TransferRoute::ROUTE_SLUG,
 				'syncDirect' => IntegrationEditorSyncDirectRoute::ROUTE_SLUG,
+				'locations' => LocationsRoute::ROUTE_SLUG,
 
 				// Editor.
 				'prefixIntegrationItemsInner' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,

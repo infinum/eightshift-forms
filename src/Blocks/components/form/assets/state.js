@@ -479,6 +479,9 @@ export class State {
 	getStateSelectorsClassVisible = () => {
 		return getState([StateEnum.SELECTORS_CLASS_VISIBLE], StateEnum.SELECTORS);
 	};
+	getStateSelectorsClassLoaderDisableOverlay = () => {
+		return getState([StateEnum.SELECTORS_CLASS_LOADER_DISABLE_OVERLAY], StateEnum.SELECTORS);
+	};
 	getStateSelectorsClassHiddenConditionalTags = () => {
 		return getState([StateEnum.SELECTORS_CLASS_HIDDEN_CT], StateEnum.SELECTORS);
 	};
@@ -601,6 +604,7 @@ export const ROUTES = {
 	MIGRATION: esFormsLocalization.restRoutes.migration,
 	TRANSFER: esFormsLocalization.restRoutes.transfer,
 	SYNC_DIRECT: esFormsLocalization.restRoutes.syncDirect,
+	LOCATIONS: esFormsLocalization.restRoutes.locations,
 
 	// Editor.
 	PREFIX_INTEGRATIONS_ITEMS_INNER: esFormsLocalization.restRoutes.prefixIntegrationItemsInner,
