@@ -689,7 +689,7 @@ class Helper
 	 */
 	public static function getBlockAdditionalContentViaFilter(string $name, array $attributes): string
 	{
-		if (is_admin()) {
+		if (\is_admin()) {
 			return '';
 		}
 
