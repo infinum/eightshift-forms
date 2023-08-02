@@ -15,6 +15,7 @@ use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -349,6 +350,11 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	private function getCountriesDataSet(bool $useFullOutput = true): array
 	{
 		$output = \get_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		// Prevent cache.
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+			$output = [];
+		}
 
 		if (!$output) {
 			$countries = Helper::getCountrySelectList();

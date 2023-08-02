@@ -168,16 +168,13 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 									'inputValue' => !empty($apiUrl) ? $apiUrl : $this->getOptionValue(self::SETTINGS_MOMENTS_API_URL_KEY),
 									'inputIsDisabled' => !empty($apiUrl),
 								],
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MOMENTS_API_KEY_KEY),
-									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_KEY_MOMENTS', !empty($apiKey)),
-									'inputType' => 'password',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY),
-									'inputIsDisabled' => !empty($apiKey),
-								],
+								$this->getSettingsPasswordFieldWithGlobalVariable(
+									$this->getSettingsName(self::SETTINGS_MOMENTS_API_KEY_KEY),
+									\__('API key', 'eightshift-forms'),
+									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY),
+									'ES_API_KEY_MOMENTS',
+									!empty($apiKey)
+								),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,

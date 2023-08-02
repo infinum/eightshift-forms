@@ -19,6 +19,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
  * AirtableClient integration class.
@@ -75,6 +76,11 @@ class AirtableClient implements ClientInterface
 	{
 		$output = \get_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
+		// Prevent cache.
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+			$output = [];
+		}
+
 		// Check if form exists in cache.
 		if (!$output) {
 			$items = $this->getAirtableLists();
@@ -116,6 +122,11 @@ class AirtableClient implements ClientInterface
 	public function getItem(string $itemId): array
 	{
 		$output = \get_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		// Prevent cache.
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+			$output = [];
+		}
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['items'])) {

@@ -396,19 +396,18 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			];
 		}
 
+		// Bailout if integration fields are missing.
+		if (!$integrationFields) {
+			return [
+				'formId' => $formId,
+				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'debugType' => 'integration_missing_fields_existing_content',
+				'message' => \esc_html__('Missing integration fields. This could indicate an API connection issue. Please check if your integration is connected properly.', 'eightshift-forms'),
+			];
+		}
+
 		// Bailout if content fields are missing.
 		if (!$contentFields) {
-			// Bailout if integration fields are missing.
-			if (!$integrationFields) {
-				return [
-					'formId' => $formId,
-					'status' => AbstractBaseRoute::STATUS_ERROR,
-					'debugType' => 'integration_missing_fields_existing_content',
-					'message' => \esc_html__('Missing form content fields and missing integration fields.', 'eightshift-forms'),
-				];
-			}
-
-			// Bailout if content fields are missing.
 			return [
 				'formId' => $formId,
 				'status' => AbstractBaseRoute::STATUS_ERROR,

@@ -17,6 +17,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
@@ -84,6 +85,11 @@ class JiraClient implements JiraClientInterface
 
 		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
+		// Prevent cache.
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+			$output = [];
+		}
+
 		// Check if form exists in cache.
 		if (!$output) {
 			$items = $this->getJiraProjects();
@@ -129,6 +135,11 @@ class JiraClient implements JiraClientInterface
 	public function getIssueType(string $itemId): array
 	{
 		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		// Prevent cache.
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+			$output = [];
+		}
 
 		$projectId = $this->getProjectIdByKey($itemId);
 

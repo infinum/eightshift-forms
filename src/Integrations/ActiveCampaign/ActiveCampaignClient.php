@@ -18,6 +18,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
  * ActiveCampaignClient integration class.
@@ -66,6 +67,11 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	public function getItems(bool $hideUpdateTime = true): array
 	{
 		$output = \get_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		// Prevent cache.
+		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+			$output = [];
+		}
 
 		// Check if form exists in cache.
 		if (empty($output)) {

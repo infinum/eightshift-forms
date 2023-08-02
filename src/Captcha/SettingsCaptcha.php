@@ -211,48 +211,36 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'component' => 'divider',
 								'dividerExtraVSpacing' => true,
 							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
-								'inputFieldLabel' => \__('Site key', 'eightshift-forms'),
-								'inputFieldHelp' => $this->getGlobalVariableOutput('ES_GOOGLE_RECAPTCHA_SITE_KEY', !empty($siteKey)),
-								'inputType' => 'password',
-								'inputIsRequired' => true,
-								'inputValue' => !empty($siteKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY),
-								'inputIsDisabled' => !empty($siteKey),
-							],
+							$this->getSettingsPasswordFieldWithGlobalVariable(
+								$this->getSettingsName(self::SETTINGS_CAPTCHA_SITE_KEY),
+								\__('Site key', 'eightshift-forms'),
+								!empty($siteKey) ? $siteKey : $this->getOptionValue(self::SETTINGS_CAPTCHA_SITE_KEY),
+								'ES_GOOGLE_RECAPTCHA_SITE_KEY',
+								!empty($siteKey)
+							),
 							...(!$isEnterprise ? [
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
-									'inputFieldLabel' => \__('Secret key', 'eightshift-forms'),
-									'inputType' => 'password',
-									'inputIsRequired' => true,
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_GOOGLE_RECAPTCHA_SECRET_KEY', !empty($secretKey)),
-									'inputValue' => !empty($secretKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
-									'inputIsDisabled' => !empty($secretKey),
-								]
+								$this->getSettingsPasswordFieldWithGlobalVariable(
+									$this->getSettingsName(self::SETTINGS_CAPTCHA_SECRET_KEY),
+									\__('Secret key', 'eightshift-forms'),
+									!empty($secretKey) ? $secretKey : $this->getOptionValue(self::SETTINGS_CAPTCHA_SECRET_KEY),
+									'ES_GOOGLE_RECAPTCHA_SECRET_KEY',
+									!empty($secretKey)
+								),
 							] : [
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
-									'inputFieldLabel' => \__('Project ID', 'eightshift-forms'),
-									'inputType' => 'password',
-									'inputIsRequired' => true,
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY', !empty($secretProjectId)),
-									'inputValue' => !empty($secretProjectId) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
-									'inputIsDisabled' => !empty($secretProjectId),
-								],
-								[
-									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_API_KEY),
-									'inputFieldLabel' => \__('API key', 'eightshift-forms'),
-									'inputType' => 'password',
-									'inputIsRequired' => true,
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_GOOGLE_RECAPTCHA_API_KEY', !empty($secretApiKey)),
-									'inputValue' => !empty($secretApiKey) ? 'xxxxxxxxxxxxxxxx' : $this->getOptionValue(self::SETTINGS_CAPTCHA_API_KEY),
-									'inputIsDisabled' => !empty($secretApiKey),
-								]
+								$this->getSettingsPasswordFieldWithGlobalVariable(
+									$this->getSettingsName(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
+									\__('Project ID', 'eightshift-forms'),
+									!empty($secretProjectId) ? $secretProjectId : $this->getOptionValue(self::SETTINGS_CAPTCHA_PROJECT_ID_KEY),
+									'ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY',
+									!empty($secretProjectId)
+								),
+								$this->getSettingsPasswordFieldWithGlobalVariable(
+									$this->getSettingsName(self::SETTINGS_CAPTCHA_API_KEY),
+									\__('API key', 'eightshift-forms'),
+									!empty($secretApiKey) ? $secretApiKey : $this->getOptionValue(self::SETTINGS_CAPTCHA_API_KEY),
+									'ES_GOOGLE_RECAPTCHA_API_KEY',
+									!empty($secretApiKey)
+								),
 							]),
 						],
 					],
