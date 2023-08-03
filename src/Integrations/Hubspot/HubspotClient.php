@@ -254,7 +254,8 @@ class HubspotClient implements HubspotClientInterface
 			$paramsPrepared,
 			$paramsFiles,
 			$itemId,
-			$formId
+			$formId,
+			$this->isCheckboxOptionChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];

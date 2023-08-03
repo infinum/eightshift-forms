@@ -52,6 +52,7 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_submit_additional_content' => ['getBlockFormSelectorAdditionalContent'],
 
 			'es_forms_block_field_style_options' => ['getBlockFieldStyleOptions'],
+			'es_forms_block_field_style_classes' => ['getBlockFieldStyleClasses'],
 
 			'es_forms_block_file_preview_remove_label' => ['getBlockFilePreviewRemoveLabel'],
 
@@ -372,18 +373,6 @@ class Testfilters implements ServiceInterface
 	 *
 	 * This filter will add new options to the style select dropdown in the field block. Field style option selector will not show unless a filter is provided. This option is shown in Block Editor.
 	 *
-	 * Available options:
-	 * - input
-	 * - textarea
-	 * - checkboxes
-	 * - radios
-	 * - select
-	 * - file
-	 * - phone
-	 * - date
-	 * - country
-	 * - submit
-	 *
 	 * @return array<string, mixed>
 	 */
 	public function getBlockFieldStyleOptions(): array
@@ -401,13 +390,25 @@ class Testfilters implements ServiceInterface
 			],
 			'select' => [
 				[
-					'label' => 'Default',
-					'value' => 'default'
-				],
-				[
 					'label' => 'Custom Style',
 					'value' => 'custom-style',
 				],
+			]
+		];
+	}
+
+	/**
+	 * Add additional style classet to field block.
+	 *
+	 * @param array<string, mixed> $attributes Block attributes.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getBlockFieldStyleClasses(array $attributes): array
+	{
+		return [
+			'input' => [
+				'custom-style',
 			]
 		];
 	}

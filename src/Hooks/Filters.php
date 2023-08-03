@@ -297,6 +297,7 @@ class Filters
 			],
 			'field' => [
 				'styleOptions' => 'style_options',
+				'styleClasses' => 'style_classes',
 				'additionalContent' => 'additional_content',
 			],
 			'input' => [

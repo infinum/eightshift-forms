@@ -189,7 +189,8 @@ class AirtableClient implements ClientInterface
 			$body,
 			$files,
 			$itemId,
-			$formId
+			$formId,
+			$this->isCheckboxOptionChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];

@@ -146,7 +146,8 @@ class GoodbitsClient implements ClientInterface
 			$body,
 			$files,
 			$itemId,
-			$formId
+			$formId,
+			$this->isCheckboxOptionChecked(SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY, SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];

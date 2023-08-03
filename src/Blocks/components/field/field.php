@@ -75,6 +75,16 @@ $fieldTypeCustom = Components::checkAttr('fieldTypeCustom', $attributes, $manife
 $fieldTracking = Components::checkAttr('fieldTracking', $attributes, $manifest);
 
 $fieldStyleOutput = [];
+$filterName = Filters::getFilterName(['block', 'field', 'styleClasses']);
+
+if (has_filter($filterName)) {
+	$fieldStyleOutputFilter = apply_filters($filterName, $attributes) ?? [];
+
+	if ($fieldStyleOutputFilter) {
+		$fieldStyleOutput = $fieldStyleOutputFilter[$blockName] ?? [];
+	}
+}
+
 if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	$fieldStyleOutput = array_map(
 		static function ($item) use ($componentClass) {

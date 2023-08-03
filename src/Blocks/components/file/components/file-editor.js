@@ -16,7 +16,7 @@ export const FileEditor = (attributes) => {
 
 	const {
 		componentClass,
-		componentName
+		componentName,
 	} = manifest;
 
 	const {

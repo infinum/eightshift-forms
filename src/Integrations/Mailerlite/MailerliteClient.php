@@ -179,7 +179,8 @@ class MailerliteClient implements ClientInterface
 			$body,
 			$files,
 			$itemId,
-			$formId
+			$formId,
+			$this->isCheckboxOptionChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
