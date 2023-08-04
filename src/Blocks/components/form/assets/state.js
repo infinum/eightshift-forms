@@ -557,8 +557,14 @@ export class State {
 	getFormFieldElementByChild = (element) => {
 		return element.closest(this.getStateSelectorsField());
 	};
+	getFormId = (element) => {
+		return element.getAttribute(getStateAttribute('formId'));
+	};
 	getFormIdByElement = (element) => {
-		return element.closest(this.getStateSelectorsForm()).getAttribute(getStateAttribute('formId'));
+		return this.getFormElementByChild(element).getAttribute(getStateAttribute('formId'));
+	};
+	getFieldNameByElement = (element) => {
+		return this.getFormFieldElementByChild(element).getAttribute(getStateAttribute('fieldName'));
 	};
 	getRestUrl = (value) => {
 		return getRestUrl(value);

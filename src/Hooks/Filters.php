@@ -285,6 +285,7 @@ class Filters
 				'hideGlobalMsgTimeout' => 'hide_global_msg_timeout',
 				'successRedirectUrl' => 'success_redirect_url',
 				'successRedirectVariation' => 'success_redirect_variation',
+				'successRedirectVariationOptions' => 'success_redirect_variation_options',
 				'trackingEventName' => 'tracking_event_name',
 				'trackingAdditionalData' => 'tracking_additional_data',
 				'dataTypeSelector' => 'data_type_selector',
@@ -391,6 +392,7 @@ class Filters
 			],
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 				'data' => 'data',
+				'prePostParams' => 'pre_post_params',
 				'successRedirectUrl' => 'success_redirect_url',
 			],
 			SettingsAirtable::SETTINGS_TYPE_KEY => [

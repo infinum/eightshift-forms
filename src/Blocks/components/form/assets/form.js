@@ -855,7 +855,7 @@ export class Form {
 		this.setupInputField(formId, name);
 
 		if (this.state.getStateFormConfigPhoneDisablePicker(formId)) {
-			this.state.getStateElementField(name, formId).querySelector('select').remove();
+			this.state.getStateElementField(name, formId).querySelector('select')?.remove();
 		} else {
 			this.setupSelectField(formId, name);
 		}
@@ -1057,6 +1057,8 @@ export class Form {
 			input.setAttribute('rows', '1');
 			input.setAttribute('cols', '');
 
+			this.state.setStateElementCustom(name, autosize?.default, formId);
+
 			autosize.default(input);
 		});
 
@@ -1214,6 +1216,10 @@ export class Form {
 
 		// Clear form state only.
 		[...formIds].forEach((formId) => {
+			[...this.state.getStateElementByType('textarea', formId)].forEach((textarea) => {
+				this.state.getStateElementCustom(textarea.name, formId).destroy(this.state.getStateElementInput(textarea.name, formId));
+			});
+
 			removeStateForm(formId);
 		});
 	}

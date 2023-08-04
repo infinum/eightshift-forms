@@ -439,7 +439,8 @@ export function setStateFormInitial(formId) {
 				if (!value) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
 				} else {
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId).number}${value}`, formId);
+					const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${value}`, formId);
 				}
 				break;
 			case 'date':
@@ -600,7 +601,8 @@ export function setStateValues(item, formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
 
 				if (getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)) {
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId).number}${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)}`, formId);
+					const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)}`, formId);
 				}
 			}
 		break;
@@ -609,7 +611,8 @@ export function setStateValues(item, formId) {
 			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
 
 			if (value) {
-				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId).number}${value}`, formId);
+				const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${value}`, formId);
 			}
 			break;
 		default:
