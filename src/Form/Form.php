@@ -137,6 +137,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
 		$formsSuccessRedirectVariation = Components::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
 		$formsSuccessRedirectVariationUrl = Components::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
+		$formsSuccessRedirectVariationUrlTitle = Components::checkAttr('formsSuccessRedirectVariationUrlTitle', $attributes, $manifest);
 		$formsDownloads = Components::checkAttr('formsDownloads', $attributes, $manifest);
 		$formsFormDataTypeSelector = Components::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 		$formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
@@ -174,6 +175,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				// Populate forms blocks attributes to the form component later in the chain.
 				$innerBlock['attrs']["{$blockName}FormSuccessRedirectVariation"] = $formsSuccessRedirectVariation;
 				$innerBlock['attrs']["{$blockName}FormSuccessRedirectVariationUrl"] = $formsSuccessRedirectVariationUrl;
+				$innerBlock['attrs']["{$blockName}FormSuccessRedirectVariationUrlTitle"] = $formsSuccessRedirectVariationUrlTitle;
 				$innerBlock['attrs']["{$blockName}FormDownloads"] = $formsDownloads;
 				$innerBlock['attrs']["{$blockName}FormType"] = $blockName;
 				$innerBlock['attrs']["{$blockName}FormPostId"] = $formsFormPostId;

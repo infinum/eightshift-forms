@@ -63,6 +63,9 @@
 		"formSuccessRedirectVariation": {
 			"type": "string"
 		},
+		"formSuccessRedirectVariationUrlTitle": {
+			"type": "string"
+		},
 		"formSuccessRedirectVariationUrl": {
 			"type": "string"
 		},

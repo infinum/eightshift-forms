@@ -239,7 +239,7 @@ export function setStateInitial() {
 
 	if (enrichment.isUsed) {
 		setState([StateEnum.ENRICHMENT_EXPIRATION], enrichment.expiration, StateEnum.ENRICHMENT);
-		setState([StateEnum.ENRICHMENT_ALLOWED], enrichment.allowed, StateEnum.ENRICHMENT);
+		setState([StateEnum.ENRICHMENT_ALLOWED], Object.values(enrichment.allowed), StateEnum.ENRICHMENT);
 		setState([StateEnum.NAME], 'es-storage', StateEnum.ENRICHMENT);
 	}
 

@@ -57,6 +57,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 	const formsDownloads = checkAttr('formsDownloads', attributes, manifest);
 	const formsSuccessRedirectVariation = checkAttr('formsSuccessRedirectVariation', attributes, manifest);
 	const formsSuccessRedirectVariationUrl = checkAttr('formsSuccessRedirectVariationUrl', attributes, manifest);
+	const formsSuccessRedirectVariationUrlTitle = checkAttr('formsSuccessRedirectVariationUrlTitle', attributes, manifest);
 
 	const [isGeoModalOpen, setIsGeoModalOpen] = useState(false);
 	const [geoFormFields, setGeoFormFields] = useState([]);
@@ -163,9 +164,15 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 					<>
 						<TextControl
 							label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
-							help={__('Additional url and file downloads that will be passed to the "Thank you" page.', 'eightshift-forms')}
+							help={__('Additional internal/external url that will be passed to the "Thank you" page.', 'eightshift-forms')}
 							value={formsSuccessRedirectVariationUrl}
 							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
+						/>
+						<TextControl
+							label={<IconLabel icon={icons.anchor} label={__('Url title', 'eightshift-forms')} />}
+							help={__('Additional internal/external url title that will be passed to the "Thank you" page.', 'eightshift-forms')}
+							value={formsSuccessRedirectVariationUrlTitle}
+							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrlTitle', attributes, manifest)]: value })}
 						/>
 						<Control reducedBottomSpacing={formsDownloads?.length > 0} noBottomSpacing={formsDownloads?.length < 1}>
 							<MediaPlaceholder
@@ -180,6 +187,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 											id: item.id,
 											isImage: mimeType?.startsWith('image/'),
 											condition: 'all',
+											fileTitle: '',
 										};
 									});
 									setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
@@ -201,6 +209,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 												icon={item?.isImage ? icons.image : icons.file}
 												label={truncateMiddle(item.title, 28)}
 												noBottomSpacing
+												additionalClasses={'es-border-t-cool-gray-300 es-mt-4 es-pt-4'}
 												actions={
 													<Button
 														onClick={() => {
@@ -214,9 +223,18 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 												}
 											>
 												<TextControl
+													label={__('Conditional fields', 'eightshift-forms')}
 													value={item?.condition}
 													onChange={(value) => {
 														formsDownloads[index].condition = value;
+														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
+													}}
+												/>
+												<TextControl
+													label={__('File title', 'eightshift-forms')}
+													value={item?.fileTitle}
+													onChange={(value) => {
+														formsDownloads[index].fileTitle = value;
 														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
 													}}
 												/>

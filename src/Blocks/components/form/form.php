@@ -45,6 +45,7 @@ $formServerSideRender = Components::checkAttr('formServerSideRender', $attribute
 $formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
 $formDownloads = Components::checkAttr('formDownloads', $attributes, $manifest);
 $formSuccessRedirectVariationUrl = Components::checkAttr('formSuccessRedirectVariationUrl', $attributes, $manifest);
+$formSuccessRedirectVariationUrlTitle = Components::checkAttr('formSuccessRedirectVariationUrlTitle', $attributes, $manifest);
 $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
 $formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 
@@ -116,24 +117,36 @@ if ($formDownloads || $formSuccessRedirectVariationUrl) {
 	$downloadsOutput = [];
 
 	foreach ($formDownloads as $file) {
-		$condition = isset($file['condition']) ? $file['condition'] : 'all';
+		$condition = isset($file['condition']) && !empty($file['condition']) ? $file['condition'] : 'all';
 		$fileId = $file['id'] ?? '';
+		$fileTitle = $file['fileTitle'] ?? '';
 
 		if (!$fileId) {
 			continue;
 		}
 
-		$downloadsOutput[$condition]['files'][] = $fileId;
+		$downloadsOutput[$condition]['files'][] = [
+			$fileId,
+			$fileTitle,
+		];
 	}
 
 	if (!$downloadsOutput) {
 		if ($formSuccessRedirectVariationUrl) {
-			$downloadsOutput['all'] = Encryption::encryptor(wp_json_encode(['url' => $formSuccessRedirectVariationUrl]));
+			$downloadsOutput['all'] = Encryption::encryptor(wp_json_encode([
+				'main' => [
+					$formSuccessRedirectVariationUrl,
+					$formSuccessRedirectVariationUrlTitle,
+				],
+			]));
 		}
 	} else {
 		foreach ($downloadsOutput as $key => $item) {
 			if ($formSuccessRedirectVariationUrl) {
-				$downloadsOutput[$key]['url'] = $formSuccessRedirectVariationUrl;
+				$downloadsOutput[$key]['main'] = [
+					$formSuccessRedirectVariationUrl,
+					$formSuccessRedirectVariationUrlTitle,
+				];
 			}
 
 			$downloadsOutput[$key] = Encryption::encryptor(wp_json_encode($downloadsOutput[$key]));

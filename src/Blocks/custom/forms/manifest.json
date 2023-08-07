@@ -50,6 +50,9 @@
 		"formsSuccessRedirectVariationUrl": {
 			"type": "string"
 		},
+		"formsSuccessRedirectVariationUrlTitle": {
+			"type": "string"
+		},
 		"formsFormDataTypeSelector": {
 			"type": "string"
 		},
