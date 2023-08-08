@@ -38,6 +38,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"dateUseLabelAsPlaceholder": {
+			"type": "boolean",
+			"default": false
+		},
 		"dateIsReadOnly": {
 			"type": "boolean",
 			"default": false

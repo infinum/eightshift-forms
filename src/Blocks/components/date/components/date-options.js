@@ -43,6 +43,7 @@ export const DateOptions = (attributes) => {
 	const dateValidationPattern = checkAttr('dateValidationPattern', attributes, manifest);
 	const dateDisabledOptions = checkAttr('dateDisabledOptions', attributes, manifest);
 	const dateType = checkAttr('dateType', attributes, manifest);
+	const dateUseLabelAsPlaceholder = checkAttr('dateUseLabelAsPlaceholder', attributes, manifest);
 
 	let dateValidationPatternOptions = [];
 
@@ -79,13 +80,21 @@ export const DateOptions = (attributes) => {
 						noSearch
 					/>
 
-					<TextControl
-						label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
-						help={__('Shown when the field is empty', 'eightshift-forms')}
-						value={datePlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('datePlaceholder', attributes, manifest), dateDisabledOptions)}
-						className='es-no-field-spacing'
+					{!dateUseLabelAsPlaceholder &&
+						<TextControl
+							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={datePlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('datePlaceholder', attributes, manifest), dateDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Use label as placeholder', 'eightshift-forms')}
+						checked={dateUseLabelAsPlaceholder}
+						onChange={(value) => setAttributes({ [getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value })}
 					/>
 				</Section>
 

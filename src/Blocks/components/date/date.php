@@ -32,8 +32,10 @@ $dateAttrs = Components::checkAttr('dateAttrs', $attributes, $manifest);
 $datePreviewFormat = Components::checkAttr('datePreviewFormat', $attributes, $manifest);
 $dateOutputFormat = Components::checkAttr('dateOutputFormat', $attributes, $manifest);
 $dateFieldAttrs = Components::checkAttr('dateFieldAttrs', $attributes, $manifest);
+$dateUseLabelAsPlaceholder = Components::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
+$dateHideLabel = false;
 $dateFieldLabel = $attributes[Components::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
 
 $dateClass = Components::classnames([
@@ -55,6 +57,11 @@ if ($datePreviewFormat) {
 
 if ($dateOutputFormat) {
 	$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['dateOutputFormat']] = esc_attr($dateOutputFormat);
+}
+
+if ($dateUseLabelAsPlaceholder) {
+	$dateAttrs['placeholder'] = esc_attr($dateFieldLabel);
+	$dateHideLabel = true;
 }
 
 $dateAttrsOutput = '';
@@ -91,6 +98,7 @@ echo Components::render(
 			'fieldDisabled' => !empty($dateIsDisabled),
 			'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $dateTracking,
+			'fieldHideLabel' => $dateHideLabel,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)
