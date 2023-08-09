@@ -304,9 +304,10 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Load after form ', 'eightshift-forms'),
+										'checkboxLabel' => \__('Load Captcha on website load', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
 										'checkboxValue' => self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY,
+										'checkboxHelp' => \__('By default, Captcha is only loaded on pages that contain forms. However, with this option, you can load Captcha on every page.', 'eightshift-forms'),
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 										'checkboxAsToggleSize' => 'medium',
@@ -316,8 +317,8 @@ class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 							$isInit ? [
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
-								'inputFieldLabel' => \__('"After initialization" action name', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Name of the action sent to reCAPTCHA when the form is loaded.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Action name', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Name of the action sent to reCAPTCHA when Captcha is loaded on every page.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => $this->getOptionValue(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY,

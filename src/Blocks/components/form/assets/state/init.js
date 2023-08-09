@@ -107,7 +107,6 @@ export const StateEnum = {
 	EVENTS_FORM_JS_LOADED: 'jsFormLoaded',
 	EVENTS_FORM_MANUAL_INIT_LOADED: 'manualInitLoaded',
 	EVENTS_AFTER_CAPTCHA_INIT: 'afterCaptchaInit',
-
 	EVENTS_STEPS_GO_TO_NEXT_STEP: 'goToNextStep',
 	EVENTS_STEPS_GO_TO_PREV_STEP: 'goToPrevStep',
 
