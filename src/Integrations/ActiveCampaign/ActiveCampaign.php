@@ -245,7 +245,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 						'inputType' => 'tel',
 						'inputIsRequired' => (bool) $isRequired,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							$isRequired ? 'textareaIsRequired' : '',
+							$isRequired ? 'inputIsRequired' : '',
 						]),
 					];
 					break;
@@ -262,7 +262,9 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 									'checkboxLabel' => $checkbox['value'],
 									'checkboxValue' => $checkbox['value'],
 									'checkboxTracking' => $name,
-									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [], false),
+									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+										'checkboxValue'
+									], false),
 								];
 							},
 							$options

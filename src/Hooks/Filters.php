@@ -404,8 +404,6 @@ class Filters
 			SettingsJira::SETTINGS_TYPE_KEY => [
 				'map' => 'map',
 			],
-			SettingsMailer::SETTINGS_TYPE_KEY => [
-			],
 		],
 		'enrichment' => [
 			'manualMap' => 'manual_map',

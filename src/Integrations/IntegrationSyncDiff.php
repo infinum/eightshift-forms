@@ -670,21 +670,26 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				// Find attributes in integration and content that match disabled options item.
 				$i = $integration['attrs'][$disabledOption] ?? '';
 				$c = $content['attrs'][$disabledOption] ?? '';
-
 				// If intregration is missing disabled or protected attribute. There could be and issue in the mapping of component attributes for integration.
 				if (!$i) {
-					$output['update'] = true;
-					$output['replaced'] = $key;
-					$output['output'] = $integration;
-					break;
+					// This condition is here if both integration and content are empty.
+					if ($i !== $c) {
+						$output['update'] = true;
+						$output['replaced'] = $key;
+						$output['output'] = $integration;
+						break;
+					}
 				}
 
 				// If content has missing, disabled or protected attribute add it from integration.
 				if (!$c) {
-					$output['update'] = true;
-					$output['changed'][$key][] = $disabledOption;
-					$innerOutput['attrs'][$disabledOption] = $i;
-					break;
+					// This condition is here if both integration and content are empty.
+					if ($c !== $i) {
+						$output['update'] = true;
+						$output['changed'][$key][] = $disabledOption;
+						$innerOutput['attrs'][$disabledOption] = $i;
+						break;
+					}
 				}
 
 				// If values of attribute in content and intregation are diffrerent do something.
