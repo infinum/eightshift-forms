@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { select, useDispatch, useSelect } from "@wordpress/data";
+import { select, useDispatch, useSelect, dispatch } from "@wordpress/data";
 import { store as noticesStore } from '@wordpress/notices';
 import { Button, PanelBody, Modal } from '@wordpress/components';
 import { icons, Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs/scripts';
@@ -15,6 +15,7 @@ import {
 	LocationsButton,
 } from '../../utils';
 import { getRestUrlByType, ROUTES } from '../../form/assets/state';
+import { FORMS_STORE_NAME } from './../../../assets/scripts/store';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
 
 export const IntegrationsOptions = ({
@@ -39,8 +40,8 @@ export const IntegrationsOptions = ({
 
 	const [formItems, setFormItems] = useState([]);
 	const [formInnerItems, setFormInnerItems] = useState([]);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [modalContent, setModalContent] = useState({});
+	const [isModalOpen, setModalOpen] = useState(select(FORMS_STORE_NAME).getIsSyncDialogOpen());
+	const [modalContent] = useState(select(FORMS_STORE_NAME).getSyncDialog());
 
 	const { createNotice } = useDispatch(noticesStore);
 
@@ -75,8 +76,8 @@ export const IntegrationsOptions = ({
 				className='es-modal-max-width-xxl es-rounded-3!'
 				title={<IconLabel icon={icons.clipboard} label={__('Sync report', 'eightshift-forms')} standalone />}
 				onRequestClose={() => {
-					setIsModalOpen(false);
-					setModalContent({});
+					setModalOpen(false);
+					dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(false);
 				}}
 			>
 				<Section
@@ -128,7 +129,6 @@ export const IntegrationsOptions = ({
 								label={
 									<span key={i}>
 										<code>{Object.keys(item)[0]}</code>: {Object.values(item)[0].join(', ')}
-
 									</span>
 								}
 								key={i}
@@ -187,7 +187,10 @@ export const IntegrationsOptions = ({
 				</Control>
 
 				<Section showIf={hasInnerBlocks} icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					<Control help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}>
+					<Control
+						help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}
+						additionalClasses={'es-border-b-gray-300 es-pb-5'}
+					>
 						<Button
 							icon={icons.loopMode}
 							onClick={() => {
@@ -203,21 +206,12 @@ export const IntegrationsOptions = ({
 											}
 										);
 									} else {
-										setModalContent(val);
-
 										createNotice(
 											val?.update ? 'success' : 'info',
 											val?.update ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'),
 											{
 												type: 'snackbar',
 												icon: '✅',
-												explicitDismiss: val?.update,
-												actions: val?.update ? [
-													{
-														label: __('View report', 'eightshift-forms'),
-														onClick: () => setIsModalOpen(true),
-													}
-												] : [],
 											}
 										);
 									}
@@ -227,6 +221,18 @@ export const IntegrationsOptions = ({
 						>
 							{__('Sync integration', 'eightshift-forms')}
 						</Button>
+
+						{Object.keys(modalContent).length > 0 &&
+							<Button
+								onClick={() => {
+									setModalOpen(true);
+									dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(true);
+								}}
+								className='es-rounded-1 es-mt-1 es-font-weight-500'
+							>
+								{__('View changes', 'eightshift-forms')}
+							</Button>
+						}
 					</Control>
 
 					<Control help={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}>
@@ -260,6 +266,10 @@ export const IntegrationsOptions = ({
 					</Control>
 				</Section>
 
+				{isModalOpen &&
+					<SyncModal />
+				}
+
 			</PanelBody>
 
 			<StepMultiflowOptions
@@ -268,8 +278,6 @@ export const IntegrationsOptions = ({
 					stepMultiflowPostId: postId,
 				})}
 			/>
-
-			{hasInnerBlocks && isModalOpen && <SyncModal />}
 		</>
 	);
 };
