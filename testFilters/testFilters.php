@@ -95,7 +95,6 @@ class Testfilters implements ServiceInterface
 			'es_forms_integrations_workable_pre_post_params' => ['getWorkableIntegrationPrePostParams'], // Dynamic name based on the integration type.
 			'es_forms_integrations_hubspot_files_options' => ['getFileUploadCustomOptions'],
 			'es_forms_integrations_clearbit_map' => ['getClearbitFieldsMap'],
-			'es_forms_integrations_workable_success_redirect_url' => ['getWorkableSuccessRedirectUrl'],
 
 			// ---------------------------------------------------------------------------------------------------------
 			// Enrichment filters.
@@ -868,16 +867,6 @@ class Testfilters implements ServiceInterface
 		$params['company-location-combined'] = "{$street} {$city} {$postalCode}";
 
 		return $params;
-	}
-
-	/**
-	 * Set Workable integration global success redirect url.
-	 *
-	 * @return string
-	 */
-	public function getWorkableSuccessRedirectUrl(): string
-	{
-		return 'https://infinum.com/';
 	}
 
 	// -----------------------------------------------------------------------------------------------------------

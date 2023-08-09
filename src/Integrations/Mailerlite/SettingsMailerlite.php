@@ -180,7 +180,6 @@ class SettingsMailerlite implements SettingGlobalInterface, ServiceInterface
 									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
-								'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
 								'inputValue' => $successRedirectUrl['dataGlobal'],
 							],
 						],

@@ -172,17 +172,10 @@ trait FiltersOuputMock
 		$data = '';
 		$dataGlobal = '';
 		$dataLocal = '';
-		$filterUsedGlobal = false;
 		$filterUsedLocal = false;
 
-		// Find global settings per integration or filter data.
-		$filterNameGlobal = Filters::getFilterName(['integrations', $type, 'successRedirectUrl']);
-		if (\has_filter($filterNameGlobal)) {
-			$dataGlobal = \apply_filters($filterNameGlobal, $type);
-			$filterUsedGlobal = true;
-		} else {
-			$dataGlobal = $this->getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
-		}
+		// Find global settings per integration.
+		$dataGlobal = $this->getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
 
 		// Populate final output.
 		$data = $dataGlobal;
@@ -191,7 +184,8 @@ trait FiltersOuputMock
 		$filterNameLocal = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
 		if (\has_filter($filterNameLocal)) {
 			$dataLocal = \apply_filters($filterNameLocal, $type, $formId);
-			$filterUsedLocal = true;
+
+			$filterUsedLocal = !!($dataLocal);
 		} else {
 			$dataLocal = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
 		}
@@ -204,9 +198,8 @@ trait FiltersOuputMock
 		return [
 			'data' => $data,
 
-			'settingsGlobal' => $this->getSettingsDivWrap($settingsGlobal, $filterUsedGlobal),
+			'settingsGlobal' => $this->getSettingsDivWrap($settingsGlobal),
 			'dataGlobal' => $dataGlobal,
-			'filterUsedGlobal' => $filterUsedGlobal,
 
 			'settingsLocal' => $this->getSettingsDivWrap($settingsLocal, $filterUsedLocal),
 			'dataLocal' => $dataLocal,

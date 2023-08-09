@@ -264,7 +264,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
-								'inputIsDisabled' => $successRedirectUrl['filterUsedGlobal'],
 								'inputValue' => $successRedirectUrl['dataGlobal'],
 							],
 							[
