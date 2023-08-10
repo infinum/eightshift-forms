@@ -113,11 +113,13 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputName' => 'email',
 				'inputTracking' => 'email',
 				'inputFieldLabel' => \__('Email', 'eightshift-forms'),
-				'inputType' => 'text',
+				'inputType' => 'email',
 				'inputIsRequired' => true,
 				'inputIsEmail' => true,
 				'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+					'inputType',
 					'inputIsRequired',
+					'inputIsEmail',
 				]),
 			],
 			[
@@ -126,7 +128,9 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputTracking' => 'first_name',
 				'inputFieldLabel' => \__('First Name', 'eightshift-forms'),
 				'inputType' => 'text',
-				'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+				'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+					'inputType',
+				]),
 			],
 			[
 				'component' => 'input',
@@ -134,7 +138,9 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputTracking' => 'last_name',
 				'inputFieldLabel' => \__('Last Name', 'eightshift-forms'),
 				'inputType' => 'text',
-				'inputDisabledOptions' => $this->prepareDisabledOptions('input'),
+				'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+					'inputType',
+				]),
 			],
 			[
 				'component' => 'submit',

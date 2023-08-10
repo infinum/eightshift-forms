@@ -210,7 +210,6 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$required ? 'inputIsRequired' : '',
 								'inputMaxLength',
-								'inputAttrs',
 								'inputTypeCustom',
 							]),
 						];
@@ -264,7 +263,6 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'selectTypeCustom' => $type,
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 							$required ? 'selectIsRequired' : '',
-							'selectAttrs',
 							'selectTypeCustom',
 						]),
 					];
@@ -279,7 +277,6 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'textareaTypeCustom' => $type,
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$required ? 'textareaIsRequired' : '',
-								'textareaAttrs',
 								'textareaTypeCustom',
 							]),
 						];

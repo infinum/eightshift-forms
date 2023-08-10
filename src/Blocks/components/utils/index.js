@@ -17,6 +17,7 @@ import {
 	lockPostEditing,
 	unlockPostEditing,
 } from '@eightshift/frontend-libs/scripts';
+import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
 
 /**
@@ -86,6 +87,8 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 			console.log(response);
 		}
 
+		dispatch(FORMS_STORE_NAME).setSyncDialog({});
+
 		if (response.code === 200) {
 			const parentId = select('core/block-editor').getBlockParents(clientId)?.[0];
 
@@ -101,15 +104,23 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 			}
 		}
 
+		if (!response?.data?.data?.update) {
+			dispatch(FORMS_STORE_NAME).setSyncDialog({});
+		} else {
+			dispatch(FORMS_STORE_NAME).setSyncDialog({
+				update: response?.data?.data?.update,
+				removed: response?.data?.data?.removed,
+				added: response?.data?.data?.added,
+				replaced: response?.data?.data?.replaced,
+				changed: response?.data?.data?.changed,
+			});
+		}
+
 		return {
 			message: response?.message,
 			debugType: response?.data?.debugType,
 			status: response?.status,
 			update: response?.data?.data?.update,
-			removed: response?.data?.data?.removed,
-			added: response?.data?.data?.added,
-			replaced: response?.data?.data?.replaced,
-			changed: response?.data?.data?.changed,
 		};
 	});
 };

@@ -219,8 +219,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							],
 							'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 								$isRequired ? 'dateIsRequired' : '',
-								$min ? 'dateMinLength' : '',
-								$max ? 'dateMaxLength' : '',
 								'dateOutputFormat',
 								'dateFieldAttrs',
 							]),
@@ -604,8 +602,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 							'checkboxesIsRequired',
 							'checkboxesFieldBeforeContent',
-							'checkboxHideLabel',
-							'checkboxIsDisabled',
 							'checkboxesTypeCustom',
 						]),
 					];

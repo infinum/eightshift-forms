@@ -146,11 +146,11 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'countryName' => $name,
 								'countryTracking' => $name,
 								'countryIsRequired' => $isRequired,
+								'countryTypeCustom' => 'country',
 								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
 									$isRequired ? 'countryIsRequired' : '',
 									'countryTypeCustom',
 								]),
-								'countryTypeCustom' => 'country',
 							];
 							break;
 						default:
@@ -312,11 +312,11 @@ class Moments extends AbstractFormBuilder implements MapperInterface, ServiceInt
 								'countryName' => $name,
 								'countryTracking' => $name,
 								'countryIsRequired' => $isRequired,
+								'countryTypeCustom' => 'country',
 								'countryDisabledOptions' => $this->prepareDisabledOptions('country', [
 									$isRequired ? 'countryIsRequired' : '',
 									'countryTypeCustom',
 								]),
-								'countryTypeCustom' => 'country',
 							];
 							break;
 						default:

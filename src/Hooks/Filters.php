@@ -294,6 +294,7 @@ class Filters
 				'additionalContent' => 'additional_content',
 			],
 			'formSelector' => [
+				'formTemplates' => 'form_templates',
 				'additionalContent' => 'additional_content',
 			],
 			'field' => [
@@ -403,8 +404,6 @@ class Filters
 			],
 			SettingsJira::SETTINGS_TYPE_KEY => [
 				'map' => 'map',
-			],
-			SettingsMailer::SETTINGS_TYPE_KEY => [
 			],
 		],
 		'enrichment' => [

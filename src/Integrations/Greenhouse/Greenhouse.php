@@ -159,6 +159,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 										$isRequired ? 'inputIsRequired' : '',
 										'inputType',
+										'inputIsEmail',
 									]),
 								];
 								break;

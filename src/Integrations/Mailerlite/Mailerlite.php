@@ -175,7 +175,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'dateOutputFormat' => 'Y-m-d',
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							'dateType',
-							'dateOutputFormat'
+							'dateOutputFormat',
 						]),
 					];
 					break;
@@ -185,9 +185,11 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
+						'inputIsNumber' => true,
 						'inputType' => 'number',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-							'inputType'
+							'inputType',
+							'inputIsNumber',
 						]),
 					];
 					break;

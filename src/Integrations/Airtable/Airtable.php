@@ -145,12 +145,12 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputFieldLabel' => $label,
 						'inputType' => 'email',
 						'inputIsEmail' => true,
+						'inputTypeCustom' => 'email',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsEmail',
 							'inputType',
 							'inputTypeCustom',
 						]),
-						'inputTypeCustom' => 'email',
 					];
 					break;
 				case 'url':
@@ -161,12 +161,12 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputFieldLabel' => $label,
 						'inputType' => 'url',
 						'inputIsUrl' => true,
+						'inputTypeCustom' => 'url',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsUrl',
 							'inputType',
 							'inputTypeCustom',
 						]),
-						'inputTypeCustom' => 'url',
 					];
 					break;
 				case 'phoneNumber':
@@ -175,10 +175,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'phoneName' => $name,
 						'phoneTracking' => $name,
 						'phoneFieldLabel' => $label,
+						'phoneTypeCustom' => 'phone',
 						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 							'phoneTypeCustom',
 						]),
-						'phoneTypeCustom' => 'phone',
 					];
 					break;
 				case 'dateTime':
@@ -219,12 +219,12 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'inputFieldLabel' => $label,
 						'inputType' => 'number',
 						'inputIsNumber' => true,
+						'inputTypeCustom' => 'number',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							'inputIsNumber',
 							'inputType',
 							'inputTypeCustom',
 						]),
-						'inputTypeCustom' => 'number',
 					];
 					break;
 				case 'multilineText':
@@ -233,7 +233,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaFieldLabel' => $label,
-						'textareatDisabledOptions' => $this->prepareDisabledOptions('textareat'),
+						'textareatDisabledOptions' => $this->prepareDisabledOptions('textarea'),
 					];
 					break;
 				case 'singleSelect':
@@ -264,6 +264,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'checkboxesName' => $name,
 						'checkboxesTracking' => $name,
 						'checkboxesFieldLabel' => $label,
+						'checkboxesTypeCustom' => 'multiCheckbox',
 						'checkboxesContent' => \array_map(
 							function ($checkbox) {
 								return [
@@ -280,7 +281,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 							'checkboxesTypeCustom',
 						]),
-						'checkboxesTypeCustom' => 'multiCheckbox',
 					];
 					break;
 				case 'checkbox':
@@ -289,6 +289,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'checkboxesName' => $name,
 						'checkboxesTracking' => $name,
 						'checkboxesFieldHideLabel' => true,
+						'checkboxesTypeCustom' => 'singleCheckbox',
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
@@ -302,7 +303,6 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 							'checkboxesTypeCustom',
 						]),
-						'checkboxesTypeCustom' => 'singleCheckbox',
 					];
 					break;
 			}
