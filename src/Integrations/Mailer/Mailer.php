@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
+use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
@@ -90,6 +91,8 @@ class Mailer implements MailerInterface
 		$files = $data['files'] ?? [];
 		$formId = $data['formId'] ?? '';
 		$isDisabled = $data['isDisabled'] ?? false;
+
+		$data['formsVersion'] = Config::getProjectVersion();
 
 		// translators: %1$s replaces the integration name and %2$s formId.
 		$subject = \sprintf(\__('Failed %1$s integration: %2$s', 'eightshift-forms'), $integration, $formId);
