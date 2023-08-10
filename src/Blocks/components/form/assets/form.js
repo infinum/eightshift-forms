@@ -1194,6 +1194,8 @@ export class Form {
 
 		// 	// Trigger on wrap click.
 			field.addEventListener('click', this.onFileWrapClickEvent);
+			input.addEventListener('focus', this.onFocusEvent);
+			input.addEventListener('blur', this.onBlurEvent);
 		});
 	}
 

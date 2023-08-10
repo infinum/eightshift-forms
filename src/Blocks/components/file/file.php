@@ -51,7 +51,7 @@ if (!$fileCustomInfoTextUse) {
 	$infoTextContent = '';
 }
 
-$infoButtonContent = '<a href="#" class="' . esc_attr("{$componentClass}__button") . '">' . esc_html($infoButton) . '</a>';
+$infoButtonContent = '<a tabindex="-1" href="#" class="' . esc_attr("{$componentClass}__button") . '">' . esc_html($infoButton) . '</a>';
 
 $customFile = '
 	<div class="' . esc_attr("{$componentClass}__custom-wrap") . '">
