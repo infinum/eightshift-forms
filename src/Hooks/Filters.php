@@ -294,6 +294,7 @@ class Filters
 				'additionalContent' => 'additional_content',
 			],
 			'formSelector' => [
+				'formTemplates' => 'form_templates',
 				'additionalContent' => 'additional_content',
 			],
 			'field' => [

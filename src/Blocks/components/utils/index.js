@@ -104,23 +104,15 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 			}
 		}
 
-		const {
-			update,
-			removed,
-			added,
-			replaced,
-			changed,
-		} = response?.data?.data;
-
-		if (!update) {
+		if (!response?.data?.data?.update) {
 			dispatch(FORMS_STORE_NAME).setSyncDialog({});
 		} else {
 			dispatch(FORMS_STORE_NAME).setSyncDialog({
-				update,
-				removed,
-				added,
-				replaced,
-				changed,
+				update: response?.data?.data?.update,
+				removed: response?.data?.data?.removed,
+				added: response?.data?.data?.added,
+				replaced: response?.data?.data?.replaced,
+				changed: response?.data?.data?.changed,
 			});
 		}
 
@@ -128,7 +120,7 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 			message: response?.message,
 			debugType: response?.data?.debugType,
 			status: response?.status,
-			update,
+			update: response?.data?.data?.update,
 		};
 	});
 };

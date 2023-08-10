@@ -1,17 +1,3 @@
-// Create a color scheme for the WP admin.
-.wp-admin {
-	// Default ("Fresh").
-	--global-colors-esf-admin-accent: #2271B1;
-	--global-colors-esf-admin-accent-50: #2271B180;
-	--global-colors-esf-admin-accent-30: #2271B133;
-	--global-colors-esf-admin-accent-10: #2271B11A;
-	--global-colors-esf-admin-accent-05: #2271B10D;
-	--global-colors-esf-admin-accent-dark: #135E96;
-	--es-input-focus-border-color: #2271B1;
-
-	background-color: var(--esf-main-bg-color, var(--global-colors-esf-gray-100));
-}
-
 // stylelint-disable-next-line selector-max-specificity
 #adminmenu a.wp-has-current-submenu::after,
 #adminmenu > li.current > a.current::after {

@@ -292,6 +292,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$fieldStyleOptionsFilterName = Filters::getFilterName(['block', 'field', 'styleOptions']);
 		$customDataOptionsFilterName = Filters::getFilterName(['block', 'customData', 'options']);
 		$breakpointsFilterName = Filters::getFilterName(['blocks', 'breakpoints']);
+		$formSelectorTemplatesFilterName = Filters::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
@@ -299,6 +300,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['customDataBlockOptions'] = \apply_filters($customDataOptionsFilterName, []);
 		$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
 		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
+		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
 		$output['postType'] = \get_post_type() ? \get_post_type() : '';
 
 		$output['settings'] = [
