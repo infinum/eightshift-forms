@@ -402,9 +402,6 @@ class Filters
 				'data' => 'data',
 				'prePostParams' => 'pre_post_params',
 			],
-			SettingsJira::SETTINGS_TYPE_KEY => [
-				'map' => 'map',
-			],
 		],
 		'enrichment' => [
 			'manualMap' => 'manual_map',
@@ -520,7 +517,7 @@ class Filters
 			SettingsWorkable::SETTINGS_TYPE_KEY => [
 				'title' => \__('Workable', 'eightshift-forms'),
 				'detail' => \__('Sourcing automation tool to help hiring teams find, reach and engage top talent quickly and effectively.', 'eightshift-forms'),
-				'externalLink' => 'https://www.greenhouse.io/',
+				'externalLink' => 'https://www.workable.com/',
 				'icon' => 'workable',
 			],
 			SettingsJira::SETTINGS_TYPE_KEY => [

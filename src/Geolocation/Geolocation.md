@@ -25,7 +25,7 @@ Files used:
 * geoio.phar
 
 Updated:
-* 2023-02-17
+* 2023-08-11
 
 ## Country list
 
