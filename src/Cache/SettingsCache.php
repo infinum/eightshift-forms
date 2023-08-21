@@ -45,7 +45,6 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const CACHE_TRANSIENTS_TIMES = [
 		'integration' => \HOUR_IN_SECONDS, // 60 min
-		'momentsToken' => \HOUR_IN_SECONDS - \MINUTE_IN_SECONDS, // 50 min
 		'quick' => \MINUTE_IN_SECONDS * 3 // 3 min
 	];
 
