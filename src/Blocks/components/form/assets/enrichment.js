@@ -71,6 +71,8 @@ export class Enrichment {
 		const currentStorageFinal = {...currentStorage};
 		delete currentStorageFinal.timestamp;
 
+		currentStorage.timestamp = parseInt(currentStorage.timestamp, 10);
+
 		// If storage exists check if it is expired.
 		if (this.getLocalStorage() !== null) {
 			// Update expiration date by number of days from the current
@@ -85,6 +87,8 @@ export class Enrichment {
 
 		// Create new storage if this is the first visit or it was expired.
 		if (this.getLocalStorage() === null) {
+			newStorage.timestamp = newStorage.timestamp.toString();
+
 			localStorage.setItem(
 				this.state.getStateEnrichmentStorageName(),
 				JSON.stringify(newStorage)
@@ -111,7 +115,7 @@ export class Enrichment {
 		// Add timestamp to the new output.
 		const finalOutput = {
 			...output,
-			timestamp: newStorage.timestamp,
+			timestamp: newStorage.timestamp.toString(),
 		};
 
 		// Update localStorage with the new item.
@@ -149,7 +153,7 @@ export class Enrichment {
 			const item = searchParams.get(element);
 
 			if (item) {
-				output[element] = item;
+				output[element] = item.toString();
 			}
 		});
 
@@ -170,7 +174,7 @@ export class Enrichment {
 			const item = cookies.getCookie(element);
 
 			if (item) {
-				output[element] = item;
+				output[element] = item.toString();
 			}
 		});
 

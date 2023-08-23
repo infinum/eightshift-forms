@@ -131,8 +131,11 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 								'component' => 'phone',
 								'phoneName' => $name,
 								'phoneTracking' => $name,
+								'phoneIsNumber' => true,
 								'phoneFieldLabel' => $label,
-								'phoneDisabledOptions' => $this->prepareDisabledOptions('phone'),
+								'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
+									'phoneIsNumber'
+								]),
 							];
 							break;
 						case 'zip':

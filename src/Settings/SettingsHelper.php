@@ -13,6 +13,7 @@ namespace EightshiftForms\Settings;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -398,7 +399,7 @@ trait SettingsHelper
 	 *
 	 * @return array<string, string>
 	 */
-	private function getActiveIntegrationIcons(string $id): array
+	private function getIntegrationDetailsById(string $id): array
 	{
 		$integrationDetails = Helper::getFormDetailsById($id);
 
@@ -417,6 +418,38 @@ trait SettingsHelper
 			'isValid' => $integrationDetails['isValid'],
 			'isApiValid' => $integrationDetails['isApiValid'],
 		];
+	}
+
+	/**
+	 * Get list of all active integrations
+	 *
+	 * @return array<int, string>
+	 */
+	private function getActiveIntegrations(): array
+	{
+		$output = [];
+
+		foreach (Filters::ALL as $key => $value) {
+			$useFilter = Filters::ALL[$key]['use'] ?? '';
+
+			if (!$useFilter) {
+				continue;
+			}
+
+			if (Filters::ALL[$key]['type'] !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+				continue;
+			}
+
+			$isUsed = $this->isCheckboxOptionChecked($useFilter, $useFilter);
+
+			if (!$isUsed) {
+				continue;
+			}
+
+			$output[] = $key;
+		}
+
+		return $output;
 	}
 
 	/**

@@ -66,7 +66,7 @@ class FormsListing implements FormListingInterface
 				'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
 				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
 				'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
-				'activeIntegration' =>  $this->getActiveIntegrationIcons((string) $id),
+				'activeIntegration' => $this->getIntegrationDetailsById((string) $id),
 				'useSync' => true,
 			];
 		}

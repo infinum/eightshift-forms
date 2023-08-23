@@ -141,8 +141,10 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 									'phoneFieldLabel' => $label,
 									'phoneMeta' => $description,
 									'phoneIsRequired' => $isRequired,
+									'phoneIsNumber' => true,
 									'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 										$isRequired ? 'phoneIsRequired' : '',
+										'phoneIsNumber',
 									]),
 								];
 								break;

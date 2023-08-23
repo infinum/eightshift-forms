@@ -26,7 +26,7 @@ export const IntegrationsEditor = ({
 	const InvalidPlaceholder = () => {
 		return (
 			<InvalidEditor
-				heading={__('Form not selected', 'eightshift-forms')}
+				heading={__('Please use the sidebar settings to choose your desired form.', 'eightshift-forms')}
 			/>
 		);
 	};

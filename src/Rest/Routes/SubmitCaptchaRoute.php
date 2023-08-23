@@ -112,7 +112,7 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 			$isEnterprise = $params['isEnterprise'] ?? false;
 
 			return \rest_ensure_response(
-				$this->captcha->check($token, $action, $isEnterprise)
+				$this->captcha->check($token, $action, (bool) $isEnterprise)
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(

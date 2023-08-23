@@ -333,7 +333,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					break;
 				case self::CUSTOM_FORM_PARAMS['storage']:
 					$output['storage'] = $value['value'];
-					$value['value'] = \json_decode($value['value'], true);
+					$value['value'] = (!empty($value['value'])) ? \json_decode($value['value'], true) : [];
 					$output['params'][$key] = $value;
 					break;
 				case self::CUSTOM_FORM_PARAMS['steps']:

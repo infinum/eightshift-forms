@@ -167,7 +167,11 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							);
 						}
 
-						$captcha = $this->captcha->check($captchaParams['token'], $captchaParams['action'], $captchaParams['isEnterprise'] ?? false);
+						$captchaToken = $captchaParams['token'] ?? '';
+						$captchaAction = $captchaParams['action'] ?? '';
+						$captchaIsEnterprise = $captchaParams['isEnterprise'] ?? false;
+
+						$captcha = $this->captcha->check($captchaToken, $captchaAction, (bool) $captchaIsEnterprise);
 
 						if ($captcha['status'] === AbstractBaseRoute::STATUS_ERROR) {
 							return \rest_ensure_response($captcha);

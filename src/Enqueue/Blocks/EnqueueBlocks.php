@@ -308,6 +308,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		];
 
 		$output['use'] = [
+			'activeIntegrations' => $this->getActiveIntegrations(),
 			'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
 		];
 

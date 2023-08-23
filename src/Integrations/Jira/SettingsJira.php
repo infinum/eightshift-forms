@@ -285,7 +285,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 							[
 								'component' => 'intro',
 								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
-								'introHelp' => SettingsHelper::getFieldTagsOutput($this->getFormFieldNames($formDetails['fieldNames'])),
+								'introHelp' => SettingsHelper::getFieldTagsOutput($this->getFormFieldNames($formDetails['fieldNamesTags'])),
 							],
 							[
 								'component' => 'divider',

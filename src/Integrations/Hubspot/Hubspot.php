@@ -272,6 +272,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'phoneTracking' => $name,
 							'phoneFieldLabel' => $label,
 							'phoneIsRequired' => $isRequired,
+							'phoneIsNumber' => true,
 							'phoneValue' => $value,
 							'phoneFieldAttrs' => [
 								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
@@ -279,6 +280,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 								$isRequired ? 'phoneIsRequired' : '',
 								'phoneFieldAttrs',
+								'phoneIsNumber',
 							]),
 						];
 

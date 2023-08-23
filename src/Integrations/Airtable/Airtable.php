@@ -176,8 +176,10 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'phoneTracking' => $name,
 						'phoneFieldLabel' => $label,
 						'phoneTypeCustom' => 'phone',
+						'phoneIsNumber' => true,
 						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 							'phoneTypeCustom',
+							'phoneIsNumber',
 						]),
 					];
 					break;

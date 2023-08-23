@@ -477,6 +477,29 @@ export const SettingsButton = ({formId}) => {
 };
 
 /**
+ * Returns global setting button component.
+ *
+ * @returns Component
+ */
+export const GlobalSettingsButton = () => {
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
+	const {
+		globalSettingsPageUrl,
+	} = select(STORE_NAME).getSettings();
+
+	return (
+		<Button
+			href={`${wpAdminUrl}${globalSettingsPageUrl}`}
+			icon={icons.globe}
+			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+		>
+			{__('Edit global settings', 'eightshift-forms')}
+		</Button>
+	);
+};
+
+/**
  * Returns location button component.
  *
  * @returns Component
@@ -498,6 +521,29 @@ export const LocationsButton = ({formId}) => {
 			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 		>
 			{__('Locations', 'eightshift-forms')}
+		</Button>
+	);
+};
+
+/**
+ * Returns dashboard button component.
+ *
+ * @returns Component
+ */
+export const DashboardButton = () => {
+	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
+
+	const {
+		dashboardPageUrl,
+	} = select(STORE_NAME).getSettings();
+
+	return (
+		<Button
+			href={`${wpAdminUrl}${dashboardPageUrl}`}
+			icon={icons.layoutAlt}
+			className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+		>
+			{__('Visit dashboard settings', 'eightshift-forms')}
 		</Button>
 	);
 };

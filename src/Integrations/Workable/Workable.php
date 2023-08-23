@@ -120,7 +120,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputFieldLabel' => \esc_html__('First name', 'eightshift-forms'),
 				'inputId' => 'firstname',
 				'inputType' => 'text',
-				'inputMaxLength' => 255,
+				'inputMaxLength' => 127,
 				'inputIsRequired' => true,
 				'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 					'inputIsRequired',
@@ -134,7 +134,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputFieldLabel' => \esc_html__('Last name', 'eightshift-forms'),
 				'inputId' => 'lastname',
 				'inputType' => 'text',
-				'inputMaxLength' => 255,
+				'inputMaxLength' => 127,
 				'inputIsRequired' => true,
 				'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 					'inputIsRequired',
@@ -150,7 +150,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				'inputType' => 'email',
 				'inputIsRequired' => true,
 				'inputIsEmail' => true,
-				'inputMaxLength' => 255,
+				'inputMaxLength' => 254,
 				'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 					'inputIsRequired',
 					'inputIsEmail',
@@ -189,23 +189,25 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							'phoneTracking' => $name,
 							'phoneFieldLabel' => $label,
 							'phoneIsRequired' => $required,
-							'phoneMaxLength' => 255,
+							'phoneMaxLength' => 254,
+							'phoneIsNumber' => true,
 							'phoneTypeCustom' => 'phone',
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 								$required ? 'phoneIsRequired' : '',
+								'phoneIsNumber',
 								'phoneMaxLength',
 								'phoneTypeCustom',
 							]),
 						];
 					} else {
-						$output[] = [
+						$stringOutput = [
 							'component' => 'input',
 							'inputName' => $name,
 							'inputTracking' => $name,
 							'inputFieldLabel' => $label,
 							'inputType' => 'text',
 							'inputIsRequired' => $required,
-							'inputMaxLength' => 255,
+							'inputMaxLength' => 254,
 							'inputTypeCustom' => $type,
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$required ? 'inputIsRequired' : '',
@@ -213,6 +215,12 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 								'inputTypeCustom',
 							]),
 						];
+
+						if ($type === 'short_text') {
+							$stringOutput['inputMaxLength'] = 127;
+						}
+
+						$output[] = $stringOutput;
 					}
 					break;
 				case 'file':

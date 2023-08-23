@@ -139,7 +139,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 										<br />
 										Tag missing? Make sure its field has a <b>Name</b> set!
 									</details>
-									%2$s', 'eightshift-forms'), $this->getFormFieldNames($formDetails['fieldNames']), $successRedirectUrl['settingsLocal']),
+									%2$s', 'eightshift-forms'), $this->getFormFieldNames($formDetails['fieldNamesTags']), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsedLocal'],

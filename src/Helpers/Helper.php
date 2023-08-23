@@ -125,7 +125,7 @@ class Helper
 	 */
 	public static function getFormTrashActionUrl(string $formId, bool $permanent = false): string
 	{
-		return \get_delete_post_link((int) $formId, '', $permanent);
+		return (string) \get_delete_post_link((int) $formId, '', $permanent);
 	}
 
 	/**
@@ -350,6 +350,7 @@ class Helper
 			'fields' => [],
 			'fieldsOnly' => [],
 			'fieldNames' => [],
+			'fieldNamesTags' => [],
 			'fieldNamesFull' => [],
 			'stepsSetup' => [],
 		];
@@ -441,6 +442,12 @@ class Helper
 			}
 
 			$output['fieldNames'][] = $value;
+
+			if ($blockItemName === 'file') {
+				continue;
+			}
+
+			$output['fieldNamesTags'][] = $value;
 		}
 
 		// Check if this form uses steps.
