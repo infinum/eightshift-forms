@@ -32,7 +32,7 @@ trait SettingsHelper
 	 */
 	public function getSettingsValue(string $key, string $formId): string
 	{
-		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), true);
+		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), '');
 	}
 
 	/**
@@ -85,16 +85,12 @@ trait SettingsHelper
 	 */
 	public function getSettingsValueGroup(string $key, string $formId): array
 	{
-		$value = \get_post_meta((int) $formId, $this->getSettingsName($key), true);
+		$value = \get_post_meta((int) $formId, $this->getSettingsName($key), []);
 		if (!$value) {
 			return [];
 		}
 
-		if (\gettype($value) === 'string') {
-			return [];
-		}
-
-		return $value;
+		return \maybe_unserialize($value);
 	}
 
 	/**
@@ -106,7 +102,7 @@ trait SettingsHelper
 	 */
 	public function getOptionValue(string $key): string
 	{
-		return (string) \get_option($this->getSettingsName($key), false);
+		return (string) \get_option($this->getSettingsName($key), '');
 	}
 
 	/**
@@ -137,17 +133,13 @@ trait SettingsHelper
 	 */
 	public function getOptionValueGroup(string $key): array
 	{
-		$value = \get_option($this->getSettingsName($key), false);
+		$value = \get_option($this->getSettingsName($key), []);
 
 		if (!$value) {
 			return [];
 		}
 
-		if (\gettype($value) === 'string') {
-			return [];
-		}
-
-		return $value;
+		return \maybe_unserialize($value);
 	}
 
 	/**
