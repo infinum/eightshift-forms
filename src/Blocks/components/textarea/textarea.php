@@ -83,7 +83,7 @@ $textarea = '<textarea
 		' . disabled($textareaIsDisabled, true, false) . '
 		' . wp_readonly($textareaIsReadOnly, true, false) . '
 		' . $textareaAttrsOutput . '
-	>' . apply_filters('the_content', $textareaValue) . '</textarea>
+	>' . wp_kses_post($textareaValue) . '</textarea>
 	' . $additionalContent . '
 ';
 

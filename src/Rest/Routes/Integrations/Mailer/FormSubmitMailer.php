@@ -16,6 +16,7 @@ use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
  * Class FormSubmitMailer
@@ -79,6 +80,14 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$files = $formDataReference['files'];
 		$responseTags = $formDataReference['emailResponseTags'] ?? [];
 
+		$additionalOutput = [];
+
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
+		if ($isDeveloperMode) {
+			$additionalOutput['debug'] = $formDataReference;
+		}
+
 		// Check if Mailer data is set and valid.
 		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 
@@ -86,6 +95,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		if (!$isSettingsValid) {
 			return $this->getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
+				$additionalOutput
 			);
 		}
 
@@ -104,6 +114,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		if (!$response) {
 			return $this->getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorEmailSend', $formId),
+				$additionalOutput
 			);
 		}
 
@@ -112,6 +123,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		// Finish.
 		return $this->getApiSuccessOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
+			$additionalOutput
 		);
 	}
 
