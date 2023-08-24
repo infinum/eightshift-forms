@@ -32,7 +32,7 @@ trait SettingsHelper
 	 */
 	public function getSettingsValue(string $key, string $formId): string
 	{
-		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), '');
+		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), true);
 	}
 
 	/**
@@ -85,7 +85,7 @@ trait SettingsHelper
 	 */
 	public function getSettingsValueGroup(string $key, string $formId): array
 	{
-		$value = \get_post_meta((int) $formId, $this->getSettingsName($key), []);
+		$value = \get_post_meta((int) $formId, $this->getSettingsName($key), true);
 		if (!$value) {
 			return [];
 		}
