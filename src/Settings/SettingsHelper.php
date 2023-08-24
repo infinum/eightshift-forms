@@ -90,6 +90,10 @@ trait SettingsHelper
 			return [];
 		}
 
+		if (\gettype($value) === 'string') {
+			return [];
+		}
+
 		return $value;
 	}
 
@@ -133,9 +137,13 @@ trait SettingsHelper
 	 */
 	public function getOptionValueGroup(string $key): array
 	{
-		$value = (array) \get_option($this->getSettingsName($key), false);
+		$value = \get_option($this->getSettingsName($key), false);
 
 		if (!$value) {
+			return [];
+		}
+
+		if (\gettype($value) === 'string') {
 			return [];
 		}
 
