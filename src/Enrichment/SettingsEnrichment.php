@@ -122,8 +122,6 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 
 		$enrichment = $this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
 
-		$allowed = $enrichment['data']['config']['allowedSettingsList'] ?? '';
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -199,7 +197,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 										'inputFieldBeforeContent' => '&rarr;',
 									];
 								},
-								$allowed
+								$enrichment['settingsFields'] ?? []
 							),
 						],
 					],

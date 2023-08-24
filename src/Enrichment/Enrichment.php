@@ -119,7 +119,7 @@ class Enrichment implements EnrichmentInterface
 	public function mapEnrichmentFields(array $params): array
 	{
 		// Get enrichment map.
-		$enrichment = $this->getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['data']['config'];
+		$enrichment = $this->getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
 
 		if (!$enrichment) {
 			return $params;

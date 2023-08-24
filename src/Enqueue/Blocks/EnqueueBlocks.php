@@ -239,7 +239,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 				[
 					'isUsed' => true,
 				],
-				$this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['data']['config'] ?? [],
+				$this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
 			);
 		} else {
 			$output['enrichment'] = [

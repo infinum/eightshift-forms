@@ -33,13 +33,9 @@ trait FiltersOuputMock
 	public function getEnrichmentManualMapFilterValue(array $config): array
 	{
 		$settings = '';
-		$data = [
-			'config' => $config,
-			'mapFilter' => [],
-		];
-		$data['config']['allowedSettingsList'] = [];
 
 		$filterUsed = false;
+		$settingsFields = [];
 
 		$filterName = Filters::getFilterName(['enrichment', 'manualMap']);
 
@@ -50,14 +46,14 @@ trait FiltersOuputMock
 			// Output map depending on the type.
 			if ($filterData) {
 				foreach ($filterData as $key => $value) {
-					$data['config']['allowed'][] = $key;
-					$data['config']['map'][$key] = \array_flip($value);
+					$config['allowed'][] = $key;
+					$config['map'][$key] = \array_flip($value);
 				}
 
-				$data['config']['allowed'] = \array_unique($data['config']['allowed']);
-				foreach ($data['config']['allowed'] as $value) {
-					if (!isset($data['config']['map'][$value])) {
-						$data['config']['allowedSettingsList'][] = $value;
+				$config['allowed'] = \array_unique($config['allowed']);
+				foreach ($config['allowed'] as $value) {
+					if (!isset(\array_flip(\array_keys($filterData))[$value])) {
+						$settingsFields[] = $value;
 					}
 				}
 			}
@@ -72,18 +68,12 @@ trait FiltersOuputMock
 			$settings .= '</ul>';
 		}
 
-		if (!$data['config']['allowedSettingsList']) {
-			$data['config']['allowedSettingsList'] = $data['config']['allowed'];
-		}
-
 		$settingsOutput = $this->getSettingsDivWrap($settings, $filterUsed, false);
 
 		return [
 			'settings' => $settingsOutput,
-			'data' => [
-				'original' => $config,
-				'config' => $data['config'],
-			],
+			'settingsFields' => $settingsFields,
+			'config' => $config,
 			'filterUsed' => $filterUsed,
 		];
 	}
