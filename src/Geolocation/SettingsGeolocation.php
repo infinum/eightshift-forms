@@ -99,6 +99,8 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 
 		$useRocket = Variables::getGeolocationUseWpRocketAdvancedCache();
 
+		$isRocketPluginActive = \is_plugin_active('wp-rocket/wp-rocket.php');
+
 		$outputConstants = '';
 
 		if ($use) {
@@ -116,6 +118,13 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 				// translators: %s will be replaced with the link.
 				'introSubtitle' => '<span>' . \sprintf(\__('We use <a href="%s" target="_blank" rel="noopener noreferrer">GeoLite2</a> by MaxMind for location data.', 'eightshift-forms'), 'https://www.maxmind.com') . '</span>',
 			],
+			(!$isRocketPluginActive && $useRocket) ? [
+					'component' => 'intro',
+					// translators: %s will be replaced with the link.
+					'introSubtitle' => \sprintf(\__('<b>Geolocation is not working</b> We have detected that you are using the ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE constant, but the WP Rocket plugin is currently deactivated. Please note that geolocation services will not work until the WP Rocket plugin is activated.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
+					'introIsHighlighted' => true,
+					'introIsHighlightedImportant' => true,
+				] : [],
 			[
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-card',
@@ -123,8 +132,9 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'intro',
 						// translators: %s will be replaced with the link.
-						'introSubtitle' => \sprintf(\__('<b>Geolocation will not work correctly if caching is enabled!</b><span>If using caching (with plugins like WP Rocket, or via a service like Cloudflare),<br />refer to the <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a> for more details.</span>', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
+						'introSubtitle' => \__('If you are using caching, such as WP Rocket or Cloudflare, refer to the documentation for more information, as geolocation may not function correctly.', 'eightshift-forms'),
 						'introIcon' => 'warning',
+
 					],
 					($use || $useRocket) ? [
 						'component' => 'divider',

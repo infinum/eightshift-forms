@@ -14,7 +14,6 @@ import {
 	getAttrKey,
 	checkAttr,
 	getFetchWpApi,
-	unescapeHTML,
 	props,
 	AsyncSelect,
 	MultiSelect,
@@ -27,7 +26,7 @@ import {
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
-import { FormEditButton, LocationsButton, SettingsButton, getSettingsJsonOptions } from '../../../components/utils';
+import { FormEditButton, LocationsButton, SettingsButton, getSettingsJsonOptions, OutputFormSelectItemWithIcon, OutputFormSelectItem } from '../../../components/utils';
 import { ROUTES, getRestUrl } from '../../../components/form/assets/state';
 
 export const FormsOptions = ({ attributes, setAttributes, preview }) => {
@@ -88,24 +87,78 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		geolocationApi = getRestUrl(ROUTES.COUNTRIES_GEOLOCATION);
 	}
 
+	const formSelectOptionsGeo = getFetchWpApi(
+		postType,
+		{
+			noCache: true,
+			processLabel: ({ title: { rendered: label }, id }) => {
+				return <OutputFormSelectItem props={{
+					label,
+					id,
+				}} />
+			},
+		}
+	);
 	const formSelectOptions = getFetchWpApi(
 		postType,
 		{
-			processLabel: ({ title: { rendered: renderedTitle } }) => unescapeHTML(renderedTitle)
+			noCache: true,
+			processLabel: ({ title: { rendered: label }, integration_type: metadata, id }) => {
+				return <OutputFormSelectItemWithIcon props={{
+					label,
+					id,
+					metadata,
+				}} />
+			},
+			fields: 'id,title,integration_type',
+			processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+				id,
+				value: id,
+				label,
+				metadata,
+			}),
 		}
 	);
+
+	const FormSelectValue = ({props}) => {
+		return <OutputFormSelectItemWithIcon props={{
+			label: props?.label,
+			id: props?.id,
+			metadata: props?.metadata,
+		}} />
+	}
 
 	return (
 		<>
 			<PanelBody title={__('Form', 'eightshift-forms')}>
 				<AsyncSelect
 					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={formsFormPostIdRaw ?? (formsFormPostId ? { label: 'Selected item', id: parseInt(formsFormPostId ?? -1) } : null)}
+					value={
+						formsFormPostIdRaw ?
+						{
+							...formsFormPostIdRaw,
+							label: <FormSelectValue props={formsFormPostIdRaw} />,
+						} :
+						(formsFormPostId ?
+							{
+								label: 'Selected item',
+								id: parseInt(formsFormPostId ?? -1)
+							} :
+							null
+						)
+					}
 					loadOptions={formSelectOptions}
-					onChange={(value) => setAttributes({
-						[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: value,
-						[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value}`,
-					})}
+					onChange={(value) => {
+						setAttributes({
+							[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: {
+								id: value?.id,
+								label: value?.metadata?.label,
+								value: value?.metadata?.value,
+								metadata: value?.metadata?.metadata,
+							},
+							[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value}`,
+						})
+					}}
 				/>
 
 				{formsFormPostId &&
@@ -326,7 +379,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 									<div className='es-h-spaced' key={index}>
 										<AsyncSelect
 											value={formsFormGeolocationAlternatives?.[index]?.form}
-											loadOptions={formSelectOptions}
+											loadOptions={formSelectOptionsGeo}
 											onChange={(value) => {
 												const newData = [...formsFormGeolocationAlternatives];
 												newData[index].form = value;

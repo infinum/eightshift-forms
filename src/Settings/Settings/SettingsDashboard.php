@@ -81,16 +81,10 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				}
 			}
 
-			$filtered[$type][] = [
+			$item = [
 				'component' => 'card',
 				'cardTitle' => Filters::getSettingsLabels($key),
 				'cardIcon' => $icon,
-				'cardTrailingButtons' => [
-					[
-						'label' => \__('edit', 'eightshift-forms'),
-						'url' => Helper::getSettingsGlobalPageUrl($key),
-					],
-				],
 				'cardContent' => [
 					[
 						'component' => 'checkboxes',
@@ -110,6 +104,17 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 					],
 				]
 			];
+
+			if ($checked) {
+				$item['cardTrailingButtons'] = [
+					[
+						'label' => \__('edit', 'eightshift-forms'),
+						'url' => Helper::getSettingsGlobalPageUrl($key),
+					],
+				];
+			}
+
+			$filtered[$type][] = $item;
 		}
 
 		$output = [
