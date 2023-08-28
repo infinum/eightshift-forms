@@ -16,6 +16,7 @@ import {
 	Notification,
 	lockPostEditing,
 	unlockPostEditing,
+	unescapeHTML,
 } from '@eightshift/frontend-libs/scripts';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
@@ -546,4 +547,45 @@ export const DashboardButton = () => {
 			{__('Visit dashboard settings', 'eightshift-forms')}
 		</Button>
 	);
+};
+
+/**
+ * Returns output select item with icon.
+ *
+ * @returns object
+ */
+export const outputFormSelectItemWithIcon = (props) => {
+	const utilsIcons = select(STORE_NAME).getComponent('utils').icons;
+
+	const {
+		label,
+		id,
+		metadata,
+	} = props;
+
+	if (!id) {
+		return '';
+	}
+
+	let outputLabel = unescapeHTML(label);
+	let icon = utilsIcons.post;
+
+	if (!outputLabel) {
+		outputLabel = __(`Form ${id}`, 'eightshift-forms');
+	}
+
+	if (utilsIcons?.[metadata]) {
+		icon = utilsIcons[metadata];
+	}
+
+	if (isDeveloperMode()) {
+		outputLabel = `${outputLabel} (${id})`;
+	}
+
+	return {
+		id,
+		label: <span dangerouslySetInnerHTML={{ __html: `<span class="es-display-inline-flex es-vertical-align-middle es-mr-2">${icon}</span>${outputLabel}`}} />,
+		value: id,
+		metadata,
+	};
 };

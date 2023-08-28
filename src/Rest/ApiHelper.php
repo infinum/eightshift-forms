@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -192,7 +191,7 @@ trait ApiHelper
 	}
 
 	/**
-	 * Return API error response array with logger.
+	 * Return API error response array.
 	 *
 	 * @param string $msg Msg for the user.
 	 * @param array<string, mixed> $additional Additonal data to attach to response.
@@ -209,10 +208,6 @@ trait ApiHelper
 
 		if ($additional) {
 			$output['data'] = $additional;
-		}
-
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-			Helper::logger($output);
 		}
 
 		return $output;

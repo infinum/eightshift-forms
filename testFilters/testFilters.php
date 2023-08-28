@@ -103,10 +103,6 @@ class Testfilters implements ServiceInterface
 			'es_forms_enrichment_manual_map' => ['getEnrichmentManualMap'],
 
 			// ---------------------------------------------------------------------------------------------------------
-			// Troubleshooting filters.
-			'es_forms_troubleshooting_output_log' => ['getTroubleshootingOutputLog'],
-
-			// ---------------------------------------------------------------------------------------------------------
 			// Validation filters.
 			'es_forms_validation_force_mimetype_from_fs' => ['forceMimetypeFs'],
 		];
@@ -937,21 +933,6 @@ class Testfilters implements ServiceInterface
 				],
 			],
 		];
-	}
-
-	// -----------------------------------------------------------------------------------------------------------
-	// Troubleshooting filters.
-
-	/**
-	 * Output debug logs to external source.
-	 *
-	 * This filter provides you with the ability to output internal debug log to an external source.
-	 *
-	 * @return bool
-	 */
-	public function getTroubleshootingOutputLog(): bool
-	{
-		return true;
 	}
 
 	// -----------------------------------------------------------------------------------------------------------

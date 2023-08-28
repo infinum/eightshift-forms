@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -52,33 +50,6 @@ class SettingsDocumentation implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$links = \array_map(
-			static function ($item, $key) {
-				if ($item['type'] === Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
-					$title = Filters::getSettingsLabels($key);
-					$detail = Filters::getSettingsLabels($key, 'detail');
-					$url = Filters::getSettingsLabels($key, 'externalLink');
-					$icon = Filters::getSettingsLabels($key, 'icon');
-
-					return [
-						'component' => 'card',
-						'cardTitle' => $title,
-						'cardSubTitle' => $detail,
-						'cardIcon' => Helper::getProjectIcons($icon),
-						'cardListItem' => true,
-						'cardTrailingButtons' => [
-							[
-								'label' => \__('Learn more', 'eightshift-forms'),
-								'url' => $url,
-							]
-						]
-					];
-				}
-			},
-			Filters::ALL,
-			\array_keys(Filters::ALL)
-		);
-
 		$logo = '<a href="https://infinum.com" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" style="width: 12.5rem" width="980" height="87" viewBox="0 0 980 87" fill="none"><path d="M226.53 81.15V5.63h25.91v75.52h-25.91ZM389.4 5.63v75.52h-28.07L297.72 32.7v48.45h-25.91V5.52h31l60.71 46.3V5.63h25.88ZM510 26.17h-73.2V40h70.54v19.41h-70.5v21.74h-25.9V5.63H510v20.54Zm16.15 54.98V5.63h25.9v75.52h-25.9ZM691.17 5.63v75.52h-28.06L599.49 32.7v48.45h-25.91V5.52h31l60.71 46.3V5.63h25.88ZM737 44.6c0 5.54 1.597 9.84 4.79 12.9 3.194 3.06 8.897 4.587 17.11 4.58h13.72c14.74 0 22.11-5.827 22.11-17.48v-39h25.91v39.1c0 11.06-3.456 20.077-10.37 27.05-6.913 6.973-17.486 10.457-31.72 10.45h-25.71a58.382 58.382 0 0 1-19.35-2.9 37.85 37.85 0 0 1-15.3-10.61c-4.713-5.14-7.066-13.14-7.06-24V5.63H737V44.6Zm129.44 36.55h-25.91V5.63h37.34l32.23 49.5 31.38-49.5h37.87v75.52h-25.86V30.22l-32.28 50.93h-21.65l-33.12-50.82v50.82ZM132.26 0c-19 0-32.54 13.53-44.46 26C75.87 13.53 62.29 0 43.33 0a43.34 43.34 0 0 0 0 86.67c19 0 32.56-13.53 44.48-26 11.93 12.44 25.52 26 44.45 26a43.342 43.342 0 0 0 40.636-26.598 43.346 43.346 0 0 0-9.565-47.615A43.347 43.347 0 0 0 132.26 0Zm19 43.33a19 19 0 0 1-19 19c-8.94 0-17.59-8.76-27.43-19 9.52-9.94 18.54-19 27.43-19a18.996 18.996 0 0 1 17.581 11.722 18.994 18.994 0 0 1 1.449 7.278h-.03Zm-80.52 0c-9.14 9.56-18.54 19-27.44 19a19 19 0 0 1 0-38c8.93-.02 17.54 8.67 27.47 19.01l-.03-.01Z" fill="var(--global-colors-esf-gray-500)"/></svg></a>';
 
 		return [
@@ -90,47 +61,10 @@ class SettingsDocumentation implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'intro',
 						'introTitle' => \__('What is Eightshift Forms?', 'eightshift-forms'),
-						'introSubtitle' => \__('Eightshift forms plugin is a complete form builder tool that utilizes modern Block editor features with multiple third-party integrations to boost your project to another level.', 'eightshift-forms'),
-					],
-				],
-			],
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
-				'layoutContent' => [
-					[
-						'component' => 'intro',
-						'introTitle' => \__('Integrations', 'eightshift-forms'),
-						// translators: %s will be replaced with links list items.
-						'introSubtitle' => \__('We support many popular third-party integrations.<br /> More will be available in the future.', 'eightshift-forms'),
-					],
-					...$links,
-				],
-			],
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
-				'layoutContent' => [
-					[
-						'component' => 'intro',
-						'introTitle' => \__('What makes Eightshift Forms different?', 'eightshift-forms'),
-						'introSubtitle' => \__('
-							Our goal is to have the perfect mix of simplicity and power in creating and customizing forms to suit your needs.<br /> <br />
-							Using the block-based form editor you can have simple forms created in no time! If something more advanced is needed, there is a system of hooks, custom events,
-							and options for custom styling and logic to make everything work just like you want it.
-						', 'eightshift-forms'),
-					],
-				],
-			],
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
-				'layoutContent' => [
-					[
-						'component' => 'intro',
-						'introTitle' => \__('Where can I find developer documentation?', 'eightshift-forms'),
-						// translators: %s will be replaced with the link.
-						'introSubtitle' => \sprintf(\__("<span>Documentation for all features and hooks can be found <a href='%s' target='_blank' rel='noopener noreferrer'>here</a>.</span>", 'eightshift-forms'), 'https://github.com/infinum/eightshift-forms/tree/develop/src/Hooks'),
+						// translators: %s will be replaced with links.
+						'introSubtitle' => \sprintf(\__("
+						Eightshift forms plugin is a complete form builder tool that utilizes modern Block editor features with multiple third-party integrations to boost your project to another level.<br /><br />
+							<span>Documentation for all features and hooks can be found <a href='%s' target='_blank' rel='noopener noreferrer'>here</a>.</span>", 'eightshift-forms'), 'https://eightshift.com/forms/welcome'),
 					],
 				],
 			],

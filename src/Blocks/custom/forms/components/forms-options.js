@@ -13,8 +13,6 @@ import {
 	icons,
 	getAttrKey,
 	checkAttr,
-	getFetchWpApi,
-	unescapeHTML,
 	props,
 	AsyncSelect,
 	MultiSelect,
@@ -27,10 +25,20 @@ import {
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
-import { FormEditButton, LocationsButton, SettingsButton, getSettingsJsonOptions } from '../../../components/utils';
+import { FormEditButton,
+	LocationsButton,
+	SettingsButton,
+	getSettingsJsonOptions,
+	outputFormSelectItemWithIcon,
+} from '../../../components/utils';
 import { ROUTES, getRestUrl } from '../../../components/form/assets/state';
 
-export const FormsOptions = ({ attributes, setAttributes, preview }) => {
+export const FormsOptions = ({
+	attributes,
+	setAttributes,
+	preview,
+	formSelectOptions
+}) => {
 	const manifest = select(STORE_NAME).getBlock('forms');
 
 	const {
@@ -38,10 +46,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 			successRedirectVariations,
 		}
 	} = esFormsLocalization;
-
-	const {
-		postType,
-	} = manifest;
 
 	const {
 		isGeoPreview,
@@ -88,24 +92,24 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 		geolocationApi = getRestUrl(ROUTES.COUNTRIES_GEOLOCATION);
 	}
 
-	const formSelectOptions = getFetchWpApi(
-		postType,
-		{
-			processLabel: ({ title: { rendered: renderedTitle } }) => unescapeHTML(renderedTitle)
-		}
-	);
-
 	return (
 		<>
 			<PanelBody title={__('Form', 'eightshift-forms')}>
 				<AsyncSelect
 					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={formsFormPostIdRaw ?? (formsFormPostId ? { label: 'Selected item', id: parseInt(formsFormPostId ?? -1) } : null)}
+					value={outputFormSelectItemWithIcon(Object.keys(formsFormPostIdRaw ?? {}).length ? formsFormPostIdRaw : {id: formsFormPostId})}
 					loadOptions={formSelectOptions}
-					onChange={(value) => setAttributes({
-						[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: value,
-						[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value}`,
-					})}
+					onChange={(value) => {
+						setAttributes({
+							[getAttrKey('formsFormPostIdRaw', attributes, manifest)]: {
+								id: value?.id,
+								label: value?.metadata?.label,
+								value: value?.metadata?.value,
+								metadata: value?.metadata?.metadata,
+							},
+							[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value.toString()}`,
+						});
+					}}
 				/>
 
 				{formsFormPostId &&
@@ -323,13 +327,18 @@ export const FormsOptions = ({ attributes, setAttributes, preview }) => {
 
 							{formsFormGeolocationAlternatives?.map((_, index) => {
 								return (
-									<div className='es-h-spaced' key={index}>
+									<div className='es-h-spaced es-mb-2' key={index}>
 										<AsyncSelect
-											value={formsFormGeolocationAlternatives?.[index]?.form}
+											value={outputFormSelectItemWithIcon(Object.keys(formsFormGeolocationAlternatives?.[index]?.form ?? {}).length ? formsFormGeolocationAlternatives?.[index]?.form : {id: formsFormGeolocationAlternatives?.[index]?.formId})}
 											loadOptions={formSelectOptions}
 											onChange={(value) => {
 												const newData = [...formsFormGeolocationAlternatives];
-												newData[index].form = value;
+												newData[index].form = {
+													id: value?.id,
+													label: value?.metadata?.label,
+													value: value?.metadata?.value,
+													metadata: value?.metadata?.metadata,
+												};
 												newData[index].formId = value.value.toString();
 												setAttributes({ [getAttrKey('formsFormGeolocationAlternatives', attributes, manifest)]: newData });
 											}}

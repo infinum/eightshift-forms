@@ -10,11 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
 use Exception;
 
@@ -246,20 +244,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return $formId;
 		}
 
-		$logModeCheck = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_LOG_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
-
 		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
 		$filterName = Filters::getFilterName(['geolocation', 'disable']);
 		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
-			if ($logModeCheck) {
-				Helper::logger([
-					'geolocation' => 'Disable filter is active, skipping geolocation.',
-					'formIdOriginal' => $formId,
-					'formIdUsed' => $formId,
-					'userLocation' => '',
-				]);
-			}
-
 			return $formId;
 		}
 
@@ -299,14 +286,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 			// If additional locations match output that new form.
 			if ($matchAdditionalLocations) {
-				if ($logModeCheck) {
-					Helper::logger([
-						'geolocation' => 'Locations exists, locations match. Outputing new form.',
-						'formIdOriginal' => $formId,
-						'formIdUsed' => $matchAdditionalLocations['formId'] ?? '',
-						'userLocation' => $userLocation,
-					]);
-				}
 				return $matchAdditionalLocations['formId'] ?? '';
 			}
 		}
@@ -327,38 +306,14 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 			// If default locations match output that new form.
 			if ($matchDefaultLocations) {
-				if ($logModeCheck) {
-					Helper::logger([
-						'geolocation' => 'Locations don\'t match or exist, default location selected. Outputting new form.',
-						'formIdOriginal' => $formId,
-						'formIdUsed' => $formId,
-						'userLocation' => $userLocation,
-					]);
-				}
 				return $formId;
 			}
 
 			// If we have set default locations but no match return empty form.
-			if ($logModeCheck) {
-				Helper::logger([
-					'geolocation' => 'Locations don\'t exists, default location doesn\'t match. Outputting nothing.',
-					'formIdOriginal' => $formId,
-					'formIdUsed' => '',
-					'userLocation' => $userLocation,
-				]);
-			}
 			return '';
 		}
 
 		// Final fallback if the user has no locations, no default locations or they didn't match. Just return the current form.
-		if ($logModeCheck) {
-			Helper::logger([
-				'geolocation' => 'Final fallback that returns the current form. Outputing the original form.',
-				'formIdOriginal' => $formId,
-				'formIdUsed' => $formId,
-				'userLocation' => $userLocation,
-			]);
-		}
 		return $formId;
 	}
 
