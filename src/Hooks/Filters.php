@@ -406,9 +406,6 @@ class Filters
 		'enrichment' => [
 			'manualMap' => 'manual_map',
 		],
-		'troubleshooting' => [
-			'outputLog' => 'output_log',
-		],
 		'validation' => [
 			'failMimetypeValidationWhenFileNotOnFS' => 'force_mimetype_from_fs',
 		],

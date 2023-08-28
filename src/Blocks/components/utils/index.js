@@ -552,9 +552,9 @@ export const DashboardButton = () => {
 /**
  * Returns output select item with icon.
  *
- * @returns Component
+ * @returns object
  */
-export const OutputFormSelectItemWithIcon = ({props}) => {
+export const outputFormSelectItemWithIcon = (props) => {
 	const utilsIcons = select(STORE_NAME).getComponent('utils').icons;
 
 	const {
@@ -571,38 +571,21 @@ export const OutputFormSelectItemWithIcon = ({props}) => {
 	let icon = utilsIcons.post;
 
 	if (!outputLabel) {
-		outputLabel = `Form ${id}`;
+		outputLabel = __(`Form ${id}`, 'eightshift-forms');
 	}
 
 	if (utilsIcons?.[metadata]) {
 		icon = utilsIcons[metadata];
 	}
 
-	return (
-		<span dangerouslySetInnerHTML={{ __html: `<span class="es-display-inline-flex es-vertical-align-middle es-mr-2">${icon}</span>${outputLabel}`}} />
-	)
-}
+	if (isDeveloperMode()) {
+		outputLabel = `${outputLabel} (${id})`;
+	}
 
-/**
- * Returns output select item.
- *
- * @returns Component
- */
-export const OutputFormSelectItem = ({props}) => {
-	const {
-		label,
+	return {
 		id,
-	} = props;
-
-	if (!id) {
-		return '';
-	}
-
-	let outputLabel = unescapeHTML(label);
-
-	if (!outputLabel) {
-		outputLabel = `Form ${id}`;
-	}
-
-	return outputLabel;
-}
+		label: <span dangerouslySetInnerHTML={{ __html: `<span class="es-display-inline-flex es-vertical-align-middle es-mr-2">${icon}</span>${outputLabel}`}} />,
+		value: id,
+		metadata,
+	};
+};

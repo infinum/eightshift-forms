@@ -92,7 +92,12 @@ class Mailer implements MailerInterface
 		$formId = $data['formId'] ?? '';
 		$isDisabled = $data['isDisabled'] ?? false;
 
-		$data['formsVersion'] = Config::getProjectVersion();
+		$data['formsDebug'] = [
+			'forms' => Config::getProjectVersion(),
+			'php' => \phpversion(),
+			'wp' => \get_bloginfo('version'),
+			'url' => \get_bloginfo('url'),
+		];
 
 		// translators: %1$s replaces the integration name and %2$s formId.
 		$subject = \sprintf(\__('Failed %1$s integration: %2$s', 'eightshift-forms'), $integration, $formId);

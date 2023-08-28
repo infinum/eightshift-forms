@@ -141,34 +141,6 @@ class Helper
 	}
 
 	/**
-	 * Provide error log output to a custom log file.
-	 *
-	 * @param array<mixed> $data Data array to output.
-	 *
-	 * @return void
-	 */
-	public static function logger(array $data): void
-	{
-		$wpContentDir = \defined('WP_CONTENT_DIR') ? \WP_CONTENT_DIR : '';
-
-		if (!empty($wpContentDir)) {
-			$data['time'] = \gmdate("Y-m-d H:i:s");
-
-			if (isset($data['files'])) {
-				unset($data['files']);
-			}
-
-			$filterName = Filters::getFilterName(['troubleshooting', 'outputLog']);
-
-			if (\has_filter($filterName)) {
-				\apply_filters($filterName, $data);
-			} else {
-				\error_log((string) \wp_json_encode($data) . "\n -------------------------------------", 3, $wpContentDir . '/eightshift-forms-debug.log'); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			}
-		}
-	}
-
-	/**
 	 * Check if current page is part of the settings page
 	 *
 	 * @return boolean

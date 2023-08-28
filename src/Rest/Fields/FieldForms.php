@@ -30,7 +30,7 @@ class FieldForms extends AbstractField implements CallableFieldInterface
 	 *
 	 * Object(s) the field is being registered to, "post"|"term"|"comment" etc.
 	 *
-	 * @return string|array
+	 * @return string
 	 */
 	protected function getObjectType()
 	{
@@ -50,7 +50,7 @@ class FieldForms extends AbstractField implements CallableFieldInterface
 	/**
 	 * Get callback arguments array
 	 *
-	 * @return array Either an array of options for the endpoint, or an array of arrays for multiple methods.
+	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
 	 */
 	protected function getCallbackArguments(): array
 	{
@@ -69,11 +69,11 @@ class FieldForms extends AbstractField implements CallableFieldInterface
 	 * @param string       $objectType The object type which the field is registered against.
 	 *                                 Typically first parameter of your register_rest_field() declaration.
 	 *
-	 * @return mixed If response generated an error, WP_Error, if response
+	 * @return string If response generated an error, WP_Error, if response
 	 *               is already an instance, WP_HTTP_Response, otherwise
 	 *               returns a new WP_REST_Response instance.
 	 */
-	public function fieldCallback($postObject, string $attr, object $request, string $objectType)
+	public function fieldCallback($postObject, string $attr, object $request, string $objectType): string // @phpstan-ignore-line
 	{
 		$id = $postObject['id'] ?? '';
 

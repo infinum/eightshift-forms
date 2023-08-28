@@ -61,10 +61,10 @@ class SettingsDocumentation implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'intro',
 						'introTitle' => \__('What is Eightshift Forms?', 'eightshift-forms'),
+						// translators: %s will be replaced with links.
 						'introSubtitle' => \sprintf(\__("
 						Eightshift forms plugin is a complete form builder tool that utilizes modern Block editor features with multiple third-party integrations to boost your project to another level.<br /><br />
-							<span>Documentation for all features and hooks can be found <a href='%s' target='_blank' rel='noopener noreferrer'>here</a>.</span>"
-						, 'eightshift-forms'), 'https://eightshift.com/forms/welcome'),
+							<span>Documentation for all features and hooks can be found <a href='%s' target='_blank' rel='noopener noreferrer'>here</a>.</span>", 'eightshift-forms'), 'https://eightshift.com/forms/welcome'),
 					],
 				],
 			],

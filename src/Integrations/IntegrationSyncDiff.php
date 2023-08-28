@@ -72,23 +72,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// If error output log.
 		if ($status === AbstractBaseRoute::STATUS_ERROR) {
-			Helper::logger(\array_merge(
-				[
-					'type' => 'diff',
-				],
-				$syncForm
-			));
-
 			return;
 		}
-
-		// Finish with success.
-		Helper::logger(\array_merge(
-			[
-				'type' => 'diff',
-			],
-			$syncForm
-		));
 	}
 
 	/**

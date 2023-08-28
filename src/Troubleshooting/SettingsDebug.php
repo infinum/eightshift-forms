@@ -52,7 +52,6 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	public const SETTINGS_DEBUG_SKIP_VALIDATION_KEY = 'skip-validation';
 	public const SETTINGS_DEBUG_SKIP_RESET_KEY = 'skip-reset';
 	public const SETTINGS_DEBUG_SKIP_CAPTCHA_KEY = 'skip-captcha';
-	public const SETTINGS_DEBUG_LOG_MODE_KEY = 'log-mode';
 	public const SETTINGS_DEBUG_DEVELOPER_MODE_KEY = 'developer-mode';
 	public const SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY = 'skip-forms-sync';
 	public const SETTINGS_DEBUG_SKIP_CACHE_KEY = 'skip-cache';
@@ -158,19 +157,6 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
 								'checkboxHelp' => \__('Disable form reset after successful submission for easier debugging.', 'eightshift-forms'),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__('Output logs', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_LOG_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_LOG_MODE_KEY,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('Logs are saved to the <code>wp-content</code> folder on the server. This feature requires the server to be able to output logs.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'divider',
