@@ -89,11 +89,16 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		$debug = [
+			'request' => $request,
+		];
+
 		try {
 			return \rest_ensure_response(
 				$this->getApiSuccessOutput(
 					\esc_html__('Success.', 'eightshift-forms'),
-					$this->geolocation->getCountriesList()
+					$this->geolocation->getCountriesList(),
+					$debug
 				)
 			);
 		} catch (UnverifiedRequestException $e) {
@@ -101,6 +106,12 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					$e->getMessage(),
+					\array_merge(
+						$debug,
+						[
+							'exception' => $e->getMessage(),
+						]
+					)
 				)
 			);
 		}

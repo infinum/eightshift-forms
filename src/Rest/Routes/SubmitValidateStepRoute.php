@@ -148,11 +148,17 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
+		$debug = [
+			'formDataReference' => $formDataReference,
+		];
+
 		$currentStep = $formDataReference['apiSteps']['current'] ?? '';
 		if (!$currentStep) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -162,6 +168,8 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -171,6 +179,8 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -189,6 +199,8 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 				return \rest_ensure_response(
 					$this->getApiErrorOutput(
 						\esc_html__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
+						[],
+						$debug
 					)
 				);
 			}
@@ -229,7 +241,8 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 					'type' => $type,
 					'nextStep' => $nextStep,
 					'progressBarItems' => $progressBarItems,
-				]
+				],
+				$debug
 			)
 		);
 	}

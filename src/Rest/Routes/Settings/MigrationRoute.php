@@ -127,10 +127,18 @@ class MigrationRoute extends AbstractBaseRoute
 			return \rest_ensure_response($premission);
 		}
 
+		$debug = [
+			'request' => $request,
+		];
+
 		$params = $request->get_body_params();
 
 		if (!isset($params['type'])) {
-			return $this->getApiErrorOutput(\__('Migration version type key was not provided.', 'eightshift-forms'));
+			return $this->getApiErrorOutput(
+				\__('Migration version type key was not provided.', 'eightshift-forms'),
+				[],
+				$debug
+			);
 		}
 
 		switch ($params['type']) {
@@ -139,7 +147,11 @@ class MigrationRoute extends AbstractBaseRoute
 			case SettingsMigration::VERSION_3_4:
 				return $this->getMigration3To4();
 			default:
-				return $this->getApiErrorOutput(\__('Version type key is not valid.', 'eightshift-forms'));
+				return $this->getApiErrorOutput(
+					\__('Version type key is not valid.', 'eightshift-forms'),
+					[],
+					$debug
+				);
 		}
 	}
 

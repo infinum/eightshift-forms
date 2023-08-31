@@ -112,11 +112,17 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 		unset($syncForm['message']);
 		unset($syncForm['status']);
 
+		$debug = [
+			'request' => $request,
+			'syncForm' => $syncForm,
+		];
+
 		if ($status === AbstractBaseRoute::STATUS_ERROR) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					$message,
-					$syncForm
+					$syncForm,
+					$debug
 				)
 			);
 		}
@@ -124,7 +130,8 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				$message,
-				$syncForm
+				$syncForm,
+				$debug
 			)
 		);
 	}

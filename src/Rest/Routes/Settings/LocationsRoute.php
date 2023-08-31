@@ -101,6 +101,10 @@ class LocationsRoute extends AbstractBaseRoute
 
 		$id = (string) $request->get_param('id');
 
+		$debug = [
+			'request' => $request,
+		];
+
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				\esc_html__('Success', 'eightshift-forms'),
@@ -111,7 +115,8 @@ class LocationsRoute extends AbstractBaseRoute
 						'sectionClass' => Components::getComponent('admin-listing')['componentClass'],
 						'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms')
 					]),
-				]
+				],
+				$debug
 			)
 		);
 	}

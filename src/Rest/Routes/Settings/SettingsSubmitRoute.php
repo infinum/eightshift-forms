@@ -151,6 +151,9 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
+		$debug = [
+			'formDataReference' => $formDataReference,
+		];
 		$formId = $formDataReference['formId'];
 		$params = $formDataReference['params'];
 
@@ -186,7 +189,9 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 		// Finish.
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
-				\esc_html__('Changes saved!', 'eightshift-forms')
+				\esc_html__('Changes saved!', 'eightshift-forms'),
+				[],
+				$debug
 			)
 		);
 	}

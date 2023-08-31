@@ -84,6 +84,10 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			return \rest_ensure_response($premission);
 		}
 
+		$debug = [
+			'request' => $request,
+		];
+
 		$params = $request->get_body_params();
 
 		// Used for JS api fecth from editor.
@@ -99,6 +103,8 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('Type key was not provided.', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -125,6 +131,8 @@ class CacheDeleteRoute extends AbstractBaseRoute
 				return \rest_ensure_response(
 					$this->getApiErrorOutput(
 						\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
+						[],
+						$debug
 					)
 				);
 			}
@@ -143,7 +151,9 @@ class CacheDeleteRoute extends AbstractBaseRoute
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				// translators: %s will be replaced with the form type.
-				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), \ucfirst($type))
+				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), \ucfirst($type)),
+				[],
+				$debug
 			)
 		);
 	}

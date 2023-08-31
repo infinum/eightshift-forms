@@ -60,9 +60,17 @@ class Captcha implements CaptchaInterface
 	 */
 	public function check(string $token, string $action, bool $isEnterprise): array
 	{
+		$debug = [
+			'token' => $token,
+			'action' => $action,
+			'isEnterprise' => $isEnterprise,
+		];
+
 		if (!$token) {
 			return $this->getApiErrorOutput(
 				$this->labels->getLabel('captchaBadRequest'),
+				[],
+				$debug
 			);
 		}
 
@@ -75,7 +83,9 @@ class Captcha implements CaptchaInterface
 		// Generic error msg from WP.
 		if (\is_wp_error($response)) {
 			return $this->getApiErrorOutput(
-				$this->labels->getLabel('submitWpError')
+				$this->labels->getLabel('submitWpError'),
+				[],
+				$debug
 			);
 		}
 
@@ -84,7 +94,9 @@ class Captcha implements CaptchaInterface
 			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		} catch (Throwable $t) {
 			return $this->getApiErrorOutput(
-				$this->labels->getLabel('captchaBadRequest')
+				$this->labels->getLabel('captchaBadRequest'),
+				[],
+				$debug
 			);
 		}
 
@@ -159,6 +171,11 @@ class Captcha implements CaptchaInterface
 	 */
 	private function getEnterpriseOutput($responseBody, string $action)
 	{
+		$debug = [
+			'responseBody' => $responseBody,
+			'action' => $action,
+		];
+
 		// Check the status.
 		$error = $responseBody['error'] ?? [];
 
@@ -169,7 +186,8 @@ class Captcha implements CaptchaInterface
 				$error['message'] ?? '',
 				[
 					'response' => $responseBody,
-				]
+				],
+				$debug
 			);
 		}
 
@@ -186,6 +204,11 @@ class Captcha implements CaptchaInterface
 	 */
 	private function getFreeOutput($responseBody, string $action)
 	{
+		$debug = [
+			'responseBody' => $responseBody,
+			'action' => $action,
+		];
+
 		// Check the status.
 		$success = $responseBody['success'] ?? false;
 
@@ -199,7 +222,8 @@ class Captcha implements CaptchaInterface
 				$this->labels->getLabel("captcha" . \ucfirst(Components::kebabToCamelCase($errorCode))),
 				[
 					'response' => $responseBody,
-				]
+				],
+				$debug
 			);
 		}
 
@@ -218,13 +242,21 @@ class Captcha implements CaptchaInterface
 	 */
 	private function validate($responseBody, string $action, string $actionResponse, float $score)
 	{
+		$debug = [
+			'responseBody' => $responseBody,
+			'action' => $action,
+			'actionResponse' => $actionResponse,
+			'score' => $score,
+		];
+
 		// Bailout if action is not correct.
 		if ($actionResponse !== $action) {
 			return $this->getApiErrorOutput(
 				$this->labels->getLabel('captchaWrongAction'),
 				[
 					'response' => $responseBody,
-				]
+				],
+				$debug
 			);
 		}
 
@@ -236,7 +268,8 @@ class Captcha implements CaptchaInterface
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
 					'response' => $responseBody,
-				]
+				],
+				$debug
 			);
 		}
 
@@ -244,7 +277,8 @@ class Captcha implements CaptchaInterface
 			'',
 			[
 				'response' => $responseBody,
-			]
+			],
+			$debug
 		);
 	}
 }

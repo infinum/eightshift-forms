@@ -10,6 +10,7 @@ import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/comp
 import { getConstantsOptions } from '../../utils';
 import { ROUTES, getRestUrl } from '../../form/assets/state';
 import { ProgressBarOptions } from '../../progress-bar/components/progress-bar-options';
+import { MultiflowFormsReactFlow } from '../../react-flow';
 
 export const StepMultiflowOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
@@ -24,6 +25,7 @@ export const StepMultiflowOptions = (attributes) => {
 	const stepProgressBarUse = checkAttr('stepProgressBarUse', attributes, manifest);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
@@ -268,6 +270,13 @@ export const StepMultiflowOptions = (attributes) => {
 					/>
 
 					<IconToggle
+						icon={icons.visible}
+						label={__('Flow preview', 'eightshift-forms')}
+						checked={isModalPreviewOpen}
+						onChange={() => setIsModalPreviewOpen(true)}
+					/>
+
+					<IconToggle
 						icon={icons.anchor}
 						label={__('Use steps multi-flow', 'eightshift-forms')}
 						checked={stepMultiflowUse}
@@ -304,6 +313,22 @@ export const StepMultiflowOptions = (attributes) => {
 							</Button>
 						</Control>
 					</Section>
+
+					{isModalPreviewOpen &&
+						<Modal
+								overlayClassName='es-conditional-tags-modal es-geolocation-modal'
+								className='es-modal-max-width-5xl es-rounded-3!'
+								title={<IconLabel icon={icons.anchor} label={__('Multi-flow preview', 'eightshift-forms')} standalone />}
+								onRequestClose={() => {
+									setIsModalPreviewOpen(false);
+								}}
+							>
+								<MultiflowFormsReactFlow
+									formFields={formFields}
+									stepMultiflowRules={stepMultiflowRules}
+								/>
+						</Modal>
+					}
 
 					{isModalOpen &&
 						<Modal

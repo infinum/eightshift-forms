@@ -94,6 +94,10 @@ class FormFieldsRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		$debug = [
+			'request' => $request,
+		];
+
 		$premission = $this->checkUserPermission();
 		if ($premission) {
 			return \rest_ensure_response($premission);
@@ -105,6 +109,8 @@ class FormFieldsRoute extends AbstractBaseRoute
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('Form Id was not provided.', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -112,10 +118,19 @@ class FormFieldsRoute extends AbstractBaseRoute
 		$data = Helper::getFormDetailsById($formId);
 		$fieldsOnly = $data['fieldsOnly'] ?? [];
 
+		$debug = \array_merge(
+			$debug,
+			[
+				'data' => $data,
+			]
+		);
+
 		if (!$fieldsOnly) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -131,7 +146,8 @@ class FormFieldsRoute extends AbstractBaseRoute
 					'fields' => \array_values($fieldsOutput),
 					'steps' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'])) : [],
 					'names' => $data['fieldNamesFull'],
-				]
+				],
+				$debug
 			)
 		);
 	}

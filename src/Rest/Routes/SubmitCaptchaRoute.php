@@ -95,11 +95,17 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		$debug = [
+			'request' => $request,
+		];
+
 		// Bailout if troubleshooting skip captcha is on.
 		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			return \rest_ensure_response(
 				$this->getApiSuccessOutput(
-					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms')
+					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -118,6 +124,13 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					$this->labels->getLabel('captchaBadRequest'),
+					[],
+					\array_merge(
+						$debug,
+						[
+							'exeption' => $t,
+						]
+					)
 				)
 			);
 		}

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Troubleshooting\SettingsDebug;
 use WP_REST_Request;
 
 /**
@@ -53,17 +52,22 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		$debug = [
+			'request' => $request,
+		];
+
 		// Try catch request.
 		try {
 			$response = $this->testAction();
 
-			$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
-
 			$additionalOutput = [];
 
-			if ($isDeveloperMode) {
-				$additionalOutput['debug'] = $response;
-			}
+			$debug = \array_merge(
+				$debug,
+				[
+					'response' => $response,
+				]
+			);
 
 			$code = $response['code'] ?? 400;
 
@@ -71,7 +75,8 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 				return \rest_ensure_response(
 					$this->getApiSuccessOutput(
 						\esc_html__('The API test was successful.', 'eightshift-forms'),
-						$additionalOutput
+						$additionalOutput,
+						$debug
 					)
 				);
 			}
@@ -80,13 +85,21 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 				$this->getApiErrorOutput(
 					\esc_html__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
 					$additionalOutput,
+					$debug
 				)
 			);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
-					$e->getMessage()
+					$e->getMessage(),
+					[],
+					\array_merge(
+						$debug,
+						[
+							'exception' => $e,
+						]
+					)
 				)
 			);
 		}

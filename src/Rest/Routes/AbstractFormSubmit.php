@@ -189,6 +189,11 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					$e->getMessage(),
 					[
 						Validator::VALIDATOR_OUTPUT_KEY => $e->getData(),
+					],
+					[
+						'exception' => $e,
+						'request' => $request,
+						'formDataReference' => $formDataReference,
 					]
 				)
 			);

@@ -100,6 +100,10 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 			return \rest_ensure_response($premission);
 		}
 
+		$debug = [
+			'request' => $request,
+		];
+
 		$formId = $request->get_param('id') ?? '';
 
 		$output = [];
@@ -153,7 +157,8 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 			return \rest_ensure_response(
 				$this->getApiWarningOutput(
 					\implode('<br/>', $msgOutput),
-					$output
+					$output,
+					$debug
 				)
 			);
 		}
@@ -162,7 +167,8 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\__('There are no forms in your list to sync.', 'eightshift-forms'),
-					$output
+					$output,
+					$debug
 				)
 			);
 		}
@@ -171,7 +177,8 @@ class IntegrationEditorSyncDirectRoute extends AbstractBaseRoute
 			$this->getApiSuccessOutput(
 				// translators: %s replaces form count number.
 				\sprintf(\_n('%s form synced with success.', '%s forms synced with success.', \count($output['success']), 'eightshift-forms'), \count($output['success'])),
-				$output
+				$output,
+				$debug
 			)
 		);
 	}

@@ -154,6 +154,9 @@ class SubmitFilesRoute extends AbstractFormSubmit
 				\esc_html__('File upload success', 'eightshift-forms'),
 				[
 					'file' => $formDataReference['filesUpload']['id'],
+				],
+				[
+					'formDataReference' => $formDataReference,
 				]
 			)
 		);

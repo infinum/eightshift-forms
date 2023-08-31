@@ -160,12 +160,6 @@ trait ApiHelper
 
 		$additionalOutput = [];
 
-		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
-
-		if ($isDeveloperMode) {
-			$additionalOutput['debug'] = $details;
-		}
-
 		$additional = [
 			Validator::VALIDATOR_OUTPUT_KEY,
 			...$additional,
@@ -180,13 +174,15 @@ trait ApiHelper
 		if ($status === AbstractBaseRoute::STATUS_SUCCESS) {
 			return $this->getApiSuccessOutput(
 				$msg,
-				$additionalOutput
+				$additionalOutput,
+				$details
 			);
 		}
 
 		return $this->getApiErrorOutput(
 			$msg,
-			$additionalOutput
+			$additionalOutput,
+			$details
 		);
 	}
 
@@ -195,10 +191,11 @@ trait ApiHelper
 	 *
 	 * @param string $msg Msg for the user.
 	 * @param array<string, mixed> $additional Additonal data to attach to response.
+	 * @param array<string, mixed> $debug Debug options.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function getApiErrorOutput(string $msg, array $additional = []): array
+	public function getApiErrorOutput(string $msg, array $additional = [], array $debug = []): array
 	{
 		$output = [
 			'status' => AbstractBaseRoute::STATUS_ERROR,
@@ -210,6 +207,12 @@ trait ApiHelper
 			$output['data'] = $additional;
 		}
 
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
+		if ($isDeveloperMode && $debug) {
+			$output['debug'] = $debug;
+		}
+
 		return $output;
 	}
 
@@ -218,10 +221,11 @@ trait ApiHelper
 	 *
 	 * @param string $msg Msg for the user.
 	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
+	 * @param array<string, mixed> $debug Debug options.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function getApiSuccessOutput(string $msg, array $additional = []): array
+	public function getApiSuccessOutput(string $msg, array $additional = [], array $debug = []): array
 	{
 		$output = [
 			'status' => AbstractBaseRoute::STATUS_SUCCESS,
@@ -233,6 +237,12 @@ trait ApiHelper
 			$output['data'] = $additional;
 		}
 
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
+		if ($isDeveloperMode && $debug) {
+			$output['debug'] = $debug;
+		}
+
 		return $output;
 	}
 
@@ -241,10 +251,11 @@ trait ApiHelper
 	 *
 	 * @param string $msg Msg for the user.
 	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
+	 * @param array<string, mixed> $debug Debug options.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function getApiWarningOutput(string $msg, array $additional = []): array
+	public function getApiWarningOutput(string $msg, array $additional = [], array $debug = []): array
 	{
 		$output = [
 			'status' => AbstractBaseRoute::STATUS_WARNING,
@@ -254,6 +265,12 @@ trait ApiHelper
 
 		if ($additional) {
 			$output['data'] = $additional;
+		}
+
+		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+
+		if ($isDeveloperMode && $debug) {
+			$output['debug'] = $debug;
 		}
 
 		return $output;

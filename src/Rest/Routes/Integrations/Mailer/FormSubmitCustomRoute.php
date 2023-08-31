@@ -140,11 +140,17 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		$action = $formDataReference['action'];
 		$actionExternal = $formDataReference['actionExternal'];
 
+		$debug = [
+			'formDataReference' => $formDataReference,
+		];
+
 		// If form action is not set or empty.
 		if (!$action) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					$this->labels->getLabel('customNoAction', $formId),
+					[],
+					$debug
 				)
 			);
 		}
@@ -155,7 +161,8 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					[
 						'processExternaly' => true,
-					]
+					],
+					$debug
 				)
 			);
 		}
@@ -181,6 +188,8 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					$this->labels->getLabel('customError', $formId),
+					[],
+					$debug
 				)
 			);
 		}
@@ -189,6 +198,8 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				$this->labels->getLabel('customSuccess', $formId),
+				[],
+				$debug
 			)
 		);
 	}

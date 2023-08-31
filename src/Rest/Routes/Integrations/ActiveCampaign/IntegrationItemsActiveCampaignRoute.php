@@ -92,6 +92,10 @@ class IntegrationItemsActiveCampaignRoute extends AbstractBaseRoute
 			return \rest_ensure_response($premission);
 		}
 
+		$debug = [
+			'request' => $request,
+		];
+
 		// Check if ActiveCampaign global settings is valid.
 		$isGlobalSettingsValid = \apply_filters(SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME, false);
 
@@ -99,6 +103,8 @@ class IntegrationItemsActiveCampaignRoute extends AbstractBaseRoute
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('Global not configured', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -109,6 +115,8 @@ class IntegrationItemsActiveCampaignRoute extends AbstractBaseRoute
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('Items missing', 'eightshift-forms'),
+					[],
+					$debug
 				)
 			);
 		}
@@ -133,7 +141,8 @@ class IntegrationItemsActiveCampaignRoute extends AbstractBaseRoute
 						'value' => '',
 					],
 					...$items,
-				]
+				],
+				$debug
 			)
 		);
 	}
