@@ -439,6 +439,11 @@ export class Utils {
 			const items = this.state.getStateElementItems(name, formId);
 			const initial = this.state.getStateElementInitial(name, formId);
 
+			// Skip select search field.
+			if (name === 'search_terms') {
+				continue;
+			}
+
 			switch (type) {
 				case 'checkbox':
 					this.state.setStateElementValue(name, {...initial}, formId);

@@ -272,9 +272,9 @@
 			background-repeat: no-repeat;
 			width: $width;
 			height: $height;
-			display: inline-block;
 			vertical-align: middle;
 			margin-right: 10px;
+			display: inline-block;
 		}
 
 		$i: 0;
@@ -285,6 +285,11 @@
 			}
 
 			$i: $i + 1;
+		}
+
+		// If placeholder is used.
+		&:not([data-country-code])::before {
+			display: none !important; // stylelint-disable-line declaration-no-important
 		}
 	}
 }

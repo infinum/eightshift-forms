@@ -1024,6 +1024,7 @@ export class Form {
 
 			const countryCookie = cookies.getCookie('esForms-country')?.toLocaleLowerCase();
 			if (countryCookie) {
+
 				choices.setChoiceByValue(countryCookie);
 			}
 
@@ -1353,6 +1354,11 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 		const type = field.getAttribute(this.state.getStateAttribute('fieldType'));
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+
+		// Skip select search field.
+		if (event?.target?.type === 'search' && event?.target?.name === 'search_terms') {
+			return;
+		}
 
 		setStateValues(event.target, this.state.getFormIdByElement(event.target));
 

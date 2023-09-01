@@ -20,7 +20,12 @@ if (!$selectOptionValue && !$selectOptionAsPlaceholder) {
 $selectOptionLabel = Components::checkAttr('selectOptionLabel', $attributes, $manifest);
 $selectOptionIsSelected = Components::checkAttr('selectOptionIsSelected', $attributes, $manifest);
 $selectOptionIsDisabled = Components::checkAttr('selectOptionIsDisabled', $attributes, $manifest);
+$selectOptionIsHidden = Components::checkAttr('selectOptionIsHidden', $attributes, $manifest);
 $selectOptionAttrs = Components::checkAttr('selectOptionAttrs', $attributes, $manifest);
+
+if ($selectOptionIsHidden) {
+	return;
+}
 
 $conditionalTags = Components::render(
 	'conditional-tags',

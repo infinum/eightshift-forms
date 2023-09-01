@@ -20,6 +20,7 @@ export const SelectOptionOptions = (attributes) => {
 	const selectOptionValue = checkAttr('selectOptionValue', attributes, manifest);
 	const selectOptionIsSelected = checkAttr('selectOptionIsSelected', attributes, manifest);
 	const selectOptionIsDisabled = checkAttr('selectOptionIsDisabled', attributes, manifest);
+	const selectOptionIsHidden = checkAttr('selectOptionIsHidden', attributes, manifest);
 	const selectOptionDisabledOptions = checkAttr('selectOptionDisabledOptions', attributes, manifest);
 
 	return (
@@ -59,6 +60,13 @@ export const SelectOptionOptions = (attributes) => {
 					checked={selectOptionIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('selectOptionIsDisabled', attributes, manifest), selectOptionDisabledOptions)}
+				/>
+				<IconToggle
+					icon={icons.hide}
+					label={__('Hidden', 'eightshift-forms')}
+					checked={selectOptionIsHidden}
+					onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsHidden', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('selectOptionIsHidden', attributes, manifest), selectOptionDisabledOptions)}
 				/>
 			</PanelBody>
 
