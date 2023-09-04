@@ -88,7 +88,7 @@ trait ApiHelper
 			'files' => $files,
 			'response' => $response['response'] ?? [],
 			'code' => $code,
-			'body' => $body,
+			'body' => !\is_string($body) ? $body : [],
 			'url' => $url,
 			'itemId' => $itemId,
 			'formId' => $formId,
