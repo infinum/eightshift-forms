@@ -12,6 +12,7 @@ export const ProgressBarOptions = (attributes) => {
 	} = attributes;
 
 	const progressBarUse = checkAttr('progressBarUse', attributes, manifest);
+	const progressBarHideLabels = checkAttr('progressBarHideLabels', attributes, manifest);
 	const progressBarMultiflowUse = checkAttr('progressBarMultiflowUse', attributes, manifest);
 	const progressBarMultiflowInitCount = checkAttr('progressBarMultiflowInitCount', attributes, manifest);
 
@@ -23,6 +24,15 @@ export const ProgressBarOptions = (attributes) => {
 				checked={progressBarUse}
 				onChange={(value) => {
 					setAttributes({ [getAttrKey('progressBarUse', attributes, manifest)]: value });
+				}}
+			/>
+
+			<IconToggle
+				icon={icons.tag}
+				label={__('Hide progress bar labels', 'eightshift-forms')}
+				checked={progressBarHideLabels}
+				onChange={(value) => {
+					setAttributes({ [getAttrKey('progressBarHideLabels', attributes, manifest)]: value });
 				}}
 			/>
 

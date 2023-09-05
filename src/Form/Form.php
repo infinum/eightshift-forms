@@ -318,6 +318,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					$innerBlock['attrs']["{$blockName}FormProgressBarMultiflowUse"] = $innerBlock['attrs']["{$blockName}StepMultiflowUse"] ?? false;
 					$innerBlock['attrs']["{$blockName}FormProgressBarMultiflowInitCount"] = $innerBlock['attrs']["{$blockName}StepProgressBarMultiflowInitCount"] ?? '';
 					$innerBlock['attrs']["{$blockName}FormProgressBarUse"] = $innerBlock['attrs']["{$blockName}StepProgressBarUse"] ?? false;
+					$innerBlock['attrs']["{$blockName}FormProgressBarHideLabels"] = $innerBlock['attrs']["{$blockName}StepProgressBarHideLabels"] ?? false;
 					$innerBlock['attrs']["{$blockName}FormHasSteps"] = true;
 
 					$inBlockOutput = \array_values($inBlockOutput);

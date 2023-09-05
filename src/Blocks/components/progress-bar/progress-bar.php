@@ -28,7 +28,6 @@ if (!$progressBarSteps) {
 }
 
 $progressBarMultiflowUse = Components::checkAttr('progressBarMultiflowUse', $attributes, $manifest);
-$progressBarMultiflowInitCount = Components::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest);
 
 $progressBarClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -47,10 +46,11 @@ $progressBarClass = Components::classnames([
 			'steps' => $progressBarSteps,
 			'componentClass' => $componentClass,
 			'componentJsClass' => $componentJsClass,
+			'hideLabels' => Components::checkAttr('progressBarHideLabels', $attributes, $manifest),
 		]);
 	} else {
 		echo Components::renderPartial('component', $manifest['componentName'], 'multiflow', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-			'count' => $progressBarMultiflowInitCount,
+			'count' => Components::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest),
 		]);
 	}
 	?>

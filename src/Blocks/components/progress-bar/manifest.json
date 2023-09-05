@@ -13,6 +13,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"progressBarHideLabels": {
+			"type": "boolean",
+			"default": false
+		},
 		"progressBarMultiflowUse": {
 			"type": "boolean",
 			"default": false

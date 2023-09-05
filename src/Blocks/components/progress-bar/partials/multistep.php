@@ -20,6 +20,8 @@ if (!$steps) {
 $componentClass = $attributes['componentClass'] ?? '';
 $componentJsClass = $attributes['componentJsClass'] ?? '';
 
+$hideLabels = $attributes['hideLabels'] ?? false;
+
 $progressBarItemClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'item'),
 	Components::selector($componentJsClass, $componentJsClass),
@@ -42,7 +44,11 @@ foreach ($steps as $step) {
 	?>
 	<div class="<?php echo esc_attr($progressBarItemClass); ?>" <?php echo $progressBarAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
 		<div class="<?php echo esc_attr("{$componentClass}__item-inner"); ?>">
-			<?php echo esc_html($label); ?>
+			<?php
+			if (!$hideLabels) {
+				echo esc_html($label);
+			}
+			?>
 		</div>
 	</div>
 	<?php

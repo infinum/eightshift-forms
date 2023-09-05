@@ -544,7 +544,7 @@ export function setSteps(formElement, formId) {
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR], stepsProgressBar, formId);
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR], {}, formId);
 
-			Object.values(stepsProgressBar).forEach((item) => {
+			[...stepsProgressBar.children].forEach((item) => {
 				const stepId = item.getAttribute(getStateAttribute('stepId'));
 				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR, stepId], item, formId);
 			});

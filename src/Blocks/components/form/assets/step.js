@@ -257,7 +257,7 @@ export class Steps {
 			// Multistep setup.
 			// Find current step.
 			const currentStep = this.state.getStateFormStepsCurrent(formId);
-	
+
 			// Remove active from current step.
 			this.state.getStateFormStepsElementProgressBar(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
 	
@@ -266,7 +266,7 @@ export class Steps {
 	
 			// Reset filled steps.
 			this.state.getStateFormStepsElementsProgressBar(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelectorsClassFilled()));
-	
+
 			// Add filled to all filled steps.
 			flow.forEach((item) => {
 				this.state.getStateFormStepsElementProgressBar(item, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
