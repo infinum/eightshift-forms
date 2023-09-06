@@ -152,7 +152,10 @@ export class Steps {
 			...this.state.getStateFormStepsFlow(formId),
 		];
 
-		newFlow.splice(nextStepIndex, flow.length);
+		// If index is found, remove all steps after that index.
+		if (nextStepIndex >= 0) {
+			newFlow.splice(nextStepIndex, flow.length);
+		}
 
 		this.setChangeStep(formId, nextStep, newFlow);
 	}

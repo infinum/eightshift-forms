@@ -182,6 +182,8 @@ export class Form {
 
 		fetch(url, body)
 			.then((response) => {
+				this.formSubmitErrorContentType(formId, response, 'formSubmit');
+
 				return response.json();
 			})
 			.then((response) => {
@@ -229,6 +231,8 @@ export class Form {
 
 		fetch(url, body)
 			.then((response) => {
+				this.formSubmitErrorContentType(formId, response, 'formSubmitStep');
+
 				return response.json();
 			})
 			.then((response) => {
@@ -257,6 +261,53 @@ export class Form {
 
 		// Remove loader.
 		this.utils.hideLoader(formId);
+	}
+
+	/**
+	 * Actions to run if api response returns wrong content type.
+	 *
+	 * This can happen if the API returns HTML or something else that we don't expect.
+	 * Cloudflare security can return HTML.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {mixed} response Api response.
+	 * @param {string} type Function used.
+	 *
+	 * @throws Error.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitErrorContentType(formId, response, type) {
+		const contentType = response?.headers?.get('content-type');
+
+		// This can happen if the API returns HTML or something else that we don't expect.
+		if (contentType && contentType.indexOf('application/json') === -1) {
+			// Clear all errors.
+			this.utils.resetErrors(formId);
+
+			// Remove loader.
+			this.utils.hideLoader(formId);
+
+			// Set global msg.
+			this.utils.setGlobalMsg(
+				formId,
+				this.state.getStateSettingsFormServerErrorMsg(),
+				'error'
+			);
+
+			// Reset timeout for after each submit.
+			if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+				clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+			}
+
+			// Hide global msg in any case after some time.
+			this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
+				this.utils.unsetGlobalMsg(formId);
+			}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+
+			// Throw error.
+			throw new Error(`API response returned the wrong content type for this request. Function used: "${type}"`);
+		}
 	}
 
 	/**
@@ -1246,11 +1297,13 @@ export class Form {
 		if (this.state.getStateFormStepsIsUsed(formId)) {
 			const button = event.submitter;
 			const field = this.state.getFormFieldElementByChild(button);
+
 			// Steps flow.
 			let direction = field.getAttribute(this.state.getStateAttribute('submitStepDirection'));
 
+			// If button is hidden prevent submiting the form.
 			if (field?.classList?.contains(this.state.getStateSelectorsClassHidden())) {
-				direction = this.steps.STEP_DIRECTION_NEXT;
+				return;
 			}
 
 			switch (direction) {
@@ -1491,6 +1544,9 @@ export class Form {
 			},
 			formSubmitBefore: (formId, response) => {
 				this.formSubmitBefore(formId, response);
+			},
+			formSubmitErrorContentType: (formId, response, type) => {
+				this.formSubmitErrorContentType(formId, response, type);
 			},
 			formSubmitSuccess: (formId, response, isFinalStep = false) => {
 				this.formSubmitSuccess(formId, response, isFinalStep);

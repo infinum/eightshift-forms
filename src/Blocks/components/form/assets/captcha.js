@@ -66,7 +66,7 @@ export class Captcha {
 	}
 
 	/**
-	 *  Handle form submit and all logic in case we have captcha in place for init load.
+	 * Handle form submit and all logic in case we have captcha in place for init load.
 	 * 
 	 * @param {string} token Captcha token from api.
 	 * @param {bool} isEnterprise Is enterprise setup.
@@ -94,11 +94,36 @@ export class Captcha {
 
 		fetch(this.state.getRestUrl(ROUTES.CAPTCHA), body)
 		.then((response) => {
+			this.formSubmitErrorContentType(response, 'invisibleCaptcha');
+
 			return response.json();
 		})
 		.then((response) => {
 			this.utils.dispatchFormEvent(window, this.state.getStateEventsAfterCaptchaInit(), response);
 		});
+	}
+
+	/**
+	 * Actions to run if api response returns wrong content type.
+	 *
+	 * This can happen if the API returns HTML or something else that we don't expect.
+	 * Cloudflare security can return HTML.
+	 *
+	 * @param {mixed} response Api response.
+	 * @param {string} type Function used.
+	 *
+	 * @throws Error.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitErrorContentType(response, type) {
+		const contentType = response?.headers?.get('content-type');
+
+		// This can happen if the API returns HTML or something else that we don't expect.
+		if (contentType && contentType.indexOf('application/json') === -1) {
+			// Throw error.
+			throw new Error(`API response returned the wrong content type for this request. Function used: "${type}"`);
+		}
 	}
 
 	/**
@@ -142,7 +167,10 @@ export class Captcha {
 			},
 			initHideCaptchaBadge: () => {
 				this.initHideCaptchaBadge();
-			}
+			},
+			formSubmitErrorContentType: (response, type) => {
+				this.formSubmitErrorContentType(response, type);
+			},
 		};
 	}
 }

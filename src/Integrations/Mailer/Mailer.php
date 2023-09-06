@@ -97,6 +97,8 @@ class Mailer implements MailerInterface
 			'php' => \phpversion(),
 			'wp' => \get_bloginfo('version'),
 			'url' => \get_bloginfo('url'),
+			'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
+			'time' => \wp_date('Y-m-d H:i:s'),
 		];
 
 		// translators: %1$s replaces the integration name and %2$s formId.

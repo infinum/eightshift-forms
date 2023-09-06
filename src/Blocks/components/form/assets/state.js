@@ -236,6 +236,9 @@ export class State {
 	getStateSettingsFormDisableAutoInit = () => {
 		return getState([StateEnum.SETTINGS_FORM_DISABLE_AUTO_INIT], StateEnum.SETTINGS);
 	};
+	getStateSettingsFormServerErrorMsg = () => {
+		return getState([StateEnum.SETTINGS_FORM_SERVER_ERROR_MSG], StateEnum.SETTINGS);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Element getters.
