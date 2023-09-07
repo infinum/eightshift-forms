@@ -92,6 +92,9 @@
 		"formMeta": {
 			"type": "string"
 		},
+		"formCustomName": {
+			"type": "string"
+		},
 		"formAttrs": {
 			"type": "object"
 		},

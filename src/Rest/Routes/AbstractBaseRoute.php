@@ -66,14 +66,20 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 */
 	public const CUSTOM_FORM_DATA_ATTRIBUTES = [
 		'formType' => 'data-form-type',
+		'formCustomName' => 'data-form-custom-name',
+		'formId' => 'data-form-id',
+
 		'stepId' => 'data-step-id',
 		'submitStepDirection' => 'data-step-direction',
 		'postId' => 'data-post-id',
-		'formId' => 'data-form-id',
+
 		'fieldId' => 'data-field-id',
 		'fieldName' => 'data-field-name',
 		'fieldType' => 'data-field-type',
 		'fieldPreventSubmit' => 'data-field-prevent-submit',
+		'fieldTypeCustom' => 'data-type-custom',
+		'fieldUncheckedValue' => 'data-unchecked-value',
+
 		'trackingEventName' => 'data-tracking-event-name',
 		'trackingAdditionalData' => 'data-tracking-additional-data',
 		'tracking' => 'data-tracking',
@@ -88,12 +94,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'conditionalTags' => 'data-conditional-tags',
 		'typeSelector' => 'data-type-selector',
 		'actionExternal' => 'data-action-external',
-		'fieldTypeCustom' => 'data-type-custom',
-		'fieldUncheckedValue' => 'data-unchecked-value',
 		'settingsType' => 'data-settings-type',
 		'groupSaveAsOneField' => 'data-group-save-as-one-field',
+
 		'datePreviewFormat' => 'data-preview-format',
 		'dateOutputFormat' => 'data-output-format',
+
 		'selectAllowSearch' => 'data-allow-search',
 		'selectPlaceholder' => 'data-placeholder',
 		'selectCustomProperties' => 'data-custom-properties',
@@ -103,6 +109,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'selectVisibility' => 'data-visibility',
 		'selectId' => 'data-id',
 		'selectValue' => 'data-value',
+
 		'phoneSync' => 'data-phone-sync',
 		'phoneDisablePicker' => 'data-phone-disable-picker',
 		'saveAsJson' => 'data-save-as-json',

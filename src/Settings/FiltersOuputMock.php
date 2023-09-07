@@ -41,7 +41,6 @@ trait FiltersOuputMock
 
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, '');
-			$filterUsed = true;
 
 			// Output map depending on the type.
 			if ($filterData) {
@@ -56,16 +55,16 @@ trait FiltersOuputMock
 						$settingsFields[] = $value;
 					}
 				}
-			}
 
-			$settings .= \__('Additional parameters were provided through code', 'eightshift-forms');
-			$settings .= '<ul>';
-			foreach ($filterData as $key => $value) {
-				$settingsValue = \implode(', ', $value);
-
-				$settings .= "<li><code>{$key}</code> : <code>{$settingsValue}</code></li>";
+				$settings .= \__('Additional parameters were provided through code', 'eightshift-forms');
+				$settings .= '<ul>';
+				foreach ($filterData as $key => $value) {
+					$settingsValue = \implode(', ', $value);
+					$settings .= "<li><code>{$key}</code> : <code>{$settingsValue}</code></li>";
+				}
+				$settings .= '</ul>';
+				$filterUsed = true;
 			}
-			$settings .= '</ul>';
 		}
 
 		$settingsOutput = $this->getSettingsDivWrap($settings, $filterUsed, false);
@@ -101,9 +100,8 @@ trait FiltersOuputMock
 					$settings .= "<li><code>{$value[0]}</code> : <code>{$value[1]}</code></li>";
 				}
 				$settings .= '</ul>';
+				$filterUsed = true;
 			}
-
-			$filterUsed = true;
 		}
 
 		$data = [
@@ -132,12 +130,16 @@ trait FiltersOuputMock
 		$data = '';
 		$filterUsed = false;
 
+		$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+
 		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectVariation']);
 		if (\has_filter($filterName)) {
-			$data = \apply_filters($filterName, $type, $formId);
-			$filterUsed = true;
-		} else {
-			$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+			$dataFilter = \apply_filters($filterName, $type, $formId);
+
+			if ($dataFilter) {
+				$data = $dataFilter;
+				$filterUsed = true;
+			}
 		}
 
 		return [
@@ -211,12 +213,16 @@ trait FiltersOuputMock
 		$data = '';
 		$filterUsed = false;
 
+		$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+
 		$filterName = Filters::getFilterName(['block', 'form', 'trackingEventName']);
 		if (\has_filter($filterName)) {
-			$data = \apply_filters($filterName, $type, $formId);
-			$filterUsed = true;
-		} else {
-			$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+			$filterData = \apply_filters($filterName, $type, $formId);
+
+			if ($data) {
+				$data = $filterData;
+				$filterUsed = true;
+			}
 		}
 
 		return [

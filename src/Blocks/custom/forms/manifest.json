@@ -56,6 +56,9 @@
 		"formsFormDataTypeSelector": {
 			"type": "string"
 		},
+		"formsCustomName": {
+			"type": "string"
+		},
 		"formsSuccessRedirectVariation": {
 			"type": "string"
 		},

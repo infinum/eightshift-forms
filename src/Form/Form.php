@@ -15,6 +15,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingsBlocks;
+use EightshiftForms\Settings\Settings\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -105,6 +106,12 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			}
 		}
 
+		// Custom form name.
+		$customFormName = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+		if ($customFormName) {
+			$attributes["{$prefix}CustomName"] = $customFormName;
+		}
+
 		// Phone sync with country block.
 		$attributes["{$prefix}PhoneSync"] = '';
 		$filterName = Filters::getFilterName(['block', 'form', 'phoneSync']);
@@ -143,6 +150,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
 		$formsConditionalTagsRulesForms = Components::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
+		$formsCustomName = Components::checkAttr('formsCustomName', $attributes, $manifest);
 
 		$checkStyleEnqueue = $this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
@@ -183,6 +191,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 				$innerBlock['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
 				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = \wp_json_encode($formsConditionalTagsRulesForms);
+				$innerBlock['attrs']["{$blockName}FormCustomName"] = $formsCustomName;
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
 				$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
 

@@ -48,6 +48,7 @@ $formSuccessRedirectVariationUrl = Components::checkAttr('formSuccessRedirectVar
 $formSuccessRedirectVariationUrlTitle = Components::checkAttr('formSuccessRedirectVariationUrlTitle', $attributes, $manifest);
 $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
 $formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
+$formCustomName = Components::checkAttr('formCustomName', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -90,6 +91,10 @@ if ($formPhoneSync) {
 
 if ($formPhoneDisablePicker) {
 	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['phoneDisablePicker']] = esc_attr($formPhoneDisablePicker);
+}
+
+if ($formCustomName) {
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formCustomName']] = esc_attr($formCustomName);
 }
 
 if ($formPostId) {

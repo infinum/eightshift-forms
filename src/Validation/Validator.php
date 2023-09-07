@@ -173,8 +173,14 @@ class Validator extends AbstractValidation
 				switch ($dataKey) {
 					// Check validation for required params.
 					case 'isRequired':
-						if (\preg_match('/^\s*$/u', $inputValue) === 1) {
-							$output[$paramKey] = $this->getValidationLabel('validationRequired', $formId);
+						if (\is_string($inputValue)) {
+							if (\preg_match('/^\s*$/u', $inputValue) === 1) {
+								$output[$paramKey] = $this->getValidationLabel('validationRequired', $formId);
+							}
+						} else {
+							if (empty($inputValue)) {
+								$output[$paramKey] = $this->getValidationLabel('validationRequired', $formId);
+							}
 						}
 						break;
 					// Check validation for required count params.

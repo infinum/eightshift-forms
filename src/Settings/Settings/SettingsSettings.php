@@ -153,7 +153,8 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 									],
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Use JavaScript for redirects', 'eightshift-forms'),
+										'checkboxLabel' => \__('Disable native JavaScript for redirects', 'eightshift-forms'),
+										'checkboxHelp' => \__('This option disables all native JavaScript redirects, requiring a custom redirect implementation based on triggered events. Typically used in single-page applications like Barba.js.', 'eightshift-forms'),
 										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
 										'checkboxAsToggle' => true,
