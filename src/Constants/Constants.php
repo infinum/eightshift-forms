@@ -109,6 +109,25 @@ class Constants implements ConstantsInterface, ServiceInterface
 			}
 		}
 
+		// If contents output file is empty use defaults file to provide constants.
+		if (!$constantFile) {
+			$pathDefaults = __DIR__ . \DIRECTORY_SEPARATOR . 'constantsOutputDefaults.php';
+
+			// Check if defaults file exists.
+			if (\file_exists($pathDefaults)) {
+				// Get defaults file content.
+				$constantFileDefaults = \file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+				// Bailout if defaults file is empty.
+				if ($constantFileDefaults) {
+					// Save the new constants file from defaults.
+					\file_put_contents($path, $constantFileDefaults); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+				}
+
+				return;
+			}
+		}
+
 		// Save the new constants file.
 		\file_put_contents($path, $constantFile); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
 	}
