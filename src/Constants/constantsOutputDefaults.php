@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contants output class - defaults.
+ * Constants output class - defaults.
  *
  * @package EightshiftForms\Constants
  */

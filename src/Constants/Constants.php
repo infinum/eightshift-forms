@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contants main class.
+ * Constants main class.
  *
  * @package EightshiftForms\Constants
  */
@@ -59,7 +59,7 @@ class Constants implements ConstantsInterface, ServiceInterface
 	public function setConstants(): void
 	{
 		foreach (\array_keys(self::CONSTANTS) as $key) {
-			$this->changeContant($key, $this->isCheckboxOptionChecked($key, $key));
+			$this->changeConstants($key, $this->isCheckboxOptionChecked($key, $key));
 		}
 	}
 
@@ -71,7 +71,7 @@ class Constants implements ConstantsInterface, ServiceInterface
 	 *
 	 * @return void
 	 */
-	public function changeContant(string $name, bool $value): void
+	public function changeConstants(string $name, bool $value): void
 	{
 		// Bailout if constant is not defined.
 		if (!isset(self::CONSTANTS[$name])) {

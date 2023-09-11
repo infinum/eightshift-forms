@@ -187,7 +187,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 					\update_option($key, $value['value']);
 
 					// Maybe update constants.
-					$this->constants->changeContant($this->getSettingsCleanName($key), true);
+					$this->constants->changeConstants($this->getSettingsCleanName($key), true);
 				} else {
 					\update_post_meta((int) $formId, $key, $value['value']);
 				}
@@ -195,8 +195,8 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 				if (!$formId) {
 					\delete_option($key);
 
-					// Maybe update contants.
-					$this->constants->changeContant($this->getSettingsCleanName($key), false);
+					// Maybe update constants.
+					$this->constants->changeConstants($this->getSettingsCleanName($key), false);
 				} else {
 					\delete_post_meta((int) $formId, $key);
 				}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Contants interface main class.
+ * Constants interface main class.
  *
  * @package EightshiftForms\Constants
  */
@@ -23,5 +23,5 @@ interface ConstantsInterface
 	 *
 	 * @return void
 	 */
-	public function changeContant(string $name, bool $value): void;
+	public function changeConstants(string $name, bool $value): void;
 }
