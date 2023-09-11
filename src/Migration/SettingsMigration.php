@@ -32,9 +32,19 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_migration';
 
 	/**
+	 * Filter settings is Valid key.
+	 */
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_migration';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'migration';
+
+	/**
+	 * Migration use key.
+	 */
+	public const SETTINGS_MIGRATION_USE_KEY = 'migration-use';
 
 	/**
 	 * Version 2-3 key.
@@ -54,6 +64,23 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+	}
+
+	/**
+	 * Determine if settings global are valid.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsGlobalValid(): bool
+	{
+		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY);
+
+		if (!$isUsed) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -63,6 +90,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY)) {
+			return $this->getNoActiveFeatureOutput();
+		}
+
 		$manifestForm = Components::getComponent('form');
 
 		return [

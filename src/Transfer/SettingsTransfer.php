@@ -46,6 +46,11 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	public const SETTINGS_TYPE_KEY = 'transfer';
 
 	/**
+	 * Transfer use key.
+	 */
+	public const SETTINGS_TRANSFER_USE_KEY = 'transfer-use';
+
+	/**
 	 * Type export global settings key.
 	 */
 	public const TYPE_EXPORT_GLOBAL_SETTINGS = 'export-global-settings';
@@ -73,6 +78,23 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+	}
+
+	/**
+	 * Determine if settings global are valid.
+	 *
+	 * @return boolean
+	 */
+	public function isSettingsGlobalValid(): bool
+	{
+		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY);
+
+		if (!$isUsed) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -82,6 +104,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY)) {
+			return $this->getNoActiveFeatureOutput();
+		}
+
 		$manifestForm = Components::getComponent('form');
 
 		return [

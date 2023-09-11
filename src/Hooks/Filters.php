@@ -56,6 +56,8 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Misc\SettingsWpRocket;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
 
@@ -237,6 +239,16 @@ class Filters
 				'jiraIssueUrl',
 			]
 		],
+		SettingsCloudflare::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsCloudflare::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
+			'use' => SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
+		],
+		SettingsWpRocket::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsWpRocket::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
+			'use' => SettingsWpRocket::SETTINGS_WPROCKET_USE_KEY,
+		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
@@ -254,11 +266,13 @@ class Filters
 		SettingsMigration::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMigration::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+			'use' => SettingsMigration::SETTINGS_MIGRATION_USE_KEY,
 		],
 		SettingsTransfer::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsTransfer::FILTER_SETTINGS_GLOBAL_NAME,
 			'valid' => SettingsTransfer::FILTER_SETTINGS_IS_VALID_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+			'use' => SettingsTransfer::SETTINGS_TRANSFER_USE_KEY,
 		],
 		SettingsDebug::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsDebug::FILTER_SETTINGS_GLOBAL_NAME,
@@ -548,6 +562,14 @@ class Filters
 				'title' => \__('Documentation', 'eightshift-forms'),
 				'desc' => \__('Need help? Interested in learning more? Find resources here.', 'eightshift-forms'),
 			],
+			SettingsCloudflare::SETTINGS_TYPE_KEY => [
+				'title' => \__('Cloudflare', 'eightshift-forms'),
+				'desc' => \__('Cloudflare is a content delivery network (CDN) and cloud security platform that provides website optimization, security, and performance services.', 'eightshift-forms'),
+			],
+			SettingsWpRocket::SETTINGS_TYPE_KEY => [
+				'title' => \__('WP Rocket', 'eightshift-forms'),
+				'desc' => \__('WP Rocket is a premium caching plugin that helps you improve your website loading speed and SEO ranking. In addition to that, it also offers a variety of automated features such as file optimisation, improving lazy loading images and much more.', 'eightshift-forms'),
+			],
 			SettingsMigration::SETTINGS_TYPE_KEY => [
 				'title' => \__('Migration', 'eightshift-forms'),
 				'desc' => \__('One-click migrate forms from earlier versions of Forms.', 'eightshift-forms'),
@@ -561,6 +583,10 @@ class Filters
 			Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING => [
 				'title' => \__('Troubleshooting', 'eightshift-forms'),
 				'desc' => \__('Settings for various troubleshooting and debugging options.', 'eightshift-forms'),
+			],
+			Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS => [
+				'title' => \__('Miscellaneous', 'eightshift-forms'),
+				'desc' => \__('Settings for various miscellaneous options.', 'eightshift-forms'),
 			],
 		];
 

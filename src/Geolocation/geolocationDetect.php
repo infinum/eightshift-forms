@@ -23,7 +23,17 @@ function setEightshiftFormsLocationCookie(): void
 	require_once dirname(__DIR__, 2) . "{$sep}src{$sep}Hooks{$sep}Variables.php";
 
 	// Bailout if geolocation is not used.
-	if (!Variables::getGeolocationUse() || !Variables::getGeolocationUseWpRocketAdvancedCache()) {
+	if (!Variables::getGeolocationUse()) {
+		return;
+	}
+
+	// Bailout if WP Rocket feature is not used.
+	if (!Variables::getGeolocationUseWpRocket()) {
+		return;
+	}
+
+	// Bailout if Cloudflare feature is used because we use their geolocation based on the header value.
+	if (Variables::getGeolocationUseCloudflare()) {
 		return;
 	}
 

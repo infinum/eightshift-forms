@@ -107,6 +107,12 @@
 		display: inline-flex;
 		flex-direction: column;
 		gap: 0.5rem;
+
+		p {
+			padding: 0;
+			margin: 0;
+			font-size: inherit;
+		}
 	}
 
 	@include field-styles;

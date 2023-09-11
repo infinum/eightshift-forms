@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -94,7 +95,7 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Get option value array.
+	 * Get option value.
 	 *
 	 * @param string $key Providing string to append to.
 	 *
@@ -235,30 +236,31 @@ trait SettingsHelper
 	/**
 	 * Get string name with locale.
 	 *
-	 * @param string $string Providing string to append to.
+	 * @param string $key Providing string to append to.
 	 *
 	 * @return string
 	 */
-	public function getSettingsName(string $string): string
+	public function getSettingsName(string $key): string
 	{
-		return "es-forms-{$string}-" . $this->getLocale();
+		return Config::getSettingsNamePrefix() . "-{$key}-" . Helper::getLocale();
 	}
 
 	/**
-	 * Set locale depending on default locale or hook override.
+	 * Get settings clean name by removing locale and prefix.
+	 *
+	 * @param string $key Providing string to remove from.
 	 *
 	 * @return string
 	 */
-	public function getLocale(): string
+	public function getSettingsCleanName(string $key): string
 	{
-		$locale = \get_locale();
-		$filterName = Filters::getFilterName(['general', 'locale']);
+		$prefix = Config::getSettingsNamePrefix();
+		$locale = Helper::getLocale();
 
-		if (\has_filter($filterName)) {
-			$locale = \apply_filters($filterName, $locale);
-		}
+		$name = \preg_replace("/^$prefix-/", '', $key);
+		$name = \preg_replace("/-$locale$/", '', $name);
 
-		return $locale;
+		return $name;
 	}
 
 	/**

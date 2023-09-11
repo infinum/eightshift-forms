@@ -97,7 +97,7 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 			return $this->getNoActiveFeatureOutput();
 		}
 
-		$useRocket = Variables::getGeolocationUseWpRocketAdvancedCache();
+		$useRocket = Variables::getGeolocationUseWpRocket();
 
 		$isRocketPluginActive = \is_plugin_active('wp-rocket/wp-rocket.php');
 
@@ -107,16 +107,25 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 			$outputConstants .= $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE');
 		}
 
-		if (Variables::getGeolocationUseWpRocketAdvancedCache()) {
-			$outputConstants .= '<br/>' . $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE');
+		if (Variables::getGeolocationUseWpRocket()) {
+			$outputConstants .= '<br/>' . $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE_WP_ROCKET');
 		}
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				// translators: %s will be replaced with the link.
-				'introSubtitle' => '<span>' . \sprintf(\__('We use <a href="%s" target="_blank" rel="noopener noreferrer">GeoLite2</a> by MaxMind for location data.', 'eightshift-forms'), 'https://www.maxmind.com') . '</span>',
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						// translators: %s will be replaced with the link.
+						'introSubtitle' => \sprintf(\__("
+							<p>By default geolocation uses cookie to store users location and that location is matched with the country list got from the <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> by MaxMind database.</p>
+							<p>With every release we update that database but you can also provide your own database by using our filters. You can find more details <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.</p>
+						", 'eightshift-forms'), 'https://www.maxmind.com', 'https://eightshift.com/forms/features/geolocation'),
+					],
+				],
 			],
 			(!$isRocketPluginActive && $useRocket) ? [
 					'component' => 'intro',
@@ -132,7 +141,12 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'intro',
 						// translators: %s will be replaced with the link.
-						'introSubtitle' => \__('If you are using caching, such as WP Rocket or Cloudflare, refer to the documentation for more information, as geolocation may not function correctly.', 'eightshift-forms'),
+						'introSubtitle' => \sprintf(\__("
+							<p>
+								If you are using caching, such as WP Rocket or Cloudflare, refer to the documentation for more information, as geolocation may not function correctly.
+								You can find more details <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.
+							</p>
+						", 'eightshift-forms'), 'https://eightshift.com/forms/features/geolocation'),
 						'introIcon' => 'warning',
 
 					],

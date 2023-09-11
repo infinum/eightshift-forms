@@ -9,7 +9,8 @@
 	.es-form[data-settings-type='migration'],
 	.es-form[data-settings-type='transfer'],
 	.es-form[data-form-type='settingsGlobal'][data-settings-type='geolocation'],
-	.es-form[data-form-type='settingsGlobal'][data-settings-type='mailer'] {
+	.es-form[data-form-type='settingsGlobal'][data-settings-type='mailer'],
+	.es-form[data-form-type='settingsGlobal'][data-settings-type='cloudflare'] {
 		.es-submit--global {
 			display: none;
 		}

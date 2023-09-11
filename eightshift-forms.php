@@ -64,7 +64,10 @@ if (\class_exists(Main::class)) {
 	// Require public helper class.
 	require __DIR__ . '/src/Helpers/esForms.php';
 
-	// Require public helper class.
+	// Require constants output.
+	require __DIR__ . '/src/Constants/constantsOutput.php';
+
+	// Require test filters.
 	require __DIR__ . '/testFilters/testFilters.php';
 
 	(new Testfilters())->register();

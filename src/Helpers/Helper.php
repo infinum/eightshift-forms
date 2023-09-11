@@ -31,6 +31,23 @@ use RecursiveIteratorIterator;
 class Helper
 {
 	/**
+	 * Set locale depending on default locale or hook override.
+	 *
+	 * @return string
+	 */
+	public static function getLocale(): string
+	{
+		$locale = \get_locale();
+		$filterName = Filters::getFilterName(['general', 'locale']);
+
+		if (\has_filter($filterName)) {
+			$locale = \apply_filters($filterName, $locale);
+		}
+
+		return $locale;
+	}
+
+	/**
 	 * Method that returns listing page url.
 	 *
 	 * @return string
