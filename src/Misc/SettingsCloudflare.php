@@ -114,7 +114,7 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 								You can find more details on how to enable it <a href='%1\$s' rel='noopener noreferrer' target='_blank'>here</a>.
 							</p>
 							<p>
-								If you have WP Rocket plugin instaled we will also remove geolocation cookie from the dynamic cookies list.
+								If you have WP Rocket plugin installed we will also remove geolocation cookie from the dynamic cookies list.
 								You can find more details on WP Rocket and geolocations <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.
 							</p>
 						", 'eightshift-forms'), 'https://developers.cloudflare.com/support/network/configuring-ip-geolocation/', 'https://eightshift.com/forms/features/geolocation'),

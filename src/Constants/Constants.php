@@ -81,7 +81,7 @@ class Constants implements ConstantsInterface, ServiceInterface
 		// Find the constants file path.
 		$path = __DIR__ . \DIRECTORY_SEPARATOR . 'constantsOutput.php';
 
-		// Baildout if constants file does not exist.
+		// Bailout if constants file does not exist.
 		if (!\file_exists($path)) {
 			return;
 		}

@@ -186,7 +186,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 				if (!$formId) {
 					\update_option($key, $value['value']);
 
-					// Maybe update contants.
+					// Maybe update constants.
 					$this->constants->changeContant($this->getSettingsCleanName($key), true);
 				} else {
 					\update_post_meta((int) $formId, $key, $value['value']);

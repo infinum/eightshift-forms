@@ -77,7 +77,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return;
 		}
 
-		// Bailout if Cludflare feature is used.
+		// Bailout if Cloudflare feature is used.
 		if (Variables::getGeolocationUseCloudflare()) {
 			return;
 		}
