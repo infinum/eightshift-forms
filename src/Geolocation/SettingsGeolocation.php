@@ -14,7 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\Settings\SettingsDocumentation;
+use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -99,13 +99,7 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 
 		$useRocket = Variables::getGeolocationUseWpRocket();
 
-		$isRocketPluginActive = \is_plugin_active('wp-rocket/wp-rocket.php');
-
 		$outputConstants = '';
-
-		if ($use) {
-			$outputConstants .= $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE');
-		}
 
 		if (Variables::getGeolocationUseWpRocket()) {
 			$outputConstants .= '<br/>' . $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE_WP_ROCKET');
@@ -127,40 +121,32 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 					],
 				],
 			],
-			(!$isRocketPluginActive && $useRocket) ? [
-					'component' => 'intro',
-					// translators: %s will be replaced with the link.
-					'introSubtitle' => \sprintf(\__('<b>Geolocation is not working</b> We have detected that you are using the ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE constant, but the WP Rocket plugin is currently deactivated. Please note that geolocation services will not work until the WP Rocket plugin is activated.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
-					'introIsHighlighted' => true,
-					'introIsHighlightedImportant' => true,
-				] : [],
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
-				'layoutContent' => [
-					[
-						'component' => 'intro',
-						// translators: %s will be replaced with the link.
-						'introSubtitle' => \sprintf(\__("
-							<p>
-								If you are using caching, such as WP Rocket or Cloudflare, refer to the documentation for more information, as geolocation may not function correctly.
-								You can find more details <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.
-							</p>
-						", 'eightshift-forms'), 'https://eightshift.com/forms/features/geolocation'),
-						'introIcon' => 'warning',
-
-					],
-					($use || $useRocket) ? [
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					] : [],
-					($use || $useRocket) ? [
-						'component' => 'intro',
-						// translators: %s will be replaced with the link.
-						'introSubtitle' => $outputConstants,
-					] : [],
-				],
-			]
+			(\is_plugin_active('wp-rocket/wp-rocket.php') && !Variables::getGeolocationUseWpRocket()) ? [
+				'component' => 'intro',
+				// translators: %s will be replaced with the link.
+				'introSubtitle' => \sprintf(\__('
+					<b>Geolocation is not working due to WP Rocket plugin</b>
+					<p>
+						We have detected that you are using the WP Rocket plugin.
+						Please turn on the WP Rocket feature in the global settings <a href="%s" rel="noopener noreferrer">dashboard</a> for proper geolocation functionality.
+					</p>
+				', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+			] : [],
+			(\is_plugin_active('cloudflare/cloudflare.php') && !Variables::getGeolocationUseCloudflare()) ? [
+				'component' => 'intro',
+				// translators: %s will be replaced with the link.
+				'introSubtitle' => \sprintf(\__('
+					<b>Geolocation is not working due to Cloudflare plugin</b>
+					<p>
+						We have detected that you are using the Cloudflare plugin.
+						Please turn on the Cloudflare feature in the global settings <a href="%s" rel="noopener noreferrer">dashboard</a> for proper geolocation functionality.
+					</p>
+				', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+			] : [],
 		];
 	}
 }
