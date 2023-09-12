@@ -219,7 +219,7 @@ trait FiltersOuputMock
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, $type, $formId);
 
-			if ($data) {
+			if ($filterData) {
 				$data = $filterData;
 				$filterUsed = true;
 			}
