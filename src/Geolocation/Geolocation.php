@@ -72,18 +72,50 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return;
 		}
 
-		// Bailout if WP Rocket feature is used.
-		if (Variables::getGeolocationUseWpRocket()) {
+		// Get cookie name.
+		$cookieName = $this->getGeolocationCookieName();
+
+		// If the cookie exists, don't set it again.
+		if (isset($_COOKIE[$cookieName])) {
 			return;
 		}
 
-		// Bailout if Cloudflare feature is used.
-		if (Variables::getGeolocationUseCloudflare()) {
-			return;
+		// If expiration is not set use default of 1 day from current timestamp.
+		$expires = Variables::getGeolocationExpiration();
+		if (!$expires) {
+			$expires = time() + DAY_IN_SECONDS;
 		}
 
-		// Detect geolocation from db and store it in the database.
-		$this->setLocationCookie();
+		try {
+			$cookieValue = '';
+
+			if (!Variables::getGeolocationUseCloudflare()) {
+				// Detect geolocation from db and store it in the database.
+				$cookieValue = $this->getGeolocation();
+			} else {
+				// Detect geolocation from Cloudflare header.
+				$cookieValue = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? \strtoupper(\sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_IPCOUNTRY']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			}
+
+			// Set cookie if we have a value.
+			if ($cookieValue) {
+				$this->setCookie(
+					$cookieName,
+					$cookieValue,
+					$expires,
+					'/'
+				);
+			}
+		} catch (Exception $exception) {
+			/*
+			 * The getGeolocation will throw an error if the phar or geo db files are missing,
+			 * but if we threw an exception here, that would break the execution of the WP app.
+			 * This way we'll log the exception, but the site should work fine without setting
+			 * the cookie.
+			 */
+			\error_log("Error code: {$exception->getCode()}, with message: {$exception->getMessage()}"); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			return;
+		}
 	}
 
 	/**
@@ -361,6 +393,11 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	private function getUsersGeolocation(): string
 	{
+		// Check if cookie is set and return that value.
+		if (isset($_COOKIE[$this->getGeolocationCookieName()])) {
+			$this->userLocation = $_COOKIE[$this->getGeolocationCookieName()];
+		}
+
 		// Returns user location retrieved from the API or cookie.
 		// Used internal variable for caching optimisations.
 		if (!$this->userLocation) {
@@ -368,7 +405,20 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			if (Variables::getGeolocationUseCloudflare()) {
 				return isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? \strtoupper(\sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_IPCOUNTRY']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			} else {
+				// Start the timer
+				$start = microtime(true);
+
 				$this->userLocation = $this->getGeolocation();
+
+				// End the timer
+				$end = microtime(true);
+
+				// Calculate the execution time
+				$executionTime = $end - $start;
+
+				error_log( print_r( ( $this->userLocation ), true ) );
+				
+				error_log( print_r( ( "Script execution time: " . $executionTime . " seconds" ), true ) );
 			}
 		}
 
