@@ -300,6 +300,11 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return $items;
 		}
 
+		// Bailout if Cloudflare feature is used because we use their geolocation based on the header value.
+		if (Variables::getGeolocationUseCloudflare()) {
+			return $items;
+		}
+
 		$items[] = $this->getGeolocationCookieName();
 
 		return $items;
@@ -321,6 +326,11 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 		// Bailout if WP Rocket feature is not used.
 		if (!Variables::getGeolocationUseWpRocket()) {
+			return $content;
+		}
+
+		// Bailout if Cloudflare feature is used because we use their geolocation based on the header value.
+		if (Variables::getGeolocationUseCloudflare()) {
 			return $content;
 		}
 
