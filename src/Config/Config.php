@@ -31,6 +31,16 @@ class Config extends AbstractConfigData
 	}
 
 	/**
+	 * Method that returns projects setting name prefix.
+	 *
+	 * @return string
+	 */
+	public static function getSettingsNamePrefix(): string
+	{
+		return "es-forms";
+	}
+
+	/**
 	 * Method that returns project version.
 	 *
 	 * Generally used for versioning asset handlers while enqueueing them.

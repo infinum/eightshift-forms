@@ -14,7 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\Settings\SettingsDocumentation;
+use EightshiftForms\Settings\Settings\SettingsDashboard;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -97,34 +97,16 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 			return $this->getNoActiveFeatureOutput();
 		}
 
-		$useRocket = Variables::getGeolocationUseWpRocketAdvancedCache();
-
-		$isRocketPluginActive = \is_plugin_active('wp-rocket/wp-rocket.php');
+		$useRocket = Variables::getGeolocationUseWpRocket();
 
 		$outputConstants = '';
 
-		if ($use) {
-			$outputConstants .= $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE');
-		}
-
-		if (Variables::getGeolocationUseWpRocketAdvancedCache()) {
-			$outputConstants .= '<br/>' . $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE');
+		if (Variables::getGeolocationUseWpRocket()) {
+			$outputConstants .= '<br/>' . $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE_WP_ROCKET');
 		}
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			[
-				'component' => 'intro',
-				// translators: %s will be replaced with the link.
-				'introSubtitle' => '<span>' . \sprintf(\__('We use <a href="%s" target="_blank" rel="noopener noreferrer">GeoLite2</a> by MaxMind for location data.', 'eightshift-forms'), 'https://www.maxmind.com') . '</span>',
-			],
-			(!$isRocketPluginActive && $useRocket) ? [
-					'component' => 'intro',
-					// translators: %s will be replaced with the link.
-					'introSubtitle' => \sprintf(\__('<b>Geolocation is not working</b> We have detected that you are using the ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE constant, but the WP Rocket plugin is currently deactivated. Please note that geolocation services will not work until the WP Rocket plugin is activated.', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDocumentation::SETTINGS_TYPE_KEY)),
-					'introIsHighlighted' => true,
-					'introIsHighlightedImportant' => true,
-				] : [],
 			[
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-card',
@@ -132,21 +114,39 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'intro',
 						// translators: %s will be replaced with the link.
-						'introSubtitle' => \__('If you are using caching, such as WP Rocket or Cloudflare, refer to the documentation for more information, as geolocation may not function correctly.', 'eightshift-forms'),
-						'introIcon' => 'warning',
-
+						'introSubtitle' => \sprintf(\__("
+							<p>By default geolocation uses cookie to store users location and that location is matched with the country list got from the <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> by MaxMind database.</p>
+							<p>With every release we update that database but you can also provide your own database by using our filters. You can find more details <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.</p>
+						", 'eightshift-forms'), 'https://www.maxmind.com', 'https://eightshift.com/forms/features/geolocation'),
 					],
-					($use || $useRocket) ? [
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					] : [],
-					($use || $useRocket) ? [
-						'component' => 'intro',
-						// translators: %s will be replaced with the link.
-						'introSubtitle' => $outputConstants,
-					] : [],
 				],
-			]
+			],
+			(\is_plugin_active('wp-rocket/wp-rocket.php') && !Variables::getGeolocationUseWpRocket()) ? [
+				'component' => 'intro',
+				// translators: %s will be replaced with the link.
+				'introSubtitle' => \sprintf(\__('
+					<b>Geolocation is not working due to WP Rocket plugin</b>
+					<p>
+						We have detected that you are using the WP Rocket plugin.
+						Please turn on the WP Rocket feature in the global settings <a href="%s" rel="noopener noreferrer">dashboard</a> for proper geolocation functionality.
+					</p>
+				', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+			] : [],
+			(\is_plugin_active('cloudflare/cloudflare.php') && !Variables::getGeolocationUseCloudflare()) ? [
+				'component' => 'intro',
+				// translators: %s will be replaced with the link.
+				'introSubtitle' => \sprintf(\__('
+					<b>Geolocation is not working due to Cloudflare plugin</b>
+					<p>
+						We have detected that you are using the Cloudflare plugin.
+						Please turn on the Cloudflare feature in the global settings <a href="%s" rel="noopener noreferrer">dashboard</a> for proper geolocation functionality.
+					</p>
+				', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+			] : [],
 		];
 	}
 }

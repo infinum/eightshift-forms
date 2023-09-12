@@ -22,10 +22,10 @@ We use Maxmind GeoLite2 Country db to provide countries.
 To download go to this link https://www.maxmind.com/en/account/login, create an account and download this file `GeoLite2 Country`.
 
 Files used:
-* geoio.phar
+* geoio.mmdb
 
 Updated:
-* 2023-08-11
+* 2023-09-08
 
 ## Country list
 

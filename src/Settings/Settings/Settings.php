@@ -42,7 +42,25 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public const SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING = 'sidebar-troubleshooting';
 
+	/**
+	 * Settings sidebar type - miscellaneous.
+	 *
+	 * @var string
+	 */
+	public const SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS = 'sidebar-miscellaneous';
+
+	/**
+	 * Setting local type name.
+	 *
+	 * @var string
+	 */
 	public const SETTINGS_TYPE_NAME = 'settings';
+
+	/**
+	 * Setting global type name.
+	 *
+	 * @var string
+	 */
 	public const SETTINGS_GLOBAL_TYPE_NAME = 'settingsGlobal';
 
 	/**

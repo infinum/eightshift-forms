@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Blocks;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
@@ -309,10 +308,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['use'] = [
 			'activeIntegrations' => $this->getActiveIntegrations(),
-			'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
+			'geolocation' => Variables::getGeolocationUse(),
 		];
 
-		$output['countryDataset'] = \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+		$output['countryDataset'] = Variables::getGeolocationUse();
 
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');

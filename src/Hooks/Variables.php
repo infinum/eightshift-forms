@@ -128,13 +128,23 @@ class Variables
 	}
 
 	/**
-	 * Get forms geolocation use WP Rocket advanced cache. Default: false.
+	 * Get forms geolocation use WP Rocket. Default: false.
 	 *
 	 * @return bool
 	 */
-	public static function getGeolocationUseWpRocketAdvancedCache(): bool
+	public static function getGeolocationUseWpRocket(): bool
 	{
-		return \defined('ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE') ? \ES_GEOLOCATION_USE_WP_ROCKET_ADVANCED_CACHE : false;
+		return \defined('ES_GEOLOCATION_USE_WP_ROCKET') ? \ES_GEOLOCATION_USE_WP_ROCKET : false;
+	}
+
+	/**
+	 * Get forms geolocation use Cloudflare. Default: false.
+	 *
+	 * @return bool
+	 */
+	public static function getGeolocationUseCloudflare(): bool
+	{
+		return \defined('ES_GEOLOCATION_USE_CLOUDFLARE') ? \ES_GEOLOCATION_USE_CLOUDFLARE : false;
 	}
 
 	/**

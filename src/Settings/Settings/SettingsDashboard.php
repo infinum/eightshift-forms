@@ -10,10 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
-use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -72,14 +70,6 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 			$type = $value['type'];
 
 			$checked = $this->isCheckboxOptionChecked($use, $use);
-			$disabled = false;
-
-			if ($key === SettingsGeolocation::SETTINGS_TYPE_KEY) {
-				if (Variables::getGeolocationUse()) {
-					$checked = true;
-					$disabled = true;
-				}
-			}
 
 			$item = [
 				'component' => 'card',
@@ -94,7 +84,6 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 								'component' => 'checkbox',
 								'checkboxHideLabelText' => true,
 								'checkboxIsChecked' => $checked,
-								'checkboxIsDisabled' => $disabled,
 								'checkboxValue' => $use,
 								'checkboxSingleSubmit' => true,
 								'checkboxAsToggle' => true,
@@ -108,7 +97,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 			if ($checked) {
 				$item['cardTrailingButtons'] = [
 					[
-						'label' => \__('edit', 'eightshift-forms'),
+						'label' => \__('Edit', 'eightshift-forms'),
 						'url' => Helper::getSettingsGlobalPageUrl($key),
 					],
 				];

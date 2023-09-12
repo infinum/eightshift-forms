@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Constants\ConstantsInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -58,23 +59,33 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	protected $captcha;
 
 	/**
+	 * Instance variable of ConstantsInterface data.
+	 *
+	 * @var ConstantsInterface
+	 */
+	protected $constants;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
+	 * @param ConstantsInterface $constants Inject ConstantsInterface which holds constants data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
-		CaptchaInterface $captcha
+		CaptchaInterface $captcha,
+		ConstantsInterface $constants
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
+		$this->constants = $constants;
 	}
 
 	/**
@@ -174,12 +185,18 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 			if ($value['value']) {
 				if (!$formId) {
 					\update_option($key, $value['value']);
+
+					// Maybe update constants.
+					$this->constants->changeConstants($this->getSettingsCleanName($key), true);
 				} else {
 					\update_post_meta((int) $formId, $key, $value['value']);
 				}
 			} else {
 				if (!$formId) {
 					\delete_option($key);
+
+					// Maybe update constants.
+					$this->constants->changeConstants($this->getSettingsCleanName($key), false);
 				} else {
 					\delete_post_meta((int) $formId, $key);
 				}
