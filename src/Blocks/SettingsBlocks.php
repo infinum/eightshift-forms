@@ -320,18 +320,14 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 			$phoneDatasetValue = $this->getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default');
 		}
 
-		$cookieName = $this->geolocation->getGeolocationCookieName();
-		$locationCookie = isset($_COOKIE[$cookieName]) ? \strtolower(\sanitize_text_field(\wp_unslash($_COOKIE[$cookieName]))) : '';
+		$locationCookie = \strtolower($this->geolocation->getUsersGeolocation());
 
 		$preselectedValue = self::SETTINGS_BLOCK_COUNTRY_FALLBACK_VALUE_KEY;
 		if ($locationCookie !== 'localhost') {
 			$preselectedValue = $locationCookie;
 		}
 
-		error_log( print_r( ( $_COOKIE[$cookieName] ?? '' ), true ) );
-		
-
-		$a = [
+		return [
 			'country' => [
 				'dataset' => $countryDatasetValue,
 				'preselectedValue' => $preselectedValue,
@@ -342,11 +338,6 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 			],
 			'countries' => $this->getCountriesDataSet(),
 		];
-
-		// error_log( print_r( ( $a ), true ) );
-		
-
-		return $a;
 	}
 
 	/**

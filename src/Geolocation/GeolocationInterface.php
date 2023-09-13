@@ -23,9 +23,9 @@ interface GeolocationInterface
 	public function getCountriesList(): array;
 
 	/**
-	 * Get geolocation cookie name.
+	 * Detect users geolocation.
 	 *
 	 * @return string
 	 */
-	public function getGeolocationCookieName(): string;
+	public function getUsersGeolocation(): string;
 }

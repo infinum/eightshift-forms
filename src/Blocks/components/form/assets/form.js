@@ -89,7 +89,7 @@ export class Form {
 
 		// Setup select inputs.
 		[...this.state.getStateElementByType('select', formId)].forEach((select) => {
-			// this.setupSelectField(formId, select.name);
+			this.setupSelectField(formId, select.name);
 		});
 
 		// Setup file single inputs.

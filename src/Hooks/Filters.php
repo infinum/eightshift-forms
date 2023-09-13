@@ -57,7 +57,6 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Misc\SettingsCloudflare;
-use EightshiftForms\Misc\SettingsWpRocket;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
 
@@ -243,11 +242,6 @@ class Filters
 			'settingsGlobal' => SettingsCloudflare::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
 			'use' => SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
-		],
-		SettingsWpRocket::SETTINGS_TYPE_KEY => [
-			'settingsGlobal' => SettingsWpRocket::FILTER_SETTINGS_GLOBAL_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
-			'use' => SettingsWpRocket::SETTINGS_WPROCKET_USE_KEY,
 		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
@@ -565,10 +559,6 @@ class Filters
 			SettingsCloudflare::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cloudflare', 'eightshift-forms'),
 				'desc' => \__('Cloudflare is a content delivery network (CDN) and cloud security platform that provides website optimization, security, and performance services.', 'eightshift-forms'),
-			],
-			SettingsWpRocket::SETTINGS_TYPE_KEY => [
-				'title' => \__('WP Rocket', 'eightshift-forms'),
-				'desc' => \__('WP Rocket is a premium caching plugin that helps you improve your website loading speed and SEO ranking. In addition to that, it also offers a variety of automated features such as file optimisation, improving lazy loading images and much more.', 'eightshift-forms'),
 			],
 			SettingsMigration::SETTINGS_TYPE_KEY => [
 				'title' => \__('Migration', 'eightshift-forms'),
