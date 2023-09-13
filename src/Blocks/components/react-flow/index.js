@@ -139,6 +139,7 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 				borderRadius: 5,
 				padding: 10,
 				width: 190,
+				height: 60,
 				backgroundColor: '#ffffff',
 			},
 			position: {

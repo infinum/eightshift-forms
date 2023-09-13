@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
+import { TextControl, PanelBody, TextareaControl } from '@wordpress/components';
 import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, props, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -39,7 +39,7 @@ export const SelectOptionOptions = (attributes) => {
 
 				<NameChangeWarning isChanged={isNameChanged} type={'value'} />
 
-				<TextControl
+				<TextareaControl
 					label={<IconLabel icon={icons.textSize} label={__('Option label', 'eightshift-forms')} />}
 					value={selectOptionLabel}
 					onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}

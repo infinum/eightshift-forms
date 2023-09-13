@@ -117,7 +117,7 @@ class Validator extends AbstractValidation
 		$formType = $data['type'];
 		$formId = $data['formId'];
 		$fieldsOnly = $data['fieldsOnly'];
-		$stepFields = $data['apiSteps']['fields'] ?? [];
+		$stepFields = isset($data['apiSteps']['fields']) ? \array_flip($data['apiSteps']['fields']) : [];
 		$params = \array_merge(
 			$data['params'],
 			$data['files']
@@ -130,25 +130,19 @@ class Validator extends AbstractValidation
 
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
-		// Output only step params to validate.
-		if ($stepFields) {
-			$stepParams = [];
-			foreach ($stepFields as $value) {
-				if (isset($params[$value])) {
-					$stepParams[$value] = $params[$value];
-				}
-			}
-
-			if ($stepParams) {
-				$params = $stepParams;
-			}
-		}
-
 		$order = self::VALIDATION_FIELDS;
 
 		// Check params.
 		foreach ($params as $paramKey => $paramValue) {
 			$inputValue = $paramValue['value'] ?? '';
+			$paramKey = $paramValue['name'] ?? '';
+
+			// Validate only step params.
+			if ($stepFields) {
+				if (!isset($stepFields[$paramKey])) {
+					continue;
+				}
+			}
 
 			// Find validation reference by ID.
 			$reference = $validationReference[$paramKey] ?? [];

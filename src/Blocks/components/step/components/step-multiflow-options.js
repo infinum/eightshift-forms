@@ -27,6 +27,7 @@ export const StepMultiflowOptions = (attributes) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isModalPreviewOpen, setIsModalPreviewOpen] = useState(false);
 	const [formFields, setFormFields] = useState([]);
+	const [formFieldsFull, setFormFieldsFull] = useState([]);
 
 	useEffect(() => {
 		apiFetch({
@@ -34,6 +35,7 @@ export const StepMultiflowOptions = (attributes) => {
 		}).then((response) => {
 			if (response.code === 200 && response.data) {
 				setFormFields(response.data.steps);
+				setFormFieldsFull(response.data.stepsFull);
 			}
 		});
 	}, [stepMultiflowPostId]);
@@ -63,7 +65,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 								<Select
 									value={stepMultiflowRules?.[index]?.[0]}
-									options={formFields}
+									options={formFieldsFull}
 									onChange={(value) => {
 										stepMultiflowRules[index][0] = value;
 										setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
@@ -146,7 +148,8 @@ export const StepMultiflowOptions = (attributes) => {
 							</>
 						);
 					})}
-
+				</div>
+				<div className='es-v-spaced'>
 					<Button
 						icon={icons.plusCircleFillAlt}
 						onClick={() => {
@@ -157,6 +160,19 @@ export const StepMultiflowOptions = (attributes) => {
 					>
 						{(__('Add step rules', 'eightshift-forms'))}
 					</Button>
+
+					<IconToggle
+						icon={icons.visible}
+						type={'button'}
+						label={__('Disable next button', 'eightshift-forms')}
+						checked={stepMultiflowRules[topParent][4]}
+						noBottomSpacing
+						additionalClasses={'es-w-fit'}
+						onChange={() => {
+							stepMultiflowRules[topParent][4] = !stepMultiflowRules[topParent][4];
+							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+						}}
+					/>
 				</div>
 			</>
 		);
@@ -324,7 +340,7 @@ export const StepMultiflowOptions = (attributes) => {
 								}}
 							>
 								<MultiflowFormsReactFlow
-									formFields={formFields}
+									formFields={formFieldsFull}
 									stepMultiflowRules={stepMultiflowRules}
 								/>
 						</Modal>

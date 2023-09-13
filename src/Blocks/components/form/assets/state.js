@@ -188,6 +188,9 @@ export class State {
 	getStateFormStepsProgressBar = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR], formId);
 	};
+	getStateFormStepsProgressBarCountInitial = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR_COUNT_INITIAL], formId);
+	};
 	getStateFormStepsProgressBarCount = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR_COUNT], formId);
 	};
@@ -206,6 +209,9 @@ export class State {
 	};
 	setStateFormStepsProgressBarCount = (value, formId) => {
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR_COUNT], value, formId);
+	};
+	setStateFormStepsProgressBarCountInitial = (value, formId) => {
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR_COUNT_INITIAL], value, formId);
 	};
 
 	////////////////////////////////////////////////////////////////

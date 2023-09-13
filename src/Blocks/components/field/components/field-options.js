@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { TextControl } from '@wordpress/components';
+import { TextControl, TextareaControl } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
@@ -44,7 +44,7 @@ export const FieldOptions = (attributes) => {
 					/>
 
 					{!fieldHideLabel &&
-						<TextControl
+						<TextareaControl
 							value={fieldLabel}
 							onChange={(value) => setAttributes({ [getAttrKey('fieldLabel', attributes, manifest)]: value })}
 							disabled={fieldHideLabel}

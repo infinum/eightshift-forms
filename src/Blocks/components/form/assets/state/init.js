@@ -134,6 +134,7 @@ export const StateEnum = {
 	STEPS_ELEMENTS: 'elements',
 	STEPS_IS_MULTIFLOW: 'isMultiflow',
 	STEPS_PROGRESS_BAR_COUNT: 'progressBarCount',
+	STEPS_PROGRESS_BAR_COUNT_INITIAL: 'progressBarCountInitial',
 	STEPS_PROGRESS_BAR: 'progressBar',
 	STEPS_ELEMENTS_PROGRESS_BAR: 'elementsProgressBar',
 
@@ -537,6 +538,7 @@ export function setSteps(formElement, formId) {
 		if (stepsProgressBarMultiflow) {
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR], stepsProgressBarMultiflow, formId);
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR_COUNT], stepsProgressBarMultiflow?.children?.length, formId);
+			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR_COUNT_INITIAL], stepsProgressBarMultiflow?.children?.length, formId);
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_IS_MULTIFLOW], true, formId);
 		}
 

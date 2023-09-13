@@ -2,7 +2,7 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { TextControl, PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import {
 	checkAttr,
@@ -61,7 +61,7 @@ export const CheckboxOptions = (attributes) => {
 				/>
 
 				{!checkboxHideLabelText &&
-					<TextControl
+					<TextareaControl
 						value={checkboxLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}

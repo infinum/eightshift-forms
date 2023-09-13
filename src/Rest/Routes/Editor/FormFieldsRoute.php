@@ -144,7 +144,8 @@ class FormFieldsRoute extends AbstractBaseRoute
 				\esc_html__('Success.', 'eightshift-forms'),
 				[
 					'fields' => \array_values($fieldsOutput),
-					'steps' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'])) : [],
+					'steps' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], false)) : [],
+					'stepsFull' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], true)) : [],
 					'names' => $data['fieldNamesFull'],
 				],
 				$debug
@@ -157,10 +158,11 @@ class FormFieldsRoute extends AbstractBaseRoute
 	 *
 	 * @param array<mixed> $items Fields output.
 	 * @param array<mixed> $data Steps output.
+	 * @param bool $outputFull Output full steps without excluding steps with fields.
 	 *
 	 * @return array<mixed>
 	 */
-	private function getSteps(array $items, array $data): array
+	private function getSteps(array $items, array $data, bool $outputFull): array
 	{
 		$output = [];
 
@@ -173,7 +175,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 			$subItems = $step['subItems'] ?? [];
 
-			if (!$subItems) {
+			if (!$subItems && !$outputFull) {
 				continue;
 			}
 
