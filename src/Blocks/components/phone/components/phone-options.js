@@ -72,8 +72,8 @@ export const PhoneOptions = (attributes) => {
 						label={__('Use label as placeholder', 'eightshift-forms')}
 						checked={phoneUseLabelAsPlaceholder}
 						onChange={(value) => {
-							setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: undefined })
-							setAttributes({ [getAttrKey('phoneUseLabelAsPlaceholder', attributes, manifest)]: value })
+							setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: undefined });
+							setAttributes({ [getAttrKey('phoneUseLabelAsPlaceholder', attributes, manifest)]: value });
 						}}
 					/>
 				</Section>

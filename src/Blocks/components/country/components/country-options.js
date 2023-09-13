@@ -67,8 +67,8 @@ export const CountryOptions = (attributes) => {
 						label={__('Use label as placeholder', 'eightshift-forms')}
 						checked={countryUseLabelAsPlaceholder}
 						onChange={(value) => {
-							setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: undefined })
-							setAttributes({ [getAttrKey('countryUseLabelAsPlaceholder', attributes, manifest)]: value })
+							setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: undefined });
+							setAttributes({ [getAttrKey('countryUseLabelAsPlaceholder', attributes, manifest)]: value });
 						}}
 					/>
 				</Section>
