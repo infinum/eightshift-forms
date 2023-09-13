@@ -68,6 +68,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'formType' => 'data-form-type',
 		'formCustomName' => 'data-form-custom-name',
 		'formId' => 'data-form-id',
+		'formUseGeolocation' => 'data-form-use-geolocation',
 
 		'stepId' => 'data-step-id',
 		'submitStepDirection' => 'data-step-direction',

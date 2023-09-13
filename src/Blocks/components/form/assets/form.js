@@ -62,18 +62,73 @@ export class Form {
 	 * @returns {void}
 	 */
 	initOnlyForms() {
-		// Loop all forms on the page.
-		[...document.querySelectorAll(this.state.getStateSelectorsForm())].forEach((element) => {
-			const formId = element.getAttribute(this.state.getStateAttribute('formId')) || 0;
+		// Geolocation.
+		const forms = document.querySelectorAll(this.state.getStateSelectorsForms());
 
-			setStateFormInitial(formId);
+		if (forms) {
+			[...forms].forEach((formsItems) => {
+				const geo = formsItems?.getAttribute(this.state.getStateAttribute('formUseGeolocation'));
 
-			this.initOne(formId);
+				const formsItemsForms = formsItems?.querySelectorAll(this.state.getStateSelectorsForm());
+				const firstFormId = formsItemsForms?.[0].getAttribute(this.state.getStateAttribute('formId')) || 0;
 
-			this.conditionalTags.initOne(formId);
+				if (geo) {
+					const body = {
+						method: 'POST',
+						mode: 'same-origin',
+						headers: {
+							Accept: 'application/json',
+						},
+						body: geo,
+						credentials: 'same-origin',
+						redirect: 'follow',
+						referrer: 'no-referrer',
+					};
 
-			this.steps.initOne(formId);
-		});
+					fetch(this.state.getRestUrl(ROUTES.GEOLOCATION), body)
+					.then((response) => {
+						this.formSubmitErrorContentType(response, 'geolocation');
+						return response.json();
+					})
+					.then((response) => {
+						let formId = response?.data?.formId;
+
+						if (!formId) {
+							formId = firstFormId;
+						}
+
+						[...formsItemsForms].forEach((formInner) => {
+							if (formInner.getAttribute(this.state.getStateAttribute('formId')) !== formId) {
+								formInner.remove();
+							} else {
+								this.initOnlyFormsInner(formId);
+								formsItems.removeAttribute(this.state.getStateAttribute('formUseGeolocation'));
+							}
+						});
+
+						formsItems?.classList?.remove(this.state.getStateSelectorsClassGeolocationLoading());
+					});
+				} else {
+					// Loop all forms on the page - no geolocation.
+					this.initOnlyFormsInner(firstFormId);
+				}
+			});
+		}
+	}
+
+	/**
+	 * Init only forms - inner items.
+	 * 
+	 * @returns {void}
+	 */
+	initOnlyFormsInner(formId) {
+		setStateFormInitial(formId);
+
+		this.initOne(formId);
+
+		this.conditionalTags.initOne(formId);
+
+		this.steps.initOne(formId);
 	}
 
 	/**

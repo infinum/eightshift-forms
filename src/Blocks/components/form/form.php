@@ -6,6 +6,8 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\Encryption;
 use EightshiftForms\Helpers\Helper;
@@ -14,6 +16,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestUtils = Components::getComponent('utils');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -197,6 +200,28 @@ if ($formAttrs) {
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 >
+	<?php if (is_user_logged_in() && !is_admin()) { ?>
+		<div class="<?php echo esc_attr('es-block-edit-options__edit-wrap') ?>">
+			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getFormEditPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
+					<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				</a>
+			<?php } ?>
+
+			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
+				<?php echo $manifestUtils['icons']['settings']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				</a>
+			<?php } ?>
+
+			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsGlobalPageUrl()) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
+					<?php echo $manifestUtils['icons']['dashboard']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				</a>
+			<?php } ?>
+		</div>
+	<?php } ?>
+
 	<?php
 	echo Components::render(
 		'global-msg',

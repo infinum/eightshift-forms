@@ -122,6 +122,7 @@ export const StateEnum = {
 	SELECTORS_CLASS_DISABLED: 'isDisabled',
 	SELECTORS_CLASS_HAS_ERROR: 'hasError',
 	SELECTORS_CLASS_LOADER_DISABLE_OVERLAY: 'isDisableOverlay',
+	SELECTORS_CLASS_GEOLOCATION_LOADING: 'isGeolocationLoading',
 
 	TRACKING: 'tracking',
 	TRACKING_EVENT_NAME: 'eventName',
@@ -140,6 +141,7 @@ export const StateEnum = {
 
 	// Specific selectors.
 	SELECTORS_PREFIX: 'prefix',
+	SELECTORS_FORMS: 'forms',
 	SELECTORS_FORM: 'form',
 	SELECTORS_SUBMIT_SINGLE: 'singleSubmit',
 	SELECTORS_STEP: `step`,
@@ -272,8 +274,10 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_CLASS_DISABLED], `${manifest.componentClass}-is-disabled`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_CLASS_HAS_ERROR], `${manifest.componentClass}-has-error`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_CLASS_LOADER_DISABLE_OVERLAY], `${manifest.componentClass}-is-disable-overlay`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_CLASS_GEOLOCATION_LOADING], `${manifest.componentClass}-is-geolocation-loading`, StateEnum.SELECTORS);
 
 	setState([StateEnum.SELECTORS_PREFIX], `.${manifest.componentJsClass}`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_FORMS], `.${manifest.componentJsClass}-forms`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_FORM], `.${manifest.componentJsClass}-form`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_SUBMIT_SINGLE], `.${manifest.componentJsClass}-single-submit`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_STEP], `.${manifest.componentJsClass}-step`, StateEnum.SELECTORS);

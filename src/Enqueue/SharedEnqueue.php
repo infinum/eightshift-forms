@@ -25,6 +25,7 @@ use EightshiftForms\Rest\Routes\Settings\SettingsSubmitRoute;
 use EightshiftForms\Rest\Routes\Settings\TransferRoute;
 use EightshiftForms\Rest\Routes\SubmitCaptchaRoute;
 use EightshiftForms\Rest\Routes\SubmitFilesRoute;
+use EightshiftForms\Rest\Routes\SubmitGeolocationRoute;
 use EightshiftForms\Rest\Routes\SubmitValidateStepRoute;
 
 /**
@@ -73,6 +74,7 @@ trait SharedEnqueue
 
 				// Public.
 				'captcha' => SubmitCaptchaRoute::ROUTE_SLUG,
+				'geolocation' => SubmitGeolocationRoute::ROUTE_SLUG,
 				'validationStep' => SubmitValidateStepRoute::ROUTE_SLUG,
 			]
 		];
