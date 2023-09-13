@@ -90,7 +90,10 @@ export const TextareaOptions = (attributes) => {
 						icon={icons.fieldPlaceholder}
 						label={__('Use label as placeholder', 'eightshift-forms')}
 						checked={textareaUseLabelAsPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: undefined })
+							setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value })
+						}}
 					/>
 				</Section>
 

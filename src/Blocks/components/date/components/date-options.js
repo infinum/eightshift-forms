@@ -94,7 +94,10 @@ export const DateOptions = (attributes) => {
 						icon={icons.fieldPlaceholder}
 						label={__('Use label as placeholder', 'eightshift-forms')}
 						checked={dateUseLabelAsPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: undefined })
+							setAttributes({ [getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value })
+						}}
 					/>
 				</Section>
 

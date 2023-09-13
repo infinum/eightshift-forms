@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { TextControl, PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import {
 	checkAttr,
@@ -60,7 +60,7 @@ export const RadioOptions = (attributes) => {
 				/>
 
 				{!radioHideLabelText &&
-					<TextControl
+					<TextareaControl
 						value={radioLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}

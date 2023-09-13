@@ -58,7 +58,10 @@ export const SelectOptions = (attributes) => {
 						icon={icons.fieldPlaceholder}
 						label={__('Use label as placeholder', 'eightshift-forms')}
 						checked={selectUseLabelAsPlaceholder}
-						onChange={(value) => setAttributes({ [getAttrKey('selectUseLabelAsPlaceholder', attributes, manifest)]: value })}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: undefined })
+							setAttributes({ [getAttrKey('selectUseLabelAsPlaceholder', attributes, manifest)]: value })
+						}}
 					/>
 				</Section>
 

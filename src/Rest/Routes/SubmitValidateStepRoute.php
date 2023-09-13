@@ -189,6 +189,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 
 		$nextStep = '';
 		$progressBarItems = 0;
+		$disableNextButton = false;
 
 		if ($multiflow) {
 			$type = 'multiflow';
@@ -210,6 +211,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 				$flowCurrent = $flow[1] ?? '';
 				$flowConditions = $flow[2] ?? [];
 				$flowProgressBarItems = $flow[3] ?? 0;
+				$flowDisableNextButton = $flow[4] ?? false;
 
 				if (!$flowNext || !$flowCurrent || !$flowConditions) {
 					continue;
@@ -222,6 +224,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 				if ($this->checkFlowConditions($flowConditions, $params)) {
 					$nextStep = $flowNext;
 					$progressBarItems = $flowProgressBarItems;
+					$disableNextButton = $flowDisableNextButton;
 				}
 			}
 
@@ -241,6 +244,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 					'type' => $type,
 					'nextStep' => $nextStep,
 					'progressBarItems' => $progressBarItems,
+					'disableNextButton' => $disableNextButton,
 				],
 				$debug
 			)

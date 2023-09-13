@@ -55,7 +55,7 @@ export class Steps {
 		} = response;
 
 		if (status === 'success') {
-			this.goToNextStep(formId, data?.nextStep, parseInt(data?.progressBarItems, 10));
+			this.goToNextStep(formId, data?.nextStep, parseInt(data?.progressBarItems, 10), Boolean(data?.disableNextButton));
 		} else {
 			if (data?.validation !== undefined) {
 				this.utils.outputErrors(formId, data?.validation);
@@ -94,7 +94,7 @@ export class Steps {
 	 *
 	 * @returns {void}
 	 */
-	goToNextStep(formId, nextStep, progressBarItems = 0) {
+	goToNextStep(formId, nextStep, progressBarItems = 0, disableNextButton = false) {
 		if (!nextStep) {
 			return;
 		}
@@ -109,6 +109,11 @@ export class Steps {
 
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
+			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelectorsClassHidden());
+		}
+
+		// Hide next button direted from the api.
+		if (disableNextButton) {
 			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelectorsClassHidden());
 		}
 
@@ -238,6 +243,8 @@ export class Steps {
 			// Update count state when we have something from api.
 			if (progressBarItems > 0) {
 				this.state.setStateFormStepsProgressBarCount(progressBarItems, formId);
+			} else {
+				this.state.setStateFormStepsProgressBarCount(this.state.getStateFormStepsProgressBarCountInitial(formId), formId);
 			}
 
 			// Clear current progress bar.
@@ -351,8 +358,8 @@ export class Steps {
 			formStepSubmitAfter: (formId, response) => {
 				this.formStepSubmitAfter(formId, response);
 			},
-			goToNextStep: (formId, nextStep, progressBarItems = 0) => {
-				this.goToNextStep(formId, nextStep, progressBarItems);
+			goToNextStep: (formId, nextStep, progressBarItems = 0, disableNextButton = false) => {
+				this.goToNextStep(formId, nextStep, progressBarItems, disableNextButton);
 			},
 			goToPrevStep: (formId) => {
 				this.goToPrevStep(formId);
