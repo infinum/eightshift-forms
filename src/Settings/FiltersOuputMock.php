@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings;
 
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\General\SettingsGeneral;
 
 /**
  * FiltersOuputMock trait.

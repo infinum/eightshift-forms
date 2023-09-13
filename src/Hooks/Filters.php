@@ -40,17 +40,17 @@ use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Settings\Settings\Settings;
-use EightshiftForms\Settings\Settings\SettingsDashboard;
-use EightshiftForms\Settings\Settings\SettingsDocumentation;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Dashboard\SettingsDashboard;
+use EightshiftForms\Documentation\SettingsDocumentation;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Integrations\Jira\JiraClient;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Integrations\Workable\Workable;
 use EightshiftForms\Integrations\Workable\WorkableClient;
-use EightshiftForms\Settings\Settings\SettingsBlocks;
-use EightshiftForms\Settings\Settings\SettingsLocation;
+use EightshiftForms\Blocks\SettingsBlocks;
+use EightshiftForms\Location\SettingsLocation;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -114,7 +114,7 @@ class Filters
 			'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsBlocks::FILTER_SETTINGS_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
-			'settingsValuesOutput' => SettingsBlocks::FILTER_BLOCK_SETTINGS_VALUE_NAME,
+			'countryOutput' => SettingsBlocks::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME,
 			'cache' => [
 				SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
 			],

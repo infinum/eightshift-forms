@@ -89,7 +89,7 @@ export class Form {
 
 		// Setup select inputs.
 		[...this.state.getStateElementByType('select', formId)].forEach((select) => {
-			this.setupSelectField(formId, select.name);
+			// this.setupSelectField(formId, select.name);
 		});
 
 		// Setup file single inputs.
@@ -1072,12 +1072,6 @@ export class Form {
 					};
 				},
 			});
-
-			const countryCookie = cookies.getCookie('esForms-country')?.toLocaleLowerCase();
-			if (countryCookie) {
-
-				choices.setChoiceByValue(countryCookie);
-			}
 
 			this.state.setStateElementLoaded(name, true, formId);
 			this.state.setStateElementCustom(name, choices, formId);

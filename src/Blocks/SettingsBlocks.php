@@ -3,17 +3,18 @@
 /**
  * Custom data block settings class.
  *
- * @package EightshiftForms\Settings\Settings
+ * @package EightshiftForms\Blocks
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings\Settings;
+namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -39,14 +40,14 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_blocks';
 
 	/**
+	 * Filter country dataset value key.
+	 */
+	public const FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME = 'es_forms_block_country_dataset_value';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'blocks';
-
-	/**
-	 * Filter block settings value key.
-	 */
-	public const FILTER_BLOCK_SETTINGS_VALUE_NAME = 'es_forms_block_settings_value';
 
 	/**
 	 * Transient cache name for block country data set. No need to flush it because it is short live.
@@ -98,7 +99,7 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_BLOCK_SETTINGS_VALUE_NAME, [$this, 'getBlockSettingsOutput']);
+		\add_filter(self::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME, [$this, 'getCountryDatasetValue'], 9999);
 	}
 
 	/**
@@ -299,13 +300,13 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 	}
 
 	/**
-	 * Get block settings output, generaly used in the view part of the block.
+	 * Get block country and phone settings output.
 	 *
 	 * @param string $formId Form Id.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getBlockSettingsOutput(string $formId): array
+	public function getCountryDatasetValue(string $formId): array
 	{
 		if ($this->isCheckboxSettingsChecked(self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId)) {
 			$countryDatasetValue = $this->getSettingsValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY, self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default', $formId);
@@ -327,7 +328,10 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 			$preselectedValue = $locationCookie;
 		}
 
-		return [
+		error_log( print_r( ( $_COOKIE[$cookieName] ?? '' ), true ) );
+		
+
+		$a = [
 			'country' => [
 				'dataset' => $countryDatasetValue,
 				'preselectedValue' => $preselectedValue,
@@ -338,6 +342,11 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 			],
 			'countries' => $this->getCountriesDataSet(),
 		];
+
+		// error_log( print_r( ( $a ), true ) );
+		
+
+		return $a;
 	}
 
 	/**

@@ -51,7 +51,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Use normal geolocation detection from db.
-		\add_filter('init', [$this, 'setNormalLocationCookie']); // @phpstan-ignore-line
+		\add_action('init', [$this, 'setNormalLocationCookie']); // @phpstan-ignore-line
 
 		// WP Rocket specific hooks for geolocation.
 		\add_filter('rocket_advanced_cache_file', [$this, 'addNginxAdvanceCacheRules']);
@@ -85,6 +85,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		if (!$expires) {
 			$expires = time() + DAY_IN_SECONDS;
 		}
+
+		error_log( print_r( ( 'ivan' ), true ) );
+		
 
 		try {
 			$cookieValue = '';
@@ -405,20 +408,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			if (Variables::getGeolocationUseCloudflare()) {
 				return isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? \strtoupper(\sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_IPCOUNTRY']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			} else {
-				// Start the timer
-				$start = microtime(true);
-
 				$this->userLocation = $this->getGeolocation();
-
-				// End the timer
-				$end = microtime(true);
-
-				// Calculate the execution time
-				$executionTime = $end - $start;
-
-				error_log( print_r( ( $this->userLocation ), true ) );
-				
-				error_log( print_r( ( "Script execution time: " . $executionTime . " seconds" ), true ) );
 			}
 		}
 

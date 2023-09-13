@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftForms\Helpers\Encryption;

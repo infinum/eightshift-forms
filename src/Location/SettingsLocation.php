@@ -3,14 +3,16 @@
 /**
  * Location Settings class.
  *
- * @package EightshiftForms\Settings\Settings
+ * @package EightshiftForms\Location
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings\Settings;
+namespace EightshiftForms\Location;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftForms\Location\SettingsLocationInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

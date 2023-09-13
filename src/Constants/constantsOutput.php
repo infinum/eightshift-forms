@@ -9,7 +9,7 @@
  declare(strict_types=1);
 
 if (!defined('ES_GEOLOCATION_USE')) {
-	define('ES_GEOLOCATION_USE', false);
+	define('ES_GEOLOCATION_USE', true);
 }
 
 if (!defined('ES_GEOLOCATION_USE_WP_ROCKET')) {

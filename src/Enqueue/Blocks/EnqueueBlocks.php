@@ -311,8 +311,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			'geolocation' => Variables::getGeolocationUse(),
 		];
 
-		$output['countryDataset'] = Variables::getGeolocationUse();
-
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');
 		$output['isDeveloperMode'] =  $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
