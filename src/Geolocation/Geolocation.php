@@ -204,12 +204,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return $formId;
 		}
 
-		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
-		$filterName = Filters::getFilterName(['geolocation', 'disable']);
-		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
-			return $formId;
-		}
-
 		// Returns user location retrieved from the API or cookie.
 		$userLocation = $this->getUsersGeolocation();
 
