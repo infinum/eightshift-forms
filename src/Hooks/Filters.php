@@ -363,11 +363,8 @@ class Filters
 		],
 		'geolocation' => [
 			'countriesList' => 'countries_list',
-			'disable' => 'disable',
 			'dbLocation' => 'db_location',
 			'pharLocation' => 'phar_location',
-			'cookieName' => 'cookie_name',
-			'wpRocketAdvancedCache' => 'wp_rocket_advanced_cache',
 		],
 		'integrations' => [
 			SettingsMailchimp::SETTINGS_TYPE_KEY => [
