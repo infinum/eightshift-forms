@@ -10,9 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
-use EightshiftFormsVendor\Firebase\JWT\JWT;
-use EightshiftFormsVendor\Firebase\JWT\Key;
-
 /**
  * Encryption class.
  */

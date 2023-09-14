@@ -30,6 +30,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 			echo Components::render('card', [
 				'cardTitle' => '<a href="' . $editLink . '">' . $formTitle . '</a>',
 				'cardIndented' => true,
+				'cardBulk' => true,
 				'cardShowButtonsOnHover' => true,
 				'cardIcon' => Helper::getProjectIcons('post'),
 				'cardTrailingButtons' => [

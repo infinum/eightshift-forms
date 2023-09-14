@@ -29,13 +29,6 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	use SettingsHelper;
 
 	/**
-	 * User location cache variable so we can optimize loading of db.
-	 *
-	 * @var string
-	 */
-	private $userLocation = '';
-
-	/**
 	 * Geolocation check if user is geolocated constant.
 	 *
 	 * @var string
@@ -48,7 +41,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function register(): void
 	{
 		// Use normal geolocation detection from db.
-		\add_action('init', [$this, 'setNormalLocationCookie']); // @phpstan-ignore-line
+		\add_action('init', [$this, 'setNormalLocationCookie']);
 
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
@@ -70,14 +63,14 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 			// Set cookie if we have a value.
 			if ($cookieValue) {
-				ob_start();
+				\ob_start();
 				$this->setCookie(
 					$this->getGeolocationCookieName(),
 					$cookieValue,
 					$this->getGeolocationExpiration(),
 					'/'
 				);
-				ob_end_flush();
+				\ob_end_flush();
 			}
 		} catch (Exception $exception) {
 			/*
@@ -291,14 +284,22 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return '';
 		}
 
-		// Check if cookie is set and return that value.
-		if (isset($_COOKIE[$this->getGeolocationCookieName()])) {
-			return $this->cleanCookieValue($_COOKIE[$this->getGeolocationCookieName()]);
-		}
-
 		// Use Cloudflare header if that feature is used.
 		if ($this->isCheckboxOptionChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
-			return isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CF_IPCOUNTRY']) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$outputCloudflare = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CF_IPCOUNTRY']) : ''; // phpcs:ignore
+
+			if ($outputCloudflare) {
+				return $outputCloudflare;
+			}
+		}
+
+		// Check if cookie is set and return that value.
+		if (isset($_COOKIE[$this->getGeolocationCookieName()])) {
+			$outputCookie = $this->cleanCookieValue($_COOKIE[$this->getGeolocationCookieName()]); // phpcs:ignore
+
+			if ($outputCookie) {
+				return $outputCookie;
+			}
 		}
 
 		return $this->cleanCookieValue($this->getGeolocation());

@@ -59,7 +59,7 @@ $loader = require __DIR__ . '/vendor/autoload.php';
  * not affect the page life cycle.
  */
 if (\class_exists(Main::class)) {
-	$sep = DIRECTORY_SEPARATOR;
+	$sep = \DIRECTORY_SEPARATOR;
 
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 

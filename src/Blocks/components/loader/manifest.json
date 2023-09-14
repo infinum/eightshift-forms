@@ -8,6 +8,10 @@
 		"loaderIsActive": {
 			"type": "boolean",
 			"default": false
+		},
+		"loaderIsGeolocation": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

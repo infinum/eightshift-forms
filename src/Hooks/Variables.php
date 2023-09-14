@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Hooks;
 
-use EightshiftForms\Helpers\Helper;
-
 /**
  * The Variables class, used for defining available Variables.
  */

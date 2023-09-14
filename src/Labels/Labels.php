@@ -22,7 +22,6 @@ use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Geolocation\SettingsGeolocation;
 
 /**
  * Labels class.

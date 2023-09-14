@@ -624,7 +624,7 @@ export const ROUTES = {
 	CACHE_CLEAR: esFormsLocalization.restRoutes.cacheClear,
 	MIGRATION: esFormsLocalization.restRoutes.migration,
 	TRANSFER: esFormsLocalization.restRoutes.transfer,
-	SYNC_DIRECT: esFormsLocalization.restRoutes.syncDirect,
+	BULK: esFormsLocalization.restRoutes.bulk,
 	LOCATIONS: esFormsLocalization.restRoutes.locations,
 
 	// Editor.

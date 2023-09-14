@@ -26,6 +26,8 @@ $cardTrailingButtons = Components::checkAttr('cardTrailingButtons', $attributes,
 $cardShowLinksOnHover = Components::checkAttr('cardShowLinksOnHover', $attributes, $manifest);
 $cardShowButtonsOnHover = Components::checkAttr('cardShowButtonsOnHover', $attributes, $manifest);
 $cardIndented = Components::checkAttr('cardIndented', $attributes, $manifest);
+$cardBulk = Components::checkAttr('cardBulk', $attributes, $manifest);
+$cardId = Components::checkAttr('cardId', $attributes, $manifest);
 
 $cardClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -53,6 +55,16 @@ $cardClass = Components::classnames([
 	?>
 >
 	<div class="<?php echo esc_attr("{$componentClass}__intro"); ?>">
+		<?php if ($cardBulk && $cardId) { ?>
+			<div class="<?php echo esc_attr("{$componentClass}__bulk"); ?>">
+				<?php
+				echo Components::render('checkbox', [
+					'checkboxValue' => $cardId,
+					'checkboxName' => $cardId,
+				]);
+				?>
+			</div>
+		<?php } ?>
 		<?php if ($cardIcon) { ?>
 			<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
 				<?php echo wp_kses_post($cardIcon); ?>

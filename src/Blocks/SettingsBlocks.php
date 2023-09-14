@@ -320,11 +320,11 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 			$phoneDatasetValue = $this->getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default');
 		}
 
-		$locationCookie = \strtolower($this->geolocation->getUsersGeolocation());
+		$geolocation = \strtolower($this->geolocation->getUsersGeolocation());
 
 		$preselectedValue = self::SETTINGS_BLOCK_COUNTRY_FALLBACK_VALUE_KEY;
-		if ($locationCookie !== 'localhost') {
-			$preselectedValue = $locationCookie;
+		if ($geolocation !== 'localhost') {
+			$preselectedValue = $geolocation;
 		}
 
 		return [

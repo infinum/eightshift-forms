@@ -5,8 +5,8 @@
 	"componentClass": "es-admin-listing",
 	"componentJsFilterClass": "js-es-admin-listing-filter",
 	"componentJsItemClass": "js-es-admin-listing-item",
-	"componentJsSyncClass": "js-es-admin-listing-sync",
 	"componentJsLocationsClass": "js-es-admin-listing-locations",
+	"componentJsBulkClass": "js-es-admin-listing-bulk",
 	"attributes": {
 		"adminListingPageTitle": {
 			"type": "string"

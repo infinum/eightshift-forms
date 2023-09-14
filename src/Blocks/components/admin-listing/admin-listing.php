@@ -20,8 +20,8 @@ echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security
 $componentClass = $manifest['componentClass'] ?? '';
 $componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
 $componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
-$componentJsSyncClass = $manifest['componentJsSyncClass'] ?? '';
 $componentJsLocationsClass = $manifest['componentJsLocationsClass'] ?? '';
+$componentJsBulkClass = $manifest['componentJsBulkClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
@@ -121,7 +121,7 @@ if ($adminListingForms) {
 
 		$formCardsToDisplay[] = Components::render('card', [
 			'additionalClass' => Components::classnames([
-				'js-es-admin-listing-item',
+				$componentJsItemClass,
 				!$isFormValid && $adminListingType !== 'trash' ? 'es-form-has-error' : '',
 			]),
 			'additionalAttributes' => [
@@ -129,46 +129,24 @@ if ($adminListingForms) {
 				'data-integration-is-active' => wp_json_encode($activeIntegrationIsActive),
 				'data-integration-is-valid' => wp_json_encode($activeIntegrationIsValid),
 				'data-integration-is-api-valid' => wp_json_encode($activeIntegrationIsApiValid),
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkId'] => $id,
 			],
 			'cardTitle' => '<a href="' . $editLink . '">' . $formTitle . ($adminListingIsDeveloperMode ? " ({$id})" : '') . '</a>',
 			'cardSubTitle' => $errorText . $subtitle,
 			'cardShowButtonsOnHover' => true,
 			'cardIcon' => $cardIcon,
+			'cardId' => $id,
+			'cardBulk' => $adminListingType !== 'locations',
 			'cardTrailingButtons' => [
-				...($adminListingType === 'trash' ? [
-					[
-						'label' => __('Delete permanently', 'eightshift-forms'),
-						'url' => $trashLink,
-						'internal' => true,
-					],
-					[
-						'label' => __('Restore', 'eightshift-forms'),
-						'url' => $trashRestoreLink,
-						'internal' => true,
-					],
-				] : [
-					[
-						'label' => __('Delete', 'eightshift-forms'),
-						'url' => $trashLink,
-						'internal' => true,
-					],
-				]),
 				...($isFormValid ? [
-					($adminListingType === 'trash' || $adminListingType === 'locations' || !Helper::canIntegrationUseSync($activeIntegration['value'])) ? [] : [
-						'label' => __('Sync', 'eightshift-forms'),
-						'internal' => true,
-						'isButton' => true,
-						'additionalAttrs' => [AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['syncId'] => $id],
-						'additionalClass' => $componentJsSyncClass,
-					],
-					[
+					$adminListingType !== 'locations' ? [
 						'label' => __('Locations', 'eightshift-forms'),
 						'url' => $settingsLocationLink,
 						'internal' => true,
 						'isButton' => true,
 						'additionalAttrs' => [AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['locationsId'] => $id],
 						'additionalClass' => $componentJsLocationsClass,
-					],
+					] : [],
 					[
 						'label' => __('Settings', 'eightshift-forms'),
 						'url' => $settingsLink,
@@ -210,7 +188,7 @@ $topBar = [];
 if ($adminListingPageTitle || $adminListingSubTitle) {
 	$topBar = [
 		Components::render('layout', [
-			'layoutType' => 'first-left-others-right',
+			'layoutType' => $adminListingType !== 'trash' ? 'first-three-left-others-right' : 'first-left-others-right',
 			'layoutContent' => Components::ensureString([
 				Components::render('container', [
 					'containerUse' => $adminListingType === 'trash' && $adminListingListingLink,
@@ -225,32 +203,62 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					]),
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingIntegrations,
+					'containerUse' => $adminListingIntegrations && $adminListingType !== 'trash',
 					'containerClass' => "{$sectionClass}__heading-filter {$componentJsFilterClass}",
 					'containerContent' => wp_kses_post($adminListingIntegrations),
+					'additionalAttributes' => [
+						'href' => $adminListingNewFormLink,
+					],
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash' && $adminListingTrashLink,
+					'containerUse' => $adminListingType === 'trash',
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Restore', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'restore',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => $adminListingType === 'trash',
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Delete permanently', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'delete-perminentely',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => $adminListingType !== 'trash',
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Delete', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'delete',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => $adminListingType !== 'trash',
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Sync', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'sync',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => $adminListingType !== 'trash',
 					'containerClass' => 'es-submit es-submit--outline',
 					'containerTag' => 'a',
 					'additionalAttributes' => [
 						'href' => $adminListingTrashLink,
 					],
 					'containerContent' => Components::ensureString([
-						esc_html__('Deleted', 'eightshift-forms'),
+						esc_html__('Trashed', 'eightshift-forms'),
 					]),
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash' && $adminListingTrashLink,
-					'containerClass' => "es-submit es-submit--outline {$componentJsSyncClass}",
-					'containerTag' => 'button',
-					'additionalAttributes' => [
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['syncId'] => 'all',
-					],
-					'containerContent' => esc_html__('Sync all', 'eightshift-forms'),
-				]),
-				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash' && $adminListingNewFormLink,
+					'containerUse' => $adminListingType !== 'trash',
 					'containerClass' => 'es-submit es-submit--fit-icon',
 					'containerTag' => 'a',
 					'additionalAttributes' => [
@@ -281,6 +289,10 @@ echo Components::render('layout', [
 			])
 			: Components::ensureString($formCardsToDisplay),
 	]),
+	'additionalClass' => "{$componentJsBulkClass}-items",
+	'additionalAttributes' => [
+		AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkItems'] => wp_json_encode([]),
+	],
 ]);
 
 // This is fake form to be able to init state for global msg.

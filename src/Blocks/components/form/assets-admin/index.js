@@ -98,22 +98,24 @@ domReady(() => {
 	}
 
 	////////////////////////////////////////////////////////////////
-	// Sync
+	// Bullk
 	////////////////////////////////////////////////////////////////
 
-	const selectorSync = `.${adminListingManifest.componentJsSyncClass}`;
-	const elementsSync = document.querySelector(selectorSync);
+	const selectorBulk = `.${adminListingManifest.componentJsBulkClass}`;
+	const elementsBulk = document.querySelector(selectorBulk);
 
-	if (elementsSync) {
-		import('./sync').then(({ Sync }) => {
-			new Sync({
-				selector: selectorSync,
+	if (elementsBulk) {
+		import('./bulk').then(({ Bulk }) => {
+			new Bulk({
+				selector: selectorBulk,
+				itemsSelector: `${selectorBulk}-items`,
+				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
 			}).init();
 		});
 	}
 
 	////////////////////////////////////////////////////////////////
-	// Sync
+	// Locations
 	////////////////////////////////////////////////////////////////
 
 	const selectorLocations = `.${adminListingManifest.componentJsLocationsClass}`;

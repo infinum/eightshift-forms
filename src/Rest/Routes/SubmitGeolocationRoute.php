@@ -103,7 +103,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 		try {
 			$params = $request->get_body();
 
-			if (!is_string($params)) {
+			if (!\is_string($params)) {
 				return \rest_ensure_response(
 					$this->getApiErrorOutput(
 						\esc_html__('The geolocation data is malformed or none valid.', 'eightshift-forms'),
@@ -127,7 +127,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 
 			$params = \json_decode($params, true);
 
-			if (!is_array($params) && !$params) {
+			if (!\is_array($params) && !$params) {
 				return \rest_ensure_response(
 					$this->getApiErrorOutput(
 						\esc_html__('The geolocation data is malformed or none valid.', 'eightshift-forms'),

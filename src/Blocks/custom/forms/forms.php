@@ -84,7 +84,7 @@ $hasGeolocation = false;
 
 if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 	$hasGeolocation = true;
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formUseGeolocation']] = Encryption::encryptor(wp_json_encode([
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formGeolocation']] = Encryption::encryptor(wp_json_encode([
 		'id' => $formsFormPostId,
 		'geo' => $formsFormGeolocation,
 		'alt' => $formsFormGeolocationAlternatives,
@@ -110,9 +110,7 @@ $formsClass = Components::classnames([
 
 <div class="<?php echo esc_attr($formsClass); ?>" <?php echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
 	<?php
-
 	foreach ($allForms as $formId) {
-
 		// Convert blocks to array.
 		$blocks = parse_blocks(get_the_content(null, false, $formId));
 
@@ -138,6 +136,13 @@ $formsClass = Components::classnames([
 			echo apply_filters('the_content', render_block($block));
 		}
 	}
+
+	echo Components::render(
+		'loader',
+		Components::props('loader', $attributes, [
+			'loaderIsGeolocation' => true,
+		])
+	);
 	?>
 </div>
 

@@ -72,7 +72,8 @@
 		}
 	},
 	"components": {
-		"conditionalTags": "conditionalTags"
+		"conditionalTags": "conditionalTags",
+		"progressBar": "progressBar"
 	},
 	"postType": "eightshift-forms",
 	"attributesSsr": [

@@ -60,6 +60,11 @@ button {
 			}
 		}
 
+		&.es-form-is-disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+
 		&--fit-icon {
 			padding: 0.625rem 1rem;
 		}

@@ -1,7 +1,13 @@
 .es-block-forms {
 	$this: &;
 
-	&.es-forms-is-geolocation-loading {
-		display: none;
+	&.es-form-is-geolocation-loading {
+		.es-form {
+			display: none;
+		}
+
+		> .es-loader__geolocation {
+			display: block;
+		}
 	}
 }
