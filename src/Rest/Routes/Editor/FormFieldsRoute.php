@@ -94,16 +94,18 @@ class FormFieldsRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$debug = [
-			'request' => $request,
-		];
-
 		$premission = $this->checkUserPermission();
 		if ($premission) {
 			return \rest_ensure_response($premission);
 		}
 
-		$formId = $request->get_param('id') ?? '';
+		$debug = [
+			'request' => $request,
+		];
+
+		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
+
+		$formId = $params['id'] ?? '';
 
 		if (!$formId) {
 			return \rest_ensure_response(

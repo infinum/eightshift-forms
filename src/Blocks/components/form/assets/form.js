@@ -92,13 +92,17 @@ export class Form {
 	initGolocationForm(formsElement) {
 		const forms = formsElement?.querySelectorAll(this.state.getStateSelectorsForm());
 
+		const formData = new FormData();
+
+		formData.append('data', formsElement?.getAttribute(this.state.getStateAttribute('formGeolocation')));
+
 		const body = {
 			method: 'POST',
 			mode: 'same-origin',
 			headers: {
 				Accept: 'application/json',
 			},
-			body: formsElement?.getAttribute(this.state.getStateAttribute('formGeolocation')),
+			body: formData,
 			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',

@@ -97,7 +97,9 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 			return \rest_ensure_response($premission);
 		}
 
-		$formId = $request->get_param('id') ?? '';
+		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
+
+		$formId = $params['id'] ?? '';
 
 		$syncForm = $this->integrationSyncDiff->syncFormEditor($formId, true);
 

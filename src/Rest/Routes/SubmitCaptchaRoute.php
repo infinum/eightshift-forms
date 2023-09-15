@@ -111,7 +111,7 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 		}
 
 		try {
-			$params = \json_decode($request->get_body(), true, 512, JSON_THROW_ON_ERROR); // phpcs:ignore
+			$params = $this->prepareSimpleApiParams($request);
 
 			$token = $params['token'] ?? '';
 			$action = $params['action'] ?? '';

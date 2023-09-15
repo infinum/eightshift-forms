@@ -112,7 +112,7 @@ class TransferRoute extends AbstractBaseRoute
 
 		$params = $request->get_body_params();
 
-		$type = $params['type'] ?? '';
+		$type = isset($params['type']) ? \esc_html($params['type']) : '';
 
 		if (!$type) {
 			return \rest_ensure_response(

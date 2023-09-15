@@ -88,18 +88,10 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			'request' => $request,
 		];
 
-		$params = $request->get_body_params();
+		$params = $this->prepareSimpleApiParams($request);
 
-		// Used for JS api fecth from editor.
-		if (!$params) {
-			$params = $request->get_json_params();
-
-			if (\is_string($params)) {
-				$params = \json_decode($params, true);
-			}
-		}
-
-		if (!isset($params['type'])) {
+		$type = $params['type'] ?? '';
+		if (!$type) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
 					\esc_html__('Type key was not provided.', 'eightshift-forms'),
@@ -108,8 +100,6 @@ class CacheDeleteRoute extends AbstractBaseRoute
 				)
 			);
 		}
-
-		$type = $params['type'];
 
 		if ($type === 'all') {
 			$allItems = Components::flattenArray(\array_map(
