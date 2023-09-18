@@ -117,7 +117,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 								'component' => 'input',
 								'inputName' => $this->getSettingsName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
 								'inputFieldLabel' => \__('Number of requests', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the time period.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 1,
 								'inputMax' => 300,

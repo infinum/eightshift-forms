@@ -35,7 +35,7 @@ interface ValidatorInterface
 
 	/**
 	 * Validate all manadatory fields that are passed from the `getFormDataReference` function.
-	 * If these fields are missing it can be that the forme is not configured correctly or it could be a unauthorized request.
+	 * If these fields are missing it can be that the form is not configured correctly or it could be a unauthorized request.
 	 *
 	 * @param array<string, mixed> $data Date to check from reference helper.
 	 *
