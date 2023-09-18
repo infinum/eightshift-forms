@@ -39,6 +39,9 @@ $layoutClass = Components::classnames([
 	Components::selector($sectionClass, $sectionClass),
 ]);
 
+$isTrashPage = $adminListingType === 'trash';
+$isLocationsPage = $adminListingType === 'locations';
+
 $formCardsToDisplay = [];
 
 if ($adminListingForms) {
@@ -81,7 +84,7 @@ if ($adminListingForms) {
 			$subtitle .= ucfirst($postType);
 		}
 
-		if (!$isFormValid && $adminListingType !== 'trash') {
+		if (!$isFormValid && !$isTrashPage) {
 			$errorText = '';
 
 			if (!$activeIntegrationIsActive) {
@@ -122,7 +125,7 @@ if ($adminListingForms) {
 		$formCardsToDisplay[] = Components::render('card', [
 			'additionalClass' => Components::classnames([
 				$componentJsItemClass,
-				!$isFormValid && $adminListingType !== 'trash' ? 'es-form-has-error' : '',
+				!$isFormValid && !$isTrashPage ? 'es-form-has-error' : '',
 			]),
 			'additionalAttributes' => [
 				'data-integration-type' => esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED),
@@ -136,10 +139,10 @@ if ($adminListingForms) {
 			'cardShowButtonsOnHover' => true,
 			'cardIcon' => $cardIcon,
 			'cardId' => $id,
-			'cardBulk' => $adminListingType !== 'locations',
+			'cardBulk' => !$isLocationsPage,
 			'cardTrailingButtons' => [
 				...($isFormValid ? [
-					$adminListingType !== 'locations' ? [
+					!$isLocationsPage ? [
 						'label' => __('Locations', 'eightshift-forms'),
 						'url' => $settingsLocationLink,
 						'internal' => true,
@@ -188,10 +191,10 @@ $topBar = [];
 if ($adminListingPageTitle || $adminListingSubTitle) {
 	$topBar = [
 		Components::render('layout', [
-			'layoutType' => $adminListingType !== 'trash' ? 'first-three-left-others-right' : 'first-left-others-right',
+			'layoutType' => !$isTrashPage ? 'first-three-left-others-right' : 'first-left-others-right',
 			'layoutContent' => Components::ensureString([
 				Components::render('container', [
-					'containerUse' => $adminListingType === 'trash' && $adminListingListingLink,
+					'containerUse' => $isTrashPage && $adminListingListingLink,
 					'containerClass' => 'es-submit es-submit--ghost',
 					'containerTag' => 'a',
 					'additionalAttributes' => [
@@ -203,7 +206,7 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					]),
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingIntegrations && $adminListingType !== 'trash',
+					'containerUse' => $adminListingIntegrations && !$isTrashPage,
 					'containerClass' => "{$sectionClass}__heading-filter {$componentJsFilterClass}",
 					'containerContent' => wp_kses_post($adminListingIntegrations),
 					'additionalAttributes' => [
@@ -211,7 +214,7 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					],
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType === 'trash',
+					'containerUse' => $isTrashPage,
 					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Restore', 'eightshift-forms'),
@@ -220,7 +223,7 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					],
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType === 'trash',
+					'containerUse' => $isTrashPage,
 					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Delete permanently', 'eightshift-forms'),
@@ -229,7 +232,7 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					],
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash',
+					'containerUse' => !$isTrashPage,
 					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Delete', 'eightshift-forms'),
@@ -238,7 +241,7 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					],
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash',
+					'containerUse' => !$isTrashPage,
 					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Sync', 'eightshift-forms'),
@@ -247,7 +250,7 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					],
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash',
+					'containerUse' => !$isTrashPage,
 					'containerClass' => 'es-submit es-submit--outline',
 					'containerTag' => 'a',
 					'additionalAttributes' => [
@@ -258,7 +261,7 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					]),
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash',
+					'containerUse' => !$isTrashPage,
 					'containerClass' => 'es-submit es-submit--fit-icon',
 					'containerTag' => 'a',
 					'additionalAttributes' => [
@@ -283,9 +286,9 @@ echo Components::render('layout', [
 		...$topBar,
 		empty($formCardsToDisplay)
 			? Components::render('highlighted-content', [
-				'highlightedContentTitle' => $adminListingType === 'trash' ? __('Trash is empty', 'eightshift-forms') : __('No forms', 'eightshift-forms'),
-				'highlightedContentSubtitle' => $adminListingType === 'trash' ? '' : '<br /><a class="es-submit es-submit--outline" href="' . $adminListingNewFormLink . '">Add form<a/>',
-				'highlightedContentIcon' => $adminListingType === 'trash' ? 'emptyStateTrash' : 'emptyStateFormList',
+				'highlightedContentTitle' => $isTrashPage ? __('Trash is empty', 'eightshift-forms') : __('No forms', 'eightshift-forms'),
+				'highlightedContentSubtitle' => $isTrashPage ? '' : '<br /><a class="es-submit es-submit--outline" href="' . $adminListingNewFormLink . '">Add form<a/>',
+				'highlightedContentIcon' => $isTrashPage ? 'emptyStateTrash' : 'emptyStateFormList',
 			])
 			: Components::ensureString($formCardsToDisplay),
 	]),
