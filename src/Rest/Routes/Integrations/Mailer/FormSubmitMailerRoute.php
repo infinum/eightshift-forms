@@ -79,7 +79,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
-	 * * @param SecurityInterface $security Inject SecurityInterface which holds security data.
+	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,

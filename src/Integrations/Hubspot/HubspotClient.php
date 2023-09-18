@@ -219,7 +219,7 @@ class HubspotClient implements HubspotClientInterface
 
 		$body = [
 			'context' => [
-				'ipAddress' => Helper::getIpAddress(), 
+				'ipAddress' => Helper::getIpAddress(),
 				'hutk' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotCookie']]['value'],
 				'pageUri' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotPageUrl']]['value'],
 				'pageName' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotPageName']]['value'],

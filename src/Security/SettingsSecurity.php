@@ -40,14 +40,24 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_TYPE_KEY = 'security';
 
 	/**
-	 * Transfer use key.
+	 * Security use key.
 	 */
 	public const SETTINGS_SECURITY_USE_KEY = 'security-use';
 
 	/**
-	 * Transfer data key.
+	 * Data data key.
 	 */
 	public const SETTINGS_SECURITY_DATA_KEY = 'security-data';
+
+	/**
+	 * Rate limit key.
+	 */
+	public const SETTINGS_SECURITY_RATE_LIMIT_KEY = 'security-rate-limit';
+
+	/**
+	 * Rate limit window key.
+	 */
+	public const SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY = 'security-rate-limit-window';
 
 	/**
 	 * Register all the hooks
@@ -89,6 +99,52 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Internal storage', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__("
+									We have implemented a rate-limiting function that keeps track of the number of requests made by each user and compares it to the limit set. <br/><br/>
+									The rate limit is based on the user's IP address, but we scramble each IP address we store to ensure that your forms comply with GDPR regulations.
+									", 'eightshift-forms'),
+							],
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
+								'inputFieldLabel' => \__('Number of requests', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the time period.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 1,
+								'inputMax' => 300,
+								'inputStep' => 1,
+								'inputPlaceholder' => Security::RATE_LIMIT,
+								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
+								'inputFieldInlineBeforeAfterContent' => true,
+								'inputValue' => $this->getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
+							],
+							[
+								'component' => 'input',
+								'inputName' => $this->getSettingsName(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
+								'inputFieldLabel' => \__('Limit window', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define a time period in which the rate limit will be checked.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 5,
+								'inputMax' => 3600,
+								'inputStep' => 1,
+								'inputPlaceholder' => Security::RATE_LIMIT_WINDOW,
+								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
+								'inputFieldInlineBeforeAfterContent' => true,
+								'inputValue' => $this->getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
+							],
+						],
+					],
+				],
+			],
 		];
 	}
 }

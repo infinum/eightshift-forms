@@ -240,11 +240,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @param WP_REST_Request $request $request Data got from endpoint url.
 	 * @param string $type Request type.
-	 * @param bool $isPublic If request if for public or internal use.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE) {
+	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE): array
+	{
 		// Check type of request and extract params.
 		switch ($type) {
 			case self::CREATABLE:
@@ -277,7 +277,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function prepareApiParams(WP_REST_Request $request, string $type = self::CREATABLE, bool $isPublic = true): array
+	protected function prepareApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
 		// Get params.
 		$params = $this->getRequestParams($request, $type);

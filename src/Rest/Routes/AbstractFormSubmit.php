@@ -10,13 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Validation\Validator;
 use WP_REST_Request;
@@ -40,24 +38,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * Use general helper trait.
 	 */
 	use FiltersOuputMock;
-
-	/**
-	 * Instance variable of SecurityInterface data.
-	 *
-	 * @var SecurityInterface
-	 */
-	protected $security;
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
-	 */
-	public function __construct(
-		SecurityInterface $security
-	) {
-		$this->security = $security;
-	}
 
 	/**
 	 * Route types.
@@ -100,19 +80,21 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$formDataReference = $this->getFormDataReference($request);
 
 			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
-			if (!$this->getValidator()->validateFormManadatoryProperies($formDataReference)) {
+			if (!$this->getValidator()->validateFormManadatoryProperies($formDataReference)) { // @phpstan-ignore-line
 				throw new UnverifiedRequestException(
-					\esc_html__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+					$this->getValidatorLabels()->getLabel('validationMissingMandatoryParams'), // @phpstan-ignore-line
 					[]
 				);
 			}
 
-			// Validate allowed number of requests
-			if (!$this->security->isRequestValid()) {
-				throw new UnverifiedRequestException(
-					\esc_html__('You have made too many requests in a short time. Please slow down and try again.', 'eightshift-forms'),
-					[]
-				);
+			// Validate allowed number of requests.
+			if ($this->routeGetType() !== self::ROUTE_TYPE_SETTINGS) {
+				if (!$this->getSecurity()->isRequestValid()) { // @phpstan-ignore-line
+					throw new UnverifiedRequestException(
+						$this->getValidatorLabels()->getLabel('validationSecurity'), // @phpstan-ignore-line
+						[]
+					);
+				}
 			}
 
 			switch ($this->routeGetType()) {
@@ -176,7 +158,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 					// Validate captcha.
 					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-						$captchaParams = $formDataReference['captcha'];
+						$captchaParams = $formDataReference['captcha'] ?? [];
 
 						if (!$captchaParams) {
 							throw new UnverifiedRequestException(
@@ -185,10 +167,10 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							);
 						}
 
-						$captcha = $this->getCaptcha()->check(
+						$captcha = $this->getCaptcha()->check( // @phpstan-ignore-line
 							$captchaParams['token'] ?? '',
 							$captchaParams['action'] ?? '',
-							(bool) $captchaParams['isEnterprise'] ?? false
+							(bool) $captchaParams['isEnterprise'] ?: false // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 						);
 
 						if ($captcha['status'] === AbstractBaseRoute::STATUS_ERROR) {

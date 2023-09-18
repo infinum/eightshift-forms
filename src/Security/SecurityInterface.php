@@ -15,5 +15,10 @@ namespace EightshiftForms\Security;
  */
 interface SecurityInterface
 {
+	/**
+	 * Detect if the request is valid using rate limiting.
+	 *
+	 * @return boolean
+	 */
 	public function isRequestValid(): bool;
 }

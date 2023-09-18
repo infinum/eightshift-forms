@@ -23,19 +23,73 @@ class Security implements SecurityInterface
 	 */
 	use SettingsHelper;
 
+	/**
+	 * Requests allowed per minute
+	 *
+	 * @var int
+	 */
+	public const RATE_LIMIT = 20;
+
+	/**
+	 * Time window in seconds
+	 *
+	 * @var int
+	 */
+	public const RATE_LIMIT_WINDOW = 60;
+
+	/**
+	 * Detect if the request is valid using rate limiting.
+	 *
+	 * @return boolean
+	 */
 	public function isRequestValid(): bool
 	{
-		$data = $this->getOptionValue(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY) ?? [];
-		$ip = Helper::getIpAddress();
-
-		error_log( print_r( ( $data ), true ) );
-
-		if (isset($data[$ip])) {
-			$data[$ip] = $data[$ip] + 1;
+		// Bailout if this feature is not enabled.
+		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_IS_VALID_NAME, [])) {
+			return true;
 		}
-		
-		error_log( print_r( ( Helper::getIpAddress() ), true ) );
-		
-		return false;
+
+		$key = SettingsSecurity::SETTINGS_SECURITY_DATA_KEY;
+		$keyName = $this->getSettingsName($key);
+		$data = $this->getOptionValueGroup($key);
+		$ip = Helper::getIpAddress(true);
+		$time = \time();
+
+		// If this is the first iteratio of this user juser add it to the list.
+		if (!isset($data[$ip])) {
+			$data[$ip] = [
+				'count' => 1,
+				'time' => $time,
+			];
+
+			\update_option($keyName, $data);
+			return true;
+		}
+
+		// Extract users data.
+		$user = $data[$ip];
+		$timestamp = $user['time'] ?? '';
+		$count = $user['count'] ?? 0;
+
+		// Reset the count if the time window has passed.
+		if (($time - $timestamp) > \intval($this->getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
+			unset($data[$ip]);
+			\update_option($keyName, $data);
+			return true;
+		}
+
+		// Check if the request count exceeds the rate limit.
+		if ($count >= \intval($this->getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT))) {
+			return false;
+		}
+
+		// Finaly update the count and time.
+		$data[$ip] = [
+			'count' => $count + 1,
+			'time' => $time,
+		];
+
+		\update_option($keyName, $data);
+		return true;
 	}
 }

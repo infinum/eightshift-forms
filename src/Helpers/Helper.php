@@ -841,10 +841,22 @@ class Helper
 	/**
 	 * Get users Ip address.
 	 *
+	 * @param bool $secure Determine if the function will return normal IP or hashed IP.
+	 *
 	 * @return string
 	 */
-	public static function getIpAddress(): string
+	public static function getIpAddress(bool $secure = false): string
 	{
-		return isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$ip = isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if (!$ip) {
+			return '';
+		}
+
+		if ($secure) {
+			return \md5($ip);
+		}
+
+		return $ip;
 	}
 }
