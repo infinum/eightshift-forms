@@ -20,6 +20,7 @@ use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -69,13 +70,24 @@ class HubspotClient implements HubspotClientInterface
 	protected EnrichmentInterface $enrichment;
 
 	/**
+	 * Instance variable of SecurityInterface data.
+	 *
+	 * @var SecurityInterface
+	 */
+	protected $security;
+
+	/**
 	 * Create a new admin instance.
 	 *
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
+	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
 	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
+	public function __construct(
+		EnrichmentInterface $enrichment,
+		SecurityInterface $security
+	) {
 		$this->enrichment = $enrichment;
+		$this->security = $security;
 	}
 
 	/**
@@ -219,7 +231,7 @@ class HubspotClient implements HubspotClientInterface
 
 		$body = [
 			'context' => [
-				'ipAddress' => Helper::getIpAddress(),
+				'ipAddress' => $this->security->getIpAddress(),
 				'hutk' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotCookie']]['value'],
 				'pageUri' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotPageUrl']]['value'],
 				'pageName' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotPageName']]['value'],

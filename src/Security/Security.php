@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Security;
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Settings\SettingsHelper;
 
 /**
@@ -52,7 +52,7 @@ class Security implements SecurityInterface
 		$key = SettingsSecurity::SETTINGS_SECURITY_DATA_KEY;
 		$keyName = $this->getSettingsName($key);
 		$data = $this->getOptionValueGroup($key);
-		$ip = Helper::getIpAddress(true);
+		$ip = $this->getIpAddress(true);
 		$time = \time();
 
 		// If this is the first iteratio of this user juser add it to the list.
@@ -91,5 +91,31 @@ class Security implements SecurityInterface
 
 		\update_option($keyName, $data);
 		return true;
+	}
+
+	/**
+	 * Get users Ip address.
+	 *
+	 * @param bool $secure Determine if the function will return normal IP or hashed IP.
+	 *
+	 * @return string
+	 */
+	public function getIpAddress(bool $secure = false): string
+	{
+		$ip = isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if ($this->isCheckboxOptionChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+			$ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_CONNECTING_IP'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		if (!$ip) {
+			return '';
+		}
+
+		if ($secure) {
+			return \md5($ip);
+		}
+
+		return $ip;
 	}
 }

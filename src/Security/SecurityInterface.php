@@ -21,4 +21,13 @@ interface SecurityInterface
 	 * @return boolean
 	 */
 	public function isRequestValid(): bool;
+
+	/**
+	 * Get users Ip address.
+	 *
+	 * @param bool $secure Determine if the function will return normal IP or hashed IP.
+	 *
+	 * @return string
+	 */
+	public function getIpAddress(bool $secure = false): string;
 }
