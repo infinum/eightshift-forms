@@ -55,7 +55,7 @@ class Security implements SecurityInterface
 		$ip = $this->getIpAddress(true);
 		$time = \time();
 
-		// If this is the first iteratio of this user juser add it to the list.
+		// If this is the first iteration of this user just add it to the list.
 		if (!isset($data[$ip])) {
 			$data[$ip] = [
 				'count' => 1,
@@ -66,7 +66,7 @@ class Security implements SecurityInterface
 			return true;
 		}
 
-		// Extract users data.
+		// Extract user's data.
 		$user = $data[$ip];
 		$timestamp = $user['time'] ?? '';
 		$count = $user['count'] ?? 0;
