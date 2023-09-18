@@ -75,7 +75,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Method that returns WP REST Response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
@@ -89,7 +89,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 			'request' => $request,
 		];
 
-		// Bailout if troubleshooting skip captcha is on.
+		// Bailout if troubleshooting "skip captcha" is on.
 		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return \rest_ensure_response(
 				$this->getApiSuccessOutput(
@@ -119,7 +119,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 			if (!Components::isJson($params)) {
 				return \rest_ensure_response(
 					$this->getApiErrorOutput(
-						\esc_html__('The geolocation data is malformed or none valid.', 'eightshift-forms'),
+						\esc_html__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
 						[],
 						$debug
 					)
@@ -131,7 +131,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 			if (!\is_array($params) && !$params) {
 				return \rest_ensure_response(
 					$this->getApiErrorOutput(
-						\esc_html__('The geolocation data is malformed or none valid.', 'eightshift-forms'),
+						\esc_html__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
 						[],
 						$debug
 					)
@@ -156,7 +156,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 		} catch (Throwable $t) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(
-					\esc_html__('The geolocation data is malformed or none valid.', 'eightshift-forms'),
+					\esc_html__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
 					[],
 					\array_merge(
 						$debug,
