@@ -291,7 +291,7 @@ class BulkRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Delete forms but Ids.
+	 * Delete forms by Ids.
 	 *
 	 * @param array<int> $ids Form Ids.
 	 *
@@ -322,7 +322,7 @@ class BulkRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Delete perminently forms but Ids.
+	 * Delete perminently forms by Ids.
 	 *
 	 * @param array<int> $ids Form Ids.
 	 *
@@ -353,7 +353,7 @@ class BulkRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Restore forms but Ids.
+	 * Restore forms by Ids.
 	 *
 	 * @param array<int> $ids Form Ids.
 	 *
