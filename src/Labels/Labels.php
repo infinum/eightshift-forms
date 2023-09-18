@@ -224,6 +224,8 @@ class Labels implements LabelsInterface
 			'validationMomentsInvalidSpecialCharacters' => \__('This field contains forbidden special characters.', 'eightshift-forms'),
 			'validationWorkableMaxLength127' => \__('This field is too long. Max length is 127 characters.', 'eightshift-forms'),
 			'validationWorkableMaxLength255' => \__('This field is too long. Max length is 255 characters.', 'eightshift-forms'),
+			'validationSecurity' => \__('You have made too many requests in a short time. Please slow down and try again.', 'eightshift-forms'),
+			'validationMissingMandatoryParams' => \__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 		];
 	}
 

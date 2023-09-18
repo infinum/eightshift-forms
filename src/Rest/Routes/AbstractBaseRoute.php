@@ -19,6 +19,7 @@ use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
+use WP_REST_Request;
 
 /**
  * Class AbstractBaseRoute
@@ -234,15 +235,58 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
-	 * Convert JS FormData object to usable data in php.
+	 * Extract params from request.
 	 * Check if array then output only value that is not empty.
 	 *
-	 * @param array<string, mixed> $params Params to convert.
+	 * @param WP_REST_Request $request $request Data got from endpoint url.
+	 * @param string $type Request type.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function prepareParams(array $params): array
+	protected function getRequestParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
+		// Check type of request and extract params.
+		switch ($type) {
+			case self::CREATABLE:
+				$params = $request->get_body_params();
+				break;
+			case self::READABLE:
+				$params = $request->get_params();
+				break;
+			default:
+				$params = [];
+				break;
+		}
+
+		// Check if request maybe has json params usualy sent by the Block editor.
+		if ($request->get_json_params()) {
+			$params = \array_merge(
+				$params,
+				$request->get_json_params(),
+			);
+		}
+
+		return $params;
+	}
+
+	/**
+	 * Convert JS FormData object to usable data in php.
+	 *
+	 * @param WP_REST_Request $request $request Data got from endpoint url.
+	 * @param string $type Request type.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function prepareApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
+	{
+		// Get params.
+		$params = $this->getRequestParams($request, $type);
+
+		// Bailout if there are no params.
+		if (!$params) {
+			return [];
+		}
+
 		// Skip any manipulations if direct param is set.
 		$paramsOutput = \array_map(
 			static function ($item) {
@@ -300,6 +344,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 
 		$output = [];
 
+		// If this route is for public form prepare all params.
 		foreach ($paramsOutput as $key => $value) {
 			switch ($key) {
 				// Used for direct import from settings.
@@ -379,6 +424,33 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
+	 * Convert JS FormData object to usable data in php.
+	 *
+	 * @param WP_REST_Request $request $request Data got from endpoint url.
+	 * @param string $type Request type.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function prepareSimpleApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
+	{
+		// Get params.
+		$params = $this->getRequestParams($request, $type);
+
+		// Bailout if there are no params.
+		if (!$params) {
+			return [];
+		}
+
+		return \array_map(
+			static function ($item) {
+				return \sanitize_text_field($item);
+			},
+			$params
+		);
+	}
+
+
+	/**
 	 * Prepare file from request for later usage. Attach custom data to file array.
 	 *
 	 * @param array<string, mixed> $file File array from reuqest.
@@ -428,7 +500,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function getFormDataReference($request): array
 	{
 		// Get params from request.
-		$params = $this->prepareParams($request->get_body_params());
+		$params = $this->prepareApiParams($request);
 
 		// Populare params.
 		$formDataReference['params'] = $params['params'] ?? [];

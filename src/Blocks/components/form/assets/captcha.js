@@ -75,6 +75,12 @@ export class Captcha {
 	 * @returns {void}
 	 */
 	formSubmitCaptchaInvisible(token, isEnterprise, action) {
+		const formData = new FormData();
+
+		formData.append('token', token);
+		formData.append('isEnterprise', isEnterprise);
+		formData.append('action', action);
+
 		// Populate body data.
 		const body = {
 			method: 'POST',
@@ -82,11 +88,7 @@ export class Captcha {
 			headers: {
 				Accept: 'application/json',
 			},
-			body: JSON.stringify({
-				token,
-				isEnterprise,
-				action,
-			}),
+			body: formData,
 			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',

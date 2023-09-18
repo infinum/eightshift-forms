@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
@@ -39,23 +38,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * Use general helper trait.
 	 */
 	use FiltersOuputMock;
-
-	/**
-	 * Instance variable of CaptchaInterface data.
-	 *
-	 * @var CaptchaInterface
-	 */
-	protected $captcha;
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
-	 */
-	public function __construct(CaptchaInterface $captcha)
-	{
-		$this->captcha = $captcha;
-	}
 
 	/**
 	 * Route types.
@@ -96,6 +78,24 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		try {
 			// Prepare all data.
 			$formDataReference = $this->getFormDataReference($request);
+
+			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
+			if (!$this->getValidator()->validateFormManadatoryProperies($formDataReference)) { // @phpstan-ignore-line
+				throw new UnverifiedRequestException(
+					$this->getValidatorLabels()->getLabel('validationMissingMandatoryParams'), // @phpstan-ignore-line
+					[]
+				);
+			}
+
+			// Validate allowed number of requests.
+			if ($this->routeGetType() !== self::ROUTE_TYPE_SETTINGS) {
+				if (!$this->getSecurity()->isRequestValid()) { // @phpstan-ignore-line
+					throw new UnverifiedRequestException(
+						$this->getValidatorLabels()->getLabel('validationSecurity'), // @phpstan-ignore-line
+						[]
+					);
+				}
+			}
 
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
@@ -158,7 +158,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 					// Validate captcha.
 					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-						$captchaParams = $formDataReference['captcha'];
+						$captchaParams = $formDataReference['captcha'] ?? [];
 
 						if (!$captchaParams) {
 							throw new UnverifiedRequestException(
@@ -167,11 +167,11 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							);
 						}
 
-						$captchaToken = $captchaParams['token'] ?? '';
-						$captchaAction = $captchaParams['action'] ?? '';
-						$captchaIsEnterprise = $captchaParams['isEnterprise'] ?? false;
-
-						$captcha = $this->captcha->check($captchaToken, $captchaAction, (bool) $captchaIsEnterprise);
+						$captcha = $this->getCaptcha()->check( // @phpstan-ignore-line
+							$captchaParams['token'] ?? '',
+							$captchaParams['action'] ?? '',
+							(bool) $captchaParams['isEnterprise'] ?: false // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+						);
 
 						if ($captcha['status'] === AbstractBaseRoute::STATUS_ERROR) {
 							return \rest_ensure_response($captcha);
@@ -230,6 +230,13 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * @return $this
 	 */
 	abstract protected function getCaptcha();
+
+	/**
+	 * Returns security class.
+	 *
+	 * @return $this
+	 */
+	abstract protected function getSecurity();
 
 	/**
 	 * Returns validator labels class.

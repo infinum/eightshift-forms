@@ -15,6 +15,7 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
@@ -64,6 +65,13 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected $captcha;
 
 	/**
+	 * Instance variable of SecurityInterface data.
+	 *
+	 * @var SecurityInterface
+	 */
+	protected $security;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -71,19 +79,22 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
 	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
+	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		FormSubmitMailerInterface $formSubmitMailer,
 		LabelsInterface $labels,
-		CaptchaInterface $captcha
+		CaptchaInterface $captcha,
+		SecurityInterface $security
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
+		$this->security = $security;
 	}
 
 	/**
@@ -134,6 +145,16 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected function getCaptcha()
 	{
 		return $this->captcha;
+	}
+
+	/**
+	 * Returns securicty class.
+	 *
+	 * @return SecurityInterface
+	 */
+	protected function getSecurity()
+	{
+		return $this->security;
 	}
 
 	/**

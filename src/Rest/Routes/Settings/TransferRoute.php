@@ -110,19 +110,9 @@ class TransferRoute extends AbstractBaseRoute
 			'request' => $request,
 		];
 
-		$params = $request->get_body_params();
+		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
 
 		$type = $params['type'] ?? '';
-
-		if (!$type) {
-			return \rest_ensure_response(
-				$this->getApiErrorOutput(
-					\esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
 
 		$output = [
 			self::TYPE_GLOBAL_SETTINGS => [],
@@ -188,11 +178,14 @@ class TransferRoute extends AbstractBaseRoute
 				$internalType = 'import';
 				break;
 			default:
-				$internalType = 'transfer';
-				break;
+				return \rest_ensure_response(
+					$this->getApiErrorOutput(
+						\esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
+						[],
+						$debug
+					)
+				);
 		}
-
-		$output = \wp_json_encode($output);
 
 		$date = \current_datetime()->format('Y-m-d-H-i-s-u');
 
@@ -203,7 +196,7 @@ class TransferRoute extends AbstractBaseRoute
 				\sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
 				[
 					'name' => "eightshift-forms-{$type}-{$date}",
-					'content' => $output,
+					'content' => \wp_json_encode($output),
 				],
 				$debug
 			)

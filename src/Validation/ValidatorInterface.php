@@ -34,6 +34,16 @@ interface ValidatorInterface
 	public function validateFiles(array $data): array;
 
 	/**
+	 * Validate all manadatory fields that are passed from the `getFormDataReference` function.
+	 * If these fields are missing it can be that the form is not configured correctly or it could be a unauthorized request.
+	 *
+	 * @param array<string, mixed> $data Date to check from reference helper.
+	 *
+	 * @return boolean
+	 */
+	public function validateFormManadatoryProperies(array $data): bool;
+
+	/**
 	 * Get validation label from cache or db on multiple items.
 	 *
 	 * @param array<string, string> $items Array of items to get label.

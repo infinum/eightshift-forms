@@ -102,7 +102,9 @@ class BulkRoute extends AbstractBaseRoute
 			'request' => $request,
 		];
 
-		$ids = $request->get_param('ids') ? \json_decode($request->get_param('ids'), true) : [];
+		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
+
+		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
 
 		if (!$ids) {
 			return \rest_ensure_response(
@@ -114,7 +116,7 @@ class BulkRoute extends AbstractBaseRoute
 			);
 		}
 
-		$type = $request->get_param('type') ?? '';
+		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
 				$this->getApiErrorOutput(

@@ -13,6 +13,7 @@ namespace EightshiftForms\Validation;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
@@ -310,6 +311,47 @@ class Validator extends AbstractValidation
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Validate all manadatory fields that are passed from the `getFormDataReference` function.
+	 * If these fields are missing it can be that the forme is not configured correctly or it could be a unauthorized request.
+	 *
+	 * @param array<string, mixed> $data Date to check from reference helper.
+	 *
+	 * @return boolean
+	 */
+	public function validateFormManadatoryProperies(array $data): bool
+	{
+		$type = $data['type'] ?? '';
+		$formId = $data['formId'] ?? '';
+		$postId = $data['postId'] ?? '';
+		$itemId = $data['itemId'] ?? '';
+		$innerId = $data['innerId'] ?? '';
+
+		if (!$type) {
+			return false;
+		}
+
+		switch ($type) {
+			case Settings::SETTINGS_GLOBAL_TYPE_NAME:
+				return true;
+			case Settings::SETTINGS_TYPE_NAME:
+				if (!$formId) {
+					return false;
+				}
+				return true;
+			case SettingsAirtable::SETTINGS_TYPE_KEY:
+				if (!$formId || !$itemId || !$postId || !$innerId) {
+					return false;
+				}
+				return true;
+			default:
+				if (!$formId || !$itemId || !$postId) {
+					return false;
+				}
+				return true;
+		}
 	}
 
 	/**
