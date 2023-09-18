@@ -837,4 +837,14 @@ class Helper
 	{
 		return isset(Filters::ALL[$integrationName]['fields']);
 	}
+
+	/**
+	 * Get users Ip address.
+	 *
+	 * @return string
+	 */
+	public static function getIpAddress(): string
+	{
+		return isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	}
 }

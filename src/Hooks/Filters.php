@@ -57,6 +57,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
 
@@ -121,6 +122,11 @@ class Filters
 		SettingsSettings::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsSettings::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+		],
+		SettingsSecurity::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsSecurity::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'use' => SettingsSecurity::SETTINGS_SECURITY_USE_KEY,
 		],
 		SettingsMailer::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
@@ -456,6 +462,10 @@ class Filters
 			SettingsSettings::SETTINGS_TYPE_KEY => [
 				'title' => \__('Settings', 'eightshift-forms'),
 				'desc' => \__('Disable default scripts and styles, configure behaviors after form submission.', 'eightshift-forms'),
+			],
+			SettingsSecurity::SETTINGS_TYPE_KEY => [
+				'title' => \__('Security', 'eightshift-forms'),
+				'desc' => \__('Prevent your forms from being misused and your website from being exploited.', 'eightshift-forms'),
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),

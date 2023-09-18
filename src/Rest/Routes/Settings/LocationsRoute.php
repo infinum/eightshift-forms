@@ -99,11 +99,13 @@ class LocationsRoute extends AbstractBaseRoute
 			return \rest_ensure_response($premission);
 		}
 
-		$id = (string) $request->get_param('id');
-
 		$debug = [
 			'request' => $request,
 		];
+
+		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
+
+		$id = $params['id'] ?? '';
 
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(

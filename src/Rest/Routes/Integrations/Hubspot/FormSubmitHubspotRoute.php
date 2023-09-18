@@ -21,6 +21,7 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -85,6 +86,13 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	protected $captcha;
 
 	/**
+	 * Instance variable of SecurityInterface data.
+	 *
+	 * @var SecurityInterface
+	 */
+	protected $security;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -94,6 +102,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
+	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -102,7 +111,8 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		HubspotClientInterface $hubspotClient,
 		ClearbitClientInterface $clearbitClient,
 		FormSubmitMailerInterface $formSubmitMailer,
-		CaptchaInterface $captcha
+		CaptchaInterface $captcha,
+		SecurityInterface $security
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
@@ -111,6 +121,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		$this->clearbitClient = $clearbitClient;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->captcha = $captcha;
+		$this->security = $security;
 	}
 
 	/**
@@ -161,6 +172,16 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	protected function getCaptcha()
 	{
 		return $this->captcha;
+	}
+
+	/**
+	 * Returns securicty class.
+	 *
+	 * @return SecurityInterface
+	 */
+	protected function getSecurity()
+	{
+		return $this->security;
 	}
 
 	/**

@@ -17,6 +17,7 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -74,6 +75,13 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	protected $captcha;
 
 	/**
+	 * Instance variable of SecurityInterface data.
+	 *
+	 * @var SecurityInterface
+	 */
+	protected $security;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
@@ -82,6 +90,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	 * @param ClientInterface $mailerliteClient Inject Mailerlite which holds Mailerlite connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
+	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -89,7 +98,8 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		ClientInterface $mailerliteClient,
 		FormSubmitMailerInterface $formSubmitMailer,
-		CaptchaInterface $captcha
+		CaptchaInterface $captcha,
+		SecurityInterface $security
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
@@ -97,6 +107,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 		$this->mailerliteClient = $mailerliteClient;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->captcha = $captcha;
+		$this->security = $security;
 	}
 
 	/**
@@ -147,6 +158,16 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	protected function getCaptcha()
 	{
 		return $this->captcha;
+	}
+
+	/**
+	 * Returns securicty class.
+	 *
+	 * @return SecurityInterface
+	 */
+	protected function getSecurity()
+	{
+		return $this->security;
 	}
 
 	/**

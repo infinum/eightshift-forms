@@ -16,6 +16,7 @@ use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Validation\Validator;
 use WP_REST_Request;
@@ -41,20 +42,21 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	use FiltersOuputMock;
 
 	/**
-	 * Instance variable of CaptchaInterface data.
+	 * Instance variable of SecurityInterface data.
 	 *
-	 * @var CaptchaInterface
+	 * @var SecurityInterface
 	 */
-	protected $captcha;
+	protected $security;
 
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
+	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
 	 */
-	public function __construct(CaptchaInterface $captcha)
-	{
-		$this->captcha = $captcha;
+	public function __construct(
+		SecurityInterface $security
+	) {
+		$this->security = $security;
 	}
 
 	/**
@@ -96,6 +98,22 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		try {
 			// Prepare all data.
 			$formDataReference = $this->getFormDataReference($request);
+
+			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
+			if (!$this->getValidator()->validateFormManadatoryProperies($formDataReference)) {
+				throw new UnverifiedRequestException(
+					\esc_html__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+					[]
+				);
+			}
+
+			// Validate allowed number of requests
+			if (!$this->security->isRequestValid()) {
+				throw new UnverifiedRequestException(
+					\esc_html__('You have made too many requests in a short time. Please slow down and try again.', 'eightshift-forms'),
+					[]
+				);
+			}
 
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
@@ -167,11 +185,11 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							);
 						}
 
-						$captchaToken = $captchaParams['token'] ?? '';
-						$captchaAction = $captchaParams['action'] ?? '';
-						$captchaIsEnterprise = $captchaParams['isEnterprise'] ?? false;
-
-						$captcha = $this->captcha->check($captchaToken, $captchaAction, (bool) $captchaIsEnterprise);
+						$captcha = $this->getCaptcha()->check(
+							$captchaParams['token'] ?? '',
+							$captchaParams['action'] ?? '',
+							(bool) $captchaParams['isEnterprise'] ?? false
+						);
 
 						if ($captcha['status'] === AbstractBaseRoute::STATUS_ERROR) {
 							return \rest_ensure_response($captcha);
@@ -230,6 +248,13 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * @return $this
 	 */
 	abstract protected function getCaptcha();
+
+	/**
+	 * Returns security class.
+	 *
+	 * @return $this
+	 */
+	abstract protected function getSecurity();
 
 	/**
 	 * Returns validator labels class.

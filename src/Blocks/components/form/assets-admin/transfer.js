@@ -81,7 +81,7 @@ export class Transfer {
 							location.reload();
 						}, 1000);
 					} else {
-						this.createFile(data.content, data.name);
+						this.createFile(data?.content, data?.name);
 					}
 				}
 
