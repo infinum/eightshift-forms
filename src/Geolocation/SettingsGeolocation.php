@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Geolocation;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Misc\SettingsCloudflare;
