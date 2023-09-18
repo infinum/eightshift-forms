@@ -15,7 +15,7 @@ use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**

@@ -48,4 +48,8 @@
 			@include form-width-limit-styles;
 		}
 	}
+
+	.es-block-edit-options__edit-wrap {
+		display: none;
+	}
 }

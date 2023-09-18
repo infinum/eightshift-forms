@@ -87,8 +87,6 @@ class Testfilters implements ServiceInterface
 			'es_forms_geolocation_disable' => ['getGeolocationDisable'],
 			'es_forms_geolocation_db_location' => ['getGeolocationDbLocation'],
 			'es_forms_geolocation_phar_location' => ['getGeolocationPharLocation'],
-			'es_forms_geolocation_cookie_name' => ['getGeolocationCookieName'],
-			'es_forms_geolocation_wp_rocket_advanced_cache' => ['getGeolocationWpRocketAdvancedCache'],
 
 			// ---------------------------------------------------------------------------------------------------------
 			// Integrations filters.
@@ -692,27 +690,9 @@ class Testfilters implements ServiceInterface
 	}
 
 	/**
-	 * Disable geolocation.
-	 *
-	 * Global variable alternative:
-	 * `ES_GEOLOCATION_USE`
-	 *
-	 * This filter provides you with the ability to totally disable geolocation on the frontend usage.
-	 *
-	 * @return boolean
-	 */
-	public function getGeolocationDisable(): bool
-	{
-		return true;
-	}
-
-	/**
 	 * Provide custom geolocation db location.
 	 *
 	 * This filter provides you with the ability to provide custom database location for geolocation.
-	 *
-	 * Global variable alternative:
-	 * `ES_GEOLOCATION_DB_PATH`
 	 *
 	 * @return string
 	 */
@@ -726,52 +706,11 @@ class Testfilters implements ServiceInterface
 	 *
 	 * This filter provides you with the ability to provide custom database location for geolocation.
 	 *
-	 * Global variable alternative:
-	 * `ES_GEOLOCATION_PHAR_PATH`
-	 *
 	 * @return string
 	 */
 	public function getGeolocationPharLocation(): string
 	{
 		return __DIR__ . \DIRECTORY_SEPARATOR . 'geoip.phar';
-	}
-
-	/**
-	 * Provide custom geolocation cookie name.
-	 *
-	 * This filter enables providing custom cookie name for geolocation.
-	 *
-	 * Global variable alternative:
-	 * `ES_GEOLOCATION_COOKIE_NAME`
-	 *
-	 * @return string
-	 */
-	public function getGeolocationCookieName(): string
-	{
-		return 'esForms-country';
-	}
-
-	/**
-	 * Provide custom WP-Rocket advanced-cache.php function.
-	 *
-	 * This filter enables providing custom function in WP-Rocket plugin activation process.
-	 *
-	 * @param string $content Original WP-Rocket output content.
-	 * @param string $outputContent Default forms output content.
-	 *
-	 * @return string
-	 */
-	public function getGeolocationWpRocketAdvancedCache(string $content, string $outputContent): string
-	{
-		$position = \strpos($content, '$rocket_config_class');
-
-		$output = '
-			$esFormsPath = ABSPATH . "wp-content/plugins/eightshift-forms/src/Geolocation/geolocationDetect.php";
-			if (file_exists($esFormsPath)) {
-				require_once $esFormsPath;
-			};';
-
-		return \substr_replace($content, $output, $position, 0);
 	}
 
 	// -----------------------------------------------------------------------------------------------------------

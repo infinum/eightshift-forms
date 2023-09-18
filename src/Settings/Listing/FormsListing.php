@@ -12,7 +12,7 @@ namespace EightshiftForms\Settings\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsLocation;
+use EightshiftForms\Location\SettingsLocation;
 use EightshiftForms\Settings\SettingsHelper;
 use WP_Query;
 

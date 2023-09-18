@@ -3,12 +3,12 @@
 /**
  * Interface that holds all methods for getting forms location usage.
  *
- * @package EightshiftForms\Settings\Settings
+ * @package EightshiftForms\Location
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings\Settings;
+namespace EightshiftForms\Location;
 
 /**
  * Interface for SettingsLocationInterface

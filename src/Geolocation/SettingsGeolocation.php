@@ -11,10 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Geolocation;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\Settings\SettingsDashboard;
+use EightshiftForms\Dashboard\SettingsDashboard;
+use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -66,17 +65,7 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (Variables::getGeolocationUse()) {
-			return true;
-		}
-
 		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
-			return false;
-		}
-
-		// Add the ability to disable geolocation from an external source (generally used for GDPR purposes).
-		$filterName = Filters::getFilterName(['geolocation', 'disable']);
-		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
 			return false;
 		}
 
@@ -90,19 +79,9 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$use = Variables::getGeolocationUse();
-
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY) && !$use) {
+		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
 			return $this->getNoActiveFeatureOutput();
-		}
-
-		$useRocket = Variables::getGeolocationUseWpRocket();
-
-		$outputConstants = '';
-
-		if (Variables::getGeolocationUseWpRocket()) {
-			$outputConstants .= '<br/>' . $this->getAppliedGlobalConstantOutput('ES_GEOLOCATION_USE_WP_ROCKET');
 		}
 
 		return [
@@ -115,26 +94,13 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 						'component' => 'intro',
 						// translators: %s will be replaced with the link.
 						'introSubtitle' => \sprintf(\__("
-							<p>By default geolocation uses cookie to store users location and that location is matched with the country list got from the <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> by MaxMind database.</p>
+							<p>By default geolocation uses <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> MaxMind ID database</a> to get users location.</p>
 							<p>With every release we update that database but you can also provide your own database by using our filters. You can find more details <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.</p>
 						", 'eightshift-forms'), 'https://www.maxmind.com', 'https://eightshift.com/forms/features/geolocation'),
 					],
 				],
 			],
-			(\is_plugin_active('wp-rocket/wp-rocket.php') && !Variables::getGeolocationUseWpRocket()) ? [
-				'component' => 'intro',
-				// translators: %s will be replaced with the link.
-				'introSubtitle' => \sprintf(\__('
-					<b>Geolocation is not working due to WP Rocket plugin</b>
-					<p>
-						We have detected that you are using the WP Rocket plugin.
-						Please turn on the WP Rocket feature in the global settings <a href="%s" rel="noopener noreferrer">dashboard</a> for proper geolocation functionality.
-					</p>
-				', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)),
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
-			] : [],
-			(\is_plugin_active('cloudflare/cloudflare.php') && !Variables::getGeolocationUseCloudflare()) ? [
+			(\is_plugin_active('cloudflare/cloudflare.php') && !$this->isCheckboxOptionChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) ? [
 				'component' => 'intro',
 				// translators: %s will be replaced with the link.
 				'introSubtitle' => \sprintf(\__('

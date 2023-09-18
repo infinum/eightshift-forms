@@ -10,7 +10,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\Settings\SettingsBlocks;
+use EightshiftForms\Blocks\SettingsBlocks;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSelect = Components::getComponent('select');
@@ -73,7 +73,7 @@ $placeholder = $countryPlaceholder ? Components::render(
 ) : '';
 
 $options = [];
-$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['settingsValuesOutput'];
+$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'];
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $countryFormPostId);

@@ -3,16 +3,18 @@
 /**
  * General Settings class.
  *
- * @package EightshiftForms\Settings\Settings
+ * @package EightshiftForms\General
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings\Settings;
+namespace EightshiftForms\General;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\FiltersOuputMock;
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

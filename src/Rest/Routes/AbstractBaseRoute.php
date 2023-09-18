@@ -68,6 +68,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'formType' => 'data-form-type',
 		'formCustomName' => 'data-form-custom-name',
 		'formId' => 'data-form-id',
+		'formGeolocation' => 'data-form-geolocation',
+
+		'bulkId' => 'data-bulk-id',
+		'bulkType' => 'data-bulk-type',
+		'bulkItems' => 'data-bulk-items',
 
 		'stepId' => 'data-step-id',
 		'submitStepDirection' => 'data-step-direction',
@@ -85,7 +90,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'tracking' => 'data-tracking',
 		'cacheType' => 'data-cache-type',
 		'testApiType' => 'data-test-api-type',
-		'syncId' => 'data-sync-id',
 		'locationsId' => 'data-locations-id',
 		'migrationType' => 'data-migration-type',
 		'migrationExportItems' => 'data-migration-export-items',

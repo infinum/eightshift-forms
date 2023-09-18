@@ -3,7 +3,13 @@
 	"componentName": "card",
 	"title": "Card",
 	"componentClass": "es-card",
+	"components": {
+		"checkbox": "checkbox"
+	},
 	"attributes": {
+		"cardId": {
+			"type": "string"
+		},
 		"cardTitle": {
 			"type": "string"
 		},
@@ -20,6 +26,10 @@
 			"type": "string"
 		},
 		"cardPadded": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardBulk": {
 			"type": "boolean",
 			"default": false
 		},

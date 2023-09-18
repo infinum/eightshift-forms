@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Hooks;
 
-use EightshiftForms\Helpers\Helper;
-
 /**
  * The Variables class, used for defining available Variables.
  */
@@ -118,36 +116,6 @@ class Variables
 	}
 
 	/**
-	 * Get forms geolocation use feature. Default: false.
-	 *
-	 * @return bool
-	 */
-	public static function getGeolocationUse(): bool
-	{
-		return \defined('ES_GEOLOCATION_USE') ? \ES_GEOLOCATION_USE : false;
-	}
-
-	/**
-	 * Get forms geolocation use WP Rocket. Default: false.
-	 *
-	 * @return bool
-	 */
-	public static function getGeolocationUseWpRocket(): bool
-	{
-		return \defined('ES_GEOLOCATION_USE_WP_ROCKET') ? \ES_GEOLOCATION_USE_WP_ROCKET : false;
-	}
-
-	/**
-	 * Get forms geolocation use Cloudflare. Default: false.
-	 *
-	 * @return bool
-	 */
-	public static function getGeolocationUseCloudflare(): bool
-	{
-		return \defined('ES_GEOLOCATION_USE_CLOUDFLARE') ? \ES_GEOLOCATION_USE_CLOUDFLARE : false;
-	}
-
-	/**
 	 * Get forms geolocation ip. Default: empty.
 	 *
 	 * @return string
@@ -155,46 +123,6 @@ class Variables
 	public static function getGeolocationIp(): string
 	{
 		return \defined('ES_GEOLOCATION_IP') ? \ES_GEOLOCATION_IP : '';
-	}
-
-	/**
-	 * Get forms geolocation cookie name. Default: esForms-country
-	 *
-	 * @return string
-	 */
-	public static function getGeolocationCookieName(): string
-	{
-		return \defined('ES_GEOLOCATION_COOKIE_NAME') ? \ES_GEOLOCATION_COOKIE_NAME : 'esForms-country';
-	}
-
-	/**
-	 * Get forms geolocation phar location. Default: Geolocation folder path.
-	 *
-	 * @return string
-	 */
-	public static function getGeolocationPharPath(): string
-	{
-		return \defined('ES_GEOLOCATION_PHAR_PATH') ? \ES_GEOLOCATION_PHAR_PATH : Helper::getDataManifestPath('geolocation', 'geoip.phar');
-	}
-
-	/**
-	 * Get forms geolocation db location. Default: Geolocation folder path.
-	 *
-	 * @return string
-	 */
-	public static function getGeolocationDbPath(): string
-	{
-		return \defined('ES_GEOLOCATION_DB_PATH') ? \ES_GEOLOCATION_DB_PATH : Helper::getDataManifestPath('geolocation', 'geoip.mmdb');
-	}
-
-	/**
-	 * Get forms geolocation expiration time. Default: 15 days.
-	 *
-	 * @return int
-	 */
-	public static function getGeolocationExpiration(): int
-	{
-		return \defined('ES_GEOLOCATION_COOKIE_EXPIRATION') ? \ES_GEOLOCATION_COOKIE_EXPIRATION : \time() + 1296000; // 15 days.
 	}
 
 	/**

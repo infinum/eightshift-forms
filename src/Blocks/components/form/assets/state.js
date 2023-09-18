@@ -503,8 +503,14 @@ export class State {
 	getStateSelectorsClassHasError = () => {
 		return getState([StateEnum.SELECTORS_CLASS_HAS_ERROR], StateEnum.SELECTORS);
 	};
+	getStateSelectorsClassGeolocationLoading = () => {
+		return getState([StateEnum.SELECTORS_CLASS_GEOLOCATION_LOADING], StateEnum.SELECTORS);
+	};
 	getStateSelectorsForm = () => {
 		return getState([StateEnum.SELECTORS_FORM], StateEnum.SELECTORS);
+	};
+	getStateSelectorsForms = () => {
+		return getState([StateEnum.SELECTORS_FORMS], StateEnum.SELECTORS);
 	};
 	getStateSelectorsSubmitSingle = () => {
 		return getState([StateEnum.SELECTORS_SUBMIT_SINGLE], StateEnum.SELECTORS);
@@ -618,7 +624,7 @@ export const ROUTES = {
 	CACHE_CLEAR: esFormsLocalization.restRoutes.cacheClear,
 	MIGRATION: esFormsLocalization.restRoutes.migration,
 	TRANSFER: esFormsLocalization.restRoutes.transfer,
-	SYNC_DIRECT: esFormsLocalization.restRoutes.syncDirect,
+	BULK: esFormsLocalization.restRoutes.bulk,
 	LOCATIONS: esFormsLocalization.restRoutes.locations,
 
 	// Editor.
@@ -632,6 +638,7 @@ export const ROUTES = {
 
 	// Public.
 	CAPTCHA: esFormsLocalization.restRoutes.captcha,
+	GEOLOCATION: esFormsLocalization.restRoutes.geolocation,
 	VALIDATION_STEP: esFormsLocalization.restRoutes.validationStep,
 };
 

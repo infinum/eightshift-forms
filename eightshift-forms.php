@@ -59,16 +59,15 @@ $loader = require __DIR__ . '/vendor/autoload.php';
  * not affect the page life cycle.
  */
 if (\class_exists(Main::class)) {
+	$sep = \DIRECTORY_SEPARATOR;
+
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 
 	// Require public helper class.
-	require __DIR__ . '/src/Helpers/esForms.php';
-
-	// Require constants output.
-	require __DIR__ . '/src/Constants/constantsOutput.php';
+	require __DIR__ . "{$sep}src{$sep}Helpers{$sep}esForms.php";
 
 	// Require test filters.
-	require __DIR__ . '/testFilters/testFilters.php';
+	require __DIR__ . "{$sep}testFilters{$sep}testFilters.php";
 
 	(new Testfilters())->register();
 }

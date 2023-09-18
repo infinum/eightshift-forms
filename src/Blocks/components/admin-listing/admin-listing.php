@@ -20,8 +20,8 @@ echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security
 $componentClass = $manifest['componentClass'] ?? '';
 $componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
 $componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
-$componentJsSyncClass = $manifest['componentJsSyncClass'] ?? '';
 $componentJsLocationsClass = $manifest['componentJsLocationsClass'] ?? '';
+$componentJsBulkClass = $manifest['componentJsBulkClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
@@ -38,6 +38,9 @@ $layoutClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($sectionClass, $sectionClass),
 ]);
+
+$isTrashPage = $adminListingType === 'trash';
+$isLocationsPage = $adminListingType === 'locations';
 
 $formCardsToDisplay = [];
 
@@ -81,7 +84,7 @@ if ($adminListingForms) {
 			$subtitle .= ucfirst($postType);
 		}
 
-		if (!$isFormValid && $adminListingType !== 'trash') {
+		if (!$isFormValid && !$isTrashPage) {
 			$errorText = '';
 
 			if (!$activeIntegrationIsActive) {
@@ -121,54 +124,32 @@ if ($adminListingForms) {
 
 		$formCardsToDisplay[] = Components::render('card', [
 			'additionalClass' => Components::classnames([
-				'js-es-admin-listing-item',
-				!$isFormValid && $adminListingType !== 'trash' ? 'es-form-has-error' : '',
+				$componentJsItemClass,
+				!$isFormValid && !$isTrashPage ? 'es-form-has-error' : '',
 			]),
 			'additionalAttributes' => [
 				'data-integration-type' => esc_attr($activeIntegration['value'] ?? FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED),
 				'data-integration-is-active' => wp_json_encode($activeIntegrationIsActive),
 				'data-integration-is-valid' => wp_json_encode($activeIntegrationIsValid),
 				'data-integration-is-api-valid' => wp_json_encode($activeIntegrationIsApiValid),
+				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkId'] => $id,
 			],
 			'cardTitle' => '<a href="' . $editLink . '">' . $formTitle . ($adminListingIsDeveloperMode ? " ({$id})" : '') . '</a>',
 			'cardSubTitle' => $errorText . $subtitle,
 			'cardShowButtonsOnHover' => true,
 			'cardIcon' => $cardIcon,
+			'cardId' => $id,
+			'cardBulk' => !$isLocationsPage,
 			'cardTrailingButtons' => [
-				...($adminListingType === 'trash' ? [
-					[
-						'label' => __('Delete permanently', 'eightshift-forms'),
-						'url' => $trashLink,
-						'internal' => true,
-					],
-					[
-						'label' => __('Restore', 'eightshift-forms'),
-						'url' => $trashRestoreLink,
-						'internal' => true,
-					],
-				] : [
-					[
-						'label' => __('Delete', 'eightshift-forms'),
-						'url' => $trashLink,
-						'internal' => true,
-					],
-				]),
 				...($isFormValid ? [
-					($adminListingType === 'trash' || $adminListingType === 'locations' || !Helper::canIntegrationUseSync($activeIntegration['value'])) ? [] : [
-						'label' => __('Sync', 'eightshift-forms'),
-						'internal' => true,
-						'isButton' => true,
-						'additionalAttrs' => [AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['syncId'] => $id],
-						'additionalClass' => $componentJsSyncClass,
-					],
-					[
+					!$isLocationsPage ? [
 						'label' => __('Locations', 'eightshift-forms'),
 						'url' => $settingsLocationLink,
 						'internal' => true,
 						'isButton' => true,
 						'additionalAttrs' => [AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['locationsId'] => $id],
 						'additionalClass' => $componentJsLocationsClass,
-					],
+					] : [],
 					[
 						'label' => __('Settings', 'eightshift-forms'),
 						'url' => $settingsLink,
@@ -210,10 +191,10 @@ $topBar = [];
 if ($adminListingPageTitle || $adminListingSubTitle) {
 	$topBar = [
 		Components::render('layout', [
-			'layoutType' => 'first-left-others-right',
+			'layoutType' => !$isTrashPage ? 'first-three-left-others-right' : 'first-left-others-right',
 			'layoutContent' => Components::ensureString([
 				Components::render('container', [
-					'containerUse' => $adminListingType === 'trash' && $adminListingListingLink,
+					'containerUse' => $isTrashPage && $adminListingListingLink,
 					'containerClass' => 'es-submit es-submit--ghost',
 					'containerTag' => 'a',
 					'additionalAttributes' => [
@@ -225,32 +206,62 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					]),
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingIntegrations,
+					'containerUse' => $adminListingIntegrations && !$isTrashPage,
 					'containerClass' => "{$sectionClass}__heading-filter {$componentJsFilterClass}",
 					'containerContent' => wp_kses_post($adminListingIntegrations),
+					'additionalAttributes' => [
+						'href' => $adminListingNewFormLink,
+					],
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash' && $adminListingTrashLink,
+					'containerUse' => $isTrashPage,
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Restore', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'restore',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => $isTrashPage,
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Delete permanently', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'delete-perminentely',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => !$isTrashPage,
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Delete', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'delete',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => !$isTrashPage,
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Sync', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'sync',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => !$isTrashPage,
 					'containerClass' => 'es-submit es-submit--outline',
 					'containerTag' => 'a',
 					'additionalAttributes' => [
 						'href' => $adminListingTrashLink,
 					],
 					'containerContent' => Components::ensureString([
-						esc_html__('Deleted', 'eightshift-forms'),
+						esc_html__('Trashed', 'eightshift-forms'),
 					]),
 				]),
 				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash' && $adminListingTrashLink,
-					'containerClass' => "es-submit es-submit--outline {$componentJsSyncClass}",
-					'containerTag' => 'button',
-					'additionalAttributes' => [
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['syncId'] => 'all',
-					],
-					'containerContent' => esc_html__('Sync all', 'eightshift-forms'),
-				]),
-				Components::render('container', [
-					'containerUse' => $adminListingType !== 'trash' && $adminListingNewFormLink,
+					'containerUse' => !$isTrashPage,
 					'containerClass' => 'es-submit es-submit--fit-icon',
 					'containerTag' => 'a',
 					'additionalAttributes' => [
@@ -275,12 +286,16 @@ echo Components::render('layout', [
 		...$topBar,
 		empty($formCardsToDisplay)
 			? Components::render('highlighted-content', [
-				'highlightedContentTitle' => $adminListingType === 'trash' ? __('Trash is empty', 'eightshift-forms') : __('No forms', 'eightshift-forms'),
-				'highlightedContentSubtitle' => $adminListingType === 'trash' ? '' : '<br /><a class="es-submit es-submit--outline" href="' . $adminListingNewFormLink . '">Add form<a/>',
-				'highlightedContentIcon' => $adminListingType === 'trash' ? 'emptyStateTrash' : 'emptyStateFormList',
+				'highlightedContentTitle' => $isTrashPage ? __('Trash is empty', 'eightshift-forms') : __('No forms', 'eightshift-forms'),
+				'highlightedContentSubtitle' => $isTrashPage ? '' : '<br /><a class="es-submit es-submit--outline" href="' . $adminListingNewFormLink . '">Add form<a/>',
+				'highlightedContentIcon' => $isTrashPage ? 'emptyStateTrash' : 'emptyStateFormList',
 			])
 			: Components::ensureString($formCardsToDisplay),
 	]),
+	'additionalClass' => "{$componentJsBulkClass}-items",
+	'additionalAttributes' => [
+		AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkItems'] => wp_json_encode([]),
+	],
 ]);
 
 // This is fake form to be able to init state for global msg.

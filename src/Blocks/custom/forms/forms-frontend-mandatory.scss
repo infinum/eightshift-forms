@@ -1,44 +1,13 @@
 .es-block-forms {
-	&__edit-wrap {
-		display: flex;
-		flex-direction: column;
+	$this: &;
 
-		position: absolute;
-		right: var(--global-esf-spacing-m);
-		z-index: 1;
-	}
-
-	&__edit-link {
-		text-decoration: none;
-		border: 1px solid var(--global-colors-esf-gray-300);
-		margin-top: -1px;
-
-		padding: var(--global-esf-spacing-s);
-		background-color: var(--global-colors-esf-white);
-		color: var(--global-colors-esf-gray-500);
-
-		transition: {
-			property: color, background-color;
-			timing-function: ease-in-out;
-			duration: 0.3s;
+	&.es-form-is-geolocation-loading {
+		.es-form {
+			display: none;
 		}
 
-		&:hover {
-			background-color: var(--global-colors-esf-gray-100);
+		> .es-loader__geolocation {
+			display: block;
 		}
-
-		&:first-child {
-			border-top-left-radius: var(--global-esf-spacing-s);
-			border-top-right-radius: var(--global-esf-spacing-s);
-		}
-
-		&:last-child {
-			border-bottom-left-radius: var(--global-esf-spacing-s);
-			border-bottom-right-radius: var(--global-esf-spacing-s);
-		}
-	}
-
-	svg {
-		display: block;
 	}
 }

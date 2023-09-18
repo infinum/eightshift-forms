@@ -10,42 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
-use EightshiftFormsVendor\Firebase\JWT\JWT;
-use EightshiftFormsVendor\Firebase\JWT\Key;
-
 /**
  * Encryption class.
  */
 class Encryption
 {
-	/**
-	 * Encode method - JWT.
-	 *
-	 * @param array<mixed> $payload Payload used to store.
-	 * @param string $key Key used.
-	 *
-	 * @return string
-	 */
-	public static function encodeJwt(array $payload, string $key)
-	{
-		return JWT::encode($payload, $key, 'HS256');
-	}
-
-	/**
-	 * Decode method - JWT.
-	 *
-	 * @param string $payload Payload used to export.
-	 * @param string $key Key used.
-	 *
-	 * @return array<mixed>
-	 */
-	public static function decodeJwt(string $payload, string $key)
-	{
-		$output =  JWT::decode($payload, new Key($key, 'HS256'));
-
-		return (array) $output;
-	}
-
 	/**
 	 * Encript method.
 	 *

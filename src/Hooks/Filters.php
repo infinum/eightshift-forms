@@ -40,24 +40,23 @@ use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Settings\Settings\Settings;
-use EightshiftForms\Settings\Settings\SettingsDashboard;
-use EightshiftForms\Settings\Settings\SettingsDocumentation;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\Dashboard\SettingsDashboard;
+use EightshiftForms\Documentation\SettingsDocumentation;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Integrations\Jira\JiraClient;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Integrations\Workable\Workable;
 use EightshiftForms\Integrations\Workable\WorkableClient;
-use EightshiftForms\Settings\Settings\SettingsBlocks;
-use EightshiftForms\Settings\Settings\SettingsLocation;
+use EightshiftForms\Blocks\SettingsBlocks;
+use EightshiftForms\Location\SettingsLocation;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Misc\SettingsCloudflare;
-use EightshiftForms\Misc\SettingsWpRocket;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
 
@@ -114,7 +113,7 @@ class Filters
 			'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsBlocks::FILTER_SETTINGS_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
-			'settingsValuesOutput' => SettingsBlocks::FILTER_BLOCK_SETTINGS_VALUE_NAME,
+			'countryOutput' => SettingsBlocks::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME,
 			'cache' => [
 				SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
 			],
@@ -244,11 +243,6 @@ class Filters
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
 			'use' => SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 		],
-		SettingsWpRocket::SETTINGS_TYPE_KEY => [
-			'settingsGlobal' => SettingsWpRocket::FILTER_SETTINGS_GLOBAL_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
-			'use' => SettingsWpRocket::SETTINGS_WPROCKET_USE_KEY,
-		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
@@ -369,11 +363,8 @@ class Filters
 		],
 		'geolocation' => [
 			'countriesList' => 'countries_list',
-			'disable' => 'disable',
 			'dbLocation' => 'db_location',
 			'pharLocation' => 'phar_location',
-			'cookieName' => 'cookie_name',
-			'wpRocketAdvancedCache' => 'wp_rocket_advanced_cache',
 		],
 		'integrations' => [
 			SettingsMailchimp::SETTINGS_TYPE_KEY => [
@@ -565,10 +556,6 @@ class Filters
 			SettingsCloudflare::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cloudflare', 'eightshift-forms'),
 				'desc' => \__('Cloudflare is a content delivery network (CDN) and cloud security platform that provides website optimization, security, and performance services.', 'eightshift-forms'),
-			],
-			SettingsWpRocket::SETTINGS_TYPE_KEY => [
-				'title' => \__('WP Rocket', 'eightshift-forms'),
-				'desc' => \__('WP Rocket is a premium caching plugin that helps you improve your website loading speed and SEO ranking. In addition to that, it also offers a variety of automated features such as file optimisation, improving lazy loading images and much more.', 'eightshift-forms'),
 			],
 			SettingsMigration::SETTINGS_TYPE_KEY => [
 				'title' => \__('Migration', 'eightshift-forms'),

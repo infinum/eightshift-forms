@@ -14,7 +14,7 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsInterface;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;

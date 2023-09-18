@@ -62,18 +62,99 @@ export class Form {
 	 * @returns {void}
 	 */
 	initOnlyForms() {
-		// Loop all forms on the page.
-		[...document.querySelectorAll(this.state.getStateSelectorsForm())].forEach((element) => {
-			const formId = element.getAttribute(this.state.getStateAttribute('formId')) || 0;
+		if (this.state.getStateConfigIsAdmin()) {
+			// If is admin do normal init.
+			this.initOnlyFormsInner(document.querySelector(this.state.getStateSelectorsForm())?.getAttribute(this.state.getStateAttribute('formId')) || 0);
+		} else {
+			// Find all forms elements
+			const forms = document.querySelectorAll(this.state.getStateSelectorsForms());
+			if (!forms) {
+				return;
+			}
 
-			setStateFormInitial(formId);
+			[...forms].forEach((formsItems) => {
+				// Find all forms elements that have have geolocation data attribute.
+				if (formsItems?.getAttribute(this.state.getStateAttribute('formGeolocation'))) {
+					// If forms element have geolocation data attribute, init geolocation via ajax.
+					this.initGolocationForm(formsItems);
+				} else {
+					// If forms element don't have geolocation data attribute, init forms the regular way.
+					this.initOnlyFormsInner(formsItems?.children?.[0]?.getAttribute(this.state.getStateAttribute('formId')) || 0);
+				}
+			});
+		}
+	}
 
-			this.initOne(formId);
+	/**
+	 * Init only geolocation forms by ajax.
+	 * @param {object} formsElement Forms element.
+	 */
+	initGolocationForm(formsElement) {
+		const forms = formsElement?.querySelectorAll(this.state.getStateSelectorsForm());
 
-			this.conditionalTags.initOne(formId);
+		const body = {
+			method: 'POST',
+			mode: 'same-origin',
+			headers: {
+				Accept: 'application/json',
+			},
+			body: formsElement?.getAttribute(this.state.getStateAttribute('formGeolocation')),
+			credentials: 'same-origin',
+			redirect: 'follow',
+			referrer: 'no-referrer',
+		};
 
-			this.steps.initOne(formId);
+		// Get geolocation data from ajax to detect what we will remove from DOM.
+		fetch(this.state.getRestUrl(ROUTES.GEOLOCATION), body)
+		.then((response) => {
+			this.formSubmitErrorContentType(response, 'geolocation');
+			return response.json();
+		})
+		.then((response) => {
+			// Get formId from ajax response.
+			let formId = response?.data?.formId;
+
+			// If form id is not set, get it from first form element.
+			if (!formId) {
+				formId = forms?.[0]?.getAttribute(this.state.getStateAttribute('formId')) || 0;
+			}
+
+			// Loop all form elements and remove all except the one we need.
+			[...forms].forEach((form) => {
+				if (form.getAttribute(this.state.getStateAttribute('formId')) !== formId) {
+					// Remove all forms except the one we got from ajax.
+					form.remove();
+				} else {
+					// Init form id that we got from ajax.
+					this.initOnlyFormsInner(formId);
+
+					// Remove geolocation data attribute from forms element.
+					formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
+				}
+			});
+
+			// Remove loading class from forms element.
+			formsElement?.classList?.remove(this.state.getStateSelectorsClassGeolocationLoading());
 		});
+	}
+
+	/**
+	 * Init only forms - inner items.
+	 * 
+	 * @returns {void}
+	 */
+	initOnlyFormsInner(formId) {
+		// Set state initial data for form.
+		setStateFormInitial(formId);
+
+		// Init all form elements.
+		this.initOne(formId);
+
+		// Init conditional tags.
+		this.conditionalTags.initOne(formId);
+
+		// Init steps.
+		this.steps.initOne(formId);
 	}
 
 	/**
@@ -1073,12 +1154,6 @@ export class Form {
 				},
 			});
 
-			const countryCookie = cookies.getCookie('esForms-country')?.toLocaleLowerCase();
-			if (countryCookie) {
-
-				choices.setChoiceByValue(countryCookie);
-			}
-
 			this.state.setStateElementLoaded(name, true, formId);
 			this.state.setStateElementCustom(name, choices, formId);
 
@@ -1533,8 +1608,14 @@ export class Form {
 			initOnlyForms: () => {
 				this.initOnlyForms();
 			},
-			initOne: (element) => {
-				this.initOne(element);
+			initGolocationForm: (formsElement) => {
+				this.initGolocationForm(formsElement);
+			},
+			initOnlyFormsInner: (formId) => {
+				this.initOnlyFormsInner(formId);
+			},
+			initOne: (formId) => {
+				this.initOne(formId);
 			},
 			formSubmit: (formId, filter = {}) => {
 				this.formSubmit(formId, filter);

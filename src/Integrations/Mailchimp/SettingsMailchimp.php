@@ -15,7 +15,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\Settings\SettingsGeneral;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

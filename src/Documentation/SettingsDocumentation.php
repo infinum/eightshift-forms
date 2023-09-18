@@ -3,13 +3,14 @@
 /**
  * Documentation Settings class.
  *
- * @package EightshiftForms\Settings\Settings
+ * @package EightshiftForms\Documentation
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings\Settings;
+namespace EightshiftForms\Documentation;
 
+use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

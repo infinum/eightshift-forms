@@ -22,6 +22,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Theme\EnqueueTheme;
+use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
@@ -308,10 +309,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['use'] = [
 			'activeIntegrations' => $this->getActiveIntegrations(),
-			'geolocation' => Variables::getGeolocationUse(),
+			'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
 		];
-
-		$output['countryDataset'] = Variables::getGeolocationUse();
 
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');

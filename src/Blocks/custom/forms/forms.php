@@ -6,20 +6,18 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Form\Form;
-use EightshiftForms\Geolocation\Geolocation;
+use EightshiftForms\Helpers\Encryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestInvalid = Components::getComponent('invalid');
-$manifestUtils = Components::getComponent('utils');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
 $blockClass = $attributes['blockClass'] ?? '';
+$componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Check formPost ID prop.
 $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
@@ -27,11 +25,6 @@ $formsStyle = Components::checkAttr('formsStyle', $attributes, $manifest);
 $formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
 $formsFormGeolocation = Components::checkAttr('formsFormGeolocation', $attributes, $manifest);
 $formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
-
-// Override form ID in case we use geo location but use this feature only on frontend.
-if (!$formsServerSideRender) {
-	$formsFormPostId = apply_filters(Geolocation::GEOLOCATION_IS_USER_LOCATED, $formsFormPostId, $formsFormGeolocation, $formsFormGeolocationAlternatives);
-}
 
 $formsStyleOutput = [];
 if ($formsStyle && gettype($formsStyle) === 'array') {
@@ -42,12 +35,6 @@ if ($formsStyle && gettype($formsStyle) === 'array') {
 		$formsStyle
 	);
 }
-
-$formsClass = Components::classnames([
-	Components::selector($blockClass, $blockClass),
-	$attributes['className'] ?? '',
-	...$formsStyleOutput,
-]);
 
 // Return nothing if it is on frontend.
 if (!$formsServerSideRender && (!$formsFormPostId || get_post_status($formsFormPostId) !== 'publish')) {
@@ -76,52 +63,86 @@ if ($formsServerSideRender) {
 	}
 }
 
+$allForms = [
+	$formsFormPostId,
+];
+
+if ($formsFormGeolocationAlternatives) {
+	$allForms = [
+		...$allForms,
+		...array_map(
+			static function ($item) {
+				return $item['formId'];
+			},
+			$formsFormGeolocationAlternatives
+		),
+	];
+}
+
+$formAttrs = [];
+$hasGeolocation = false;
+
+if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
+	$hasGeolocation = true;
+	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formGeolocation']] = Encryption::encryptor(wp_json_encode([
+		'id' => $formsFormPostId,
+		'geo' => $formsFormGeolocation,
+		'alt' => $formsFormGeolocationAlternatives,
+	]));
+}
+
+$formsAttrsOutput = '';
+if ($formAttrs) {
+	foreach ($formAttrs as $key => $value) {
+		$formsAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
+	}
+}
+
+$formsClass = Components::classnames([
+	Components::selector($blockClass, $blockClass),
+	Components::selector($componentJsClass, $componentJsClass),
+	Components::selector($hasGeolocation, 'es-form-is-geolocation-loading'),
+	$attributes['className'] ?? '',
+	...$formsStyleOutput,
+]);
+
 ?>
 
-<div class="<?php echo esc_attr($formsClass); ?>">
-	<?php if (is_user_logged_in() && !is_admin()) { ?>
-		<div class="<?php echo esc_attr("{$blockClass}__edit-wrap") ?>">
-			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getFormEditPageUrl($formsFormPostId)) ?>" title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
-					<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-				</a>
-			<?php } ?>
-
-			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
-				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formsFormPostId)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
-				<?php echo $manifestUtils['icons']['settings']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-				</a>
-			<?php } ?>
-
-			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr("{$blockClass}__edit-link") ?>" href="<?php echo esc_url(Helper::getSettingsGlobalPageUrl()) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
-					<?php echo $manifestUtils['icons']['dashboard']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
-				</a>
-			<?php } ?>
-		</div>
-	<?php } ?>
-
+<div class="<?php echo esc_attr($formsClass); ?>" <?php echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
 	<?php
+	foreach ($allForms as $formId) {
+		// Convert blocks to array.
+		$blocks = parse_blocks(get_the_content(null, false, $formId));
 
-	// Convert blocks to array.
-	$blocks = parse_blocks(get_the_content(null, false, $formsFormPostId));
+		// Bailout if it fails for some reason.
+		if (!$blocks) {
+			return;
+		}
 
-	// Bailout if it fails for some reason.
-	if (!$blocks) {
-		return;
+		$output = apply_filters(
+			Form::FILTER_FORMS_BLOCK_MODIFICATIONS,
+			$blocks,
+			array_merge(
+				$attributes,
+				[
+					'formsFormPostId' => $formId,
+				]
+			),
+		);
+
+		// Render blocks.
+		foreach ($output as $block) {
+			// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			echo apply_filters('the_content', render_block($block));
+		}
 	}
 
-	$output = apply_filters(
-		Form::FILTER_FORMS_BLOCK_MODIFICATIONS,
-		$blocks,
-		$attributes,
+	echo Components::render(
+		'loader',
+		Components::props('loader', $attributes, [
+			'loaderIsGeolocation' => true,
+		])
 	);
-
-	// Render blocks.
-	foreach ($output as $block) {
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		echo apply_filters('the_content', render_block($block));
-	}
 	?>
 </div>
 

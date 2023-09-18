@@ -23,9 +23,20 @@ interface GeolocationInterface
 	public function getCountriesList(): array;
 
 	/**
-	 * Get geolocation cookie name.
+	 * Detect users geolocation.
 	 *
 	 * @return string
 	 */
-	public function getGeolocationCookieName(): string;
+	public function getUsersGeolocation(): string;
+
+	/**
+	 * Check if user location exists in the provided locations.
+	 *
+	 * @param string $formId Form Id.
+	 * @param array<string, mixed> $defaultLocations Default locations set to form..
+	 * @param array<string, mixed> $additionalLocations Additional location set to form.
+	 *
+	 * @return string
+	 */
+	public function isUserGeolocated(string $formId, array $defaultLocations, array $additionalLocations): string;
 }

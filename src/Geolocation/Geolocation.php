@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
 use Exception;
@@ -27,35 +29,19 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	use SettingsHelper;
 
 	/**
-	 * User location cache variable so we can optimize loading of db.
-	 *
-	 * @var string
-	 */
-	private $userLocation = '';
-
-	/**
 	 * Geolocation check if user is geolocated constant.
 	 *
 	 * @var string
 	 */
 	public const GEOLOCATION_IS_USER_LOCATED = 'es_geolocation_is_user_located';
-	public const GEOLOCATION_COOKIE_NAME = 'es_geolocation_cookie_name';
 
 	/**
 	 * Register all the hooks
 	 */
 	public function register(): void
 	{
-		if (!\function_exists('is_plugin_active')) {
-			include_once(\ABSPATH . 'wp-admin/includes/plugin.php');
-		}
-
 		// Use normal geolocation detection from db.
-		\add_filter('init', [$this, 'setNormalLocationCookie']); // @phpstan-ignore-line
-
-		// WP Rocket specific hooks for geolocation.
-		\add_filter('rocket_advanced_cache_file', [$this, 'addNginxAdvanceCacheRules']);
-		\add_filter('rocket_cache_dynamic_cookies', [$this, 'dynamicCookiesList']);
+		\add_action('init', [$this, 'setNormalLocationCookie']);
 
 		\add_filter(self::GEOLOCATION_IS_USER_LOCATED, [$this, 'isUserGeolocated'], 10, 3);
 	}
@@ -68,22 +54,34 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function setNormalLocationCookie(): void
 	{
 		// Bailout if geolocation feature is not used.
-		if (!Variables::getGeolocationUse()) {
+		if (!$this->useGeolocation()) {
 			return;
 		}
 
-		// Bailout if WP Rocket feature is used.
-		if (Variables::getGeolocationUseWpRocket()) {
+		try {
+			$cookieValue = $this->getUsersGeolocation();
+
+			// Set cookie if we have a value.
+			if ($cookieValue) {
+				\ob_start();
+				$this->setCookie(
+					$this->getGeolocationCookieName(),
+					$cookieValue,
+					$this->getGeolocationExpiration(),
+					'/'
+				);
+				\ob_end_flush();
+			}
+		} catch (Exception $exception) {
+			/*
+			 * The getGeolocation will throw an error if the phar or geo db files are missing,
+			 * but if we threw an exception here, that would break the execution of the WP app.
+			 * This way we'll log the exception, but the site should work fine without setting
+			 * the cookie.
+			 */
+			\error_log("Error code: {$exception->getCode()}, with message: {$exception->getMessage()}"); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
 			return;
 		}
-
-		// Bailout if Cloudflare feature is used.
-		if (Variables::getGeolocationUseCloudflare()) {
-			return;
-		}
-
-		// Detect geolocation from db and store it in the database.
-		$this->setLocationCookie();
 	}
 
 	/**
@@ -93,7 +91,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function useGeolocation(): bool
 	{
-		return Variables::getGeolocationUse();
+		return \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 	}
 
 	/**
@@ -103,14 +101,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationCookieName(): string
 	{
-		$name = Variables::getGeolocationCookieName();
-
-		$filterName = Filters::getFilterName(['geolocation', 'cookieName']);
-		if (\has_filter($filterName)) {
-			$name = \apply_filters($filterName, null);
-		}
-
-		return $name;
+		return 'esForms-country';
 	}
 
 	/**
@@ -122,7 +113,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$path = Variables::getGeolocationPharPath();
+		$path = Helper::getDataManifestPath('geolocation', 'geoip.phar');
 
 		$filterName = Filters::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
@@ -146,7 +137,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$path = Variables::getGeolocationDbPath();
+		$path = Helper::getDataManifestPath('geolocation', 'geoip.mmdb');
 
 		$filterName = Filters::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
@@ -194,7 +185,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationExpiration(): int
 	{
-		return Variables::getGeolocationExpiration();
+		return \time() + 1296000; // 15 days.
 	}
 
 	/**
@@ -209,13 +200,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function isUserGeolocated(string $formId, array $defaultLocations, array $additionalLocations): string
 	{
 		// Bailout if geolocation feature is not used.
-		if (!Variables::getGeolocationUse()) {
-			return $formId;
-		}
-
-		// Add ability to disable geolocation from external source. (Generaly used for GDPR).
-		$filterName = Filters::getFilterName(['geolocation', 'disable']);
-		if (\has_filter($filterName) && \apply_filters($filterName, null)) {
+		if (!$this->useGeolocation()) {
 			return $formId;
 		}
 
@@ -259,7 +244,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			$matchDefaultLocations = \array_filter(
 				$defaultLocations,
 				function ($location) use ($userLocation) {
-					$country = $this->getCountryGroup($location['value']);
+					$country = $this->getCountryGroup($location);
 
 					return isset($country[$userLocation]);
 				}
@@ -282,97 +267,48 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	}
 
 	/**
-	 * List all dynamic cookies that will create new cached version.
-	 *
-	 * @param array<string, mixed> $items Items from the admin.
-	 *
-	 * @return array<int|string, mixed>
-	 */
-	public function dynamicCookiesList(array $items): array
-	{
-		// Bailout if geolocation feature is not used.
-		if (!Variables::getGeolocationUse()) {
-			return $items;
-		}
-
-		// Bailout if WP Rocket feature is not used.
-		if (!Variables::getGeolocationUseWpRocket()) {
-			return $items;
-		}
-
-		// Bailout if Cloudflare feature is used because we use their geolocation based on the header value.
-		if (Variables::getGeolocationUseCloudflare()) {
-			return $items;
-		}
-
-		$items[] = $this->getGeolocationCookieName();
-
-		return $items;
-	}
-
-	/**
-	 * Add geolocation function in the advance-cache.php config file on plugin activation
-	 *
-	 * Used only with Nginx web servers.
-	 *
-	 * @param string $content Original file output.
-	 */
-	public function addNginxAdvanceCacheRules(string $content): string
-	{
-		// Bailout if geolocation feature is not used.
-		if (!Variables::getGeolocationUse()) {
-			return $content;
-		}
-
-		// Bailout if WP Rocket feature is not used.
-		if (!Variables::getGeolocationUseWpRocket()) {
-			return $content;
-		}
-
-		// Bailout if Cloudflare feature is used because we use their geolocation based on the header value.
-		if (Variables::getGeolocationUseCloudflare()) {
-			return $content;
-		}
-
-		$position = \strpos($content, '$rocket_config_class');
-
-		// This part is string on purpose.
-		$output = '
-		$esFormsPath = ABSPATH . "wp-content/plugins/eightshift-forms/src/Geolocation/geolocationDetect.php";
-		if (file_exists($esFormsPath)) {
-			require_once $esFormsPath;
-		};';
-
-		$outputContent = \substr_replace($content, $output, $position, 0);
-
-		// Override output with filter.
-		$filterName = Filters::getFilterName(['geolocation', 'wpRocketAdvancedCache']);
-		if (\has_filter($filterName)) {
-			return \apply_filters($filterName, $content, $outputContent);
-		}
-
-		return $outputContent;
-	}
-
-	/**
 	 * Detect users geolocation.
 	 *
 	 * @return string
 	 */
-	private function getUsersGeolocation(): string
+	public function getUsersGeolocation(): string
 	{
-		// Returns user location retrieved from the API or cookie.
-		// Used internal variable for caching optimisations.
-		if (!$this->userLocation) {
-			// Use Cloudflare header if that feature is used.
-			if (Variables::getGeolocationUseCloudflare()) {
-				return isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? \strtoupper(\sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_IPCOUNTRY']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			} else {
-				$this->userLocation = $this->getGeolocation();
+		// Bailout if geolocation feature is not used.
+		if (!$this->useGeolocation()) {
+			return '';
+		}
+
+		// Use Cloudflare header if that feature is used.
+		if ($this->isCheckboxOptionChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+			$outputCloudflare = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CF_IPCOUNTRY']) : ''; // phpcs:ignore
+
+			if ($outputCloudflare) {
+				return $outputCloudflare;
 			}
 		}
 
-		return $this->userLocation;
+		// Check if cookie is set and return that value.
+		if (isset($_COOKIE[$this->getGeolocationCookieName()])) {
+			$outputCookie = $this->cleanCookieValue($_COOKIE[$this->getGeolocationCookieName()]); // phpcs:ignore
+
+			if ($outputCookie) {
+				return $outputCookie;
+			}
+		}
+
+		return $this->cleanCookieValue($this->getGeolocation());
+	}
+
+	/**
+	 * Clean cookie value.
+	 *
+	 * @param string $value Cookie value to clean.
+	 *
+	 * @return string
+	 */
+	private function cleanCookieValue(string $value): string
+	{
+		return \strtoupper(\sanitize_text_field(\wp_unslash($value)));
 	}
 
 	/**

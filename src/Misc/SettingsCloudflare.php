@@ -107,17 +107,13 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 						'component' => 'intro',
 						'introTitle' => \__('Geolocation', 'eightshift-forms'),
 						'introSubtitle' => \sprintf(\__("
-							By default geolocation uses cookie to store users location.
+							By default geolocation uses IP database to get users location.
 							With Cloudflare enabled, geolocation will use Cloudflare headers to get the user location.
 							<p>
 								Make sure you have enabled <strong>IP Geolocation</strong> in your Cloudflare dashboard.
 								You can find more details on how to enable it <a href='%1\$s' rel='noopener noreferrer' target='_blank'>here</a>.
 							</p>
-							<p>
-								If you have WP Rocket plugin installed we will also remove geolocation cookie from the dynamic cookies list.
-								You can find more details on WP Rocket and geolocations <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.
-							</p>
-						", 'eightshift-forms'), 'https://developers.cloudflare.com/support/network/configuring-ip-geolocation/', 'https://eightshift.com/forms/features/geolocation'),
+						", 'eightshift-forms'), 'https://developers.cloudflare.com/support/network/configuring-ip-geolocation/'),
 					],
 				],
 			],

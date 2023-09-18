@@ -15,7 +15,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
-use EightshiftForms\Settings\Settings\SettingsDashboard;
+use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**

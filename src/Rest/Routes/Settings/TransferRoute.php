@@ -401,7 +401,7 @@ class TransferRoute extends AbstractBaseRoute
 					$newId = \wp_update_post([
 						'ID' => (int) $exists,
 						'post_title' => $postTitle,
-						'post_content' => $postContent,
+						'post_content' => \wp_slash($postContent),
 						'post_status' => $postStatus,
 						'post_password' => $postPassword,
 						'post_parent' => $postParent,
@@ -444,7 +444,7 @@ class TransferRoute extends AbstractBaseRoute
 					// Create a new post.
 					$newId = \wp_insert_post([
 						'post_title' => $postTitle,
-						'post_content' => $postContent,
+						'post_content' => \wp_slash($postContent),
 						'post_status' => $postStatus,
 						'post_password' => $postPassword,
 						'post_parent' => $postParent,
