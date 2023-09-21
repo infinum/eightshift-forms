@@ -531,7 +531,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			if (
 				$type === Settings::SETTINGS_TYPE_NAME ||
 				$type === Settings::SETTINGS_GLOBAL_TYPE_NAME ||
-				$type === 'fileUpload'
+				$type === 'fileUploadAdmin'
 			) {
 				$formDataReference = [
 					'formId' => $formId,

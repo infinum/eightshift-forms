@@ -132,6 +132,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 								'phoneName' => $name,
 								'phoneTracking' => $name,
 								'phoneIsNumber' => true,
+								'phoneFieldHidden' => true,
 								'phoneFieldLabel' => $label,
 								'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 									'phoneIsNumber'
@@ -143,6 +144,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 								'component' => 'input',
 								'inputName' => $name,
 								'inputTracking' => $name,
+								'inputFieldHidden' => true,
 								'inputFieldLabel' => $label,
 								'inputType' => 'number',
 								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -157,6 +159,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 								'inputTracking' => $name,
 								'inputFieldLabel' => $label,
 								'inputType' => 'text',
+								'inputFieldHidden' => $name !== 'email',
 								'inputIsRequired' => $name === 'email',
 								'inputIsEmail' => $name === 'email',
 								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
@@ -173,6 +176,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'dateName' => $name,
 						'dateTracking' => $name,
 						'dateFieldLabel' => $label,
+						'dateFieldHidden' => true,
 						'dateType' => 'date',
 						'datePreviewFormat' => 'F j, Y',
 						'dateOutputFormat' => 'Y-m-d',
@@ -188,6 +192,7 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 						'inputName' => $name,
 						'inputTracking' => $name,
 						'inputFieldLabel' => $label,
+						'inputFieldHidden' => true,
 						'inputIsNumber' => true,
 						'inputType' => 'number',
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [

@@ -672,7 +672,7 @@ export class Form {
 						break;
 					}
 
-					this.FORM_DATA.append(name, JSON.stringify(data));
+					// this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 			}
 		}
@@ -1231,7 +1231,7 @@ export class Form {
 					},
 					{
 						name: this.state.getStateParam('type'),
-						value: 'fileUpload', // Not connected to anything just here for reference.
+						value: this.state.getStateConfigIsAdmin() ? 'fileUploadAdmin' : 'fileUpload',
 					},
 					{
 						// Add field name to know where whas this file upload to.
@@ -1251,12 +1251,12 @@ export class Form {
 				const response = JSON.parse(file.xhr.response);
 
 				// Output errors if ther is any.
-				if (response?.data?.validation !== undefined) {
+				if (typeof response?.data?.validation !== 'undefined' && Object.keys(response?.data?.validation)?.length > 0) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.validation?.[file?.upload?.uuid];
 
 					// Remove faulty files.
 					setTimeout(() => {
-						dropzone.removeFile(file);
+						// dropzone.removeFile(file);
 					}, 2500);
 				}
 
@@ -1268,7 +1268,7 @@ export class Form {
 				files.forEach((file) => {
 					if (file.status === 'error') {
 						setTimeout(() => {
-							dropzone.removeFile(file);
+							// dropzone.removeFile(file);
 						}, 2500);
 					}
 				});

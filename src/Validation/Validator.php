@@ -131,12 +131,41 @@ class Validator extends AbstractValidation
 			$fieldsOnly = $this->getValidationReferenceManual($fieldsOnly);
 		}
 
+		// Find refference fields in admin config.
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
+		// Find all req fields.
+		$validationReferenceRequired = $this->getValidationReferenceOnlyRequired($validationReference);
+
+		// Don't validate if no validation reference is found and if this is a step validation.
+		if ($validationReferenceRequired && !$stepFields) {
+			// Get all param names excluding hidden fields.
+			$paramsNames = $this->getParamsFieldNames($params);
+
+			// Check if all required fields are present.
+			foreach ($validationReferenceRequired as $key => $value) {
+				// If field is present skip it.
+				if (array_key_exists($key, $paramsNames)) {
+					continue;
+				}
+
+				// Output keys that are missing as required.
+				$output[$key] = $this->getValidationLabel('validationRequired', $formId);
+			}
+		}
+
+		// Define order of validation.
 		$order = self::VALIDATION_FIELDS;
 
 		// Check params.
-		foreach ($params as $paramKey => $paramValue) {
+		foreach ($params as $paramValue) {
+			$paramType = $paramValue['type'] ?? '';
+
+			// Skip validating hidden fields.
+			if ($paramType === 'hidden') {
+				continue;
+			}
+
 			$inputValue = $paramValue['value'] ?? '';
 			$paramKey = $paramValue['name'] ?? '';
 
@@ -337,7 +366,7 @@ class Validator extends AbstractValidation
 
 		switch ($type) {
 			case Settings::SETTINGS_GLOBAL_TYPE_NAME:
-			case 'fileUpload':
+			case 'fileUploadAdmin':
 				return true;
 			case Settings::SETTINGS_TYPE_NAME:
 				if (!$formId) {
@@ -379,6 +408,21 @@ class Validator extends AbstractValidation
 			},
 			$items
 		);
+	}
+
+	private function getRequiredParamsCheck(string $inputValue, string $formId): string
+	{
+		if (\is_string($inputValue)) {
+			if (\preg_match('/^\s*$/u', $inputValue) === 1) {
+				return $this->getValidationLabel('validationRequired', $formId);
+			}
+		} else {
+			if (empty($inputValue)) {
+				return $this->getValidationLabel('validationRequired', $formId);
+			}
+		}
+
+		return '';
 	}
 
 	/**
@@ -428,6 +472,48 @@ class Validator extends AbstractValidation
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Output validation reference fields that are required only.
+	 *
+	 * @param array<int|string, array<string, mixed>> $refference Valiadaton refference from getValidationReference function.
+	 *
+	 * @return array<int|string, array<string, mixed>>
+	 */
+	private function getValidationReferenceOnlyRequired(array $refference): array
+	{
+		$output = \array_filter(
+			$refference,
+			static function ($value) {
+				return isset($value['isRequired']) && $value['isRequired'] === true;
+			}
+		);
+
+		return $output ? \array_flip(\array_keys($output)) : [];
+	}
+
+	/**
+	 * Output params field names.
+	 *
+	 * @param array<string, mixed> $params Params array.
+	 *
+	 * @return array<string, int>
+	 */
+	private function getParamsFieldNames(array $params): array
+	{
+		return \array_flip(\array_filter(\array_values(\array_map(
+			static function($item) {
+				$type = $item['type'] ?? '';
+
+				if ($type === 'hidden') {
+					return '';
+				}
+
+				return $item['name'] ?? '';
+			},
+			$params
+		))));
 	}
 
 	/**

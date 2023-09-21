@@ -121,15 +121,19 @@ class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 			);
 		}
 
-		$items = \array_values(\array_map(
+		$items = \array_filter(\array_values(\array_map(
 			static function ($item) {
-				return [
-					'label' => $item['title'],
-					'value' => $item['id'],
-				];
+				$id = $item['id'] ?? '';
+
+				if ($id) {
+					return [
+						'label' => $item['title'] ?? \__('No title', 'eightshift-forms'),
+						'value' => $id,
+					];
+				}
 			},
 			$items
-		));
+		)));
 
 		// Finish.
 		return \rest_ensure_response(
