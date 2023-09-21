@@ -191,7 +191,7 @@ $topBar = [];
 if ($adminListingPageTitle || $adminListingSubTitle) {
 	$topBar = [
 		Components::render('layout', [
-			'layoutType' => !$isTrashPage ? 'first-three-left-others-right' : 'first-left-others-right',
+			'layoutType' => !$isTrashPage ? 'first-four-left-others-right' : 'first-left-others-right',
 			'layoutContent' => Components::ensureString([
 				Components::render('container', [
 					'containerUse' => $isTrashPage && $adminListingListingLink,
@@ -247,6 +247,15 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					'containerContent' => esc_html__('Sync', 'eightshift-forms'),
 					'additionalAttributes' => [
 						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'sync',
+					],
+				]),
+				Components::render('container', [
+					'containerUse' => !$isTrashPage,
+					'containerClass' => "es-submit es-submit--ghost {$componentJsBulkClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Duplicate', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'duplicate',
 					],
 				]),
 				Components::render('container', [

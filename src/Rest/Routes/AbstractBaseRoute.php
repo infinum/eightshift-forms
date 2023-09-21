@@ -528,7 +528,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			$formSettingsType = $params['settingsType'] ?? '';
 
 			// Manual populate output it admin settings our build it from form Id.
-			if ($type === Settings::SETTINGS_TYPE_NAME || $type === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+			if (
+				$type === Settings::SETTINGS_TYPE_NAME ||
+				$type === Settings::SETTINGS_GLOBAL_TYPE_NAME ||
+				$type === 'fileUpload'
+			) {
 				$formDataReference = [
 					'formId' => $formId,
 					'type' => $type,

@@ -129,13 +129,13 @@
 		}
 	}
 
-	&[data-layout-type='first-three-left-others-right'] {
+	&[data-layout-type='first-four-left-others-right'] {
 		> #{$this}__wrap {
 			display: flex;
 			align-items: center;
 			gap: 0.75rem;
 
-			> *:nth-child(3):not(:last-child) {
+			> *:nth-child(4):not(:last-child) {
 				margin-right: auto;
 			}
 		}

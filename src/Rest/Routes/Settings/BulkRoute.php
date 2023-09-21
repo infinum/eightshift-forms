@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Transfer\TransferInterface;
 use WP_REST_Request;
 
 /**
@@ -39,13 +40,24 @@ class BulkRoute extends AbstractBaseRoute
 	protected $integrationSyncDiff;
 
 	/**
+	 * Instance variable of TransferInterface data.
+	 *
+	 * @var TransferInterface
+	 */
+	protected $transfer;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
+	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
-	public function __construct(IntegrationSyncInterface $integrationSyncDiff)
-	{
+	public function __construct(
+		IntegrationSyncInterface $integrationSyncDiff,
+		TransferInterface $transfer
+	) {
 		$this->integrationSyncDiff = $integrationSyncDiff;
+		$this->transfer = $transfer;
 	}
 
 	/**
@@ -142,6 +154,9 @@ class BulkRoute extends AbstractBaseRoute
 			case 'delete-perminentely':
 				$output = $this->deletePerminently($ids);
 				break;
+			case 'duplicate':
+				$output = $this->duplicate($ids);
+				break;
 		}
 
 		switch ($output['status']) {
@@ -200,6 +215,9 @@ class BulkRoute extends AbstractBaseRoute
 				break;
 			case 'delete-perminentely':
 				$msg = \esc_html__('deleted perminently', 'eightshift-forms');
+				break;
+			case 'duplicate':
+				$msg = \esc_html__('duplicate', 'eightshift-forms');
 				break;
 		}
 
@@ -386,5 +404,38 @@ class BulkRoute extends AbstractBaseRoute
 		}
 
 		return $this->output($output, 'restore');
+	}
+
+	/**
+	 * Duplicate forms by Ids.
+	 *
+	 * @param array<int> $ids Form Ids.
+	 *
+	 * @return array<int>
+	 */
+	private function duplicate(array $ids): array
+	{
+		$output = [];
+
+		foreach ($ids as $id) {
+			$title = \get_the_title($id);
+
+			if (!$title) {
+				// translators: %s replaces form id.
+				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
+			}
+
+			$export = $this->transfer->getExportForm((string) $id);
+
+			$action  = $this->transfer->getImportByFormArray($export, false);
+
+			if ($action) {
+				$output['success'][] = $title;
+			} else {
+				$output['error'][] = $title;
+			}
+		}
+
+		return $this->output($output, 'duplicate');
 	}
 }

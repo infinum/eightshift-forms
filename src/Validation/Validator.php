@@ -14,6 +14,8 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
+use EightshiftForms\Integrations\Jira\SettingsJira;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
@@ -335,19 +337,26 @@ class Validator extends AbstractValidation
 
 		switch ($type) {
 			case Settings::SETTINGS_GLOBAL_TYPE_NAME:
+			case 'fileUpload':
 				return true;
 			case Settings::SETTINGS_TYPE_NAME:
 				if (!$formId) {
 					return false;
 				}
 				return true;
+			case SettingsMailer::SETTINGS_TYPE_KEY:
+			case SettingsJira::SETTINGS_TYPE_KEY:
+				if (!$formId || !$postId) {
+					return false;
+				}
+				return true;
 			case SettingsAirtable::SETTINGS_TYPE_KEY:
-				if (!$formId || !$itemId || !$postId || !$innerId) {
+				if (!$formId || !$postId || !$itemId || !$innerId) {
 					return false;
 				}
 				return true;
 			default:
-				if (!$formId || !$itemId || !$postId) {
+				if (!$formId || !$postId || !$itemId) {
 					return false;
 				}
 				return true;
