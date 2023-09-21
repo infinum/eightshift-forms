@@ -111,7 +111,7 @@ export class Form {
 		// Get geolocation data from ajax to detect what we will remove from DOM.
 		fetch(this.state.getRestUrl(ROUTES.GEOLOCATION), body)
 		.then((response) => {
-			this.formSubmitErrorContentType(response, 'geolocation');
+			this.utils.formSubmitErrorContentType(response, 'geolocation', null);
 			return response.json();
 		})
 		.then((response) => {
@@ -267,8 +267,7 @@ export class Form {
 
 		fetch(url, body)
 			.then((response) => {
-				this.formSubmitErrorContentType(formId, response, 'formSubmit');
-
+				this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
 				return response.json();
 			})
 			.then((response) => {
@@ -316,8 +315,7 @@ export class Form {
 
 		fetch(url, body)
 			.then((response) => {
-				this.formSubmitErrorContentType(formId, response, 'formSubmitStep');
-
+				this.utils.formSubmitErrorContentType(response, 'formSubmitStep', formId);
 				return response.json();
 			})
 			.then((response) => {
@@ -346,53 +344,6 @@ export class Form {
 
 		// Remove loader.
 		this.utils.hideLoader(formId);
-	}
-
-	/**
-	 * Actions to run if api response returns wrong content type.
-	 *
-	 * This can happen if the API returns HTML or something else that we don't expect.
-	 * Cloudflare security can return HTML.
-	 *
-	 * @param {string} formId Form Id.
-	 * @param {mixed} response Api response.
-	 * @param {string} type Function used.
-	 *
-	 * @throws Error.
-	 *
-	 * @returns {void}
-	 */
-	formSubmitErrorContentType(formId, response, type) {
-		const contentType = response?.headers?.get('content-type');
-
-		// This can happen if the API returns HTML or something else that we don't expect.
-		if (contentType && contentType.indexOf('application/json') === -1) {
-			// Clear all errors.
-			this.utils.resetErrors(formId);
-
-			// Remove loader.
-			this.utils.hideLoader(formId);
-
-			// Set global msg.
-			this.utils.setGlobalMsg(
-				formId,
-				this.state.getStateSettingsFormServerErrorMsg(),
-				'error'
-			);
-
-			// Reset timeout for after each submit.
-			if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
-				clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
-			}
-
-			// Hide global msg in any case after some time.
-			this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
-				this.utils.unsetGlobalMsg(formId);
-			}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
-
-			// Throw error.
-			throw new Error(`API response returned the wrong content type for this request. Function used: "${type}"`);
-		}
 	}
 
 	/**
@@ -1629,9 +1580,6 @@ export class Form {
 			},
 			formSubmitBefore: (formId, response) => {
 				this.formSubmitBefore(formId, response);
-			},
-			formSubmitErrorContentType: (formId, response, type) => {
-				this.formSubmitErrorContentType(formId, response, type);
 			},
 			formSubmitSuccess: (formId, response, isFinalStep = false) => {
 				this.formSubmitSuccess(formId, response, isFinalStep);

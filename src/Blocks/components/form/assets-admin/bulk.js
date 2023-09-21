@@ -77,6 +77,7 @@ export class Bulk {
 
 		fetch(this.state.getRestUrl(ROUTES.BULK), body)
 			.then((response) => {
+				this.utils.formSubmitErrorContentType(response, 'bulk', null);
 				return response.json();
 			})
 			.then((response) => {

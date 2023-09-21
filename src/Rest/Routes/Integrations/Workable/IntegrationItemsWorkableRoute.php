@@ -124,8 +124,8 @@ class IntegrationItemsWorkableRoute extends AbstractBaseRoute
 		$items = \array_values(\array_map(
 			static function ($item) {
 				return [
-					'label' => $item['title'],
-					'value' => $item['id'],
+					'label' => $item['title'] ?? \__('No title', 'eightshift-forms'),
+					'value' => $item['id'] ?? '',
 				];
 			},
 			$items

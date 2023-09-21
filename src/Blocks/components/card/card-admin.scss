@@ -240,6 +240,16 @@
 		--global-colors-esf-admin-accent: var(--global-colors-esf-red-500);
 		--global-colors-esf-admin-accent-30: var(--global-colors-esf-red-50);
 		--global-colors-esf-admin-accent-05: var(--global-colors-esf-red-100);
+		opacity: 0.5;
+		transition: {
+			property: opacity;
+			timing-function: ease-out;
+			duration: 0.3s;
+		}
+
+		&:hover {
+			opacity: 1;
+		}
 
 		#{$this}__icon {
 			color: var(--global-colors-esf-red-600);

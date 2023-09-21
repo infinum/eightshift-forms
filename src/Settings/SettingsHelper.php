@@ -70,7 +70,11 @@ trait SettingsHelper
 		$value = $this->getSettingsValue($key, $formId);
 
 		if (!$value) {
-			return $this->getOptionValue($optionKey);
+			$value = $this->getOptionValue($optionKey);
+		}
+
+		if (!$value) {
+			$value = $fallback;
 		}
 
 		return $value;
@@ -119,7 +123,7 @@ trait SettingsHelper
 		$value = $this->getOptionValue($key);
 
 		if (!$value) {
-			return $fallback;
+			$value = $fallback;
 		}
 
 		return $value;

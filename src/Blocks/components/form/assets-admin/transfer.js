@@ -64,6 +64,7 @@ export class Transfer {
 
 		fetch(this.state.getRestUrl(ROUTES.TRANSFER), body)
 			.then((response) => {
+				this.utils.formSubmitErrorContentType(response, 'transfer', formId);
 				return response.json();
 			})
 			.then((response) => {

@@ -43,6 +43,7 @@ export class Locations {
 
 		fetch(this.state.getRestUrl(ROUTES.LOCATIONS), body)
 			.then((response) => {
+				this.utils.formSubmitErrorContentType(response, 'location', this.FORM_ID);
 				return response.json();
 			})
 			.then((response) => {

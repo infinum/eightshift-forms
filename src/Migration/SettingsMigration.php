@@ -131,7 +131,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'card',
 						'cardTitle' => \__('Version 3 &rarr; Version 4', 'eightshift-forms'),
-						'cardSubTitle' => \__('Major changes to integrations, settings and form editing.', 'eightshift-forms'),
+						'cardSubTitle' => \__('Major changes to integrations, settings and form editing. If you experience timeout issues, disable all integrations and run the migration with only one integration active at a time.', 'eightshift-forms'),
 						'cardContent' => [
 							[
 								'component' => 'submit',

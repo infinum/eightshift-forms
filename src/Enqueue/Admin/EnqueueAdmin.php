@@ -12,6 +12,7 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Enqueue\SharedEnqueue;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
@@ -78,18 +79,21 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	{
 		parent::enqueueScripts();
 
-		$output = \array_merge(
-			$this->getEnqueueSharedInlineCommonItems(),
-			[
-				'nonce' => \wp_create_nonce('wp_rest'),
-				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
-				'isAdmin' => true,
-				'redirectionTimeout' => 100,
-			],
-		);
+		$output = [];
+
+		if (Helper::isEightshiftFormsAdminPages()) {
+			$output = \array_merge(
+				$this->getEnqueueSharedInlineCommonItems(),
+				[
+					'nonce' => \wp_create_nonce('wp_rest'),
+					'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
+					'isAdmin' => true,
+					'redirectionTimeout' => 100,
+				],
+			);
+		}
 
 		$output = \wp_json_encode($output);
-
 		\wp_add_inline_script($this->getAdminScriptHandle(), "const esFormsLocalization = {$output}", 'before');
 	}
 }
