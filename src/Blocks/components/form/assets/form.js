@@ -655,13 +655,8 @@ export class Form {
 					// Loop files and append.
 					if (fileList.length) {
 						for (const [key, file] of Object.entries(fileList)) {
-							const status = file?.xhr?.response ? JSON.parse(file.xhr.response)?.status : 'error';
-
-							// Check if the file is ok.
-							if (status === 'success') {
-								data.value = this.utils.getFileNameFromFileObject(file);
-								this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
-							}
+							data.value = this.utils.getFileNameFromFileObject(file);
+							this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
 						}
 					} else {
 						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
@@ -1253,11 +1248,6 @@ export class Form {
 				// Output errors if ther is any.
 				if (typeof response?.data?.validation !== 'undefined' && Object.keys(response?.data?.validation)?.length > 0) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.validation?.[file?.upload?.uuid];
-
-					// Remove faulty files.
-					setTimeout(() => {
-						// dropzone.removeFile(file);
-					}, 2500);
 				}
 
 				field?.classList?.add(this.state.getStateSelectorsClassFilled());

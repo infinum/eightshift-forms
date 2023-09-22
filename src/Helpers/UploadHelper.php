@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
+use EightshiftForms\Config\Config;
+
 /**
  * Trait UploadHelper
  */
@@ -45,8 +47,9 @@ trait UploadHelper
 		}
 
 		$sep = \DIRECTORY_SEPARATOR;
+		$dir = Config::getTempUploadDir();
 
-		$folderPath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}";
+		$folderPath = \WP_CONTENT_DIR . "{$sep}{$dir}{$sep}";
 
 		if (!\is_dir($folderPath)) {
 			\mkdir($folderPath);
@@ -118,8 +121,8 @@ trait UploadHelper
 			return;
 		}
 		$sep = \DIRECTORY_SEPARATOR;
-
-		$folderPath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}";
+		$dir = Config::getTempUploadDir();
+		$folderPath = \WP_CONTENT_DIR . "{$sep}{$dir}{$sep}";
 
 		if (!\is_dir($folderPath)) {
 			return;
@@ -156,8 +159,9 @@ trait UploadHelper
 		}
 
 		$sep = \DIRECTORY_SEPARATOR;
+		$dir = Config::getTempUploadDir();
 
-		$filePath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}{$name}";
+		$filePath = \WP_CONTENT_DIR . "{$sep}{$dir}{$sep}{$name}";
 
 		if (!\file_exists($filePath)) {
 			return '';

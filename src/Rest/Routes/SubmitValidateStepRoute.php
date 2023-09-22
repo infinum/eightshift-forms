@@ -284,7 +284,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	{
 		// Make sure all keys are strings.
 		$keys = \array_filter(\array_values(\array_map(
-			static function($value) {
+			static function ($value) {
 				return \strval($value);
 			},
 			\array_keys($steps)

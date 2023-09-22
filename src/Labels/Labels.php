@@ -210,6 +210,9 @@ class Labels implements LabelsInterface
 			'validationAccept' => \__('The file type is not supported. Only %s files are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
 			'validationAcceptMime' => \__('The file seems to be corrupted or invalid format. Only %s are allowed.', 'eightshift-forms'),
+			// translators: %s used for displaying file type value.
+			'validationAcceptMimeMultiple' => \__('One or more files seems to be corrupted or invalid format. Only %s are allowed.', 'eightshift-forms'),
+			'validationFileWrongUploadPath' => \__('One or more files seems to be uploaded using unauthorized method.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Config\Config;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
@@ -139,6 +140,7 @@ class Validator extends AbstractValidation
 		$validationReferenceRequired = $this->getValidationReferenceOnlyRequired($validationReference);
 
 		// Don't validate if no validation reference is found and if this is a step validation.
+		// This protects us from no required fields being sent by none authorized request or sending non valid file type.
 		if ($validationReferenceRequired && $strictValidation) {
 			// Get all param names excluding hidden fields.
 			$paramsNames = $this->getParamsFieldNames($params);
@@ -146,7 +148,7 @@ class Validator extends AbstractValidation
 			// Check if all required fields are present.
 			foreach ($validationReferenceRequired as $key => $value) {
 				// If field is present skip it.
-				if (array_key_exists($key, $paramsNames)) {
+				if (\array_key_exists($key, $paramsNames)) {
 					continue;
 				}
 
@@ -191,9 +193,26 @@ class Validator extends AbstractValidation
 				return (\array_search($key1, $order, true) > \array_search($key2, $order, true));
 			});
 
-			error_log( print_r( ( $reference ), true ) );
-			error_log( print_r( ( $paramKey ), true ) );
-			
+			// Validate are all files uploaded to the server and not a external link.
+			if ($paramType === 'file') {
+				if (\is_array($inputValue)) {
+					foreach ($inputValue as $key => $value) {
+						// Expolode and remove empty files.
+						$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, $value));
+						if (!$fileName) {
+							continue;
+						}
+
+						$fileName = \array_flip($fileName);
+
+						if (isset($fileName[Config::getTempUploadDir()])) {
+							continue;
+						}
+
+						$output[$paramKey] = $this->getValidationLabel('validationFileWrongUploadPath', $formId);
+					}
+				}
+			}
 
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
@@ -287,6 +306,18 @@ class Validator extends AbstractValidation
 						}
 
 						break;
+					case 'accept':
+						// Check every file and detect if it is correct extension.
+						if (\is_array($inputValue)) {
+							foreach ($inputValue as $key => $value) {
+								if ($this->isFileTypeValid($value, $dataValue)) {
+									continue;
+								}
+
+								$output[$paramKey] = \sprintf($this->getValidationLabel('validationAcceptMimeMultiple', $formId), $dataValue);
+							}
+						}
+						break;
 				}
 			}
 		}
@@ -318,10 +349,6 @@ class Validator extends AbstractValidation
 		// Find validation reference by ID.
 		$reference = $validationReference[$fieldName] ?? [];
 
-		error_log( print_r( ( $reference ), true ) );
-		error_log( print_r( ( $file ), true ) );
-		
-
 		// Loop all validations from the reference.
 		foreach ($reference as $dataKey => $dataValue) {
 			if (!$dataValue) {
@@ -349,9 +376,6 @@ class Validator extends AbstractValidation
 					break;
 			}
 		}
-
-		error_log( print_r( ( $output ), true ) );
-		
 
 		return $output;
 	}
@@ -422,21 +446,6 @@ class Validator extends AbstractValidation
 		);
 	}
 
-	private function getRequiredParamsCheck(string $inputValue, string $formId): string
-	{
-		if (\is_string($inputValue)) {
-			if (\preg_match('/^\s*$/u', $inputValue) === 1) {
-				return $this->getValidationLabel('validationRequired', $formId);
-			}
-		} else {
-			if (empty($inputValue)) {
-				return $this->getValidationLabel('validationRequired', $formId);
-			}
-		}
-
-		return '';
-	}
-
 	/**
 	 * Get validation label from cache or db.
 	 *
@@ -491,7 +500,7 @@ class Validator extends AbstractValidation
 	 *
 	 * @param array<int|string, array<string, mixed>> $refference Valiadaton refference from getValidationReference function.
 	 *
-	 * @return array<int|string, array<string, mixed>>
+	 * @return array<int|string, int>
 	 */
 	private function getValidationReferenceOnlyRequired(array $refference): array
 	{
@@ -515,7 +524,7 @@ class Validator extends AbstractValidation
 	private function getParamsFieldNames(array $params): array
 	{
 		return \array_flip(\array_filter(\array_values(\array_map(
-			static function($item) {
+			static function ($item) {
 				$type = $item['type'] ?? '';
 
 				if ($type === 'hidden') {
