@@ -157,19 +157,21 @@ export class State {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], formId);
 	};
 	getStateFormStepsFirstStep = (formId) => {
-		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
-
-		return items ? Object.keys(items)?.[0] : '';
+		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], formId);
+		return typeof items !== 'undefined' ? items[0] : '';
 	};
 	getStateFormStepsLastStep = (formId) => {
-		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
-		return items ? Object.keys(items)?.pop() : '';
+		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], formId);
+		return typeof items !== 'undefined' ? items?.[items?.length - 1] : '';
 	};
 	getStateFormStepsItem = (stepId, formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS, stepId], formId);
 	};
 	getStateFormStepsItems = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
+	};
+	getStateFormStepsOrder = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], formId);
 	};
 	getStateFormStepsElements = (formId) => {
 		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], formId);

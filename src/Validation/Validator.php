@@ -111,10 +111,11 @@ class Validator extends AbstractValidation
 	 * Validate params.
 	 *
 	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param bool $strictValidation Is falidation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validateParams(array $data): array
+	public function validateParams(array $data, bool $strictValidation = true): array
 	{
 		$output = [];
 		$formType = $data['type'];
@@ -138,7 +139,7 @@ class Validator extends AbstractValidation
 		$validationReferenceRequired = $this->getValidationReferenceOnlyRequired($validationReference);
 
 		// Don't validate if no validation reference is found and if this is a step validation.
-		if ($validationReferenceRequired && !$stepFields) {
+		if ($validationReferenceRequired && $strictValidation) {
 			// Get all param names excluding hidden fields.
 			$paramsNames = $this->getParamsFieldNames($params);
 
@@ -189,6 +190,10 @@ class Validator extends AbstractValidation
 			\uksort($reference, function ($key1, $key2) use ($order) {
 				return (\array_search($key1, $order, true) > \array_search($key2, $order, true));
 			});
+
+			error_log( print_r( ( $reference ), true ) );
+			error_log( print_r( ( $paramKey ), true ) );
+			
 
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
@@ -313,6 +318,10 @@ class Validator extends AbstractValidation
 		// Find validation reference by ID.
 		$reference = $validationReference[$fieldName] ?? [];
 
+		error_log( print_r( ( $reference ), true ) );
+		error_log( print_r( ( $file ), true ) );
+		
+
 		// Loop all validations from the reference.
 		foreach ($reference as $dataKey => $dataValue) {
 			if (!$dataValue) {
@@ -340,6 +349,9 @@ class Validator extends AbstractValidation
 					break;
 			}
 		}
+
+		error_log( print_r( ( $output ), true ) );
+		
 
 		return $output;
 	}

@@ -107,6 +107,8 @@ export class Steps {
 
 		this.setChangeStep(formId, nextStep, flow, progressBarItems);
 
+		console.log(nextStep, this.state.getStateFormStepsLastStep(formId));
+
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
 			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelectorsClassHidden());

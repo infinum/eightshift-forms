@@ -672,7 +672,7 @@ export class Form {
 						break;
 					}
 
-					// this.FORM_DATA.append(name, JSON.stringify(data));
+					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 			}
 		}

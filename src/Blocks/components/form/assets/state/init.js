@@ -132,6 +132,7 @@ export const StateEnum = {
 	STEPS_FLOW: 'flow',
 	STEPS_CURRENT: 'current',
 	STEPS_ITEMS: 'items',
+	STEPS_ORDER: 'order',
 	STEPS_ELEMENTS: 'elements',
 	STEPS_IS_MULTIFLOW: 'isMultiflow',
 	STEPS_PROGRESS_BAR_COUNT: 'progressBarCount',
@@ -514,12 +515,14 @@ export function setSteps(formElement, formId) {
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_FLOW], [], formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], '', formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], {}, formId);
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], [], formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], {}, formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_IS_MULTIFLOW], false, formId);
 
+		const stepsOrder = [];
 		Object.values(steps).forEach((item, index) => {
 			const stepFields = item?.querySelectorAll(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
-			const stepId = item.getAttribute(getStateAttribute('stepId'));
+			const stepId = String(item.getAttribute(getStateAttribute('stepId')));
 			const stepOutput = [];
 
 			stepFields.forEach((stepField) => {
@@ -536,7 +539,12 @@ export function setSteps(formElement, formId) {
 			if (index === 0) {
 				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], stepId, formId);
 			}
+
+			if (stepFields) {
+				stepsOrder.push(stepId);
+			}
 		});
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], stepsOrder, formId);
 
 		const stepsProgressBarMultiflow = formElement.querySelector(getState([StateEnum.SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW], StateEnum.SELECTORS));
 

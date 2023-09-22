@@ -128,7 +128,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				case self::ROUTE_TYPE_STEP_VALIDATION:
 					// Validate params.
 					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-						$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
+						$validate = $this->getValidator()->validateParams($formDataReference, false); // @phpstan-ignore-line
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
