@@ -1175,6 +1175,7 @@ export class Form {
 					autoDiscover: false,
 					parallelUploads: 1,
 					maxFiles: !input.multiple ? 1 : null,
+					dictMaxFilesExceeded: '',
 					dictRemoveFile: this.state.getStateSettingsFileRemoveLabel(formId),
 				}
 			);
@@ -1253,18 +1254,7 @@ export class Form {
 				field?.classList?.add(this.state.getStateSelectorsClassFilled());
 			});
 
-			// On max file size reached output error and remove files.
-			dropzone.on('maxfilesreached', (files) => {
-				files.forEach((file) => {
-					if (file.status === 'error') {
-						setTimeout(() => {
-							// dropzone.removeFile(file);
-						}, 2500);
-					}
-				});
-			});
-
-		// 	// Trigger on wrap click.
+			// Trigger on wrap click.
 			field.addEventListener('click', this.onFileWrapClickEvent);
 			input.addEventListener('focus', this.onFocusEvent);
 			input.addEventListener('blur', this.onBlurEvent);

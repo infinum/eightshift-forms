@@ -65,6 +65,7 @@ class Validator extends AbstractValidation
 		'maxSize',
 		'minLength',
 		'maxLength',
+		'isMultiple',
 		'isRequired',
 	];
 
@@ -196,6 +197,12 @@ class Validator extends AbstractValidation
 			// Validate are all files uploaded to the server and not a external link.
 			if ($paramType === 'file') {
 				if (\is_array($inputValue)) {
+					// Check if single or multiple and output error.
+					if (!isset($reference['isMultiple']) && \count($inputValue) > 1) {
+						$output[$paramKey] = $this->getValidationLabel('validationFileMaxAmount', $formId);
+					}
+
+					// Check if wrong upload path.
 					foreach ($inputValue as $key => $value) {
 						// Expolode and remove empty files.
 						$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, $value));
@@ -205,10 +212,12 @@ class Validator extends AbstractValidation
 
 						$fileName = \array_flip($fileName);
 
+						// Bailout if file is ok.
 						if (isset($fileName[Config::getTempUploadDir()])) {
 							continue;
 						}
 
+						// Output error if file is not uploaded to the correct path.
 						$output[$paramKey] = $this->getValidationLabel('validationFileWrongUploadPath', $formId);
 					}
 				}
