@@ -635,51 +635,67 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function getConsentData(array $item): array
 	{
-
 		// Find consent data from meta.
-		$consentData = \array_values(\array_filter(
-			$item['metaData'],
+		$consentData = \array_values(\array_filter(\array_map(
 			static function ($item) {
-				return $item['name'] === 'legalConsentOptions';
-			}
-		));
+				$name = $item['name'] ?? '';
+
+				if ($name === 'legalConsentOptions') {
+					return $item['value'] ?? '';
+				}
+			},
+			$item['metaData'] ?? [],
+		)));
+
+		$consentData = $consentData[0] ?? '';
+
+		// Validate if json.
+		if (!Components::isJson($consentData)) {
+			return [];
+		}
 
 		// Check for consent data.
 		if (!$consentData) {
 			return [];
 		}
 
+		$consentData = \json_decode($consentData, true);
+		if (!$consentData) {
+			return [];
+		}
+
 		$output = [];
 
-		$consentData = \json_decode($consentData[0]['value'], true);
+		$type = $consentData['processingConsentType'] ?? '';
+		$interest = $consentData['isLegitimateInterest'] ?? false;
 
 		$output[self::HUBSPOT_CONSENT_COMMUNICATION] = [
 			'items' => \array_map(
 				static function ($item) {
 					return [
-						'id' => (string) $item['communicationTypeId'],
-						'label' => $item['label'],
-						'isRequired' => $item['required'],
+						'id' => isset($item['communicationTypeId']) ? \strval($item['communicationTypeId']) : '',
+						'label' => $item['label'] ?? '',
+						'isRequired' => $item['required'] ?? false,
 					];
 				},
-				$consentData['communicationConsentCheckboxes']
+				$consentData['communicationConsentCheckboxes'] ?? []
 			),
-			'text' => $consentData['communicationConsentText'],
-			'isHidden' => $consentData['processingConsentType'] === 'IMPLICIT' && $consentData['isLegitimateInterest'],
+			'text' => $consentData['communicationConsentText'] ?? '',
+			'isHidden' => $type === 'IMPLICIT' && $interest,
 		];
 
 		$output[self::HUBSPOT_CONSENT_PROCESSING] = [
-			'type' => $consentData['processingConsentType'],
-			'text' => $consentData['processingConsentText'],
-			'label' => $consentData['processingConsentCheckboxLabel'],
-			'isHidden' => ($consentData['processingConsentType'] === 'IMPLICIT' && $consentData['isLegitimateInterest']) || ($consentData['processingConsentType'] === 'IMPLICIT' && !$consentData['isLegitimateInterest']),
+			'type' => $type,
+			'text' => $consentData['processingConsentText'] ?? '',
+			'label' => $consentData['processingConsentCheckboxLabel'] ?? '',
+			'isHidden' => ($type === 'IMPLICIT' && $interest) || ($type === 'IMPLICIT' && !$interest),
 		];
 
 		$output[self::HUBSPOT_CONSENT_LEGITIMATE] = [
 			'typeId' => $consentData['legitimateInterestSubscriptionTypes'][0] ?? '',
 			'basis' => 'CUSTOMER',
-			'isActive' => !!$consentData['isLegitimateInterest'],
-			'text' => $consentData['privacyPolicyText'],
+			'isActive' => !!$interest,
+			'text' => $consentData['privacyPolicyText'] ?? '',
 			'isHidden' => true,
 		];
 
