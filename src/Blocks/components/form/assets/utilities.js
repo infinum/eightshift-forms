@@ -149,6 +149,9 @@ export class Utils {
 	 */
 	setFieldError(formId, name, msg) {
 		const error = this.state.getStateElementError(name, formId);
+		if (!error) {
+			return;
+		}
 
 		error?.classList?.add(this.state.getStateSelectorsClassHasError());
 		this.state.setStateElementHasError(name, true, formId);

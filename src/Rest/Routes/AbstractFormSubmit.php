@@ -111,6 +111,19 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 						}
 					}
 
+					$uploadFile = $this->uploadFile($formDataReference['filesUpload']);
+					$uploadFileId = $formDataReference['filesUpload']['id'] ?? '';
+
+
+					if (!$uploadFile) {
+						throw new UnverifiedRequestException(
+							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+							[
+								$uploadFileId => $this->getValidatorLabels()->getLabel('validationFileUpload'), // @phpstan-ignore-line
+							]
+						);
+					}
+
 					// Upload files to temp folder.
 					$formDataReference['filesUpload'] = $this->uploadFile($formDataReference['filesUpload']);
 					break;

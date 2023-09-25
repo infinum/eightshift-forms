@@ -71,7 +71,10 @@ trait UploadHelper
 		$finalFilePath = "{$folderPath}{$name}";
 
 		// Move the file to new location.
-		\move_uploaded_file($file['tmp_name'], $finalFilePath);
+		$output = \move_uploaded_file($file['tmp_name'], $finalFilePath);
+		if (!$output) {
+			return [];
+		}
 
 		return \array_merge(
 			$file,

@@ -222,11 +222,12 @@ class WorkableClient implements ClientInterface
 		switch ($msg) {
 			case 'Bad Request':
 				return 'workableBadRequestError';
+			case 'position is draft or archived':
+				return 'workableArchivedJobError';
 			default:
 				return 'submitWpError';
 		}
 	}
-
 
 	/**
 	 * Map service messages for fields with our own.

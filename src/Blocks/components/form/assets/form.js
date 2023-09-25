@@ -1211,6 +1211,9 @@ export class Form {
 
 				field?.classList?.remove(this.state.getStateSelectorsClassActive());
 				this.state.setStateElementValue(name, '', formId);
+
+				// Remove main filed validation error.
+				this.utils.unsetFieldError(formId, name);
 			});
 
 			// Add data formData to the api call for the file upload.
