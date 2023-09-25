@@ -113,7 +113,7 @@ class Testfilters implements ServiceInterface
 			// ---------------------------------------------------------------------------------------------------------
 		];
 
-		// Turn off if cosntant is not se.
+		// Turn off if constant is not set.
 		if (\defined('ES_RUN_TEST_FILTERS')) {
 			if (\ES_RUN_TEST_FILTERS === 'all') {
 				// Loop all filters.
