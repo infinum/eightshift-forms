@@ -129,7 +129,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					break;
 				case self::ROUTE_TYPE_SETTINGS:
 					// Validate params.
-					$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
+					$validate = $this->getValidator()->validateParams($formDataReference, false); // @phpstan-ignore-line
 
 					if ($validate) {
 						throw new UnverifiedRequestException(

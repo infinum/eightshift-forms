@@ -318,7 +318,7 @@ class MigrationRoute extends AbstractBaseRoute
 							'data' => $preCheck['data'],
 						];
 						break;
-					case 'form':
+					case 'form': // Legacy blocks for Mailer integrations is called form and not mailer.
 						$preCheck = $this->updateFormMailer3To4($content);
 
 						$output[$id] = [

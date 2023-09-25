@@ -90,7 +90,7 @@ class Transfer implements TransferInterface
 					"SELECT meta_key name, meta_value as value
 					FROM $wpdb->postmeta
 					WHERE post_id=%d
-					AND meta_key LIKE '%es-forms-%'",
+					AND meta_key LIKE '%es-forms-%'", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
 					$form->ID
 				)
 			);
@@ -141,7 +141,7 @@ class Transfer implements TransferInterface
 				"SELECT meta_key name, meta_value as value
 				FROM $wpdb->postmeta
 				WHERE post_id=%d
-				AND meta_key LIKE '%es-forms-%'",
+				AND meta_key LIKE '%es-forms-%'", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
 				$item
 			)
 		);
@@ -274,7 +274,7 @@ class Transfer implements TransferInterface
 					"SELECT meta_key name, meta_value as value
 					FROM $wpdb->postmeta
 					WHERE post_id=%s
-					AND meta_key LIKE '%es-forms-%'",
+					AND meta_key LIKE '%es-forms-%'", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
 					$exists
 				)
 			);
