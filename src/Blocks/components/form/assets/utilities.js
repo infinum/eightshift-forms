@@ -691,7 +691,7 @@ export class Utils {
 		const status = response?.status;
 
 		// This can happen if the API returns HTML or something else that we don't expect.
-		if ((contentType && contentType.indexOf('application/json') === -1) || status === 500) {
+		if ((contentType && contentType.indexOf('application/json') === -1) || (status >= 500 && status <= 599)) {
 			if (formId !== null) {
 				// Clear all errors.
 				this.resetErrors(formId);

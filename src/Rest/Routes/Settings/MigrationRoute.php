@@ -389,7 +389,7 @@ class MigrationRoute extends AbstractBaseRoute
 
 		$outputFinal['fatal'] = $outputFatal;
 
-		$actionName = Filters::getFilterName(['migration', 'ThreeToFour']);
+		$actionName = Filters::getFilterName(['migration', 'threeToFour']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_3_4);
 		}

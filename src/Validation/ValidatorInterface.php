@@ -19,7 +19,7 @@ interface ValidatorInterface
 	 * Validate params.
 	 *
 	 * @param array<string, mixed> $data Date to check from reference helper.
-	 * @param bool $strictValidation Is falidation is strict.
+	 * @param bool $strictValidation Is validation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */

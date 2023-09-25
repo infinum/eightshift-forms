@@ -431,7 +431,7 @@ class Filters
 		],
 		'migration' => [
 			'twoToThree',
-			'ThreeToFour',
+			'threeToFour',
 		],
 	];
 

@@ -42,14 +42,10 @@ trait UploadHelper
 			return [];
 		}
 
-		if (!\defined('WP_CONTENT_DIR')) {
+		$folderPath = $this->getUploadFolerPath();
+		if (!$folderPath) {
 			return [];
 		}
-
-		$sep = \DIRECTORY_SEPARATOR;
-		$dir = Config::getTempUploadDir();
-
-		$folderPath = \WP_CONTENT_DIR . "{$sep}{$dir}{$sep}";
 
 		if (!\is_dir($folderPath)) {
 			\mkdir($folderPath);
@@ -120,12 +116,10 @@ trait UploadHelper
 	 */
 	protected function deleteUploadFolderContent(int $numberOfHours = 2): void
 	{
-		if (!\defined('WP_CONTENT_DIR')) {
+		$folderPath = $this->getUploadFolerPath();
+		if (!$folderPath) {
 			return;
 		}
-		$sep = \DIRECTORY_SEPARATOR;
-		$dir = Config::getTempUploadDir();
-		$folderPath = \WP_CONTENT_DIR . "{$sep}{$dir}{$sep}";
 
 		if (!\is_dir($folderPath)) {
 			return;
@@ -153,18 +147,16 @@ trait UploadHelper
 	 *
 	 * @param string $name File name.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	protected function getFilePath(string $name)
+	protected function getFilePath(string $name): string
 	{
-		if (!\defined('WP_CONTENT_DIR')) {
+		$folderPath = $this->getUploadFolerPath();
+		if (!$folderPath) {
 			return '';
 		}
 
-		$sep = \DIRECTORY_SEPARATOR;
-		$dir = Config::getTempUploadDir();
-
-		$filePath = \WP_CONTENT_DIR . "{$sep}{$dir}{$sep}{$name}";
+		$filePath = "{$folderPath}{$name}";
 
 		if (!\file_exists($filePath)) {
 			return '';
@@ -219,5 +211,21 @@ trait UploadHelper
 		}
 
 		return $isFaulty;
+	}
+
+	/**
+	 * Get upload folder path.
+	 *
+	 * @return string
+	 */
+	private function getUploadFolerPath(): string
+	{
+		if (!\defined('WP_CONTENT_DIR')) {
+			return '';
+		}
+
+		$sep = \DIRECTORY_SEPARATOR;
+		$dir = Config::getTempUploadDir();
+		return \WP_CONTENT_DIR . "{$sep}{$dir}{$sep}";
 	}
 }
