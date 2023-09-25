@@ -362,7 +362,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 
 		// Change the final output if necesery.
 		$filterName = Filters::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'data']);
-		if (\has_filter($filterName) && \is_admin()) {
+		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
 

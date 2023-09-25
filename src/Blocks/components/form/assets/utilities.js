@@ -8,6 +8,8 @@ export class Utils {
 	constructor() {
 		this.state = new State();
 
+		this.GLOBAL_MSG_TIMEOUT_ID = undefined;
+
 		// Set all public methods.
 		this.publicMethods();
 	}
@@ -147,6 +149,9 @@ export class Utils {
 	 */
 	setFieldError(formId, name, msg) {
 		const error = this.state.getStateElementError(name, formId);
+		if (!error) {
+			return;
+		}
 
 		error?.classList?.add(this.state.getStateSelectorsClassHasError());
 		this.state.setStateElementHasError(name, true, formId);
@@ -667,6 +672,60 @@ export class Utils {
 		return `${file.upload.uuid}.${fileExt}`;
 	}
 
+	/**
+	 * Actions to run if api response returns wrong content type.
+	 *
+	 * This can happen if the API returns HTML or something else that we don't expect.
+	 * Cloudflare security can return HTML.
+	 *
+	 * @param {mixed} response Api response.
+	 * @param {string} type Function used.
+	 * @param {string} formId Form Id.
+	 *
+	 * @throws Error.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitErrorContentType(response, type, formId) {
+		const contentType = response?.headers?.get('content-type');
+		const status = response?.status;
+
+		// This can happen if the API returns HTML or something else that we don't expect.
+		if ((contentType && contentType.indexOf('application/json') === -1) || (status >= 500 && status <= 599)) {
+			if (formId !== null) {
+				// Clear all errors.
+				this.resetErrors(formId);
+	
+				// Remove loader.
+				this.hideLoader(formId);
+	
+				// Set global msg.
+				this.setGlobalMsg(
+					formId,
+					this.state.getStateSettingsFormServerErrorMsg(),
+					'error'
+				);
+	
+				// Reset timeout for after each submit.
+				if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+					clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+				}
+	
+				// Hide global msg in any case after some time.
+				this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
+					this.unsetGlobalMsg(formId);
+				}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+			}
+
+			// Throw error.
+			if (status >= 500 && status <= 599) {
+				throw new Error(`API response returned the server error for this request. Function used: "${type}"`);
+			} else {
+				throw new Error(`API response returned the wrong content type for this request. Function used: "${type}"`);
+			}
+		}
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////
@@ -756,6 +815,9 @@ export class Utils {
 			},
 			getFileNameFromFileObject: (file) => {
 				this.getFileNameFromFileObject(file);
+			},
+			formSubmitErrorContentType: (response, type, formId) => {
+				this.formSubmitErrorContentType(response, type, formId);
 			},
 		};
 	}

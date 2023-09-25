@@ -157,19 +157,21 @@ export class State {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], formId);
 	};
 	getStateFormStepsFirstStep = (formId) => {
-		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
-
-		return items ? Object.keys(items)?.[0] : '';
+		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], formId);
+		return typeof items !== 'undefined' ? items[0] : '';
 	};
 	getStateFormStepsLastStep = (formId) => {
-		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
-		return items ? Object.keys(items)?.pop() : '';
+		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], formId);
+		return typeof items !== 'undefined' ? items?.[items?.length - 1] : '';
 	};
 	getStateFormStepsItem = (stepId, formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS, stepId], formId);
 	};
 	getStateFormStepsItems = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], formId);
+	};
+	getStateFormStepsOrder = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], formId);
 	};
 	getStateFormStepsElements = (formId) => {
 		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], formId);
@@ -613,33 +615,33 @@ export class State {
  */
 export const ROUTES = {
 	// Common.
-	PREFIX: esFormsLocalization.restRoutes.prefix,
-	PREFIX_PROJECT: esFormsLocalization.restRoutes.prefixProject,
-	PREFIX_SUBMIT: esFormsLocalization.restRoutes.prefixSubmit,
-	PREFIX_TEST_API: esFormsLocalization.restRoutes.prefixTestApi,
-	FILES: esFormsLocalization.restRoutes.files,
+	PREFIX: esFormsLocalization?.restRoutes?.prefix,
+	PREFIX_PROJECT: esFormsLocalization?.restRoutes?.prefixProject,
+	PREFIX_SUBMIT: esFormsLocalization?.restRoutes?.prefixSubmit,
+	PREFIX_TEST_API: esFormsLocalization?.restRoutes?.prefixTestApi,
+	FILES: esFormsLocalization?.restRoutes?.files,
 
 	// Admin.
-	SETTINGS: esFormsLocalization.restRoutes.settings,
-	CACHE_CLEAR: esFormsLocalization.restRoutes.cacheClear,
-	MIGRATION: esFormsLocalization.restRoutes.migration,
-	TRANSFER: esFormsLocalization.restRoutes.transfer,
-	BULK: esFormsLocalization.restRoutes.bulk,
-	LOCATIONS: esFormsLocalization.restRoutes.locations,
+	SETTINGS: esFormsLocalization?.restRoutes?.settings,
+	CACHE_CLEAR: esFormsLocalization?.restRoutes?.cacheClear,
+	MIGRATION: esFormsLocalization?.restRoutes?.migration,
+	TRANSFER: esFormsLocalization?.restRoutes?.transfer,
+	BULK: esFormsLocalization?.restRoutes?.bulk,
+	LOCATIONS: esFormsLocalization?.restRoutes?.locations,
 
 	// Editor.
-	PREFIX_INTEGRATIONS_ITEMS_INNER: esFormsLocalization.restRoutes.prefixIntegrationItemsInner,
-	PREFIX_INTEGRATIONS_ITEMS: esFormsLocalization.restRoutes.prefixIntegrationItems,
-	PREFIX_INTEGRATION_EDITOR: esFormsLocalization.restRoutes.prefixIntegrationEditor,
-	INTEGRATIONS_EDITOR_SYNC: esFormsLocalization.restRoutes.integrationsEditorSync,
-	INTEGRATIONS_EDITOR_CREATE: esFormsLocalization.restRoutes.integrationsEditorCreate,
-	FORM_FIELDS: esFormsLocalization.restRoutes.formFields,
-	COUNTRIES_GEOLOCATION: esFormsLocalization.restRoutes.countriesGeolocation,
+	PREFIX_INTEGRATIONS_ITEMS_INNER: esFormsLocalization?.restRoutes?.prefixIntegrationItemsInner,
+	PREFIX_INTEGRATIONS_ITEMS: esFormsLocalization?.restRoutes?.prefixIntegrationItems,
+	PREFIX_INTEGRATION_EDITOR: esFormsLocalization?.restRoutes?.prefixIntegrationEditor,
+	INTEGRATIONS_EDITOR_SYNC: esFormsLocalization?.restRoutes?.integrationsEditorSync,
+	INTEGRATIONS_EDITOR_CREATE: esFormsLocalization?.restRoutes?.integrationsEditorCreate,
+	FORM_FIELDS: esFormsLocalization?.restRoutes?.formFields,
+	COUNTRIES_GEOLOCATION: esFormsLocalization?.restRoutes?.countriesGeolocation,
 
 	// Public.
-	CAPTCHA: esFormsLocalization.restRoutes.captcha,
-	GEOLOCATION: esFormsLocalization.restRoutes.geolocation,
-	VALIDATION_STEP: esFormsLocalization.restRoutes.validationStep,
+	CAPTCHA: esFormsLocalization?.restRoutes?.captcha,
+	GEOLOCATION: esFormsLocalization?.restRoutes?.geolocation,
+	VALIDATION_STEP: esFormsLocalization?.restRoutes?.validationStep,
 };
 
 /**

@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
+use EightshiftForms\Transfer\Transfer;
+use EightshiftForms\Transfer\TransferInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use WP_Query;
 use WP_REST_Request;
 
 /**
@@ -35,16 +35,6 @@ class TransferRoute extends AbstractBaseRoute
 	use SettingsHelper;
 
 	/**
-	 * Type global settings key.
-	 */
-	public const TYPE_GLOBAL_SETTINGS = 'globalSettings';
-
-	/**
-	 * Type forms key.
-	 */
-	public const TYPE_FORMS = 'forms';
-
-	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
 	 * @var ValidatorInterface
@@ -52,13 +42,24 @@ class TransferRoute extends AbstractBaseRoute
 	protected $validator;
 
 	/**
+	 * Instance variable of TransferInterface data.
+	 *
+	 * @var TransferInterface
+	 */
+	protected $transfer;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
-	public function __construct(ValidatorInterface $validator)
-	{
+	public function __construct(
+		ValidatorInterface $validator,
+		TransferInterface $transfer
+	) {
 		$this->validator = $validator;
+		$this->transfer = $transfer;
 	}
 
 	/**
@@ -115,13 +116,13 @@ class TransferRoute extends AbstractBaseRoute
 		$type = $params['type'] ?? '';
 
 		$output = [
-			self::TYPE_GLOBAL_SETTINGS => [],
-			self::TYPE_FORMS => [],
+			Transfer::TYPE_GLOBAL_SETTINGS => [],
+			Transfer::TYPE_FORMS => [],
 		];
 
 		switch ($type) {
 			case SettingsTransfer::TYPE_EXPORT_GLOBAL_SETTINGS:
-				$output[self::TYPE_GLOBAL_SETTINGS] = $this->getExportGlobalSettings();
+				$output[Transfer::TYPE_GLOBAL_SETTINGS] = $this->transfer->getExportGlobalSettings();
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_EXPORT_FORMS:
@@ -139,12 +140,12 @@ class TransferRoute extends AbstractBaseRoute
 
 				$items = \explode(',', $items);
 
-				$output[self::TYPE_FORMS] = $this->getExportForms($items);
+				$output[Transfer::TYPE_FORMS] = $this->transfer->getExportForms($items);
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_EXPORT_ALL:
-				$output[self::TYPE_GLOBAL_SETTINGS] = $this->getExportGlobalSettings();
-				$output[self::TYPE_FORMS] = $this->getExportForms();
+				$output[Transfer::TYPE_GLOBAL_SETTINGS] = $this->transfer->getExportGlobalSettings();
+				$output[Transfer::TYPE_FORMS] = $this->transfer->getExportForms();
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_IMPORT:
@@ -160,7 +161,7 @@ class TransferRoute extends AbstractBaseRoute
 					);
 				}
 
-				$uploadStatus = $this->getImport(
+				$uploadStatus = $this->transfer->getImport(
 					$upload,
 					isset($params['override']) ? \filter_var($params['override'], \FILTER_VALIDATE_BOOLEAN) : false
 				);
@@ -201,295 +202,5 @@ class TransferRoute extends AbstractBaseRoute
 				$debug
 			)
 		);
-	}
-
-	/**
-	 * Get formated meta/options output.
-	 *
-	 * @param array<int, object> $items Query output items.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getMetaOutput(array $items): array
-	{
-		$output = [];
-		foreach ($items as $item) {
-			$name = $item->name ?? '';
-			$value = $item->value ?? '';
-
-			if (!$name || !$value) {
-				continue;
-			}
-
-			$output[] = [
-				'name' => $name,
-				'value' => $value,
-			];
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Export global settings.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getExportGlobalSettings(): array
-	{
-		global $wpdb;
-
-		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			"SELECT option_name as name, option_value as value
-				FROM $wpdb->options
-				WHERE option_name REGEXP 'es-forms-'"
-		);
-
-		return $options ? $this->getMetaOutput($options) : [];
-	}
-
-	/**
-	 * Export Forms with settings.
-	 *
-	 * @param array<int, string> $items Specify items to query.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	private function getExportForms(array $items = []): array
-	{
-		$args = [
-			'post_type' => Forms::POST_TYPE_SLUG,
-			'no_found_rows' => true,
-			'update_post_term_cache' => false,
-			'posts_per_page' => 10000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
-		];
-
-		if ($items) {
-			$args['post__in'] = $items;
-		}
-
-		$theQuery = new WP_Query($args);
-
-		$forms = $theQuery->posts;
-		\wp_reset_postdata();
-
-		if (!$forms) {
-			return [];
-		}
-
-		global $wpdb;
-
-		$output = [];
-		foreach ($forms as $key => $form) {
-			$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$wpdb->prepare(
-					"SELECT meta_key name, meta_value as value
-					FROM $wpdb->postmeta
-					WHERE post_id=%d
-					AND meta_key REGEXP 'es-forms-'",
-					$form->ID
-				)
-			);
-
-			$output[$key] = (array) $form;
-
-			if (!$settings) {
-				continue;
-			}
-
-			$output[$key]['es_settings'] = $this->getMetaOutput($settings);
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Import uploaded file.
-	 *
-	 * @param string $upload Upload file.
-	 * @param bool $override Override existing form.
-	 *
-	 * @return boolean
-	 */
-	private function getImport(string $upload, bool $override): bool
-	{
-		$filePath = $this->getFilePath($upload);
-
-		if (!$filePath) {
-			return false;
-		}
-
-		$data = \json_decode(\implode(' ', (array)\file($filePath)), true);
-
-		if (!$data) {
-			return false;
-		}
-
-		$globalSettings = $data[self::TYPE_GLOBAL_SETTINGS] ?? [];
-		$forms = $data[self::TYPE_FORMS] ?? [];
-
-		// Bailout if both keys are missing.
-		if (!$globalSettings && !$forms) {
-			return false;
-		}
-
-		global $wpdb;
-
-		// Import global settings.
-		if ($globalSettings) {
-			// Find all global existing setting.
-			$existingGlobalSettings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				"SELECT option_name name, option_value as value
-				FROM $wpdb->options
-				AND option_name REGEXP 'es-forms-'"
-			);
-
-			// If existing global settings are present delete them all.
-			if ($existingGlobalSettings) {
-				$existingGlobalSettings = $this->getMetaOutput($existingGlobalSettings);
-
-				foreach ($existingGlobalSettings as $existingGlobalSetting) {
-					$name = $existingGlobalSetting['name'] ?? '';
-
-					if (!$name) {
-						continue;
-					}
-
-					\delete_option($name);
-				}
-			}
-
-			// Import all global settings.
-			foreach ($globalSettings as $globalSetting) {
-				$name = $globalSetting['name'] ?? '';
-				$value = $globalSetting['value'] ?? '';
-
-				if (!$name || !$value) {
-					continue;
-				}
-
-				\update_option($name, $value);
-			}
-		}
-
-		// Import forms.
-		if ($forms) {
-			foreach ($forms as $form) {
-				$postTitle = $form['post_title'] ?? '';
-				$postContent = $form['post_content'] ?? '';
-				$postStatus = $form['post_status'] ?? '';
-				$postPassword = $form['post_password'] ?? '';
-				$postParent = $form['post_parent'] ?? '';
-				$postType = $form['post_type'] ?? '';
-				$postName = $form['post_name'] ?? '';
-
-				// Check if form exists.
-				$exists = $this->formExists([
-					'name' => $postName,
-					'post_type' => $postType,
-				]);
-
-				if ($override) {
-					// If override checkbox is set update the existing form.
-					$newId = \wp_update_post([
-						'ID' => (int) $exists,
-						'post_title' => $postTitle,
-						'post_content' => \wp_slash($postContent),
-						'post_status' => $postStatus,
-						'post_password' => $postPassword,
-						'post_parent' => $postParent,
-						'post_type' => $postType,
-					]);
-
-					// Find all forms existing setting.
-					$existingSettings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-						$wpdb->prepare(
-							"SELECT meta_key name, meta_value as value
-							FROM $wpdb->postmeta
-							WHERE post_id=%s
-							AND meta_key REGEXP 'es-forms-'",
-							$exists
-						)
-					);
-
-					// If existing settings are present delete them all.
-					if ($existingSettings) {
-						$existingSettings = $this->getMetaOutput($existingSettings);
-
-						foreach ($existingSettings as $existingSetting) {
-							$name = $existingSetting['name'] ?? '';
-
-							if (!$name) {
-								continue;
-							}
-
-							\delete_post_meta((int) $exists, $name);
-						}
-					}
-				} else {
-					// If override checkbox is not set create new form.
-
-					// If form name exists add copy to the title.
-					if ($exists) {
-						$postTitle = "{$postTitle} - copy";
-					}
-
-					// Create a new post.
-					$newId = \wp_insert_post([
-						'post_title' => $postTitle,
-						'post_content' => \wp_slash($postContent),
-						'post_status' => $postStatus,
-						'post_password' => $postPassword,
-						'post_parent' => $postParent,
-						'post_type' => $postType,
-					]);
-				}
-
-				$esSettings = $form['es_settings'] ?? [];
-
-				// Check if form new form is created and has settings and create them.
-				if ($newId && $esSettings) {
-					foreach ($esSettings as $esSettings) {
-						$name = $esSettings['name'] ?? '';
-						$value = $esSettings['value'] ?? '';
-
-						if (!$name || !$value) {
-							continue;
-						}
-
-						\update_post_meta($newId, $name, $value);
-					}
-				}
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Check if form exists
-	 *
-	 * @param array<string, mixed> $args Arguments to pass to WP_Query.
-	 *
-	 * @return string
-	 */
-	private function formExists(array $args): string
-	{
-		$args = \array_merge(
-			$args,
-			[
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-				'no_found_rows' => true,
-				'fields' => 'ids',
-				'numberposts' => 1,
-			]
-		);
-
-		$theQuery = new WP_Query($args);
-
-		\wp_reset_postdata();
-
-		return isset($theQuery->posts[0]) ? (string) $theQuery->posts[0] : '';
 	}
 }

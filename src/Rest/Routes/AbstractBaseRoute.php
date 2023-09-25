@@ -399,23 +399,25 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					];
 					break;
 				default:
-					$type = $value['type'] ?? '';
+					$fileType = $value['type'] ?? '';
+					$fileValue = $value['value'] ?? '';
 
-					if ($type === 'file') {
-						$output['files'][$key] = $value['value'] ? \array_merge(
+					if ($fileType === 'file') {
+						$output['files'][$key] = $fileValue ? \array_merge(
 							$value,
 							[
 								'value' => \array_map(
 									function ($item) {
 										return $this->getFilePath($item);
 									},
-									\explode(self::DELIMITER, $value['value'])
+									\explode(self::DELIMITER, $fileValue)
 								),
 							]
-						) : [];
+						) : $value;
 					} else {
 						$output['params'][$key] = $value;
 					}
+
 					break;
 			}
 		}
@@ -528,7 +530,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			$formSettingsType = $params['settingsType'] ?? '';
 
 			// Manual populate output it admin settings our build it from form Id.
-			if ($type === Settings::SETTINGS_TYPE_NAME || $type === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+			if (
+				$type === Settings::SETTINGS_TYPE_NAME ||
+				$type === Settings::SETTINGS_GLOBAL_TYPE_NAME ||
+				$type === 'fileUploadAdmin'
+			) {
 				$formDataReference = [
 					'formId' => $formId,
 					'type' => $type,
@@ -546,7 +552,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			// Populate files from uploaded ID.
 			$formDataReference['files'] = $params['files'] ?? [];
 
-			// Populare files on upload.
+			// Populare files on upload. Only populated on file upload.
 			$formDataReference['filesUpload'] = $this->prepareFile($request->get_file_params(), $params['params'] ?? []);
 
 			// Populare action.

@@ -111,12 +111,25 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 						}
 					}
 
+					$uploadFile = $this->uploadFile($formDataReference['filesUpload']);
+					$uploadFileId = $formDataReference['filesUpload']['id'] ?? '';
+
+
+					if (!$uploadFile) {
+						throw new UnverifiedRequestException(
+							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+							[
+								$uploadFileId => $this->getValidatorLabels()->getLabel('validationFileUpload'), // @phpstan-ignore-line
+							]
+						);
+					}
+
 					// Upload files to temp folder.
 					$formDataReference['filesUpload'] = $this->uploadFile($formDataReference['filesUpload']);
 					break;
 				case self::ROUTE_TYPE_SETTINGS:
 					// Validate params.
-					$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
+					$validate = $this->getValidator()->validateParams($formDataReference, false); // @phpstan-ignore-line
 
 					if ($validate) {
 						throw new UnverifiedRequestException(
@@ -128,7 +141,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				case self::ROUTE_TYPE_STEP_VALIDATION:
 					// Validate params.
 					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
-						$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
+						$validate = $this->getValidator()->validateParams($formDataReference, false); // @phpstan-ignore-line
 
 						if ($validate) {
 							throw new UnverifiedRequestException(

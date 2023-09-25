@@ -228,8 +228,8 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			}
 
 			foreach ($multiflow as $flow) {
-				$flowNext = $flow[0] ?? '';
-				$flowCurrent = $flow[1] ?? '';
+				$flowNext = isset($flow[0]) ? \strval($flow[0]) : '';
+				$flowCurrent = isset($flow[1]) ? \strval($flow[1]) : '';
 				$flowConditions = $flow[2] ?? [];
 				$flowProgressBarItems = $flow[3] ?? 0;
 				$flowDisableNextButton = $flow[4] ?? false;
@@ -282,7 +282,14 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	 */
 	private function getNextStepRegular(array $steps, string $currentStep): string
 	{
-		$keys = \array_keys($steps);
+		// Make sure all keys are strings.
+		$keys = \array_filter(\array_values(\array_map(
+			static function ($value) {
+				return \strval($value);
+			},
+			\array_keys($steps)
+		)));
+
 		return (string) $keys[\array_search($currentStep, $keys, true) + 1];
 	}
 

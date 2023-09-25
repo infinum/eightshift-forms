@@ -7,8 +7,14 @@ import adminListingManifest from './../../admin-listing/manifest.json';
 import { setStateInitial } from '../assets/state/init';
 
 domReady(() => {
+	// Global variable must be set for everything to work.
 	if (typeof esFormsLocalization === 'undefined') {
-		console.warn('Your project is missing global variable esFormsLocalization called from the enqueue script in the forms. Forms will work but they will not get the admin settings configuration.');
+		throw Error('Your project is missing global variable "esFormsLocalization" called from the enqueue script in the forms.');
+	}
+
+	// Bailout if no forms pages.
+	if (esFormsLocalization.length === 0) {
+		return;
 	}
 
 	// Set initial state.

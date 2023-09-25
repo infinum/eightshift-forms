@@ -238,8 +238,10 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 						$clearbitResponse['data'] ?? []
 					);
 				} else {
-					// Send fallback email.
-					$this->formSubmitMailer->sendFallbackEmail($clearbitResponse);
+					// Send fallback email if error but ignore for unknown entry.
+					if ($clearbitResponse['code'] !== 404) {
+						$this->formSubmitMailer->sendFallbackEmail($clearbitResponse);
+					}
 				}
 			}
 		}

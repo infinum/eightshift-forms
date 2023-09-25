@@ -41,6 +41,16 @@ class Config extends AbstractConfigData
 	}
 
 	/**
+	 * Method that returns projects temp upload dir name.
+	 *
+	 * @return string
+	 */
+	public static function getTempUploadDir(): string
+	{
+		return "esforms-tmp";
+	}
+
+	/**
 	 * Method that returns project version.
 	 *
 	 * Generally used for versioning asset handlers while enqueueing them.

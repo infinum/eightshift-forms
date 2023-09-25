@@ -93,6 +93,7 @@ class Testfilters implements ServiceInterface
 			'es_forms_integrations_greenhouse_data' => ['getGreenhouseIntegrationData', 2], // Dynamic name based on the integration type.
 			'es_forms_integrations_workable_data' => ['getWorkableIntegrationData', 2], // Dynamic name based on the integration type.
 			'es_forms_integrations_workable_pre_post_params' => ['getWorkableIntegrationPrePostParams'], // Dynamic name based on the integration type.
+			'es_forms_integrations_workable_order' => ['getWorkableIntegrationOrder'], // Dynamic name based on the integration type.
 			'es_forms_integrations_hubspot_files_options' => ['getFileUploadCustomOptions'],
 			'es_forms_integrations_clearbit_map' => ['getClearbitFieldsMap'],
 
@@ -105,7 +106,14 @@ class Testfilters implements ServiceInterface
 			'es_forms_validation_force_mimetype_from_fs' => ['forceMimetypeFs'],
 		];
 
-		// Turn off if cosntant is not se.
+		$actions = [
+			// Validation actions.
+			'es_forms_migration_two_to_three' => ['runMigration2To3'],
+			'es_forms_migration_three_to_four' => ['runMigration3To4'],
+			// ---------------------------------------------------------------------------------------------------------
+		];
+
+		// Turn off if constant is not set.
 		if (\defined('ES_RUN_TEST_FILTERS')) {
 			if (\ES_RUN_TEST_FILTERS === 'all') {
 				// Loop all filters.
@@ -117,6 +125,21 @@ class Testfilters implements ServiceInterface
 
 				if ($filter) {
 					\add_filter(\ES_RUN_TEST_FILTERS, [$this, $filters[\ES_RUN_TEST_FILTERS][0]], 10, $filters[\ES_RUN_TEST_FILTERS][1] ?? 1);
+				}
+			}
+		}
+
+		if (\defined('ES_RUN_TEST_ACTIONS')) {
+			if (\ES_RUN_TEST_ACTIONS === 'all') {
+				// Loop all actions.
+				foreach ($actions as $key => $value) {
+					\add_action($key, [$this, $value[0]], 10, $value[1] ?? 1);
+				}
+			} else {
+				$action = $actions[\ES_RUN_TEST_ACTIONS] ?? '';
+
+				if ($action) {
+					\add_action(\ES_RUN_TEST_ACTIONS, [$this, $actions[\ES_RUN_TEST_ACTIONS][0]], 10, $actions[\ES_RUN_TEST_FILTERS][1] ?? 1);
 				}
 			}
 		}
@@ -726,21 +749,6 @@ class Testfilters implements ServiceInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getGreenhouseIntegrationData(array $data, string $formId): array
-	{
-		return $data;
-	}
-
-	/**
-	 * Change form fields data before output.
-	 *
-	 * This filter is used if you want to change form fields data before output. By changing the name of the filter you will target different integrations.
-	 *
-	 * @param array<string, mixed> $data Array of component/attributes data.
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<string, mixed>
-	 */
 	public function getWorkableIntegrationData(array $data, string $formId): array
 	{
 		return \array_merge(
@@ -798,6 +806,23 @@ class Testfilters implements ServiceInterface
 		unset($params['utm_medium']);
 
 		return $params;
+	}
+
+	/**
+	 * Change form fields order before output.
+	 *
+	 * @return array<int, string>
+	 */
+	public function getWorkableIntegrationOrder(): array
+	{
+		return [
+			'firstname',
+			'lastname',
+			'email',
+			'phone',
+			'headline',
+			'summary',
+		];
 	}
 
 	/**
@@ -890,5 +915,28 @@ class Testfilters implements ServiceInterface
 	public function forceMimetypeFs(): bool
 	{
 		return true;
+	}
+
+	// -----------------------------------------------------------------------------------------------------------
+	// Migration actions.
+
+	/**
+	 * Run custom action after migration from verson 2 to 3.
+	 *
+	 * @return void
+	 */
+	public function runMigration2To3(): void
+	{
+		error_log(print_r(('Action hook activated 2-3'), true)); // phpcs:ignore
+	}
+
+	/**
+	 * Run custom action after migration from verson 3 to 4.
+	 *
+	 * @return void
+	 */
+	public function runMigration3To4(): void
+	{
+		error_log(print_r(('Action hook activated 3-4'), true)); // phpcs:ignore
 	}
 }

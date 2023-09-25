@@ -69,6 +69,11 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	public const SETTINGS_MAILER_USE_KEY = 'mailer-use';
 
 	/**
+	 * Mailer settings Use key.
+	 */
+	public const SETTINGS_MAILER_SETTINGS_USE_KEY = 'mailer-settings-use';
+
+	/**
 	 * Email field key.
 	 */
 	public const SETTINGS_MAILER_EMAIL_FIELD_KEY = 'mailer-email-field';
@@ -139,13 +144,14 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return false;
 		}
 
+		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
 		$name = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
 		$email = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
 		$to = $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId);
 		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
 		$template = $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
 
-		if (!$name || !$email || !$to || !$subject || !$template) {
+		if (!$isUsed || !$name || !$email || !$to || !$subject || !$template) {
 			return false;
 		}
 
@@ -215,6 +221,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 		$fieldNameTags = $this->getFormFieldNames($fieldNames);
 		$formResponseTags = $this->getFormResponseTags($formDetails['typeFilter']);
 
+		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
 		$isSenderUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
 		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
 
@@ -228,131 +235,38 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 						'tabLabel' => \__('E-mail', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
-								'inputFieldLabel' => \__('Recipient e-mail', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name.
-								'inputFieldHelp' => \sprintf(\__('
-									This e-mail address will be used to sent the form data to.<br />
-									You can use multiple e-mails here by separating them by comma.<br /><br />
-									%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
-								'inputType' => 'text',
-								'inputPlaceholder' => 'info@infinum.com',
-								'inputIsRequired' => true,
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
-								'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name.
-								'inputFieldHelp' => \sprintf(\__('
-									Specify e-mail subject with this field.<br /><br />
-									%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
-								'inputType' => 'text',
-								'inputIsRequired' => true,
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'textarea',
-								'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
-								'textareaFieldLabel' => \__('Content', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name.
-								'textareaFieldHelp' => \sprintf(\__('
-									Specify e-mail body template with this field. You can use plain text or markdown.<br /><br />
-									%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
-								'textareaIsRequired' => true,
-								'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
-							],
-						]
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Advanced', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
-								'inputFieldLabel' => \__('E-mail client sender name', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Most e-mail clients will show this instead of the real address in the list of e-mails. Make this something related to your brand that will distinguish you from the rest.', 'eightshift-forms'),
-								'inputType' => 'text',
-								'inputIsRequired' => true,
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
-								'inputFieldLabel' => \__('E-mail client from e-mail', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Most e-mail clients will us this as field as the sender e-mail (displayed as <i>From:</i>). It will also be used as a reply-to destination. Example: `info@infinum.com`.', 'eightshift-forms'),
-								'inputType' => 'text',
-								'inputIsEmail' => true,
-								'inputIsRequired' => true,
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
-							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Confirmation e-mail', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Send your users a "thank you" message after they submit the form.', 'eightshift-forms'),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_USE_KEY),
+								'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Send a confirmation e-mail', 'eightshift-forms'),
-										'checkboxIsChecked' => $isSenderUsed,
-										'checkboxValue' => self::SETTINGS_MAILER_SENDER_USE_KEY,
+										'checkboxLabel' => \__('Use mailer', 'eightshift-forms'),
+										'checkboxIsChecked' => $isUsed,
+										'checkboxValue' => self::SETTINGS_MAILER_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									]
 								]
 							],
-							...($isSenderUsed ? [
+							...($isUsed ? [
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => 'true',
 								],
 								[
-									'component' => 'select',
-									'selectSingleSubmit' => true,
-									'selectName' => $this->getSettingsName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
-									'selectFieldHelp' => \__('You must select what field is used as an e-mail.', 'eightshift-forms'),
-									'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
-									'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
-									'selectContent' => \array_map(
-										static function ($option) use ($emailField) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => $option,
-												'selectOptionValue' => $option,
-												'selectOptionIsSelected' => $emailField === $option,
-											];
-										},
-										$fieldNames
-									),
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
+									'inputFieldLabel' => \__('Recipient e-mail', 'eightshift-forms'),
+									// translators: %s will be replaced with forms field name.
+									'inputFieldHelp' => \sprintf(\__('
+										This e-mail address will be used to sent the form data to.<br />
+										You can use multiple e-mails here by separating them by comma.<br /><br />
+										%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
+									'inputType' => 'text',
+									'inputPlaceholder' => 'info@infinum.com',
+									'inputIsRequired' => true,
+									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -360,15 +274,15 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								],
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
+									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
 									'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
 									'inputFieldHelp' => \sprintf(\__('
-										Specify confirmation e-mail subject with this field.<br /><br />
+										Specify e-mail subject with this field.<br /><br />
 										%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
-									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -376,18 +290,134 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								],
 								[
 									'component' => 'textarea',
-									'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
-									'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
+									'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
+									'textareaFieldLabel' => \__('Content', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
 									'textareaFieldHelp' => \sprintf(\__('
-										Specify confirmation e-mail body template with this field. You can use plain text or markdown.<br /><br />
+										Specify e-mail body template with this field. You can use plain text or markdown.<br /><br />
 										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
 									'textareaIsRequired' => true,
-									'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+									'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 								],
 							] : []),
-						],
+						]
 					],
+					...($isUsed ? [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('Advanced', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
+									'inputFieldLabel' => \__('E-mail client sender name', 'eightshift-forms'),
+									'inputFieldHelp' => \__('Most e-mail clients will show this instead of the real address in the list of e-mails. Make this something related to your brand that will distinguish you from the rest.', 'eightshift-forms'),
+									'inputType' => 'text',
+									'inputIsRequired' => true,
+									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => 'true',
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
+									'inputFieldLabel' => \__('E-mail client from e-mail', 'eightshift-forms'),
+									'inputFieldHelp' => \__('Most e-mail clients will us this as field as the sender e-mail (displayed as <i>From:</i>). It will also be used as a reply-to destination. Example: `info@infinum.com`.', 'eightshift-forms'),
+									'inputType' => 'text',
+									'inputIsEmail' => true,
+									'inputIsRequired' => true,
+									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+								],
+							],
+						],
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('Confirmation e-mail', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'intro',
+									'introSubtitle' => \__('Send your users a "thank you" message after they submit the form.', 'eightshift-forms'),
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => 'true',
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_USE_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Send a confirmation e-mail', 'eightshift-forms'),
+											'checkboxIsChecked' => $isSenderUsed,
+											'checkboxValue' => self::SETTINGS_MAILER_SENDER_USE_KEY,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										]
+									]
+								],
+								...($isSenderUsed ? [
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'select',
+										'selectSingleSubmit' => true,
+										'selectName' => $this->getSettingsName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
+										'selectFieldHelp' => \__('You must select what field is used as an e-mail.', 'eightshift-forms'),
+										'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
+										'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
+										'selectContent' => \array_map(
+											static function ($option) use ($emailField) {
+												return [
+													'component' => 'select-option',
+													'selectOptionLabel' => $option,
+													'selectOptionValue' => $option,
+													'selectOptionIsSelected' => $emailField === $option,
+												];
+											},
+											$fieldNames
+										),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'input',
+										'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
+										'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
+										// translators: %s will be replaced with forms field name.
+										'inputFieldHelp' => \sprintf(\__('
+											Specify confirmation e-mail subject with this field.<br /><br />
+											%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
+										'inputType' => 'text',
+										'inputIsRequired' => true,
+										'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'textarea',
+										'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
+										'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
+										// translators: %s will be replaced with forms field name.
+										'textareaFieldHelp' => \sprintf(\__('
+											Specify confirmation e-mail body template with this field. You can use plain text or markdown.<br /><br />
+											%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
+										'textareaIsRequired' => true,
+										'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+									],
+								] : []),
+							],
+						],
+					] : []),
 				],
 			],
 		];

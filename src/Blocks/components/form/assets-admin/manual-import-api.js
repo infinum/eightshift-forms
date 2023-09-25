@@ -105,6 +105,7 @@ export class ManualImportApi {
 
 				fetch(this.state.getRestUrlByType(ROUTES.PREFIX_SUBMIT, item.type), body)
 					.then((response) => {
+						this.utils.formSubmitErrorContentType(response, 'manualImport', formId);
 						return response.json();
 					})
 					.then((response) => {

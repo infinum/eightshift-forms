@@ -229,12 +229,19 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			];
 		}
 
+		$blockOutput = \array_map(
+			static function ($item) {
+				return $item['integration'];
+			},
+			$this->prepareIntegrationBlocksForCheck($integrationFields)
+		);
+
+		// Recreate blocks output.
 		$fields = $this->reconstructBlocksOutput(
-			\array_map(
-				static function ($item) {
-					return $item['integration'];
-				},
-				$this->prepareIntegrationBlocksForCheck($integrationFields)
+			$this->orderBlocks(
+				$blockOutput,
+				$this->extractInnerBlocksOrder($blockOutput),
+				$type
 			),
 			$editorOutput
 		);
@@ -492,9 +499,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Prepare arrays for diff.
 		$diff = $this->prepareContentBlocksForCheck($content['fields']['innerBlocks'][0]['innerBlocks'] ?? [], $this->prepareIntegrationBlocksForCheck($integration['fields']));
 
+		$integrationType = $integration['type'] ?? '';
+		$diffOrder = $diff['order'] ?? [];
+		$diffOrderInner = $diff['orderInner'] ?? [];
+
 		// Prepare standard output.
 		$output = [
-			'type' => $integration['type'] ?? '',
+			'type' => $integrationType,
 			'itemId' => $integration['itemId'] ?? '',
 			'innerId' => $integration['innerId'] ?? '',
 			'typeAttrs' => $content['fields']['innerBlocks'][0]['attrs'] ?? [],
@@ -503,7 +514,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			'added' => [],
 			'replaced' => [],
 			'changed' => [],
-			'order' => $diff['order'],
+			'order' => $diffOrder,
+			'orderInner' => $diffOrderInner,
 			'output' => [],
 			'isOutputMissing' => false,
 			'diff' => $diff['diff'],
@@ -570,16 +582,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$output['isOutputMissing'] = true;
 		} else {
 			// If output not is missing recreate a form.
-
-			// Reorder block by provided array list in the content data and remove items that are missing.
-			$output['output'] = \array_filter(
-				\array_replace(
-					\array_flip($output['order']),
-					$output['output']
-				),
-				static fn($item) => \is_array($item)
-			);
-
 			// Recounstruct blocks output and build array for final serialization.
 			$output['output'] = $this->reconstructBlocksTopLevelOutput($output, $editorOutput);
 		}
@@ -819,6 +821,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Used to preserver content order of the blocks.
 		$order = [];
+		$orderInner = [];
 
 		foreach ($blocks as $index => $block) {
 			$blockTypeOriginal = $block['blockName'] ?? '';
@@ -900,13 +903,14 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 						'isExternal' => false,
 					];
 
-					$order[] = $innerKeyValue;
+					$orderInner[] = $innerKeyValue;
 				}
 			}
 		}
 
 		return [
 			'order' => $order ? $order : \array_keys($output),
+			'orderInner' => $orderInner,
 			'diff' => $output,
 		];
 	}
@@ -921,7 +925,21 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	private function reconstructBlocksTopLevelOutput(array $data, bool $editorOutput = false): array
 	{
-		$fieldsOutput = $this->reconstructBlocksOutput($data['output'], $editorOutput);
+		$integrationType = $data['type'] ?? '';
+		$blockOutput = $data['output'] ?? [];
+
+		// Reconstruct fields output and provide a custom order.
+		$fieldsOutput = $this->reconstructBlocksOutput(
+			$this->orderBlocks(
+				$blockOutput,
+				[
+					'order' => $data['order'] ?? [],
+					'orderInner' => $data['orderInner'] ?? [],
+				],
+				$integrationType
+			),
+			$editorOutput
+		);
 
 		$namespace = Components::getSettingsNamespace();
 
@@ -934,13 +952,13 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		return [
 			[
-				$blockNameKey => "{$namespace}/{$data['type']}",
+				$blockNameKey => "{$namespace}/{$integrationType}",
 				$attrsKey => \array_merge(
 					[
-						"{$data['type']}IntegrationId" => $data['itemId'],
+						"{$integrationType}IntegrationId" => $data['itemId'],
 					],
 					$data['innerId'] ? [
-						"{$data['type']}IntegrationInnerId" => $data['innerId'],
+						"{$integrationType}IntegrationInnerId" => $data['innerId'],
 					] : [],
 					$data['typeAttrs']
 				),
@@ -1090,13 +1108,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$value = $label;
 		}
 
+		$delimiter = AbstractBaseRoute::DELIMITER;
+
 		if (!$value) {
-			return "{$parentName}-{$index}";
+			return "{$parentName}{$delimiter}{$index}";
 		}
 
 		$value = \crc32((string) $value);
 
-		return "{$parentName}-{$value}";
+		return "{$parentName}{$delimiter}{$value}";
 	}
 
 	/**
@@ -1114,5 +1134,96 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			'innerBlocks' => 'innerBlocks',
 			'innerContent' => 'innerContent',
 		];
+	}
+
+	/**
+	 * Order array by provided array list.
+	 *
+	 * @param array<int, mixed> $a Base array.
+	 * @param array<int, string> $b Order by array.
+	 *
+	 * @return array<int, mixed>
+	 */
+	private function reorderArray(array $a, array $b): array
+	{
+		// Create an associative array to store the indices of elements in $b.
+		$indexMap = \array_flip($b);
+
+		// Sort $a based on the order in $b, preserving the original order for missing elements.
+		\usort($a, function ($x, $y) use ($indexMap) {
+			$indexX = isset($indexMap[$x]) ? $indexMap[$x] : \count($indexMap);
+			$indexY = isset($indexMap[$y]) ? $indexMap[$y] : \count($indexMap);
+			return $indexX - $indexY;
+		});
+
+		return $a;
+	}
+
+	/**
+	 * Extract order of the blocks depending if it is top level or inner.
+	 *
+	 * @param array<string, mixed> $blocks Block list.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function extractInnerBlocksOrder(array $blocks): array
+	{
+		$output = [];
+
+		foreach (\array_keys($blocks) as $block) {
+			$delimiter = AbstractBaseRoute::DELIMITER;
+			$blockName = \explode($delimiter, $block);
+
+			$key = \count($blockName) === 1 ? 'order' : 'orderInner';
+
+			$output[$key][] = $block;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Order blocks to preserve the correct order and check the filter.
+	 *
+	 * @param array<string, mixed> $blocks Block list.
+	 * @param array<string, mixed> $orders Order list.
+	 * @param string $integrationType Integration type.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function orderBlocks(array $blocks, array $orders, string $integrationType): array
+	{
+		$topLevelOrder = $orders['order'] ?? [];
+
+		// Provide a custom order from external filter.
+		$filterName = Filters::getFilterName(['integrations', $integrationType, 'order']);
+		if (\has_filter($filterName)) {
+			$filterOrder = \apply_filters($filterName, []);
+
+			if ($filterOrder) {
+				// Reorder top level blocks only.
+				$topLevelOrder = $this->reorderArray($topLevelOrder, $filterOrder);
+			}
+		}
+
+		// Merge top level and inner blocks order.
+		$newOrder = [
+			...$topLevelOrder,
+			...$orders['orderInner'] ?? [],
+		];
+
+		// Bailout if empty.
+		if (!$newOrder) {
+			return $blocks;
+		}
+
+		// Update the blocks output with new order.
+		return \array_filter(
+			\array_replace(
+				\array_flip($newOrder),
+				$blocks
+			),
+			static fn($item) => \is_array($item)
+		);
 	}
 }

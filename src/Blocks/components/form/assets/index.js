@@ -5,9 +5,9 @@ import { setStateInitial } from './state/init';
 import { Utils } from "../assets/utilities";
 import { State } from './state';
 
-
+// Global variable must be set for everything to work.
 if (typeof esFormsLocalization === 'undefined') {
-	console.warn('Your project is missing global variable esFormsLocalization called from the enqueue script in the forms. Forms will work but they will not get the admin settings configuration.');
+	throw Error('Your project is missing global variable "esFormsLocalization" called from the enqueue script in the forms.');
 }
 
 // Set initial state.

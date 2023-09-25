@@ -33,7 +33,6 @@ trait FiltersOuputMock
 	public function getEnrichmentManualMapFilterValue(array $config): array
 	{
 		$settings = '';
-
 		$filterUsed = false;
 		$settingsFields = [];
 
@@ -159,12 +158,8 @@ trait FiltersOuputMock
 	 */
 	public function getSuccessRedirectUrlFilterValue(string $type, string $formId): array
 	{
-		$settingsGlobal = '';
-		$settingsLocal = '';
 		$data = '';
-		$dataGlobal = '';
-		$dataLocal = '';
-		$filterUsedLocal = false;
+		$filterUsed = false;
 
 		// Find global settings per integration.
 		$dataGlobal = $this->getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
@@ -172,30 +167,34 @@ trait FiltersOuputMock
 		// Populate final output.
 		$data = $dataGlobal;
 
+		// Find local settings for form.
+		$dataLocal = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
+
+		if ($dataLocal) {
+			$data = $dataLocal;
+		}
+
 		// Find local settings per integration or filter data.
 		$filterNameLocal = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
 		if (\has_filter($filterNameLocal)) {
-			$dataLocal = \apply_filters($filterNameLocal, $type, $formId);
+			$dataFilter = \apply_filters($filterNameLocal, $type, $formId) ?? '';
 
-			$filterUsedLocal = !!($dataLocal);
-		} else {
-			$dataLocal = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
-		}
-
-		// If local data exists overrider final output.
-		if ($dataLocal) {
-			$data = $dataLocal;
+			if ($dataFilter) {
+				$data = $dataFilter;
+				$dataLocal = $dataFilter;
+				$filterUsed = true;
+			}
 		}
 
 		return [
 			'data' => $data,
 
-			'settingsGlobal' => $this->getSettingsDivWrap($settingsGlobal),
+			'settingsGlobal' => $this->getSettingsDivWrap(''),
 			'dataGlobal' => $dataGlobal,
 
-			'settingsLocal' => $this->getSettingsDivWrap($settingsLocal, $filterUsedLocal),
+			'settingsLocal' => $this->getSettingsDivWrap('', $filterUsed),
 			'dataLocal' => $dataLocal,
-			'filterUsedLocal' => $filterUsedLocal,
+			'filterUsed' => $filterUsed,
 		];
 	}
 
@@ -209,8 +208,6 @@ trait FiltersOuputMock
 	 */
 	public function getTrackingEventNameFilterValue(string $type, string $formId): array
 	{
-		$settings = '';
-		$data = '';
 		$filterUsed = false;
 
 		$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
@@ -226,7 +223,7 @@ trait FiltersOuputMock
 		}
 
 		return [
-			'settings' => $this->getSettingsDivWrap($settings, $filterUsed),
+			'settings' => $this->getSettingsDivWrap('', $filterUsed),
 			'data' => $data,
 			'filterUsed' => $filterUsed,
 		];

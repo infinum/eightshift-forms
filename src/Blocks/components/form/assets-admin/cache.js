@@ -42,6 +42,7 @@ export class Cache {
 
 		fetch(this.state.getRestUrl(ROUTES.CACHE_CLEAR), body)
 			.then((response) => {
+				this.utils.formSubmitErrorContentType(response, 'cache', formId);
 				return response.json();
 			})
 			.then((response) => {

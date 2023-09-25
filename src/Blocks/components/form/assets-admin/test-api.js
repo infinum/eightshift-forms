@@ -43,6 +43,7 @@ export class TestApi {
 
 		fetch(this.state.getRestUrlByType(ROUTES.PREFIX_TEST_API, integrationType), body)
 			.then((response) => {
+				this.utils.formSubmitErrorContentType(response, 'testApi', formId);
 				return response.json();
 			})
 			.then((response) => {

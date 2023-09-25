@@ -61,7 +61,7 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Skip integration.
 	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY = 'ACTIVE_CAMPAIGN-skip-integration';
+	public const SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY = 'active-campaign-skip-integration';
 
 	/**
 	 * Instance variable for Fallback settings.

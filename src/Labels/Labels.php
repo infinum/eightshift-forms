@@ -210,6 +210,11 @@ class Labels implements LabelsInterface
 			'validationAccept' => \__('The file type is not supported. Only %s files are allowed.', 'eightshift-forms'),
 			// translators: %s used for displaying file type value.
 			'validationAcceptMime' => \__('The file seems to be corrupted or invalid format. Only %s are allowed.', 'eightshift-forms'),
+			// translators: %s used for displaying file type value.
+			'validationAcceptMimeMultiple' => \__('One or more files seem to be corrupt or have invalid format. Only %s are allowed.', 'eightshift-forms'),
+			'validationFileWrongUploadPath' => \__('One or more files seem to be uploaded using an unauthorized method.', 'eightshift-forms'),
+			'validationFileUpload' => \__('There seems to be an error with the file upload. Please try again.', 'eightshift-forms'),
+			'validationFileMaxAmount' => \__('You can only upload a single file in this field. If you have multiple files, please remove them and try again.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
@@ -430,6 +435,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'workableBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			'workableArchivedJobError' => \__('We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake.', 'eightshift-forms'),
 			'workableSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}

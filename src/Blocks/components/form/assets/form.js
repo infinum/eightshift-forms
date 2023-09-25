@@ -111,7 +111,7 @@ export class Form {
 		// Get geolocation data from ajax to detect what we will remove from DOM.
 		fetch(this.state.getRestUrl(ROUTES.GEOLOCATION), body)
 		.then((response) => {
-			this.formSubmitErrorContentType(response, 'geolocation');
+			this.utils.formSubmitErrorContentType(response, 'geolocation', null);
 			return response.json();
 		})
 		.then((response) => {
@@ -267,8 +267,7 @@ export class Form {
 
 		fetch(url, body)
 			.then((response) => {
-				this.formSubmitErrorContentType(formId, response, 'formSubmit');
-
+				this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
 				return response.json();
 			})
 			.then((response) => {
@@ -316,8 +315,7 @@ export class Form {
 
 		fetch(url, body)
 			.then((response) => {
-				this.formSubmitErrorContentType(formId, response, 'formSubmitStep');
-
+				this.utils.formSubmitErrorContentType(response, 'formSubmitStep', formId);
 				return response.json();
 			})
 			.then((response) => {
@@ -346,53 +344,6 @@ export class Form {
 
 		// Remove loader.
 		this.utils.hideLoader(formId);
-	}
-
-	/**
-	 * Actions to run if api response returns wrong content type.
-	 *
-	 * This can happen if the API returns HTML or something else that we don't expect.
-	 * Cloudflare security can return HTML.
-	 *
-	 * @param {string} formId Form Id.
-	 * @param {mixed} response Api response.
-	 * @param {string} type Function used.
-	 *
-	 * @throws Error.
-	 *
-	 * @returns {void}
-	 */
-	formSubmitErrorContentType(formId, response, type) {
-		const contentType = response?.headers?.get('content-type');
-
-		// This can happen if the API returns HTML or something else that we don't expect.
-		if (contentType && contentType.indexOf('application/json') === -1) {
-			// Clear all errors.
-			this.utils.resetErrors(formId);
-
-			// Remove loader.
-			this.utils.hideLoader(formId);
-
-			// Set global msg.
-			this.utils.setGlobalMsg(
-				formId,
-				this.state.getStateSettingsFormServerErrorMsg(),
-				'error'
-			);
-
-			// Reset timeout for after each submit.
-			if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
-				clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
-			}
-
-			// Hide global msg in any case after some time.
-			this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
-				this.utils.unsetGlobalMsg(formId);
-			}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
-
-			// Throw error.
-			throw new Error(`API response returned the wrong content type for this request. Function used: "${type}"`);
-		}
 	}
 
 	/**
@@ -704,13 +655,8 @@ export class Form {
 					// Loop files and append.
 					if (fileList.length) {
 						for (const [key, file] of Object.entries(fileList)) {
-							const status = file?.xhr?.response ? JSON.parse(file.xhr.response)?.status : 'error';
-
-							// Check if the file is ok.
-							if (status === 'success') {
-								data.value = this.utils.getFileNameFromFileObject(file);
-								this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
-							}
+							data.value = this.utils.getFileNameFromFileObject(file);
+							this.FORM_DATA.append(`${name}[${key}]`, JSON.stringify(data));
 						}
 					} else {
 						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
@@ -1229,6 +1175,7 @@ export class Form {
 					autoDiscover: false,
 					parallelUploads: 1,
 					maxFiles: !input.multiple ? 1 : null,
+					dictMaxFilesExceeded: '',
 					dictRemoveFile: this.state.getStateSettingsFileRemoveLabel(formId),
 				}
 			);
@@ -1264,6 +1211,9 @@ export class Form {
 
 				field?.classList?.remove(this.state.getStateSelectorsClassActive());
 				this.state.setStateElementValue(name, '', formId);
+
+				// Remove main filed validation error.
+				this.utils.unsetFieldError(formId, name);
 			});
 
 			// Add data formData to the api call for the file upload.
@@ -1280,7 +1230,7 @@ export class Form {
 					},
 					{
 						name: this.state.getStateParam('type'),
-						value: 'fileUpload', // Not connected to anything just here for reference.
+						value: this.state.getStateConfigIsAdmin() ? 'fileUploadAdmin' : 'fileUpload',
 					},
 					{
 						// Add field name to know where whas this file upload to.
@@ -1300,30 +1250,14 @@ export class Form {
 				const response = JSON.parse(file.xhr.response);
 
 				// Output errors if ther is any.
-				if (response?.data?.validation !== undefined) {
+				if (typeof response?.data?.validation !== 'undefined' && Object.keys(response?.data?.validation)?.length > 0) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.validation?.[file?.upload?.uuid];
-
-					// Remove faulty files.
-					setTimeout(() => {
-						dropzone.removeFile(file);
-					}, 2500);
 				}
 
 				field?.classList?.add(this.state.getStateSelectorsClassFilled());
 			});
 
-			// On max file size reached output error and remove files.
-			dropzone.on('maxfilesreached', (files) => {
-				files.forEach((file) => {
-					if (file.status === 'error') {
-						setTimeout(() => {
-							dropzone.removeFile(file);
-						}, 2500);
-					}
-				});
-			});
-
-		// 	// Trigger on wrap click.
+			// Trigger on wrap click.
 			field.addEventListener('click', this.onFileWrapClickEvent);
 			input.addEventListener('focus', this.onFocusEvent);
 			input.addEventListener('blur', this.onBlurEvent);
@@ -1629,9 +1563,6 @@ export class Form {
 			},
 			formSubmitBefore: (formId, response) => {
 				this.formSubmitBefore(formId, response);
-			},
-			formSubmitErrorContentType: (formId, response, type) => {
-				this.formSubmitErrorContentType(formId, response, type);
 			},
 			formSubmitSuccess: (formId, response, isFinalStep = false) => {
 				this.formSubmitSuccess(formId, response, isFinalStep);

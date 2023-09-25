@@ -10,11 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
+use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
@@ -28,7 +30,9 @@ use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
+use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\ValidatorInterface;
 use WP_Query;
@@ -187,6 +191,28 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 		}
 
+		$configDelimiter = [
+			SettingsClearbit::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY,
+			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY,
+			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY,
+			SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY,
+			SettingsBlocks::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY,
+			SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY,
+		];
+
+		foreach ($configDelimiter as $key) {
+			$option = $this->getOptionValue($key);
+			if ($option) {
+				$option = \explode(', ', $option);
+				$option = \implode(AbstractBaseRoute::DELIMITER, $option);
+				\update_option($this->getSettingsName($key), $option);
+			}
+		}
+
+		$actionName = Filters::getFilterName(['migration', 'twoToThree']);
+		if (\has_action($actionName)) {
+			\do_action($actionName, SettingsMigration::VERSION_2_3);
+		}
 
 		return $this->getApiSuccessOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
 	}
@@ -232,80 +258,91 @@ class MigrationRoute extends AbstractBaseRoute
 
 			$type = Helper::getFormTypeById($id);
 
-			switch ($type) {
-				case SettingsHubspot::SETTINGS_TYPE_KEY:
-					$preCheck = $this->updateFormIntegration3To4($type, 'item-id', '', $id, $content);
-
-					$output[$id] = [
-						'fatal' => $preCheck['fatal'],
-						'title' => $title,
-						'type' => $type,
-						'msg' => $preCheck['msg'],
-						'data' => $preCheck['data'],
-					];
-					break;
-				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
-				case SettingsWorkable::SETTINGS_TYPE_KEY:
-					$preCheck = $this->updateFormIntegration3To4($type, 'job-id', '', $id, $content);
-
-					$output[$id] = [
-						'fatal' => $preCheck['fatal'],
-						'title' => $title,
-						'type' => $type,
-						'msg' => $preCheck['msg'],
-						'data' => $preCheck['data'],
-					];
-					break;
-				case SettingsMailchimp::SETTINGS_TYPE_KEY:
-				case SettingsMailerlite::SETTINGS_TYPE_KEY:
-				case SettingsActiveCampaign::SETTINGS_TYPE_KEY:
-				case SettingsGoodbits::SETTINGS_TYPE_KEY:
-				case SettingsMoments::SETTINGS_TYPE_KEY:
-					$preCheck = $this->updateFormIntegration3To4($type, 'list', '', $id, $content);
-
-					$output[$id] = [
-						'fatal' => $preCheck['fatal'],
-						'title' => $title,
-						'type' => $type,
-						'msg' => $preCheck['msg'],
-						'data' => $preCheck['data'],
-					];
-					break;
-				case SettingsAirtable::SETTINGS_TYPE_KEY:
-					$preCheck = $this->updateFormIntegration3To4($type, 'list', 'field', $id, $content);
-
-					$output[$id] = [
-						'fatal' => $preCheck['fatal'],
-						'title' => $title,
-						'type' => $type,
-						'msg' => $preCheck['msg'],
-						'data' => $preCheck['data'],
-					];
-					break;
-				case 'form':
-					$preCheck = $this->updateFormMailer3To4($content);
-
-					$output[$id] = [
-						'fatal' => $preCheck['fatal'],
-						'title' => $title,
-						'type' => $type,
-						'msg' => $preCheck['msg'],
-						'data' => $preCheck['data'],
-					];
-					break;
-				default:
-					$output[$id] = [
-						'fatal' => true,
-						'title' => $title,
-						'type' => $type,
-						'msg' => [\__('Form content is missing type block.', 'eightshift-forms')],
-						'data' => [],
-					];
-					break;
+			// If there is nothing in the content, skip this form.
+			if (!$type) {
+				continue;
 			}
 
-			\delete_option($this->getSettingsName("{$type}-clearbit-email-field"));
-			\delete_option($this->getSettingsName("{$type}-integration-fields"));
+			// Bailout integrations that are disabled.
+			$use = Filters::ALL[$type]['use'] ?? '';
+
+			// Skip deactivated integrations.
+			if ($this->isCheckboxOptionChecked($use, $use)) {
+				switch ($type) {
+					case SettingsHubspot::SETTINGS_TYPE_KEY:
+						$preCheck = $this->updateFormIntegration3To4($type, 'item-id', '', $id, $content);
+
+						$output[$id] = [
+							'fatal' => $preCheck['fatal'],
+							'title' => $title,
+							'type' => $type,
+							'msg' => $preCheck['msg'],
+							'data' => $preCheck['data'],
+						];
+						break;
+					case SettingsGreenhouse::SETTINGS_TYPE_KEY:
+					case SettingsWorkable::SETTINGS_TYPE_KEY:
+						$preCheck = $this->updateFormIntegration3To4($type, 'job-id', '', $id, $content);
+
+						$output[$id] = [
+							'fatal' => $preCheck['fatal'],
+							'title' => $title,
+							'type' => $type,
+							'msg' => $preCheck['msg'],
+							'data' => $preCheck['data'],
+						];
+						break;
+					case SettingsMailchimp::SETTINGS_TYPE_KEY:
+					case SettingsMailerlite::SETTINGS_TYPE_KEY:
+					case SettingsActiveCampaign::SETTINGS_TYPE_KEY:
+					case SettingsGoodbits::SETTINGS_TYPE_KEY:
+					case SettingsMoments::SETTINGS_TYPE_KEY:
+						$preCheck = $this->updateFormIntegration3To4($type, 'list', '', $id, $content);
+
+						$output[$id] = [
+							'fatal' => $preCheck['fatal'],
+							'title' => $title,
+							'type' => $type,
+							'msg' => $preCheck['msg'],
+							'data' => $preCheck['data'],
+						];
+						break;
+					case SettingsAirtable::SETTINGS_TYPE_KEY:
+						$preCheck = $this->updateFormIntegration3To4($type, 'list', 'field', $id, $content);
+
+						$output[$id] = [
+							'fatal' => $preCheck['fatal'],
+							'title' => $title,
+							'type' => $type,
+							'msg' => $preCheck['msg'],
+							'data' => $preCheck['data'],
+						];
+						break;
+					case 'form': // Legacy blocks for Mailer integrations is called form and not mailer.
+						$preCheck = $this->updateFormMailer3To4($content);
+
+						$output[$id] = [
+							'fatal' => $preCheck['fatal'],
+							'title' => $title,
+							'type' => $type,
+							'msg' => $preCheck['msg'],
+							'data' => $preCheck['data'],
+						];
+						break;
+					default:
+						$output[$id] = [
+							'fatal' => true,
+							'title' => $title,
+							'type' => $type,
+							'msg' => [\__('Form content is missing type block.', 'eightshift-forms')],
+							'data' => [],
+						];
+						break;
+				}
+
+				\delete_option($this->getSettingsName("{$type}-clearbit-email-field"));
+				\delete_option($this->getSettingsName("{$type}-integration-fields"));
+			}
 		}
 
 		\wp_reset_postdata();
@@ -315,6 +352,7 @@ class MigrationRoute extends AbstractBaseRoute
 			'fatal' => [],
 			'items' => [],
 		];
+
 		foreach ($output as $key => $value) {
 			if ($value['fatal']) {
 				$outputFatal[$key] = [
@@ -350,6 +388,11 @@ class MigrationRoute extends AbstractBaseRoute
 		}
 
 		$outputFinal['fatal'] = $outputFatal;
+
+		$actionName = Filters::getFilterName(['migration', 'threeToFour']);
+		if (\has_action($actionName)) {
+			\do_action($actionName, SettingsMigration::VERSION_3_4);
+		}
 
 		if (!$outputFinal['items']) {
 			return $this->getApiErrorOutput(

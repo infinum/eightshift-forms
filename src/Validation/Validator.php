@@ -11,9 +11,12 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Config\Config;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
+use EightshiftForms\Integrations\Jira\SettingsJira;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
@@ -62,6 +65,7 @@ class Validator extends AbstractValidation
 		'maxSize',
 		'minLength',
 		'maxLength',
+		'isMultiple',
 		'isRequired',
 	];
 
@@ -109,10 +113,11 @@ class Validator extends AbstractValidation
 	 * Validate params.
 	 *
 	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param bool $strictValidation Is validation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validateParams(array $data): array
+	public function validateParams(array $data, bool $strictValidation = true): array
 	{
 		$output = [];
 		$formType = $data['type'];
@@ -129,12 +134,42 @@ class Validator extends AbstractValidation
 			$fieldsOnly = $this->getValidationReferenceManual($fieldsOnly);
 		}
 
+		// Find refference fields in admin config.
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
+		// Find all required fields.
+		$validationReferenceRequired = $this->getValidationReferenceOnlyRequired($validationReference);
+
+		// Don't validate if no validation reference is found and if this is a step validation.
+		// This protects us from no required fields being sent by none authorized request or sending non valid file type.
+		if ($validationReferenceRequired && $strictValidation) {
+			// Get all param names excluding hidden fields.
+			$paramsNames = $this->getParamsFieldNames($params);
+
+			// Check if all required fields are present.
+			foreach ($validationReferenceRequired as $key => $value) {
+				// If field is present skip it.
+				if (\array_key_exists($key, $paramsNames)) {
+					continue;
+				}
+
+				// Output keys that are missing as required.
+				$output[$key] = $this->getValidationLabel('validationRequired', $formId);
+			}
+		}
+
+		// Define order of validation.
 		$order = self::VALIDATION_FIELDS;
 
 		// Check params.
-		foreach ($params as $paramKey => $paramValue) {
+		foreach ($params as $paramValue) {
+			$paramType = $paramValue['type'] ?? '';
+
+			// Skip validating hidden fields.
+			if ($paramType === 'hidden') {
+				continue;
+			}
+
 			$inputValue = $paramValue['value'] ?? '';
 			$paramKey = $paramValue['name'] ?? '';
 
@@ -158,6 +193,35 @@ class Validator extends AbstractValidation
 			\uksort($reference, function ($key1, $key2) use ($order) {
 				return (\array_search($key1, $order, true) > \array_search($key2, $order, true));
 			});
+
+			// Validate all files are uploaded to the server and not a external link.
+			if ($paramType === 'file') {
+				if (\is_array($inputValue)) {
+					// Check if single or multiple and output error.
+					if (!isset($reference['isMultiple']) && \count($inputValue) > 1) {
+						$output[$paramKey] = $this->getValidationLabel('validationFileMaxAmount', $formId);
+					}
+
+					// Check if wrong upload path.
+					foreach ($inputValue as $key => $value) {
+						// Expolode and remove empty files.
+						$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, $value));
+						if (!$fileName) {
+							continue;
+						}
+
+						$fileName = \array_flip($fileName);
+
+						// Bailout if file is ok.
+						if (isset($fileName[Config::getTempUploadDir()])) {
+							continue;
+						}
+
+						// Output error if file is not uploaded to the correct path.
+						$output[$paramKey] = $this->getValidationLabel('validationFileWrongUploadPath', $formId);
+					}
+				}
+			}
 
 			// Loop all validations from the reference.
 			foreach ($reference as $dataKey => $dataValue) {
@@ -251,6 +315,18 @@ class Validator extends AbstractValidation
 						}
 
 						break;
+					case 'accept':
+						// Check every file and detect if it has correct extension.
+						if (\is_array($inputValue)) {
+							foreach ($inputValue as $key => $value) {
+								if ($this->isFileTypeValid($value, $dataValue)) {
+									continue;
+								}
+
+								$output[$paramKey] = \sprintf($this->getValidationLabel('validationAcceptMimeMultiple', $formId), $dataValue);
+							}
+						}
+						break;
 				}
 			}
 		}
@@ -335,19 +411,26 @@ class Validator extends AbstractValidation
 
 		switch ($type) {
 			case Settings::SETTINGS_GLOBAL_TYPE_NAME:
+			case 'fileUploadAdmin':
 				return true;
 			case Settings::SETTINGS_TYPE_NAME:
 				if (!$formId) {
 					return false;
 				}
 				return true;
+			case SettingsMailer::SETTINGS_TYPE_KEY:
+			case SettingsJira::SETTINGS_TYPE_KEY:
+				if (!$formId || !$postId) {
+					return false;
+				}
+				return true;
 			case SettingsAirtable::SETTINGS_TYPE_KEY:
-				if (!$formId || !$itemId || !$postId || !$innerId) {
+				if (!$formId || !$postId || !$itemId || !$innerId) {
 					return false;
 				}
 				return true;
 			default:
-				if (!$formId || !$itemId || !$postId) {
+				if (!$formId || !$postId || !$itemId) {
 					return false;
 				}
 				return true;
@@ -419,6 +502,48 @@ class Validator extends AbstractValidation
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Only output validation reference fields which are required.
+	 *
+	 * @param array<int|string, array<string, mixed>> $refference Valiadaton refference from getValidationReference function.
+	 *
+	 * @return array<int|string, int>
+	 */
+	private function getValidationReferenceOnlyRequired(array $refference): array
+	{
+		$output = \array_filter(
+			$refference,
+			static function ($value) {
+				return isset($value['isRequired']) && $value['isRequired'] === true;
+			}
+		);
+
+		return $output ? \array_flip(\array_keys($output)) : [];
+	}
+
+	/**
+	 * Output params field names.
+	 *
+	 * @param array<string, mixed> $params Params array.
+	 *
+	 * @return array<string, int>
+	 */
+	private function getParamsFieldNames(array $params): array
+	{
+		return \array_flip(\array_filter(\array_values(\array_map(
+			static function ($item) {
+				$type = $item['type'] ?? '';
+
+				if ($type === 'hidden') {
+					return '';
+				}
+
+				return $item['name'] ?? '';
+			},
+			$params
+		))));
 	}
 
 	/**

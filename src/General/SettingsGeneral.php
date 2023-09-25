@@ -144,7 +144,7 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 									%2$s', 'eightshift-forms'), $this->getFormFieldNames($formDetails['fieldNamesTags']), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
-								'inputIsDisabled' => $successRedirectUrl['filterUsedLocal'],
+								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
 								'inputValue' => $successRedirectUrl['dataLocal'],
 							],
 							[

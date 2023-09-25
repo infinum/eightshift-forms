@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
+use EightshiftForms\AdminMenus\FormAdminMenu;
 use EightshiftForms\AdminMenus\FormGlobalSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\AdminMenus\FormListingAdminSubMenu;
@@ -130,6 +131,24 @@ class Helper
 	public static function getFormEditPageUrl(string $formId): string
 	{
 		return \get_edit_post_link((int) $formId) ?? '';
+	}
+
+	/**
+	 * Method that checks if request is a part of the forms.
+	 *
+	 * @return bool
+	 */
+	public static function isEightshiftFormsAdminPages(): bool
+	{
+		$page = isset($_GET['page']) ? \sanitize_text_field(\wp_unslash($_GET['page'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		$pages = \array_flip([
+			FormAdminMenu::ADMIN_MENU_SLUG,
+			FormSettingsAdminSubMenu::ADMIN_MENU_SLUG,
+			FormGlobalSettingsAdminSubMenu::ADMIN_MENU_SLUG,
+		]);
+
+		return isset($pages[$page]) && \is_admin();
 	}
 
 	/**

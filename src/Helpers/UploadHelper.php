@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
+use EightshiftForms\Config\Config;
+
 /**
  * Trait UploadHelper
  */
@@ -40,13 +42,10 @@ trait UploadHelper
 			return [];
 		}
 
-		if (!\defined('WP_CONTENT_DIR')) {
+		$folderPath = $this->getUploadFolerPath();
+		if (!$folderPath) {
 			return [];
 		}
-
-		$sep = \DIRECTORY_SEPARATOR;
-
-		$folderPath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}";
 
 		if (!\is_dir($folderPath)) {
 			\mkdir($folderPath);
@@ -68,7 +67,10 @@ trait UploadHelper
 		$finalFilePath = "{$folderPath}{$name}";
 
 		// Move the file to new location.
-		\move_uploaded_file($file['tmp_name'], $finalFilePath);
+		$output = \move_uploaded_file($file['tmp_name'], $finalFilePath);
+		if (!$output) {
+			return [];
+		}
 
 		return \array_merge(
 			$file,
@@ -114,12 +116,10 @@ trait UploadHelper
 	 */
 	protected function deleteUploadFolderContent(int $numberOfHours = 2): void
 	{
-		if (!\defined('WP_CONTENT_DIR')) {
+		$folderPath = $this->getUploadFolerPath();
+		if (!$folderPath) {
 			return;
 		}
-		$sep = \DIRECTORY_SEPARATOR;
-
-		$folderPath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}";
 
 		if (!\is_dir($folderPath)) {
 			return;
@@ -147,17 +147,16 @@ trait UploadHelper
 	 *
 	 * @param string $name File name.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	protected function getFilePath(string $name)
+	protected function getFilePath(string $name): string
 	{
-		if (!\defined('WP_CONTENT_DIR')) {
+		$folderPath = $this->getUploadFolerPath();
+		if (!$folderPath) {
 			return '';
 		}
 
-		$sep = \DIRECTORY_SEPARATOR;
-
-		$filePath = \WP_CONTENT_DIR . "{$sep}esforms-tmp{$sep}{$name}";
+		$filePath = "{$folderPath}{$name}";
 
 		if (!\file_exists($filePath)) {
 			return '';
@@ -212,5 +211,21 @@ trait UploadHelper
 		}
 
 		return $isFaulty;
+	}
+
+	/**
+	 * Get upload folder path.
+	 *
+	 * @return string
+	 */
+	private function getUploadFolerPath(): string
+	{
+		if (!\defined('WP_CONTENT_DIR')) {
+			return '';
+		}
+
+		$sep = \DIRECTORY_SEPARATOR;
+		$dir = Config::getTempUploadDir();
+		return \WP_CONTENT_DIR . "{$sep}{$dir}{$sep}";
 	}
 }

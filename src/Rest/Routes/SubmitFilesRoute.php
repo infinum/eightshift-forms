@@ -174,7 +174,7 @@ class SubmitFilesRoute extends AbstractFormSubmit
 			$this->getApiSuccessOutput(
 				\esc_html__('File upload success', 'eightshift-forms'),
 				[
-					'file' => $formDataReference['filesUpload']['id'],
+					'file' => $formDataReference['filesUpload']['id'] ?? '',
 				],
 				[
 					'formDataReference' => $formDataReference,

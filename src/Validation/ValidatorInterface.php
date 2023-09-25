@@ -19,10 +19,11 @@ interface ValidatorInterface
 	 * Validate params.
 	 *
 	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param bool $strictValidation Is validation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validateParams(array $data): array;
+	public function validateParams(array $data, bool $strictValidation = true): array;
 
 	/**
 	 * Validate files from the validation reference.

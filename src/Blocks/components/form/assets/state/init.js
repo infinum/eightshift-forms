@@ -132,6 +132,7 @@ export const StateEnum = {
 	STEPS_FLOW: 'flow',
 	STEPS_CURRENT: 'current',
 	STEPS_ITEMS: 'items',
+	STEPS_ORDER: 'order',
 	STEPS_ELEMENTS: 'elements',
 	STEPS_IS_MULTIFLOW: 'isMultiflow',
 	STEPS_PROGRESS_BAR_COUNT: 'progressBarCount',
@@ -319,42 +320,43 @@ export function setStateFormInitial(formId) {
 		formElement = document.querySelector(`${getState([StateEnum.SELECTORS_FORM], StateEnum.SELECTORS)}[${getStateAttribute('formId')}="${formId}"]`);
 	}
 
-	setState([StateEnum.FORM, StateEnum.POST_ID],formElement.getAttribute(getStateAttribute('postId')), formId);
+	setState([StateEnum.FORM, StateEnum.POST_ID],formElement?.getAttribute(getStateAttribute('postId')), formId);
 	setState([StateEnum.FORM, StateEnum.ISLOADED], false, formId);
 	setState([StateEnum.FORM, StateEnum.IS_SINGLE_SUBMIT], false, formId);
 	setState([StateEnum.FORM, StateEnum.ELEMENT], formElement, formId);
-	setState([StateEnum.FORM, StateEnum.TYPE], formElement.getAttribute(getStateAttribute('formType')), formId);
-	setState([StateEnum.FORM, StateEnum.METHOD], formElement.getAttribute('method'), formId);
-	setState([StateEnum.FORM, StateEnum.ACTION], formElement.getAttribute('action'), formId);
-	setState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formElement.getAttribute(getStateAttribute('actionExternal')), formId);
-	setState([StateEnum.FORM, StateEnum.TYPE_SETTINGS], formElement.getAttribute(getStateAttribute('settingsType')), formId);
-	setState([StateEnum.FORM, StateEnum.LOADER], formElement.querySelector(getState([StateEnum.SELECTORS_LOADER], StateEnum.SELECTORS)), formId);
-	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_NAME], formElement.getAttribute(getStateAttribute('trackingEventName')), formId);
-	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_ADDITIONAL_DATA], JSON.parse(formElement.getAttribute(getStateAttribute('trackingAdditionalData'))), formId);
+	setState([StateEnum.FORM, StateEnum.TYPE], formElement?.getAttribute(getStateAttribute('formType')), formId);
+	setState([StateEnum.FORM, StateEnum.METHOD], formElement?.getAttribute('method'), formId);
+	setState([StateEnum.FORM, StateEnum.ACTION], formElement?.getAttribute('action'), formId);
+	setState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formElement?.getAttribute(getStateAttribute('actionExternal')), formId);
+	setState([StateEnum.FORM, StateEnum.TYPE_SETTINGS], formElement?.getAttribute(getStateAttribute('settingsType')), formId);
+	setState([StateEnum.FORM, StateEnum.LOADER], formElement?.querySelector(getState([StateEnum.SELECTORS_LOADER], StateEnum.SELECTORS)), formId);
+	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_NAME], formElement?.getAttribute(getStateAttribute('trackingEventName')), formId);
+	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_ADDITIONAL_DATA], JSON.parse(formElement?.getAttribute(getStateAttribute('trackingAdditionalData')) ?? '{}'), formId);
+
 
 	// Form settings
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement.getAttribute(getStateAttribute('phoneDisablePicker'))), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement.getAttribute(getStateAttribute('phoneSync'))), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT], formElement.getAttribute(getStateAttribute('successRedirect')), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement.getAttribute(getStateAttribute('successRedirectVariation')), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_DOWNLOADS], JSON.parse(formElement.getAttribute(getStateAttribute('downloads'))), formId);
+	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement?.getAttribute(getStateAttribute('phoneDisablePicker'))), formId);
+	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement?.getAttribute(getStateAttribute('phoneSync'))), formId);
+	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT], formElement?.getAttribute(getStateAttribute('successRedirect')), formId);
+	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement?.getAttribute(getStateAttribute('successRedirectVariation')), formId);
+	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_DOWNLOADS], JSON.parse(formElement?.getAttribute(getStateAttribute('downloads')) ?? '{}'), formId);
 
-	const globalMsg = formElement.querySelector(getState([StateEnum.SELECTORS_GLOBAL_MSG], StateEnum.SELECTORS));
+	const globalMsg = formElement?.querySelector(getState([StateEnum.SELECTORS_GLOBAL_MSG], StateEnum.SELECTORS));
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.ELEMENT], globalMsg, formId);
-	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_SUCCESS], globalMsg.getAttribute(getStateAttribute('globalMsgHeadingSuccess')), formId);
-	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], globalMsg.getAttribute(getStateAttribute('globalMsgHeadingError')), formId);
+	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_SUCCESS], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingSuccess')), formId);
+	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingError')), formId);
 
 	// Conditional tags
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_IGNORE], [], formId);
-	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(formElement.getAttribute(getStateAttribute('conditionalTags'))), formId);
+	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(formElement?.getAttribute(getStateAttribute('conditionalTags')) ?? '{}'), formId);
 
 	// Steps.
 	setSteps(formElement, formId);
 
 	// Loop all fields.
-	for (const item of Object.values(formElement.querySelectorAll('input, select, textarea'))) {
+	for (const item of Object.values(formElement?.querySelectorAll('input, select, textarea') ?? {})) {
 		const {
 			value,
 			name,
@@ -505,20 +507,22 @@ export function setStateFormInitial(formId) {
  * * @returns {void}
  */
 export function setSteps(formElement, formId) {
-	const steps = formElement.querySelectorAll(getState([StateEnum.SELECTORS_STEP], StateEnum.SELECTORS));
+	const steps = formElement?.querySelectorAll(getState([StateEnum.SELECTORS_STEP], StateEnum.SELECTORS));
 	setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.IS_USED], false, formId);
 
-	if (steps.length) {
+	if (steps?.length) {
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.IS_USED], true, formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_FLOW], [], formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], '', formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ITEMS], {}, formId);
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], [], formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], {}, formId);
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_IS_MULTIFLOW], false, formId);
 
+		const stepsOrder = [];
 		Object.values(steps).forEach((item, index) => {
-			const stepFields = item.querySelectorAll(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
-			const stepId = item.getAttribute(getStateAttribute('stepId'));
+			const stepFields = item?.querySelectorAll(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
+			const stepId = String(item.getAttribute(getStateAttribute('stepId')));
 			const stepOutput = [];
 
 			stepFields.forEach((stepField) => {
@@ -535,7 +539,12 @@ export function setSteps(formElement, formId) {
 			if (index === 0) {
 				setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_CURRENT], stepId, formId);
 			}
+
+			if (stepFields) {
+				stepsOrder.push(stepId);
+			}
 		});
+		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], stepsOrder, formId);
 
 		const stepsProgressBarMultiflow = formElement.querySelector(getState([StateEnum.SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW], StateEnum.SELECTORS));
 
