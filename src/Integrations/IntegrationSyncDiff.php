@@ -1183,7 +1183,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	}
 
 	/**
-	 * Oreder blocks the correct way by preserving the correct order and checking the filter.
+	 * Order blocks to preserve the correct order and check the filter.
 	 *
 	 * @param array<string, mixed> $blocks Block list.
 	 * @param array<string, mixed> $orders Order list.

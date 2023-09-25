@@ -20,7 +20,7 @@ use WP_Query;
 class Transfer implements TransferInterface
 {
 	/**
-	 * Use trait Upload_Helper inside class.
+	 * Use trait UploadHelper inside class.
 	 */
 	use UploadHelper;
 
@@ -46,7 +46,7 @@ class Transfer implements TransferInterface
 		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			"SELECT option_name as name, option_value as value
 				FROM $wpdb->options
-				WHERE option_name REGEXP 'es-forms-'"
+				WHERE option_name LIKE '%es-forms-%'"
 		);
 
 		return $options ? $this->getMetaOutput($options) : [];
@@ -90,7 +90,7 @@ class Transfer implements TransferInterface
 					"SELECT meta_key name, meta_value as value
 					FROM $wpdb->postmeta
 					WHERE post_id=%d
-					AND meta_key REGEXP 'es-forms-'",
+					AND meta_key LIKE '%es-forms-%'",
 					$form->ID
 				)
 			);
@@ -141,7 +141,7 @@ class Transfer implements TransferInterface
 				"SELECT meta_key name, meta_value as value
 				FROM $wpdb->postmeta
 				WHERE post_id=%d
-				AND meta_key REGEXP 'es-forms-'",
+				AND meta_key LIKE '%es-forms-%'",
 				$item
 			)
 		);
@@ -189,7 +189,7 @@ class Transfer implements TransferInterface
 			$existingGlobalSettings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				"SELECT option_name name, option_value as value
 				FROM $wpdb->options
-				AND option_name REGEXP 'es-forms-'"
+				AND option_name LIKE '%es-forms-%'"
 			);
 
 			// If existing global settings are present delete them all.
@@ -274,7 +274,7 @@ class Transfer implements TransferInterface
 					"SELECT meta_key name, meta_value as value
 					FROM $wpdb->postmeta
 					WHERE post_id=%s
-					AND meta_key REGEXP 'es-forms-'",
+					AND meta_key LIKE '%es-forms-%'",
 					$exists
 				)
 			);
@@ -314,7 +314,7 @@ class Transfer implements TransferInterface
 
 		$esSettings = $form['es_settings'] ?? [];
 
-		// Check if form new form is created and has settings and create them.
+		// Check if new form is created and has settings. Create settings if true.
 		if ($newId && $esSettings) {
 			foreach ($esSettings as $esSettings) {
 				$name = $esSettings['name'] ?? '';

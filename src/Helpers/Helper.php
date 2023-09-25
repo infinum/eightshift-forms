@@ -134,7 +134,7 @@ class Helper
 	}
 
 	/**
-	 * Method that check if request is a part of the forms.
+	 * Method that checks if request is a part of the forms.
 	 *
 	 * @return bool
 	 */

@@ -137,7 +137,7 @@ class Validator extends AbstractValidation
 		// Find refference fields in admin config.
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
-		// Find all req fields.
+		// Find all required fields.
 		$validationReferenceRequired = $this->getValidationReferenceOnlyRequired($validationReference);
 
 		// Don't validate if no validation reference is found and if this is a step validation.
@@ -194,7 +194,7 @@ class Validator extends AbstractValidation
 				return (\array_search($key1, $order, true) > \array_search($key2, $order, true));
 			});
 
-			// Validate are all files uploaded to the server and not a external link.
+			// Validate all files are uploaded to the server and not a external link.
 			if ($paramType === 'file') {
 				if (\is_array($inputValue)) {
 					// Check if single or multiple and output error.
@@ -316,7 +316,7 @@ class Validator extends AbstractValidation
 
 						break;
 					case 'accept':
-						// Check every file and detect if it is correct extension.
+						// Check every file and detect if it has correct extension.
 						if (\is_array($inputValue)) {
 							foreach ($inputValue as $key => $value) {
 								if ($this->isFileTypeValid($value, $dataValue)) {
@@ -505,7 +505,7 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Output validation reference fields that are required only.
+	 * Only output validation reference fields which are required.
 	 *
 	 * @param array<int|string, array<string, mixed>> $refference Valiadaton refference from getValidationReference function.
 	 *
