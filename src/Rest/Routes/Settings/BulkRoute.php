@@ -237,17 +237,17 @@ class BulkRoute extends AbstractBaseRoute
 
 			if ($error) {
 				// translators: %s replaces error list.
-				$msgOutput[] = \sprintf(\esc_html__('<br/><strong>Error:</strong><br/> %s', 'eightshift-forms'), \implode('<br/>', $error));
+				$msgOutput[] = \sprintf(\wp_kses_post(\__('<br/><strong>Error:</strong><br/> %s', 'eightshift-forms')), \implode('<br/>', $error));
 			}
 
 			if ($success) {
 				// translators: %s replaces success list.
-				$msgOutput[] = \sprintf(\esc_html__('<br/><strong>Success:</strong><br/> %s', 'eightshift-forms'), \implode('<br/>', $success));
+				$msgOutput[] = \sprintf(\wp_kses_post(\__('<br/><strong>Success:</strong><br/> %s', 'eightshift-forms')), \implode('<br/>', $success));
 			}
 
 			if ($skip) {
 				// translators: %s replaces skip list.
-				$msgOutput[] = \sprintf(\esc_html__('<br/><strong>Skip:</strong><br/> %s', 'eightshift-forms'), \implode('<br/>', $skip));
+				$msgOutput[] = \sprintf(\wp_kses_post(\__('<br/><strong>Skip:</strong><br/> %s', 'eightshift-forms')), \implode('<br/>', $skip));
 			}
 
 			return [
