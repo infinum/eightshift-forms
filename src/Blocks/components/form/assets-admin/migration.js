@@ -26,6 +26,7 @@ export class Migration {
 		const formData = new FormData();
 
 		formData.append('type', field.getAttribute(this.state.getStateAttribute('migrationType')));
+		this.utils.showLoader(formId);
 
 		document.querySelector(this.outputSelector).value = 'Please wait, this may take a few minutes...';
 
@@ -54,6 +55,7 @@ export class Migration {
 					status,
 				} = response;
 
+				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);
 
 				document.querySelector(this.outputSelector).value = JSON.stringify(response, null, 4);

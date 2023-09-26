@@ -57,6 +57,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
@@ -249,6 +250,11 @@ class Filters
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
 			'use' => SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 		],
+		SettingsWpml::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsWpml::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
+			'use' => SettingsWpml::SETTINGS_WPML_USE_KEY,
+		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
@@ -432,6 +438,7 @@ class Filters
 		'migration' => [
 			'twoToThree',
 			'threeToFour',
+			'threeToFourLocale',
 		],
 	];
 
@@ -580,6 +587,10 @@ class Filters
 				'title' => \__('Cloudflare', 'eightshift-forms'),
 				'desc' => \__('Cloudflare is a content delivery network (CDN) and cloud security platform that provides website optimization, security, and performance services.', 'eightshift-forms'),
 			],
+			SettingsWpml::SETTINGS_TYPE_KEY => [
+				'title' => \__('WPML', 'eightshift-forms'),
+				'desc' => \__('WPML is a WordPress plugin, which allows building and running multilingual sites. It integrates with almost all popular WordPress themes and plugins and allows building anything from multilingual blogs to complex e-commerce and corporate sites.', 'eightshift-forms'),
+			],
 			SettingsMigration::SETTINGS_TYPE_KEY => [
 				'title' => \__('Migration', 'eightshift-forms'),
 				'desc' => \__('One-click migrate forms from earlier versions of Forms.', 'eightshift-forms'),
@@ -601,6 +612,89 @@ class Filters
 		];
 
 		return isset($data[$type][$key]) ? $data[$type][$key] : '';
+	}
+
+	/**
+	 * Check if provided name is fixed or localized.
+	 *
+	 * @param string $name Setting or option name.
+	 *
+	 * @return boolean
+	 */
+	public static function isNameFixed(string $name): bool
+	{
+		$list = \array_flip([
+			SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
+			SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY,
+			SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY,
+			SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
+			SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY,
+
+			SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY,
+
+			SettingsEnrichment::SETTINGS_ENRICHMENT_USE_KEY,
+
+			SettingsSecurity::SETTINGS_SECURITY_USE_KEY,
+
+			SettingsMailer::SETTINGS_MAILER_USE_KEY,
+
+			SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
+			SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY,
+
+			SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY,
+			SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY,
+			SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY,
+
+			SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY,
+			SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY,
+
+			SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY,
+			SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY,
+
+			SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY,
+			SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY,
+
+			SettingsClearbit::SETTINGS_CLEARBIT_USE_KEY,
+			SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY,
+
+			SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY,
+			SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY,
+			SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY,
+
+			SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY,
+			SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY,
+
+			SettingsMoments::SETTINGS_MOMENTS_USE_KEY,
+			SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY,
+			SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY,
+
+			SettingsWorkable::SETTINGS_WORKABLE_USE_KEY,
+			SettingsWorkable::SETTINGS_WORKABLE_API_KEY_KEY,
+			SettingsWorkable::SETTINGS_WORKABLE_SUBDOMAIN_KEY,
+
+			SettingsJira::SETTINGS_JIRA_USE_KEY,
+			SettingsJira::SETTINGS_JIRA_API_KEY_KEY,
+			SettingsJira::SETTINGS_JIRA_API_BOARD_KEY,
+			SettingsJira::SETTINGS_JIRA_API_USER_KEY,
+			SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY,
+
+			SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
+
+			SettingsWpml::SETTINGS_WPML_USE_KEY,
+
+			SettingsFallback::SETTINGS_FALLBACK_USE_KEY,
+
+			SettingsMigration::SETTINGS_MIGRATION_USE_KEY,
+
+			SettingsTransfer::SETTINGS_TRANSFER_USE_KEY,
+
+			SettingsDebug::SETTINGS_DEBUG_USE_KEY,
+			SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY,
+
+			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY,
+		]);
+
+		return isset($list[$name]);
 	}
 
 	/**

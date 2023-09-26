@@ -35,6 +35,8 @@ export class Transfer {
 
 		formData.append('type', type);
 
+		this.utils.showLoader(formId);
+
 		if (type === 'import') {
 			const { name } = document.querySelector(this.uploadSelector);
 
@@ -74,6 +76,7 @@ export class Transfer {
 					data,
 				} = response;
 
+				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);
 
 				if (status === 'success') {

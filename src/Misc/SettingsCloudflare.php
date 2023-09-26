@@ -84,17 +84,7 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
-				'layoutContent' => [
-					[
-						'component' => 'intro',
-						'introTitle' => \__('Disclamer', 'eightshift-forms'),
-						'introSubtitle' => \__("Eightshift Forms doesn't configure the Cloudflare app or any other third-party tools. However, enabling this feature adds necessary configurations in the backend for everything to function correctly.", 'eightshift-forms'),
-					],
-				],
-			],
+			$this->settingMiscDisclamer(),
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Features affected by Cloudflare are:', 'eightshift-forms'),

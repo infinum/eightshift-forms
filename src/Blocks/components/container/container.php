@@ -21,7 +21,6 @@ $containerContent = Components::checkAttr('containerContent', $attributes, $mani
 $containerTag = Components::checkAttr('containerTag', $attributes, $manifest);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
-
 ?>
 
 <<?php echo esc_attr($containerTag); ?>
@@ -30,7 +29,7 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 	<?php
 	foreach ($additionalAttributes as $key => $value) {
 		if (!empty($key) && !empty($value)) {
-			echo wp_kses_post("{$key}=" . $value . " ");
+			echo wp_kses_post(" {$key}='" . $value . "'");
 		}
 	}
 	?>

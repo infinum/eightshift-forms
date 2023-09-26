@@ -25,6 +25,7 @@ export class Cache {
 		const formData = new FormData();
 
 		formData.append('type', field.getAttribute(this.state.getStateAttribute('cacheType')));
+		this.utils.showLoader(formId);
 
 		// Populate body data.
 		const body = {
@@ -51,6 +52,7 @@ export class Cache {
 					status,
 				} = response;
 
+				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);
 
 				if (this.state.getStateFormElement(formId).getAttribute(this.state.getStateAttribute('reload')) === 'true') {

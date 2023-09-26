@@ -57,6 +57,11 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	public const VERSION_3_4 = '3-4';
 
 	/**
+	 * Version 3-4 locale key.
+	 */
+	public const VERSION_3_4_LOCALE = '3-4-locale';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -139,6 +144,26 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
 									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_3_4,
+								],
+								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+							],
+						],
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Version 3 &rarr; Version 4 locale', 'eightshift-forms'),
+						'cardSubTitle' => \__('Major changes to form settings name based on locale.', 'eightshift-forms'),
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
+								'submitAttrs' => [
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_3_4_LOCALE,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],

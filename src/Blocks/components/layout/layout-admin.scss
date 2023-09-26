@@ -117,25 +117,25 @@
 		}
 	}
 
-	&[data-layout-type='first-left-others-right'] {
+	&[data-layout-type='second-left-others-right'] {
 		> #{$this}__wrap {
 			display: flex;
 			align-items: center;
 			gap: 0.75rem;
 
-			> *:first-child:not(:last-child) {
+			> *:nth-child(2):not(:last-child) {
 				margin-right: auto;
 			}
 		}
 	}
 
-	&[data-layout-type='first-four-left-others-right'] {
+	&[data-layout-type='first-five-left-others-right'] {
 		> #{$this}__wrap {
 			display: flex;
 			align-items: center;
 			gap: 0.75rem;
 
-			> *:nth-child(4):not(:last-child) {
+			> *:nth-child(5):not(:last-child) {
 				margin-right: auto;
 			}
 		}

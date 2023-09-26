@@ -29,6 +29,8 @@ export class ManualImportApi {
 
 		const items = this.getIntegrationData(dataValue);
 
+		this.utils.showLoader(formId);
+
 		[...items].forEach((item, index) => {
 			setTimeout(() => {
 				if (item.formId) {
@@ -114,6 +116,7 @@ export class ManualImportApi {
 							status,
 						} = response;
 
+						this.utils.hideLoader(formId);
 						this.utils.setGlobalMsg(formId, message, status);
 
 						data.value = '';

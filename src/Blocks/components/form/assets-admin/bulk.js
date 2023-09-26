@@ -12,10 +12,13 @@ export class Bulk {
 		this.selector = options.selector;
 		this.itemsSelector = options.itemsSelector;
 		this.itemSelector = options.itemSelector;
+		this.selectAllSelector = options.selectAllSelector;
 	}
 
 	init() {
 		this.toggleDisableButton();
+
+		document.querySelector(this.selectAllSelector)?.addEventListener('click', this.onClickSelectAll, true);
 
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
@@ -29,21 +32,27 @@ export class Bulk {
 		this.state.getStateFormGlobalMsgElement(this.FORM_ID)?.addEventListener('mouseleave', this.onGlobalMsgBlur);
 	}
 
-	onClickItem = (event) => {
-		const formId = parseInt(event.target.name);
-		const itemsElement = document.querySelector(this.itemsSelector);
-		const items = itemsElement?.getAttribute(this.state.getStateAttribute('bulkItems'));
+	onClickSelectAll = (event) => {
+		const items = document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems'));
 
-		let output = items ? JSON.parse(items) : [];
+		const output = items ? JSON.parse(items) : [];
 
-		if (event.target.checked) {
-			output.push(formId);
+		[...document.querySelectorAll(`${this.itemSelector} input`)].forEach((element) => {
+			element.checked = !output.length
+			this.selectItem(parseInt(element.name), !output.length);
+		});
+
+		if (!output.length) {
+			event.target.classList.add(this.state.getStateSelectorsClassActive());
 		} else {
-			output = output.filter((item) => item !== formId);
+			event.target.classList.remove(this.state.getStateSelectorsClassActive());
 		}
 
-		itemsElement.setAttribute(this.state.getStateAttribute('bulkItems'), JSON.stringify(output));
-		this.toggleDisableButton();
+		this.togleSelectAll();
+	};
+
+	onClickItem = (event) => {
+		this.selectItem(parseInt(event.target.name), event.target.checked);
 	};
 
 	// Handle form submit and all logic.
@@ -98,6 +107,37 @@ export class Bulk {
 				this.hideGlobalMsg();
 			});
 	};
+
+	togleSelectAll() {
+		const item = document.querySelector(this.selectAllSelector);
+
+		const items = document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems'));
+
+		const output = items ? JSON.parse(items) : [];
+
+		if (!output.length) {
+			item.innerHTML = item.getAttribute(this.state.getStateAttribute('selectAllLabelHide'));
+		} else {
+			item.innerHTML = item.getAttribute(this.state.getStateAttribute('selectAllLabelShow'));
+		}
+	}
+
+	selectItem(formId, status=false) {
+		const itemsElement = document.querySelector(this.itemsSelector);
+		const items = itemsElement?.getAttribute(this.state.getStateAttribute('bulkItems'));
+
+		let output = items ? JSON.parse(items) : [];
+
+		if (status) {
+			output.push(formId);
+		} else {
+			output = output.filter((item) => item !== formId);
+		}
+
+		itemsElement.setAttribute(this.state.getStateAttribute('bulkItems'), JSON.stringify(output));
+		this.toggleDisableButton();
+		this.togleSelectAll();
+	}
 
 	toggleDisableButton() {
 		const items = document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems'));

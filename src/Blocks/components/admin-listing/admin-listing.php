@@ -22,6 +22,7 @@ $componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
 $componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
 $componentJsLocationsClass = $manifest['componentJsLocationsClass'] ?? '';
 $componentJsBulkClass = $manifest['componentJsBulkClass'] ?? '';
+$componentJsSelectAllClass = $manifest['componentJsSelectAllClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
@@ -41,10 +42,11 @@ $layoutClass = Components::classnames([
 
 $isTrashPage = $adminListingType === 'trash';
 $isLocationsPage = $adminListingType === 'locations';
+$hasForms = !empty($adminListingForms);
 
 $formCardsToDisplay = [];
 
-if ($adminListingForms) {
+if ($hasForms) {
 	foreach ($adminListingForms as $form) {
 		$id = $form['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$editLink = $form['editLink'] ?? '';
@@ -191,7 +193,7 @@ $topBar = [];
 if ($adminListingPageTitle || $adminListingSubTitle) {
 	$topBar = [
 		Components::render('layout', [
-			'layoutType' => !$isTrashPage ? 'first-four-left-others-right' : 'first-left-others-right',
+			'layoutType' => !$isTrashPage ? 'first-five-left-others-right' : 'second-left-others-right',
 			'layoutContent' => Components::ensureString([
 				Components::render('container', [
 					'containerUse' => $isTrashPage && $adminListingListingLink,
@@ -211,6 +213,15 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					'containerContent' => wp_kses_post($adminListingIntegrations),
 					'additionalAttributes' => [
 						'href' => $adminListingNewFormLink,
+					],
+				]),
+				Components::render('container', [
+					'containerClass' => "es-submit es-submit--ghost {$componentJsSelectAllClass}",
+					'containerTag' => 'button',
+					'containerContent' => esc_html__('Select all', 'eightshift-forms'),
+					'additionalAttributes' => [
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllLabelHide'] => esc_html__('Select all', 'eightshift-forms'),
+						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllLabelShow'] => esc_html__('Unselect all', 'eightshift-forms'),
 					],
 				]),
 				Components::render('container', [

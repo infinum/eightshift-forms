@@ -27,6 +27,8 @@ export class TestApi {
 
 		formData.append('type', integrationType);
 
+		this.utils.showLoader(formId);
+
 		// Populate body data.
 		const body = {
 			method: 'POST',
@@ -52,6 +54,7 @@ export class TestApi {
 					status,
 				} = response;
 
+				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);
 
 				if (this.state.getStateFormElement(formId).getAttribute(this.state.getStateAttribute('reload')) === 'true') {

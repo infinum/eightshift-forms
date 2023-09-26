@@ -7,6 +7,7 @@
 	"componentJsItemClass": "js-es-admin-listing-item",
 	"componentJsLocationsClass": "js-es-admin-listing-locations",
 	"componentJsBulkClass": "js-es-admin-listing-bulk",
+	"componentJsSelectAllClass": "js-es-admin-listing-select-all",
 	"attributes": {
 		"adminListingPageTitle": {
 			"type": "string"

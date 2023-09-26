@@ -65,7 +65,9 @@ class Transfer implements TransferInterface
 			'post_type' => Forms::POST_TYPE_SLUG,
 			'no_found_rows' => true,
 			'update_post_term_cache' => false,
-			'posts_per_page' => 10000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+			'post_status' => 'any',
+			'nopaging' => true,
+			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 		];
 
 		if ($items) {
@@ -216,7 +218,10 @@ class Transfer implements TransferInterface
 					continue;
 				}
 
-				\update_option($name, $value);
+				error_log( print_r( ( $name ), true ) );
+				error_log( print_r( ( $value ), true ) );
+
+				\update_option($name, \maybe_unserialize($value));
 			}
 		}
 

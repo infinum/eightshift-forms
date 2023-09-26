@@ -210,7 +210,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		$filterOptions = Components::render(
 			'select-option',
 			[
-				'selectOptionLabel' => \__('All', 'eightshift-forms'),
+				'selectOptionLabel' => \__('Show all', 'eightshift-forms'),
 				'selectOptionValue' => 'all',
 			]
 		);

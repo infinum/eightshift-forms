@@ -95,7 +95,16 @@ trait SettingsHelper
 			return [];
 		}
 
-		return \maybe_unserialize($value);
+		if (!$value) {
+			return [];
+		}
+
+		$value = \maybe_unserialize($value);
+		if (!is_array($value)) {
+			return [];
+		}
+
+		return $value;
 	}
 
 	/**
@@ -144,7 +153,12 @@ trait SettingsHelper
 			return [];
 		}
 
-		return \maybe_unserialize($value);
+		$value = \maybe_unserialize($value);
+		if (!is_array($value)) {
+			return [];
+		}
+
+		return $value;
 	}
 
 	/**
@@ -246,7 +260,18 @@ trait SettingsHelper
 	 */
 	public function getSettingsName(string $key): string
 	{
-		return Config::getSettingsNamePrefix() . "-{$key}-" . Helper::getLocale();
+		$sufix = '';
+
+		if (!Filters::isNameFixed($key)) {
+			$locale = Helper::getLocale();
+
+			if ($locale) {
+				$delimiter = AbstractBaseRoute::DELIMITER;
+				$sufix = "{$delimiter}{$locale}";
+			}
+		}
+
+		return Config::getSettingsNamePrefix() . "-{$key}{$sufix}";
 	}
 
 	/**
@@ -446,7 +471,7 @@ trait SettingsHelper
 				continue;
 			}
 
-			$isUsed = $this->isCheckboxOptionChecked($useFilter, $useFilter);
+			$isUsed = $this->isCheckboxOptionChecked($useFilter, $useFilter, true);
 
 			if (!$isUsed) {
 				continue;
@@ -590,6 +615,26 @@ trait SettingsHelper
 		];
 
 		return $output[$key] ?? '';
+	}
+
+	/**
+	 * Settings output misc disclamer.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function settingMiscDisclamer(): array
+	{
+		return [
+			'component' => 'layout',
+			'layoutType' => 'layout-v-stack-card',
+			'layoutContent' => [
+				[
+					'component' => 'intro',
+					'introTitle' => \__('Disclamer', 'eightshift-forms'),
+					'introSubtitle' => \__("Eightshift Forms doesn't configure the Wpml app or any other third-party tools. However, enabling this feature adds necessary configurations in the backend for everything to function correctly.", 'eightshift-forms'),
+				],
+			],
+		];
 	}
 
 	/**

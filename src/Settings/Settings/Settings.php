@@ -100,7 +100,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 			$isUsedKey = $value['use'] ?? '';
 
 			// Bailout if used key is missing.
-			if ($isUsedKey && !$this->isCheckboxOptionChecked($isUsedKey, $isUsedKey)) {
+			if ($isUsedKey && !$this->isCheckboxOptionChecked($isUsedKey, $isUsedKey, true)) {
 				continue;
 			}
 

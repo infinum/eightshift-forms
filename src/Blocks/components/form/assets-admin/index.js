@@ -116,6 +116,7 @@ domReady(() => {
 				selector: selectorBulk,
 				itemsSelector: `${selectorBulk}-items`,
 				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
+				selectAllSelector: `.${adminListingManifest.componentJsSelectAllClass}`,
 			}).init();
 		});
 	}

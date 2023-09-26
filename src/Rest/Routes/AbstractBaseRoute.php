@@ -125,7 +125,9 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'globalMsgHeadingError' => 'data-msg-heading-error',
 		'hideCaptchaBadge' => 'data-hide-captcha-badge',
 		'reload' => 'data-reload',
-		'hubspotTypeId' => 'data-hubspot-type-id'
+		'hubspotTypeId' => 'data-hubspot-type-id',
+		'selectAllLabelShow' => 'data-select-all-label-show',
+		'selectAllLabelHide' => 'data-select-all-label-hide',
 	];
 
 	/**

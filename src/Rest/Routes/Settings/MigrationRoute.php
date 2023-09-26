@@ -144,6 +144,8 @@ class MigrationRoute extends AbstractBaseRoute
 				return $this->getMigration2To3();
 			case SettingsMigration::VERSION_3_4:
 				return $this->getMigration3To4();
+			case SettingsMigration::VERSION_3_4_LOCALE:
+				return $this->getMigration3To4Locale();
 			default:
 				return $this->getApiErrorOutput(
 					\__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
@@ -404,6 +406,115 @@ class MigrationRoute extends AbstractBaseRoute
 		return $this->getApiSuccessOutput(
 			\__('Migration version 3 to 4 finished with success.', 'eightshift-forms'),
 			$outputFinal
+		);
+	}
+
+	/**
+	 * Migration version 3-4 locale.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getMigration3To4Locale(): array
+	{
+		global $wpdb;
+
+		$output = [
+			'options' => [
+				'changed' => [],
+				'errors' => [],
+			],
+			'forms' => [],
+		];
+
+		$theQuery = new WP_Query([
+			'post_type' => Forms::POST_TYPE_SLUG,
+			'no_found_rows' => true,
+			'update_post_term_cache' => false,
+			'post_status' => 'any',
+			'nopaging' => true,
+			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+		]);
+
+		$forms = $theQuery->posts;
+		\wp_reset_postdata();
+
+		if ($forms) {
+			foreach ($forms as $key => $form) {
+				$formId = (string) $form->ID ?? '';
+
+				if (!$formId) {
+					continue;
+				}
+
+				$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->prepare(
+						"SELECT meta_key name, meta_value as value
+						FROM $wpdb->postmeta
+						WHERE post_id=%d
+						AND meta_key LIKE '%es-forms-%'", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+						$form->ID
+					)
+				);
+
+				foreach ($settings as $setting) {
+					$name = $setting->name ?? '';
+					$value = $setting->value ?? '';
+
+					if (!$name) {
+						$output['forms'][$formId]['errors'][] = $name;
+						continue;
+					}
+
+					$newName = \str_replace('-en_US', '', $name);
+
+					$newOption = \add_post_meta($formId, $newName, \maybe_unserialize($value), true);
+
+					if ($newOption) {
+						$output['forms'][$formId]['changed'][] = $name;
+						\delete_post_meta($formId, $name);
+					} else {
+						$output['forms'][$formId]['errors'][] = $name;
+					}
+				}
+			}
+		}
+
+		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			"SELECT option_name as name, option_value as value
+				FROM $wpdb->options
+				WHERE option_name LIKE '%es-forms-%'"
+		);
+
+		if ($options) {
+			foreach ($options as $option) {
+				$name = $option->name ?? '';
+				$value = $option->value ?? '';
+
+				if (!$name) {
+					$output['errors'][] = $name;
+					continue;
+				}
+
+				$newName = \str_replace('-en_US', '', $name);
+
+				$newOption = \add_option($newName, \maybe_unserialize($value));
+				if ($newOption) {
+					$output['options']['changed'][] = $name;
+					\delete_option($name);
+				} else {
+					$output['options']['errors'][] = $name;
+				}
+			}
+		}
+
+		$actionName = Filters::getFilterName(['migration', 'threeToFourLocale']);
+		if (\has_action($actionName)) {
+			\do_action($actionName, SettingsMigration::VERSION_3_4_LOCALE);
+		}
+
+		return $this->getApiSuccessOutput(
+			\__('Migration version 3 to 4 finished with success.', 'eightshift-forms'),
+			$output
 		);
 	}
 }
