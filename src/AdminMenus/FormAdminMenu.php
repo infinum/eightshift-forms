@@ -13,6 +13,7 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\SettingsHelper;
@@ -197,9 +198,18 @@ class FormAdminMenu extends AbstractAdminMenu
 	protected function processAttributes($attr): array
 	{
 		$status = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$title = \esc_html__('Forms', 'eightshift-forms');
 		$trashLink = Helper::getFormsTrashPageUrl();
 		$listingLink = '';
+
+		$title = \esc_html__('Forms', 'eightshift-forms');
+
+		$useWpml = \apply_filters(SettingsWpml::FILTER_SETTINGS_IS_VALID_NAME, []);
+		if ($useWpml) {
+			$lang = \apply_filters('wpml_current_language', '');
+			if ($lang) {
+				$title = $title . ' - ' . strtoupper($lang);
+			}
+		}
 
 		if ($status === 'trash') {
 			$title = \esc_html__('Deleted forms', 'eightshift-forms');

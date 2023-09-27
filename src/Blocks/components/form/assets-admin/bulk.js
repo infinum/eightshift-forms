@@ -38,8 +38,12 @@ export class Bulk {
 		const output = items ? JSON.parse(items) : [];
 
 		[...document.querySelectorAll(`${this.itemSelector} input`)].forEach((element) => {
-			element.checked = event.target.checked;
-			this.selectItem(parseInt(element.name), !output.length);
+			const item = element?.closest(this.itemSelector);
+
+			if (!item?.classList?.contains(this.state.getStateSelectorsClassHidden())) {
+				element.checked = event.target.checked;
+				this.selectItem(parseInt(element.name), !output.length);
+			}
 		});
 
 		this.toggleAllOtherButtons();

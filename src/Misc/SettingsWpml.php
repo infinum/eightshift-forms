@@ -87,6 +87,12 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 			$this->settingMiscDisclamer(),
 			[
 				'component' => 'intro',
+				'introSubtitle' => \__('In order for Eightshift forms to work correctly with WPML, you must enable translations in the WPML settings.', 'eightshift-forms'),
+				'introIsHighlighted' => true,
+				'introIsHighlightedImportant' => true,
+			],
+			[
+				'component' => 'intro',
 				'introTitle' => \__('Features affected by WPML are:', 'eightshift-forms'),
 			],
 			[
