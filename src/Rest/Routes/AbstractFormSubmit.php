@@ -125,7 +125,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					}
 
 					// Upload files to temp folder.
-					$formDataReference['filesUpload'] = $this->uploadFile($formDataReference['filesUpload']);
+					$formDataReference['filesUpload'] = $uploadFile;
 					break;
 				case self::ROUTE_TYPE_SETTINGS:
 					// Validate params.

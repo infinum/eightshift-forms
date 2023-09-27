@@ -207,7 +207,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		if ($useWpml) {
 			$lang = \apply_filters('wpml_current_language', '');
 			if ($lang) {
-				$title = $title . ' - ' . strtoupper($lang);
+				$title = $title . ' - ' . \strtoupper($lang);
 			}
 		}
 

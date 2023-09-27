@@ -1345,6 +1345,8 @@ export class Form {
 						[this.FILTER_IS_STEPS_FINAL_SUBMIT]: true,
 					};
 
+					console.log(filterFinal);
+
 					if (this.state.getStateCaptchaIsUsed()) {
 						this.runFormCaptcha(formId, filterFinal);
 					} else {

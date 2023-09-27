@@ -137,27 +137,6 @@ class Validator extends AbstractValidation
 		// Find refference fields in admin config.
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
-		// Find all required fields.
-		$validationReferenceRequired = $this->getValidationReferenceOnlyRequired($validationReference);
-
-		// Don't validate if no validation reference is found and if this is a step validation.
-		// This protects us from no required fields being sent by none authorized request or sending non valid file type.
-		if ($validationReferenceRequired && $strictValidation) {
-			// Get all param names excluding hidden fields.
-			$paramsNames = $this->getParamsFieldNames($params);
-
-			// Check if all required fields are present.
-			foreach ($validationReferenceRequired as $key => $value) {
-				// If field is present skip it.
-				if (\array_key_exists($key, $paramsNames)) {
-					continue;
-				}
-
-				// Output keys that are missing as required.
-				$output[$key] = $this->getValidationLabel('validationRequired', $formId);
-			}
-		}
-
 		// Define order of validation.
 		$order = self::VALIDATION_FIELDS;
 
@@ -502,48 +481,6 @@ class Validator extends AbstractValidation
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Only output validation reference fields which are required.
-	 *
-	 * @param array<int|string, array<string, mixed>> $refference Valiadaton refference from getValidationReference function.
-	 *
-	 * @return array<int|string, int>
-	 */
-	private function getValidationReferenceOnlyRequired(array $refference): array
-	{
-		$output = \array_filter(
-			$refference,
-			static function ($value) {
-				return isset($value['isRequired']) && $value['isRequired'] === true;
-			}
-		);
-
-		return $output ? \array_flip(\array_keys($output)) : [];
-	}
-
-	/**
-	 * Output params field names.
-	 *
-	 * @param array<string, mixed> $params Params array.
-	 *
-	 * @return array<string, int>
-	 */
-	private function getParamsFieldNames(array $params): array
-	{
-		return \array_flip(\array_filter(\array_values(\array_map(
-			static function ($item) {
-				$type = $item['type'] ?? '';
-
-				if ($type === 'hidden') {
-					return '';
-				}
-
-				return $item['name'] ?? '';
-			},
-			$params
-		))));
 	}
 
 	/**
