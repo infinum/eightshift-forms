@@ -359,9 +359,11 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'selectFieldAttrs' => [
 								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['hubspotTypeId'] => $objectTypeId,
 							],
-							'selectContent' => \array_values(
-								\array_map(
-									function ($selectOption) use ($selectedOption) {
+							'selectContent' => \array_filter(\array_values(\array_map(
+								function ($selectOption) use ($selectedOption) {
+									$value = $selectOption['value'] ?? '';
+
+									if ($value) {
 										return [
 											'component' => 'select-option',
 											'selectOptionIsSelected' => !empty($selectedOption) && $selectOption['value'] === $selectedOption,
@@ -371,10 +373,10 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 												'selectOptionValue',
 											], false),
 										];
-									},
-									$options
-								)
-							),
+									}
+								},
+								$options
+							))),
 							'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 								$isRequired ? 'selectIsRequired' : '',
 								'selectFieldAttrs'
@@ -497,6 +499,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 					$communicationIsRequired = $communicationItem['isRequired'] ?? false;
 					$communicationText = $communication['text'] ?? '';
 					$communicationLabel = $communicationItem['label'] ?? '';
+					$communicationValue = isset($communicationItem['label']) ? \wp_strip_all_tags($communicationItem['label']) : 'on';
 					$communicationId = $communicationItem['id'] ?? '';
 					$communicationIsHidden = $communication['isHidden'] ?? false;
 
@@ -511,7 +514,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => $communicationLabel,
-								'checkboxValue' => \wp_strip_all_tags($communicationLabel),
+								'checkboxValue' => $communicationValue,
 								'checkboxIsChecked' => $communicationIsHidden,
 								'checkboxHideLabel' => $communicationIsHidden,
 								'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
@@ -534,6 +537,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 			if ($processing) {
 				$processingText = $processing['text'] ?? '';
 				$processingLabel = $processing['label'] ?? '';
+				$processingValue = (isset($processing['label']) && !empty($processing['label'])) ? \wp_strip_all_tags($processing['label']) : 'on';
 				$processingIsHidden = $processing['isHidden'] ?? false;
 
 				$output[] = [
@@ -548,7 +552,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						[
 							'component' => 'checkbox',
 							'checkboxLabel' => $processingLabel,
-							'checkboxValue' => \wp_strip_all_tags($processingLabel),
+							'checkboxValue' => $processingValue,
 							'checkboxIsChecked' => $processingIsHidden,
 							'checkboxHideLabel' => $processingIsHidden,
 							'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [

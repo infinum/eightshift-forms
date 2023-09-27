@@ -546,16 +546,30 @@ class Helper
 	public static function unserializeAttributes(string $attribute): string
 	{
 		// It can happen that we get null here because WP that is why.
+		if (\is_string($attribute)) {
+			$attribute = \preg_replace('/\u002d\u002d/', '--', $attribute);
+		}
+
+		if (\is_string($attribute)) {
+			$attribute = \preg_replace('/\u003c/', '<', $attribute);
+		}
+
+		if (\is_string($attribute)) {
+			$attribute = \preg_replace('/\u003e/', '>', $attribute);
+		}
+
+		if (\is_string($attribute)) {
+			$attribute = \preg_replace('/\u0026/', '&', $attribute);
+		}
+
+		if (\is_string($attribute)) {
+			// Regex: /\\"/.
+			$attribute = \preg_replace('/\u0022/', '"', $attribute);
+		}
+
 		if (!\is_string($attribute)) {
 			return '';
 		}
-
-		$attribute = \preg_replace('/\u002d\u002d/', '--', $attribute);
-		$attribute = \preg_replace('/\u003c/', '<', $attribute);
-		$attribute = \preg_replace('/\u003e/', '>', $attribute);
-		$attribute = \preg_replace('/\u0026/', '&', $attribute);
-		// Regex: /\\"/.
-		$attribute = \preg_replace('/\u0022/', '"', $attribute);
 
 		return $attribute;
 	}
