@@ -563,7 +563,7 @@ export class Utils {
 			url.searchParams.append('es-variation', variation);
 		}
 
-		this.redirectToUrlByRefference(formId, url.href);
+		this.redirectToUrlByReference(formId, url.href);
 	}
 
 	/**
@@ -575,7 +575,7 @@ export class Utils {
 	 *
 	 * @returns {void}
 	 */
-	redirectToUrlByRefference(formId, redirectUrl, reload = false) {
+	redirectToUrlByReference(formId, redirectUrl, reload = false) {
 		this.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccessBeforeRedirect(), redirectUrl);
 
 		if (!this.state.getStateSettingsDisableNativeRedirectOnSuccess(formId)) {
@@ -726,6 +726,23 @@ export class Utils {
 		}
 	}
 
+	/**
+	 * Get selected value by custom data of select for country and phone.
+	 *
+	 * @param {string} type Type for field.
+	 * @param {string} value Value to check.
+	 * @param {object} choices Choices object.
+	 *
+	 * @returns {string}
+	 */
+	getSelectSelectedValueByCustomData(type, value, choices) {
+		if (type == 'country' || type === 'phone') {
+			return choices?.config?.choices?.find((item) => item?.customProperties?.[this.state.getStateAttribute('selectCountryCode')] === value)?.value;
+		}
+
+		return '';
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////
@@ -804,8 +821,8 @@ export class Utils {
 			redirectToUrl: (formId) => {
 				this.redirectToUrl(formId);
 			},
-			redirectToUrlByRefference: (formId, redirectUrl, reload = false) => {
-				this.redirectToUrlByRefference(formId, redirectUrl, reload);
+			redirectToUrlByReference: (formId, redirectUrl, reload = false) => {
+				this.redirectToUrlByReference(formId, redirectUrl, reload);
 			},
 			isFormLoaded: (formId) => {
 				this.isFormLoaded(formId);
@@ -818,6 +835,9 @@ export class Utils {
 			},
 			formSubmitErrorContentType: (response, type, formId) => {
 				this.formSubmitErrorContentType(response, type, formId);
+			},
+			getSelectSelectedValueByCustomData: (type, value, choices) => {
+				return this.getSelectSelectedValueByCustomData(type, value, choices);
 			},
 		};
 	}

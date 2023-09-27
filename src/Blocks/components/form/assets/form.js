@@ -369,7 +369,7 @@ export class Form {
 			this.utils.setGlobalMsg(formId, message, status);
 
 			if (this.state.getStateFormIsSingleSubmit(formId)) {
-				this.utils.redirectToUrlByRefference(formId, window.location.href, true);
+				this.utils.redirectToUrlByReference(formId, window.location.href, true);
 			}
 		} else {
 			// Send GTM.
@@ -1022,6 +1022,7 @@ export class Form {
 	setupSelectField(formId, name) {
 		let input = this.state.getStateElementInput(name, formId);
 		const type = this.state.getStateElementType(name, formId);
+		const typeInternal = this.state.getStateElementTypeCustom(name, formId);
 
 		 if (type === 'tel') {
 			 input = this.state.getStateElementInputSelect(name, formId);
@@ -1103,6 +1104,16 @@ export class Form {
 					};
 				},
 			});
+
+			// Detect if we have country cookie and set value to the select.
+			// This is here because of caching and we need to set the value after the select is loaded.
+			const countryCookie = cookies?.getCookie('esForms-country')?.toLocaleLowerCase();
+			if (countryCookie) {
+				const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, choices);
+				if (selectValue) {
+					choices?.setChoiceByValue(selectValue);
+				}
+			}
 
 			this.state.setStateElementLoaded(name, true, formId);
 			this.state.setStateElementCustom(name, choices, formId);
@@ -1344,8 +1355,6 @@ export class Form {
 						],
 						[this.FILTER_IS_STEPS_FINAL_SUBMIT]: true,
 					};
-
-					console.log(filterFinal);
 
 					if (this.state.getStateCaptchaIsUsed()) {
 						this.runFormCaptcha(formId, filterFinal);
