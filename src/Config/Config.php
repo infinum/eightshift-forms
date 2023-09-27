@@ -57,7 +57,13 @@ class Config extends AbstractConfigData
 	 */
 	public static function getProjectVersion(): string
 	{
-		return \get_plugin_data(\dirname(__FILE__, 3) . '/eightshift-forms.php')['Version'];
+		if (!\function_exists('get_plugin_data')) {
+			require_once(\ABSPATH . 'wp-admin/includes/plugin.php');
+		}
+
+		$details = \get_plugin_data(\dirname(__FILE__, 3) . '/eightshift-forms.php');
+
+		return isset($details['Version']) ? (string) $details['Version'] : '1.0.0';
 	}
 
 	/**

@@ -531,6 +531,11 @@ class Helper
 	 */
 	public static function unserializeAttributes(string $attribute): string
 	{
+		// It can happen that we get null here because WP that is why.
+		if (!\is_string($attribute)) {
+			return '';
+		}
+
 		$attribute = \preg_replace('/\u002d\u002d/', '--', $attribute);
 		$attribute = \preg_replace('/\u003c/', '<', $attribute);
 		$attribute = \preg_replace('/\u003e/', '>', $attribute);
