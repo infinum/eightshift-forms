@@ -144,12 +144,12 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return false;
 		}
 
-		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
-		$name = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
-		$email = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
-		$to = $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId);
-		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
-		$template = $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
+		$isUsed = $this->isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
+		$name = $this->getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
+		$email = $this->getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
+		$to = $this->getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId);
+		$subject = $this->getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
+		$template = $this->getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
 
 		if (!$isUsed || !$name || !$email || !$to || !$subject || !$template) {
 			return false;
@@ -171,12 +171,12 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 			return false;
 		}
 
-		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
-		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
-		$name = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
-		$email = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
-		$subject = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
-		$template = $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
+		$emailField = $this->getSettingValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
+		$isUsed = $this->isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
+		$name = $this->getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
+		$email = $this->getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
+		$subject = $this->getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
+		$template = $this->getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
 
 		if (!$isUsed || !$name || !$email || !$subject || !$template || !$emailField) {
 			return false;
@@ -192,7 +192,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -212,7 +212,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoActiveFeatureOutput();
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$formDetails = Helper::getFormDetailsById($formId);
@@ -221,9 +221,9 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 		$fieldNameTags = $this->getFormFieldNames($fieldNames);
 		$formResponseTags = $this->getFormResponseTags($formDetails['typeFilter']);
 
-		$isUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
-		$isSenderUsed = $this->isCheckboxSettingsChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
-		$emailField = $this->getSettingsValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
+		$isUsed = $this->isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
+		$isSenderUsed = $this->isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
+		$emailField = $this->getSettingValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -237,7 +237,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_SETTINGS_USE_KEY),
+								'checkboxesName' => $this->getSettingName(self::SETTINGS_MAILER_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -256,7 +256,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								],
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_TO_KEY),
+									'inputName' => $this->getSettingName(self::SETTINGS_MAILER_TO_KEY),
 									'inputFieldLabel' => \__('Recipient e-mail', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
 									'inputFieldHelp' => \sprintf(\__('
@@ -266,7 +266,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									'inputType' => 'text',
 									'inputPlaceholder' => 'info@infinum.com',
 									'inputIsRequired' => true,
-									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TO_KEY, $formId),
+									'inputValue' => $this->getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -274,7 +274,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								],
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SUBJECT_KEY),
+									'inputName' => $this->getSettingName(self::SETTINGS_MAILER_SUBJECT_KEY),
 									'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
 									'inputFieldHelp' => \sprintf(\__('
@@ -282,7 +282,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 										%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
-									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+									'inputValue' => $this->getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -290,14 +290,14 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								],
 								[
 									'component' => 'textarea',
-									'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_TEMPLATE_KEY),
+									'textareaName' => $this->getSettingName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 									'textareaFieldLabel' => \__('Content', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
 									'textareaFieldHelp' => \sprintf(\__('
 										Specify e-mail body template with this field. You can use plain text or markdown.<br /><br />
 										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
 									'textareaIsRequired' => true,
-									'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
+									'textareaValue' => $this->getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 								],
 							] : []),
 						]
@@ -309,12 +309,12 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 							'tabContent' => [
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
+									'inputName' => $this->getSettingName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
 									'inputFieldLabel' => \__('E-mail client sender name', 'eightshift-forms'),
 									'inputFieldHelp' => \__('Most e-mail clients will show this instead of the real address in the list of e-mails. Make this something related to your brand that will distinguish you from the rest.', 'eightshift-forms'),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
-									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
+									'inputValue' => $this->getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -322,13 +322,13 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								],
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
+									'inputName' => $this->getSettingName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
 									'inputFieldLabel' => \__('E-mail client from e-mail', 'eightshift-forms'),
 									'inputFieldHelp' => \__('Most e-mail clients will us this as field as the sender e-mail (displayed as <i>From:</i>). It will also be used as a reply-to destination. Example: `info@infinum.com`.', 'eightshift-forms'),
 									'inputType' => 'text',
 									'inputIsEmail' => true,
 									'inputIsRequired' => true,
-									'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+									'inputValue' => $this->getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 								],
 							],
 						],
@@ -347,7 +347,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_USE_KEY),
+									'checkboxesName' => $this->getSettingName(self::SETTINGS_MAILER_SENDER_USE_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
@@ -367,7 +367,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									[
 										'component' => 'select',
 										'selectSingleSubmit' => true,
-										'selectName' => $this->getSettingsName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
+										'selectName' => $this->getSettingName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
 										'selectFieldHelp' => \__('You must select what field is used as an e-mail.', 'eightshift-forms'),
 										'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
 										'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
@@ -389,7 +389,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									],
 									[
 										'component' => 'input',
-										'inputName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
+										'inputName' => $this->getSettingName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
 										'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
 										// translators: %s will be replaced with forms field name.
 										'inputFieldHelp' => \sprintf(\__('
@@ -397,7 +397,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 											%s', 'eightshift-forms'), SettingsHelper::getFieldTagsOutput($fieldNameTags)),
 										'inputType' => 'text',
 										'inputIsRequired' => true,
-										'inputValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+										'inputValue' => $this->getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
 									],
 									[
 										'component' => 'divider',
@@ -405,14 +405,14 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 									],
 									[
 										'component' => 'textarea',
-										'textareaName' => $this->getSettingsName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
+										'textareaName' => $this->getSettingName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
 										'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
 										// translators: %s will be replaced with forms field name.
 										'textareaFieldHelp' => \sprintf(\__('
 											Specify confirmation e-mail body template with this field. You can use plain text or markdown.<br /><br />
 											%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsHelper::getFieldTagsOutput($fieldNameTags), SettingsHelper::getResponseTagsOutput($formResponseTags)),
 										'textareaIsRequired' => true,
-										'textareaValue' => $this->getSettingsValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+										'textareaValue' => $this->getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 									],
 								] : []),
 							],
@@ -431,8 +431,8 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
@@ -458,7 +458,7 @@ class SettingsMailer implements SettingInterface, SettingGlobalInterface, Servic
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('

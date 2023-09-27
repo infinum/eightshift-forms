@@ -77,7 +77,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -93,8 +93,8 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		return [
@@ -115,7 +115,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
 								'inputFieldLabel' => \__('Number of requests', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -129,7 +129,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
 								'inputFieldLabel' => \__('Limit window', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Define a time period in which the rate limit will be checked.', 'eightshift-forms'),
 								'inputType' => 'number',

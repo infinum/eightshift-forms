@@ -279,7 +279,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Use Cloudflare header if that feature is used.
-		if ($this->isCheckboxOptionChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$outputCloudflare = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CF_IPCOUNTRY']) : ''; // phpcs:ignore
 
 			if ($outputCloudflare) {

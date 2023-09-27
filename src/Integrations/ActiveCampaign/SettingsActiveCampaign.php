@@ -97,7 +97,7 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyActiveCampaign()) ? Variables::getApiKeyActiveCampaign() : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
 		$url = !empty(Variables::getApiUrlActiveCampaign()) ? Variables::getApiUrlActiveCampaign() : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
 
@@ -116,14 +116,14 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$apiKey = Variables::getApiKeyActiveCampaign();
 		$apiUrl = Variables::getApiUrlActiveCampaign();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -137,7 +137,7 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -160,7 +160,7 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 							] : [
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
+									'inputName' => $this->getOptionName(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
 									'inputFieldLabel' => \__('API URL', 'eightshift-forms'),
 									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_URL_ACTIVE_CAMPAIGN', !empty($apiUrl)),
 									'inputType' => 'text',
@@ -169,7 +169,7 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 									'inputIsDisabled' => !empty($apiUrl),
 								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getSettingsName(self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY),
+									$this->getOptionName(self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY),
 									\__('API key', 'eightshift-forms'),
 									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY),
 									'ES_API_KEY_ACTIVE_CAMPAIGN',
@@ -189,7 +189,7 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('

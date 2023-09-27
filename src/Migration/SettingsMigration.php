@@ -79,7 +79,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -95,8 +95,8 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$manifestForm = Components::getComponent('form');

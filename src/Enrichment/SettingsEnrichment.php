@@ -101,7 +101,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_ENRICHMENT_USE_KEY, self::SETTINGS_ENRICHMENT_USE_KEY)) {
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_USE_KEY, self::SETTINGS_ENRICHMENT_USE_KEY)) {
 			return false;
 		}
 
@@ -117,7 +117,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoActiveFeatureOutput();
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$enrichment = $this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
@@ -133,7 +133,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 								'inputFieldLabel' => \__('Clear storage after', 'eightshift-forms'),
 								'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -153,7 +153,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'textarea',
-								'textareaName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
+								'textareaName' => $this->getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
 								'textareaFieldLabel' => \__('Custom parameters', 'eightshift-forms'),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
@@ -190,7 +190,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								function ($item) {
 									return [
 										'component' => 'input',
-										'inputName' => $this->getSettingsName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+										'inputName' => $this->getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 										'inputFieldLabel' => $item,
 										'inputValue' => $this->getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 										'inputFieldIsFiftyFiftyHorizontal' => true,

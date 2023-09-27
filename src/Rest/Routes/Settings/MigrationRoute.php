@@ -174,9 +174,9 @@ class MigrationRoute extends AbstractBaseRoute
 		$globalFallback = $this->getOptionValue($config['options']['old']);
 
 		if ($globalFallback) {
-			\update_option($this->getSettingsName($config['options']['new']), $globalFallback);
-			\update_option($this->getSettingsName($config['options']['use']), $config['options']['use']);
-			\delete_option($this->getSettingsName($config['options']['old']));
+			\update_option($this->getOptionName($config['options']['new']), \maybe_unserialize($globalFallback));
+			\update_option($this->getOptionName($config['options']['use']), \maybe_unserialize($config['options']['use']));
+			\delete_option($this->getOptionName($config['options']['old']));
 		}
 
 		// Migrate each integration fallback.
@@ -188,8 +188,8 @@ class MigrationRoute extends AbstractBaseRoute
 			$globalIntegrationFallback = $this->getOptionValue($config['options']['old'] . '-' . $key);
 
 			if ($globalIntegrationFallback) {
-				\update_option($this->getSettingsName($config['options']['new'] . '-' . $key), $globalIntegrationFallback);
-				\delete_option($this->getSettingsName($config['options']['old'] . '-' . $key));
+				\update_option($this->getOptionName($config['options']['new'] . '-' . $key), \maybe_unserialize($globalIntegrationFallback));
+				\delete_option($this->getOptionName($config['options']['old'] . '-' . $key));
 			}
 		}
 
@@ -207,7 +207,7 @@ class MigrationRoute extends AbstractBaseRoute
 			if ($option) {
 				$option = \explode(', ', $option);
 				$option = \implode(AbstractBaseRoute::DELIMITER, $option);
-				\update_option($this->getSettingsName($key), $option);
+				\update_option($this->getOptionName($key), \maybe_unserialize($option));
 			}
 		}
 
@@ -269,7 +269,7 @@ class MigrationRoute extends AbstractBaseRoute
 			$use = Filters::ALL[$type]['use'] ?? '';
 
 			// Skip deactivated integrations.
-			if ($this->isCheckboxOptionChecked($use, $use)) {
+			if ($this->isOptionCheckboxChecked($use, $use)) {
 				switch ($type) {
 					case SettingsHubspot::SETTINGS_TYPE_KEY:
 						$preCheck = $this->updateFormIntegration3To4($type, 'item-id', '', $id, $content);
@@ -342,8 +342,8 @@ class MigrationRoute extends AbstractBaseRoute
 						break;
 				}
 
-				\delete_option($this->getSettingsName("{$type}-clearbit-email-field"));
-				\delete_option($this->getSettingsName("{$type}-integration-fields"));
+				\delete_option($this->getOptionName("{$type}-clearbit-email-field"));
+				\delete_option($this->getOptionName("{$type}-integration-fields"));
 			}
 		}
 
@@ -440,7 +440,7 @@ class MigrationRoute extends AbstractBaseRoute
 
 		if ($forms) {
 			foreach ($forms as $key => $form) {
-				$formId = (string) $form->ID ?? '';
+				$formId = (int) $form->ID;
 
 				if (!$formId) {
 					continue;

@@ -144,7 +144,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function enqueueBlockFrontendStyleLocal(): void
 	{
-		if ($this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return;
 		}
 
@@ -214,23 +214,23 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
 		$output['fileRemoveLabel'] = \apply_filters($fileRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
-		$output['formDisableScrollToFieldOnError'] = $this->isCheckboxOptionChecked(
+		$output['formDisableScrollToFieldOnError'] = $this->isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableScrollToGlobalMessageOnSuccess'] = $this->isCheckboxOptionChecked(
+		$output['formDisableScrollToGlobalMessageOnSuccess'] = $this->isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableNativeRedirectOnSuccess'] = $this->isCheckboxOptionChecked(
+		$output['formDisableNativeRedirectOnSuccess'] = $this->isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableAutoInit'] = $this->isCheckboxOptionChecked(
+		$output['formDisableAutoInit'] = $this->isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 		);
-		$output['formResetOnSuccess'] = !$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$output['formResetOnSuccess'] = !$this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 
 		// Enrichment config.
@@ -251,12 +251,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output['captcha'] = [
 				'isUsed' => true,
-				'isEnterprise' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+				'isEnterprise' => $this->isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
 				'siteKey' => !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
 				'submitAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				'initAction' => $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'loadOnInit' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
-				'hideBadge' => $this->isCheckboxOptionChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+				'loadOnInit' => $this->isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+				'hideBadge' => $this->isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
 			];
 		} else {
 			$output['captcha'] = [
@@ -314,7 +314,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');
-		$output['isDeveloperMode'] =  $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$output['isDeveloperMode'] =  $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 		$output['isAdmin'] = true;
 
 		$output = \wp_json_encode($output);

@@ -86,7 +86,7 @@ class JiraClient implements JiraClientInterface
 		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -137,7 +137,7 @@ class JiraClient implements JiraClientInterface
 		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -200,7 +200,7 @@ class JiraClient implements JiraClientInterface
 			[],
 			'',
 			$formId,
-			$this->isCheckboxOptionChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)
+			$this->isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
@@ -441,18 +441,18 @@ class JiraClient implements JiraClientInterface
 	{
 		$output = [];
 
-		$selectedProject = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_PROJECT_KEY, $formId);
+		$selectedProject = $this->getSettingValue(SettingsJira::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
 		if (!$selectedProject) {
 			return $output;
 		}
 
-		$selectedIssueType = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
+		$selectedIssueType = $this->getSettingValue(SettingsJira::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
 		if (!$selectedIssueType) {
 			return $output;
 		}
 
-		$title = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_TITLE_KEY, $formId);
+		$title = $this->getSettingValue(SettingsJira::SETTINGS_JIRA_TITLE_KEY, $formId);
 		if (!$title) {
 			return $output;
 		}
@@ -465,7 +465,7 @@ class JiraClient implements JiraClientInterface
 
 		$formTitle = \get_the_title((int) $formId);
 
-		$additionalDescription = $this->getSettingsValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
+		$additionalDescription = $this->getSettingValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
 
 		$output = [
 			'project' => [
@@ -485,7 +485,7 @@ class JiraClient implements JiraClientInterface
 			];
 
 			// Standard fields output.
-			if (!$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			if (!$this->getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
 				$contentOutput = [];
 
 				$i = 0;
@@ -616,7 +616,7 @@ class JiraClient implements JiraClientInterface
 			}
 
 			// Custom fields maps output.
-			$mapParams = $this->getSettingsValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
+			$mapParams = $this->getSettingValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
 			if ($mapParams) {
 				foreach ($mapParams as $key => $value) {
 					if (!$value) {
@@ -632,7 +632,7 @@ class JiraClient implements JiraClientInterface
 			$descriptionOutput = \sprintf(\__('Data populated from the WordPress "%1$s" form: %2$s %2$s', 'eightshift-forms'), \esc_html($formTitle), \PHP_EOL);
 
 			// Standard fields output.
-			if (!$this->getSettingsValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			if (!$this->getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
 				$i = 0;
 				foreach ($params as $param) {
 					$value = $param['value'] ?? '';

@@ -117,10 +117,10 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName($key),
+								'inputName' => $this->getSettingName($key),
 								'inputFieldLabel' => \ucfirst($key),
 								'inputPlaceholder' => $this->labels->getLabels()[$key],
-								'inputValue' => $this->getSettingsValue($key, $formId),
+								'inputValue' => $this->getSettingValue($key, $formId),
 							],
 						],
 					],
@@ -157,7 +157,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 
 			$messagesOutput[] = [
 				'component' => 'input',
-				'inputName' => $this->getSettingsName($key),
+				'inputName' => $this->getOptionName($key),
 				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
 				'inputValue' => $this->getOptionValue($key),
@@ -176,12 +176,12 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use top level domain validation on all email fields', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
 										'checkboxValue' => self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -194,7 +194,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => $this->getSettingsName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaName' => $this->getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Custom validation patterns', 'eightshift-forms'),

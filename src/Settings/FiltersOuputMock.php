@@ -129,7 +129,7 @@ trait FiltersOuputMock
 		$data = '';
 		$filterUsed = false;
 
-		$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		$data = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
 
 		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectVariation']);
 		if (\has_filter($filterName)) {
@@ -168,7 +168,7 @@ trait FiltersOuputMock
 		$data = $dataGlobal;
 
 		// Find local settings for form.
-		$dataLocal = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
+		$dataLocal = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
 
 		if ($dataLocal) {
 			$data = $dataLocal;
@@ -210,7 +210,7 @@ trait FiltersOuputMock
 	{
 		$filterUsed = false;
 
-		$data = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+		$data = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
 
 		$filterName = Filters::getFilterName(['block', 'form', 'trackingEventName']);
 		if (\has_filter($filterName)) {
@@ -245,9 +245,9 @@ trait FiltersOuputMock
 		$filterUsed = false;
 
 		$filterName = Filters::getFilterName(['block', 'form', 'trackingAdditionalData']);
-		$trackingAdditionalData = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
-		$trackingAdditionalDataSuccess = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
-		$trackingAdditionalDataError = $this->getSettingsValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
+		$trackingAdditionalData = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
+		$trackingAdditionalDataSuccess = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
+		$trackingAdditionalDataError = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
 		$trackingAdditionalDataFilterValue = \has_filter($filterName) ? \apply_filters($filterName, $type, $formId) : [];
 
 		if ($trackingAdditionalData || $trackingAdditionalDataFilterValue || $trackingAdditionalDataSuccess || $trackingAdditionalDataError) {

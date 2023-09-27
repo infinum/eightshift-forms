@@ -38,7 +38,7 @@ export class Bulk {
 		const output = items ? JSON.parse(items) : [];
 
 		[...document.querySelectorAll(`${this.itemSelector} input`)].forEach((element) => {
-			element.checked = !output.length
+			element.checked = !output.length;
 			this.selectItem(parseInt(element.name), !output.length);
 		});
 

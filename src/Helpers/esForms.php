@@ -31,7 +31,7 @@ function esFormsGetFormIdByName(string $formId): string
 		}
 	);
 
-	return $class->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+	return $class->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
 }
 
 /**

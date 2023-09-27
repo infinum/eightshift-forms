@@ -65,7 +65,7 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
 			return false;
 		}
 
@@ -80,8 +80,8 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_GEOLOCATION_USE_KEY, self::SETTINGS_GEOLOCATION_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		return [
@@ -100,7 +100,7 @@ class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
 					],
 				],
 			],
-			(\is_plugin_active('cloudflare/cloudflare.php') && !$this->isCheckboxOptionChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) ? [
+			(\is_plugin_active('cloudflare/cloudflare.php') && !$this->isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) ? [
 				'component' => 'intro',
 				// translators: %s will be replaced with the link.
 				'introSubtitle' => \sprintf(\__('

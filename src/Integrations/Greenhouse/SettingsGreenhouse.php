@@ -114,7 +114,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyGreenhouse()) ? Variables::getApiKeyGreenhouse() : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY);
 		$boardToken = !empty(Variables::getBoardTokenGreenhouse()) ? Variables::getBoardTokenGreenhouse() : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
 
@@ -133,14 +133,14 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$apiKey = Variables::getApiKeyGreenhouse();
 		$boardToken = Variables::getBoardTokenGreenhouse();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -154,7 +154,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -176,7 +176,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 								],
 							] : [
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getSettingsName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+									$this->getOptionName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 									\__('API key', 'eightshift-forms'),
 									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
 									'ES_API_KEY_GREENHOUSE',
@@ -188,7 +188,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 								],
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
+									'inputName' => $this->getOptionName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
 									'inputFieldLabel' => \__('Job board', 'eightshift-forms'),
 									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_BOARD_TOKEN_GREENHOUSE', !empty($boardToken)),
 									'inputType' => 'text',
@@ -210,7 +210,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -223,7 +223,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Up to 25MB.', 'eightshift-forms'),
 								'inputFieldAfterContent' => 'MB',
@@ -244,19 +244,19 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => \__('Disable default fields', 'eightshift-forms'),
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Cover letter textarea', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
 										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER,
 										'checkboxAsToggle' => true,
 									],
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Resume textarea', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
 										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME,
 										'checkboxAsToggle' => true,
 									],

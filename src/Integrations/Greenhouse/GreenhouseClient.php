@@ -79,7 +79,7 @@ class GreenhouseClient implements ClientInterface
 		$output = \get_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -208,7 +208,7 @@ class GreenhouseClient implements ClientInterface
 			$paramsFiles,
 			$itemId,
 			$formId,
-			$this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
+			$this->isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
 			true
 		);
 

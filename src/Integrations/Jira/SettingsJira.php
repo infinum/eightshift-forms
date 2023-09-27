@@ -175,13 +175,13 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 			return false;
 		}
 
-		$selectedProject = $this->getSettingsValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
+		$selectedProject = $this->getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
 		if (!$selectedProject) {
 			return false;
 		}
 
-		$selectedIssueType = $this->getSettingsValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
+		$selectedIssueType = $this->getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
 
 		if (!$selectedIssueType) {
 			return false;
@@ -201,15 +201,15 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoActiveFeatureOutput();
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$formDetails = Helper::getFormDetailsById($formId);
 
-		$selectedProject = $this->getSettingsValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
-		$selectedIssueType = $this->getSettingsValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
-		$manualMapParams = $this->isCheckboxSettingsChecked(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId);
-		$mapParams = $this->getSettingsValueGroup(self::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
+		$selectedProject = $this->getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
+		$selectedIssueType = $this->getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
+		$manualMapParams = $this->isSettingCheckboxChecked(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId);
+		$mapParams = $this->getSettingValueGroup(self::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
 		$customFields = $this->jiraClient->getProjectsCustomFields($selectedProject);
 
 		return [
@@ -223,7 +223,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 						'tabContent' => [
 							[
 								'component' => 'select',
-								'selectName' => $this->getSettingsName(self::SETTINGS_JIRA_PROJECT_KEY),
+								'selectName' => $this->getSettingName(self::SETTINGS_JIRA_PROJECT_KEY),
 								'selectFieldLabel' => \__('Project', 'eightshift-forms'),
 								'selectSingleSubmit' => true,
 								'selectPlaceholder' => \__('Select project', 'eightshift-forms'),
@@ -242,7 +242,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 							$selectedProject ? [
 								'component' => 'select',
 								'selectSingleSubmit' => true,
-								'selectName' => $this->getSettingsName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
+								'selectName' => $this->getSettingName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
 								'selectFieldLabel' => \__('Issue type', 'eightshift-forms'),
 								'selectPlaceholder' => \__('Select issue type', 'eightshift-forms'),
 								'selectContent' => \array_map(
@@ -265,18 +265,18 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_TITLE_KEY),
+								'inputName' => $this->getSettingName(self::SETTINGS_JIRA_TITLE_KEY),
 								'inputFieldLabel' => \__('Issue title', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_TITLE_KEY, $formId),
+								'inputValue' => $this->getSettingValue(self::SETTINGS_JIRA_TITLE_KEY, $formId),
 							],
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_DESC_KEY),
+								'inputName' => $this->getSettingName(self::SETTINGS_JIRA_DESC_KEY),
 								'inputFieldLabel' => \__('Additional description', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => $this->getSettingsValue(self::SETTINGS_JIRA_DESC_KEY, $formId),
+								'inputValue' => $this->getSettingValue(self::SETTINGS_JIRA_DESC_KEY, $formId),
 							],
 							[
 								'component' => 'divider',
@@ -294,7 +294,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY),
+								'checkboxesName' => $this->getSettingName(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -320,7 +320,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								],
 								[
 									'component' => 'group',
-									'groupName' => $this->getSettingsName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
+									'groupName' => $this->getSettingName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
 									'groupSaveOneField' => true,
 									'groupStyle' => 'default-listing',
 									'groupContent' => [
@@ -357,7 +357,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyJira()) ? Variables::getApiKeyJira() : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY);
 		$apiBoard = !empty(Variables::getApiBoardJira()) ? Variables::getApiBoardJira() : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY);
 		$apiUser = !empty(Variables::getApiUserJira()) ? Variables::getApiUserJira() : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY);
@@ -377,8 +377,8 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$apiKey = Variables::getApiKeyJira();
@@ -386,7 +386,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 		$apiUser = Variables::getApiUserJira();
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -400,7 +400,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -422,7 +422,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								],
 							] : [
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getSettingsName(self::SETTINGS_JIRA_API_KEY_KEY),
+									$this->getOptionName(self::SETTINGS_JIRA_API_KEY_KEY),
 									\__('API key', 'eightshift-forms'),
 									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY),
 									'ES_API_KEY_JIRA',
@@ -430,7 +430,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								),
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_BOARD_KEY),
+									'inputName' => $this->getOptionName(self::SETTINGS_JIRA_API_BOARD_KEY),
 									'inputFieldLabel' => \__('Board', 'eightshift-forms'),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
@@ -443,7 +443,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								],
 								[
 									'component' => 'input',
-									'inputName' => $this->getSettingsName(self::SETTINGS_JIRA_API_USER_KEY),
+									'inputName' => $this->getOptionName(self::SETTINGS_JIRA_API_USER_KEY),
 									'inputFieldLabel' => \__('User', 'eightshift-forms'),
 									// translators: %s will be replaced with global variable name.
 									'inputFieldHelp' => \sprintf(\__('
@@ -457,12 +457,12 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => $this->getSettingsName(self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+									'checkboxesName' => $this->getOptionName(self::SETTINGS_JIRA_SELF_HOSTED_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Use self-hosted version', 'eightshift-forms'),
-											'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+											'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
 											'checkboxValue' => self::SETTINGS_JIRA_SELF_HOSTED_KEY,
 											'checkboxAsToggle' => true,
 											'checkboxAsToggleSize' => 'medium',
@@ -483,7 +483,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('

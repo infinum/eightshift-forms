@@ -12,7 +12,6 @@ namespace EightshiftForms\Dashboard;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -71,7 +70,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 			$icon = Helper::getProjectIcons($key);
 			$type = $value['type'];
 
-			$checked = $this->isCheckboxOptionChecked($use, $use, true);
+			$checked = $this->isOptionCheckboxChecked($use, $use);
 
 			$item = [
 				'component' => 'card',
@@ -80,7 +79,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				'cardContent' => [
 					[
 						'component' => 'checkboxes',
-						'checkboxesName' => $this->getSettingsName($use, true),
+						'checkboxesName' => $this->getOptionName($use),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',

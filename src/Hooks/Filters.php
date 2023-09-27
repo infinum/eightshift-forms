@@ -621,7 +621,7 @@ class Filters
 	 *
 	 * @return boolean
 	 */
-	public static function isNameFixed(string $name): bool
+	public static function isOptionNotTranslatable(string $name): bool
 	{
 		$list = \array_flip([
 			SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,

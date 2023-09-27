@@ -80,7 +80,7 @@ class FormAdminBarMenu implements ServiceInterface
 		}
 
 		$prefix = FormAdminMenu::ADMIN_MENU_SLUG;
-		$isDevelopMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDevelopMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
 		$version = Config::getProjectVersion();
 

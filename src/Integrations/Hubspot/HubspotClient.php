@@ -102,7 +102,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -171,7 +171,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = \get_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -270,7 +270,7 @@ class HubspotClient implements HubspotClientInterface
 			$paramsFiles,
 			$itemId,
 			$formId,
-			$this->isCheckboxOptionChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)
+			$this->isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
@@ -366,7 +366,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function postFileMedia(string $file, string $formId): string
 	{
-		$folder = $this->getSettingsValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
+		$folder = $this->getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
 
 		if (!$folder) {
 			$folder = self::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY;

@@ -88,7 +88,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -104,8 +104,8 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$manifestForm = Components::getComponent('form');
@@ -328,7 +328,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 
 		$output = [];
 
-		$isDeveloperMode = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDeveloperMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 
 		while ($theQuery->have_posts()) {
 			$theQuery->the_post();

@@ -84,13 +84,13 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldHideLabel' => true,
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 								'checkboxesIsToggles' => true,
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Disable default styles', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
@@ -99,7 +99,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Disable default scripts', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
@@ -112,7 +112,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Don\'t auto-initialize scripts', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY, self::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
@@ -129,12 +129,12 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldHideLabel' => true,
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Don\'t scroll to the first field with an error', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
@@ -142,7 +142,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Don\'t scroll to the top of the form (to reveal the success message)', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
@@ -155,7 +155,7 @@ class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Disable native JavaScript for redirects', 'eightshift-forms'),
 										'checkboxHelp' => \__('This option disables all native JavaScript redirects, requiring a custom redirect implementation based on triggered events. Typically used in single-page applications like Barba.js.', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
+										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,

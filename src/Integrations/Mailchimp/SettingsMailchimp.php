@@ -104,7 +104,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyMailchimp()) ? Variables::getApiKeyMailchimp() : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
@@ -125,7 +125,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	{
 		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput(self::SETTINGS_TYPE_KEY);
+			return $this->getSettingOutputNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
 		}
 
 		// Output additonal tabs for config.
@@ -142,10 +142,10 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 						],
 						[
 							'component' => 'select',
-							'selectName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
+							'selectName' => $this->getSettingName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
 							'selectFieldLabel' => \__('Tag visibility', 'eightshift-forms'),
 							'selectFieldHelp' => \__('Select the way you want to show/use tags in your form.', 'eightshift-forms'),
-							'selectValue' => $this->getOptionValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
+							'selectValue' => $this->getSettingValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 							'selectSingleSubmit' => true,
 							'selectPlaceholder' => \__('Select tag visibility', 'eightshift-forms'),
 							'selectContent' => [
@@ -153,31 +153,31 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 									'component' => 'select-option',
 									'selectOptionLabel' => \__('Don\'t use tags', 'eightshift-forms'),
 									'selectOptionValue' => 'none',
-									'selectOptionIsSelected' => $this->isCheckedSettings('none', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+									'selectOptionIsSelected' => $this->isSettingChecked('none', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 								],
 								[
 									'component' => 'select-option',
 									'selectOptionLabel' => \__('Use as hidden field', 'eightshift-forms'),
 									'selectOptionValue' => 'hidden',
-									'selectOptionIsSelected' => $this->isCheckedSettings('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+									'selectOptionIsSelected' => $this->isSettingChecked('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 								],
 								[
 									'component' => 'select-option',
 									'selectOptionLabel' => \__('Use as a select field', 'eightshift-forms'),
 									'selectOptionValue' => 'select',
-									'selectOptionIsSelected' => $this->isCheckedSettings('select', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+									'selectOptionIsSelected' => $this->isSettingChecked('select', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 								],
 								[
 									'component' => 'select-option',
 									'selectOptionLabel' => \__('Use as checkbox field', 'eightshift-forms'),
 									'selectOptionValue' => 'checkboxes',
-									'selectOptionIsSelected' => $this->isCheckedSettings('checkboxes', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+									'selectOptionIsSelected' => $this->isSettingChecked('checkboxes', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 								],
 								[
 									'component' => 'select-option',
 									'selectOptionLabel' => \__('Use as radio field', 'eightshift-forms'),
 									'selectOptionValue' => 'radios',
-									'selectOptionIsSelected' => $this->isCheckedSettings('radios', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
+									'selectOptionIsSelected' => $this->isSettingChecked('radios', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
 								],
 							]
 						],
@@ -200,13 +200,13 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$apiKey = Variables::getApiKeyMailchimp();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -220,7 +220,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -242,7 +242,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 								],
 							] : [
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getSettingsName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+									$this->getOptionName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 									\__('API key', 'eightshift-forms'),
 									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
 									'ES_API_KEY_MAILCHIMP',
@@ -262,7 +262,7 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('Redirect to URL after form submit', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('

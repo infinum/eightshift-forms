@@ -50,7 +50,7 @@ class Security implements SecurityInterface
 		}
 
 		$key = SettingsSecurity::SETTINGS_SECURITY_DATA_KEY;
-		$keyName = $this->getSettingsName($key);
+		$keyName = $this->getOptionName($key);
 		$data = $this->getOptionValueGroup($key);
 		$ip = $this->getIpAddress(true);
 		$time = \time();
@@ -62,7 +62,7 @@ class Security implements SecurityInterface
 				'time' => $time,
 			];
 
-			\update_option($keyName, $data);
+			\update_option($keyName, $data); // No need for unserilize because we are storing array.
 			return true;
 		}
 
@@ -104,7 +104,7 @@ class Security implements SecurityInterface
 	{
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		if ($this->isCheckboxOptionChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_CONNECTING_IP'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 

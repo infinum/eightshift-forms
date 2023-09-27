@@ -71,7 +71,7 @@ class MailchimpClient implements MailchimpClientInterface
 		$output = \get_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -212,7 +212,7 @@ class MailchimpClient implements MailchimpClientInterface
 			$files,
 			$itemId,
 			$formId,
-			$this->isCheckboxOptionChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)
+			$this->isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];

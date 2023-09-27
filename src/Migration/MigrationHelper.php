@@ -95,8 +95,8 @@ trait MigrationHelper
 			'data' => [],
 		];
 
-		$itemId = $this->getSettingsValue("{$type}-{$itemIdKey}", $id);
-		$innerId = $this->getSettingsValue("{$type}-{$innerIdKey}", $id);
+		$itemId = $this->getSettingValue("{$type}-{$itemIdKey}", $id);
+		$innerId = $this->getSettingValue("{$type}-{$innerIdKey}", $id);
 		$blocks = \parse_blocks($content);
 		$integrationFields = $this->prepareIntegrationFields3To4($type, $id);
 
@@ -230,7 +230,7 @@ trait MigrationHelper
 	{
 		$output = [];
 
-		$integrationFields = $this->getSettingsValueGroup("{$type}-integration-fields", $id);
+		$integrationFields = $this->getSettingValueGroup("{$type}-integration-fields", $id);
 
 		if (!$integrationFields) {
 			return [];

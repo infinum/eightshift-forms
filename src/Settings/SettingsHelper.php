@@ -23,6 +23,9 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 trait SettingsHelper
 {
+	// --------------------------------------------------
+	// Settings helper methods
+	// --------------------------------------------------
 	/**
 	 * Get settings value.
 	 *
@@ -31,9 +34,9 @@ trait SettingsHelper
 	 *
 	 * @return string
 	 */
-	public function getSettingsValue(string $key, string $formId): string
+	public function getSettingValue(string $key, string $formId): string
 	{
-		return (string) \get_post_meta((int) $formId, $this->getSettingsName($key), true);
+		return (string) \get_post_meta((int) $formId, $this->getSettingName($key), true);
 	}
 
 	/**
@@ -45,9 +48,9 @@ trait SettingsHelper
 	 *
 	 * @return string
 	 */
-	public function getSettingsValueAsJson(string $key, string $formId, int $useNumber = 2): string
+	public function getSettingValueAsJson(string $key, string $formId, int $useNumber = 2): string
 	{
-		$values = $this->getSettingsValueGroup($key, $formId);
+		$values = $this->getSettingValueGroup($key, $formId);
 		if (!$values) {
 			return '';
 		}
@@ -65,9 +68,9 @@ trait SettingsHelper
 	 *
 	 * @return string
 	 */
-	public function getSettingsValueWithFallback(string $key, string $optionKey, string $fallback, string $formId): string
+	public function getSettingValueWithFallback(string $key, string $optionKey, string $fallback, string $formId): string
 	{
-		$value = $this->getSettingsValue($key, $formId);
+		$value = $this->getSettingValue($key, $formId);
 
 		if (!$value) {
 			$value = $this->getOptionValue($optionKey);
@@ -88,24 +91,64 @@ trait SettingsHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSettingsValueGroup(string $key, string $formId): array
+	public function getSettingValueGroup(string $key, string $formId): array
 	{
-		$value = \get_post_meta((int) $formId, $this->getSettingsName($key), true);
-		if (!$value) {
-			return [];
-		}
-
+		$value = \get_post_meta((int) $formId, $this->getSettingName($key), true);
 		if (!$value) {
 			return [];
 		}
 
 		$value = \maybe_unserialize($value);
-		if (!is_array($value)) {
+		if (!\is_array($value)) {
 			return [];
 		}
 
 		return $value;
 	}
+
+	/**
+	 * Determine if settings is checked (used for radio, and select box).
+	 *
+	 * @param string $key Key to find.
+	 * @param string $id Checkboxes ID.
+	 * @param string $formId Form Id.
+	 *
+	 * @return bool
+	 */
+	public function isSettingChecked(string $key, string $id, string $formId): bool
+	{
+		return $this->getSettingValue($id, $formId) === $key;
+	}
+
+	/**
+	 * Determine if checkbox settings is checked (used for checkbox).
+	 *
+	 * @param string $key Key to find.
+	 * @param string $id Checkboxes ID.
+	 * @param string $formId Form Id.
+	 *
+	 * @return bool
+	 */
+	public function isSettingCheckboxChecked(string $key, string $id, string $formId): bool
+	{
+		return \in_array($key, \explode(AbstractBaseRoute::DELIMITER, $this->getSettingValue($id, $formId)), true);
+	}
+
+	/**
+	 * Get string setting name.
+	 *
+	 * @param string $key Providing string to append to.
+	 *
+	 * @return string
+	 */
+	public function getSettingName(string $key): string
+	{
+		return Config::getSettingNamePrefix() . "-{$key}";
+	}
+
+	// --------------------------------------------------
+	// Options helper methods
+	// --------------------------------------------------
 
 	/**
 	 * Get option value.
@@ -116,7 +159,7 @@ trait SettingsHelper
 	 */
 	public function getOptionValue(string $key): string
 	{
-		return (string) \get_option($this->getSettingsName($key), '');
+		return (string) \get_option($this->getOptionName($key), '');
 	}
 
 	/**
@@ -147,14 +190,14 @@ trait SettingsHelper
 	 */
 	public function getOptionValueGroup(string $key): array
 	{
-		$value = \get_option($this->getSettingsName($key), []);
+		$value = \get_option($this->getOptionName($key), []);
 
 		if (!$value) {
 			return [];
 		}
 
 		$value = \maybe_unserialize($value);
-		if (!is_array($value)) {
+		if (!\is_array($value)) {
 			return [];
 		}
 
@@ -198,20 +241,6 @@ trait SettingsHelper
 	}
 
 	/**
-	 * Determine if settings is checked (used for radio, and select box).
-	 *
-	 * @param string $key Key to find.
-	 * @param string $id Checkboxes ID.
-	 * @param string $formId Form Id.
-	 *
-	 * @return bool
-	 */
-	public function isCheckedSettings(string $key, string $id, string $formId): bool
-	{
-		return $this->getSettingsValue($id, $formId) === $key;
-	}
-
-	/**
 	 * Determine if global is checked (used for radio, and select box).
 	 *
 	 * @param string $key Key to find.
@@ -219,23 +248,9 @@ trait SettingsHelper
 	 *
 	 * @return bool
 	 */
-	public function isCheckedOption(string $key, string $id): bool
+	public function isOptionChecked(string $key, string $id): bool
 	{
 		return $this->getOptionValue($id) === $key;
-	}
-
-	/**
-	 * Determine if checkbox settings is checked (used for checkbox).
-	 *
-	 * @param string $key Key to find.
-	 * @param string $id Checkboxes ID.
-	 * @param string $formId Form Id.
-	 *
-	 * @return bool
-	 */
-	public function isCheckboxSettingsChecked(string $key, string $id, string $formId): bool
-	{
-		return \in_array($key, \explode(AbstractBaseRoute::DELIMITER, $this->getSettingsValue($id, $formId)), true);
 	}
 
 	/**
@@ -246,23 +261,23 @@ trait SettingsHelper
 	 *
 	 * @return bool
 	 */
-	public function isCheckboxOptionChecked(string $key, string $id): bool
+	public function isOptionCheckboxChecked(string $key, string $id): bool
 	{
 		return \in_array($key, \explode(AbstractBaseRoute::DELIMITER, $this->getOptionValue($id)), true);
 	}
 
 	/**
-	 * Get string name with locale.
+	 * Get string option name with locale.
 	 *
 	 * @param string $key Providing string to append to.
 	 *
 	 * @return string
 	 */
-	public function getSettingsName(string $key): string
+	public function getOptionName(string $key): string
 	{
 		$sufix = '';
 
-		if (!Filters::isNameFixed($key)) {
+		if (!Filters::isOptionNotTranslatable($key)) {
 			$locale = Helper::getLocale();
 
 			if ($locale) {
@@ -271,26 +286,12 @@ trait SettingsHelper
 			}
 		}
 
-		return Config::getSettingsNamePrefix() . "-{$key}{$sufix}";
+		return Config::getSettingNamePrefix() . "-{$key}{$sufix}";
 	}
 
-	/**
-	 * Get settings clean name by removing locale and prefix.
-	 *
-	 * @param string $key Providing string to remove from.
-	 *
-	 * @return string
-	 */
-	public function getSettingsCleanName(string $key): string
-	{
-		$prefix = Config::getSettingsNamePrefix();
-		$locale = Helper::getLocale();
-
-		$name = \preg_replace("/^$prefix-/", '', $key);
-		$name = \preg_replace("/-$locale$/", '', $name);
-
-		return $name;
-	}
+	// --------------------------------------------------
+	// General helper methods
+	// --------------------------------------------------
 
 	/**
 	 * Get saved value string saved as json array - used for textarea with : delimiter.
@@ -351,7 +352,7 @@ trait SettingsHelper
 	 *
 	 * @return array<int, array<string, string>>
 	 */
-	private function getNoActiveFeatureOutput(): array
+	private function getSettingOutputNoActiveFeature(): array
 	{
 		return [
 			[
@@ -371,7 +372,7 @@ trait SettingsHelper
 	 *
 	 * @return array<int, array<string, string>>
 	 */
-	private function getNoValidGlobalConfigOutput(string $type): array
+	private function getSettingOutputNoValidGlobalConfig(string $type): array
 	{
 		$label = Filters::getSettingsLabels($type);
 
@@ -393,7 +394,7 @@ trait SettingsHelper
 	 *
 	 * @return array<int, array<string, string>>
 	 */
-	private function getNoIntegrationFetchDataOutput(string $type): array
+	private function getSettingOutputNoIntegrationFetchData(string $type): array
 	{
 		$label = Filters::getSettingsLabels($type);
 
@@ -445,7 +446,7 @@ trait SettingsHelper
 			'label' => $integrationDetails['label'],
 			'icon' => $integrationDetails['icon'],
 			'value' => $type,
-			'isActive' => $useFilter ? $this->isCheckboxOptionChecked($useFilter, $useFilter) : false,
+			'isActive' => $useFilter ? $this->isOptionCheckboxChecked($useFilter, $useFilter) : false,
 			'isValid' => $integrationDetails['isValid'],
 			'isApiValid' => $integrationDetails['isApiValid'],
 		];
@@ -471,7 +472,7 @@ trait SettingsHelper
 				continue;
 			}
 
-			$isUsed = $this->isCheckboxOptionChecked($useFilter, $useFilter, true);
+			$isUsed = $this->isOptionCheckboxChecked($useFilter, $useFilter);
 
 			if (!$isUsed) {
 				continue;

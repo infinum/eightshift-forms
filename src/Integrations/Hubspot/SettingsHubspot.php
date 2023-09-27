@@ -146,7 +146,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
 		$apiKey = !empty(Variables::getApiKeyHubspot()) ? Variables::getApiKeyHubspot() : $this->getOptionValue(SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY);
 
 		if (!$isUsed || empty($apiKey)) {
@@ -167,7 +167,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	{
 		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getNoValidGlobalConfigOutput(self::SETTINGS_TYPE_KEY);
+			return $this->getSettingOutputNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
 		}
 
 		return [
@@ -193,13 +193,13 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		$apiKey = Variables::getApiKeyHubspot();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = $this->isCheckboxOptionChecked(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -213,7 +213,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => $this->getOptionName(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -235,7 +235,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 								],
 							] : [
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getSettingsName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+									$this->getOptionName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 									\__('API key', 'eightshift-forms'),
 									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
 									'ES_API_KEY_HUBSPOT',
@@ -255,7 +255,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -268,7 +268,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 							],
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 								'inputFieldLabel' => \__('Allowed file types', 'eightshift-forms'),
 								'inputFieldHelp' => \sprintf(
 									// Translators: %s will be replaced with the link.
@@ -326,12 +326,12 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 			'tabContent' => [
 				[
 					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
+					'inputName' => $this->getSettingName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 					'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
 					'inputFieldLabel' => \__('File uploads folder', 'eightshift-forms'),
 					'inputFieldHelp' => \__('All of the uploaded files will land inside this folder in the HubSpot file manager.', 'eightshift-forms'),
 					'inputType' => 'text',
-					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
+					'inputValue' => $this->getSettingValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
 				],
 				[
 					'component' => 'divider',
@@ -339,7 +339,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 				],
 				[
 					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+					'inputName' => $this->getSettingName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputFieldLabel' => \__('Upload allowed file types', 'eightshift-forms'),
 					'inputFieldHelp' => \sprintf(
 						// Translators: %s will be replaced with the link.
@@ -348,7 +348,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 					),
 					'inputPlaceholder' => $this->getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputType' => 'text',
-					'inputValue' => $this->getSettingsValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),
+					'inputValue' => $this->getSettingValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),
 				],
 			]
 		];

@@ -107,7 +107,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Custom form name.
-		$customFormName = $this->getSettingsValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+		$customFormName = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
 		if ($customFormName) {
 			$attributes["{$prefix}CustomName"] = $customFormName;
 		}
@@ -118,10 +118,10 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		if (\has_filter($filterName)) {
 			$attributes["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
 		} else {
-			$attributes["{$prefix}PhoneSync"] = !$this->isCheckboxSettingsChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
+			$attributes["{$prefix}PhoneSync"] = !$this->isSettingCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
 		}
 
-		$attributes["{$prefix}PhoneDisablePicker"] = $this->isCheckboxOptionChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
+		$attributes["{$prefix}PhoneDisablePicker"] = $this->isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
 
 		return $attributes;
 	}
@@ -152,7 +152,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
 		$formsCustomName = Components::checkAttr('formsCustomName', $attributes, $manifest);
 
-		$checkStyleEnqueue = $this->isCheckboxOptionChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
+		$checkStyleEnqueue = $this->isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
 		// Iterate blocks an children by passing them form ID.
 		foreach ($blocks as $block) {

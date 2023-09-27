@@ -363,7 +363,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 		$customTagParamName = AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags'];
 
-		switch ($this->getSettingsValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId)) {
+		switch ($this->getSettingValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId)) {
 			case 'select':
 				return [
 					[

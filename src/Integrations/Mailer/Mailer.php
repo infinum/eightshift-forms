@@ -65,8 +65,8 @@ class Mailer implements MailerInterface
 			$this->getTemplate('subject', $fields, $subject),
 			$this->getTemplate('message', $fields, $template, $responseFields),
 			$this->getHeader(
-				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
-				$this->getSettingsValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
+				$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+				$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
 			),
 			$this->prepareFiles($files)
 		);

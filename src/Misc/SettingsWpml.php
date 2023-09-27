@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -63,7 +62,7 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY, true);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -79,8 +78,8 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY, true)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		return [

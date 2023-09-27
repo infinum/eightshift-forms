@@ -218,9 +218,6 @@ class Transfer implements TransferInterface
 					continue;
 				}
 
-				error_log( print_r( ( $name ), true ) );
-				error_log( print_r( ( $value ), true ) );
-
 				\update_option($name, \maybe_unserialize($value));
 			}
 		}

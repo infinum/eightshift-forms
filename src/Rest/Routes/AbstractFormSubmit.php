@@ -100,7 +100,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
 					// Validate files.
-					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+					if (!$this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 						$validate = $this->getValidator()->validateFiles($formDataReference); // @phpstan-ignore-line
 
 						if ($validate) {
@@ -140,7 +140,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					break;
 				case self::ROUTE_TYPE_STEP_VALIDATION:
 					// Validate params.
-					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+					if (!$this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 						$validate = $this->getValidator()->validateParams($formDataReference, false); // @phpstan-ignore-line
 
 						if ($validate) {
@@ -158,7 +158,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					}
 
 					// Validate params.
-					if (!$this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+					if (!$this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 						$validate = $this->getValidator()->validateParams($formDataReference); // @phpstan-ignore-line
 
 						if ($validate) {

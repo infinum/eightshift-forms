@@ -83,6 +83,6 @@ class Security implements ServiceInterface
 	 */
 	public function getJobCallback()
 	{
-		\delete_option($this->getSettingsName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY));
+		\delete_option($this->getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY));
 	}
 }

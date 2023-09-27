@@ -77,7 +77,7 @@ class AirtableClient implements ClientInterface
 		$output = \get_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -124,7 +124,7 @@ class AirtableClient implements ClientInterface
 		$output = \get_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -190,7 +190,7 @@ class AirtableClient implements ClientInterface
 			$files,
 			$itemId,
 			$formId,
-			$this->isCheckboxOptionChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)
+			$this->isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];

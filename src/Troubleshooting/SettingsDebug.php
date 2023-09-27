@@ -74,7 +74,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -102,8 +102,8 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		return [
@@ -121,12 +121,12 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => '',
-						'checkboxesName' => $this->getSettingsName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
+						'checkboxesName' => $this->getOptionName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Bypass validation', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -139,7 +139,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Bypass captcha', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -152,7 +152,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__("Don't clear form after submission", 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -165,7 +165,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Developer mode', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -183,7 +183,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Stop form syncing', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -196,7 +196,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Skip internal cache', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isCheckboxOptionChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CACHE_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,

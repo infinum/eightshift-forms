@@ -203,8 +203,8 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 						];
 						break;
 					case 'textarea':
-						$disableResume = $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
-						$disableCoverLetter = $this->isCheckboxOptionChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
+						$disableResume = $this->isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
+						$disableCoverLetter = $this->isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, SettingsGreenhouse::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY);
 
 						if ($disableResume || $disableCoverLetter) {
 							break;

@@ -49,7 +49,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	public function updateFormOnBlockEditorLoad(): void
 	{
 		// Prevent forms sync.
-		$skipFormsSync = $this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$skipFormsSync = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 		if ($skipFormsSync) {
 			return;
 		}

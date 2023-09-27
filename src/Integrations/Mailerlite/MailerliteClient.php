@@ -77,7 +77,7 @@ class MailerliteClient implements ClientInterface
 		$output = \get_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isCheckboxOptionChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
@@ -180,7 +180,7 @@ class MailerliteClient implements ClientInterface
 			$files,
 			$itemId,
 			$formId,
-			$this->isCheckboxOptionChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)
+			$this->isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];

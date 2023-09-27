@@ -67,7 +67,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isCheckboxOptionChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
 		$email = $this->getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
 
 		if (!$isUsed || empty($email)) {
@@ -84,8 +84,8 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isCheckboxOptionChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY)) {
-			return $this->getNoActiveFeatureOutput();
+		if (!$this->isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY)) {
+			return $this->getSettingOutputNoActiveFeature();
 		}
 
 		return [
@@ -107,7 +107,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 							],
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
+								'inputName' => $this->getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 								'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 								'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 								'inputType' => 'text',
@@ -143,7 +143,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				],
 				[
 					'component' => 'input',
-					'inputName' => $this->getSettingsName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
+					'inputName' => $this->getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 					'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 					'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 					'inputType' => 'text',
