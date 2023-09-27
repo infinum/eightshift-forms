@@ -18,7 +18,7 @@ export class Bulk {
 	init() {
 		this.toggleDisableButton();
 
-		document.querySelector(this.selectAllSelector)?.addEventListener('click', this.onClickSelectAll, true);
+		document.querySelector(`${this.selectAllSelector} input`)?.addEventListener('click', this.onClickSelectAll, true);
 
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
@@ -38,17 +38,11 @@ export class Bulk {
 		const output = items ? JSON.parse(items) : [];
 
 		[...document.querySelectorAll(`${this.itemSelector} input`)].forEach((element) => {
-			element.checked = !output.length;
+			element.checked = event.target.checked;
 			this.selectItem(parseInt(element.name), !output.length);
 		});
 
-		if (!output.length) {
-			event.target.classList.add(this.state.getStateSelectorsClassActive());
-		} else {
-			event.target.classList.remove(this.state.getStateSelectorsClassActive());
-		}
-
-		this.togleSelectAll();
+		this.toggleAllOtherButtons();
 	};
 
 	onClickItem = (event) => {
@@ -108,17 +102,16 @@ export class Bulk {
 			});
 	};
 
-	togleSelectAll() {
-		const item = document.querySelector(this.selectAllSelector);
-
+	toggleAllOtherButtons() {
 		const items = document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems'));
+		const button = document.querySelector(`${this.selectAllSelector} input`);
 
 		const output = items ? JSON.parse(items) : [];
 
 		if (!output.length) {
-			item.innerHTML = item.getAttribute(this.state.getStateAttribute('selectAllLabelHide'));
+			button.classList.add(this.state.getStateSelectorsClassActive());
 		} else {
-			item.innerHTML = item.getAttribute(this.state.getStateAttribute('selectAllLabelShow'));
+			button.classList.remove(this.state.getStateSelectorsClassActive());
 		}
 	}
 
@@ -136,7 +129,6 @@ export class Bulk {
 
 		itemsElement.setAttribute(this.state.getStateAttribute('bulkItems'), JSON.stringify(output));
 		this.toggleDisableButton();
-		this.togleSelectAll();
 	}
 
 	toggleDisableButton() {

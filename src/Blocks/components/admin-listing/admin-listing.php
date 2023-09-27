@@ -208,20 +208,19 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 					]),
 				]),
 				Components::render('container', [
+					'containerClass' => "es-submit es-submit--ghost {$componentJsSelectAllClass}",
+					'containerTag' => 'div',
+					'containerContent' => Components::render('checkbox', [
+						'checkboxValue' => 'all',
+						'checkboxName' => 'all',
+					]),
+				]),
+				Components::render('container', [
 					'containerUse' => $adminListingIntegrations && !$isTrashPage,
 					'containerClass' => "{$sectionClass}__heading-filter {$componentJsFilterClass}",
 					'containerContent' => wp_kses_post($adminListingIntegrations),
 					'additionalAttributes' => [
 						'href' => $adminListingNewFormLink,
-					],
-				]),
-				Components::render('container', [
-					'containerClass' => "es-submit es-submit--ghost {$componentJsSelectAllClass}",
-					'containerTag' => 'button',
-					'containerContent' => esc_html__('Select all', 'eightshift-forms'),
-					'additionalAttributes' => [
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllLabelHide'] => esc_html__('Select all', 'eightshift-forms'),
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllLabelShow'] => esc_html__('Unselect all', 'eightshift-forms'),
 					],
 				]),
 				Components::render('container', [
