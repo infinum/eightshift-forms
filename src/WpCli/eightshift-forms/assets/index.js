@@ -7,7 +7,7 @@ export default function() {
 		const selector = `.js-es-block`;
 		const elements = document.querySelectorAll(selector);
 
-		if (elements.length && typeof esFormsLocalization !== 'undefined') {
+		if (elements?.length && typeof esFormsLocalization !== 'undefined') {
 			import('./form').then(({ Form }) => {
 				const form = new Form();
 

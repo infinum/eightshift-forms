@@ -12,11 +12,12 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
+$globalManifest = Components::getSettings();
 $manifestInvalid = Components::getComponent('invalid');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
-$blockClass = $attributes['blockClass'] ?? '';
+$blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Check formPost ID prop.

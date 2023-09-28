@@ -7,7 +7,7 @@ export class Filter {
 	}
 
 	init = () => {
-		if (!document.querySelectorAll(this.itemSelector)) {
+		if (!document.querySelectorAll(this.itemSelector)?.length) {
 			return;
 		}
 

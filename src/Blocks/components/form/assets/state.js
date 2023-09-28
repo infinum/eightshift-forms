@@ -247,6 +247,9 @@ export class State {
 	getStateSettingsFormServerErrorMsg = () => {
 		return getState([StateEnum.SETTINGS_FORM_SERVER_ERROR_MSG], StateEnum.SETTINGS);
 	};
+	getStateSettingsFormMisconfiguredMsg = () => {
+		return getState([StateEnum.SETTINGS_FORM_MISCONFIGURED_MSG], StateEnum.SETTINGS);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Element getters.

@@ -68,7 +68,8 @@ export class Form {
 		} else {
 			// Find all forms elements
 			const forms = document.querySelectorAll(this.state.getStateSelectorsForms());
-			if (!forms) {
+			if (!forms.length) {
+				this.utils.removeFormsWithMissingFormsBlock();
 				return;
 			}
 

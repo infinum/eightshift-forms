@@ -232,6 +232,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		);
 		$output['formResetOnSuccess'] = !$this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
+		$output['formMisconfigured'] = \is_user_logged_in() ? \esc_html__('You form is missing forms block and it is missconfigured.', 'eightshift-forms') : '';
 
 		// Enrichment config.
 		if (\apply_filters(SettingsEnrichment::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {

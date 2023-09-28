@@ -10,7 +10,7 @@ export class Tabs {
 	init = () => {
 		const tabsElements = document.querySelectorAll(this.tabsSelector);
 
-		if (!tabsElements) {
+		if (!tabsElements?.length) {
 			return;
 		}
 
@@ -51,7 +51,7 @@ export class Tabs {
 	removeActive = (element) => {
 		const elements = element.parentElement.querySelectorAll(this.tabSelector);
 
-		if (elements.length) {
+		if (elements?.length) {
 			elements.forEach((item) => {
 				item?.classList?.remove(this.CLASS_ACTIVE);
 			});

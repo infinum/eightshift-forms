@@ -9,7 +9,7 @@ export class Form {
 	init = () => {
 		const elements = document.querySelectorAll(this.formSelector);
 
-		if (elements.length) {
+		if (elements?.length) {
 			[...elements].forEach(() => {
 
 			});

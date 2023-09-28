@@ -80,3 +80,27 @@ function esFormsGetComponentsRender(string $component, array $attributes = []): 
 {
 	return Components::render($component, $attributes);
 }
+
+/**
+ * Renders a block forms manualy using provided form ID.
+ *
+ * @param string $formId Form Id.
+ * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
+ *
+ * @return string
+ */
+function esFormRenderForm(string $formId, array $attributes = []): string
+{
+	return Components::render(
+		'forms/forms.php',
+		[
+			'formsFormPostId' => $formId,
+			'formsStyle' => $attributes['style'] ?? [],
+			'formsDownloads' => $attributes['downloads'] ?? [],
+			'formsFormGeolocation' => $attributes['geolocation'] ?? [],
+			'formsFormGeolocationAlternatives' => $attributes['geolocationAlternatives'] ?? [],
+		],
+		Components::getProjectPaths('blocksDestinationCustom'),
+		true
+	);
+}

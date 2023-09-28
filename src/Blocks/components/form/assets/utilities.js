@@ -743,6 +743,19 @@ export class Utils {
 		return '';
 	}
 
+	/**
+	 * Remove forms that don't have forms block.
+	 *
+	 * @returns {void}
+	 */
+	removeFormsWithMissingFormsBlock() {
+		[...document.querySelectorAll(this.state.getStateSelectorsForm())].forEach((form) => {
+			if (!form?.closest(this.state.getStateSelectorsForms())) {
+				form.innerHTML = this.state.getStateSettingsFormMisconfiguredMsg();
+			}
+		});
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////
@@ -838,6 +851,9 @@ export class Utils {
 			},
 			getSelectSelectedValueByCustomData: (type, value, choices) => {
 				return this.getSelectSelectedValueByCustomData(type, value, choices);
+			},
+			removeFormsWithMissingFormsBlock: () => {
+				this.removeFormsWithMissingFormsBlock();
 			},
 		};
 	}
