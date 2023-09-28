@@ -1,0 +1,38 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "pipedrive",
+	"title": "Pipedrive form",
+	"description" : "A Pipedrive form issues",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-pipedrive"
+	},
+	"keywords": [
+		"pipedrive"
+	],
+	"example": {
+	},
+	"components": {
+		"form": "form",
+		"step": "step"
+	},
+	"hasInnerBlocks": true,
+	"attributes": {
+		"pipedriveAllowedBlocks": {
+			"type": "array",
+			"default": []
+		},
+		"pipedriveIntegrationId": {
+			"type": "string"
+		},
+		"pipedriveFormPostId": {
+			"type": "string"
+		},
+		"pipedriveFormDataTypeSelector": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

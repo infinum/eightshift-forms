@@ -22,6 +22,7 @@ use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
 /**
  * Labels class.
@@ -49,6 +50,7 @@ class Labels implements LabelsInterface
 		'momentsSuccess',
 		'workableSuccess',
 		'jiraSuccess',
+		'pipedriveSuccess',
 	];
 
 	/**
@@ -118,6 +120,11 @@ class Labels implements LabelsInterface
 		// Jira.
 		if ($this->isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
 			$output = \array_merge($output, $this->getJiraLabels());
+		}
+
+		// Pipedrive.
+		if ($this->isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
+			$output = \array_merge($output, $this->getPipedriveLabels());
 		}
 
 		return $output;
@@ -453,6 +460,22 @@ class Labels implements LabelsInterface
 			'jiraMissingSummary' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
 			'jiraBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'jiraSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Pipedrive
+	 *
+	 * @return array<string, string>
+	 */
+	private function getPipedriveLabels(): array
+	{
+		return [
+			'pipedriveMissingProject' => \__('Your form is missing project key. Please try again.', 'eightshift-forms'),
+			'pipedriveMissingIssueType' => \__('Your form is missing issue type. Please try again.', 'eightshift-forms'),
+			'pipedriveMissingSummary' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
+			'pipedriveBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			'pipedriveSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 }

@@ -234,4 +234,14 @@ class Variables
 	{
 		return \defined('ES_API_USER_JIRA') ? \ES_API_USER_JIRA : '';
 	}
+
+	/**
+	 * Get API Key for Pipedrive.
+	 *
+	 * @return string|array<string, mixed>
+	 */
+	public static function getApiKeyPipedrive()
+	{
+		return \defined('ES_API_KEY_PIPEDRIVE') ? \ES_API_KEY_PIPEDRIVE : '';
+	}
 }

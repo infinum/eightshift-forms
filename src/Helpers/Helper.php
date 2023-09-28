@@ -22,6 +22,7 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use RecursiveArrayIterator;
@@ -424,6 +425,7 @@ class Helper
 				break;
 			case SettingsMailer::SETTINGS_TYPE_KEY:
 			case SettingsJira::SETTINGS_TYPE_KEY:
+			case SettingsPipedrive::SETTINGS_TYPE_KEY:
 				if ($output['type']) {
 					$output['isValid'] = true;
 
