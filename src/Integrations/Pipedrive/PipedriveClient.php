@@ -176,14 +176,14 @@ class PipedriveClient implements PipedriveClientInterface
 	}
 
 	/**
-	 * API request to post issue.
+	 * API request to post person.
 	 *
 	 * @param array<string, mixed> $params Params array.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postIssue(array $params, string $formId): array
+	public function postPerson(array $params, string $formId): array
 	{
 		$url = self::BASE_URL . "persons";
 

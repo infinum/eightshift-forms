@@ -32,14 +32,14 @@ interface PipedriveClientInterface
 	public function getIssueType(string $itemId): array;
 
 	/**
-	 * API request to post issue.
+	 * API request to post person.
 	 *
 	 * @param array<string, mixed> $params Params array.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postIssue(array $params, string $formId): array;
+	public function postPerson(array $params, string $formId): array;
 
 	/**
 	 * Get projects custom fields list.

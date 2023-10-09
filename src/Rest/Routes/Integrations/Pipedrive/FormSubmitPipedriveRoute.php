@@ -184,7 +184,7 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 		$params = $formDataReference['params'];
 
 		// Send application to Hubspot.
-		$response = $this->pipedriveClient->postIssue(
+		$response = $this->pipedriveClient->postPerson(
 			$params,
 			$formId
 		);
