@@ -119,11 +119,6 @@ export class Form {
 			// Get formId from ajax response.
 			let formId = response?.data?.formId;
 
-			// If form id is not set, get it from first form element.
-			if (!formId) {
-				formId = forms?.[0]?.getAttribute(this.state.getStateAttribute('formId')) || 0;
-			}
-
 			// Loop all form elements and remove all except the one we need.
 			[...forms].forEach((form) => {
 				if (form.getAttribute(this.state.getStateAttribute('formId')) !== formId) {
