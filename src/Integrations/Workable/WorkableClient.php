@@ -224,6 +224,8 @@ class WorkableClient implements ClientInterface
 				return 'workableBadRequestError';
 			case 'position is draft or archived':
 				return 'workableArchivedJobError';
+			case 'Filename should contain less characters':
+				return 'workableTooLongFileNameError';
 			default:
 				return 'submitWpError';
 		}

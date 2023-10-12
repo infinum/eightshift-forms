@@ -42,11 +42,11 @@ interface JiraClientInterface
 	public function postIssue(array $params, string $formId): array;
 
 	/**
-	 * Return base url prefix.
+	 * Return base output url prefix.
 	 *
 	 * @return string
 	 */
-	public function getBaseUrlPrefix(): string;
+	public function getBaseUrlOutputPrefix(): string;
 
 	/**
 	 * Get projects custom fields list.

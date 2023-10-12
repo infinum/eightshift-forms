@@ -172,7 +172,13 @@ abstract class AbstractValidation implements ValidatorInterface
 	private function parseFiletypesString(string $fileTypes): array
 	{
 		$fileTypes = \str_replace(['.', ' '], '', $fileTypes);
-		return \explode(',', $fileTypes);
+		$fileTypes = \explode(',', \strtolower($fileTypes));
+
+		if ($fileTypes) {
+			$fileTypes = \array_unique($fileTypes);
+		}
+
+		return $fileTypes;
 	}
 
 	/**
@@ -184,6 +190,6 @@ abstract class AbstractValidation implements ValidatorInterface
 	private function getFileExtensionFromFilename(string $fileName): string
 	{
 		$explodedFilename = \explode('.', $fileName);
-		return \end($explodedFilename);
+		return \strtolower(\end($explodedFilename));
 	}
 }

@@ -222,15 +222,21 @@ class JiraClient implements JiraClientInterface
 	}
 
 	/**
-	 * Return base url prefix.
+	 * Return base output url prefix.
 	 *
 	 * @return string
 	 */
-	public function getBaseUrlPrefix(): string
+	public function getBaseUrlOutputPrefix(): string
 	{
-		$board = $this->getApiBoard();
+		$output = $this->getOptionValue(SettingsJira::SETTINGS_JIRA_API_BOARD_URL_KEY);
 
-		return "https://{$board}/";
+		if (!$output) {
+			$output = $this->getApiBoard();
+		}
+
+		$output = $this->cleanBoard($output);
+
+		return "https://{$output}/";
 	}
 
 	/**
@@ -296,6 +302,36 @@ class JiraClient implements JiraClientInterface
 	public function isSelfHosted(): bool
 	{
 		return (bool) $this->getOptionValue(SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY);
+	}
+
+	/**
+	 * Return base url prefix.
+	 *
+	 * @return string
+	 */
+	private function getBaseUrlPrefix(): string
+	{
+		$output = $this->cleanBoard($this->getApiBoard());
+
+		return "https://{$output}/";
+	}
+
+	/**
+	 * Return base url claned from user input.
+	 *
+	 * @param string $output Output to clean.
+	 *
+	 * @return string
+	 */
+	private function cleanBoard(string $output): string
+	{
+		$output = \str_replace('https://', '', $output);
+		$output = \str_replace('http://', '', $output);
+		$output = \str_replace('www.', '', $output);
+		$output = \rtrim($output, '/');
+		$output = \ltrim($output, '/');
+
+		return $output;
 	}
 
 	/**

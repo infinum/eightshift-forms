@@ -889,4 +889,16 @@ class Helper
 	{
 		return isset(Filters::ALL[$integrationName]['fields']);
 	}
+
+	/**
+	 * Clean url from query params.
+	 *
+	 * @param string $url Url to clean.
+	 *
+	 * @return string
+	 */
+	public static function cleanPageUrl(string $url): string
+	{
+		return \preg_replace('/\\?.*/', '', $url);
+	}
 }
