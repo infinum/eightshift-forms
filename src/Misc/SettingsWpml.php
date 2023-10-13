@@ -124,7 +124,7 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'intro',
 						'introTitle' => \__('Forms settings', 'eightshift-forms'),
-						'introSubtitle' => \__("We will make each forms setings language specific.", 'eightshift-forms'),
+						'introSubtitle' => \__("We will make each forms settings language specific.", 'eightshift-forms'),
 					],
 				],
 			],
