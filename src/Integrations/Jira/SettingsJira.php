@@ -76,6 +76,11 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	public const SETTINGS_JIRA_API_BOARD_KEY = 'jira-api-board';
 
 	/**
+	 * API Board url.
+	 */
+	public const SETTINGS_JIRA_API_BOARD_URL_KEY = 'jira-api-board-url';
+
+	/**
 	 * API User.
 	 */
 	public const SETTINGS_JIRA_API_USER_KEY = 'jira-api-user';
@@ -388,6 +393,9 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
 
+		$alternativeBoardUrlValue = $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_URL_KEY);
+		$boardValue = !empty($apiBoard) ? $apiBoard : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY);
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -436,7 +444,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 									'inputIsRequired' => true,
 									// translators: %s will be replaced with global variable name.
 									'inputFieldHelp' => \sprintf(\__('
-										Provided in the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.<br/><br/>
+										Provided the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.<br/><br/>
 										%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_BOARD_JIRA', !empty($apiBoard))),
 									'inputValue' => !empty($apiBoard) ? $apiBoard : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY),
 									'inputIsDisabled' => !empty($apiBoard),
@@ -453,6 +461,20 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 									'inputIsRequired' => true,
 									'inputValue' => !empty($apiUser) ? $apiUser : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY),
 									'inputIsDisabled' => !empty($apiUser),
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getOptionName(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
+									'inputFieldLabel' => \__('Alternative board url', 'eightshift-forms'),
+									'inputType' => 'text',
+									'inputIsRequired' => false,
+									'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a defference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.<br/><br/>', 'eightshift-forms'),
+									'inputValue' => $alternativeBoardUrlValue,
+									'inputPlaceholder' => !$alternativeBoardUrlValue ? $boardValue : '',
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
 								],
 								[
 									'component' => 'checkboxes',

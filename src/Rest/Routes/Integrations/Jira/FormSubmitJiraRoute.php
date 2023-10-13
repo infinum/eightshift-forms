@@ -253,7 +253,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 
 		if ($key) {
 			$output['jiraIssueKey'] = $key;
-			$output['jiraIssueUrl'] = $this->jiraClient->getBaseUrlPrefix() . "browse/{$key}/";
+			$output['jiraIssueUrl'] = $this->jiraClient->getBaseUrlOutputPrefix() . "browse/{$key}/";
 		}
 
 		return $output;
