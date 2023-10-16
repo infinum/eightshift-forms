@@ -8,52 +8,28 @@
 
 namespace EightshiftForms\Integrations\Pipedrive;
 
+use EightshiftForms\Integrations\ClientMappingInterface;
+
 /**
  * Interface for a Client
  */
-interface PipedriveClientInterface
+interface PipedriveClientInterface extends ClientMappingInterface
 {
 	/**
-	 * Return projects.
+	 * Return person fields.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getProjects(bool $hideUpdateTime = true): array;
+	public function getPersonFields(bool $hideUpdateTime = true): array;
 
 	/**
-	 * Return projects issue types.
+	 * Return leads fields.
 	 *
-	 * @param string $itemId Item ID to search by.
+	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getIssueType(string $itemId): array;
-
-	/**
-	 * API request to post person.
-	 *
-	 * @param array<string, mixed> $params Params array.
-	 * @param string $formId FormId value.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function postPerson(array $params, string $formId): array;
-
-	/**
-	 * Get projects custom fields list.
-	 *
-	 * @param string $projectId Project Id to get fields from.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getProjectsCustomFields(string $projectId): array;
-
-	/**
-	 * Get test api.
-	 *
-	 * @return array<mixed>
-	 */
-	public function getTestApi(): array;
+	public function getLeadsFields(bool $hideUpdateTime = true): array;
 }

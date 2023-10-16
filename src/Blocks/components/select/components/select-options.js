@@ -26,6 +26,7 @@ export const SelectOptions = (attributes) => {
 	const selectUseSearch = checkAttr('selectUseSearch', attributes, manifest);
 	const selectPlaceholder = checkAttr('selectPlaceholder', attributes, manifest);
 	const selectUseLabelAsPlaceholder = checkAttr('selectUseLabelAsPlaceholder', attributes, manifest);
+	const selectIsClearable = checkAttr('selectIsClearable', attributes, manifest);
 
 	return (
 		<>
@@ -98,6 +99,14 @@ export const SelectOptions = (attributes) => {
 						checked={selectUseSearch}
 						onChange={(value) => setAttributes({ [getAttrKey('selectUseSearch', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('selectUseSearch', attributes, manifest), selectDisabledOptions)}
+					/>
+
+					<IconToggle
+						icon={icons.clearAlt}
+						label={__('Clearable', 'eightshift-forms')}
+						checked={selectIsClearable}
+						onChange={(value) => setAttributes({ [getAttrKey('selectIsClearable', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('selectIsClearable', attributes, manifest), selectDisabledOptions)}
 						noBottomSpacing
 					/>
 				</Section>

@@ -332,6 +332,7 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 										...\array_map(
 											function ($item) use ($mapParams) {
 												$id  = $item['id'] ?? '';
+
 												if ($id) {
 													return [
 														'component' => 'input',

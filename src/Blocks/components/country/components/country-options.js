@@ -35,6 +35,7 @@ export const CountryOptions = (attributes) => {
 	const countryUseSearch = checkAttr('countryUseSearch', attributes, manifest);
 	const countryPlaceholder = checkAttr('countryPlaceholder', attributes, manifest);
 	const countryUseLabelAsPlaceholder = checkAttr('countryUseLabelAsPlaceholder', attributes, manifest);
+	const countryIsClearable = checkAttr('countryIsClearable', attributes, manifest);
 
 	return (
 		<>
@@ -106,6 +107,14 @@ export const CountryOptions = (attributes) => {
 						checked={countryUseSearch}
 						onChange={(value) => setAttributes({ [getAttrKey('countryUseSearch', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('countryUseSearch', attributes, manifest), countryDisabledOptions)}
+					/>
+
+					<IconToggle
+						icon={icons.clearAlt}
+						label={__('Clearable', 'eightshift-forms')}
+						checked={countryIsClearable}
+						onChange={(value) => setAttributes({ [getAttrKey('countryIsClearable', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('countryIsClearable', attributes, manifest), countryDisabledOptions)}
 						noBottomSpacing
 					/>
 				</Section>

@@ -242,9 +242,9 @@ class Filters
 				JiraClient::CACHE_JIRA_ISSUE_TYPE_TRANSIENT_NAME,
 			],
 			'emailTemplateTags' => [
-				'jiraIssueId',
-				'jiraIssueKey',
-				'jiraIssueUrl',
+				'jiraIssueId' => 'id',
+				'jiraIssueKey' => 'key',
+				'jiraIssueUrl' => 'self',
 			]
 		],
 		SettingsPipedrive::SETTINGS_TYPE_KEY => [
@@ -253,13 +253,13 @@ class Filters
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 			'cache' => [
-				PipedriveClient::CACHE_PIPEDRIVE_PROJECTS_TRANSIENT_NAME,
-				PipedriveClient::CACHE_PIPEDRIVE_ISSUE_TYPE_TRANSIENT_NAME,
+				PipedriveClient::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME,
+				PipedriveClient::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME,
 			],
 			'emailTemplateTags' => [
-				'jiraIssueId',
-				'jiraIssueKey',
-				'jiraIssueUrl',
+				'pipedrivePersonId' => 'id',
+				'pipedriveCompanyId' => 'company_id',
+				'pipedriveOrganizationId' => 'org_id',
 			]
 		],
 		SettingsCloudflare::SETTINGS_TYPE_KEY => [

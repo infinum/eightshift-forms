@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Pipedrive;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClientInterface;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
@@ -182,10 +183,12 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 
 		$formId = $formDataReference['formId'];
 		$params = $formDataReference['params'];
+		$files = $formDataReference['files'];
 
 		// Send application to Hubspot.
-		$response = $this->pipedriveClient->postPerson(
+		$response = $this->pipedriveClient->postApplication(
 			$params,
+			$files,
 			$formId
 		);
 
@@ -237,23 +240,15 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 	 */
 	private function getEmailResponseTags(array $response): array
 	{
-		$body = $response['body'] ?? [];
+		$body = $response['body']['data'] ?? [];
 		$output = [];
 
 		if (!$body) {
 			return $output;
 		}
 
-		$id = $body['id'] ?? '';
-		$key = $body['key'] ?? '';
-
-		if ($id) {
-			$output['pipedriveIssueId'] = $id;
-		}
-
-		if ($key) {
-			$output['pipedriveIssueKey'] = $key;
-			// $output['pipedriveIssueUrl'] = $this->pipedriveClient->getBaseUrlPrefix() . "browse/{$key}/";
+		foreach (Filters::ALL[SettingsPipedrive::SETTINGS_TYPE_KEY]['emailTemplateTags'] as $key => $value) {
+			$output[$key] = $body[$value] ?? '';;
 		}
 
 		return $output;

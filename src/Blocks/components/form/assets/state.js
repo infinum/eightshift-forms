@@ -541,6 +541,9 @@ export class State {
 	getStateSelectorsField = () => {
 		return getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS);
 	};
+	getStateSelectorsSelectClearable = () => {
+		return getState([StateEnum.SELECTORS_SELECT_CLEARABLE], StateEnum.SELECTORS);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Attributes getters.

@@ -472,9 +472,7 @@ class Labels implements LabelsInterface
 	private function getPipedriveLabels(): array
 	{
 		return [
-			'pipedriveMissingProject' => \__('Your form is missing project key. Please try again.', 'eightshift-forms'),
-			'pipedriveMissingIssueType' => \__('Your form is missing issue type. Please try again.', 'eightshift-forms'),
-			'pipedriveMissingSummary' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
+			'pipedriveMissingName' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'pipedriveBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'pipedriveSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Pipedrive;
 
+use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
@@ -49,14 +50,14 @@ class PipedriveClient implements PipedriveClientInterface
 	private const BASE_URL = 'https://api.pipedrive.com/v1/';
 
 	/**
-	 * Transient cache name for projects.
+	 * Transient cache name for person fields.
 	 */
-	public const CACHE_PIPEDRIVE_PROJECTS_TRANSIENT_NAME = 'es_pipedrive_projects_cache';
+	public const CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME = 'es_pipedrive_person_fields';
 
 	/**
-	 * Transient cache name for issue types.
+	 * Transient cache name for leads fields.
 	 */
-	public const CACHE_PIPEDRIVE_ISSUE_TYPE_TRANSIENT_NAME = 'es_pipedrive_issue_type_cache';
+	public const CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME = 'es_pipedrive_leads_fields';
 
 	/**
 	 * Issue type epic.
@@ -81,16 +82,16 @@ class PipedriveClient implements PipedriveClientInterface
 	}
 
 	/**
-	 * Return projects.
+	 * Return person fields.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getProjects(bool $hideUpdateTime = true): array
+	public function getPersonFields(bool $hideUpdateTime = true): array
 	{
 
-		$output = \get_transient(self::CACHE_PIPEDRIVE_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
 		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
@@ -99,20 +100,39 @@ class PipedriveClient implements PipedriveClientInterface
 
 		// Check if form exists in cache.
 		if (!$output) {
-			$items = $this->getPipedriveProjects();
+			$items = $this->getPipedrivePersonFields();
 
 			if ($items) {
-				$fields = $this->getPipedriveCustomFields();
-
 				foreach ($items as $item) {
+					$isActive = $item['active_flag'] ?? false;
+
+					if (!$isActive) {
+						continue;
+					}
+
 					$id = $item['id'] ?? '';
+					if (!$id) {
+						continue;
+					}
 
 					$output[$id] = [
 						'id' => $id,
 						'key' => $item['key'] ?? '',
 						'title' => $item['name'] ?? '',
-						'issueTypes' => [],
-						'customFields' => $fields,
+						'fields' => array_filter(array_map(
+							static function ($inner) {
+								$id = $inner['id'] ?? '';
+								if (!$id) {
+									return [];
+								}
+
+								return [
+									'id' => (string) $id,
+									'title' => $inner['label'] ?? '',
+								];
+							},
+							$item['options'] ?? []
+						)),
 					];
 				}
 
@@ -121,7 +141,7 @@ class PipedriveClient implements PipedriveClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_PIPEDRIVE_PROJECTS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+				\set_transient(self::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -133,63 +153,70 @@ class PipedriveClient implements PipedriveClientInterface
 	}
 
 	/**
-	 * Return projects issue types.
+	 * Return leads fields.
 	 *
-	 * @param string $itemId Item ID to search by.
+	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getIssueType(string $itemId): array
+	public function getLeadsFields(bool $hideUpdateTime = true): array
 	{
-		$output = \get_transient(self::CACHE_PIPEDRIVE_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		$output = \get_transient(self::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
 		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
 			$output = [];
 		}
 
-		$projectId = $this->getProjectIdByKey($itemId);
-
 		// Check if form exists in cache.
-		if (!$output || !$projectId || !isset($output[$itemId]) || !$output[$itemId] || !$output[$itemId]['issueTypes']) {
-			$items = $this->getPipedriveIssueTypes($projectId);
+		if (!$output) {
+			$items = $this->getPipedriveLeadsFields();
 
 			if ($items) {
 				foreach ($items as $item) {
-					if (isset($item['hierarchyLevel']) && $item['hierarchyLevel'] === -1) {
+					$id = $item['id'] ?? '';
+					if (!$id) {
 						continue;
 					}
 
-					$id = $item['id'] ?? '';
-
-					$output[$projectId]['issueTypes'][$id] = [
-						'id' => $id,
+					$output[$id] = [
+						'id' => (string) $id,
+						'key' => $item['key'] ?? '',
 						'title' => $item['name'] ?? '',
 					];
 				}
 
-				\set_transient(self::CACHE_PIPEDRIVE_PROJECTS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
+					'id' => ClientInterface::TRANSIENT_STORED_TIME,
+					'title' => \current_datetime()->format('Y-m-d H:i:s'),
+				];
+
+				\set_transient(self::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
-		return $output[$projectId]['issueTypes'] ?? [];
+		if ($hideUpdateTime) {
+			unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * API request to post person.
+	 * API request to post application.
 	 *
 	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postPerson(array $params, string $formId): array
+	public function postApplication(array $params, array $files, string $formId): array
 	{
 		$url = self::BASE_URL . "persons";
 
-		$body = [
-			// 'fields' => $this->prepareParams($params, $formId),
-		];
+		$body = $this->prepareParams($params, $formId);
 
 		$response = \wp_remote_post(
 			$this->getApiUrl($url),
@@ -198,8 +225,6 @@ class PipedriveClient implements PipedriveClientInterface
 				'body' => \wp_json_encode($body),
 			]
 		);
-
-		error_log( print_r( ( $response ), true ) );
 
 		$details = $this->getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
@@ -217,6 +242,24 @@ class PipedriveClient implements PipedriveClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
+			if ($this->isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, $formId)) {
+				$lead = $this->postApplicationLead(
+					$params,
+					[
+						'person_id' => $body['data']['id'] ?? '',
+					],
+					$formId
+				);
+			}
+
+			$this->postFileMedia(
+				$files,
+				[
+					'person_id' => $body['data']['id'] ?? '',
+				],
+				$formId
+			);
+
 			return $this->getIntegrationApiSuccessOutput($details);
 		}
 
@@ -231,44 +274,16 @@ class PipedriveClient implements PipedriveClientInterface
 	}
 
 	/**
-	 * Get projects custom fields list.
-	 *
-	 * @param string $projectId Project Id to get fields from.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getProjectsCustomFields(string $projectId): array
-	{
-		$ignoreKeys = [
-			'project' => 0,
-			'issuetype' => 1,
-			'description' => 2,
-			'parent' => 2,
-		];
-
-		$projectId = $this->getProjectIdByKey($projectId);
-
-		return \array_map(
-			static function ($item) use ($ignoreKeys) {
-				if (!isset($ignoreKeys[$item['id']])) {
-					return $item;
-				}
-			},
-			$this->getProjects()[$projectId]['customFields'] ?? [],
-		);
-	}
-
-	/**
 	 * Get test api.
 	 *
 	 * @return array<mixed>
 	 */
 	public function getTestApi(): array
 	{
-		$url = self::BASE_URL . "activities";
+		$url = self::BASE_URL . "persons";
 
 		$response = \wp_remote_get(
-			$this->getApiUrl($url),
+			$this->getApiUrl($url, 'limit=1'),
 			[
 				'headers' => $this->getHeaders(),
 			]
@@ -282,122 +297,174 @@ class PipedriveClient implements PipedriveClientInterface
 	}
 
 	/**
-	 * Get projects from the api.
+	 * Upload file and attach to person.
 	 *
-	 * @return array<mixed>
+	 * @param array $files Files to upload from form.
+	 * @param array $additionalParams Additional body data.
+	 *
+	 * @return boolean
 	 */
-	private function getPipedriveProjects()
+	private function postFileMedia(array $files, array $additionalParams): bool
 	{
-		$details = $this->getTestApi();
-
-		$code = $details['code'];
-		$body = $details['body'];
-
-		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return $body['values'] ?? [];
+		if (!$files) {
+			return true;
 		}
 
-		return [];
+		foreach ($files as $file) {
+			$fileItems = $file['value'] ?? [];
+
+			if (!$fileItems) {
+				continue;
+			}
+
+			foreach ($fileItems as $item) {
+				$postData = \array_merge(
+					[
+					'file' => new CURLFile($item, 'multipart/form-data'),
+					],
+					$additionalParams
+				);
+
+				$curl = \curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
+				\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
+					$curl,
+					[
+						\CURLOPT_URL => $this->getApiUrl(self::BASE_URL . "files"),
+						\CURLOPT_FAILONERROR => true,
+						\CURLOPT_POST => true,
+						\CURLOPT_RETURNTRANSFER => true,
+						\CURLOPT_POSTFIELDS => $postData,
+						\CURLOPT_HTTPHEADER => $this->getHeaders(true),
+					]
+				);
+				\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+			}
+		}
+
+		return false;
 	}
 
 	/**
-	 * Get issue types from the api.
+	 * API request to post application lead.
 	 *
-	 * @param string $itemId Item ID to search by.
-	 *
-	 * @return array<mixed>
-	 */
-	private function getPipedriveIssueTypes(string $itemId)
-	{
-
-		$url = self::BASE_URL . "issuetype/project?projectId={$itemId}";
-
-		$response = \wp_remote_get(
-			$this->getApiUrl($url),
-			[
-				'headers' => $this->getHeaders(),
-			]
-		);
-
-		$details = $this->getIntegrationApiReponseDetails(
-			SettingsPipedrive::SETTINGS_TYPE_KEY,
-			$response,
-			$url,
-		);
-
-		$code = $details['code'];
-		$body = $details['body'];
-
-		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return $body ?? [];
-		}
-
-		return [];
-	}
-
-	/**
-	 * Get custom fields from the api.
-	 *
-	 * @return array<mixed>
-	 */
-	private function getPipedriveCustomFields()
-	{
-
-		$url = self::BASE_URL . "field";
-
-		$response = \wp_remote_get(
-			$this->getApiUrl($url),
-			[
-				'headers' => $this->getHeaders(),
-			]
-		);
-
-		$details = $this->getIntegrationApiReponseDetails(
-			SettingsPipedrive::SETTINGS_TYPE_KEY,
-			$response,
-			$url,
-		);
-
-		$code = $details['code'];
-		$body = $details['body'];
-
-		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return \array_map(
-				static function ($item) {
-					return [
-						'id' => $item['id'],
-						'title' => $item['name'],
-					];
-				},
-				$body
-			);
-		}
-
-		return [];
-	}
-
-	/**
-	 * Output project Id by project key.
-	 *
-	 * @param string $projectId Project Id from API.
+	 * @param array<string, mixed> $params Params array.
+	 * @param array $additionalParams Additional body data.
+	 * @param string $formId FormId value.
 	 *
 	 * @return string
 	 */
-	private function getProjectIdByKey(string $projectId): string
+	public function postApplicationLead(array $params, array $additionaParams, string $formId): string
 	{
-		return \array_values(\array_filter(
-			$this->getProjects(),
-			static function ($item) use ($projectId) {
-				return $item['key'] === $projectId;
-			}
-		))[0]['id'] ?? '';
+		$url = self::BASE_URL . "leads";
+
+		$body = $this->prepareParamsLead(
+			$params,
+			$additionaParams,
+			$formId
+		);
+
+		$response = \wp_remote_post(
+			$this->getApiUrl($url),
+			[
+				'headers' => $this->getHeaders(),
+				'body' => \wp_json_encode($body),
+			]
+		);
+
+		$details = $this->getIntegrationApiReponseDetails(
+			SettingsPipedrive::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$body,
+			[],
+			'',
+			$formId,
+			$this->isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY)
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		error_log( print_r( ( $body ), true ) );
+		
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return 'true';
+		}
+
+		// Output error.
+		return 'false';
 	}
 
 	/**
-	 * Prepare params
+	 * Get person fields from the api.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getPipedrivePersonFields()
+	{
+		$url = self::BASE_URL . "personFields";
+
+		$response = \wp_remote_get(
+			$this->getApiUrl($url),
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
+
+		$details = $this->getIntegrationApiReponseDetails(
+			SettingsPipedrive::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body['data'] ?? [];
+		}
+
+		return [];
+	}
+
+	/**
+	 * Get leads from the api.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getPipedriveLeadsFields()
+	{
+		$url = self::BASE_URL . "leadLabels";
+
+		$response = \wp_remote_get(
+			$this->getApiUrl($url),
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
+
+		$details = $this->getIntegrationApiReponseDetails(
+			SettingsPipedrive::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details['code'];
+		$body = $details['body'];
+
+		// On success return output.
+		if ($code >= 200 && $code <= 299) {
+			return $body['data'] ?? [];
+		}
+
+		return [];
+	}
+
+	/**
+	 * Prepare params person
 	 *
 	 * @param array<string, mixed> $params Params.
 	 * @param string $formId FormId value.
@@ -408,21 +475,12 @@ class PipedriveClient implements PipedriveClientInterface
 	{
 		$output = [];
 
-		$selectedProject = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_PROJECT_KEY, $formId);
-
-		if (!$selectedProject) {
+		$personName = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
+		if (!$personName) {
 			return $output;
 		}
 
-		$selectedIssueType = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_ISSUE_TYPE_KEY, $formId);
-		if (!$selectedIssueType) {
-			return $output;
-		}
-
-		$title = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_TITLE_KEY, $formId);
-		if (!$title) {
-			return $output;
-		}
+		$output['name'] = $params[$personName]['value'] ?? '';
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
@@ -430,53 +488,76 @@ class PipedriveClient implements PipedriveClientInterface
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
 
-		$formTitle = \get_the_title((int) $formId);
+		$mapParams = $this->getSettingValueGroup(SettingsPipedrive::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 
-		$additionalDescription = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_DESC_KEY, $formId);
-
-		$output = [
-			'project' => [
-				'key' => $selectedProject,
-			],
-			'issuetype' => [
-				'id' => $selectedIssueType,
-			],
-			'summary' => $title,
-		];
-
-		// Add header.
-		// translators: %1$s will be replaced with form name, and %2$s with new line break.
-		$descriptionOutput = \sprintf(\__('Data populated from the WordPress "%1$s" form: %2$s %2$s', 'eightshift-forms'), \esc_html($formTitle), \PHP_EOL);
-
-		// Standard fields output.
-		if (!$this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_PARAMS_MANUAL_MAP_KEY, $formId)) {
-			$i = 0;
-			foreach ($params as $param) {
-				$value = $param['value'] ?? '';
-				if (!$value) {
-					continue;
-				}
-
-				$name = $param['name'] ?? '';
-				if (!$name) {
-					continue;
-				}
-
-				$descriptionOutput .= \esc_html($name) . ':' . \PHP_EOL . \esc_html($value) . \PHP_EOL . \PHP_EOL;
-
-				$i++;
+		foreach ($params as $param) {
+			$name = $param['name'] ?? '';
+			if (!$name) {
+				continue;
 			}
 
-			// Additional desc.
-			if ($additionalDescription) {
-				$descriptionOutput .= \PHP_EOL . \PHP_EOL . \esc_html($additionalDescription);
+			$map = $mapParams[$name] ?? '';
+			if (!$map) {
+				continue;
 			}
 
-			// Custom fields maps is not suported.
+			$value = $param['value'] ?? '';
+			if (!$value) {
+				continue;
+			}
+
+			$output[$map] = $value;
 		}
 
-		// Populate output desc.
-		$output['description'] = $descriptionOutput;
+		$output['add_time'] = \gmdate("Y-m-d H:i:s");
+
+		$label = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
+		if ($label) {
+			$output['label'] = $label;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Prepare params lead
+	 *
+	 * @param array<string, mixed> $params Params.
+	 * @param string $formId FormId value.
+	 *
+	 * @return array<string, string>
+	 */
+	private function prepareParamsLead(array $params, array $additionalParams, string $formId): array
+	{
+		$output = [];
+
+		$leadTitle = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId);
+		if (!$leadTitle) {
+			return $output;
+		}
+
+		$output['title'] = $leadTitle;
+
+
+		$label = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
+		if ($label) {
+			$output['label_ids'] = [$label];
+		}
+
+		$leadValue = $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
+		if ($leadValue) {
+			$value = array_values(array_filter($params, fn($item) => $item['name'] === $leadValue))[0]['value'] ?? 0;
+
+			$output['value'] = [
+				'amount' => intval($value, 10),
+				'currency' => $this->getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
+			];
+		}
+
+		$output = \array_merge(
+			$output,
+			$additionalParams,
+		);
 
 		return $output;
 	}
@@ -502,29 +583,11 @@ class PipedriveClient implements PipedriveClientInterface
 	 */
 	private function getErrorMsg(array $body): string
 	{
-		$msg = $body['errors'] ?? [];
-
-		if (isset($body['errors']['project'])) {
-			return 'pipedriveMissingProject';
-		}
-
-		if (isset($body['errors']['issuetype'])) {
-			return 'pipedriveMissingIssueType';
-		}
-
-		if (isset($body['errors']['summary'])) {
-			return 'pipedriveMissingSummary';
-		}
-
-		if (isset($body['errors']['customfield_10011'])) {
-			return 'pipedriveMissingEpicName';
-		}
+		$msg = $body['error'] ?? '';
 
 		switch ($msg) {
-			case 'auth_required':
-				return 'pipedriveAuthRequired';
-			case 'email_invalid':
-				return 'pipedriveInvalidEmail';
+			case 'Name must be given.':
+				return 'pipedriveMissingName';
 			default:
 				return 'submitWpError';
 		}
@@ -534,23 +597,39 @@ class PipedriveClient implements PipedriveClientInterface
 	 * Get api token.
 	 *
 	 * @param string $url Url to get token from.
+	 * @param string $params Additional params.
 	 *
 	 * @return string
 	 */
-	private function getApiUrl(string $url): string
+	private function getApiUrl(string $url, string $params = ''): string
 	{
 		$url = rtrim($url, '/');
 
-		return $url . '/?api_token=' . $this->getApiKey();
+		$output = $url . '/?api_token=' . $this->getApiKey();
+
+		if ($params) {
+			$output = $output . '&' . $params;
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Set headers used for fetching data.
 	 *
+	 * @param boolean $isCurl If using post method we need to send Authorization header and type in the request.
+	 *
 	 * @return array<string, mixed>
 	 */
-	private function getHeaders(): array
+	private function getHeaders(bool $isCurl = false): array
 	{
+		if ($isCurl) {
+			return [
+				'Content-Type: multipart/form-data',
+			];
+		}
+
+
 		return [
 			'Content-Type' => 'application/json; charset=utf-8',
 		];

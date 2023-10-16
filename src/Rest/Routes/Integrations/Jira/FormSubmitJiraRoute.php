@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Jira;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Jira\JiraClientInterface;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Labels\LabelsInterface;
@@ -184,8 +185,9 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 		$params = $formDataReference['params'];
 
 		// Send application to Hubspot.
-		$response = $this->jiraClient->postIssue(
+		$response = $this->jiraClient->postApplication(
 			$params,
+			[],
 			$formId
 		);
 
@@ -244,16 +246,18 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			return $output;
 		}
 
-		$id = $body['id'] ?? '';
-		$key = $body['key'] ?? '';
+		foreach (Filters::ALL[SettingsJira::SETTINGS_TYPE_KEY]['emailTemplateTags'] as $key => $value) {
+			$item = $body[$value] ?? '';
 
-		if ($id) {
-			$output['jiraIssueId'] = $id;
-		}
+			if ($key === 'jiraIssueUrl') {
+				$jiraKey = $body['key'] ?? '';
 
-		if ($key) {
-			$output['jiraIssueKey'] = $key;
-			$output['jiraIssueUrl'] = $this->jiraClient->getBaseUrlOutputPrefix() . "browse/{$key}/";
+				if ($jiraKey) {
+					$output[$key] = $this->jiraClient->getBaseUrlOutputPrefix() . "browse/{$jiraKey}/";
+				}
+			} else {
+				$output[$key] = $item;
+			}
 		}
 
 		return $output;

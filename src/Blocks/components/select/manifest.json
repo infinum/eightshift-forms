@@ -4,6 +4,7 @@
 	"title": "Select",
 	"componentClass": "es-select",
 	"componentJsSingleSubmitClass": "js-es-block-single-submit",
+	"componentJsClearableClass": "js-es-block-select-clearable",
 	"example": {
 		"attributes": {
 			"selectContent": "",
@@ -46,6 +47,10 @@
 			"type": "string"
 		},
 		"selectSingleSubmit": {
+			"type": "boolean",
+			"default": false
+		},
+		"selectIsClearable": {
 			"type": "boolean",
 			"default": false
 		},

@@ -29,6 +29,7 @@ export const StateEnum = {
 	VALUE_COUNTRY: 'valueCountry',
 	INPUT: 'input',
 	INPUT_SELECT: 'inputSelect',
+	SELECT_CLEARABLE: 'clearable',
 	ITEMS: 'items',
 	CUSTOM: 'custom',
 	IS_DISABLED: 'disabled',
@@ -66,6 +67,7 @@ export const StateEnum = {
 
 	CONFIG: 'config',
 	CONFIG_SELECT_USE_SEARCH: 'useSearch',
+	CONFIG_SELECT_USE_CLEARABLE: 'useClearable',
 	CONFIG_PHONE_DISABLE_PICKER: 'disablePhoneCountryPicker',
 	CONFIG_PHONE_USE_PHONE_SYNC: 'usePhoneSync',
 	CONFIG_SUCCESS_REDIRECT: 'successRedirect',
@@ -155,6 +157,7 @@ export const StateEnum = {
 	SELECTORS_GLOBAL_MSG: `globalMsg`,
 	SELECTORS_GROUP: `group`,
 	SELECTORS_FIELD: `field`,
+	SELECTORS_SELECT_CLEARABLE: `select-clearable`,
 
 	ATTRIBUTES: 'attributes',
 	PARAMS: 'params',
@@ -292,6 +295,7 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_GLOBAL_MSG], `.${manifest.componentJsClass}-global-msg`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_GROUP], `.${manifest.componentJsClass}-group`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_FIELD], `.${manifest.componentJsClass}-field`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_SELECT_CLEARABLE], `.${manifest.componentJsClass}-select-clearable`, StateEnum.SELECTORS);
 }
 
 /**
@@ -334,7 +338,6 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.LOADER], formElement?.querySelector(getState([StateEnum.SELECTORS_LOADER], StateEnum.SELECTORS)), formId);
 	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_NAME], formElement?.getAttribute(getStateAttribute('trackingEventName')), formId);
 	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_ADDITIONAL_DATA], JSON.parse(formElement?.getAttribute(getStateAttribute('trackingAdditionalData')) ?? '{}'), formId);
-
 
 	// Form settings
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement?.getAttribute(getStateAttribute('phoneDisablePicker'))), formId);
@@ -434,6 +437,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], 'select', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(getStateAttribute('selectAllowSearch'))), formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_CLEARABLE], Boolean(item.getAttribute(getStateAttribute('selectIsClearable'))), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 			case 'tel':
