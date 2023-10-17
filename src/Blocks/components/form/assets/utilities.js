@@ -866,6 +866,9 @@ export class Utils {
 			removeFormsWithMissingFormsBlock: () => {
 				this.removeFormsWithMissingFormsBlock();
 			},
+			setSelectValue: (formId, name, value) => {
+				this.setSelectValue(formId, name, value);
+			},
 		};
 	}
 }
