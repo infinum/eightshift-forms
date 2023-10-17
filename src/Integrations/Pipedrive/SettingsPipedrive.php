@@ -242,7 +242,7 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 									'component' => 'select',
 									'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY),
 									'selectFieldLabel' => \__('Person name', 'eightshift-forms'),
-									'selectFieldHelp' => \__('When you add a new contact to your list, you can use their name to differentiate them from others.', 'eightshift-forms'),
+									'selectFieldHelp' => \__('When you add a new contact to your list, you can use their name to differentiate them from other contacts.', 'eightshift-forms'),
 									'selectSingleSubmit' => true,
 									'selectIsRequired' => true,
 									'selectPlaceholder' => \__('Select person name field', 'eightshift-forms'),
