@@ -2,7 +2,7 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "jira",
 	"title": "Jira form",
-	"description" : "A Jira form issues",
+	"description" : "Jira issues application form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-jira"

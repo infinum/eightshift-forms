@@ -2,7 +2,7 @@
 
 /**
  * File containing Connect mapping interface.
- * Used on integrations that doesn't have form builder on their side.
+ * Used on integrations that doesn't have form builder.
  *
  * @package EightshiftForms\Integrations
  */

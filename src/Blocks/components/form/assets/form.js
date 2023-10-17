@@ -707,7 +707,7 @@ export class Form {
 					disabled,
 				} = groupInnerItem;
 
-				// Skip select” search field.
+				// Skip select search field.
 				if (name === 'search_terms') {
 					continue;
 				}
