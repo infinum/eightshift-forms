@@ -101,19 +101,14 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 	public const SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY = 'pipedrive-lead-value';
 
 	/**
-	 * Pipedrive issue type key.
+	 * Pipedrive organization key.
 	 */
-	public const SETTINGS_PIPEDRIVE_ISSUE_TYPE_KEY = 'pipedrive-issue-type';
+	public const SETTINGS_PIPEDRIVE_ORGANIZATION_KEY = 'pipedrive-organization';
 
 	/**
 	 * Pipedrive title key.
 	 */
 	public const SETTINGS_PIPEDRIVE_TITLE_KEY = 'pipedrive-title';
-
-	/**
-	 * Pipedrive description key.
-	 */
-	public const SETTINGS_PIPEDRIVE_DESC_KEY = 'pipedrive-desc';
 
 	/**
 	 * Pipedrive params map key.
@@ -124,6 +119,11 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 	 * Pipedrive use lead key.
 	 */
 	public const SETTINGS_PIPEDRIVE_USE_LEAD = 'pipedrive-use-lead';
+
+	/**
+	 * Pipedrive use organization key.
+	 */
+	public const SETTINGS_PIPEDRIVE_USE_ORGANIZATION = 'pipedrive-use-organization';
 
 	/**
 	 * Skip integration.
@@ -175,7 +175,6 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 	 * Determine if settings are valid.
 	 *
 	 * @param string $formId Form ID.
-	 * @param string $type Integration type.
 	 *
 	 * @return boolean
 	 */
@@ -211,28 +210,30 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 		$formDetails = Helper::getFormDetailsById($formId);
 
 		$fields = $formDetails['fieldNamesTags'] ?? [];
+		$mapParams = $this->getSettingValueGroup(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 
 		$personName = $this->getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
-		$labelsPerson = $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
-		$labelsLead = $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
-		$leadValue = $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
-
-		$mapParams = $this->getSettingValueGroup(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 		$personFields = $this->pipedriveClient->getPersonFields();
-		$leadsFields = $this->pipedriveClient->getLeadsFields();
+		$personLabel = $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
 
 		$useLead = $this->isSettingCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_LEAD, self::SETTINGS_PIPEDRIVE_USE_LEAD, $formId);
+		$leadFields = $this->pipedriveClient->getLeadsFields();
+		$leadValue = $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
+		$leadLabel = $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
+
+		$organization = $this->getSettingValue(self::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY, $formId);
+		$useOrganization = $this->isSettingCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			[
-				'component' => 'tabs',
-				'tabsContent' => [
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Person', 'eightshift-forms'),
-						'tabContent' => [
-							...($fields ? [
+			...($fields) ? [
+				[
+					'component' => 'tabs',
+					'tabsContent' => [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('Person', 'eightshift-forms'),
+							'tabContent' => [
 								[
 									'component' => 'intro',
 									'introTitle' => \__('Mandatory person fields', 'eightshift-forms'),
@@ -241,6 +242,7 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 									'component' => 'select',
 									'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY),
 									'selectFieldLabel' => \__('Person name', 'eightshift-forms'),
+									'selectFieldHelp' => \__('When you add a new contact to your list, you can use their name to differentiate them from others.', 'eightshift-forms'),
 									'selectSingleSubmit' => true,
 									'selectIsRequired' => true,
 									'selectPlaceholder' => \__('Select person name field', 'eightshift-forms'),
@@ -279,7 +281,7 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 										'groupSaveOneField' => true,
 										'groupStyle' => 'default-listing',
 										'groupContent' => [
-											...array_filter(\array_map(
+											...\array_filter(\array_map(
 												function ($item) use ($mapParams, $personName, $personFields) {
 													if ($personName === $item) {
 														return [];
@@ -294,7 +296,7 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 														'selectUseEmptyPlaceholder' => true,
 														'selectIsClearable' => true,
 														'selectContent' => [
-															...(array_filter(\array_map(
+															...(\array_filter(\array_map(
 																static function ($option) use ($mapParams, $item) {
 																	$id  = $option['key'] ?? '';
 
@@ -305,7 +307,7 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 																	if ($id === 'name' || $id === 'label') {
 																		return [];
 																	}
-	
+
 																	return [
 																		'component' => 'select-option',
 																		'selectOptionLabel' => \ucfirst($option['title']),
@@ -334,9 +336,11 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 										'component' => 'select',
 										'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY),
 										'selectFieldLabel' => \__('Person label', 'eightshift-forms'),
+										'selectFieldHelp' => \__('Person label is used to distinguish lead statuses in your list.', 'eightshift-forms'),
 										'selectPlaceholder' => \__('Select person label', 'eightshift-forms'),
-										'selectContent' => array_filter(\array_map(
-											static function ($option) use ($labelsPerson) {
+										'selectIsClearable' => true,
+										'selectContent' => \array_filter(\array_map(
+											static function ($option) use ($personLabel) {
 												$id  = $option['id'] ?? '';
 
 												if (!$id) {
@@ -347,128 +351,182 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 													'component' => 'select-option',
 													'selectOptionLabel' => \ucfirst($option['title']),
 													'selectOptionValue' => $id,
-													'selectOptionIsSelected' => $labelsPerson === $id,
+													'selectOptionIsSelected' => $personLabel === $id,
 												];
 											},
-											array_values(array_filter($personFields, fn($item) => $item['key'] === 'label'))[0]['fields'] ?? []
+											\array_values(\array_filter($personFields, fn($item) => $item['key'] === 'label'))[0]['fields'] ?? []
 										)),
 									],
 								] : []),
-							] : [$this->settingDataMappedIntegrationMissingFields()]),
+							],
 						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Lead', 'eightshift-forms'),
-						'tabContent' => [
-							...($fields ? [
-								[
-									'component' => 'checkboxes',
-									'checkboxesFieldLabel' => '',
-									'checkboxesName' => $this->getOptionName(self::SETTINGS_PIPEDRIVE_USE_LEAD),
-									'checkboxesContent' => [
-										[
-											'component' => 'checkbox',
-											'checkboxLabel' => \__('Create new lead when creating a person', 'eightshift-forms'),
-											'checkboxHelp' => \__('New leads are automatically created and assigned upon submission.', 'eightshift-forms'),
-											'checkboxIsChecked' => $useLead,
-											'checkboxValue' => self::SETTINGS_PIPEDRIVE_USE_LEAD,
-											'checkboxSingleSubmit' => true,
-											'checkboxAsToggle' => true,
+						...($personName ? [
+							[
+								'component' => 'tab',
+								'tabLabel' => \__('Lead', 'eightshift-forms'),
+								'tabContent' => [
+									[
+										'component' => 'checkboxes',
+										'checkboxesFieldLabel' => '',
+										'checkboxesName' => $this->getOptionName(self::SETTINGS_PIPEDRIVE_USE_LEAD),
+										'checkboxesContent' => [
+											[
+												'component' => 'checkbox',
+												'checkboxLabel' => \__('Create new lead when creating a person', 'eightshift-forms'),
+												'checkboxHelp' => \__('New lead is automatically created and assigned upon submission.', 'eightshift-forms'),
+												'checkboxIsChecked' => $useLead,
+												'checkboxValue' => self::SETTINGS_PIPEDRIVE_USE_LEAD,
+												'checkboxSingleSubmit' => true,
+												'checkboxAsToggle' => true,
+											]
 										]
-									]
+									],
+									...($useLead ? [
+										[
+											'component' => 'divider',
+											'dividerExtraVSpacing' => true,
+										],
+										[
+											'component' => 'intro',
+											'introTitle' => \__('Mandatory lead fields', 'eightshift-forms'),
+										],
+										[
+											'component' => 'input',
+											'inputName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY),
+											'inputFieldLabel' => \__('Lead title', 'eightshift-forms'),
+											'inputFieldHelp' => \__('Lead title is used to distinguish lead sources in your list.', 'eightshift-forms'),
+											'inputType' => 'text',
+											'inputIsRequired' => true,
+											'inputValue' => $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId),
+										],
+										[
+											'component' => 'divider',
+											'dividerExtraVSpacing' => true,
+										],
+										[
+											'component' => 'intro',
+											'introTitle' => \__('Optional lead fields', 'eightshift-forms'),
+											'introSubtitle' => \__('Please ensure that your form fields are properly connected to integration fields to ensure proper functionality.', 'eightshift-forms'),
+										],
+										[
+											'component' => 'select',
+											'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY),
+											'selectFieldLabel' => \__('Lead value', 'eightshift-forms'),
+											'selectIsClearable' => true,
+											'selectFieldHelp' => \__('Make sure that you assign lead value to a field that can only have number value.', 'eightshift-forms'),
+											'selectPlaceholder' => \__('Select lead value name field', 'eightshift-forms'),
+											'selectContent' => \array_map(
+												static function ($option) use ($leadValue) {
+													return [
+														'component' => 'select-option',
+														'selectOptionLabel' => \ucfirst($option),
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $leadValue === $option,
+													];
+												},
+												$fields
+											),
+										],
+										[
+											'component' => 'input',
+											'inputName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY),
+											'inputFieldHelp' => \__('Make sure that you only add currency added from the list in you Pipedrive admin. To find currency list go to your Pipedrive account > Settings > Company settings > Currencies.', 'eightshift-forms'),
+											'inputFieldLabel' => \__('Lead currency', 'eightshift-forms'),
+											'inputType' => 'text',
+											'inputValue' => $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
+										],
+										[
+											'component' => 'divider',
+											'dividerExtraVSpacing' => true,
+										],
+										[
+											'component' => 'intro',
+											'introTitle' => \__('Additional lead fields', 'eightshift-forms'),
+										],
+										[
+											'component' => 'select',
+											'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY),
+											'selectFieldLabel' => \__('Lead label', 'eightshift-forms'),
+											'selectFieldHelp' => \__('Lead label is used to distinguish lead statuses in your list.', 'eightshift-forms'),
+											'selectPlaceholder' => \__('Select lead label', 'eightshift-forms'),
+											'selectIsClearable' => true,
+											'selectContent' => \array_filter(\array_map(
+												static function ($option) use ($leadLabel) {
+													$id  = $option['id'] ?? '';
+
+													if (!$id) {
+														return [];
+													}
+
+													return [
+														'component' => 'select-option',
+														'selectOptionLabel' => \ucfirst($option['title']),
+														'selectOptionValue' => $id,
+														'selectOptionIsSelected' => $leadLabel === $id,
+													];
+												},
+												$leadFields ?? []
+											)),
+										],
+									] : []),
 								],
-								...($useLead ? [
+							],
+							[
+								'component' => 'tab',
+								'tabLabel' => \__('Organization', 'eightshift-forms'),
+								'tabContent' => [
 									[
-										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
+										'component' => 'checkboxes',
+										'checkboxesFieldLabel' => '',
+										'checkboxesName' => $this->getOptionName(self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION),
+										'checkboxesContent' => [
+											[
+												'component' => 'checkbox',
+												'checkboxLabel' => \__('Create new organization when creating a person', 'eightshift-forms'),
+												'checkboxHelp' => \__('New organization is automatically created and assigned upon submission.', 'eightshift-forms'),
+												'checkboxIsChecked' => $useOrganization,
+												'checkboxValue' => self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION,
+												'checkboxSingleSubmit' => true,
+												'checkboxAsToggle' => true,
+											]
+										]
 									],
-									[
-										'component' => 'intro',
-										'introTitle' => \__('Mandatory lead fields', 'eightshift-forms'),
-									],
-									[
-										'component' => 'input',
-										'inputName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY),
-										'inputFieldLabel' => \__('Lead title', 'eightshift-forms'),
-										'inputType' => 'text',
-										'inputIsRequired' => true,
-										'inputValue' => $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId),
-									],
-									[
-										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
-									],
-									[
-										'component' => 'intro',
-										'introTitle' => \__('Optional lead fields', 'eightshift-forms'),
-										'introSubtitle' => \__('Please ensure that your form fields are properly connected to integration fields to ensure proper functionality.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'select',
-										'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY),
-										'selectFieldLabel' => \__('Lead value', 'eightshift-forms'),
-										'selectSingleSubmit' => true,
-										'selectIsRequired' => true,
-										'selectPlaceholder' => \__('Select lead value name field', 'eightshift-forms'),
-										'selectContent' => \array_map(
-											static function ($option) use ($leadValue) {
-												return [
-													'component' => 'select-option',
-													'selectOptionLabel' => \ucfirst($option),
-													'selectOptionValue' => $option,
-													'selectOptionIsSelected' => $leadValue === $option,
-												];
-											},
-											$fields
-										),
-									],
-									[
-										'component' => 'input',
-										'inputName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY),
-										'inputFieldLabel' => \__('Lead currency', 'eightshift-forms'),
-										'inputType' => 'text',
-										'inputIsRequired' => true,
-										'inputValue' => $this->getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
-									],
-									[
-										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
-									],
-									[
-										'component' => 'intro',
-										'introTitle' => \__('Additional lead fields', 'eightshift-forms'),
-									],
-									[
-										'component' => 'select',
-										'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY),
-										'selectFieldLabel' => \__('Lead label', 'eightshift-forms'),
-										'selectPlaceholder' => \__('Select lead label', 'eightshift-forms'),
-										'selectContent' => array_filter(\array_map(
-											static function ($option) use ($labelsLead) {
-												$id  = $option['id'] ?? '';
-
-												if (!$id) {
-													return [];
-												}
-
-												return [
-													'component' => 'select-option',
-													'selectOptionLabel' => \ucfirst($option['title']),
-													'selectOptionValue' => $id,
-													'selectOptionIsSelected' => $labelsLead === $id,
-												];
-											},
-											$leadsFields ?? []
-										)),
-									],
-								]
-								: []),
-							] : []),
-						],
+									...($useOrganization ? [
+										[
+											'component' => 'divider',
+											'dividerExtraVSpacing' => true,
+										],
+										[
+											'component' => 'intro',
+											'introTitle' => \__('Mandatory organization fields', 'eightshift-forms'),
+										],
+										[
+											'component' => 'select',
+											'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY),
+											'selectFieldLabel' => \__('Organization', 'eightshift-forms'),
+											'selectIsRequired' => true,
+											'selectIsClearable' => true,
+											'selectFieldHelp' => \__('Organization name is assignet to every new organization created.', 'eightshift-forms'),
+											'selectPlaceholder' => \__('Select organization name field', 'eightshift-forms'),
+											'selectContent' => \array_map(
+												static function ($option) use ($organization) {
+													return [
+														'component' => 'select-option',
+														'selectOptionLabel' => \ucfirst($option),
+														'selectOptionValue' => $option,
+														'selectOptionIsSelected' => $organization === $option,
+													];
+												},
+												$fields
+											),
+										],
+									] : []),
+								],
+							],
+						] : []),
 					],
 				],
-			],
+			] : [$this->settingDataMappedIntegrationMissingFields()],
 		];
 	}
 

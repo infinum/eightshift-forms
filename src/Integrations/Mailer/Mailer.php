@@ -222,6 +222,10 @@ class Mailer implements MailerInterface
 		);
 
 		foreach ($params as $name => $value) {
+			if (\is_array($value)) {
+				continue;
+			}
+
 			$template = \str_replace("{" . $name . "}", $value, $template);
 		}
 

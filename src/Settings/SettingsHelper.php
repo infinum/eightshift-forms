@@ -733,9 +733,4 @@ trait SettingsHelper
 			]
 		);
 	}
-
-	public function getFormNamesSelectList()
-	{
-		
-	}
 }

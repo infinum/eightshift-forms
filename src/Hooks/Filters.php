@@ -258,8 +258,7 @@ class Filters
 			],
 			'emailTemplateTags' => [
 				'pipedrivePersonId' => 'id',
-				'pipedriveCompanyId' => 'company_id',
-				'pipedriveOrganizationId' => 'org_id',
+				'pipedriveOrganizationName' => 'org_name',
 			]
 		],
 		SettingsCloudflare::SETTINGS_TYPE_KEY => [

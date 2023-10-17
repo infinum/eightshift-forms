@@ -473,6 +473,9 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'pipedriveMissingName' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'pipedriveMissingOrganization' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'pipedriveWrongOrganizationId' => \__('Organization ID is invalid.', 'eightshift-forms'),
+			'pipedriveWrongDataset' => \__('Integration dataset is invalid.', 'eightshift-forms'),
 			'pipedriveBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'pipedriveSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
