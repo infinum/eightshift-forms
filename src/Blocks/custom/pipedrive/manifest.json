@@ -1,14 +1,14 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
-	"blockName": "jira",
-	"title": "Jira form",
-	"description" : "Jira issues application form",
+	"blockName": "pipedrive",
+	"title": "Pipedrive form",
+	"description" : "Pipedrive subscription form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-jira"
+		"src": "esf-form-pipedrive"
 	},
 	"keywords": [
-		"jira"
+		"pipedrive"
 	],
 	"example": {
 	},
@@ -18,17 +18,17 @@
 	},
 	"hasInnerBlocks": true,
 	"attributes": {
-		"jiraAllowedBlocks": {
+		"pipedriveAllowedBlocks": {
 			"type": "array",
 			"default": []
 		},
-		"jiraIntegrationId": {
+		"pipedriveIntegrationId": {
 			"type": "string"
 		},
-		"jiraFormPostId": {
+		"pipedriveFormPostId": {
 			"type": "string"
 		},
-		"jiraFormDataTypeSelector": {
+		"pipedriveFormDataTypeSelector": {
 			"type": "string"
 		}
 	},

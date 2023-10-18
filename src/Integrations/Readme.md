@@ -11,3 +11,5 @@ Adding new integration steps:
 8. Add new allowed block in the manifest.json of the `Blocks/custom/form-selector/manifest.json` block.
 9. Add new API key global variable in the `Hooks/Variables.php`.
 10. Add labels for new integration `Labels/Labels.php`.
+11. Add new icon for new integration `Blocks/components/utils/manifest.json`.
+12. If the integration has manual setup like Jira you need to add switch condition in the `Helpers/Helper.php` file under the `getFormDetailsById` function.

@@ -8,10 +8,12 @@
 
 namespace EightshiftForms\Integrations\Jira;
 
+use EightshiftForms\Integrations\ClientMappingInterface;
+
 /**
  * Interface for a Client
  */
-interface JiraClientInterface
+interface JiraClientInterface extends ClientMappingInterface
 {
 	/**
 	 * Return projects.
@@ -32,16 +34,6 @@ interface JiraClientInterface
 	public function getIssueType(string $itemId): array;
 
 	/**
-	 * API request to post issue.
-	 *
-	 * @param array<string, mixed> $params Params array.
-	 * @param string $formId FormId value.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function postIssue(array $params, string $formId): array;
-
-	/**
 	 * Return base output url prefix.
 	 *
 	 * @return string
@@ -56,13 +48,6 @@ interface JiraClientInterface
 	 * @return array<string, mixed>
 	 */
 	public function getProjectsCustomFields(string $projectId): array;
-
-	/**
-	 * Get test api.
-	 *
-	 * @return array<mixed>
-	 */
-	public function getTestApi(): array;
 
 	/**
 	 * Use self-hosted or cloud version.

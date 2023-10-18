@@ -5,6 +5,7 @@ import {
 	CONDITIONAL_TAGS_ACTIONS,
 	CONDITIONAL_TAGS_LOGIC,
 } from '../../conditional-tags/assets/utils';
+import { Utils } from './utilities';
 import { prefix, setStateWindow } from './state/init';
 
 /**
@@ -13,6 +14,7 @@ import { prefix, setStateWindow } from './state/init';
 export class ConditionalTags {
 	constructor() {
 		this.state = new State();
+		this.utils = new Utils();
 
 		// Simplify usage of constants
 		this.SHOW = CONDITIONAL_TAGS_ACTIONS.SHOW;
@@ -319,7 +321,7 @@ export class ConditionalTags {
 						// If current item to change is selected, unset the choice.
 						if (innerName === activeItem) {
 							// Filed will be unable to unset unless we have placeholder set.
-							custom.setChoiceByValue('');
+							this.utils.setSelectValue(formId, name, '');
 						}
 
 					 } else {
@@ -336,14 +338,14 @@ export class ConditionalTags {
 					// If current item to change is selected, unset the choice.
 					if (innerName === activeItem) {
 						// Filed will be unable to unset unless we have placeholder set.
-						custom.setChoiceByValue('');
+						this.utils.setSelectValue(formId, name, '');
 					}
 				}
 
 				// If all items in in parent are hidden, hide the top level field.
 				if (parentField.querySelectorAll(`[${this.state.getStateAttribute('selectVisibility')}="${this.state.getStateSelectorsClassHiddenConditionalTags()}"]`).length === items.length && items.length > 0) {
 					parentField?.classList?.add(this.state.getStateSelectorsClassHiddenConditionalTags());
-					custom.setChoiceByValue('');
+					this.utils.setSelectValue(formId, name, '');
 				} else {
 					if (defaults === this.HIDE) {
 						parentField?.classList?.remove(this.state.getStateSelectorsClassHiddenConditionalTags());

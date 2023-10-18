@@ -17,6 +17,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
@@ -399,6 +400,7 @@ class Validator extends AbstractValidation
 				return true;
 			case SettingsMailer::SETTINGS_TYPE_KEY:
 			case SettingsJira::SETTINGS_TYPE_KEY:
+			case SettingsPipedrive::SETTINGS_TYPE_KEY:
 				if (!$formId || !$postId) {
 					return false;
 				}

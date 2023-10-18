@@ -56,6 +56,8 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
+use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
@@ -240,9 +242,23 @@ class Filters
 				JiraClient::CACHE_JIRA_ISSUE_TYPE_TRANSIENT_NAME,
 			],
 			'emailTemplateTags' => [
-				'jiraIssueId',
-				'jiraIssueKey',
-				'jiraIssueUrl',
+				'jiraIssueId' => 'id',
+				'jiraIssueKey' => 'key',
+				'jiraIssueUrl' => 'self',
+			]
+		],
+		SettingsPipedrive::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsPipedrive::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsPipedrive::FILTER_SETTINGS_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+			'use' => SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
+			'cache' => [
+				PipedriveClient::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME,
+				PipedriveClient::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME,
+			],
+			'emailTemplateTags' => [
+				'pipedrivePersonId' => 'id',
+				'pipedriveOrganizationName' => 'org_name',
 			]
 		],
 		SettingsCloudflare::SETTINGS_TYPE_KEY => [
@@ -559,6 +575,13 @@ class Filters
 				'externalLink' => 'https://jira.atlassian.com/',
 				'icon' => 'jira',
 			],
+			SettingsPipedrive::SETTINGS_TYPE_KEY => [
+				'title' => \__('Pipedrive', 'eightshift-forms'),
+				'desc' => \__('Pipedrive integration settings.', 'eightshift-forms'),
+				'detail' => \__('Pipedrive is a web-based Sales CRM and pipeline management solution that enables businesses to plan their sales activities and monitor deals.', 'eightshift-forms'),
+				'externalLink' => 'https://www.pipedrive.com/',
+				'icon' => 'pipedrive',
+			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),
 				'desc' => \__('Force data re-fetch for certain integrations.', 'eightshift-forms'),
@@ -677,6 +700,9 @@ class Filters
 			SettingsJira::SETTINGS_JIRA_API_BOARD_KEY,
 			SettingsJira::SETTINGS_JIRA_API_USER_KEY,
 			SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY,
+
+			SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
+			SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY,
 
 			SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 

@@ -594,7 +594,7 @@ trait SettingsHelper
 		$tags = Filters::ALL[$formType]['emailTemplateTags'] ?? [];
 
 		if ($tags) {
-			return $this->getFormFieldNames($tags);
+			return $this->getFormFieldNames(\array_keys($tags));
 		}
 
 		return '';
@@ -616,6 +616,21 @@ trait SettingsHelper
 		];
 
 		return $output[$key] ?? '';
+	}
+
+	/**
+	 * Settings output data mapped integration missing fields.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function settingDataMappedIntegrationMissingFields(): array
+	{
+		return [
+			'component' => 'intro',
+			'introSubtitle' => \__("Your form is missing form fields, please edit your form before making integration connection!", 'eightshift-forms'),
+			'introIsHighlighted' => true,
+			'introIsHighlightedImportant' => true,
+		];
 	}
 
 	/**

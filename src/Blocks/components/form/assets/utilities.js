@@ -1,5 +1,5 @@
 import { State } from './state';
-import { StateEnum, prefix, setStateWindow } from './state/init';
+import { StateEnum, prefix, setStateWindow, setStateValues } from './state/init';
 
 /**
  * Main Utilities class.
@@ -756,6 +756,18 @@ export class Utils {
 		});
 	}
 
+	setSelectValue(formId, name, value) {
+		const input = this.state.getStateElementInput(name, formId);
+		const choices = this.state.getStateElementCustom(name, formId);
+
+		choices?.setChoiceByValue(value);
+		setStateValues(input, formId);
+
+		if (!value) {
+			this.setFieldFilledState(formId, name);
+		}
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////
@@ -800,7 +812,6 @@ export class Utils {
 			outputErrors: (formId, data) => {
 				this.outputErrors(formId, data);
 			},
-
 			unsetGlobalMsg: (formId) => {
 				this.unsetGlobalMsg(formId);
 			},
@@ -854,6 +865,9 @@ export class Utils {
 			},
 			removeFormsWithMissingFormsBlock: () => {
 				this.removeFormsWithMissingFormsBlock();
+			},
+			setSelectValue: (formId, name, value) => {
+				this.setSelectValue(formId, name, value);
 			},
 		};
 	}

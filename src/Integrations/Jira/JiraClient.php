@@ -169,14 +169,15 @@ class JiraClient implements JiraClientInterface
 	}
 
 	/**
-	 * API request to post issue.
+	 * API request to post application.
 	 *
 	 * @param array<string, mixed> $params Params array.
+	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postIssue(array $params, string $formId): array
+	public function postApplication(array $params, array $files, string $formId): array
 	{
 		$url = $this->getBaseUrl() . "issue";
 

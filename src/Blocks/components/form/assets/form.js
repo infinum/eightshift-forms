@@ -707,6 +707,11 @@ export class Form {
 					disabled,
 				} = groupInnerItem;
 
+				// Skip select search field.
+				if (name === 'search_terms') {
+					continue;
+				}
+
 				if (disabled) {
 					continue;
 				}
@@ -1019,6 +1024,7 @@ export class Form {
 		let input = this.state.getStateElementInput(name, formId);
 		const type = this.state.getStateElementType(name, formId);
 		const typeInternal = this.state.getStateElementTypeCustom(name, formId);
+		const useClearable = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_CLEARABLE, formId);
 
 		 if (type === 'tel') {
 			 input = this.state.getStateElementInputSelect(name, formId);
@@ -1054,6 +1060,14 @@ export class Form {
 				},
 				callbackOnCreateTemplates: function() {
 					return {
+						containerInner: ({classNames: {containerInner}}) => {
+							const clearableOutput = useClearable ? `<div class="choices__clearable ${state.getStateSelectorsSelectClearable().substring(1)}"></div>` : '';
+
+							return Object.assign(document.createElement('div'), {
+								className: containerInner,
+								innerHTML: clearableOutput,
+							});
+						},
 						// Fake select option.
 						option: (...args) => {
 							const element = Choices.default.defaults.templates.option.call(this, ...args);
@@ -1101,13 +1115,24 @@ export class Form {
 				},
 			});
 
+			if (useClearable) {
+				const clearableElement = choices?.containerInner?.element?.querySelector(state.getStateSelectorsSelectClearable());
+
+				if (clearableElement) {
+					clearableElement?.addEventListener('click', (event) => {
+						event.preventDefault();
+						this.utils.setSelectValue(formId, name, '');
+					});
+				}
+			}
+
 			// Detect if we have country cookie and set value to the select.
 			// This is here because of caching and we need to set the value after the select is loaded.
 			const countryCookie = cookies?.getCookie('esForms-country')?.toLocaleLowerCase();
 			if (countryCookie) {
 				const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, choices);
 				if (selectValue) {
-					choices?.setChoiceByValue(selectValue);
+					this.utils.setSelectValue(formId, name, selectValue);
 				}
 			}
 

@@ -1,19 +1,19 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Jira
+ * The class register route for public form submiting endpoint - Pipedrive
  *
- * @package EightshiftForms\Rest\Route\Integrations\Jira
+ * @package EightshiftForms\Rest\Route\Integrations\Pipedrive
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\Integrations\Jira;
+namespace EightshiftForms\Rest\Routes\Integrations\Pipedrive;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Integrations\Jira\JiraClientInterface;
-use EightshiftForms\Integrations\Jira\SettingsJira;
+use EightshiftForms\Integrations\Pipedrive\PipedriveClientInterface;
+use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -24,14 +24,14 @@ use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
- * Class FormSubmitJiraRoute
+ * Class FormSubmitPipedriveRoute
  */
-class FormSubmitJiraRoute extends AbstractFormSubmit
+class FormSubmitPipedriveRoute extends AbstractFormSubmit
 {
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = SettingsJira::SETTINGS_TYPE_KEY;
+	public const ROUTE_SLUG = SettingsPipedrive::SETTINGS_TYPE_KEY;
 
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -55,11 +55,11 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	protected $labels;
 
 	/**
-	 * Instance variable for Jira data.
+	 * Instance variable for Pipedrive data.
 	 *
-	 * @var JiraClientInterface
+	 * @var PipedriveClientInterface
 	 */
-	protected $jiraClient;
+	protected $pipedriveClient;
 
 	/**
 	 * Instance variable of FormSubmitMailerInterface data.
@@ -88,7 +88,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param JiraClientInterface $jiraClient Inject Jira which holds Jira connect data.
+	 * @param PipedriveClientInterface $pipedriveClient Inject Pipedrive which holds Pipedrive connect data.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
@@ -97,7 +97,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
-		JiraClientInterface $jiraClient,
+		PipedriveClientInterface $pipedriveClient,
 		FormSubmitMailerInterface $formSubmitMailer,
 		CaptchaInterface $captcha,
 		SecurityInterface $security
@@ -105,7 +105,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
-		$this->jiraClient = $jiraClient;
+		$this->pipedriveClient = $pipedriveClient;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->captcha = $captcha;
 		$this->security = $security;
@@ -183,17 +183,18 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 
 		$formId = $formDataReference['formId'];
 		$params = $formDataReference['params'];
+		$files = $formDataReference['files'];
 
 		// Send application to Hubspot.
-		$response = $this->jiraClient->postApplication(
+		$response = $this->pipedriveClient->postApplication(
 			$params,
-			[],
+			$files,
 			$formId
 		);
 
 		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
 
-		// There is no need to utput integrations validation issues because Jira doesn't control the form.
+		// There is no need to utput integrations validation issues because Pipedrive doesn't control the form.
 
 		// Skip fallback email if integration is disabled.
 		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
@@ -239,25 +240,15 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 */
 	private function getEmailResponseTags(array $response): array
 	{
-		$body = $response['body'] ?? [];
+		$body = $response['body']['data'] ?? [];
 		$output = [];
 
 		if (!$body) {
 			return $output;
 		}
 
-		foreach (Filters::ALL[SettingsJira::SETTINGS_TYPE_KEY]['emailTemplateTags'] as $key => $value) {
-			$item = $body[$value] ?? '';
-
-			if ($key === 'jiraIssueUrl') {
-				$jiraKey = $body['key'] ?? '';
-
-				if ($jiraKey) {
-					$output[$key] = $this->jiraClient->getBaseUrlOutputPrefix() . "browse/{$jiraKey}/";
-				}
-			} else {
-				$output[$key] = $item;
-			}
+		foreach (Filters::ALL[SettingsPipedrive::SETTINGS_TYPE_KEY]['emailTemplateTags'] as $key => $value) {
+			$output[$key] = $body[$value] ?? '';
 		}
 
 		return $output;

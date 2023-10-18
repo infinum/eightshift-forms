@@ -406,10 +406,10 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		$response = \curl_exec($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
-		$statusCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
+		$code = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
-		if ($statusCode === 200) {
+		if ($code >= 200 && $code <= 299) {
 			$response = \json_decode((string) $response, true);
 
 			return $response['objects'][0]['url'] ?? '';

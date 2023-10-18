@@ -34,6 +34,7 @@ $countryTypeCustom = Components::checkAttr('countryTypeCustom', $attributes, $ma
 $countryFieldAttrs = Components::checkAttr('countryFieldAttrs', $attributes, $manifest);
 $countryPlaceholder = Components::checkAttr('countryPlaceholder', $attributes, $manifest);
 $countryUseLabelAsPlaceholder = Components::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
+$countryIsClearable = Components::checkAttr('countryIsClearable', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $countryHideLabel = false;
@@ -47,6 +48,10 @@ $countryClass = Components::classnames([
 
 if ($countryUseSearch) {
 	$countryAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($countryUseSearch);
+}
+
+if ($countryIsClearable) {
+	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectIsClearable']] = esc_attr($countryIsClearable);
 }
 
 if ($countryUseLabelAsPlaceholder) {
