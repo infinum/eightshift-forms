@@ -319,7 +319,7 @@ echo Components::render('layout', [
 			'containerContent' => Components::render('highlighted-content', [
 				'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
 				'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="es-submit es-submit--outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
-				'highlightedContentIcon' => $isTrashPage ? 'emptyStateTrash' : 'emptyStateFormList',
+				'highlightedContentIcon' => 'docsFormList',
 			]),
 		]),
 	]),
