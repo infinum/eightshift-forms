@@ -94,7 +94,7 @@ class Forms extends AbstractPostType
 			'public' => true,
 			'menu_position' => static::MENU_POSITION,
 			'menu_icon' => static::MENU_ICON,
-			'supports' => ['title', 'editor', 'revision'],
+			'supports' => ['title', 'editor', 'revisions'],
 			'has_archive' => false,
 			'show_in_rest' => true,
 			'publicly_queryable' => false,

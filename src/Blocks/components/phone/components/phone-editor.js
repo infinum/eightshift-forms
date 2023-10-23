@@ -46,7 +46,7 @@ export const PhoneEditor = (attributes) => {
 
 	const phone = (
 		<>
-			<select className={selectClass}></select>
+			<select className={selectClass} />
 			<input
 				className={phoneClass}
 				value={phoneValue}

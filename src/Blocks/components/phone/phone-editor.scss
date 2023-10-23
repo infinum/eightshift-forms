@@ -1,5 +1,5 @@
 @import './phone-style.scss';
 
 input.es-phone {
-	@include input-styles-disabled;
+	@include input-styles-editor;
 }

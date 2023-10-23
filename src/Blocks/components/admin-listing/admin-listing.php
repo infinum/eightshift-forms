@@ -17,6 +17,7 @@ $manifestUtils = Components::getComponent('utils');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
+$componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
 $componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
@@ -302,14 +303,25 @@ if ($adminListingPageTitle || $adminListingSubTitle) {
 echo Components::render('layout', [
 	'layoutType' => 'layout-v-stack-card-fullwidth',
 	'layoutContent' => Components::ensureString([
-		...$topBar,
-		empty($formCardsToDisplay)
-			? Components::render('highlighted-content', [
-				'highlightedContentTitle' => $isTrashPage ? __('Trash is empty', 'eightshift-forms') : __('No forms', 'eightshift-forms'),
-				'highlightedContentSubtitle' => $isTrashPage ? '' : '<br /><a class="es-submit es-submit--outline" href="' . $adminListingNewFormLink . '">Add form<a/>',
+		Components::render('container', [
+			'containerContent' => Components::ensureString([
+				...$topBar,
+				empty($formCardsToDisplay)
+				? Components::render('highlighted-content', [
+					'highlightedContentTitle' => $isTrashPage ? __('Trash is empty', 'eightshift-forms') : __('No forms', 'eightshift-forms'),
+					'highlightedContentSubtitle' => $isTrashPage ? '' : '<br /><a class="es-submit es-submit--outline" href="' . $adminListingNewFormLink . '">' . __('Add your first form', 'eightshift-forms') . '</a>',
+					'highlightedContentIcon' => $isTrashPage ? 'emptyStateTrash' : 'emptyStateFormList',
+				])
+				: Components::ensureString($formCardsToDisplay),
+			]),
+		]),
+		Components::render('container', [
+			'containerContent' => Components::render('highlighted-content', [
+				'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
+				'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="es-submit es-submit--outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
 				'highlightedContentIcon' => $isTrashPage ? 'emptyStateTrash' : 'emptyStateFormList',
-			])
-			: Components::ensureString($formCardsToDisplay),
+			]),
+		]),
 	]),
 	'additionalClass' => "{$componentJsBulkClass}-items",
 	'additionalAttributes' => [

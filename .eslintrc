@@ -1,3 +1,8 @@
 {
-	"extends": "./node_modules/@eightshift/frontend-libs/linters/eslint.config.js"
+	"extends": "./node_modules/@eightshift/frontend-libs/linters/eslint.config.js",
+	"rules": {
+		"max-len": 0,
+		// "padding-line-between-statements": 0,
+		// "react/self-closing-comp": 0
+	}
 }

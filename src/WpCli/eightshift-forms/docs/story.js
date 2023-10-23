@@ -12,5 +12,5 @@ export default {
 };
 
 export const block = () => (
-	<div></div>
+	<div />
 );
