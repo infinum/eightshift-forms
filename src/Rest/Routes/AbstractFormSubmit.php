@@ -112,10 +112,13 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					}
 
 					$uploadFile = $this->uploadFile($formDataReference['filesUpload']);
+					$uploadError = $uploadFile['errorOutput'] ?? '';
 					$uploadFileId = $formDataReference['filesUpload']['id'] ?? '';
 
+					// Upload files to temp folder.
+					$formDataReference['filesUpload'] = $uploadFile;
 
-					if (!$uploadFile) {
+					if ($uploadError) {
 						throw new UnverifiedRequestException(
 							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
 							[
@@ -123,9 +126,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							]
 						);
 					}
-
-					// Upload files to temp folder.
-					$formDataReference['filesUpload'] = $uploadFile;
 					break;
 				case self::ROUTE_TYPE_SETTINGS:
 					// Validate params.

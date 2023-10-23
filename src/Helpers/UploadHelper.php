@@ -26,36 +26,72 @@ trait UploadHelper
 	 */
 	protected function uploadFile(array $file): array
 	{
+		$output = $file;
+
 		if (!$file) {
-			return [];
+			return \array_merge(
+				$output,
+				[
+					'errorOutput' => 'fileUploadNoFileProvided',
+				]
+			);
 		}
 
 		$fieldName = $file['fieldName'] ?? '';
 
 		if (!$fieldName) {
-			return [];
+			return \array_merge(
+				$output,
+				[
+					'errorOutput' => 'fileUploadNoNameProvided',
+				]
+			);
 		}
 
 		$fileId = $file['id'] ?? '';
 
 		if (!$fileId) {
-			return [];
+			return \array_merge(
+				$output,
+				[
+					'errorOutput' => 'fileUploadNoIdProvided',
+				]
+			);
 		}
 
 		$folderPath = $this->getUploadFolerPath();
 		if (!$folderPath) {
-			return [];
+			return \array_merge(
+				$output,
+				[
+					'errorOutput' => 'fileUploadFolderUploadPathMissing',
+				]
+			);
 		}
 
 		if (!\is_dir($folderPath)) {
-			\mkdir($folderPath);
+			$newFolder = \mkdir($folderPath);
+
+			if (!$newFolder) {
+				return \array_merge(
+					$output,
+					[
+						'errorOutput' => 'fileUploadUnableToCreateFolder',
+					]
+				);
+			}
 		}
 
 		$error = $file['error'] ?? '';
 
 		// If file is faulty return error.
 		if ($error !== \UPLOAD_ERR_OK) {
-			return [];
+			return \array_merge(
+				$output,
+				[
+					'errorOutput' => 'fileUploadFailtyFile',
+				]
+			);
 		}
 
 		// Create hashed file name so there is no collision.
@@ -67,16 +103,22 @@ trait UploadHelper
 		$finalFilePath = "{$folderPath}{$name}";
 
 		// Move the file to new location.
-		$output = \move_uploaded_file($file['tmp_name'], $finalFilePath);
-		if (!$output) {
-			return [];
+		$move = \move_uploaded_file($file['tmp_name'], $finalFilePath);
+		if (!$move) {
+			return \array_merge(
+				$output,
+				[
+					'errorOutput' => 'fileUploadUnableToMoveFile',
+				]
+			);
 		}
 
 		return \array_merge(
-			$file,
+			$output,
 			[
 				'path' => $finalFilePath,
 				'ext' => $ext,
+				'errorOutput' => '',
 			]
 		);
 	}
