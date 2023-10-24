@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
@@ -22,11 +21,6 @@ use EightshiftForms\Settings\SettingsHelper;
  */
 class FormSubmitMailer implements FormSubmitMailerInterface
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
 	/**
 	 * Use general helper trait.
 	 */

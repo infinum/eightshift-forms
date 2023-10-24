@@ -14,6 +14,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
@@ -30,6 +31,11 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 class Validator extends AbstractValidation
 {
+	/**
+	 * Use trait Upload_Helper inside class.
+	 */
+	use UploadHelper;
+
 	/**
 	 * Use general helper trait.
 	 */
@@ -175,15 +181,23 @@ class Validator extends AbstractValidation
 			});
 
 			// Validate all files are uploaded to the server and not a external link.
+			$isFilesError = false;
 			if ($paramType === 'file') {
 				if (\is_array($inputValue)) {
 					// Check if single or multiple and output error.
 					if (!isset($reference['isMultiple']) && \count($inputValue) > 1) {
 						$output[$paramKey] = $this->getValidationLabel('validationFileMaxAmount', $formId);
+						$isFilesError = true;
 					}
 
 					// Check if wrong upload path.
-					foreach ($inputValue as $key => $value) {
+					foreach ($inputValue as $value) {
+						if ($this->isUploadError($value)) {
+							$output[$paramKey] = $this->getValidationLabel('validationFileNotLocated', $formId);
+							$isFilesError = true;
+							break;
+						}
+
 						// Expolode and remove empty files.
 						$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, $value));
 						if (!$fileName) {
@@ -199,6 +213,8 @@ class Validator extends AbstractValidation
 
 						// Output error if file is not uploaded to the correct path.
 						$output[$paramKey] = $this->getValidationLabel('validationFileWrongUploadPath', $formId);
+						$isFilesError = true;
+						break;
 					}
 				}
 			}
@@ -297,8 +313,8 @@ class Validator extends AbstractValidation
 						break;
 					case 'accept':
 						// Check every file and detect if it has correct extension.
-						if (\is_array($inputValue)) {
-							foreach ($inputValue as $key => $value) {
+						if (\is_array($inputValue) && $isFilesError === false) {
+							foreach ($inputValue as $value) {
 								if ($this->isFileTypeValid($value, $dataValue)) {
 									continue;
 								}

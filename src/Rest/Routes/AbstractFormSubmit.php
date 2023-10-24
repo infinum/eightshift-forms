@@ -118,7 +118,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					// Upload files to temp folder.
 					$formDataReference['filesUpload'] = $uploadFile;
 
-					if ($uploadError) {
+					if ($this->isUploadError($uploadError)) {
 						throw new UnverifiedRequestException(
 							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
 							[

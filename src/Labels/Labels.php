@@ -220,6 +220,7 @@ class Labels implements LabelsInterface
 			// translators: %s used for displaying file type value.
 			'validationAcceptMimeMultiple' => \__('One or more files seem to be corrupt or have invalid format. Only %s are allowed.', 'eightshift-forms'),
 			'validationFileWrongUploadPath' => \__('One or more files seem to be uploaded using an unauthorized method.', 'eightshift-forms'),
+			'validationFileNotLocated' => \__('It seems that one or more files were not uploaded to the server. Please remove the files and try again.', 'eightshift-forms'),
 			'validationFileUpload' => \__('There seems to be an error with the file upload. Please try again.', 'eightshift-forms'),
 			'validationFileMaxAmount' => \__('You can only upload a single file in this field. If you have multiple files, please remove them and try again.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.

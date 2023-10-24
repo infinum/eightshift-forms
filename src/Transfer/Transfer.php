@@ -165,7 +165,7 @@ class Transfer implements TransferInterface
 	{
 		$filePath = $this->getFilePath($upload);
 
-		if (!$filePath) {
+		if ($this->isUploadError($filePath)) {
 			return false;
 		}
 

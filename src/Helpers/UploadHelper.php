@@ -18,6 +18,36 @@ use EightshiftForms\Config\Config;
 trait UploadHelper
 {
 	/**
+	 * Detect if there is and error in the file upload.
+	 *
+	 * @param string $error String value, can be file path or error key.
+	 *
+	 * @return boolean
+	 */
+	protected function isUploadError(string $error): bool
+	{
+		$errors = [
+			// uploadFile() method errors.
+			'errorFileUploadNoFileProvided' => '',
+			'errorFileUploadNoNameProvided' => '',
+			'errorFileUploadNoIdProvided' => '',
+			'errorFileUploadFolderUploadPathMissing' => '',
+			'errorFileUploadUnableToCreateFolder' => '',
+			'errorFileUploadFailtyFile' => '',
+			'errorFileUploadUnableToMoveFile' => '',
+
+			// getFilePath() method errors.
+			'errorFilePathMissingUploadFolder' => '',
+			'errorFilePathMissingFile' => '',
+
+			// getUploadFolerPath() method errors.
+			'errorUploadFolderPathMissingWpContentDir' => '',
+		];
+
+		return isset($errors[$error]);
+	}
+
+	/**
 	 * Prepare all files and upload to uploads folder.
 	 *
 	 * @param array<string, mixed> $file File to prepare.
@@ -32,7 +62,7 @@ trait UploadHelper
 			return \array_merge(
 				$output,
 				[
-					'errorOutput' => 'fileUploadNoFileProvided',
+					'errorOutput' => 'errorFileUploadNoFileProvided',
 				]
 			);
 		}
@@ -43,7 +73,7 @@ trait UploadHelper
 			return \array_merge(
 				$output,
 				[
-					'errorOutput' => 'fileUploadNoNameProvided',
+					'errorOutput' => 'errorFileUploadNoNameProvided',
 				]
 			);
 		}
@@ -54,17 +84,17 @@ trait UploadHelper
 			return \array_merge(
 				$output,
 				[
-					'errorOutput' => 'fileUploadNoIdProvided',
+					'errorOutput' => 'errorFileUploadNoIdProvided',
 				]
 			);
 		}
 
 		$folderPath = $this->getUploadFolerPath();
-		if (!$folderPath) {
+		if ($this->isUploadError($folderPath)) {
 			return \array_merge(
 				$output,
 				[
-					'errorOutput' => 'fileUploadFolderUploadPathMissing',
+					'errorOutput' => 'errorFileUploadFolderUploadPathMissing',
 				]
 			);
 		}
@@ -76,7 +106,7 @@ trait UploadHelper
 				return \array_merge(
 					$output,
 					[
-						'errorOutput' => 'fileUploadUnableToCreateFolder',
+						'errorOutput' => 'errorFileUploadUnableToCreateFolder',
 					]
 				);
 			}
@@ -89,7 +119,7 @@ trait UploadHelper
 			return \array_merge(
 				$output,
 				[
-					'errorOutput' => 'fileUploadFailtyFile',
+					'errorOutput' => 'errorFileUploadFailtyFile',
 				]
 			);
 		}
@@ -108,7 +138,7 @@ trait UploadHelper
 			return \array_merge(
 				$output,
 				[
-					'errorOutput' => 'fileUploadUnableToMoveFile',
+					'errorOutput' => 'errorFileUploadUnableToMoveFile',
 				]
 			);
 		}
@@ -159,7 +189,7 @@ trait UploadHelper
 	protected function deleteUploadFolderContent(int $numberOfHours = 2): void
 	{
 		$folderPath = $this->getUploadFolerPath();
-		if (!$folderPath) {
+		if ($this->isUploadError($folderPath)) {
 			return;
 		}
 
@@ -194,14 +224,14 @@ trait UploadHelper
 	protected function getFilePath(string $name): string
 	{
 		$folderPath = $this->getUploadFolerPath();
-		if (!$folderPath) {
-			return '';
+		if ($this->isUploadError($folderPath)) {
+			return 'errorFilePathMissingUploadFolder';
 		}
 
 		$filePath = "{$folderPath}{$name}";
 
 		if (!\file_exists($filePath)) {
-			return '';
+			return 'errorFilePathMissingFile';
 		}
 
 		return $filePath;
@@ -263,7 +293,7 @@ trait UploadHelper
 	private function getUploadFolerPath(): string
 	{
 		if (!\defined('WP_CONTENT_DIR')) {
-			return '';
+			return 'errorUploadFolderPathMissingWpContentDir';
 		}
 
 		$sep = \DIRECTORY_SEPARATOR;

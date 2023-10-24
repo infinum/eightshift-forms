@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Mailer;
 use CURLFile;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -24,11 +23,6 @@ use Parsedown;
  */
 class Mailer implements MailerInterface
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
 	/**
 	 * Use general helper trait.
 	 */

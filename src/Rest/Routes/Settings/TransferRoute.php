@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
@@ -24,11 +23,6 @@ use WP_REST_Request;
  */
 class TransferRoute extends AbstractBaseRoute
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
 	/**
 	 * Use general helper trait.
 	 */

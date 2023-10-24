@@ -12,7 +12,7 @@ export class Locations {
 
 	init() {
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
-			element.addEventListener('click', this.onClick, true);
+			element.addEventListener('click', this.onClick, {once: true});
 		});
 	}
 
