@@ -147,14 +147,19 @@ export class Form {
 		// Set state initial data for form.
 		setStateFormInitial(formId);
 
-		// Init all form elements.
-		this.initOne(formId);
+		if (this.state.getStateFormIsConfigured(formId)) {
+			// Init all form elements.
+			this.initOne(formId);
 
-		// Init conditional tags.
-		this.conditionalTags.initOne(formId);
+			// Init conditional tags.
+			this.conditionalTags.initOne(formId);
 
-		// Init steps.
-		this.steps.initOne(formId);
+			// Init steps.
+			this.steps.initOne(formId);
+		} else {
+			this.utils.removeFormById(formId);
+		}
+
 	}
 
 	/**
