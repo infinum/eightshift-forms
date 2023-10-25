@@ -76,9 +76,6 @@ export class State {
 	getStateFormLoader = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.LOADER], formId);
 	};
-	getStateFormIsConfigured = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.ISCONFIGURED], formId);
-	};
 
 	setStateFormIsLoaded = (value, formId) => {
 		setState([StateEnum.FORM, StateEnum.ISLOADED], value, formId);

@@ -24,6 +24,7 @@ use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsWpml;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
@@ -902,5 +903,19 @@ class Helper
 	public static function cleanPageUrl(string $url): string
 	{
 		return \preg_replace('/\\?.*/', '', $url);
+	}
+
+	/**
+	 * Set and output data to output log using Query Monitor plugin.
+	 *
+	 * @param mixed $data Data to output.
+	 *
+	 * @return void
+	 */
+	public static function setQmLogsOutput($data = ''): void
+	{
+		if (\is_plugin_active('query-monitor/query-monitor.php') && \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_QM_LOG) && $data) {
+			\do_action('qm/debug', $data); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+		}
 	}
 }

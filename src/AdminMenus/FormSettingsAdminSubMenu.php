@@ -190,7 +190,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			return [];
 		}
 
-		$isDeveloperMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 		$formTitle = \get_the_title((int) $formId);
 

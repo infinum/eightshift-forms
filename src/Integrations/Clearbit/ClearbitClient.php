@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Rest\ApiHelper;
@@ -82,6 +83,8 @@ class ClearbitClient implements ClearbitClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {

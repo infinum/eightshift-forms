@@ -86,7 +86,7 @@ class JiraClient implements JiraClientInterface
 		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
 			$output = [];
 		}
 
@@ -137,7 +137,7 @@ class JiraClient implements JiraClientInterface
 		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
 			$output = [];
 		}
 
@@ -206,6 +206,8 @@ class JiraClient implements JiraClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -347,6 +349,8 @@ class JiraClient implements JiraClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			if ($this->isSelfHosted()) {
@@ -391,6 +395,8 @@ class JiraClient implements JiraClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			if ($this->isSelfHosted()) {
@@ -432,6 +438,8 @@ class JiraClient implements JiraClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {

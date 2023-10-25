@@ -71,7 +71,7 @@ class MailchimpClient implements MailchimpClientInterface
 		$output = \get_transient(self::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
 			$output = [];
 		}
 
@@ -218,6 +218,8 @@ class MailchimpClient implements MailchimpClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			return $this->getIntegrationApiSuccessOutput($details);
@@ -328,6 +330,8 @@ class MailchimpClient implements MailchimpClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			return $body['tags'] ?? [];
@@ -378,6 +382,8 @@ class MailchimpClient implements MailchimpClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -436,6 +442,8 @@ class MailchimpClient implements MailchimpClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {

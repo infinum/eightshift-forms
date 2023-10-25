@@ -112,7 +112,7 @@ class SettingsLocation implements SettingInterface, ServiceInterface, SettingsLo
 			return [];
 		}
 
-		$isDeveloperMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 		return \array_map(
 			function ($item) use ($isDeveloperMode) {
