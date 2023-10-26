@@ -207,7 +207,7 @@ trait ApiHelper
 			$output['data'] = $additional;
 		}
 
-		$isDeveloperMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 		if ($isDeveloperMode && $debug) {
 			$output['debug'] = $debug;
@@ -237,7 +237,7 @@ trait ApiHelper
 			$output['data'] = $additional;
 		}
 
-		$isDeveloperMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 		if ($isDeveloperMode && $debug) {
 			$output['debug'] = $debug;
@@ -267,7 +267,7 @@ trait ApiHelper
 			$output['data'] = $additional;
 		}
 
-		$isDeveloperMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 		if ($isDeveloperMode && $debug) {
 			$output['debug'] = $debug;

@@ -328,7 +328,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 
 		$output = [];
 
-		$isDeveloperMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 		while ($theQuery->have_posts()) {
 			$theQuery->the_post();

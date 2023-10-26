@@ -69,7 +69,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$output = \get_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
 			$output = [];
 		}
 
@@ -174,6 +174,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			return $this->getIntegrationApiSuccessOutput(
@@ -256,6 +258,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			return $this->getIntegrationApiSuccessOutput($details);
@@ -308,6 +312,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			return $this->getIntegrationApiSuccessOutput($details);
@@ -350,6 +356,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -413,6 +421,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -506,6 +516,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// Bailout if fields are missing.
 		if (!isset($body['form']['cfields'])) {
 			return [];
@@ -582,6 +594,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$details = $this->getTestApi();
 
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		if (!isset($body['forms'])) {
 			return [];

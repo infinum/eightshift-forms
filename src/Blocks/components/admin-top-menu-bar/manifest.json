@@ -1,0 +1,6 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "admin-top-menu-bar",
+	"title": "Admin Top Menu Bar",
+	"componentClass": "es-admin-top-menu-bar"
+}

@@ -230,7 +230,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 		);
-		$output['formResetOnSuccess'] = !$this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$output['formResetOnSuccess'] = !\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY);
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 		$output['formMisconfigured'] = \is_user_logged_in() ? \esc_html__('You form is missing forms block or it is missconfigured.', 'eightshift-forms') : '';
 
@@ -315,7 +315,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');
-		$output['isDeveloperMode'] =  $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$output['isDeveloperMode'] = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 		$output['isAdmin'] = true;
 
 		$output = \wp_json_encode($output);

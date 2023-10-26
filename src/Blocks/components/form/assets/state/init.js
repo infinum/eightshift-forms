@@ -13,7 +13,6 @@ export const prefix = 'esForms';
 export const StateEnum = {
 	// State names.
 	ISLOADED: 'isloaded',
-	ISCONFIGURED: 'isConfigured',
 	ELEMENTS: 'elements',
 	FORM: 'form',
 	FORMS: 'forms',
@@ -329,7 +328,6 @@ export function setStateFormInitial(formId) {
 
 	setState([StateEnum.FORM, StateEnum.POST_ID],formElement?.getAttribute(getStateAttribute('postId')), formId);
 	setState([StateEnum.FORM, StateEnum.ISLOADED], false, formId);
-	setState([StateEnum.FORM, StateEnum.ISCONFIGURED], true, formId);
 	setState([StateEnum.FORM, StateEnum.IS_SINGLE_SUBMIT], false, formId);
 	setState([StateEnum.FORM, StateEnum.ELEMENT], formElement, formId);
 	setState([StateEnum.FORM, StateEnum.TYPE], formElement?.getAttribute(getStateAttribute('formType')), formId);
@@ -370,10 +368,6 @@ export function setStateFormInitial(formId) {
 			type,
 			disabled,
 		} = item;
-
-		if (name in getState([StateEnum.ELEMENTS], formId) && getState([StateEnum.ELEMENTS], formId)?.[name]?.[StateEnum.TYPE] === type) {
-			setState([StateEnum.FORM, StateEnum.ISCONFIGURED], false, formId);
-		}
 
 		if (name === 'search_terms') {
 			continue;

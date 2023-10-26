@@ -80,17 +80,23 @@ class FormAdminBarMenu implements ServiceInterface
 		}
 
 		$prefix = FormAdminMenu::ADMIN_MENU_SLUG;
-		$isDevelopMode = $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY);
+		$isDevelopMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
+		$isDevelopModeQmLog = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_QM_LOG);
 
 		$version = Config::getProjectVersion();
+
+		$mainLabel = \esc_html__('Eightshift Forms', 'eightshift-forms');
 
 		$adminBar->add_menu(
 			[
 				'id' => $prefix,
 				'parent' => null,
-				'group'  => null,
-				'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
-				'href'  => Helper::getListingPageUrl(),
+				'group' => null,
+				'title' => ($isDevelopMode || $isDevelopModeQmLog) ? $mainLabel . Helper::getProjectIcons('warning') : $mainLabel,
+				'href' => Helper::getListingPageUrl(),
+				'meta' => [
+					'title' => ($isDevelopMode || $isDevelopModeQmLog) ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
+				]
 			],
 		);
 
@@ -100,7 +106,7 @@ class FormAdminBarMenu implements ServiceInterface
 				'id' => $listingPrefix,
 				'parent' => $prefix,
 				'title' => \esc_html__('View all forms', 'eightshift-forms'),
-				'href'  => Helper::getListingPageUrl(),
+				'href' => Helper::getListingPageUrl(),
 			],
 		);
 
@@ -128,7 +134,7 @@ class FormAdminBarMenu implements ServiceInterface
 						'id' => "{$listingPrefix}-{$id}",
 						'parent' => $listingPrefix,
 						'title' => $title,
-						'href'  => $url,
+						'href' => $url,
 					],
 				);
 
@@ -137,7 +143,7 @@ class FormAdminBarMenu implements ServiceInterface
 						'id' => "{$listingPrefix}-{$id}-edit",
 						'parent' => $link,
 						'title' => \esc_html__('Edit form', 'eightshift-forms'),
-						'href'  => $url,
+						'href' => $url,
 					],
 				);
 				$adminBar->add_menu(
@@ -145,7 +151,7 @@ class FormAdminBarMenu implements ServiceInterface
 						'id' => "{$listingPrefix}-{$id}-settings",
 						'parent' => $link,
 						'title' => \esc_html__('Settings', 'eightshift-forms'),
-						'href'  => $item['settingsLink'] ?? null,
+						'href' => $item['settingsLink'] ?? null,
 					],
 				);
 				$adminBar->add_menu(
@@ -153,7 +159,7 @@ class FormAdminBarMenu implements ServiceInterface
 						'id' => "{$listingPrefix}-{$id}-locations",
 						'parent' => $link,
 						'title' => \esc_html__('Locations', 'eightshift-forms'),
-						'href'  => $item['settingsLocationLink'] ?? null,
+						'href' => $item['settingsLocationLink'] ?? null,
 					],
 				);
 			}
@@ -164,7 +170,7 @@ class FormAdminBarMenu implements ServiceInterface
 				'id' => "{$prefix}-new-form",
 				'parent' => $prefix,
 				'title' => \esc_html__('Add new form', 'eightshift-forms'),
-				'href'  => Helper::getNewFormPageUrl(),
+				'href' => Helper::getNewFormPageUrl(),
 			],
 		);
 
@@ -174,7 +180,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'id' => "{$prefix}-global-settings",
 					'parent' => $prefix,
 					'title' => \esc_html__('Global settings', 'eightshift-forms'),
-					'href'  => Helper::getSettingsGlobalPageUrl(),
+					'href' => Helper::getSettingsGlobalPageUrl(),
 				],
 			);
 
@@ -184,7 +190,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'id' => $troubleshootingPrefix,
 					'parent' => $prefix,
 					'title' => \esc_html__('Troubleshooting', 'eightshift-forms'),
-					'href'  => null,
+					'href' => null,
 				],
 			);
 
@@ -193,7 +199,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'id' => "{$troubleshootingPrefix}-cache",
 					'parent' => $troubleshootingPrefix,
 					'title' => \esc_html__('Clear cache', 'eightshift-forms'),
-					'href'  => Helper::getSettingsGlobalPageUrl(SettingsCache::SETTINGS_TYPE_KEY),
+					'href' => Helper::getSettingsGlobalPageUrl(SettingsCache::SETTINGS_TYPE_KEY),
 				],
 			);
 
@@ -202,7 +208,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'id' => "{$troubleshootingPrefix}-debug",
 					'parent' => $troubleshootingPrefix,
 					'title' => \esc_html__('Debug', 'eightshift-forms'),
-					'href'  => Helper::getSettingsGlobalPageUrl(SettingsDebug::SETTINGS_TYPE_KEY),
+					'href' => Helper::getSettingsGlobalPageUrl(SettingsDebug::SETTINGS_TYPE_KEY),
 				],
 			);
 
@@ -212,7 +218,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'parent' => $troubleshootingPrefix,
 					// Translators: %s is the plugin version number.
 					'title' => \sprintf(\esc_html__('Version: %s', 'eightshift-forms'), \esc_html($version)),
-					'href'  => null,
+					'href' => null,
 				],
 			);
 		}

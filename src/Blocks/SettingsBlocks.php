@@ -352,7 +352,7 @@ class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
 		$output = \get_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
 			$output = [];
 		}
 

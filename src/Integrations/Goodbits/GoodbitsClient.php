@@ -153,6 +153,8 @@ class GoodbitsClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			return $this->getIntegrationApiSuccessOutput($details);

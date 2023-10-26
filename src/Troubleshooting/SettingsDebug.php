@@ -35,6 +35,11 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_debug';
 
 	/**
+	 * Filter settings is debug active key.
+	 */
+	public const FILTER_SETTINGS_IS_DEBUG_ACTIVE = 'es_forms_settings_is_debug_active';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'debug';
@@ -55,6 +60,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	public const SETTINGS_DEBUG_DEVELOPER_MODE_KEY = 'developer-mode';
 	public const SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY = 'skip-forms-sync';
 	public const SETTINGS_DEBUG_SKIP_CACHE_KEY = 'skip-cache';
+	public const SETTINGS_DEBUG_QM_LOG = 'skip-qm-log';
 
 	/**
 	 * Register all the hooks
@@ -65,6 +71,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_IS_DEBUG_ACTIVE, [$this, 'isDebugActive']);
 	}
 
 	/**
@@ -202,10 +209,39 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxSingleSubmit' => true,
 								'checkboxHelp' => \__('Prevents storing integration data to the temporary internal cache to optimize load time and API calls. Turning on this option can cause many API calls in a short time, which may cause a temporary ban from the external integration service. Use with caution.', 'eightshift-forms'),
 							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
+							],
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Output Query Monitor log', 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_QM_LOG, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_QM_LOG,
+								'checkboxAsToggle' => true,
+								'checkboxSingleSubmit' => true,
+								'checkboxHelp' => \__('You can preview the output logs for internal API responses not handled by JavaScript. To use this feature, the Query Monitor plugin must be installed and active in your project.', 'eightshift-forms'),
+							],
 						]
 					],
 				],
 			],
 		];
+	}
+
+	/**
+	 * Determine if settings global is valid and debug item is active.
+	 *
+	 * @param string $settingKey Setting key to check.
+	 *
+	 * @return boolean
+	 */
+	public function isDebugActive(string $settingKey): bool
+	{
+		if (!$this->isSettingsGlobalValid()) {
+			return false;
+		}
+
+		return $this->isOptionCheckboxChecked($settingKey, self::SETTINGS_DEBUG_DEBUGGING_KEY);
 	}
 }

@@ -757,19 +757,6 @@ export class Utils {
 	}
 
 	/**
-	 * Remove form by Id.
-	 *
-	 * @returns {void}
-	 */
-	removeFormById(formId) {
-		const form = this.state.getStateFormElement(formId);
-
-		if (form) {
-			form.innerHTML = this.state.getStateSettingsFormMisconfiguredMsg();
-		}
-	}
-
-	/**
 	 * Set select value.
 	 * 
 	 * @param {string} formId Form Id.
@@ -887,9 +874,6 @@ export class Utils {
 			},
 			removeFormsWithMissingFormsBlock: () => {
 				this.removeFormsWithMissingFormsBlock();
-			},
-			removeFormById: (formId) => {
-				this.removeFormById(formId);
 			},
 			setSelectValue: (formId, name, value) => {
 				this.setSelectValue(formId, name, value);

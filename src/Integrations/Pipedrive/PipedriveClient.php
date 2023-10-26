@@ -93,7 +93,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = \get_transient(self::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
 			$output = [];
 		}
 
@@ -164,7 +164,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = \get_transient(self::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
 			$output = [];
 		}
 
@@ -432,6 +432,8 @@ class PipedriveClient implements PipedriveClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
+		Helper::setQmLogsOutput($details);
+
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
 			return $body['data'] ?? [];
@@ -464,6 +466,8 @@ class PipedriveClient implements PipedriveClientInterface
 
 		$code = $details['code'];
 		$body = $details['body'];
+
+		Helper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {

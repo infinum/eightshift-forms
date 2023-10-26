@@ -269,7 +269,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			'adminListingType' => $status,
 			'adminListingListingLink' => $listingLink,
 			'adminListingIntegrations' => $filter,
-			'adminListingIsDeveloperMode' => $this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY),
+			'adminListingIsDeveloperMode' => \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY),
 		];
 	}
 }

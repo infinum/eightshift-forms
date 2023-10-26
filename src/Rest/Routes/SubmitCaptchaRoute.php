@@ -100,7 +100,7 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 		];
 
 		// Bailout if troubleshooting skip captcha is on.
-		if ($this->isOptionCheckboxChecked(SettingsDebug::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY)) {
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY)) {
 			return \rest_ensure_response(
 				$this->getApiSuccessOutput(
 					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
