@@ -220,7 +220,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxValue' => self::SETTINGS_DEBUG_QM_LOG,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('You can preview the output logs for internal API responses not handled by JavaScript. To use this feature, the Query Monitor plugin must be active on your project.', 'eightshift-forms'),
+								'checkboxHelp' => \__('You can preview the output logs for internal API responses not handled by JavaScript. To use this feature, the Query Monitor plugin must be installed and active in your project.', 'eightshift-forms'),
 							],
 						]
 					],

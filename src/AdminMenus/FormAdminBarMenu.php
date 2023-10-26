@@ -95,7 +95,7 @@ class FormAdminBarMenu implements ServiceInterface
 				'title' => ($isDevelopMode || $isDevelopModeQmLog) ? $mainLabel . Helper::getProjectIcons('warning') : $mainLabel,
 				'href' => Helper::getListingPageUrl(),
 				'meta' => [
-					'title' => ($isDevelopMode || $isDevelopModeQmLog) ? \esc_html__('Your Debug tools are active!', 'eightshift-forms') : $mainLabel,
+					'title' => ($isDevelopMode || $isDevelopModeQmLog) ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
 				]
 			],
 		);
