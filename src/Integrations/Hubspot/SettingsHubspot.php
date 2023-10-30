@@ -147,7 +147,7 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyHubspot()) ? Variables::getApiKeyHubspot() : $this->getOptionValue(SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -197,7 +197,6 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyHubspot();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY);
 
@@ -234,12 +233,17 @@ class SettingsHubspot implements SettingInterface, SettingGlobalInterface, Servi
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_HUBSPOT_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyHubspot(),
+										self::SETTINGS_HUBSPOT_API_KEY_KEY,
+										'ES_API_KEY_HUBSPOT'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_HUBSPOT_API_KEY_KEY),
-									'ES_API_KEY_HUBSPOT',
-									!empty($apiKey)
 								),
 								[
 									'component' => 'divider',

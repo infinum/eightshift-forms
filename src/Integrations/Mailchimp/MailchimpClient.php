@@ -554,8 +554,6 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyMailchimp();
-
-		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailchimp(), SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY)['value'];
 	}
 }

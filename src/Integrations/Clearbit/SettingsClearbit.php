@@ -133,7 +133,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyClearbit()) ? Variables::getApiKeyClearbit() : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -154,8 +154,6 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyClearbit();
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -166,11 +164,12 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							$this->getSettingsPasswordFieldWithGlobalVariable(
-								$this->getOptionName(self::SETTINGS_CLEARBIT_API_KEY_KEY),
+								$this->getSettingsDisabledOutputWithDebugFilter(
+									Variables::getApiKeyClearbit(),
+									self::SETTINGS_CLEARBIT_API_KEY_KEY,
+									'ES_API_KEY_CLEARBIT'
+								),
 								\__('API key', 'eightshift-forms'),
-								!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_CLEARBIT_API_KEY_KEY),
-								'ES_API_KEY_CLEARBIT',
-								!empty($apiKey)
 							),
 						],
 					],

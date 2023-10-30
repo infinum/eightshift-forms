@@ -92,7 +92,7 @@ class SettingsMailerlite implements SettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_MAILERLITE_USE_KEY, self::SETTINGS_MAILERLITE_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyMailerlite()) ? Variables::getApiKeyMailerlite() : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailerlite(), self::SETTINGS_MAILERLITE_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -113,7 +113,6 @@ class SettingsMailerlite implements SettingGlobalInterface, ServiceInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyMailerlite();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, self::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY);
 
@@ -150,12 +149,17 @@ class SettingsMailerlite implements SettingGlobalInterface, ServiceInterface
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_MAILERLITE_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyMailerlite(),
+										self::SETTINGS_MAILERLITE_API_KEY_KEY,
+										'ES_API_KEY_MAILERLITE'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILERLITE_API_KEY_KEY),
-									'ES_API_KEY_MAILERLITE',
-									!empty($apiKey)
 								),
 								[
 									'component' => 'divider',

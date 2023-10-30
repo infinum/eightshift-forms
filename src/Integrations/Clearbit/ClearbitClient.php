@@ -339,8 +339,6 @@ class ClearbitClient implements ClearbitClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyClearbit();
-
-		return $apiKey ? $apiKey : $this->getOptionValue(SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
 	}
 }

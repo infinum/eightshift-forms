@@ -538,7 +538,7 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyPipedrive()) ? Variables::getApiKeyPipedrive() : $this->getOptionValue(self::SETTINGS_PIPEDRIVE_API_KEY_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), self::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -558,8 +558,6 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 		if (!$this->isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY)) {
 			return $this->getSettingOutputNoActiveFeature();
 		}
-
-		$apiKey = Variables::getApiKeyPipedrive();
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY);
@@ -597,12 +595,17 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_PIPEDRIVE_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyPipedrive(),
+										self::SETTINGS_PIPEDRIVE_API_KEY_KEY,
+										'ES_API_KEY_PIPEDRIVE'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_PIPEDRIVE_API_KEY_KEY),
-									'ES_API_KEY_PIPEDRIVE',
-									!empty($apiKey)
 								),
 								[
 									'component' => 'divider',

@@ -806,9 +806,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyJira();
-
-		return $apiKey ? $apiKey : $this->getOptionValue(SettingsJira::SETTINGS_JIRA_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyJira(), SettingsJira::SETTINGS_JIRA_API_KEY_KEY)['value'];
 	}
 
 	/**
@@ -818,9 +816,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiBoard(): string
 	{
-		$apiBoard = Variables::getApiBoardJira();
-
-		return $apiBoard ? $apiBoard : $this->getOptionValue(SettingsJira::SETTINGS_JIRA_API_BOARD_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiBoardJira(), SettingsJira::SETTINGS_JIRA_API_BOARD_KEY)['value'];
 	}
 
 	/**
@@ -830,8 +826,6 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiUser(): string
 	{
-		$apiUser = Variables::getApiUserJira();
-
-		return $apiUser ? $apiUser : $this->getOptionValue(SettingsJira::SETTINGS_JIRA_API_USER_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiUserJira(), SettingsJira::SETTINGS_JIRA_API_USER_KEY)['value'];
 	}
 }

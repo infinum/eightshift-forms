@@ -681,8 +681,6 @@ class PipedriveClient implements PipedriveClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyPipedrive();
-
-		return $apiKey ? $apiKey : $this->getOptionValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
 	}
 }

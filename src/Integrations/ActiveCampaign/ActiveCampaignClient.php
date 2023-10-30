@@ -689,9 +689,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyActiveCampaign();
-
-		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY)['value'];
 	}
 
 	/**
@@ -701,8 +699,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getApiUrl(): string
 	{
-		$apiUrl = Variables::getApiUrlActiveCampaign();
-
-		return !empty($apiUrl) ? $apiUrl : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY)['value'];
 	}
 }

@@ -376,8 +376,6 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyMailerlite();
-
-		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailerlite(), SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY)['value'];
 	}
 }

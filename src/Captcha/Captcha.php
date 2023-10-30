@@ -117,9 +117,9 @@ class Captcha implements CaptchaInterface
 	 */
 	private function onEnterprise(string $token, string $action)
 	{
-		$siteKey = !empty(Variables::getGoogleReCaptchaSiteKey()) ? Variables::getGoogleReCaptchaSiteKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
-		$apiKey = !empty(Variables::getGoogleReCaptchaApiKey()) ? Variables::getGoogleReCaptchaApiKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
-		$projectIdKey = !empty(Variables::getGoogleReCaptchaProjectIdKey()) ? Variables::getGoogleReCaptchaProjectIdKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
+		$siteKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'];
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY)['value'];
+		$projectIdKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY)['value'];
 
 		return \wp_remote_post(
 			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
@@ -148,7 +148,7 @@ class Captcha implements CaptchaInterface
 	 */
 	private function onFree(string $token)
 	{
-		$secretKey = !empty(Variables::getGoogleReCaptchaSecretKey()) ? Variables::getGoogleReCaptchaSecretKey() : $this->getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
+		$secretKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY)['value'];
 
 		return \wp_remote_post(
 			"https://www.google.com/recaptcha/api/siteverify",

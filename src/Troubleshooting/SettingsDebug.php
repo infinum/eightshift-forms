@@ -61,6 +61,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	public const SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY = 'skip-forms-sync';
 	public const SETTINGS_DEBUG_SKIP_CACHE_KEY = 'skip-cache';
 	public const SETTINGS_DEBUG_QM_LOG = 'skip-qm-log';
+	public const SETTINGS_DEBUG_FORCE_DISABLED_FIELDS = 'skip-force-disabled-fields';
 
 	/**
 	 * Register all the hooks
@@ -221,6 +222,19 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
 								'checkboxHelp' => \__('You can preview the output logs for internal API responses not handled by JavaScript. To use this feature, the Query Monitor plugin must be installed and active in your project.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => 'true',
+							],
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Enable disabled fields admin overrides', 'eightshift-forms'),
+								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxValue' => self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS,
+								'checkboxAsToggle' => true,
+								'checkboxSingleSubmit' => true,
+								'checkboxHelp' => \__('You can use this toggle to turn off all disabled fields in the global settings. This is used to debug API keys that are stored in the global variables.', 'eightshift-forms'),
 							],
 						]
 					],

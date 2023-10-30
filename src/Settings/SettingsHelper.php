@@ -16,6 +16,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Dashboard\SettingsDashboard;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -412,6 +413,53 @@ trait SettingsHelper
 	}
 
 	/**
+	 * Get settings option value or global variable depending on the debug settings.
+	 *
+	 * @param string $constantValue Constant value.
+	 * @param string $optionName Option name.
+	 * @param string $constantName Constant name.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getSettingsDisabledOutputWithDebugFilter(
+		string $constantValue,
+		string $optionName,
+		string $constantName = ''
+	): array {
+		$isDisabled = !empty($constantValue);
+		$value = '';
+		$isContantValueUsed = false;
+
+		$option = $this->getOptionValue($optionName);
+
+		if (empty($constantValue)) {
+			$value = $option;
+		} else {
+			$value = $constantValue;
+			$isContantValueUsed = true;
+		}
+
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS)) {
+			$isDisabled = false;
+			if (empty($option)) {
+				$value = $constantValue;
+				$isContantValueUsed = true;
+			} else {
+				$value = $option;
+			}
+		}
+
+		return [
+			'name' => $this->getOptionName($optionName),
+			'value' => $value,
+			'isDisabled' => $isDisabled,
+			'help' => $constantName ? $this->getGlobalVariableOutput($constantName, $isContantValueUsed) : '',
+			'constantValue' => $constantValue,
+			'isContantValueUsed' => $isContantValueUsed,
+		];
+	}
+
+	/**
 	 * Applied Global constant settings output.
 	 *
 	 * @param string $name Variable name.
@@ -507,6 +555,10 @@ trait SettingsHelper
 
 		if ($usedVariable) {
 			$output = '<span class="is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
+		}
+
+		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS)) {
+			$output .= '<span class="is-debug-applied">' . \__('Debug disable option override is active. Be careful what value is used!', 'eightshift-forms') . '</span>';
 		}
 
 		return $output;
@@ -676,32 +728,26 @@ trait SettingsHelper
 	/**
 	 * Get settings password field with global variable.
 	 *
-	 * @param string $name Field name.
+	 * @param array<string, mixed> $options Field name.
 	 * @param string $label Field label.
-	 * @param string $value Field value.
-	 * @param string $globalVariable Field global variable.
-	 * @param boolean $useGlobalVariable Is global variable used.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSettingsPasswordFieldWithGlobalVariable(
-		string $name,
-		string $label,
-		string $value,
-		string $globalVariable,
-		$useGlobalVariable = false
-	): array {
-
+	public function getSettingsPasswordFieldWithGlobalVariable(array $options, string $label): array
+	{
 		$general = [
 			'component' => 'input',
-			'inputName' => $name,
+			'inputName' => $options['name'],
 			'inputFieldLabel' => $label,
 			'inputIsRequired' => true,
-			'inputFieldHelp' => $this->getGlobalVariableOutput($globalVariable, $useGlobalVariable),
-			'inputIsDisabled' => $useGlobalVariable,
+			'inputFieldHelp' => $options['help'],
+			'inputIsDisabled' => $options['isDisabled'],
 		];
 
-		if ($useGlobalVariable) {
+		$isContantValueUsed = $options['isContantValueUsed'] ?? false;
+		$value = $options['value'] ?? '';
+
+		if ($isContantValueUsed) {
 			// Show only last 3 characters.
 			$visibleCharacters = 3;
 
@@ -732,5 +778,31 @@ trait SettingsHelper
 				'inputValue' => $value,
 			]
 		);
+	}
+
+	/**
+	 * Get settings input field with global variable.
+	 *
+	 * @param array<string, mixed> $options Field name.
+	 * @param string $label Field label.
+	 * @param string $help Field help.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getSettingsInputFieldWithGlobalVariable(array $options, string $label, string $help = ''): array
+	{
+		$internalHelp = !empty($help) ? $help . '<br/><br/>' : '';
+		$optionsHelp = !empty($options['help']) ? $internalHelp . $options['help'] : $help;
+
+		return [
+			'component' => 'input',
+			'inputName' => $options['name'],
+			'inputFieldLabel' => $label,
+			'inputType' => 'text',
+			'inputIsRequired' => true,
+			'inputFieldHelp' => $optionsHelp,
+			'inputValue' => $options['value'],
+			'inputIsDisabled' => $options['isDisabled'],
+			];
 	}
 }

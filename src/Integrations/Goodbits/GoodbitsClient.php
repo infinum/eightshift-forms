@@ -73,9 +73,7 @@ class GoodbitsClient implements ClientInterface
 	 */
 	public function getItems(bool $hideUpdateTime = true): array
 	{
-		$apiKey = Variables::getApiKeyGoodbits();
-
-		$key = !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY);
+		$key = $this->getApiKey();
 
 		if (\is_string($key) && $this->isJson($key)) {
 			$key = \json_decode($key);
@@ -285,5 +283,15 @@ class GoodbitsClient implements ClientInterface
 		}
 
 		return Helper::prepareGenericParamsOutput($params);
+	}
+
+	/**
+	 * Return Api Key from settings or global variable.
+	 *
+	 * @return string
+	 */
+	private function getApiKey(): string
+	{
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGoodbits(), SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY)['value'];
 	}
 }

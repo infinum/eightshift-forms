@@ -92,7 +92,7 @@ class SettingsAirtable implements SettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_AIRTABLE_USE_KEY, self::SETTINGS_AIRTABLE_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyAirtable()) ? Variables::getApiKeyAirtable() : $this->getOptionValue(self::SETTINGS_AIRTABLE_API_KEY_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyAirtable(), self::SETTINGS_AIRTABLE_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -113,7 +113,6 @@ class SettingsAirtable implements SettingGlobalInterface, ServiceInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyAirtable();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY);
 
@@ -150,12 +149,17 @@ class SettingsAirtable implements SettingGlobalInterface, ServiceInterface
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_AIRTABLE_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyAirtable(),
+										self::SETTINGS_AIRTABLE_API_KEY_KEY,
+										'ES_API_KEY_AIRTABLE'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_AIRTABLE_API_KEY_KEY),
-									'ES_API_KEY_AIRTABLE',
-									!empty($apiKey)
 								),
 								[
 									'component' => 'divider',

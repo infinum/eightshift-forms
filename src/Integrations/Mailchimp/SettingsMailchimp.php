@@ -104,8 +104,8 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyMailchimp()) ? Variables::getApiKeyMailchimp() : $this->getOptionValue(SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
+		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailchimp(), self::SETTINGS_MAILCHIMP_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -204,7 +204,6 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyMailchimp();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, self::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY);
 
@@ -241,12 +240,17 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyMailchimp(),
+										self::SETTINGS_MAILCHIMP_API_KEY_KEY,
+										'ES_API_KEY_MAILCHIMP'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MAILCHIMP_API_KEY_KEY),
-									'ES_API_KEY_MAILCHIMP',
-									!empty($apiKey)
 								),
 								[
 									'component' => 'divider',

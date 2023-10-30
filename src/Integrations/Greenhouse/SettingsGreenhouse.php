@@ -115,8 +115,8 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyGreenhouse()) ? Variables::getApiKeyGreenhouse() : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY);
-		$boardToken = !empty(Variables::getBoardTokenGreenhouse()) ? Variables::getBoardTokenGreenhouse() : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGreenhouse(), self::SETTINGS_GREENHOUSE_API_KEY_KEY)['value'];
+		$boardToken = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getBoardTokenGreenhouse(), self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey) || empty($boardToken)) {
 			return false;
@@ -137,8 +137,6 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyGreenhouse();
-		$boardToken = Variables::getBoardTokenGreenhouse();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY);
 
@@ -175,27 +173,30 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyGreenhouse(),
+										self::SETTINGS_GREENHOUSE_API_KEY_KEY,
+										'ES_API_KEY_GREENHOUSE'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GREENHOUSE_API_KEY_KEY),
-									'ES_API_KEY_GREENHOUSE',
-									!empty($apiKey)
 								),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								[
-									'component' => 'input',
-									'inputName' => $this->getOptionName(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-									'inputFieldLabel' => \__('Job board', 'eightshift-forms'),
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_BOARD_TOKEN_GREENHOUSE', !empty($boardToken)),
-									'inputType' => 'text',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($boardToken) ? $boardToken : $this->getOptionValue(self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY),
-									'inputIsDisabled' => !empty($boardToken),
-								],
+								$this->getSettingsInputFieldWithGlobalVariable(
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getBoardTokenGreenhouse(),
+										self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY,
+										'ES_BOARD_TOKEN_GREENHOUSE'
+									),
+									\__('Job board', 'eightshift-forms'),
+								),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,

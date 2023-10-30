@@ -397,8 +397,6 @@ class AirtableClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyAirtable();
-
-		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY)['value'];
 	}
 }

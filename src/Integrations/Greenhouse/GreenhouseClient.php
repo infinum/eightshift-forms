@@ -454,9 +454,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getBoardToken(): string
 	{
-		$boardToken = Variables::getBoardTokenGreenhouse();
-
-		return $boardToken ? $boardToken : $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getBoardTokenGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY)['value'];
 	}
 
 	/**
@@ -466,8 +464,6 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyGreenhouse();
-
-		return \base64_encode($apiKey ? $apiKey : $this->getOptionValue(SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return \base64_encode($this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)['value']); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 }

@@ -364,9 +364,9 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyJira()) ? Variables::getApiKeyJira() : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY);
-		$apiBoard = !empty(Variables::getApiBoardJira()) ? Variables::getApiBoardJira() : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY);
-		$apiUser = !empty(Variables::getApiUserJira()) ? Variables::getApiUserJira() : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY)['value'];
+		$apiBoard = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY)['value'];
+		$apiUser = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey) || empty($apiBoard) || empty($apiUser)) {
 			return false;
@@ -387,15 +387,8 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyJira();
-		$apiBoard = Variables::getApiBoardJira();
-		$apiUser = Variables::getApiUserJira();
-
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
-
-		$alternativeBoardUrlValue = $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_URL_KEY);
-		$boardValue = !empty($apiBoard) ? $apiBoard : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY);
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -430,49 +423,44 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_JIRA_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyJira(),
+										self::SETTINGS_JIRA_API_KEY_KEY,
+										'ES_API_KEY_JIRA'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_JIRA_API_KEY_KEY),
-									'ES_API_KEY_JIRA',
-									!empty($apiKey)
 								),
 								[
-									'component' => 'input',
-									'inputName' => $this->getOptionName(self::SETTINGS_JIRA_API_BOARD_KEY),
-									'inputFieldLabel' => \__('Board', 'eightshift-forms'),
-									'inputType' => 'text',
-									'inputIsRequired' => true,
-									// translators: %s will be replaced with global variable name.
-									'inputFieldHelp' => \sprintf(\__('
-										Provided the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.<br/><br/>
-										%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_BOARD_JIRA', !empty($apiBoard))),
-									'inputValue' => !empty($apiBoard) ? $apiBoard : $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_KEY),
-									'inputIsDisabled' => !empty($apiBoard),
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
 								],
+								$this->getSettingsInputFieldWithGlobalVariable(
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiBoardJira(),
+										self::SETTINGS_JIRA_API_BOARD_KEY,
+										'ES_API_BOARD_JIRA'
+									),
+									\__('Board', 'eightshift-forms'),
+									\__('Provided the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
+								),
 								[
-									'component' => 'input',
-									'inputName' => $this->getOptionName(self::SETTINGS_JIRA_API_USER_KEY),
-									'inputFieldLabel' => \__('User', 'eightshift-forms'),
-									// translators: %s will be replaced with global variable name.
-									'inputFieldHelp' => \sprintf(\__('
-										E-mail or user name of the user connected to the user token.<br/><br/>
-										%s', 'eightshift-forms'), $this->getGlobalVariableOutput('ES_API_USER_JIRA', !empty($apiUser))),
-									'inputType' => 'text',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiUser) ? $apiUser : $this->getOptionValue(self::SETTINGS_JIRA_API_USER_KEY),
-									'inputIsDisabled' => !empty($apiUser),
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
 								],
-								[
-									'component' => 'input',
-									'inputName' => $this->getOptionName(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
-									'inputFieldLabel' => \__('Alternative board url', 'eightshift-forms'),
-									'inputType' => 'text',
-									'inputIsRequired' => false,
-									'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a defference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.<br/><br/>', 'eightshift-forms'),
-									'inputValue' => $alternativeBoardUrlValue,
-									'inputPlaceholder' => !$alternativeBoardUrlValue ? $boardValue : '',
-								],
+								$this->getSettingsInputFieldWithGlobalVariable(
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiUserJira(),
+										self::SETTINGS_JIRA_API_USER_KEY,
+										'ES_API_USER_JIRA'
+									),
+									\__('User', 'eightshift-forms'),
+									\__('E-mail or user name of the user connected to the user token.', 'eightshift-forms'),
+								),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
@@ -516,6 +504,15 @@ class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingI
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputValue' => $successRedirectUrl['dataGlobal'],
+							],
+							[
+								'component' => 'input',
+								'inputName' => $this->getOptionName(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
+								'inputFieldLabel' => \__('Alternative board url', 'eightshift-forms'),
+								'inputType' => 'text',
+								'inputIsRequired' => false,
+								'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a defference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
+								'inputValue' => $this->getOptionValue(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
 							],
 						],
 					],

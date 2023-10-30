@@ -490,9 +490,7 @@ class MomentsClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyMoments();
-
-		return !empty($apiKey) ? $apiKey : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
 	}
 
 	/**
@@ -502,8 +500,6 @@ class MomentsClient implements ClientInterface
 	 */
 	private function getApiUrl(): string
 	{
-		$apiUrl = Variables::getApiUrlMoments();
-
-		return !empty($apiUrl) ? $apiUrl : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY)['value'];
 	}
 }

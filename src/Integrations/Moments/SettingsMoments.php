@@ -97,8 +97,8 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyMoments()) ? Variables::getApiKeyMoments() : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY);
-		$url = !empty(Variables::getApiUrlMoments()) ? Variables::getApiUrlMoments() : $this->getOptionValue(SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
+		$url = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey) || empty($url)) {
 			return false;
@@ -119,8 +119,6 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyMoments();
-		$apiUrl = Variables::getApiUrlMoments();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY);
@@ -159,21 +157,28 @@ class SettingsMoments implements SettingGlobalInterface, ServiceInterface
 								],
 							] : [
 								[
-									'component' => 'input',
-									'inputName' => $this->getOptionName(self::SETTINGS_MOMENTS_API_URL_KEY),
-									'inputFieldLabel' => \__('API url', 'eightshift-forms'),
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_URL_MOMENTS', !empty($apiUrl)),
-									'inputType' => 'text',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiUrl) ? $apiUrl : $this->getOptionValue(self::SETTINGS_MOMENTS_API_URL_KEY),
-									'inputIsDisabled' => !empty($apiUrl),
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
 								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_MOMENTS_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyMoments(),
+										self::SETTINGS_MOMENTS_API_KEY_KEY,
+										'ES_API_KEY_MOMENTS'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_MOMENTS_API_KEY_KEY),
-									'ES_API_KEY_MOMENTS',
-									!empty($apiKey)
+								),
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								$this->getSettingsInputFieldWithGlobalVariable(
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiUrlMoments(),
+										self::SETTINGS_MOMENTS_API_URL_KEY,
+										'ES_API_URL_MOMENTS'
+									),
+									\__('API url', 'eightshift-forms'),
 								),
 								[
 									'component' => 'divider',

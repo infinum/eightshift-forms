@@ -98,8 +98,8 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyActiveCampaign()) ? Variables::getApiKeyActiveCampaign() : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
-		$url = !empty(Variables::getApiUrlActiveCampaign()) ? Variables::getApiUrlActiveCampaign() : $this->getOptionValue(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY)['value'];
+		$url = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey) || empty($url)) {
 			return false;
@@ -120,8 +120,6 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyActiveCampaign();
-		$apiUrl = Variables::getApiUrlActiveCampaign();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY);
 
@@ -159,21 +157,28 @@ class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
 								],
 							] : [
 								[
-									'component' => 'input',
-									'inputName' => $this->getOptionName(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
-									'inputFieldLabel' => \__('API URL', 'eightshift-forms'),
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_API_URL_ACTIVE_CAMPAIGN', !empty($apiUrl)),
-									'inputType' => 'text',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($apiUrl) ? $apiUrl : $this->getOptionValue(self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY),
-									'inputIsDisabled' => !empty($apiUrl),
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
 								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyActiveCampaign(),
+										self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY,
+										'ES_API_KEY_ACTIVE_CAMPAIGN'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY),
-									'ES_API_KEY_ACTIVE_CAMPAIGN',
-									!empty($apiKey)
+								),
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								$this->getSettingsInputFieldWithGlobalVariable(
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiUrlActiveCampaign(),
+										self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY,
+										'ES_API_URL_ACTIVE_CAMPAIGN'
+									),
+									\__('API URL', 'eightshift-forms'),
 								),
 								[
 									'component' => 'divider',

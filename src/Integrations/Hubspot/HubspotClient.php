@@ -885,9 +885,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyHubspot();
-
-		return $apiKey ? $apiKey : $this->getOptionValue(SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
 	}
 
 	/**

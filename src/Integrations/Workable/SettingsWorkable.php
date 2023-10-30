@@ -108,8 +108,8 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyWorkable()) ? Variables::getApiKeyWorkable() : $this->getOptionValue(self::SETTINGS_WORKABLE_API_KEY_KEY);
-		$subdomain = !empty(Variables::getSubdomainWorkable()) ? Variables::getSubdomainWorkable() : $this->getOptionValue(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
+		$subdomain = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey) || empty($subdomain)) {
 			return false;
@@ -129,9 +129,6 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 		if (!$this->isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY)) {
 			return $this->getSettingOutputNoActiveFeature();
 		}
-
-		$apiKey = Variables::getApiKeyWorkable();
-		$subdomain = Variables::getSubdomainWorkable();
 
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY);
@@ -169,23 +166,30 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_WORKABLE_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyWorkable(),
+										self::SETTINGS_WORKABLE_API_KEY_KEY,
+										'ES_API_KEY_WORKABLE'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_WORKABLE_API_KEY_KEY),
-									'ES_API_KEY_WORKABLE',
-									!empty($apiKey)
 								),
 								[
-									'component' => 'input',
-									'inputName' => $this->getOptionName(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
-									'inputFieldLabel' => \__('Subdomain', 'eightshift-forms'),
-									'inputFieldHelp' => $this->getGlobalVariableOutput('ES_SUBDOMAIN_WORKABLE', !empty($subdomain)),
-									'inputType' => 'text',
-									'inputIsRequired' => true,
-									'inputValue' => !empty($subdomain) ? $subdomain : $this->getOptionValue(self::SETTINGS_WORKABLE_SUBDOMAIN_KEY),
-									'inputIsDisabled' => !empty($subdomain),
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
 								],
+								$this->getSettingsInputFieldWithGlobalVariable(
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getSubdomainWorkable(),
+										self::SETTINGS_WORKABLE_SUBDOMAIN_KEY,
+										'ES_SUBDOMAIN_WORKABLE'
+									),
+									\__('Subdomain', 'eightshift-forms'),
+								),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,

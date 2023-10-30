@@ -13,7 +13,8 @@
 	&__help,
 	&__before-content,
 	&__after-content {
-		.is-filter-applied {
+		.is-filter-applied,
+		.is-debug-applied {
 			margin-top: var(--global-esf-spacing-xs);
 			background-color: var(--global-colors-esf-sky-50);
 			border: 1px solid var(--global-colors-esf-sky-100);
@@ -35,6 +36,11 @@
 			summary {
 				cursor: pointer;
 			}
+		}
+
+		.is-debug-applied {
+			background-color: var(--global-colors-esf-red-50);
+			border-color: var(--global-colors-esf-red-100);
 		}
 	}
 

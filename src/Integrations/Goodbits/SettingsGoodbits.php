@@ -92,7 +92,7 @@ class SettingsGoodbits implements SettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_GOODBITS_USE_KEY, self::SETTINGS_GOODBITS_USE_KEY);
-		$apiKey = !empty(Variables::getApiKeyGoodbits()) ? Variables::getApiKeyGoodbits() : $this->getOptionValue(self::SETTINGS_GOODBITS_API_KEY_KEY);
+		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGoodbits(), self::SETTINGS_GOODBITS_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -113,7 +113,6 @@ class SettingsGoodbits implements SettingGlobalInterface, ServiceInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$apiKey = Variables::getApiKeyGoodbits();
 		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = $this->isOptionCheckboxChecked(self::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY, self::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY);
 
@@ -150,12 +149,17 @@ class SettingsGoodbits implements SettingGlobalInterface, ServiceInterface
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								$this->getSettingsPasswordFieldWithGlobalVariable(
-									$this->getOptionName(self::SETTINGS_GOODBITS_API_KEY_KEY),
+									$this->getSettingsDisabledOutputWithDebugFilter(
+										Variables::getApiKeyGoodbits(),
+										self::SETTINGS_GOODBITS_API_KEY_KEY,
+										'ES_API_KEY_GOODBITS'
+									),
 									\__('API key', 'eightshift-forms'),
-									!empty($apiKey) ? $apiKey : $this->getOptionValue(self::SETTINGS_GOODBITS_API_KEY_KEY),
-									'ES_API_KEY_GOODBITS',
-									!empty($apiKey)
 								),
 								[
 									'component' => 'divider',

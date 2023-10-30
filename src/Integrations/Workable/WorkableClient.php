@@ -534,9 +534,7 @@ class WorkableClient implements ClientInterface
 	 */
 	private function getSubdomain(): string
 	{
-		$subdomain = Variables::getSubdomainWorkable();
-
-		return $subdomain ? $subdomain : $this->getOptionValue(SettingsWorkable::SETTINGS_WORKABLE_SUBDOMAIN_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), SettingsWorkable::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
 	}
 
 	/**
@@ -546,9 +544,7 @@ class WorkableClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		$apiKey = Variables::getApiKeyWorkable();
-
-		return $apiKey ? $apiKey : $this->getOptionValue(SettingsWorkable::SETTINGS_WORKABLE_API_KEY_KEY);
+		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), SettingsWorkable::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
 	}
 
 	/**
