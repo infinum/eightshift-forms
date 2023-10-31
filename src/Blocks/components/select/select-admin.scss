@@ -1,17 +1,43 @@
 @import './select-frontend-mandatory.scss';
 @import './select-frontend.scss';
 
-.es-select {
+div.es-select {
 	--es-input-radius: var(--global-es-radius-8);
+	--es-input-font-size: 0.825rem;
+
+	font-size: var(--es-input-font-size);
+
+	.choices__inner {
+		font-size: var(--es-input-font-size);
+	}
+
+	.choices__list {
+		&--dropdown {
+			border-radius: 0 0 var(--global-es-radius-8) var(--global-es-radius-8);
+			box-shadow: var(--global-esf-box-shadow-l);
+
+			.choices__item {
+				font-size: var(--es-input-font-size);
+			}
+		}
+
+		&--single {
+			font-size: var(--es-input-font-size);
+		}
+
+		&--multiple {
+			.choices__item {
+				font-size: var(--es-input-font-size);
+			}
+		}
+	}
+
+	.choices__input {
+		font-size: var(--es-input-font-size);
+	}
 
 	&.is-open {
 		--es-input-radius: var(--global-es-radius-8) var(--global-es-radius-8) 0 0;
-
-		box-shadow: var(--global-esf-box-shadow-l);
-	}
-
-	.choices__list--dropdown {
-		border-radius: 0 0 var(--global-es-radius-8) var(--global-es-radius-8);
 
 		box-shadow: var(--global-esf-box-shadow-l);
 	}

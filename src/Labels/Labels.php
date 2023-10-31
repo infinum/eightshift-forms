@@ -210,6 +210,10 @@ class Labels implements LabelsInterface
 			'validationMinLength' => \__('This field value has less characters than expected. We expect minimum %s characters.', 'eightshift-forms'),
 			// translators: %s used for displaying length max number to the user.
 			'validationMaxLength' => \__('This field value has more characters than expected. We expect maximum %s characters.', 'eightshift-forms'),
+			// translators: %s used for displaying length min number to the user.
+			'validationMinCount' => \__('This field value has less items than expected. We expect minimum %s items.', 'eightshift-forms'),
+			// translators: %s used for displaying length max number to the user.
+			'validationMaxCount' => \__('This field value has more items than expected. We expect maximum %s items.', 'eightshift-forms'),
 			'validationNumber' => \__('This field should only contain numbers.', 'eightshift-forms'),
 			// translators: %s used for displaying validation pattern to the user.
 			'validationPattern' => \__('This field value should be in this format: %s.', 'eightshift-forms'),

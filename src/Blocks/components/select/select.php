@@ -15,7 +15,6 @@ $manifest = Components::getManifest(__DIR__);
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
-$componentJsClearableClass = $manifest['componentJsClearableClass'] ?? '';
 
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 if (!$selectName) {
@@ -34,7 +33,7 @@ $selectTypeCustom = Components::checkAttr('selectTypeCustom', $attributes, $mani
 $selectFieldAttrs = Components::checkAttr('selectFieldAttrs', $attributes, $manifest);
 $selectUseLabelAsPlaceholder = Components::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
 $selectUseEmptyPlaceholder = Components::checkAttr('selectUseEmptyPlaceholder', $attributes, $manifest);
-$selectIsClearable = Components::checkAttr('selectIsClearable', $attributes, $manifest);
+$selectIsMultiple = Components::checkAttr('selectIsMultiple', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectHideLabel = false;
@@ -50,8 +49,9 @@ if ($selectUseSearch) {
 	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($selectUseSearch);
 }
 
-if ($selectIsClearable) {
-	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectIsClearable']] = esc_attr($selectIsClearable);
+if ($selectIsMultiple) {
+	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectIsMultiple']] = esc_attr($selectIsMultiple);
+	$selectAttrs['multiple'] = 'true';
 }
 
 $placeholder = '';

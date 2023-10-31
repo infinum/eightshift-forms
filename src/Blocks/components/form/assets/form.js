@@ -635,7 +635,11 @@ export class Form {
 					}
 
 					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
-						data.value = `${valueCountry.number}${value}`;
+						if (typeof valueCountry.number !== 'undefined') {
+							data.value = `${valueCountry.number}${value}`;
+						} else {
+							data.value = '';
+						}
 					}
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
@@ -1022,11 +1026,9 @@ export class Form {
 	 */
 	setupSelectField(formId, name) {
 		let input = this.state.getStateElementInput(name, formId);
-		const type = this.state.getStateElementType(name, formId);
 		const typeInternal = this.state.getStateElementTypeCustom(name, formId);
-		const useClearable = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_CLEARABLE, formId);
 
-		 if (type === 'tel') {
+		 if (typeInternal === 'phone') {
 			 input = this.state.getStateElementInputSelect(name, formId);
 		 }
 
@@ -1046,6 +1048,7 @@ export class Form {
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
+				removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
 				searchFields: [
 					'label',
@@ -1060,14 +1063,6 @@ export class Form {
 				},
 				callbackOnCreateTemplates: function() {
 					return {
-						containerInner: ({classNames: {containerInner}}) => {
-							const clearableOutput = useClearable ? `<div class="choices__clearable ${state.getStateSelectorsSelectClearable().substring(1)}"></div>` : '';
-
-							return Object.assign(document.createElement('div'), {
-								className: containerInner,
-								innerHTML: clearableOutput,
-							});
-						},
 						// Fake select option.
 						option: (...args) => {
 							const element = Choices.default.defaults.templates.option.call(this, ...args);
@@ -1114,17 +1109,6 @@ export class Form {
 					};
 				},
 			});
-
-			if (useClearable) {
-				const clearableElement = choices?.containerInner?.element?.querySelector(state.getStateSelectorsSelectClearable());
-
-				if (clearableElement) {
-					clearableElement?.addEventListener('click', (event) => {
-						event.preventDefault();
-						this.utils.setSelectValue(formId, name, '');
-					});
-				}
-			}
 
 			// Detect if we have country cookie and set value to the select.
 			// This is here because of caching and we need to set the value after the select is loaded.

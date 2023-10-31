@@ -3,14 +3,31 @@ div.es-select {
 	margin: 0;
 	font-size: initial;
 
+	&.choices[data-type*='select-one'] .choices__inner { // stylelint-disable-line selector-max-specificity
+		padding: 0;
+	}
+
+	&.choices[data-type*='select-multiple'] .choices__inner { // stylelint-disable-line selector-max-specificity
+		padding: var(--es-input-spacing) var(--es-input-spacing) calc(var(--es-input-spacing) - 0.2344rem) var(--es-input-spacing);
+
+		.choices__input { // stylelint-disable-line selector-max-specificity
+			padding: 0;
+			margin: 0;
+
+			&::placeholder { // stylelint-disable-line selector-max-specificity
+				@include input-styles-placeholder;
+			}
+		}
+	}
+
 	.choices__inner {
-		font-size: 0.85rem;
+		font-size: initial;
 		border-radius: var(--es-input-radius);
 		background-color: transparent;
-		height: var(--esf-input-height);
+		height: auto;
 		border: 1px solid var(--es-input-border-color);
-		padding: var(--es-input-spacing);
-		min-height: auto;
+		padding: 0;
+		min-height: var(--esf-input-height);
 		transition: {
 			property: border-color;
 			timing-function: var(--es-input-transition-timing);
@@ -20,7 +37,6 @@ div.es-select {
 
 	.choices__list {
 		&--dropdown {
-			font-size: 0.85rem;
 			transition: {
 				property: border-color;
 				timing-function: var(--es-input-transition-timing);
@@ -28,7 +44,7 @@ div.es-select {
 			}
 
 			.choices__item {
-				font-size: 0.85rem;
+				font-size: initial;
 				padding: var(--es-input-spacing);
 				display: flex;
 				align-items: center;
@@ -36,25 +52,33 @@ div.es-select {
 
 				@include conditional-tags-styles;
 			}
+
+			.choices__input {
+				border-bottom: 1px solid var(--es-input-border-color);
+			}
 		}
 
 		&--single {
-			padding: 0;
+			min-height: var(--esf-input-height);
+			padding: var(--es-input-spacing) 1.875rem var(--es-input-spacing) var(--es-input-spacing);
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			font-size: initial;
 		}
-	}
 
-	.choices__item {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-
-		font-size: 0.85rem;
+		&--multiple {
+			.choices__item {
+				font-size: initial;
+			}
+		}
 	}
 
 	.choices__input {
 		border-radius: 0;
 		border: none;
-		border-bottom: 1px solid var(--es-input-border-color);
+		background: none;
+		font-size: initial;
 
 		&:focus {
 			@include input-styles-focus;

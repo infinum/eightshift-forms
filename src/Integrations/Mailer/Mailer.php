@@ -217,7 +217,7 @@ class Mailer implements MailerInterface
 
 		foreach ($params as $name => $value) {
 			if (\is_array($value)) {
-				continue;
+				$value = \implode(', ', $value);
 			}
 
 			$template = \str_replace("{" . $name . "}", $value, $template);

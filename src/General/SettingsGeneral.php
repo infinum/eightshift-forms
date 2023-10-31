@@ -154,7 +154,6 @@ class SettingsGeneral implements SettingInterface, SettingGlobalInterface, Servi
 							[
 								'component' => 'select',
 								'selectFieldLabel' => \__('Redirect variation', 'eightshift-forms'),
-								'selectIsClearable' => true,
 								'selectName' => $this->getSettingName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY),
 								'selectPlaceholder' => \__('Pick an option', 'eightshift-forms'),
 								'selectIsDisabled' => $successRedirectVariation['filterUsed'],

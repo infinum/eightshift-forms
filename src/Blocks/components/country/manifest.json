@@ -57,10 +57,6 @@
 		},
 		"countryTypeCustom": {
 			"type": "string"
-		},
-		"countryIsClearable": {
-			"type": "boolean",
-			"default": false
 		}
 	}
 }

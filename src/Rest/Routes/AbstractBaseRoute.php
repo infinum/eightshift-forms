@@ -106,7 +106,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'dateOutputFormat' => 'data-output-format',
 
 		'selectAllowSearch' => 'data-allow-search',
-		'selectIsClearable' => 'data-is-clearable',
+		'selectIsMultiple' => 'data-is-multiple',
 		'selectPlaceholder' => 'data-placeholder',
 		'selectCustomProperties' => 'data-custom-properties',
 		'selectCountryCode' => 'data-country-code',

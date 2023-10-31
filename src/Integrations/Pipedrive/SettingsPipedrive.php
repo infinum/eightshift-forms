@@ -294,7 +294,6 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 														'selectFieldIsFiftyFiftyHorizontal' => true,
 														'selectFieldBeforeContent' => '&rarr;',
 														'selectUseEmptyPlaceholder' => true,
-														'selectIsClearable' => true,
 														'selectContent' => [
 															...(\array_filter(\array_map(
 																static function ($option) use ($mapParams, $item) {
@@ -338,7 +337,6 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 										'selectFieldLabel' => \__('Person label', 'eightshift-forms'),
 										'selectFieldHelp' => \__('Person label is used to distinguish lead statuses in your list.', 'eightshift-forms'),
 										'selectPlaceholder' => \__('Select person label', 'eightshift-forms'),
-										'selectIsClearable' => true,
 										'selectContent' => \array_filter(\array_map(
 											static function ($option) use ($personLabel) {
 												$id  = $option['id'] ?? '';
@@ -412,7 +410,6 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 											'component' => 'select',
 											'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY),
 											'selectFieldLabel' => \__('Lead value', 'eightshift-forms'),
-											'selectIsClearable' => true,
 											'selectFieldHelp' => \__('Make sure that you assign lead value to a field that can only have number value.', 'eightshift-forms'),
 											'selectPlaceholder' => \__('Select lead value name field', 'eightshift-forms'),
 											'selectContent' => \array_map(
@@ -449,7 +446,6 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 											'selectFieldLabel' => \__('Lead label', 'eightshift-forms'),
 											'selectFieldHelp' => \__('Lead label is used to distinguish lead statuses in your list.', 'eightshift-forms'),
 											'selectPlaceholder' => \__('Select lead label', 'eightshift-forms'),
-											'selectIsClearable' => true,
 											'selectContent' => \array_filter(\array_map(
 												static function ($option) use ($leadLabel) {
 													$id  = $option['id'] ?? '';
@@ -505,7 +501,6 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 											'selectName' => $this->getSettingName(self::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY),
 											'selectFieldLabel' => \__('Organization', 'eightshift-forms'),
 											'selectIsRequired' => true,
-											'selectIsClearable' => true,
 											'selectFieldHelp' => \__('Organization name is assignet to every new organization created.', 'eightshift-forms'),
 											'selectPlaceholder' => \__('Select organization name field', 'eightshift-forms'),
 											'selectContent' => \array_map(

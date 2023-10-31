@@ -41,7 +41,6 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 					onChange={(value) => setAttributes({ [getAttrKey('customDataFieldType', attributes, manifest)]: value })}
 					simpleValue
 					isSearchable={false}
-					isClearable={false}
 				/>
 
 				<Select
@@ -51,7 +50,6 @@ export const CustomDataOptions = ({ attributes, setAttributes, clientId }) => {
 					onChange={(value) => setAttributes({ [getAttrKey('customDataData', attributes, manifest)]: value })}
 					simpleValue
 					isSearchable={false}
-					isClearable={false}
 				/>
 			</PanelBody>
 

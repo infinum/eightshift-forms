@@ -29,7 +29,6 @@ export const StateEnum = {
 	VALUE_COUNTRY: 'valueCountry',
 	INPUT: 'input',
 	INPUT_SELECT: 'inputSelect',
-	SELECT_CLEARABLE: 'clearable',
 	ITEMS: 'items',
 	CUSTOM: 'custom',
 	IS_DISABLED: 'disabled',
@@ -67,7 +66,7 @@ export const StateEnum = {
 
 	CONFIG: 'config',
 	CONFIG_SELECT_USE_SEARCH: 'useSearch',
-	CONFIG_SELECT_USE_CLEARABLE: 'useClearable',
+	CONFIG_SELECT_USE_MULTIPLE: 'useMultiple',
 	CONFIG_PHONE_DISABLE_PICKER: 'disablePhoneCountryPicker',
 	CONFIG_PHONE_USE_PHONE_SYNC: 'usePhoneSync',
 	CONFIG_SUCCESS_REDIRECT: 'successRedirect',
@@ -157,7 +156,6 @@ export const StateEnum = {
 	SELECTORS_GLOBAL_MSG: `globalMsg`,
 	SELECTORS_GROUP: `group`,
 	SELECTORS_FIELD: `field`,
-	SELECTORS_SELECT_CLEARABLE: `select-clearable`,
 
 	ATTRIBUTES: 'attributes',
 	PARAMS: 'params',
@@ -295,7 +293,6 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_GLOBAL_MSG], `.${manifest.componentJsClass}-global-msg`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_GROUP], `.${manifest.componentJsClass}-group`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_FIELD], `.${manifest.componentJsClass}-field`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_SELECT_CLEARABLE], `.${manifest.componentJsClass}-select-clearable`, StateEnum.SELECTORS);
 }
 
 /**
@@ -380,7 +377,6 @@ export function setStateFormInitial(formId) {
 			case 'radio':
 			case 'checkbox':
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], type, formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], type, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], '', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.FIELD], item.parentNode.parentNode, formId);
@@ -398,46 +394,55 @@ export function setStateFormInitial(formId) {
 					}
 
 					setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], 'radio', formId);
 				}
 
 				if (type === 'checkbox') {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE, value], item.checked ? value : '', formId);
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL, value], item.checked ? value : '', formId);
 					setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING, value], item.parentNode.parentNode.getAttribute(getStateAttribute('tracking')), formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], 'checkbox', formId);
 				}
 
 				setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
 
 				break;
 			case 'select-one':
+			case 'select-multiple':
 				// Combined fields like phone can have field null.
-				const customField = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)); // eslint-disable-line no-case-declarations
-				const typeTemp = customField.getAttribute(getStateAttribute('fieldType')); // eslint-disable-line no-case-declarations
+				const blockName = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS))?.getAttribute(getStateAttribute('fieldType')); // eslint-disable-line no-case-declarations
+				const isMultiple = Boolean(item.getAttribute(getStateAttribute('selectIsMultiple'))); // eslint-disable-line no-case-declarations
 
-				if (item.options.length) {
-					const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(getStateAttribute('selectCustomProperties')));
+				if (item.options.length && (blockName === 'phone' || blockName === 'country')) {
+					let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
 
-					switch (typeTemp) {
-						case 'phone':
-						case 'country':
-							setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData[getStateAttribute('selectCountryCode')], formId);
-							setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData[getStateAttribute('selectCountryLabel')], formId);
-							setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData[getStateAttribute('selectCountryNumber')], formId);
-							break;
-						}
+					if (typeof customData === 'string') {
+						customData = JSON.parse(customData);
+					}
+
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData[getStateAttribute('selectCountryCode')], formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData[getStateAttribute('selectCountryLabel')], formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData[getStateAttribute('selectCountryNumber')], formId);
 				}
 
-				if (typeTemp !== 'phone') {
+				if (blockName !== 'phone') {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
+
+					if (isMultiple) {
+						const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
+
+						setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
+						setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], multipleValues, formId);
+					}
 				}
 
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], typeTemp, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], blockName, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], 'select', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(getStateAttribute('selectAllowSearch'))), formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_CLEARABLE], Boolean(item.getAttribute(getStateAttribute('selectIsClearable'))), formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], isMultiple, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 			case 'tel':
@@ -462,7 +467,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], type, formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], type, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], 'date', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
@@ -602,24 +607,32 @@ export function setStateValues(item, formId) {
 			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE, value], checked ? value : '', formId);
 			break;
 		case 'select-one':
-			const customField = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)); // eslint-disable-line no-case-declarations
-			const typeCustom = customField.getAttribute(getStateAttribute('fieldType')); // eslint-disable-line no-case-declarations
-			const customData = JSON.parse(item.options[item.options.selectedIndex].getAttribute(getStateAttribute('selectCustomProperties'))); // eslint-disable-line no-case-declarations
+		case 'select-multiple':
+			const blockName = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS))?.getAttribute(getStateAttribute('fieldType')); // eslint-disable-line no-case-declarations
 
-			switch (typeCustom) {
-				case 'phone':
-				case 'country':
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData[getStateAttribute('selectCountryCode')], formId);
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData[getStateAttribute('selectCountryLabel')], formId);
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData[getStateAttribute('selectCountryNumber')], formId);
-					break;
+			if (blockName === 'phone' || blockName === 'country') {
+				let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
+
+				if (typeof customData === 'string') {
+					customData = JSON.parse(customData);
+				}
+
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData?.[getStateAttribute('selectCountryCode')], formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData?.[getStateAttribute('selectCountryLabel')], formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData?.[getStateAttribute('selectCountryNumber')], formId);
 			}
 
-			if (typeCustom !== 'phone') {
+			if (blockName !== 'phone') {
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+
+				if (getState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], formId)) {
+					const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
+
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
+				}
 			}
 
-			if (typeCustom === 'phone') {
+			if (blockName === 'phone') {
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
 
 				if (getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)) {

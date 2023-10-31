@@ -4,7 +4,6 @@
 	"title": "Select",
 	"componentClass": "es-select",
 	"componentJsSingleSubmitClass": "js-es-block-single-submit",
-	"componentJsClearableClass": "js-es-block-select-clearable",
 	"example": {
 		"attributes": {
 			"selectContent": "",
@@ -50,9 +49,15 @@
 			"type": "boolean",
 			"default": false
 		},
-		"selectIsClearable": {
+		"selectIsMultiple": {
 			"type": "boolean",
 			"default": false
+		},
+		"selectMinCount": {
+			"type": "integer"
+		},
+		"selectMaxCount": {
+			"type": "integer"
 		},
 		"selectMeta": {
 			"type": "string"
@@ -72,6 +77,16 @@
 		},
 		"selectTypeCustom": {
 			"type": "string"
+		}
+	},
+	"options": {
+		"selectMinCount": {
+			"min":  0,
+			"step": 1
+		},
+		"selectMaxCount": {
+			"min":  1,
+			"step": 1
 		}
 	}
 }
