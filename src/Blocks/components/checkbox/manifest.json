@@ -88,6 +88,10 @@
 		},
 		"checkboxDisabledOptions": {
 			"type": "array"
+		},
+		"checkboxIsHidden": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

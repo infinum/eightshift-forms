@@ -761,7 +761,7 @@ export class Utils {
 	 * 
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
-	 * @param {string} value Value to set.
+	 * @param {string|array} value Value to set.
 	 * 
 	 * @returns {void}
 	 */
@@ -769,7 +769,14 @@ export class Utils {
 		const input = this.state.getStateElementInput(name, formId);
 		const choices = this.state.getStateElementCustom(name, formId);
 
-		choices?.setChoiceByValue(value);
+		if (typeof value === 'object') {
+			[...value].forEach((item) => {
+				choices?.removeActiveItemsByValue(item);
+			});
+		} else {
+			choices?.setChoiceByValue(value);
+		}
+
 		setStateValues(input, formId);
 
 		if (!value) {

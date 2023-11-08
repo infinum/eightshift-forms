@@ -1,9 +1,11 @@
-.es-form-is-hidden-ct {
-	display: none;
-	user-select: none;
+.es-form-is-hidden-ct,
+[data-option-is-hidden="true"] {
+	display: none !important;
+	user-select: none !important;
 }
 
 // Used for conditional tags.
 .es-form-is-visible-ct {
 	display: block;
 }
+

@@ -1,1 +1,7 @@
 @import './radio-style.scss';
+
+.es-radio {
+	&.es-form-is-hidden &__content {
+		opacity: 0.4;
+	}
+}

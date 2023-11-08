@@ -1040,7 +1040,7 @@ export class Form {
 				this.state.getStateAttribute('selectCountryLabel'),
 				this.state.getStateAttribute('selectCountryNumber'),
 				this.state.getStateAttribute('conditionalTags'),
-				this.state.getStateAttribute('selectVisibility'),
+				this.state.getStateAttribute('selectOptionIsHidden'),
 			];
  
 			const choices = new Choices.default(input, {

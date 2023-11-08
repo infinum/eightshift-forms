@@ -38,6 +38,7 @@ $checkboxHideLabel = Components::checkAttr('checkboxHideLabel', $attributes, $ma
 $checkboxHelp = Components::checkAttr('checkboxHelp', $attributes, $manifest);
 $checkboxFieldAttrs = Components::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
 $checkboxIcon = Components::checkAttr('checkboxIcon', $attributes, $manifest);
+$checkboxIsHidden = Components::checkAttr('checkboxIsHidden', $attributes, $manifest);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
@@ -48,6 +49,7 @@ $checkboxClass = Components::classnames([
 	Components::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($checkboxIsDisabled, 'es-form-is-disabled'),
+	Components::selector($checkboxIsHidden, 'es-form-is-hidden'),
 ]);
 
 $checkboxInputClass = Components::classnames([

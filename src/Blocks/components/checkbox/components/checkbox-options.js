@@ -36,6 +36,7 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxDisabledOptions = checkAttr('checkboxDisabledOptions', attributes, manifest);
 	const checkboxIcon = checkAttr('checkboxIcon', attributes, manifest);
 	const checkboxHideLabelText = checkAttr('checkboxHideLabelText', attributes, manifest);
+	const checkboxIsHidden = checkAttr('checkboxIsHidden', attributes, manifest);
 
 	return (
 		<>
@@ -77,6 +78,7 @@ export const CheckboxOptions = (attributes) => {
 					label={__('Checked', 'eightshift-forms')}
 					checked={checkboxIsChecked}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxIsChecked', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
 				<IconToggle
@@ -84,6 +86,7 @@ export const CheckboxOptions = (attributes) => {
 					label={__('Read-only', 'eightshift-forms')}
 					checked={checkboxIsReadOnly}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxIsReadOnly', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
 				<IconToggle
@@ -91,6 +94,15 @@ export const CheckboxOptions = (attributes) => {
 					label={__('Disabled', 'eightshift-forms')}
 					checked={checkboxIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxIsDisabled', attributes, manifest), checkboxDisabledOptions)}
+				/>
+
+				<IconToggle
+					icon={icons.hide}
+					label={__('Hidden', 'eightshift-forms')}
+					checked={checkboxIsHidden}
+					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsHidden', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('checkboxIsHidden', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
 				<Section

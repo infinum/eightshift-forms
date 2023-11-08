@@ -34,6 +34,7 @@ export const RadioOptions = (attributes) => {
 	const radioDisabledOptions = checkAttr('radioDisabledOptions', attributes, manifest);
 	const radioIcon = checkAttr('radioIcon', attributes, manifest);
 	const radioHideLabelText = checkAttr('radioHideLabelText', attributes, manifest);
+	const radioIsHidden = checkAttr('radioIsHidden', attributes, manifest);
 
 	return (
 		<>
@@ -85,6 +86,14 @@ export const RadioOptions = (attributes) => {
 					checked={radioIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('radioIsDisabled', attributes, manifest), radioDisabledOptions)}
+				/>
+
+				<IconToggle
+					icon={icons.hide}
+					label={__('Hidden', 'eightshift-forms')}
+					checked={radioIsHidden}
+					onChange={(value) => setAttributes({ [getAttrKey('radioIsHidden', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('radioIsHidden', attributes, manifest), radioDisabledOptions)}
 				/>
 
 				<Section

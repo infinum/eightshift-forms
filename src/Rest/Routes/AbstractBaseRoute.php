@@ -112,7 +112,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		'selectCountryCode' => 'data-country-code',
 		'selectCountryLabel' => 'data-country-label',
 		'selectCountryNumber' => 'data-country-number',
-		'selectVisibility' => 'data-visibility',
+		'selectOptionIsHidden' => 'data-option-is-hidden',
 		'selectId' => 'data-id',
 		'selectValue' => 'data-value',
 

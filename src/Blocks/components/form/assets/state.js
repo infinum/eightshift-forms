@@ -102,6 +102,15 @@ export class State {
 	getStateFormConditionalTagsEvents = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], formId);
 	};
+	getStateFormConditionalTagsStateHideForms = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_HIDE], formId);
+	};
+	getStateFormConditionalTagsStateShowForms = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_SHOW], formId);
+	};
+	getStateFormConditionalTagsStateCt = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_CT], formId);
+	};
 	getStateFormConditionalTagsInnerEvents = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], formId);
 	};
@@ -540,6 +549,9 @@ export class State {
 	};
 	getStateSelectorsField = () => {
 		return getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS);
+	};
+	getStateSelectorsFieldStyle = () => {
+		return getState([StateEnum.SELECTORS_FIELD_STYLE], StateEnum.SELECTORS);
 	};
 
 	////////////////////////////////////////////////////////////////

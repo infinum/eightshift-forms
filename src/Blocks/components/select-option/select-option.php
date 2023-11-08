@@ -23,10 +23,6 @@ $selectOptionIsDisabled = Components::checkAttr('selectOptionIsDisabled', $attri
 $selectOptionIsHidden = Components::checkAttr('selectOptionIsHidden', $attributes, $manifest);
 $selectOptionAttrs = Components::checkAttr('selectOptionAttrs', $attributes, $manifest);
 
-if ($selectOptionIsHidden) {
-	return;
-}
-
 $conditionalTags = Components::render(
 	'conditional-tags',
 	Components::props('conditionalTags', $attributes)
@@ -34,7 +30,7 @@ $conditionalTags = Components::render(
 
 $customAttributes = [];
 
-$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectVisibility']] = 'es-form-is-visible-ct';
+$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectOptionIsHidden']] = $selectOptionIsHidden;
 
 if ($conditionalTags) {
 	$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;

@@ -69,6 +69,10 @@
 		},
 		"radioDisabledOptions": {
 			"type": "array"
+		},
+		"radioIsHidden": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

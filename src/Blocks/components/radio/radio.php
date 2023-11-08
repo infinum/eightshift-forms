@@ -31,11 +31,13 @@ $radioSingleSubmit = Components::checkAttr('radioSingleSubmit', $attributes, $ma
 $radioAttrs = Components::checkAttr('radioAttrs', $attributes, $manifest);
 $radioFieldAttrs = Components::checkAttr('radioFieldAttrs', $attributes, $manifest);
 $radioIcon = Components::checkAttr('radioIcon', $attributes, $manifest);
+$radioIsHidden = Components::checkAttr('radioIsHidden', $attributes, $manifest);
 
 $radioClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($radioIsDisabled, $componentClass, '', 'disabled'),
+	Components::selector($radioIsDisabled, 'es-form-is-disabled'),
+	Components::selector($radioIsHidden, 'es-form-is-hidden'),
 ]);
 
 $radioInputClass = Components::classnames([

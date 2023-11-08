@@ -62,6 +62,9 @@ export const StateEnum = {
 	CONDITIONAL_TAGS_IGNORE: 'conditionalTagsIgnore',
 	CONDITIONAL_TAGS_FORM: 'conditionalTagsForm',
 	CONDITIONAL_TAGS_EVENTS: 'conditionalTagsEvents',
+	CONDITIONAL_TAGS_STATE_FORM_HIDE: 'conditionalTagsStateFormHide',
+	CONDITIONAL_TAGS_STATE_FORM_SHOW: 'conditionalTagsStateFormShow',
+	CONDITIONAL_TAGS_STATE_CT: 'conditionalTagsStateCt',
 	CONDITIONAL_TAGS_INNER_EVENTS: 'conditionalTagsInnerEvents',
 
 	CONFIG: 'config',
@@ -156,6 +159,7 @@ export const StateEnum = {
 	SELECTORS_GLOBAL_MSG: `globalMsg`,
 	SELECTORS_GROUP: `group`,
 	SELECTORS_FIELD: `field`,
+	SELECTORS_FIELD_STYLE: `fieldStyle`,
 
 	ATTRIBUTES: 'attributes',
 	PARAMS: 'params',
@@ -293,6 +297,7 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_GLOBAL_MSG], `.${manifest.componentJsClass}-global-msg`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_GROUP], `.${manifest.componentJsClass}-group`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_FIELD], `.${manifest.componentJsClass}-field`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_FIELD_STYLE], `.${manifest.componentClass}-field`, StateEnum.SELECTORS);
 }
 
 /**
@@ -353,6 +358,9 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_IGNORE], [], formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(formElement?.getAttribute(getStateAttribute('conditionalTags')) ?? '{}'), formId);
+	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_HIDE], {}, formId);
+	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_SHOW], {}, formId);
+	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_CT], {}, formId);
 
 	// Steps.
 	setSteps(formElement, formId);
@@ -627,7 +635,6 @@ export function setStateValues(item, formId) {
 
 				if (getState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], formId)) {
 					const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
-
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
 				}
 			}

@@ -1,1 +1,7 @@
 @import './checkbox-style.scss';
+
+.es-checkbox {
+	&.es-form-is-hidden &__content {
+		opacity: 0.4;
+	}
+}

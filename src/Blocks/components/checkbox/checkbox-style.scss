@@ -1,6 +1,5 @@
 .es-checkbox {
 	@include checkbox-styles;
-	@include conditional-tags-styles;
 
 	&__label::before {
 		border-radius: 0.25rem;
