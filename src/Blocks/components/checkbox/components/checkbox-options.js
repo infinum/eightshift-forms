@@ -108,6 +108,7 @@ export const CheckboxOptions = (attributes) => {
 				<Section
 					icon={icons.image}
 					label={__('Field icon', 'eightshift-forms')}
+					collapsable
 				>
 					{checkboxIcon ? 
 						<>
@@ -129,7 +130,7 @@ export const CheckboxOptions = (attributes) => {
 					}
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={checkboxTracking}
@@ -143,6 +144,7 @@ export const CheckboxOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: checkboxValue,
+					conditionalTagsIsHidden: checkboxIsHidden,
 				})}
 			/>
 		</>

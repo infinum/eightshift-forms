@@ -19,6 +19,10 @@
 		},
 		"conditionalTagsBlockName": {
 			"type": "string"
+		},
+		"conditionalTagsIsHidden": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

@@ -4,7 +4,19 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import {
+	icons,
+	getAttrKey,
+	checkAttr,
+	IconToggle,
+	Select,
+	Control,
+	Section,
+	IconLabel,
+	OptionSelector,
+	STORE_NAME,
+	Notification,
+} from '@eightshift/frontend-libs/scripts';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { ROUTES, getRestUrl } from '../../form/assets/state';
@@ -148,7 +160,10 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					title={<IconLabel icon={icons.visibilityAlt} label={__('Field visibility overrides', 'eightshift-forms')} standalone />}
 					onRequestClose={() => setIsModalOpen(false)}
 				>
-					<div className='es-mb-10'>{__('It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.', 'eightshift-forms')}</div>
+					<Notification
+						text={__('It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.', 'eightshift-forms')}
+						type={'warning'}
+					/>
 
 					{conditionalTagsRulesForms.length > 0 &&
 						<div className='es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300'>

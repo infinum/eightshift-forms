@@ -3,7 +3,18 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, IconLabel, Select, Control, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import {
+	icons,
+	getAttrKey,
+	checkAttr,
+	IconToggle,
+	IconLabel,
+	Select,
+	Control,
+	Section,
+	STORE_NAME,
+	Notification,
+} from '@eightshift/frontend-libs/scripts';
 import { getConstantsOptions } from '../../utils';
 import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../assets/utils';
 import {
@@ -36,6 +47,7 @@ export const ConditionalTagsOptions = (attributes) => {
 	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
 	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
 	const conditionalTagsBlockName = checkAttr('conditionalTagsBlockName', attributes, manifest);
+	const conditionalTagsIsHidden = checkAttr('conditionalTagsIsHidden', attributes, manifest);
 
 	const ConditionalTagsType = () => {
 		if (!formFields) {
@@ -44,7 +56,9 @@ export const ConditionalTagsOptions = (attributes) => {
 
 		return (
 			<>
-				<div>{sprintf(__('This field will be %s by default, but you can provide exception to this rule.', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_LABELS[conditionalTagsRules[0]])}</div>
+				<div>
+					{sprintf(__('This field will be %s by default, but you can provide exception to this rule.', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_LABELS[conditionalTagsRules[0]])}
+				</div>
 				<Select
 					value={conditionalTagsRules[0]}
 					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_LABELS)}
@@ -230,14 +244,20 @@ export const ConditionalTagsOptions = (attributes) => {
 					checked={conditionalTagsUse}
 					onChange={(value) => {
 						setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: value });
-
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: !value ? undefined : [CONDITIONAL_TAGS_ACTIONS.HIDE, []]});
+						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: !value ? undefined : [CONDITIONAL_TAGS_ACTIONS.HIDE, []]});
 					}}
 					noBottomSpacing={!conditionalTagsUse}
 					additionalClasses='es-font-weight-500'
 				/>
-	
+
 				<Section showIf={conditionalTagsUse} noBottomSpacing>
+					{conditionalTagsIsHidden &&
+						<Notification
+							text={__('Your field is hidden! It is important to remember that this may result in unforeseen consequences when used with conditional tags.', 'eightshift-forms')}
+							type={'warning'}
+						/>
+					}
+
 					<Control
 						icon={icons.conditionH}
 						label={__('Rules', 'eightshift-forms')}

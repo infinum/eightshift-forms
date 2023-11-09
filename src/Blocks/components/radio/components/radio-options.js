@@ -99,6 +99,7 @@ export const RadioOptions = (attributes) => {
 				<Section
 					icon={icons.image}
 					label={__('Field icon', 'eightshift-forms')}
+					collapsable
 				>
 					{radioIcon ? 
 						<>
@@ -124,6 +125,7 @@ export const RadioOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: radioValue,
+					conditionalTagsIsHidden: radioIsHidden,
 				})}
 			/>
 		</>

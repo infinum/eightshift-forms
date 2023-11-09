@@ -11,9 +11,9 @@ import {
 	ResponsiveNumberPicker,
 	getDefaultBreakpointNames,
 	ucfirst,
-	Collapsable,
 	MultiSelect,
 	STORE_NAME,
+	Section
 } from '@eightshift/frontend-libs/scripts';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { isObject } from 'lodash';
@@ -64,9 +64,14 @@ const FieldPanelItem = ({props}) => {
 			/>
 
 			{children &&
-				<Collapsable icon={icons.moreH} label={__('More options', 'eightshift-forms')} noBottomSpacing>
+				<Section
+					icon={icons.moreH}
+					label={__('More options', 'eightshift-forms')}
+					noBottomSpacing
+					collapsable
+				>
 					{children}
-				</Collapsable>
+				</Section>
 			}
 		</>
 	);

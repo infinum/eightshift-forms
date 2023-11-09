@@ -13,11 +13,12 @@ $manifest = Components::getManifest(__DIR__);
 
 $selectOptionValue = Components::checkAttr('selectOptionValue', $attributes, $manifest);
 $selectOptionAsPlaceholder = Components::checkAttr('selectOptionAsPlaceholder', $attributes, $manifest);
-if (!$selectOptionValue && !$selectOptionAsPlaceholder) {
+$selectOptionLabel = Components::checkAttr('selectOptionLabel', $attributes, $manifest);
+
+if ((!$selectOptionValue || !$selectOptionLabel) && !$selectOptionAsPlaceholder) {
 	return;
 }
 
-$selectOptionLabel = Components::checkAttr('selectOptionLabel', $attributes, $manifest);
 $selectOptionIsSelected = Components::checkAttr('selectOptionIsSelected', $attributes, $manifest);
 $selectOptionIsDisabled = Components::checkAttr('selectOptionIsDisabled', $attributes, $manifest);
 $selectOptionIsHidden = Components::checkAttr('selectOptionIsHidden', $attributes, $manifest);

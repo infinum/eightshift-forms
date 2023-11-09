@@ -47,7 +47,7 @@ export const SubmitOptions = (attributes) => {
 				additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 			/>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 				<TextControl
 					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 					value={submitTracking}

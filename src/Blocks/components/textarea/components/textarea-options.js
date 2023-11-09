@@ -217,7 +217,7 @@ export const TextareaOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={textareaTracking}
@@ -231,6 +231,7 @@ export const TextareaOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: textareaName,
+					conditionalTagsIsHidden: checkAttr('textareaFieldHidden', attributes, manifest),
 				})}
 			/>
 		</>

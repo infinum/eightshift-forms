@@ -109,7 +109,7 @@ export const CountryOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={countryTracking}
@@ -123,6 +123,7 @@ export const CountryOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: countryName,
+					conditionalTagsIsHidden: checkAttr('countryFieldHidden', attributes, manifest),
 				})}
 			/>
 		</>

@@ -190,7 +190,7 @@ export const SelectOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={selectTracking}
@@ -204,6 +204,7 @@ export const SelectOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: selectName,
+					conditionalTagsIsHidden: checkAttr('selectFieldHidden', attributes, manifest),
 				})}
 			/>
 		</>

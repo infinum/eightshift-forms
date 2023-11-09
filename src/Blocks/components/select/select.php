@@ -32,7 +32,6 @@ $selectPlaceholder = Components::checkAttr('selectPlaceholder', $attributes, $ma
 $selectTypeCustom = Components::checkAttr('selectTypeCustom', $attributes, $manifest);
 $selectFieldAttrs = Components::checkAttr('selectFieldAttrs', $attributes, $manifest);
 $selectUseLabelAsPlaceholder = Components::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
-$selectUseEmptyPlaceholder = Components::checkAttr('selectUseEmptyPlaceholder', $attributes, $manifest);
 $selectIsMultiple = Components::checkAttr('selectIsMultiple', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
@@ -54,39 +53,27 @@ if ($selectIsMultiple) {
 	$selectAttrs['multiple'] = 'true';
 }
 
-$placeholder = '';
+$placeholderLabel = '';
 
+// Placeholder input value.
 if ($selectPlaceholder) {
-	$placeholder = Components::render(
-		'select-option',
-		[
-			'selectOptionLabel' => $selectPlaceholder, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'selectOptionAsPlaceholder' => true,
-		]
-	);
+	$placeholderLabel = $selectPlaceholder;
 }
 
+// Placeholder label for value.
 if ($selectUseLabelAsPlaceholder) {
 	$selectHideLabel = true;
-
-	$placeholder = Components::render(
-		'select-option',
-		[
-			'selectOptionLabel' => esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'selectOptionAsPlaceholder' => true,
-		]
-	);
+	$placeholderLabel = esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 }
 
-if ($selectUseEmptyPlaceholder) {
-	$placeholder = Components::render(
-		'select-option',
-		[
-			'selectOptionLabel' => '', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'selectOptionAsPlaceholder' => true,
-		]
-	);
-}
+$placeholder = Components::render(
+	'select-option',
+	[
+		'selectOptionLabel' => $placeholderLabel,
+		'selectOptionAsPlaceholder' => true,
+		'selectOptionIsHidden' => true,
+	]
+);
 
 $selectAttrsOutput = '';
 if ($selectAttrs) {

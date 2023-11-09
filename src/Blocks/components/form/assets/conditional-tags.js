@@ -332,6 +332,8 @@ export class ConditionalTags {
 		let selector = '';
 		let type = '';
 
+		console.log(data, stateName);
+
 		// Set correct selector and type based on state name.
 		switch (stateName) {
 			case StateEnum.CONDITIONAL_TAGS_STATE_FORM_HIDE:
@@ -441,7 +443,7 @@ export class ConditionalTags {
 	 */
 	getFieldInnerByName(formId, name, innerName) {
 		// Check if conditions are valid or not. This is where the magic happens.
-		const isValid = this.state.getStateElementConditionalTagsRefInner(name, innerName, formId).map((validItem) => validItem.every(Boolean)).some(Boolean);
+		const isValid = this.state.getStateElementConditionalTagsRefInner(name, innerName, formId)?.map((validItem) => validItem.every(Boolean)).some(Boolean);
 
 		// Find defaults to know what direction to use.
 		const defaultState = this.state.getStateElementConditionalTagsDefaultsInner(name, innerName, formId);
@@ -460,14 +462,14 @@ export class ConditionalTags {
 	}
 
 	/**
-	 * Get field inner items - select single only.
+	 * Get field inner items - select.
 	 *
 	 * @param {string} fromId Form Id.
 	 * @param {string} name Field Name.
 	 *
 	 * @returns {object}
 	 */
-	getFieldInnerSelectSingle(formId, name) {
+	getFieldInnerSelect(formId, name) {
 		// Prepare outputs.
 		const output = {
 			innerParents: false,
@@ -500,6 +502,35 @@ export class ConditionalTags {
 	}
 
 	/**
+	 * Get field inner items - select single only.
+	 *
+	 * @param {string} fromId Form Id.
+	 * @param {string} name Field Name.
+	 *
+	 * @returns {object}
+	 */
+	getFieldInnerSelectSingle(formId, name) {
+
+		// Get choices object.
+		const custom = this.state.getStateElementCustom(name, formId);
+		const isPlaceholder = this.state.getStateElementCustom(name, formId)?.config?.choices?.[0]?.placeholder;
+
+		// Get active items.
+		const innerName = custom?.getValue(true);
+
+		// Remove active items by name.
+		if (this.getFieldInnerByName(formId, name, innerName)) {
+			custom?.removeActiveItemsByValue(innerName);
+			if (isPlaceholder) {
+				custom?.setChoiceByValue('');
+			}
+		}
+
+		// Set inner items.
+		return this.getFieldInnerSelect(formId, name);
+	}
+
+	/**
 	 * Get field inner items - select multiple only.
 	 *
 	 * @param {string} fromId Form Id.
@@ -519,8 +550,8 @@ export class ConditionalTags {
 			}
 		});
 
-		// Set inner items as it was single.
-		return this.getFieldInnerSelectSingle(formId, name);
+		// Set inner items.
+		return this.getFieldInnerSelect(formId, name);
 	}
 
 	/**

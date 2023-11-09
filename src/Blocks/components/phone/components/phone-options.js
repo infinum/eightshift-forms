@@ -151,7 +151,7 @@ export const PhoneOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={phoneTracking}
@@ -165,6 +165,7 @@ export const PhoneOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: phoneName,
+					conditionalTagsIsHidden: checkAttr('phoneFieldHidden', attributes, manifest),
 				})}
 			/>
 		</>

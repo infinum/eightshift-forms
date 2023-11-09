@@ -58,7 +58,7 @@ export const RadiosOptions = (attributes) => {
 						noBottomSpacing
 					/>
 				</Section>
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={radiosTracking}
@@ -72,6 +72,7 @@ export const RadiosOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: radiosName,
+					conditionalTagsIsHidden: checkAttr('radiosFieldHidden', attributes, manifest),
 				})}
 			/>
 		</>

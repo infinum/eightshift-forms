@@ -4,15 +4,14 @@ import React from 'react';
 import classnames from 'classnames';
 import { isObject } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { Tooltip } from '@wordpress/components';
 import { dispatch, select } from '@wordpress/data';
 import {
 	selector,
 	checkAttr,
 	outputCssVariables,
 	STORE_NAME,
-	icons,
 } from '@eightshift/frontend-libs/scripts';
+import { VisibilityHidden } from './../../utils';
 
 export const FieldEditorExternalBlocks = (props) => {
 	const manifest = select(STORE_NAME).getComponent('field');
@@ -101,14 +100,6 @@ export const FieldEditor = (attributes) => {
 		selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required'),
 	]);
 
-	const hideIndicator = fieldHidden && (
-		<div className='es-position-absolute es-right-7 es-top-4 es-nested-color-pure-white es-bg-cool-gray-650 es-nested-w-6 es-nested-h-6 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
-			<Tooltip text={__('Field is hidden', 'eightshift-forms')}>
-				{icons.hide}
-			</Tooltip>
-		</div>
-	);
-
 	const LabelDefault = () => (
 		<>
 			{!fieldHideLabel &&
@@ -166,7 +157,7 @@ export const FieldEditor = (attributes) => {
 					<Help />
 				</div>
 
-				{hideIndicator}
+				<VisibilityHidden value={fieldHidden} label={__('Field', 'eightshift-forms')} />
 			</div>
 		);
 	};
@@ -184,7 +175,7 @@ export const FieldEditor = (attributes) => {
 					<Help />
 				</div>
 
-				{hideIndicator}
+				<VisibilityHidden value={fieldHidden} label={__('Field', 'eightshift-forms')} />
 			</fieldset>
 		);
 	};

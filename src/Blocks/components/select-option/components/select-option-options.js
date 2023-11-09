@@ -73,6 +73,7 @@ export const SelectOptionOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: selectOptionValue,
+					conditionalTagsIsHidden: selectOptionIsHidden,
 				})}
 			/>
 		</>

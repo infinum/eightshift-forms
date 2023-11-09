@@ -293,7 +293,6 @@ class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, Set
 														'selectFieldLabel' => \ucfirst($item),
 														'selectFieldIsFiftyFiftyHorizontal' => true,
 														'selectFieldBeforeContent' => '&rarr;',
-														'selectUseEmptyPlaceholder' => true,
 														'selectContent' => [
 															...(\array_filter(\array_map(
 																static function ($option) use ($mapParams, $item) {

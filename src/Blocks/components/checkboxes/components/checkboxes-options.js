@@ -104,6 +104,7 @@ export const CheckboxesOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: checkboxesName,
+					conditionalTagsIsHidden: checkAttr('checkboxesFieldHidden', attributes, manifest),
 				})}
 			/>
 		</>

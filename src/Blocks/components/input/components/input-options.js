@@ -379,7 +379,7 @@ export const InputOptions = (attributes) => {
 					}
 				</Section>
 
-				<Section showIf={showInputAdvancedOptions} icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<Section showIf={showInputAdvancedOptions} icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 					{showInputTracking &&
 						<TextControl
 							label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
@@ -395,6 +395,7 @@ export const InputOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: inputName,
+					conditionalTagsIsHidden: checkAttr('inputFieldHidden', attributes, manifest),
 				})}
 			/>
 		</>

@@ -27,10 +27,6 @@
 			"type": "boolean",
 			"default": false
 		},
-		"selectUseEmptyPlaceholder": {
-			"type": "boolean",
-			"default": false
-		},
 		"selectName": {
 			"type": "string"
 		},

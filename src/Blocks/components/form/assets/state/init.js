@@ -363,8 +363,10 @@ export function setStateFormInitial(formId) {
 	// Steps.
 	setSteps(formElement, formId);
 
+	const formFields = formElement?.querySelectorAll('input, select, textarea') ?? {};
+
 	// Loop all fields.
-	for (const item of Object.values(formElement?.querySelectorAll('input, select, textarea') ?? {})) {
+	for (const item of Object.values(formFields)) {
 		const {
 			value,
 			name,
@@ -410,8 +412,6 @@ export function setStateFormInitial(formId) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], 'checkbox', formId);
 				}
 
-				setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
-
 				break;
 			case 'select-one':
 			case 'select-multiple':
@@ -434,6 +434,13 @@ export function setStateFormInitial(formId) {
 				if (blockName !== 'phone') {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
+
+					[...item.children].forEach((option) => {
+						const value = option?.value;
+						if (value) {
+							setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, name, StateEnum.NAME], value, formId);
+						}
+					});
 
 					if (isMultiple) {
 						const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
@@ -507,6 +514,26 @@ export function setStateFormInitial(formId) {
 		setState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], item?.classList?.contains(getState([StateEnum.SELECTORS_SUBMIT_SINGLE], StateEnum.SELECTORS).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.SAVE_AS_JSON], Boolean(item.getAttribute(getStateAttribute('saveAsJson'))), formId);
+	}
+
+	// Loop all fields for conditional tags later because we need to have all state set.
+	for (const item of Object.values(formFields)) {
+		const {
+			value,
+			name,
+			type,
+		} = item;
+
+		if (name === 'search_terms') {
+			continue;
+		}
+
+		const field = formElement.querySelector(`${getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)}[${getStateAttribute('fieldName')}="${name}"]`);
+
+		
+		if (type ==='radio' || type ==='checkbox') {
+			setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
+		}
 
 		// Conditional tags.
 		if (field) {
@@ -677,14 +704,27 @@ export function setStateConditionalTags(field, name, formId) {
 	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], [], formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], [], formId);
 
-	if (conditionalTags) {
-		const tag = JSON.parse(conditionalTags)?.[0];
-
-		setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], tag[0], formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], tag[1], formId);
-
-		setStateConditionalTagsInner(name, formId, tag[1]);
+	if (!conditionalTags) {
+		return;
 	}
+
+	const tag = JSON.parse(conditionalTags)?.[0];
+
+	// Check if fields exist and remove conditional tags if not.
+	// This can happend if the user deletes a field and the conditional tag is still there on other field.
+	const output = tag[1].map((item) => item.filter((inner) => {
+		const itemName = inner[0] ?? '';
+		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
+	})).filter(outputInner => outputInner.length > 0);
+
+	if (!output.length) {
+		return;
+	}
+
+	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], tag[0], formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], output, formId);
+
+	setStateConditionalTagsInner(name, formId, output);
 }
 
 
@@ -695,7 +735,7 @@ export function setStateConditionalTags(field, name, formId) {
  * @param {string} name Field name.
  * @param {string} innerName Conditional tag inner name.
  * @param {string} formId Form ID.
- * 
+ *
  * @returns {void}
  */
 export function setStateConditionalTagsItems(conditionalTags, name, innerName, formId) {
@@ -713,10 +753,21 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 
 	const tag = JSON.parse(conditionalTags)?.[0];
 
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], tag[0], formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS], tag[1], formId);
+	// Check if fields exist and remove conditional tags if not.
+	// This can happend if the user deletes a field and the conditional tag is still there on other field.
+	const output = tag[1].map((item) => item.filter((inner) => {
+		const itemName = inner[0] ?? '';
+		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
+	})).filter(outputInner => outputInner.length > 0);
 
-	setStateConditionalTagsInner(name, formId, tag[1], innerName);
+	if (!output.length) {
+		return;
+	}
+
+	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], tag[0], formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS], output, formId);
+
+	setStateConditionalTagsInner(name, formId, output, innerName);
 }
 
 /**
@@ -726,7 +777,7 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
  * @param {string} formId Form ID.
  * @param {array} tags Tags array.
  * @param {string} innerName Conditional tag inner name.
- * 
+ *
  * @returns {void}
  */
 export function setStateConditionalTagsInner(name, formId, tags, innerName = '') {

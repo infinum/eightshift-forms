@@ -141,7 +141,7 @@ export const FileOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={fileTracking}
@@ -155,6 +155,7 @@ export const FileOptions = (attributes) => {
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
 					conditionalTagsBlockName: fileName,
+					conditionalTagsIsHidden: checkAttr('fileFieldHidden', attributes, manifest),
 				})}
 			/>
 		</>

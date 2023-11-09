@@ -326,21 +326,44 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
  * Outputs notification if name is missing.
  *
  * @param {string} value Field name value.
+ * @param {bool} asPlaceholder If this is a placeholder.
  * @param {string} className Additional class name to add.
  *
  * @returns Component
  */
-export const MissingName = ({ value, asPlaceholder, className }) => {
+export const MissingName = ({ value, asPlaceholder, className = '' }) => {
 	if (value || asPlaceholder) {
 		return null;
 	}
 
 	return (
-		<div className={`es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-bg-red-500 es-nested-w-6 es-nested-h-6 es-w-10 es-h-10 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center ${className}`}>
-		<Tooltip text={__('Name not set!', 'eightshift-forms')}>
-			{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
-		</Tooltip>
-	</div>
+		<div className={`es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-bg-red-500 es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center ${className}`}>
+			<Tooltip text={__('Name not set!', 'eightshift-forms')}>
+				{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
+			</Tooltip>
+		</div>
+	);
+};
+
+/**
+ * Outputs notification if visibility is hidden.
+ *
+ * @param {bool} value Field value.
+ * @param {string} label Field label.
+ *
+ * @returns Component
+ */
+export const VisibilityHidden = ({ value, label }) => {
+	if (!value) {
+		return null;
+	}
+
+	return (
+		<div className='es-position-absolute es-right-7 es-top-0 es-nested-color-pure-white es-bg-cool-gray-650 es-nested-w-6 es-nested-h-6 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
+			<Tooltip text={__(`${label} is hidden`, 'eightshift-forms')}>
+				{icons.hide}
+			</Tooltip>
+		</div>
 	);
 };
 

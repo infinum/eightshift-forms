@@ -65,7 +65,7 @@ export const FieldOptions = (attributes) => {
 
 			<IconToggle
 				icon={icons.hide}
-				label={__('Hide', 'eightshift-forms')}
+				label={__('Hidden', 'eightshift-forms')}
 				checked={fieldHidden}
 				onChange={(value) => setAttributes({ [getAttrKey('fieldHidden', attributes, manifest)]: value })}
 				disabled={isOptionDisabled(getAttrKey('fieldHidden', attributes, manifest), fieldDisabledOptions)}
