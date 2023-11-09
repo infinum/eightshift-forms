@@ -105,17 +105,11 @@ export class State {
 	getStateFormConditionalTagsStateHideForms = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_HIDE], formId);
 	};
-	getStateFormConditionalTagsStateShowForms = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_SHOW], formId);
-	};
 	getStateFormConditionalTagsStateCt = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_CT], formId);
 	};
 	getStateFormConditionalTagsInnerEvents = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], formId);
-	};
-	getStateFormConditionalTagsIgnore = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_IGNORE], formId);
 	};
 	getStateFormConditionalTagsForm = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], formId);

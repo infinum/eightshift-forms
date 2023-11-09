@@ -1,7 +1,7 @@
 .es-form-is-hidden-ct,
-[data-option-is-hidden="true"] {
-	display: none !important;
-	user-select: none !important;
+[data-option-is-hidden='true'] {
+	display: none !important; // stylelint-disable-line declaration-no-important
+	user-select: none !important; // stylelint-disable-line declaration-no-important
 }
 
 // Used for conditional tags.

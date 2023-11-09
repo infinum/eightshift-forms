@@ -59,7 +59,6 @@ export const StateEnum = {
 	TAGS_REF: 'reference',
 	TAGS_DEFAULTS: 'defaults',
 	TAGS_EVENTS: 'events',
-	CONDITIONAL_TAGS_IGNORE: 'conditionalTagsIgnore',
 	CONDITIONAL_TAGS_FORM: 'conditionalTagsForm',
 	CONDITIONAL_TAGS_EVENTS: 'conditionalTagsEvents',
 	CONDITIONAL_TAGS_STATE_FORM_HIDE: 'conditionalTagsStateFormHide',
@@ -356,7 +355,6 @@ export function setStateFormInitial(formId) {
 	// Conditional tags
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
-	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_IGNORE], [], formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(formElement?.getAttribute(getStateAttribute('conditionalTags')) ?? '{}'), formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_HIDE], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_SHOW], {}, formId);
