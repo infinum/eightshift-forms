@@ -7,8 +7,7 @@ import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import {icons,checkAttr,getAttrKey,IconLabel,props,IconToggle,Section,Select, STORE_NAME} from '@eightshift/frontend-libs/scripts';
-import { FieldOptions } from '../../field/components/field-options';
-import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
@@ -56,10 +55,17 @@ export const PhoneOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('phoneName', attributes, manifest), phoneDisabledOptions)}
 					/>
 					<NameChangeWarning isChanged={isNameChanged} />
+				</Section>
 
+				<FieldOptions
+					{...props('field', attributes, {
+						fieldDisabledOptions: phoneDisabledOptions,
+					})}
+				/>
+
+				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
 					{!phoneUseLabelAsPlaceholder &&
 						<TextControl
-							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={phonePlaceholder}
 							onChange={(value) => setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })}
@@ -78,11 +84,10 @@ export const PhoneOptions = (attributes) => {
 					/>
 				</Section>
 
-				<FieldOptions
+				<FieldOptionsLayout
 					{...props('field', attributes, {
 						fieldDisabledOptions: phoneDisabledOptions,
 					})}
-					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
@@ -91,6 +96,12 @@ export const PhoneOptions = (attributes) => {
 						value={phoneValue}
 						onChange={(value) => setAttributes({ [getAttrKey('phoneValue', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('phoneValue', attributes, manifest), phoneDisabledOptions)}
+					/>
+
+					<FieldOptionsVisibility
+						{...props('field', attributes, {
+							fieldDisabledOptions: phoneDisabledOptions,
+						})}
 					/>
 
 					<IconToggle
@@ -151,7 +162,7 @@ export const PhoneOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={phoneTracking}
@@ -160,6 +171,12 @@ export const PhoneOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				</Section>
+
+				<FieldOptionsMore
+					{...props('field', attributes, {
+						fieldDisabledOptions: phoneDisabledOptions,
+					})}
+				/>
 			</PanelBody>
 
 			<ConditionalTagsOptions

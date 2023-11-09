@@ -10,7 +10,6 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { SelectOptionEditor } from './../../select-option/components/select-option-editor';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const SelectEditor = (attributes) => {
@@ -43,15 +42,6 @@ export const SelectEditor = (attributes) => {
 	const selectComponent = (
 		<>
 			<div className={selectClass}>
-
-				{selectPlaceholder &&
-					<div className={`${componentClass}__placeholder`}>
-						<SelectOptionEditor
-							selectOptionLabel={selectPlaceholder}
-							selectOptionAsPlaceholder={true}
-						/>
-					</div>
-				}
 
 				{selectContent}
 

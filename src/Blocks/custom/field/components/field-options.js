@@ -1,16 +1,22 @@
 import React from 'react';
-import { select } from '@wordpress/data';
-import { STORE_NAME } from '@eightshift/frontend-libs/scripts';
-import { FieldPanel } from './../../../components/field/components/field-options-advanced';
+import { __ } from '@wordpress/i18n';
+import { PanelBody } from '@wordpress/components';
+import { props } from '@eightshift/frontend-libs/scripts';
+import { FieldOptionsLayout } from './../../../components/field/components/field-options';
 
 // This block is only used if you want to include custom external blocks to forms.
 export const FieldOptions = ({ attributes, setAttributes }) => {
+	console.log(props('field', attributes, {
+		setAttributes,
+	}));
+	
 	return (
-		<FieldPanel
-			fieldManifest={select(STORE_NAME).getComponent('field')}
-			attributes={attributes}
-			setAttributes={setAttributes}
-			showPanel={true}
-		/>
+		<PanelBody title={__('Field', 'eightshift-forms')}>
+			<FieldOptionsLayout
+				{...props('field', attributes, {
+					setAttributes,
+				})}
+			/>
+		</PanelBody>
 	);
 };

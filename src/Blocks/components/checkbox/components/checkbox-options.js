@@ -41,69 +41,75 @@ export const CheckboxOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={__('Checkbox', 'eightshift-forms')}>
-				<TextControl
-					label={<NameFieldLabel value={checkboxValue} label={__('Value', 'eightshift-forms')} />}
-					help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-					value={checkboxValue}
-					onChange={(value) => {
-						setIsNameChanged(true);
-						setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value });
-					}}
-					disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
-				/>
-				<NameChangeWarning isChanged={isNameChanged} type={'value'} />
-
-				<IconToggle
-					icon={icons.tag}
-					label={__('Label', 'eightshift-forms')}
-					checked={!checkboxHideLabelText}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxHideLabelText', attributes, manifest)]: !value })}
-					reducedBottomSpacing
-				/>
-
-				{!checkboxHideLabelText &&
-					<TextareaControl
-						value={checkboxLabel}
-						onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
+				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={checkboxValue} label={__('Value', 'eightshift-forms')} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={checkboxValue}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value });
+						}}
+						disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
 					/>
-				}
+					<NameChangeWarning isChanged={isNameChanged} type={'value'} />
+				</Section>
 
-				<AnimatedContentVisibility showIf={checkboxHideLabelText}>
-					<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
-				</AnimatedContentVisibility>
+				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
+					<IconToggle
+						label={__('Use label', 'eightshift-forms')}
+						checked={!checkboxHideLabelText}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxHideLabelText', attributes, manifest)]: !value })}
+						reducedBottomSpacing
+					/>
 
-				<IconToggle
-					icon={icons.checkSquare}
-					label={__('Checked', 'eightshift-forms')}
-					checked={checkboxIsChecked}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxIsChecked', attributes, manifest), checkboxDisabledOptions)}
-				/>
+					{!checkboxHideLabelText &&
+						<TextareaControl
+							value={checkboxLabel}
+							onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
+						/>
+					}
 
-				<IconToggle
-					icon={icons.readOnly}
-					label={__('Read-only', 'eightshift-forms')}
-					checked={checkboxIsReadOnly}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxIsReadOnly', attributes, manifest), checkboxDisabledOptions)}
-				/>
+					<AnimatedContentVisibility showIf={checkboxHideLabelText}>
+						<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
+					</AnimatedContentVisibility>
+				</Section>
 
-				<IconToggle
-					icon={icons.cursorDisabled}
-					label={__('Disabled', 'eightshift-forms')}
-					checked={checkboxIsDisabled}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxIsDisabled', attributes, manifest), checkboxDisabledOptions)}
-				/>
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<IconToggle
+						icon={icons.checkSquare}
+						label={__('Checked', 'eightshift-forms')}
+						checked={checkboxIsChecked}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('checkboxIsChecked', attributes, manifest), checkboxDisabledOptions)}
+					/>
 
-				<IconToggle
-					icon={icons.hide}
-					label={__('Hidden', 'eightshift-forms')}
-					checked={checkboxIsHidden}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsHidden', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxIsHidden', attributes, manifest), checkboxDisabledOptions)}
-				/>
+					<IconToggle
+						icon={icons.readOnly}
+						label={__('Read-only', 'eightshift-forms')}
+						checked={checkboxIsReadOnly}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('checkboxIsReadOnly', attributes, manifest), checkboxDisabledOptions)}
+					/>
+
+					<IconToggle
+						icon={icons.cursorDisabled}
+						label={__('Disabled', 'eightshift-forms')}
+						checked={checkboxIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsDisabled', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('checkboxIsDisabled', attributes, manifest), checkboxDisabledOptions)}
+					/>
+
+					<IconToggle
+						icon={icons.hide}
+						label={__('Hidden', 'eightshift-forms')}
+						checked={checkboxIsHidden}
+						onChange={(value) => setAttributes({ [getAttrKey('checkboxIsHidden', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('checkboxIsHidden', attributes, manifest), checkboxDisabledOptions)}
+						noBottomSpacing
+					/>
+				</Section>
 
 				<Section
 					icon={icons.image}

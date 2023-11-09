@@ -3,8 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { icons, checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions } from '../../../components/field/components/field-options';
-import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
 
 export const SubmitOptions = (attributes) => {
@@ -28,6 +27,26 @@ export const SubmitOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('submitValue', attributes, manifest), submitDisabledOptions)}
 				/>
+			</Section>
+
+			<FieldOptions
+				{...props('field', attributes, {
+					fieldDisabledOptions: submitDisabledOptions,
+				})}
+			/>
+
+			<FieldOptionsLayout
+				{...props('field', attributes, {
+					fieldDisabledOptions: submitDisabledOptions,
+				})}
+			/>
+
+			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+				<FieldOptionsVisibility
+					{...props('field', attributes, {
+						fieldDisabledOptions: submitDisabledOptions,
+					})}
+				/>
 
 				<IconToggle
 					icon={icons.cursorDisabled}
@@ -39,15 +58,7 @@ export const SubmitOptions = (attributes) => {
 				/>
 			</Section>
 
-			<FieldOptions
-				{...props('field', attributes, {
-					fieldDisabledOptions: submitDisabledOptions,
-				})}
-				showFieldLabel={false}
-				additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
-			/>
-
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
+			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
 				<TextControl
 					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 					value={submitTracking}
@@ -56,6 +67,12 @@ export const SubmitOptions = (attributes) => {
 					className='es-no-field-spacing'
 				/>
 			</Section>
+
+			<FieldOptionsMore
+				{...props('field', attributes, {
+					fieldDisabledOptions: submitDisabledOptions,
+				})}
+			/>
 		</PanelBody>
 	);
 };

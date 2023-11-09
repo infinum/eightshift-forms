@@ -4,8 +4,7 @@ import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, props, icons, Section, IconToggle, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions } from '../../field/components/field-options';
-import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
@@ -45,7 +44,12 @@ export const RadiosOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: radiosDisabledOptions,
 					})}
-					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
+				/>
+
+				<FieldOptionsLayout
+					{...props('field', attributes, {
+						fieldDisabledOptions: radiosDisabledOptions,
+					})}
 				/>
 
 				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')} >
@@ -58,7 +62,16 @@ export const RadiosOptions = (attributes) => {
 						noBottomSpacing
 					/>
 				</Section>
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
+
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<FieldOptionsVisibility
+						{...props('field', attributes, {
+							fieldDisabledOptions: radiosDisabledOptions,
+						})}
+					/>
+				</Section>
+
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={radiosTracking}
@@ -67,6 +80,12 @@ export const RadiosOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				</Section>
+
+				<FieldOptionsMore
+					{...props('field', attributes, {
+						fieldDisabledOptions: radiosDisabledOptions,
+					})}
+				/>
 			</PanelBody>
 
 			<ConditionalTagsOptions

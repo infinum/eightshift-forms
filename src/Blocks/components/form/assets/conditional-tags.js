@@ -418,6 +418,7 @@ export class ConditionalTags {
 		// Loop inner items.
 		items.forEach((innerName) => {
 			const inner = this.getFieldInnerByName(formId, name, innerName);
+
 			if (inner) {
 				// Push to inner state if existing.
 				output.inner.push(inner);
@@ -513,7 +514,6 @@ export class ConditionalTags {
 
 		// Get choices object.
 		const custom = this.state.getStateElementCustom(name, formId);
-		const isPlaceholder = this.state.getStateElementCustom(name, formId)?.config?.choices?.[0]?.placeholder;
 
 		// Get active items.
 		const innerName = custom?.getValue(true);
@@ -521,9 +521,7 @@ export class ConditionalTags {
 		// Remove active items by name.
 		if (this.getFieldInnerByName(formId, name, innerName)) {
 			custom?.removeActiveItemsByValue(innerName);
-			if (isPlaceholder) {
-				custom?.setChoiceByValue('');
-			}
+			custom?.setChoiceByValue('');
 		}
 
 		// Set inner items.
@@ -569,12 +567,7 @@ export class ConditionalTags {
 			const items = this.state.getStateElementCustom(name, formId)?.config?.choices;
 
 			// Get total items.
-			let totalItems = items?.length;
-
-			// Total items are one less if placeholder is set.
-			if (items?.[0]?.placeholder) {
-				totalItems--;
-			}
+			let totalItems = items?.length - 1;
 
 			// All items are hidden so we need to hide the parent also.
 			if (totalItems === currentState.length) {

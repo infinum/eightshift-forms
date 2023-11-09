@@ -18,8 +18,7 @@ import {
 	getOption,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions } from '../../field/components/field-options';
-import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
@@ -79,10 +78,17 @@ export const DateOptions = (attributes) => {
 						inlineLabel
 						noSearch
 					/>
+				</Section>
 
+				<FieldOptions
+					{...props('field', attributes, {
+						fieldDisabledOptions: dateDisabledOptions,
+					})}
+				/>
+
+				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
 					{!dateUseLabelAsPlaceholder &&
 						<TextControl
-							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={datePlaceholder}
 							onChange={(value) => setAttributes({ [getAttrKey('datePlaceholder', attributes, manifest)]: value })}
@@ -101,11 +107,10 @@ export const DateOptions = (attributes) => {
 					/>
 				</Section>
 
-				<FieldOptions
+				<FieldOptionsLayout
 					{...props('field', attributes, {
 						fieldDisabledOptions: dateDisabledOptions,
 					})}
-					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
 				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
@@ -140,6 +145,12 @@ export const DateOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('dateValue', attributes, manifest), dateDisabledOptions)}
 					/>
 
+					<FieldOptionsVisibility
+						{...props('field', attributes, {
+							fieldDisabledOptions: dateDisabledOptions,
+						})}
+					/>
+
 					<IconToggle
 						icon={icons.readOnly}
 						label={__('Read-only', 'eightshift-forms')}
@@ -158,7 +169,7 @@ export const DateOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={dateTracking}
@@ -167,6 +178,12 @@ export const DateOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				</Section>
+
+				<FieldOptionsMore
+					{...props('field', attributes, {
+						fieldDisabledOptions: dateDisabledOptions,
+					})}
+				/>
 			</PanelBody>
 
 			<ConditionalTagsOptions

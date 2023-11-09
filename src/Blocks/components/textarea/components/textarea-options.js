@@ -19,8 +19,7 @@ import {
 	Control,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions } from '../../../components/field/components/field-options';
-import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
@@ -75,10 +74,17 @@ export const TextareaOptions = (attributes) => {
 					/>
 
 					<NameChangeWarning isChanged={isNameChanged} />
+				</Section>
 
+				<FieldOptions
+					{...props('field', attributes, {
+						fieldDisabledOptions: textareaDisabledOptions,
+					})}
+				/>
+
+				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
 					{!textareaUseLabelAsPlaceholder &&
 						<TextControl
-							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={textareaPlaceholder}
 							onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
@@ -97,11 +103,10 @@ export const TextareaOptions = (attributes) => {
 					/>
 				</Section>
 
-				<FieldOptions
+				<FieldOptionsLayout
 					{...props('field', attributes, {
 						fieldDisabledOptions: textareaDisabledOptions,
 					})}
-					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
 				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
@@ -199,6 +204,12 @@ export const TextareaOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('textareaValue', attributes, manifest), textareaDisabledOptions)}
 					/>
 
+					<FieldOptionsVisibility
+						{...props('field', attributes, {
+							fieldDisabledOptions: textareaDisabledOptions,
+						})}
+					/>
+
 					<IconToggle
 						icon={icons.readOnly}
 						label={__('Read-only', 'eightshift-forms')}
@@ -217,7 +228,7 @@ export const TextareaOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={textareaTracking}
@@ -226,6 +237,12 @@ export const TextareaOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				</Section>
+
+				<FieldOptionsMore
+					{...props('field', attributes, {
+						fieldDisabledOptions: textareaDisabledOptions,
+					})}
+				/>
 			</PanelBody>
 
 			<ConditionalTagsOptions

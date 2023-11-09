@@ -4,8 +4,7 @@ import { useSelect, select } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, props, icons, Section, IconToggle, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions } from '../../field/components/field-options';
-import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
@@ -64,7 +63,12 @@ export const CheckboxesOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: checkboxesDisabledOptions,
 					})}
-					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
+				/>
+
+				<FieldOptionsLayout
+					{...props('field', attributes, {
+						fieldDisabledOptions: checkboxesDisabledOptions,
+					})}
 				/>
 
 				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
@@ -99,6 +103,20 @@ export const CheckboxesOptions = (attributes) => {
 						</div>
 					</AnimatedContentVisibility>
 				</Section>
+
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<FieldOptionsVisibility
+						{...props('field', attributes, {
+							fieldDisabledOptions: checkboxesDisabledOptions,
+						})}
+					/>
+				</Section>
+
+				<FieldOptionsMore
+					{...props('field', attributes, {
+						fieldDisabledOptions: checkboxesDisabledOptions,
+					})}
+				/>
 			</PanelBody>
 
 			<ConditionalTagsOptions

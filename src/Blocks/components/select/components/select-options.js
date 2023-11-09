@@ -15,8 +15,7 @@ import {
 	NumberPicker,
 	Control,
 } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions } from '../../../components/field/components/field-options';
-import { FieldOptionsAdvanced } from '../../field/components/field-options-advanced';
+import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
@@ -61,10 +60,17 @@ export const SelectOptions = (attributes) => {
 					/>
 
 					<NameChangeWarning isChanged={isNameChanged} />
+				</Section>
 
+				<FieldOptions
+					{...props('field', attributes, {
+						fieldDisabledOptions: selectDisabledOptions,
+					})}
+				/>
+
+				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
 					{!selectUseLabelAsPlaceholder &&
 						<TextControl
-							label={<IconLabel icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')} />}
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={selectPlaceholder}
 							onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
@@ -83,11 +89,10 @@ export const SelectOptions = (attributes) => {
 					/>
 				</Section>
 
-				<FieldOptions
+				<FieldOptionsLayout
 					{...props('field', attributes, {
 						fieldDisabledOptions: selectDisabledOptions,
 					})}
-					additionalControls={<FieldOptionsAdvanced {...props('field', attributes)} />}
 				/>
 
 				<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
@@ -160,6 +165,12 @@ export const SelectOptions = (attributes) => {
 				</Section>
 
 				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<FieldOptionsVisibility
+						{...props('field', attributes, {
+							fieldDisabledOptions: selectDisabledOptions,
+						})}
+					/>
+
 					<IconToggle
 						icon={icons.cursorDisabled}
 						label={__('Disabled', 'eightshift-forms')}
@@ -190,7 +201,7 @@ export const SelectOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} noBottomSpacing collapsable>
+				<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
 					<TextControl
 						label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
 						value={selectTracking}
@@ -199,6 +210,12 @@ export const SelectOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				</Section>
+
+				<FieldOptionsMore
+					{...props('field', attributes, {
+						fieldDisabledOptions: selectDisabledOptions,
+					})}
+				/>
 			</PanelBody>
 
 			<ConditionalTagsOptions

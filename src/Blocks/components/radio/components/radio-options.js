@@ -39,62 +39,68 @@ export const RadioOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={__('Radio button', 'eightshift-forms')}>
-				<TextControl
-					label={<NameFieldLabel value={radioValue} label={__('Value', 'eightshift-forms')} />}
-					help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
-					value={radioValue}
-					onChange={(value) => {
-						setIsNameChanged(true);
-						setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value });
-					}}
-					disabled={isOptionDisabled(getAttrKey('radioValue', attributes, manifest), radioDisabledOptions)}
-				/>
-
-				<NameChangeWarning isChanged={isNameChanged} type={'value'} />
-
-				<IconToggle
-					icon={icons.tag}
-					label={__('Label', 'eightshift-forms')}
-					checked={!radioHideLabelText}
-					onChange={(value) => setAttributes({ [getAttrKey('radioHideLabelText', attributes, manifest)]: !value })}
-					reducedBottomSpacing
-				/>
-
-				{!radioHideLabelText &&
-					<TextareaControl
-						value={radioLabel}
-						onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}
+				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<TextControl
+						label={<NameFieldLabel value={radioValue} label={__('Value', 'eightshift-forms')} />}
+						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+						value={radioValue}
+						onChange={(value) => {
+							setIsNameChanged(true);
+							setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value });
+						}}
+						disabled={isOptionDisabled(getAttrKey('radioValue', attributes, manifest), radioDisabledOptions)}
 					/>
-				}
 
-				<AnimatedContentVisibility showIf={radioHideLabelText}>
-					<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
-				</AnimatedContentVisibility>
+					<NameChangeWarning isChanged={isNameChanged} type={'value'} />
+				</Section>
 
-				<IconToggle
-					icon={icons.checkCircle}
-					label={__('Selected', 'eightshift-forms')}
-					checked={radioIsChecked}
-					onChange={(value) => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radioIsChecked', attributes, manifest), radioDisabledOptions)}
-				/>
+				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
+					<IconToggle
+						label={__('Use label', 'eightshift-forms')}
+						checked={!radioHideLabelText}
+						onChange={(value) => setAttributes({ [getAttrKey('radioHideLabelText', attributes, manifest)]: !value })}
+						reducedBottomSpacing
+					/>
 
-				<IconToggle
-					icon={icons.cursorDisabled}
-					label={__('Disabled', 'eightshift-forms')}
-					checked={radioIsDisabled}
-					onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radioIsDisabled', attributes, manifest), radioDisabledOptions)}
-				/>
+					{!radioHideLabelText &&
+						<TextareaControl
+							value={radioLabel}
+							onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}
+						/>
+					}
 
-				<IconToggle
-					icon={icons.hide}
-					label={__('Hidden', 'eightshift-forms')}
-					checked={radioIsHidden}
-					onChange={(value) => setAttributes({ [getAttrKey('radioIsHidden', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('radioIsHidden', attributes, manifest), radioDisabledOptions)}
-				/>
+					<AnimatedContentVisibility showIf={radioHideLabelText}>
+						<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
+					</AnimatedContentVisibility>
+				</Section>
+
+				<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<IconToggle
+						icon={icons.checkCircle}
+						label={__('Selected', 'eightshift-forms')}
+						checked={radioIsChecked}
+						onChange={(value) => setAttributes({ [getAttrKey('radioIsChecked', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radioIsChecked', attributes, manifest), radioDisabledOptions)}
+					/>
+
+					<IconToggle
+						icon={icons.cursorDisabled}
+						label={__('Disabled', 'eightshift-forms')}
+						checked={radioIsDisabled}
+						onChange={(value) => setAttributes({ [getAttrKey('radioIsDisabled', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radioIsDisabled', attributes, manifest), radioDisabledOptions)}
+					/>
+
+					<IconToggle
+						icon={icons.hide}
+						label={__('Hidden', 'eightshift-forms')}
+						checked={radioIsHidden}
+						onChange={(value) => setAttributes({ [getAttrKey('radioIsHidden', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('radioIsHidden', attributes, manifest), radioDisabledOptions)}
+						noBottomSpacing
+					/>
+				</Section>
 
 				<Section
 					icon={icons.image}
