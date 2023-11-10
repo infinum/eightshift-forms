@@ -73,6 +73,9 @@
 		},
 		"selectTypeCustom": {
 			"type": "string"
+		},
+		"selectShowAs": {
+			"type": "string"
 		}
 	},
 	"options": {

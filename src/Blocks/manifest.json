@@ -31,6 +31,150 @@
 		"eightshift-forms/country",
 		"eightshift-forms/step"
 	],
+	"showAsMap": {
+		"options": [
+			{
+				"label": "Select",
+				"value": "select"
+			},
+			{
+				"label": "Radios",
+				"value": "radios"
+			},
+			{
+				"label": "Checkboxes",
+				"value": "checkboxes"
+			}
+		],
+		"checkboxes-select": {
+			"names" : {
+				"checkboxes": {
+					"top": "select",
+					"children": "select-option"
+				},
+				"select": {
+					"top": "checkboxes",
+					"children": "checkbox"
+				}
+			},
+			"prefix" : {
+				"checkboxes": {
+					"from": "checkboxesCheckboxes",
+					"to": "selectSelect"
+				},
+				"select": {
+					"from": "selectSelect",
+					"to": "checkboxesCheckboxes"
+				}
+			},
+			"top": {
+				"checkboxesCheckboxesContent": "selectSelectContent",
+				"checkboxesCheckboxesName": "selectSelectName",
+				"checkboxesCheckboxesIsRequired": "selectSelectIsRequired",
+				"checkboxesCheckboxesMeta": "selectSelectMeta",
+				"checkboxesCheckboxesDisabledOptions": "selectSelectDisabledOptions",
+				"checkboxesCheckboxesTypeCustom": "selectSelectTypeCustom",
+				"checkboxesCheckboxesShowAs": "selectSelectShowAs",
+				"checkboxesCheckboxesFieldAttrs": "selectSelectFieldAttrs"
+			},
+			"children": {
+				"checkboxCheckboxLabel": "selectOptionSelectOptionLabel",
+				"checkboxCheckboxValue": "selectOptionSelectOptionValue",
+				"checkboxCheckboxIsChecked": "selectOptionSelectOptionIsSelected",
+				"checkboxCheckboxIsDisabled": "selectOptionSelectOptionIsDisabled",
+				"checkboxCheckboxAttrs": "selectOptionSelectOptionAttrs",
+				"checkboxCheckboxIsHidden": "selectOptionSelectOptionIsHidden",
+				"checkboxCheckboxDisabledOptions": "selectOptionSelectOptionDisabledOptions"
+			},
+			"append": {
+				"checkboxes": {
+					"selectSelectIsMultiple": true
+				}
+			}
+		},
+		"checkboxes-radios": {
+			"names" : {
+				"checkboxes": {
+					"top": "radios",
+					"children": "radio"
+				},
+				"radios": {
+					"top": "checkboxes",
+					"children": "checkbox"
+				}
+			},
+			"prefix" : {
+				"checkboxes": {
+					"from": "checkboxesCheckboxes",
+					"to": "radiosRadios"
+				},
+				"radios": {
+					"from": "radiosRadios",
+					"to": "checkboxesCheckboxes"
+				}
+			},
+			"top": {
+				"checkboxesCheckboxesContent": "radiosRadiosContent",
+				"checkboxesCheckboxesName": "radiosRadiosName",
+				"checkboxesCheckboxesIsRequired": "radiosRadiosIsRequired",
+				"checkboxesCheckboxesMeta": "radiosRadiosMeta",
+				"checkboxesCheckboxesDisabledOptions": "radiosRadiosDisabledOptions",
+				"checkboxesCheckboxesTypeCustom": "radiosRadiosTypeCustom",
+				"checkboxesCheckboxesShowAs": "radiosRadiosShowAs",
+				"checkboxesCheckboxesFieldAttrs": "radiosRadiosFieldAttrs"
+			},
+			"children": {
+				"checkboxCheckboxLabel": "radioRadioLabel",
+				"checkboxCheckboxValue": "radioRadioValue",
+				"checkboxCheckboxIsChecked": "radioRadioIsSelected",
+				"checkboxCheckboxIsDisabled": "radioRadioIsDisabled",
+				"checkboxCheckboxAttrs": "radioRadioAttrs",
+				"checkboxCheckboxIsHidden": "radioRadioIsHidden",
+				"checkboxCheckboxDisabledOptions": "radioRadioDisabledOptions"
+			}
+		},
+		"radios-select": {
+			"names" : {
+				"select": {
+					"top": "radios",
+					"children": "radio"
+				},
+				"radios": {
+					"top": "select",
+					"children": "select-option"
+				}
+			},
+			"prefix" : {
+				"select": {
+					"from": "selectSelect",
+					"to": "radiosRadios"
+				},
+				"radios": {
+					"from": "radiosRadios",
+					"to": "selectSelect"
+				}
+			},
+			"top": {
+				 "radiosRadiosContent": "selectSelectContent",
+				 "radiosRadiosName": "selectSelectName",
+				 "radiosRadiosIsRequired": "selectSelectIsRequired",
+				 "radiosRadiosMeta": "selectSelectMeta",
+				 "radiosRadiosDisabledOptions": "selectSelectDisabledOptions",
+				 "radiosRadiosTypeCustom": "selectSelectTypeCustom",
+				 "radiosRadiosShowAs": "selectSelectShowAs",
+				 "radiosRadiosFieldAttrs": "selectSelectFieldAttrs"
+			},
+			"children": {
+				"radioRadioLabel": "selectOptionSelectOptionLabel",
+				"radioRadioValue": "selectOptionSelectOptionValue",
+				"radioRadioIsChecked": "selectOptionSelectOptionIsSelected",
+				"radioRadioIsDisabled": "selectOptionSelectOptionIsDisabled",
+				"radioRadioAttrs": "selectOptionSelectOptionAttrs",
+				"radioRadioIsHidden": "selectOptionSelectOptionIsHidden",
+				"radioRadioDisabledOptions": "selectOptionSelectOptionDisabledOptions"
+			}
+		}
+	},
 	"globalVariables": {
 		"customBlocksName": "eightshift-block",
 		"esMaxCols": 12,

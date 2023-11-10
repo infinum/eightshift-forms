@@ -34,6 +34,9 @@
 		"radiosTypeCustom": {
 			"type": "string"
 		},
+		"radiosShowAs": {
+			"type": "string"
+		},
 		"radiosFieldAttrs": {
 			"type": "object"
 		}

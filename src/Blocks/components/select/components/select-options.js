@@ -14,12 +14,14 @@ import {
 	STORE_NAME,
 	NumberPicker,
 	Control,
+	Select,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const SelectOptions = (attributes) => {
+	const globalManifest = select(STORE_NAME).getSettings();
 	const manifest = select(STORE_NAME).getComponent('select');
 
 	const {
@@ -43,6 +45,7 @@ export const SelectOptions = (attributes) => {
 	const selectIsMultiple = checkAttr('selectIsMultiple', attributes, manifest);
 	const selectMinCount = checkAttr('selectMinCount', attributes, manifest);
 	const selectMaxCount = checkAttr('selectMaxCount', attributes, manifest);
+	const selectShowAs = checkAttr('selectShowAs', attributes, manifest);
 
 	return (
 		<>
@@ -58,6 +61,22 @@ export const SelectOptions = (attributes) => {
 						setIsChanged={setIsNameChanged}
 					/>
 				</Section>
+
+				<Select
+					icon={icons.optionListAlt}
+					label={__('Show as', 'eightshift-forms')}
+					value={selectShowAs}
+					options={globalManifest.showAsMap.options.filter((item) => item.value !== 'select')}
+					disabled={isOptionDisabled(getAttrKey('selectShowAs', attributes, manifest), selectDisabledOptions)}
+					onChange={(value) => {
+						setAttributes({ [getAttrKey('selectShowAs', attributes, manifest)]: value });
+					}}
+					additionalSelectClasses='es-w-40'
+					simpleValue
+					inlineLabel
+					noSearch
+					clearable
+				/>
 
 				<FieldOptions
 					{...props('field', attributes, {

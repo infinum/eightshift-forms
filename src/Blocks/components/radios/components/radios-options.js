@@ -3,12 +3,23 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, icons, Section, IconToggle, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import {
+	checkAttr,
+	getAttrKey,
+	props,
+	icons,
+	Section,
+	IconToggle,
+	IconLabel,
+	STORE_NAME,
+	Select,
+} from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const RadiosOptions = (attributes) => {
+	const globalManifest = select(STORE_NAME).getSettings();
 	const manifest = select(STORE_NAME).getComponent('radios');
 
 	const {
@@ -21,6 +32,7 @@ export const RadiosOptions = (attributes) => {
 	const radiosIsRequired = checkAttr('radiosIsRequired', attributes, manifest);
 	const radiosDisabledOptions = checkAttr('radiosDisabledOptions', attributes, manifest);
 	const radiosTracking = checkAttr('radiosTracking', attributes, manifest);
+	const radiosShowAs = checkAttr('radiosShowAs', attributes, manifest);
 
 	return (
 		<>
@@ -36,6 +48,22 @@ export const RadiosOptions = (attributes) => {
 						setIsChanged={setIsNameChanged}
 					/>
 				</Section>
+
+				<Select
+					icon={icons.optionListAlt}
+					label={__('Show as', 'eightshift-forms')}
+					value={radiosShowAs}
+					options={globalManifest.showAsMap.options.filter((item) => item.value !== 'radios')}
+					disabled={isOptionDisabled(getAttrKey('radiosShowAs', attributes, manifest), radiosDisabledOptions)}
+					onChange={(value) => {
+						setAttributes({ [getAttrKey('radiosShowAs', attributes, manifest)]: value });
+					}}
+					additionalSelectClasses='es-w-40'
+					simpleValue
+					inlineLabel
+					noSearch
+					clearable
+				/>
 
 				<FieldOptions
 					{...props('field', attributes, {

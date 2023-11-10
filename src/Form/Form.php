@@ -236,6 +236,11 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						case 'country':
 							$inBlock['attrs'][Components::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
 							break;
+						case 'select':
+						case 'checkboxes':
+						case 'radios':
+							$inBlock = $this->getShowAsOutput($inBlock);
+							break;
 					}
 
 					// Add custom field block around none forms block to be able to use positioning.
@@ -352,5 +357,144 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		return \array_values($output);
+	}
+
+	/**
+	 * Get show as output.
+	 *
+	 * @param array<string, mixed> $block Block array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getShowAsOutput(array $block): array
+	{
+		$nameDetails = Helper::getBlockNameDetails($block['blockName']);
+		$name = $nameDetails['name'];
+		$namespace = $nameDetails['namespace'];
+		$attrs = $block['attrs'] ?? [];
+		$innerBlocks = $block['innerBlocks'] ?? [];
+
+		if (!$attrs || !$innerBlocks) {
+			return $block;
+		}
+
+		$showAs = $attrs[Components::kebabToCamelCase("{$name}-{$name}-showAs")] ?? '';
+
+		if ($showAs === $name || $showAs === 'default' || !$showAs) {
+			return $block;
+		}
+
+		$output = [];
+
+		if (
+			($name === 'checkboxes' && $showAs === 'select') ||
+			($name === 'checkboxes' && $showAs === 'radios') ||
+			($name === 'radios' && $showAs === 'select')
+		) {
+			$output = $this->getShowAsOutputItem($name, $showAs, $namespace, $attrs, $innerBlocks);
+		}
+
+		if (
+			($name === 'select' && $showAs === 'checkboxes') ||
+			($name === 'radios' && $showAs === 'checkboxes') ||
+			($name === 'select' && $showAs === 'radios')
+		) {
+			$output = $this->getShowAsOutputItem($name, $showAs, $namespace, $attrs, $innerBlocks, true);
+		}
+
+		if (!$output) {
+			return $block;
+		}
+
+		$output['innerHTML'] = $block['innerHTML'] ?? '';
+		$output['innerContent'] = $block['innerContent'] ?? [];
+
+		return $output;
+	}
+
+	/**
+	 * Transform one block to a new block.
+	 *
+	 * @param string $name Block name.
+	 * @param string $showAs Show as name from block attribute.
+	 * @param string $namespace Block namespace.
+	 * @param array<string, mixed> $attrs Block attributes.
+	 * @param array<int, mixed> $innerBlocks Block inner blocks.
+	 * @param boolean $isFlipped Is flipped version.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getShowAsOutputItem(string $name, string $showAs, string $namespace, array $attrs, array $innerBlocks, bool $isFlipped = false): array
+	{
+		$output = [];
+		$maps = Components::getSettings()['showAsMap'];
+
+		$mapName = "{$name}-{$showAs}";
+
+		if ($isFlipped) {
+			$mapName = "{$showAs}-{$name}";
+		}
+
+		$map = $maps[$mapName];
+		$mapTop = $map['top'];
+		$mapChildren = $map['children'];
+		$mapNames = $map['names'];
+		$mapPrefix = $map['prefix'];
+		$mapAppend = $map['append'][$name] ?? [];
+
+		if ($isFlipped) {
+			$mapTop = \array_flip($mapTop);
+			$mapChildren = \array_flip($mapChildren);
+		}
+
+		$output['blockName'] = "{$namespace}/{$mapNames[$name]['top']}";
+		$output['attrs'] = [];
+
+		foreach ($mapTop as $key => $value) {
+			$attr = $attrs[$key] ?? '';
+
+			if (!$attr) {
+				continue;
+			}
+
+			$output['attrs'][$value] = $attr;
+		}
+
+		if ($mapAppend) {
+			foreach ($mapAppend as $key => $value) {
+				$output['attrs'][$key] = $value;
+			}
+		}
+
+		foreach ($attrs as $attrKey => $attrsValue) {
+			if (\strpos($attrKey, 'Field') !== false) {
+				$output['attrs'][\str_replace($mapPrefix[$name]['from'], $mapPrefix[$name]['to'], $attrKey)] = $attrsValue;
+			}
+		}
+
+		$outputInner = [];
+
+		foreach ($innerBlocks as $innerBlockKey => $innerBlock) {
+			$outputInner[$innerBlockKey]['blockName'] = "{$namespace}/{$mapNames[$name]['children']}";
+			$attrs = $innerBlock['attrs'] ?? [];
+
+			foreach ($mapChildren as $key => $value) {
+				$attr = $attrs[$key] ?? '';
+
+				if (!$attr) {
+					continue;
+				}
+
+				$outputInner[$innerBlockKey]['attrs'][$value] = $attr;
+			}
+
+			$outputInner[$innerBlockKey]['innerBlocks'] = $innerBlock['innerBlocks'] ?? [];
+			$outputInner[$innerBlockKey]['innerHTML'] = '';
+			$outputInner[$innerBlockKey]['innerContent'] = $innerBlock['innerBlocks'] ?? [];
+
+			$output['innerBlocks'] = $outputInner;
+		}
+
+		return $output;
 	}
 }

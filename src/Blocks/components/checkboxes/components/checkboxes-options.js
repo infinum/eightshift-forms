@@ -3,12 +3,23 @@ import { useState } from '@wordpress/element';
 import { useSelect, select } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, icons, Section, IconToggle, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import {
+	checkAttr,
+	getAttrKey,
+	props,
+	icons,
+	Section,
+	IconToggle,
+	AnimatedContentVisibility,
+	STORE_NAME,
+	Select,
+ } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CheckboxesOptions = (attributes) => {
+	const globalManifest = select(STORE_NAME).getSettings();
 	const manifest = select(STORE_NAME).getComponent('checkboxes');
 
 	const {
@@ -26,6 +37,7 @@ export const CheckboxesOptions = (attributes) => {
 	const checkboxesIsRequired = checkAttr('checkboxesIsRequired', attributes, manifest);
 	const checkboxesIsRequiredCount = checkAttr('checkboxesIsRequiredCount', attributes, manifest);
 	const checkboxesDisabledOptions = checkAttr('checkboxesDisabledOptions', attributes, manifest);
+	const checkboxesShowAs = checkAttr('checkboxesShowAs', attributes, manifest);
 
 	const [countInnerBlocks, setCountInnerBlocks] = useState(0);
 
@@ -55,6 +67,22 @@ export const CheckboxesOptions = (attributes) => {
 						setIsChanged={setIsNameChanged}
 					/>
 				</Section>
+
+				<Select
+					icon={icons.optionListAlt}
+					label={__('Show as', 'eightshift-forms')}
+					value={checkboxesShowAs}
+					options={globalManifest.showAsMap.options.filter((item) => item.value !== 'checkboxes')}
+					disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
+					onChange={(value) => {
+						setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value });
+					}}
+					additionalSelectClasses='es-w-40'
+					simpleValue
+					inlineLabel
+					noSearch
+					clearable
+				/>
 
 				<FieldOptions
 					{...props('field', attributes, {

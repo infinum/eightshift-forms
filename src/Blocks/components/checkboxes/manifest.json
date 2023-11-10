@@ -39,6 +39,9 @@
 		"checkboxesTypeCustom": {
 			"type": "string"
 		},
+		"checkboxesShowAs": {
+			"type": "string"
+		},
 		"checkboxesFieldAttrs": {
 			"type": "object"
 		}
