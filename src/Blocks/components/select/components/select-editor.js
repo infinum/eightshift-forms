@@ -28,7 +28,6 @@ export const SelectEditor = (attributes) => {
 
 	const selectContent = checkAttr('selectContent', attributes, manifest);
 	const selectName = checkAttr('selectName', attributes, manifest);
-	const selectPlaceholder = checkAttr('selectPlaceholder', attributes, manifest);
 	const selectIsDisabled = checkAttr('selectIsDisabled', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('selectName', attributes, manifest), selectName);

@@ -13,18 +13,17 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import { VisibilityHidden } from './../../utils';
 
-export const FieldEditorExternalBlocks = (props) => {
+export const FieldEditorExternalBlocks = ({
+	attributes,
+	children,
+	clientId
+}) => {
 	const manifest = select(STORE_NAME).getComponent('field');
 
 	const {
 		componentClass,
 	} = manifest;
 
-	const {
-		attributes,
-		children,
-		clientId
-	} = props;
 	const fieldClass = classnames([
 		selector(componentClass, componentClass),
 		selector(componentClass, componentClass, '', 'field'),

@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { TextControl, PanelBody, Button, TextareaControl } from '@wordpress/components';
+import { PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import {
 	checkAttr,
@@ -16,7 +16,7 @@ import {
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
+import { isOptionDisabled, NameField } from './../../utils';
 
 export const RadioOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('radio');
@@ -40,18 +40,16 @@ export const RadioOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Radio button', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={radioValue} label={__('Value', 'eightshift-forms')} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={radioValue}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('radioValue', attributes, manifest)]: value });
-						}}
-						disabled={isOptionDisabled(getAttrKey('radioValue', attributes, manifest), radioDisabledOptions)}
+						attribute={getAttrKey('radioValue', attributes, manifest)}
+						disabledOptions={radioDisabledOptions}
+						setAttributes={setAttributes}
+						type={'radio'}
+						label={__('Value', 'eightshift-forms')}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
-
-					<NameChangeWarning isChanged={isNameChanged} type={'value'} />
 				</Section>
 
 				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>

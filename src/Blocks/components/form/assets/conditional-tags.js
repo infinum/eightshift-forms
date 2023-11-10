@@ -332,8 +332,6 @@ export class ConditionalTags {
 		let selector = '';
 		let type = '';
 
-		console.log(data, stateName);
-
 		// Set correct selector and type based on state name.
 		switch (stateName) {
 			case StateEnum.CONDITIONAL_TAGS_STATE_FORM_HIDE:

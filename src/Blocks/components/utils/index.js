@@ -1,10 +1,10 @@
 /* global esFormsLocalization */
 
 import React, { useEffect } from 'react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
-import { Tooltip, Button } from '@wordpress/components';
+import { Tooltip, Button, TextControl } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import {
 	AnimatedContentVisibility,
@@ -17,6 +17,7 @@ import {
 	lockPostEditing,
 	unlockPostEditing,
 	unescapeHTML,
+	getUnique,
 } from '@eightshift/frontend-libs/scripts';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
@@ -147,7 +148,7 @@ export const clearTransientCache = (type) => {
  * Create new inner blocks from provided template.
  *
  * @param {int} clientId Client ID from block editor.
- * @param {string} name Block name tamplete is set to.
+ * @param {string} name Block name template is set to.
  * @param {array} templates Templates of blocks to build.
  *
  * @returns {void}
@@ -247,7 +248,7 @@ export const getFormFields = () => {
 };
 
 /**
- * Filter attributes by array of keys. Used to provide alternative attributes to server side render component to prevent unecesery rerender.
+ * Filter attributes by array of keys. Used to provide alternative attributes to server side render component to prevent unnecessary rerender.
  *
  * @param {object} attributes Attributes data source.
  * @param {array} filterAttributes Array of attributes to filter.
@@ -368,24 +369,81 @@ export const VisibilityHidden = ({ value, label }) => {
 };
 
 /**
- * "Name" option label with optional "Required" notification.
+ * "Name" option with optional "Required" notification.
  *
- * @param {string} value Field value.
+ * @param {string} value Field name value.
+ * @param {string} attribute Field name attribute.
+ * @param {string} help Field help text.
+ * @param {array} disabledOptions Array of disabled options.
  * @param {string} label Field label.
+ * @param {function} setAttributes Set attributes function.
+ * @param {bool} show Show this field.
+ * @param {string} type Type of this field.
  *
  * @returns Component
  */
-export const NameFieldLabel = ({ value, label }) => {
-	return (
-		<div className='es-h-between es-w-full'>
-			<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
+export const NameField = ({
+	value,
+	attribute,
+	help = '',
+	disabledOptions = [],
+	label,
+	setAttributes,
+	show = true,
+	type,
+	isChanged = false,
+	setIsChanged,
+}) => {
 
-			<AnimatedContentVisibility showIf={!value}>
-				<Tooltip text={__('The form may not work correctly.', 'eightshift-forms')}>
-					<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span>
-				</Tooltip>
-			</AnimatedContentVisibility>
-		</div>
+	const isDisabled = isOptionDisabled(attribute, disabledOptions);
+
+	const NameFieldLabel = () => {
+		return (
+			<div className='es-h-between es-w-full'>
+				<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
+
+				<AnimatedContentVisibility showIf={!value}>
+					<Tooltip text={__('The form may not work correctly.', 'eightshift-forms')}>
+						<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span>
+					</Tooltip>
+				</AnimatedContentVisibility>
+
+				{(!value && !isDisabled) &&
+					<Button
+						className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+						onClick={() => {
+							setIsChanged(true);
+
+							const valueName = `${type}-${getUnique()}`;
+							setAttributes({ [attribute]: valueName });
+						}}
+					>
+						{__('Generate name', 'eightshift-forms')}
+					</Button>
+				}
+			</div>
+		);
+	};
+
+	return (
+		<>
+			{show &&
+				<>
+					<TextControl
+						label={<NameFieldLabel />}
+						help={sprintf(__('Identifies the %s within form submission data. Must be unique. %s', 'eightshift-forms'), type, help)}
+						value={value}
+						onChange={(value) => {
+							setIsChanged(true);
+							setAttributes({ [attribute]: value });
+						}}
+						disabled={isDisabled}
+					/>
+
+					<NameChangeWarning isChanged={isChanged} />
+				</>
+			}
+		</>
 	);
 };
 
@@ -400,7 +458,7 @@ export const NameFieldLabel = ({ value, label }) => {
  */
 export const preventSaveOnMissingProps = (blockClientId, key, value) => {
 	useEffect(() => {
-		// Allows trigering this action only when the block is inserted in the editor.
+		// Allows triggering this action only when the block is inserted in the editor.
 		if (select('core/block-editor').getBlock(blockClientId)) {
 			// Lock/unlock depending on the value.
 			(value === '') ? lockPostEditing(blockClientId, key) : unlockPostEditing(blockClientId, key);

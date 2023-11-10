@@ -6,16 +6,17 @@ import { FieldOptionsLayout } from './../../../components/field/components/field
 
 // This block is only used if you want to include custom external blocks to forms.
 export const FieldOptions = ({ attributes, setAttributes }) => {
-	console.log(props('field', attributes, {
-		setAttributes,
-	}));
-	
 	return (
 		<PanelBody title={__('Field', 'eightshift-forms')}>
 			<FieldOptionsLayout
 				{...props('field', attributes, {
 					setAttributes,
 				})}
+				prefix={'field'}
+				fieldWidthLarge={attributes.fieldWidthLarge}
+				fieldWidthDesktop={attributes.fieldWidthDesktop}
+				fieldWidthTablet={attributes.fieldWidthTablet}
+				fieldWidthMobile={attributes.fieldWidthMobile}
 			/>
 		</PanelBody>
 	);

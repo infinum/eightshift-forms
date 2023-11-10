@@ -2,9 +2,9 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody, TextareaControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, IconLabel, IconToggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs/scripts';
-import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
+import { PanelBody, TextareaControl } from '@wordpress/components';
+import { checkAttr, getAttrKey, icons, IconToggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs/scripts';
+import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const SelectOptionOptions = (attributes) => {
@@ -27,18 +27,16 @@ export const SelectOptionOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Option', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={selectOptionValue} label={__('Value', 'eightshift-forms')} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={selectOptionValue}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('selectOptionValue', attributes, manifest)]: value });
-						}}
-						disabled={isOptionDisabled(getAttrKey('selectOptionValue', attributes, manifest), selectOptionDisabledOptions)}
+						attribute={getAttrKey('selectOptionValue', attributes, manifest)}
+						disabledOptions={selectOptionDisabledOptions}
+						setAttributes={setAttributes}
+						type={'select-option'}
+						label={__('Value', 'eightshift-forms')}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
-
-					<NameChangeWarning isChanged={isNameChanged} type={'value'} />
 				</Section>
 
 				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>

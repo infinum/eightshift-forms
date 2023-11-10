@@ -1,16 +1,18 @@
+// stylelint-disable
+
 @import '~choices.js/public/assets/styles/choices.min.css';
 
 div.es-select.choices {
 	.choices__list--dropdown {
 		.choices__placeholder,
 		[data-option-is-hidden='true'] {
-			display: none !important; // stylelint-disable-line declaration-no-important
-			user-select: none !important; // stylelint-disable-line declaration-no-important
-			padding: 0 !important; // stylelint-disable-line declaration-no-important
-			position: absolute !important; // stylelint-disable-line declaration-no-important
-			height: 0 !important; // stylelint-disable-line declaration-no-important
-			visibility: hidden !important; // stylelint-disable-line declaration-no-important
-			margin: 0 !important; // stylelint-disable-line declaration-no-important
+			display: none !important;
+			user-select: none !important;
+			padding: 0 !important;
+			position: absolute !important;
+			height: 0 !important;
+			visibility: hidden !important;
+			margin: 0 !important;
 		}
 	}
 }

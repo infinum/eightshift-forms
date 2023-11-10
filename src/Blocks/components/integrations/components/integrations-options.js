@@ -144,41 +144,6 @@ export const IntegrationsOptions = ({
 	return (
 		<>
 			<PanelBody title={title}>
-				<Select
-					icon={icons.formAlt}
-					label={__('Form to display', 'eightshift-forms')}
-					help={!(innerIdKey && itemId) && __('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={itemId}
-					options={formItems}
-					onChange={(value) => {
-						if (innerIdKey) {
-							resetInnerBlocks(clientId);
-							setAttributes({ [itemIdKey]: value.toString() });
-							setAttributes({ [innerIdKey]: undefined });
-						} else {
-							updateIntegrationBlocks(clientId, postId, block, value.toString());
-							setAttributes({ [itemIdKey]: value.toString() });
-						}
-					}}
-					reducedBottomSpacing={innerIdKey && itemId}
-					closeMenuAfterSelect
-					simpleValue
-				/>
-
-				{(innerIdKey && itemId) &&
-					<Select
-						help={__('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
-						value={innerId}
-						options={formInnerItems}
-						onChange={(value) => {
-							updateIntegrationBlocks(clientId, postId, block, itemId, value.toString());
-							setAttributes({ [innerIdKey]: value.toString() });
-						}}
-						closeMenuAfterSelect
-						simpleValue
-					/>
-				}
-
 				<Control>
 					<div className='es-fifty-fifty-h es-gap-2!'>
 						<SettingsButton />
@@ -186,69 +151,108 @@ export const IntegrationsOptions = ({
 					</div>
 				</Control>
 
-				<Section showIf={hasInnerBlocks} icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-					<Control
-						help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}
-						additionalClasses={'es-border-b-gray-300 es-pb-5'}
-					>
-						<Button
-							icon={icons.loopMode}
-							onClick={() => {
-								// Sync integration blocks.
-								syncIntegrationBlocks(clientId, postId).then((val) => {
-									if (val?.status === 'error') {
-										createNotice(
-											'error',
-											val?.message,
-											{
-												type: 'snackbar',
-												icon: '❌',
-											}
-										);
-									} else {
-										createNotice(
-											val?.update ? 'success' : 'info',
-											val?.update ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'),
-											{
-												type: 'snackbar',
-												icon: '✅',
-											}
-										);
-									}
-								});
-							}}
-							className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
-						>
-							{__('Sync integration', 'eightshift-forms')}
-						</Button>
+				<Section icon={icons.tools} label={__('Integration options', 'eightshift-forms')}>
+					<Select
+						icon={icons.formAlt}
+						label={__('Select a form to display', 'eightshift-forms')}
+						help={!(innerIdKey && itemId) && __('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
+						value={itemId}
+						options={formItems}
+						onChange={(value) => {
+							if (innerIdKey) {
+								resetInnerBlocks(clientId);
+								setAttributes({ [itemIdKey]: value.toString() });
+								setAttributes({ [innerIdKey]: undefined });
+							} else {
+								updateIntegrationBlocks(clientId, postId, block, value.toString());
+								setAttributes({ [itemIdKey]: value.toString() });
+							}
+						}}
+						reducedBottomSpacing={innerIdKey && itemId}
+						closeMenuAfterSelect
+						simpleValue
+					/>
 
-						{Object.keys(modalContent).length > 0 &&
-							<Button
-								onClick={() => {
-									setModalOpen(true);
-									dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(true);
-								}}
-								className='es-rounded-1 es-mt-1 es-font-weight-500'
+					{(innerIdKey && itemId) &&
+						<Select
+							help={__('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
+							value={innerId}
+							options={formInnerItems}
+							onChange={(value) => {
+								updateIntegrationBlocks(clientId, postId, block, itemId, value.toString());
+								setAttributes({ [innerIdKey]: value.toString() });
+							}}
+							closeMenuAfterSelect
+							simpleValue
+						/>
+					}
+
+					{hasInnerBlocks &&
+						<div className={'es-border-t-gray-300 es-mt-5 es-pt-5'}>
+							<Control
+								help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}
+								additionalClasses={'es-border-b-gray-300 es-pb-5'}
 							>
-								{__('View changes', 'eightshift-forms')}
-							</Button>
-						}
-					</Control>
+								<Button
+									icon={icons.loopMode}
+									onClick={() => {
+										// Sync integration blocks.
+										syncIntegrationBlocks(clientId, postId).then((val) => {
+											if (val?.status === 'error') {
+												createNotice(
+													'error',
+													val?.message,
+													{
+														type: 'snackbar',
+														icon: '❌',
+													}
+												);
+											} else {
+												createNotice(
+													val?.update ? 'success' : 'info',
+													val?.update ? __('Sync complete!', 'eightshift-forms') : __('Nothing synced, form is up-to-date', 'eightshift-forms'),
+													{
+														type: 'snackbar',
+														icon: '✅',
+													}
+												);
+											}
+										});
+									}}
+									className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+								>
+									{__('Sync integration', 'eightshift-forms')}
+								</Button>
 
-					<Control help={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}>
-						<Button
-							icon={icons.data}
-							onClick={() => {
-								// Sync integration blocks.
-								clearTransientCache(block).then((msg) => createNotice('success', msg, {
-									type: 'snackbar',
-								}));
-							}}
-							className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
-						>
-							{__('Clear cache', 'eightshift-forms')}
-						</Button>
-					</Control>
+								{Object.keys(modalContent).length > 0 &&
+									<Button
+										onClick={() => {
+											setModalOpen(true);
+											dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(true);
+										}}
+										className='es-rounded-1 es-mt-1 es-font-weight-500'
+									>
+										{__('View changes', 'eightshift-forms')}
+									</Button>
+								}
+							</Control>
+
+							<Control help={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}>
+								<Button
+									icon={icons.data}
+									onClick={() => {
+										// Sync integration blocks.
+										clearTransientCache(block).then((msg) => createNotice('success', msg, {
+											type: 'snackbar',
+										}));
+									}}
+									className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+								>
+									{__('Clear cache', 'eightshift-forms')}
+								</Button>
+							</Control>
+						</div>
+					}
 				</Section>
 
 				<Section icon={icons.warning} label={__('Danger zone', 'eightshift-forms')} noBottomSpacing>

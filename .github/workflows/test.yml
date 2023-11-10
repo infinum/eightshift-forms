@@ -3,9 +3,6 @@ name: Unit tests
 on:
   # Run on PRs and pushes, only on significant changes.
   push:
-    branches:
-      - develop
-      - main
     paths-ignore:
       - '**.md'
   pull_request:

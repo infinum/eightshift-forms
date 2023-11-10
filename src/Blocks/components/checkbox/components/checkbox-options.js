@@ -15,7 +15,7 @@ import {
 	AnimatedContentVisibility,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
-import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
+import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const CheckboxOptions = (attributes) => {
@@ -42,17 +42,16 @@ export const CheckboxOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Checkbox', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={checkboxValue} label={__('Value', 'eightshift-forms')} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={checkboxValue}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('checkboxValue', attributes, manifest)]: value });
-						}}
-						disabled={isOptionDisabled(getAttrKey('checkboxValue', attributes, manifest), checkboxDisabledOptions)}
+						attribute={getAttrKey('checkboxValue', attributes, manifest)}
+						disabledOptions={checkboxDisabledOptions}
+						setAttributes={setAttributes}
+						label={__('Value', 'eightshift-forms')}
+						type={'checkbox'}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
-					<NameChangeWarning isChanged={isNameChanged} type={'value'} />
 				</Section>
 
 				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>

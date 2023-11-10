@@ -8,7 +8,7 @@ import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import {icons,checkAttr,getAttrKey,IconLabel,props,IconToggle,Section,Select, STORE_NAME} from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
-import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from '../../utils';
+import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const PhoneOptions = (attributes) => {
@@ -44,17 +44,15 @@ export const PhoneOptions = (attributes) => {
 		<>
 			<PanelBody title={title}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={phoneName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={phoneName}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('phoneName', attributes, manifest)]: value });
-						}}
-						disabled={isOptionDisabled(getAttrKey('phoneName', attributes, manifest), phoneDisabledOptions)}
+						attribute={getAttrKey('phoneName', attributes, manifest)}
+						disabledOptions={phoneDisabledOptions}
+						setAttributes={setAttributes}
+						type={'phone'}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
-					<NameChangeWarning isChanged={isNameChanged} />
 				</Section>
 
 				<FieldOptions

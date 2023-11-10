@@ -16,7 +16,7 @@ import {
 	Control,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
-import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
+import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const SelectOptions = (attributes) => {
@@ -48,18 +48,15 @@ export const SelectOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Select', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={selectName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={selectName}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('selectName', attributes, manifest)]: value });
-						}}
-						disabled={isOptionDisabled(getAttrKey('selectName', attributes, manifest), selectDisabledOptions)}
+						attribute={getAttrKey('selectName', attributes, manifest)}
+						disabledOptions={selectDisabledOptions}
+						setAttributes={setAttributes}
+						type={'select'}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
-
-					<NameChangeWarning isChanged={isNameChanged} />
 				</Section>
 
 				<FieldOptions

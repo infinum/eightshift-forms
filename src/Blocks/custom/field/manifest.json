@@ -10,6 +10,9 @@
 	"keywords": [
 		"field"
 	],
+	"components": {
+		"field": "field"
+	},
 	"parent": [
 		"eightshift-forms/form"
 	]

@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, Control, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
-import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
+import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const FileOptions = (attributes) => {
@@ -33,26 +33,14 @@ export const FileOptions = (attributes) => {
 		<>
 			<PanelBody title={__('File', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={fileName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={fileName}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('fileName', attributes, manifest)]: value });
-						}}
-						disabled={isOptionDisabled(getAttrKey('fileName', attributes, manifest), fileDisabledOptions)}
-						className='es-no-field-spacing'
-					/>
-					<NameChangeWarning isChanged={isNameChanged} />
-
-					<IconToggle
-						icon={icons.files}
-						label={__('Allow multi-file upload', 'eightshift-forms')}
-						checked={fileIsMultiple}
-						onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
-						disabled={isOptionDisabled(getAttrKey('fileIsMultiple', attributes, manifest), fileDisabledOptions)}
-						noBottomSpacing
+						attribute={getAttrKey('fileName', attributes, manifest)}
+						disabledOptions={fileDisabledOptions}
+						setAttributes={setAttributes}
+						type={'file'}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
 				</Section>
 
@@ -117,6 +105,14 @@ export const FileOptions = (attributes) => {
 					/>
 
 					<IconToggle
+						icon={icons.files}
+						label={__('Allow multi-file upload', 'eightshift-forms')}
+						checked={fileIsMultiple}
+						onChange={(value) => setAttributes({ [getAttrKey('fileIsMultiple', attributes, manifest)]: value })}
+						disabled={isOptionDisabled(getAttrKey('fileIsMultiple', attributes, manifest), fileDisabledOptions)}
+					/>
+
+					<IconToggle
 						icon={icons.cursorDisabled}
 						label={__('Disabled', 'eightshift-forms')}
 						checked={fileIsDisabled}
@@ -126,7 +122,7 @@ export const FileOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.upload} label={__('Custom uploader', 'eightshift-forms')}>
+				<Section icon={icons.upload} label={__('Custom uploader', 'eightshift-forms')} collapsable>
 					<TextControl
 						value={fileCustomInfoText}
 						label={<IconLabel icon={icons.infoCircle} label={__('Prompt text', 'eightshift-forms')} />}

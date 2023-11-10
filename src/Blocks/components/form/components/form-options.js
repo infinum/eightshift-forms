@@ -18,12 +18,14 @@ export const FormOptions = (attributes) => {
 
 	return (
 		<>
-			<TextControl
-				label={<IconLabel icon={icons.tag} label={__('Form name', 'eightshift-forms')} />}
-				help={__('A human-readable description of the form. If not set, a random name will be generated.', 'eightshift-forms')}
-				value={formName}
-				onChange={(value) => setAttributes({ [getAttrKey('formName', attributes, manifest)]: value })}
-			/>
+			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+				<TextControl
+					label={<IconLabel icon={icons.tag} label={__('Form name', 'eightshift-forms')} />}
+					help={__('Used as a name attribute for form element Useful if you want to add additional code style for the form.', 'eightshift-forms')}
+					value={formName}
+					onChange={(value) => setAttributes({ [getAttrKey('formName', attributes, manifest)]: value })}
+				/>
+			</Section>
 
 			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')} collapsable noBottomSpacing>
 				<TextControl

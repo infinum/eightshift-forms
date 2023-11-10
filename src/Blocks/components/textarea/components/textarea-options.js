@@ -20,7 +20,7 @@ import {
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
-import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
+import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const TextareaOptions = (attributes) => {
@@ -62,18 +62,15 @@ export const TextareaOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Multiline text', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={textareaName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={textareaName}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('textareaName', attributes, manifest)]: value });
-						}}
-						disabled={isOptionDisabled(getAttrKey('textareaName', attributes, manifest), textareaDisabledOptions)}
+						attribute={getAttrKey('textareaName', attributes, manifest)}
+						disabledOptions={textareaDisabledOptions}
+						setAttributes={setAttributes}
+						type={'textarea'}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
-
-					<NameChangeWarning isChanged={isNameChanged} />
 				</Section>
 
 				<FieldOptions

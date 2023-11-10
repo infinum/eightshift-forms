@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, props, icons, Section, IconToggle, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
-import { isOptionDisabled, NameFieldLabel, NameChangeWarning } from './../../utils';
+import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 
 export const RadiosOptions = (attributes) => {
@@ -26,18 +26,15 @@ export const RadiosOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Radio buttons', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={radiosName} />}
-						help={__('Identifies the field within form submission data. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={radiosName}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('radiosName', attributes, manifest)]: value });
-						}}
-						disabled={isOptionDisabled(getAttrKey('radiosName', attributes, manifest), radiosDisabledOptions)}
-						className='es-no-field-spacing'
+						attribute={getAttrKey('radiosName', attributes, manifest)}
+						disabledOptions={radiosDisabledOptions}
+						setAttributes={setAttributes}
+						type={'radios'}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
-					<NameChangeWarning isChanged={isNameChanged} />
 				</Section>
 
 				<FieldOptions

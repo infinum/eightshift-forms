@@ -4,7 +4,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { icons, checkAttr, getAttrKey, IconLabel, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
-import { NameFieldLabel, NameChangeWarning } from './../../utils';
+import { NameField } from './../../utils';
 
 export const StepOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
@@ -24,24 +24,26 @@ export const StepOptions = (attributes) => {
 		<>
 			<PanelBody title={__('Step', 'eightshift-forms')}>
 				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-					<TextControl
-						label={<NameFieldLabel value={stepName} />}
-						help={__('Identifies the step within form multi step flow. Must be unique.', 'eightshift-forms')}
+					<NameField
 						value={stepName}
-						onChange={(value) => {
-							setIsNameChanged(true);
-							setAttributes({ [getAttrKey('stepName', attributes, manifest)]: value });
-						}}
+						help={__('Used to identify the step within form multi step flow.', 'eightshift-forms')}
+						attribute={getAttrKey('stepName', attributes, manifest)}
+						setAttributes={setAttributes}
+						type={'step'}
+						isChanged={isNameChanged}
+						setIsChanged={setIsNameChanged}
 					/>
+				</Section>
 
-					<NameChangeWarning isChanged={isNameChanged} type={'step'} />
-
+				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
 					<TextControl
-						label={<IconLabel icon={icons.tag} label={__('Label', 'eightshift-forms')} />}
 						help={__('This label will not be shown on the frontend, this is only for easier configuration.', 'eightshift-forms')}
 						value={stepLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepLabel', attributes, manifest)]: value })}
 					/>
+				</Section>
+
+				<Section icon={icons.buttonFilled} label={__('Buttons', 'eightshift-forms')}>
 
 					<TextControl
 						label={<IconLabel icon={icons.tag} label={__('Previous button label', 'eightshift-forms')} />}
