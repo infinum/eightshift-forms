@@ -540,6 +540,10 @@ class JiraClient implements JiraClientInterface
 						continue;
 					}
 
+					if (\is_array($value)) {
+						$value = \implode(', ', $value);
+					}
+
 					$name = $param['name'] ?? '';
 					if (!$name) {
 						continue;
