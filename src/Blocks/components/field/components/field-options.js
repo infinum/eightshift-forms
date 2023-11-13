@@ -28,6 +28,7 @@ export const FieldOptions = (attributes) => {
 		setAttributes,
 
 		showFieldLabel = true,
+		showFieldHideLabel = true,
 
 		additionalControls,
 	} = attributes;
@@ -39,12 +40,14 @@ export const FieldOptions = (attributes) => {
 		<>
 			{showFieldLabel &&
 				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
-					<IconToggle
-						label={__('Use label', 'eightshift-forms')}
-						checked={!fieldHideLabel}
-						onChange={(value) => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: !value })}
-						reducedBottomSpacing
-					/>
+					{showFieldHideLabel &&
+						<IconToggle
+							label={__('Use label', 'eightshift-forms')}
+							checked={!fieldHideLabel}
+							onChange={(value) => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: !value })}
+							reducedBottomSpacing
+						/>
+					}
 
 					{!fieldHideLabel &&
 						<TextareaControl
@@ -54,8 +57,8 @@ export const FieldOptions = (attributes) => {
 						/>
 					}
 
-					<AnimatedContentVisibility showIf={fieldHideLabel}>
-						<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
+					<AnimatedContentVisibility showIf={fieldHideLabel || fieldLabel === ''}>
+						<IconLabel label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
 					</AnimatedContentVisibility>
 				</Section>
 			}

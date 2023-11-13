@@ -134,6 +134,7 @@ export const InputOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: inputDisabledOptions,
 					})}
+					showFieldHideLabel={false}
 				/>
 
 				<Section showIf={showInputPlaceholder} icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>

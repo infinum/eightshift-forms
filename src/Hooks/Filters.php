@@ -455,6 +455,7 @@ class Filters
 			'twoToThree',
 			'threeToFour',
 			'threeToFourLocale',
+			'threeToFourLabels',
 		],
 	];
 

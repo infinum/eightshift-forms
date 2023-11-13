@@ -59,6 +59,7 @@ export const PhoneOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: phoneDisabledOptions,
 					})}
+					showFieldHideLabel={false}
 				/>
 
 				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>

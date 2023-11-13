@@ -62,6 +62,11 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	public const VERSION_3_4_LOCALE = '3-4-locale';
 
 	/**
+	 * Version 3-4 labels key.
+	 */
+	public const VERSION_3_4_LABELS = '3-4-labels';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -168,7 +173,27 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
 						],
-					]
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Version 3 &rarr; Version 4 labels', 'eightshift-forms'),
+						'cardSubTitle' => \__('Small changes to field labels.', 'eightshift-forms'),
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
+								'submitAttrs' => [
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_3_4_LABELS,
+								],
+								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+							],
+						],
+					],
 				],
 			],
 			[

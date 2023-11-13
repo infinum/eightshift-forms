@@ -77,6 +77,7 @@ export const TextareaOptions = (attributes) => {
 					{...props('field', attributes, {
 						fieldDisabledOptions: textareaDisabledOptions,
 					})}
+					showFieldHideLabel={false}
 				/>
 
 				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>

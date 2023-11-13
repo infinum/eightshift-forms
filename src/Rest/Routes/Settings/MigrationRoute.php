@@ -146,6 +146,8 @@ class MigrationRoute extends AbstractBaseRoute
 				return $this->getMigration3To4();
 			case SettingsMigration::VERSION_3_4_LOCALE:
 				return $this->getMigration3To4Locale();
+			case SettingsMigration::VERSION_3_4_LABELS:
+				return $this->getMigration3To4Labels();
 			default:
 				return $this->getApiErrorOutput(
 					\__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
@@ -513,7 +515,69 @@ class MigrationRoute extends AbstractBaseRoute
 		}
 
 		return $this->getApiSuccessOutput(
-			\__('Migration version 3 to 4 finished with success.', 'eightshift-forms'),
+			\__('Migration version 3 to 4 locale finished with success.', 'eightshift-forms'),
+			$output
+		);
+	}
+
+	/**
+	 * Migration version 3-4 labels.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getMigration3To4Labels(): array
+	{
+		$output = [];
+
+		$theQuery = new WP_Query([
+			'post_type' => Forms::POST_TYPE_SLUG,
+			'no_found_rows' => true,
+			'update_post_term_cache' => false,
+			'post_status' => 'any',
+			'nopaging' => true,
+			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+		]);
+
+		// Fields to update.
+		$fields = [
+			'inputInputFieldHideLabel',
+			'textareaTextareaFieldHideLabel',
+			'countryCountryFieldHideLabel',
+			'dateDateFieldHideLabel',
+			'phonePhoneFieldHideLabel',
+			'selectSelectFieldHideLabel',
+		];
+
+		$forms = $theQuery->posts;
+		\wp_reset_postdata();
+
+		if ($forms) {
+			foreach ($forms as $form) {
+				$formId = (int) $form->ID;
+				$content = $form->post_content; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+
+				if (!$formId || !$content) {
+					continue;
+				}
+
+				foreach ($fields as $field) {
+					$content = \str_replace("\"{$field}\":true", "\"{$field}\":false", $content);
+				}
+
+				$output[] = \wp_update_post([
+					'ID' => $formId,
+					'post_content' => $content,
+				]);
+			}
+		}
+
+		$actionName = Filters::getFilterName(['migration', 'threeToFourLabels']);
+		if (\has_action($actionName)) {
+			\do_action($actionName, SettingsMigration::VERSION_3_4_LABELS);
+		}
+
+		return $this->getApiSuccessOutput(
+			\__('Migration version 3 to 4 labels finished with success.', 'eightshift-forms'),
 			$output
 		);
 	}
