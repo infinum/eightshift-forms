@@ -438,6 +438,7 @@ class Filters
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 			],
 			SettingsWorkable::SETTINGS_TYPE_KEY => [
 				'data',

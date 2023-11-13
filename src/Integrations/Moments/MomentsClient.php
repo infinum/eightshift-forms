@@ -137,6 +137,11 @@ class MomentsClient implements ClientInterface
 	{
 		$body = $this->prepareParams($params);
 
+		$filterName = Filters::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostId']);
+		if (\has_filter($filterName)) {
+			$itemId = \apply_filters($filterName, $itemId, $body, $files, $formId) ?? $itemId;
+		}
+
 		$url = "{$this->getBaseUrl()}forms/1/forms/{$itemId}/data";
 
 		$response = \wp_remote_post(
