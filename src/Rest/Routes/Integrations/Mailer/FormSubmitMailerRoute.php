@@ -166,6 +166,8 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
-		return $this->formSubmitMailer->sendEmails($formDataReference);
+		return \rest_ensure_response(
+			$this->formSubmitMailer->sendEmails($formDataReference)
+		);
 	}
 }
