@@ -65,6 +65,11 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY = 'enrichment-expiration-time';
 
+	/**
+	 * Expiration prefill time key.
+	 */
+	public const SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY = 'enrichment-prefill-expiration-time';
+
 
 	/**
 	 * Instance variable of enrichment data.
@@ -129,12 +134,12 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Internal storage', 'eightshift-forms'),
+						'tabLabel' => \__('Enrichment', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'input',
 								'inputName' => $this->getOptionName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
-								'inputFieldLabel' => \__('Clear storage after', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Clear enrichment storage after', 'eightshift-forms'),
 								'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 0,
@@ -145,16 +150,14 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								'inputFieldInlineBeforeAfterContent' => true,
 								'inputValue' => $this->getOptionValue(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Custom parameters', 'eightshift-forms'),
-						'tabContent' => [
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'textarea',
 								'textareaName' => $this->getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
-								'textareaFieldLabel' => \__('Custom parameters', 'eightshift-forms'),
+								'textareaFieldLabel' => \__('Add custom enrichment parameters', 'eightshift-forms'),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
@@ -165,19 +168,13 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 									Some commonly used parameters are included by default.%s', 'eightshift-forms'), $enrichment['settings']),
 								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Parameter mapping', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'intro',
-								'introSubtitle' => \__('Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
-							],
 							[
 								'component' => 'divider',
 								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('Map the URL parameters and cookies to field names. When the form is submitted, the selected fields will be populated by the chosen URL parameters or cookies.<br /><br />You can map to multiple fields by separating their names with a comma.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'field',
@@ -199,6 +196,26 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 								},
 								$enrichment['settingsFields'] ?? []
 							),
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Prefill', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => $this->getOptionName(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
+								'inputFieldLabel' => \__('Clear form prefill storage after', 'eightshift-forms'),
+								'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 0,
+								'inputMax' => 100,
+								'inputStep' => 1,
+								'inputPlaceholder' => Enrichment::ENRICHMENT_PREFILL_EXPIRATION,
+								'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
+								'inputFieldInlineBeforeAfterContent' => true,
+								'inputValue' => $this->getOptionValue(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
+							],
 						],
 					],
 				]

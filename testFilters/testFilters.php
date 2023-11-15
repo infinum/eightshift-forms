@@ -93,6 +93,7 @@ class Testfilters implements ServiceInterface
 			'es_forms_integrations_greenhouse_data' => ['getGreenhouseIntegrationData', 2], // Dynamic name based on the integration type.
 			'es_forms_integrations_workable_data' => ['getWorkableIntegrationData', 2], // Dynamic name based on the integration type.
 			'es_forms_integrations_workable_pre_post_params' => ['getWorkableIntegrationPrePostParams'], // Dynamic name based on the integration type.
+			'es_forms_integrations_workable_pre_post_id' => ['getWorkableIntegrationPrePostId', 3], // Dynamic name based on the integration type.
 			'es_forms_integrations_workable_order' => ['getWorkableIntegrationOrder'], // Dynamic name based on the integration type.
 			'es_forms_integrations_hubspot_files_options' => ['getFileUploadCustomOptions'],
 			'es_forms_integrations_clearbit_map' => ['getClearbitFieldsMap'],
@@ -806,6 +807,31 @@ class Testfilters implements ServiceInterface
 		unset($params['utm_medium']);
 
 		return $params;
+	}
+
+	/**
+	 * Change form fields data before we send it to the external integration.
+	 *
+	 * @param array<string, mixed> $params Array of params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	/**
+	 *
+	 * Change integration ID fields data before we send it to the external integration.
+	 *
+	 * @param string $itemId Item id.
+	 * @param array<mixed> $params Params to alterate.
+	 * @param string $formId Form id.
+	 *
+	 * @return string
+	 */
+	public function getWorkableIntegrationPrePostId(
+		string $itemId,
+		array $params,
+		string $formId
+	): string {
+		return $itemId;
 	}
 
 	/**

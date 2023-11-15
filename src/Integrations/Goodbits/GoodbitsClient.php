@@ -126,6 +126,11 @@ class GoodbitsClient implements ClientInterface
 			'subscriber' => $this->prepareParams($params),
 		];
 
+		$filterName = Filters::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'prePostId']);
+		if (\has_filter($filterName)) {
+			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
+		}
+
 		$url = self::BASE_URL . "subscribers";
 
 		$response = \wp_remote_post(

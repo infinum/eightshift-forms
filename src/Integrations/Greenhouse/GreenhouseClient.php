@@ -167,6 +167,11 @@ class GreenhouseClient implements ClientInterface
 			$paramsFiles
 		);
 
+		$filterName = Filters::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'prePostId']);
+		if (\has_filter($filterName)) {
+			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
+		}
+
 		$filterName = Filters::getFilterName(['general', 'httpRequestTimeout']);
 
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}";

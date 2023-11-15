@@ -1,6 +1,7 @@
 import { State } from './state';
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import { prefix, setStateWindow } from './state/init';
+import { Utils } from './utilities';
 
 /**
  * Enrichment class.
@@ -8,6 +9,7 @@ import { prefix, setStateWindow } from './state/init';
 export class Enrichment {
 	constructor() {
 		this.state = new State();
+		this.utils = new Utils();
 
 		// Set all public methods.
 		this.publicMethods();
@@ -28,23 +30,22 @@ export class Enrichment {
 			return;
 		}
 
-		// Set local storage data.
-		this.setLocalStorage();
+		// Set local storage data for enrichment.
+		this.setLocalStorageEnrichment();
 	}
 
 	/**
-	 * Set localStorage value.
+	 * Set localStorage value for enrichment.
 	 *
 	 * @returns {void}
 	 */
-	setLocalStorage() {
+	setLocalStorageEnrichment() {
 		// Check if enrichment is used.
 		if (!this.state.getStateEnrichmentIsUsed()) {
 			return;
 		}
 
 		const allowedTags = this.state.getStateEnrichmentAllowed();
-		const expiration = this.state.getStateEnrichmentExpiration();
 
 		// Missing data from backend, bailout.
 		if (!allowedTags) {
@@ -57,15 +58,99 @@ export class Enrichment {
 			...this.getCookiesAllowedParams(allowedTags)
 		};
 
+		this.setLocalStorage(newStorage, this.state.getStateEnrichmentStorageName());
+	}
+
+	/**
+	 * Prefill localStorage value for every field.
+	 *
+	 * @returns {void}
+	 */
+	setLocalStorageFormPrefill(formId) {
+		// Check if enrichment is used.
+		if (!this.state.getStateEnrichmentIsUsed()) {
+			return;
+		}
+
+		this.state.getStateFormElement(formId).addEventListener(
+			this.state.getStateEventsFormJsLoaded(),
+			this.onPrefillEvent
+		);
+	}
+
+	/**
+	 * Prefill url params value for every field.
+	 *
+	 * @returns {void}
+	 */
+	setUrlParamsFormPrefill(formId) {
+		// Check if enrichment is used.
+		if (!this.state.getStateEnrichmentIsUsed()) {
+			return;
+		}
+
+		this.state.getStateFormElement(formId).addEventListener(
+			this.state.getStateEventsFormJsLoaded(),
+			this.onUrlParamsPrefillEvent
+		);
+	}
+
+	/**
+	 * Set localStorage value for every field.
+	 *
+	 * @returns {void}
+	 */
+	setLocalStorageFormPrefillItem(formId, name) {
+		// Check if enrichment is used.
+		if (!this.state.getStateEnrichmentIsUsed()) {
+			return;
+		}
+
+		const type = this.state.getStateElementTypeCustom(name, formId);
+		let value = '';
+		switch (type) {
+			case 'phone':
+				value = {
+					prefix: this.state.getStateElementValueCountry(name, formId)?.number,
+					value: this.state.getStateElementValue(name, formId),
+				};
+				break;
+			default:
+				value = this.state.getStateElementValue(name, formId);
+				break;
+		}
+
+		const newStorage = {
+			[name]: value,
+		};
+
+		this.setLocalStorage(
+			newStorage,
+			this.state.getStateEnrichmentFormPrefillStorageName(formId),
+			this.state.getStateEnrichmentExpirationPrefill()
+		);
+	}
+
+	/**
+	 * Set localStorage value.
+	 *
+	 * @returns {void}
+	 */
+	setLocalStorage(newStorage, storageName, expiration = this.state.getStateEnrichmentExpiration()) {
+		// Check if enrichment is used.
+		if (!this.state.getStateEnrichmentIsUsed()) {
+			return;
+		}
+
 		// Add current timestamp to new storage.
 		newStorage.timestamp = Date.now();
 
 		// Create new storage if this is the first visit or it was expired.
-		if (this.getLocalStorage() === null) {
+		if (this.getLocalStorage(storageName) === null) {
 			newStorage.timestamp = newStorage.timestamp.toString();
 
 			localStorage.setItem(
-				this.state.getStateEnrichmentStorageName(),
+				storageName,
 				JSON.stringify(newStorage)
 			);
 			return;
@@ -76,7 +161,7 @@ export class Enrichment {
 		delete newStorageFinal.timestamp;
 
 		// Current storage is got from localStorage.
-		const currentStorage = JSON.parse(this.getLocalStorage());
+		const currentStorage = JSON.parse(this.getLocalStorage(storageName));
 
 		// Store in a new variable for later usage.
 		const currentStorageFinal = {...currentStorage};
@@ -85,14 +170,14 @@ export class Enrichment {
 		currentStorage.timestamp = parseInt(currentStorage?.timestamp, 10);
 
 		// If storage exists check if it is expired.
-		if (this.getLocalStorage() !== null) {
+		if (this.getLocalStorage(storageName) !== null) {
 			// Update expiration date by number of days from the current
 			let expirationDate = new Date(currentStorage.timestamp);
 			expirationDate.setDate(expirationDate.getDate() + parseInt(expiration, 10));
 
 			// Remove expired storage if it exists.
 			if (expirationDate.getTime() < currentStorage.timestamp) {
-				localStorage.removeItem(this.state.getStateEnrichmentStorageName());
+				localStorage.removeItem(storageName);
 			}
 		}
 
@@ -119,16 +204,29 @@ export class Enrichment {
 		};
 
 		// Update localStorage with the new item.
-		localStorage.setItem(this.state.getStateEnrichmentStorageName(), JSON.stringify(finalOutput));
+		localStorage.setItem(storageName, JSON.stringify(finalOutput));
 	}
 
 	/**
-	 * Get localStorage value.
+	 * Get localStorage data.
 	 *
-	 * @returns {string}
+	 * @param {string} storageName Storage name.
+	 *
+	 * @returns {object}
 	 */
-	getLocalStorage() {
-		return localStorage.getItem(this.state.getStateEnrichmentStorageName());
+	getLocalStorage(storageName) {
+		return localStorage.getItem(storageName);
+	}
+
+	/**
+	 * Delete localStorage data.
+	 *
+	 * @param {string} storageName Storage name.
+	 *
+	 * @returns {object}
+	 */
+	deleteLocalStorage(storageName) {
+		return localStorage.removeItem(storageName);
 	}
 
 	/**
@@ -181,6 +279,113 @@ export class Enrichment {
 		return output;
 	}
 
+	/**
+	 * Prefill form fields with data.
+	 *
+	 * @param {string} formId Form ID.
+	 * @param {object} data Data to prefill.
+	 * 
+	 * @returns {void}
+	 */
+	prefillByData(formId, data) {
+		Object.entries(data).forEach(([name, value]) => {
+			if (name === 'timestamp') {
+				return;
+			}
+
+			switch (this.state.getStateElementTypeCustom(name, formId)) {
+				case 'phone':
+					this.utils.setPhoneValue(formId, name, value);
+					break;
+				case 'date':
+				case 'datetime-local':
+					this.utils.setDateValue(formId, name, value);
+					break;
+				case 'country':
+				case 'select':
+					this.utils.setSelectValue(formId, name, value);
+					break;
+				case 'checkbox':
+					this.utils.setCheckboxValue(formId, name, value);
+					break;
+				case 'radio':
+					this.utils.setRadioValue(formId, name, value);
+					break;
+				default:
+					this.utils.setInputValue(formId, name, value);
+					break;
+			}
+		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Events callback
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Set url params value for every field.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onUrlParamsPrefillEvent = (event) => {
+		const { formId } = event.detail;
+
+		// Bailout if nothing is set in the url.
+		if (!window.location.search) {
+			return;
+		}
+
+		// Find url params.
+		const searchParams = new URLSearchParams(window.location.search);
+
+		const param = searchParams.get(`form-${formId}`);
+
+		if(!param) {
+			return;
+		}
+
+		let data = {};
+
+		try {
+			data = JSON.parse(param);
+		} catch {
+			return;
+		}
+
+		if(!data) {
+			return;
+		}
+
+		this.prefillByData(formId,data);
+	};
+
+	/**
+	 * Set localStorage value for every field.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onPrefillEvent = (event) => {
+		const { formId } = event.detail;
+
+		let data = {};
+
+		try {
+			data = JSON.parse(this.getLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId)));
+		} catch {
+			return;
+		}
+
+		if (!data) {
+			return;
+		}
+
+		this.prefillByData(formId,data);
+	};
+
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
 	////////////////////////////////////////////////////////////////
@@ -201,11 +406,17 @@ export class Enrichment {
 			init: () => {
 				this.init();
 			},
-			setLocalStorage: () => {
-				this.setLocalStorage();
+			setLocalStorageEnrichment: () => {
+				this.setLocalStorageEnrichment();
 			},
-			getLocalStorage: () => {
-				return this.getLocalStorage();
+			setLocalStorageFormPrefillItem: () => {
+				this.setLocalStorageFormPrefillItem();
+			},
+			setLocalStorage: (newStorage, storageName) => {
+				this.setLocalStorage(newStorage, storageName);
+			},
+			getLocalStorage: (storageName) => {
+				return this.getLocalStorage(storageName);
 			},
 			getUrlAllowedParams: (allowedTags) => {
 				return this.getUrlAllowedParams(allowedTags);

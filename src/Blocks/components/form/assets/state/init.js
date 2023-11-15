@@ -96,7 +96,9 @@ export const StateEnum = {
 	CAPTCHA_HIDE_BADGE: 'hideBadge',
 
 	ENRICHMENT: 'enrichment',
+	ENRICHMENT_FORM_PREFILL: 'formPrefill',
 	ENRICHMENT_EXPIRATION: 'expiration',
+	ENRICHMENT_EXPIRATION_PREFILL: 'expirationPrefill',
 	ENRICHMENT_ALLOWED: 'allowed',
 
 	EVENTS: 'events',
@@ -250,6 +252,7 @@ export function setStateInitial() {
 
 	if (enrichment.isUsed) {
 		setState([StateEnum.ENRICHMENT_EXPIRATION], enrichment.expiration, StateEnum.ENRICHMENT);
+		setState([StateEnum.ENRICHMENT_EXPIRATION_PREFILL], enrichment.expirationPrefill, StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_ALLOWED], Object.values(enrichment.allowed), StateEnum.ENRICHMENT);
 		setState([StateEnum.NAME], 'es-storage', StateEnum.ENRICHMENT);
 	}
@@ -614,79 +617,169 @@ export function setSteps(formElement, formId) {
 }
 
 /**
- * Set state values when the field changes.
+ * Set state values when the field changes - Input.
  *
  * @param {object} item Item/field to check.
  * @param {string} formId Form ID.
  *
- * * @returns {void}
+ * @returns {void}
  */
-export function setStateValues(item, formId) {
- const {
-	 name,
-	 value,
-	 checked,
-	 type,
- } = item;
+export function setStateValuesInput(item, formId) {
+	const {
+		name,
+		value,
+	} = item;
 
- // Datepicker and dropzone are set using native lib events.
+	// Datepicker and dropzone are set using native lib events.
 	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+}
 
-	switch (type) {
-		case 'radio':
-			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], checked ? value : '', formId);
-			break;
-		case 'checkbox':
-			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE, value], checked ? value : '', formId);
-			break;
-		case 'select-one':
-		case 'select-multiple':
-			const blockName = item.closest(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS))?.getAttribute(getStateAttribute('fieldType')); // eslint-disable-line no-case-declarations
+/**
+ * Set state values when the field changes - Radio.
+ *
+ * @param {object} item Item/field to check.
+ * @param {string} formId Form ID.
+ *
+ * @returns {void}
+ */
+export function setStateValuesRadio(item, formId) {
+	const {
+		name,
+		value,
+		checked,
+	} = item;
 
-			if (blockName === 'phone' || blockName === 'country') {
-				let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
+	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], checked ? value : '', formId);
+}
 
-				if (typeof customData === 'string') {
-					customData = JSON.parse(customData);
-				}
+/**
+ * Set state values when the field changes - Checkbox.
+ *
+ * @param {object} item Item/field to check.
+ * @param {string} formId Form ID.
+ *
+ * @returns {void}
+ */
+export function setStateValuesCheckbox(item, formId) {
+	const {
+		name,
+		value,
+		checked,
+	} = item;
 
-				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData?.[getStateAttribute('selectCountryCode')], formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData?.[getStateAttribute('selectCountryLabel')], formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData?.[getStateAttribute('selectCountryNumber')], formId);
-			}
+	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE, value], checked ? value : '', formId);
+}
 
-			if (blockName !== 'phone') {
-				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+/**
+ * Set state values when the field changes - Phone input.
+ *
+ * @param {object} item Item/field to check.
+ * @param {string} formId Form ID.
+ *
+ * @returns {void}
+ */
+export function setStateValuesPhoneInput(item, formId) {
+	const {
+		name,
+		value,
+	} = item;
 
-				if (getState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], formId)) {
-					const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
-				}
-			}
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
 
-			if (blockName === 'phone') {
-				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
-
-				if (getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)) {
-					const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)}`, formId);
-				}
-			}
-		break;
-		case 'tel':
-			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
-
-			if (value) {
-				const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
-				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${value}`, formId);
-			}
-			break;
-		default:
-			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-			break;
+	if (value) {
+		const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
+		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${value}`, formId);
 	}
 }
+
+/**
+ * Set state values when the field changes - Select.
+ *
+ * @param {object} item Item/field to check.
+ * @param {string} formId Form ID.
+ *
+ * @returns {void}
+ */
+export function setStateValuesSelect(item, formId) {
+	const {
+		name,
+		value,
+	} = item;
+
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+
+	if (getState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], formId)) {
+		const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
+		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
+	}
+}
+
+/**
+ * Set state values when the field changes - Country.
+ *
+ * @param {object} item Item/field to check.
+ * @param {string} formId Form ID.
+ *
+ * @returns {void}
+ */
+export function setStateValuesCountry(item, formId) {
+	const {
+		name,
+		value,
+	} = item;
+
+	let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
+
+	if (typeof customData === 'string') {
+		customData = JSON.parse(customData);
+	}
+
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData?.[getStateAttribute('selectCountryCode')], formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData?.[getStateAttribute('selectCountryLabel')], formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData?.[getStateAttribute('selectCountryNumber')], formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+
+	if (getState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], formId)) {
+		const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
+		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
+	}
+}
+
+/**
+ * Set state values when the field changes - Phone select.
+ *
+ * @param {object} item Item/field to check.
+ * @param {string} formId Form ID.
+ *
+ * @returns {void}
+ */
+export function setStateValuesPhoneSelect(item, formId) {
+	const {
+		name,
+	} = item;
+
+	let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
+
+	if (typeof customData === 'string') {
+		customData = JSON.parse(customData);
+	}
+
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData?.[getStateAttribute('selectCountryCode')], formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData?.[getStateAttribute('selectCountryLabel')], formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData?.[getStateAttribute('selectCountryNumber')], formId);
+
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
+
+	if (getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)) {
+		const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
+		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)}`, formId);
+	}
+}
+
 
 /**
  * Set state conditional tags on one field.
@@ -694,7 +787,7 @@ export function setStateValues(item, formId) {
  * @param {object} field Field object.
  * @param {string} name Field name.
  * @param {string} formId Form ID.
- * 
+ *
  * @returns {void}
  */
 export function setStateConditionalTags(field, name, formId) {

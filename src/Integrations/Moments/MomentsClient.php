@@ -139,7 +139,7 @@ class MomentsClient implements ClientInterface
 
 		$filterName = Filters::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
-			$itemId = \apply_filters($filterName, $itemId, $body, $files, $formId) ?? $itemId;
+			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
 
 		$url = "{$this->getBaseUrl()}forms/1/forms/{$itemId}/data";

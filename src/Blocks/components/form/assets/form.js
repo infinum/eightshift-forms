@@ -12,7 +12,6 @@ import {
 	prefix,
 	setStateFormInitial,
 	setStateWindow,
-	setStateValues,
 	removeStateForm,
 	setStateConditionalTagsItems,
 } from './state/init';
@@ -155,6 +154,10 @@ export class Form {
 
 		// Init steps.
 		this.steps.initOne(formId);
+
+		// Init enrichment prefill.
+		this.enrichment.setLocalStorageFormPrefill(formId);
+		this.enrichment.setUrlParamsFormPrefill(formId);
 	}
 
 	/**
@@ -359,6 +362,11 @@ export class Form {
 		} = response;
 
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccess(), response);
+
+		// Remove local storage for prefill.
+		if (this.state.getStateEnrichmentIsUsed()) {
+			this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
+		}
 
 		if (this.state.getStateConfigIsAdmin()) {
 			// Set global msg.
@@ -800,13 +808,13 @@ export class Form {
 			return;
 		}
 
-		const data = this.enrichment.getLocalStorage();
+		const data = this.enrichment.getLocalStorage(this.state.getStateEnrichmentStorageName());
 
 		if (data) {
 			this.buildFormDataItems([
 				{
 					name: this.state.getStateParam('storage'),
-					value: this.enrichment.getLocalStorage(),
+					value: data,
 				},
 			]);
 		}
@@ -985,6 +993,7 @@ export class Form {
 			const state = this.state;
 			const utils = this.utils;
 			const conditionalTags = this.conditionalTags;
+			const enrichment = this.enrichment;
 
 			flatpickr.default(input, {
 				enableTime: this.state.getStateElementTypeInternal(name, formId) === 'datetime',
@@ -1003,12 +1012,8 @@ export class Form {
 					utils.setFieldActiveState(formId, name);
 				},
 				onChange: function () {
-					setStateValues(input, formId);
-
-					if (state.getStateElementHasChanged(name, formId)) {
-						utils.unsetFieldError(formId, name);
-					}
-
+					utils.setOnDate(input);
+					enrichment.setLocalStorageFormPrefillItem(formId, name);
 					utils.setFieldFilledState(formId, name);
 					conditionalTags.setField(formId, name);
 				},
@@ -1116,7 +1121,7 @@ export class Form {
 			if (countryCookie) {
 				const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, choices);
 				if (selectValue) {
-					this.utils.setSelectValue(formId, name, selectValue);
+					choices?.setChoiceByValue(selectValue);
 				}
 			}
 
@@ -1418,10 +1423,7 @@ export class Form {
 	 * @returns {void}
 	 */
 	onFocusEvent = (event) => {
-		this.utils.setFieldActiveState(
-			this.state.getFormIdByElement(event.target),
-			this.state.getFormFieldElementByChild(event.target).getAttribute(this.state.getStateAttribute('fieldName'))
-		);
+		this.utils.setOnFocus(event.target);
 	};
 
 	/**
@@ -1432,48 +1434,13 @@ export class Form {
 	 * @returns {void}
 	 */
 	onSelectChangeEvent = (event) => {
-		const field = this.state.getFormFieldElementByChild(event.target);
 		const formId = this.state.getFormIdByElement(event.target);
-		const type = field.getAttribute(this.state.getStateAttribute('fieldType'));
+		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
-		// Skip select search field.
-		if (event?.target?.type === 'search' && event?.target?.name === 'search_terms') {
-			return;
-		}
+		this.utils.setOnSelectChange(event.target);
 
-		setStateValues(event.target, this.state.getFormIdByElement(event.target));
-
-		if (this.state.getStateElementHasChanged(name, formId)) {
-			this.utils.unsetFieldError(formId, name);
-		}
-
-		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
-			if (type === 'country') {
-				const country = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateElementByTypeInternal('tel', formId)].forEach((tel) => {
-					const name = tel[StateEnum.NAME];
-					const value = this.state.getStateElementValue(name, formId);
-
-					this.state.getStateElementCustom(name, formId).setChoiceByValue(country.number);
-					this.state.setStateElementValueCountry(name, country, formId);
-					if (value) {
-						this.state.setStateElementValueCombined(name, `${country.number}${value}`, formId);
-					}
-				});
-			}
-
-			if (type === 'phone') {
-				const phone = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateElementByTypeInternal('country', formId)].forEach((country) => {
-					const name = country[StateEnum.NAME];
-
-					this.state.getStateElementCustom(name, formId).setChoiceByValue(phone.label);
-					this.state.setStateElementValueCountry(name, phone, formId);
-					this.state.setStateElementValue(name, phone.label, formId);
-				});
-			}
-		}
+		this.enrichment.setLocalStorageFormPrefillItem(formId, name);
 
 		this.conditionalTags.setField(formId, name);
 
@@ -1499,11 +1466,9 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
-		setStateValues(event.target, this.state.getFormIdByElement(event.target));
+		this.utils.setOnInput(event.target);
 
-		if (this.state.getStateElementHasChanged(name, formId)) {
-			this.utils.unsetFieldError(formId, name);
-		}
+		this.enrichment.setLocalStorageFormPrefillItem(formId, name);
 
 		this.conditionalTags.setField(formId, name);
 
@@ -1525,11 +1490,7 @@ export class Form {
 	 * @returns {void}
 	 */
 	onBlurEvent = (event) => {
-		const field = this.state.getFormFieldElementByChild(event.target);
-		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
-		const formId = this.state.getFormIdByElement(event.target);
-
-		this.utils.setFieldFilledState(formId, name);
+		this.utils.setOnBlur(event.target);
 	};
 
 	////////////////////////////////////////////////////////////////

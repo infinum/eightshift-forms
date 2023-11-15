@@ -1,5 +1,15 @@
 import { State } from './state';
-import { StateEnum, prefix, setStateWindow, setStateValues } from './state/init';
+import { StateEnum,
+	prefix,
+	setStateWindow,
+	setStateValuesSelect,
+	setStateValuesInput,
+	setStateValuesPhoneInput,
+	setStateValuesRadio,
+	setStateValuesCheckbox,
+	setStateValuesPhoneSelect,
+	setStateValuesCountry,
+} from './state/init';
 
 /**
  * Main Utilities class.
@@ -757,30 +767,268 @@ export class Utils {
 	}
 
 	/**
-	 * Set select value.
+	 * Set on focus change event.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	setOnFocus(target) {
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+
+		this.setFieldActiveState(formId, name);
+	}
+
+	/**
+	 * Set on blur change event.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	setOnBlur(target) {
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+
+		this.setFieldFilledState(formId, name);
+	}
+
+	/**
+	 * Set on input change event.
+	 *
+	 * @param {object} target Field element.
+	 *
+	 * @returns {void}
+	 */
+	setOnInput(target) {
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		const type = field.getAttribute(this.state.getStateAttribute('fieldTypeCustom'));
+
+		switch (type) {
+			case 'phone':
+				setStateValuesPhoneInput(target, formId);
+				break;
+			case 'radio':
+				setStateValuesRadio(target, formId);
+				break;
+			case 'checkbox':
+				setStateValuesCheckbox(target, formId);
+				break;
+			default:
+				setStateValuesInput(target, formId);
+				break;
+		}
+
+		if (this.state.getStateElementHasChanged(name, formId)) {
+			this.unsetFieldError(formId, name);
+		}
+	}
+
+	/**
+	 * Set on date change event.
+	 *
+	 * @param {object} target Field element.
+	 *
+	 * @returns {void}
+	 */
+	setOnDate(target) {
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+
+		setStateValuesInput(target, formId);
+
+		if (this.state.getStateElementHasChanged(name, formId)) {
+			this.unsetFieldError(formId, name);
+		}
+	}
+
+	/**
+	 * Set on select change event.
+	 *
+	 * @param {object} target Field element.
+	 * @param {bool} disableSync Disable sync.
+	 *
+	 * @returns {void}
+	 */
+	setOnSelectChange(target, disableSync = false) {
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		const type = field.getAttribute(this.state.getStateAttribute('fieldTypeCustom'));
+
+		switch (type) {
+			case 'phone':
+				setStateValuesPhoneSelect(target, formId);
+				break;
+			case 'country':
+				setStateValuesCountry(target, formId);
+				break;
+			default:
+				setStateValuesSelect(target, formId);
+				break;
+		}
+
+		if (this.state.getStateElementHasChanged(name, formId)) {
+			this.unsetFieldError(formId, name);
+		}
+
+		if (disableSync) {
+			return;
+		}
+
+		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
+			if (type === 'country') {
+				const country = this.state.getStateElementValueCountry(name, formId);
+				[...this.state.getStateElementByTypeInternal('tel', formId)].forEach((tel) => {
+					const name = tel[StateEnum.NAME];
+					const value = this.state.getStateElementValue(name, formId);
+
+					this.state.getStateElementCustom(name, formId).setChoiceByValue(country.number);
+					this.state.setStateElementValueCountry(name, country, formId);
+					if (value) {
+						this.state.setStateElementValueCombined(name, `${country.number}${value}`, formId);
+					}
+				});
+			}
+
+			if (type === 'phone') {
+				const phone = this.state.getStateElementValueCountry(name, formId);
+				[...this.state.getStateElementByTypeInternal('country', formId)].forEach((country) => {
+					const name = country[StateEnum.NAME];
+
+					this.state.getStateElementCustom(name, formId).setChoiceByValue(phone.label);
+					this.state.setStateElementValueCountry(name, phone, formId);
+					this.state.setStateElementValue(name, phone.label, formId);
+				});
+			}
+		}
+	}
+
+	/**
+	 * Set field value - Phone
 	 * 
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
-	 * @param {string|array} value Value to set.
+	 * @param {object} value Field value.
+	 * 
+	 * @returns {void}
+	 */
+	setPhoneValue(formId, name, value) {
+		const input = this.state.getStateElementInput(name, formId);
+		const custom = this.state.getStateElementCustom(name, formId);
+
+		if (input && value?.value) {
+			input.value = value?.value;
+			custom.setChoiceByValue(value?.prefix);
+			this.setOnInput(input);
+			this.setOnBlur(input);
+		}
+	}
+
+	/**
+	 * Set field value - Date
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object} value Field value.
+	 * 
+	 * @returns {void}
+	 */
+	setDateValue(formId, name, value) {
+		const custom = this.state.getStateElementCustom(name, formId);
+		const input = this.state.getStateElementInput(name, formId);
+
+		if (input && value) {
+			custom.setDate(value, true, custom?.config?.dateFormat);
+		}
+	}
+
+	/**
+	 * Set field value - Select/Country.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object} value Field value.
 	 * 
 	 * @returns {void}
 	 */
 	setSelectValue(formId, name, value) {
+		const custom = this.state.getStateElementCustom(name, formId);
 		const input = this.state.getStateElementInput(name, formId);
-		const choices = this.state.getStateElementCustom(name, formId);
 
-		if (typeof value === 'object') {
-			[...value].forEach((item) => {
-				choices?.removeActiveItemsByValue(item);
-			});
-		} else {
-			choices?.setChoiceByValue(value);
+		if (input && value) {
+			custom.setChoiceByValue(value);
+			this.setOnSelectChange(input, true);
+			this.setOnBlur(input);
 		}
+	}
 
-		setStateValues(input, formId);
 
-		if (!value) {
-			this.setFieldFilledState(formId, name);
+	/**
+	 * Set field value - Checkboxes.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object} value Field value.
+	 * 
+	 * @returns {void}
+	 */
+	setCheckboxValue(formId, name, value) {
+		Object.entries(value).forEach(([innerName, innerValue]) => {
+			const innerInput = this.state.getStateElementItemsInput(name, innerName, formId);
+			if (innerInput && innerValue) {
+				innerInput.checked = true;
+				this.setOnInput(innerInput);
+				this.setOnBlur(innerInput);
+			}
+		});
+	}
+
+	/**
+	 * Set field value - Radios
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object} value Field value.
+	 * 
+	 * @returns {void}
+	 */
+	setRadioValue(formId, name, value) {
+		const items = this.state.getStateElementItems(name, formId);
+
+		const innerInput = items?.[value]?.input;
+
+		if (innerInput && value) {
+			innerInput.checked = true;
+			this.setOnInput(innerInput);
+			this.setOnBlur(innerInput);
+		}
+	}
+
+	/**
+	 * Set field value - Input/Textarea/Email/Text/Tel/Number/Password/Hidden
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object} value Field value.
+	 * 
+	 * @returns {void}
+	 */
+	setInputValue(formId, name, value) {
+		const input = this.state.getStateElementInput(name, formId);
+
+		if (input && value) {
+			input.value = value;
+			this.setOnInput(input);
+			this.setOnBlur(input);
 		}
 	}
 
@@ -881,9 +1129,6 @@ export class Utils {
 			},
 			removeFormsWithMissingFormsBlock: () => {
 				this.removeFormsWithMissingFormsBlock();
-			},
-			setSelectValue: (formId, name, value) => {
-				this.setSelectValue(formId, name, value);
 			},
 		};
 	}

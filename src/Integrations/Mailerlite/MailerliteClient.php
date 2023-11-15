@@ -161,6 +161,11 @@ class MailerliteClient implements ClientInterface
 			'fields' => $this->prepareParams($params),
 		];
 
+		$filterName = Filters::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'prePostId']);
+		if (\has_filter($filterName)) {
+			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
+		}
+
 		$url = self::BASE_URL . "groups/{$itemId}/subscribers";
 
 		$response = \wp_remote_post(

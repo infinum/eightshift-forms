@@ -399,27 +399,32 @@ class Filters
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 			],
 			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 			],
 			SettingsHubspot::SETTINGS_TYPE_KEY => [
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 				'filesOptions',
 			],
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 			],
 			SettingsGoodbits::SETTINGS_TYPE_KEY => [
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 			],
 			SettingsClearbit::SETTINGS_TYPE_KEY => [
 				'map',
@@ -428,11 +433,13 @@ class Filters
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 			],
 			SettingsAirtable::SETTINGS_TYPE_KEY => [
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 			],
 			SettingsMoments::SETTINGS_TYPE_KEY => [
 				'data',
@@ -444,6 +451,7 @@ class Filters
 				'data',
 				'prePostParams',
 				'order',
+				'prePostId',
 			],
 		],
 		'enrichment' => [

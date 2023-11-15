@@ -37,6 +37,13 @@ class Enrichment implements EnrichmentInterface
 	public const ENRICHMENT_EXPIRATION = '30';
 
 	/**
+	 * Enrichment prefill expiration time in days const.
+	 *
+	 * @var string
+	 */
+	public const ENRICHMENT_PREFILL_EXPIRATION = '2';
+
+	/**
 	 * Enrichment default allowed tags const.
 	 *
 	 * @var array<int, string>
@@ -84,6 +91,7 @@ class Enrichment implements EnrichmentInterface
 		}
 
 		$expiration = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY);
+		$expirationPrefill = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY);
 
 		$fullAllowed = [
 			...$tags,
@@ -104,6 +112,7 @@ class Enrichment implements EnrichmentInterface
 
 		return [
 			'expiration' => $expiration ?: self::ENRICHMENT_EXPIRATION, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'expirationPrefill' => $expirationPrefill ?: self::ENRICHMENT_PREFILL_EXPIRATION, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'allowed' => $fullAllowed,
 			'map' => $map,
 		];

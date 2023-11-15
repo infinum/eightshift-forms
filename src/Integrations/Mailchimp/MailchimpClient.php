@@ -192,6 +192,12 @@ class MailchimpClient implements MailchimpClientInterface
 			'merge_fields' => $this->prepareParams($params),
 		];
 
+
+		$filterName = Filters::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostId']);
+		if (\has_filter($filterName)) {
+			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
+		}
+
 		$url = "{$this->getBaseUrl()}lists/{$itemId}/members/{$emailHash}";
 
 		$response = \wp_remote_request(

@@ -224,10 +224,8 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
-
-		$baseId = $itemIdExploded[1] ?? '';
-		$submitId = $itemIdExploded[0] ?? '';
+		$paramsPrepared = $this->prepareParams($params);
+		$paramsFiles = $this->prepareFiles($files, $formId);
 
 		$body = [
 			'context' => [
@@ -238,13 +236,20 @@ class HubspotClient implements HubspotClientInterface
 			],
 		];
 
+		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostId']);
+		if (\has_filter($filterName)) {
+			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
+		}
+
+		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
+
+		$baseId = $itemIdExploded[1] ?? '';
+		$submitId = $itemIdExploded[0] ?? '';
+
 		$paramsConsent = $this->prepareConsent($params, $itemId);
 		if ($paramsConsent) {
 			$body['legalConsentOptions'] = $paramsConsent;
 		}
-
-		$paramsPrepared = $this->prepareParams($params);
-		$paramsFiles = $this->prepareFiles($files, $formId);
 
 		$body['fields'] = \array_merge(
 			$paramsPrepared,

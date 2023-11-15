@@ -168,6 +168,11 @@ class WorkableClient implements ClientInterface
 			),
 		];
 
+		$filterName = Filters::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'prePostId']);
+		if (\has_filter($filterName)) {
+			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
+		}
+
 		$url = "{$this->getBaseUrl()}jobs/{$itemId}/candidates";
 
 		$response = \wp_remote_post(

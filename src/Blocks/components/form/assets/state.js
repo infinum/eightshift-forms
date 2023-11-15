@@ -415,16 +415,22 @@ export class State {
 	////////////////////////////////////////////////////////////////
 
 	getStateEnrichmentIsUsed = () => {
-		return getState([StateEnum.IS_USED], StateEnum.ENRICHMENT);
+		return getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
 	getStateEnrichmentExpiration = () => {
 		return getState([StateEnum.ENRICHMENT_EXPIRATION], StateEnum.ENRICHMENT);
+	};
+	getStateEnrichmentExpirationPrefill = () => {
+		return getState([StateEnum.ENRICHMENT_EXPIRATION_PREFILL], StateEnum.ENRICHMENT);
 	};
 	getStateEnrichmentAllowed = () => {
 		return getState([StateEnum.ENRICHMENT_ALLOWED], StateEnum.ENRICHMENT);
 	};
 	getStateEnrichmentStorageName = () => {
 		return getState([StateEnum.NAME], StateEnum.ENRICHMENT);
+	};
+	getStateEnrichmentFormPrefillStorageName = (formId) => {
+		return `${getState([StateEnum.NAME], StateEnum.ENRICHMENT)}-${formId}`;
 	};
 
 	////////////////////////////////////////////////////////////////

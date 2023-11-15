@@ -165,13 +165,21 @@ class AirtableClient implements ClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
-
 		$body = [
 			'fields' => $this->prepareParams($params),
 		];
 
-		$url = self::BASE_URL . "{$itemIdExploded[0]}/{$itemIdExploded[1]}";
+		$filterName = Filters::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostId']);
+		if (\has_filter($filterName)) {
+			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
+		}
+
+		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
+
+		$itemIdReal = $itemIdExploded[0] ?? '';
+		$itemInnerIdReal = $itemIdExploded[1] ?? '';
+
+		$url = self::BASE_URL . "{$itemIdReal}/{$itemInnerIdReal}";
 
 		$response = \wp_remote_post(
 			$url,
