@@ -223,10 +223,10 @@ export class Enrichment {
 	 *
 	 * @param {string} storageName Storage name.
 	 *
-	 * @returns {object}
+	 * @returns {void}
 	 */
 	deleteLocalStorage(storageName) {
-		return localStorage.removeItem(storageName);
+		localStorage.removeItem(storageName);
 	}
 
 	/**
@@ -409,20 +409,38 @@ export class Enrichment {
 			setLocalStorageEnrichment: () => {
 				this.setLocalStorageEnrichment();
 			},
-			setLocalStorageFormPrefillItem: () => {
-				this.setLocalStorageFormPrefillItem();
+			setLocalStorageFormPrefill: () => {
+				this.setLocalStorageFormPrefill();
 			},
-			setLocalStorage: (newStorage, storageName) => {
-				this.setLocalStorage(newStorage, storageName);
+			setUrlParamsFormPrefill: () => {
+				this.setUrlParamsFormPrefill();
+			},
+			setLocalStorageFormPrefillItem: (formId, name) => {
+				this.setLocalStorageFormPrefillItem(formId, name);
+			},
+			setLocalStorage: (newStorage, storageName, expiration) => {
+				this.setLocalStorage(newStorage, storageName, expiration);
 			},
 			getLocalStorage: (storageName) => {
 				return this.getLocalStorage(storageName);
+			},
+			deleteLocalStorage: (storageName) => {
+				this.deleteLocalStorage(storageName);
 			},
 			getUrlAllowedParams: (allowedTags) => {
 				return this.getUrlAllowedParams(allowedTags);
 			},
 			getCookiesAllowedParams: (allowedTags) => {
 				return this.getCookiesAllowedParams(allowedTags);
+			},
+			prefillByData: (formId, data) => {
+				this.prefillByData(formId, data);
+			},
+			onUrlParamsPrefillEvent: (event) => {
+				this.onUrlParamsPrefillEvent(event);
+			},
+			onPrefillEvent: (event) => {
+				this.onPrefillEvent(event);
 			},
 		};
 	}

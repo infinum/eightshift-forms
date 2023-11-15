@@ -971,7 +971,6 @@ export class Utils {
 		}
 	}
 
-
 	/**
 	 * Set field value - Checkboxes.
 	 * 
@@ -1129,6 +1128,39 @@ export class Utils {
 			},
 			removeFormsWithMissingFormsBlock: () => {
 				this.removeFormsWithMissingFormsBlock();
+			},
+			setOnFocus: (target) => {
+				this.setOnFocus(target);
+			},
+			setOnBlur: (target) => {
+				this.setOnBlur(target);
+			},
+			setOnInput: (target) => {
+				this.setOnInput(target);
+			},
+			setOnDate: (target) => {
+				this.setOnDate(target);
+			},
+			setOnSelectChange: (target) => {
+				this.setOnSelectChange(target);
+			},
+			setPhoneValue: (formId, name, value) => {
+				this.setPhoneValue(formId, name, value);
+			},
+			setDateValue: (formId, name, value) => {
+				this.setDateValue(formId, name, value);
+			},
+			setSelectValue: (formId, name, value) => {
+				this.setSelectValue(formId, name, value);
+			},
+			setCheckboxValue: (formId, name, value) => {
+				this.setCheckboxValue(formId, name, value);
+			},
+			setRadioValue: (formId, name, value) => {
+				this.setRadioValue(formId, name, value);
+			},
+			setInputValue: (formId, name, value) => {
+				this.setInputValue(formId, name, value);
 			},
 		};
 	}
