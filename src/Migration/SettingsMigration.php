@@ -47,24 +47,24 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_MIGRATION_USE_KEY = 'migration-use';
 
 	/**
-	 * Version 2-3 key.
+	 * Version 2-3 general key.
 	 */
-	public const VERSION_2_3 = '2-3';
+	public const VERSION_2_3_GENERAL = '2-3-general';
 
 	/**
-	 * Version 3-4 key.
+	 * Version 2-3 forms key.
 	 */
-	public const VERSION_3_4 = '3-4';
+	public const VERSION_2_3_FORMS = '2-3-forms';
 
 	/**
-	 * Version 3-4 locale key.
+	 * Version 2-3 locale locale key.
 	 */
-	public const VERSION_3_4_LOCALE = '3-4-locale';
+	public const VERSION_2_3_LOCALE = '2-3-locale';
 
 	/**
-	 * Version 3-4 labels key.
+	 * Version 2-3 labels key.
 	 */
-	public const VERSION_3_4_LABELS = '3-4-labels';
+	public const VERSION_2_3_LABELS = '2-3-labels';
 
 	/**
 	 * Register all the hooks
@@ -120,47 +120,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 				'layoutContent' => [
 					[
 						'component' => 'card',
-						'cardTitle' => \__('Version 2 &rarr; Version 3', 'eightshift-forms'),
-						'cardSubTitle' => \__('Changes to options and custom meta names for fallback emails.', 'eightshift-forms'),
-						'cardContent' => [
-							[
-								'component' => 'submit',
-								'submitValue' => \__('Migrate', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3,
-								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
-							],
-						],
-					],
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					],
-					[
-						'component' => 'card',
-						'cardTitle' => \__('Version 3 &rarr; Version 4', 'eightshift-forms'),
-						'cardSubTitle' => \__('Major changes to integrations, settings and form editing. If you experience timeout issues, disable all integrations and run the migration with only one integration active at a time.', 'eightshift-forms'),
-						'cardContent' => [
-							[
-								'component' => 'submit',
-								'submitValue' => \__('Migrate', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_3_4,
-								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
-							],
-						],
-					],
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					],
-					[
-						'component' => 'card',
-						'cardTitle' => \__('Version 3 &rarr; Version 4 locale', 'eightshift-forms'),
+						'cardTitle' => \__('Version 2 &rarr; Version 3 - locale', 'eightshift-forms'),
 						'cardSubTitle' => \__('Major changes to form settings name based on locale.', 'eightshift-forms'),
 						'cardContent' => [
 							[
@@ -168,7 +128,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_3_4_LOCALE,
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3_LOCALE,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
@@ -180,7 +140,47 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'card',
-						'cardTitle' => \__('Version 3 &rarr; Version 4 labels', 'eightshift-forms'),
+						'cardTitle' => \__('Version 2 &rarr; Version 3 - general', 'eightshift-forms'),
+						'cardSubTitle' => \__('Changes to options and custom meta names for fallback emails.', 'eightshift-forms'),
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
+								'submitAttrs' => [
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3_GENERAL,
+								],
+								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+							],
+						],
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Version 2 &rarr; Version 3 - forms', 'eightshift-forms'),
+						'cardSubTitle' => \__('Major changes to integrations, settings and form editing. If you experience timeout issues, disable all integrations and run the migration with only one integration active at a time.', 'eightshift-forms'),
+						'cardContent' => [
+							[
+								'component' => 'submit',
+								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
+								'submitAttrs' => [
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3_FORMS,
+								],
+								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+							],
+						],
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					[
+						'component' => 'card',
+						'cardTitle' => \__('Version 2 &rarr; Version 3 - labels', 'eightshift-forms'),
 						'cardSubTitle' => \__('Small changes to field labels.', 'eightshift-forms'),
 						'cardContent' => [
 							[
@@ -188,7 +188,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_3_4_LABELS,
+									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3_LABELS,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],

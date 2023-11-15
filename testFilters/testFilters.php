@@ -109,8 +109,10 @@ class Testfilters implements ServiceInterface
 
 		$actions = [
 			// Validation actions.
-			'es_forms_migration_two_to_three' => ['runMigration2To3'],
-			'es_forms_migration_three_to_four' => ['runMigration3To4'],
+			'es_forms_migration_two_to_three_general' => ['runMigration2To3General'],
+			'es_forms_migration_two_to_three_forms' => ['runMigration2To3Forms'],
+			'es_forms_migration_two_to_three_labels' => ['runMigration2To3Labels'],
+			'es_forms_migration_two_to_three_locale' => ['runMigration2To3Locale'],
 			// ---------------------------------------------------------------------------------------------------------
 		];
 
@@ -810,13 +812,6 @@ class Testfilters implements ServiceInterface
 	}
 
 	/**
-	 * Change form fields data before we send it to the external integration.
-	 *
-	 * @param array<string, mixed> $params Array of params.
-	 *
-	 * @return array<string, mixed>
-	 */
-	/**
 	 *
 	 * Change integration ID fields data before we send it to the external integration.
 	 *
@@ -947,22 +942,42 @@ class Testfilters implements ServiceInterface
 	// Migration actions.
 
 	/**
-	 * Run custom action after migration from verson 2 to 3.
+	 * Run custom action after migration from verson 2 to 3 - general.
 	 *
 	 * @return void
 	 */
-	public function runMigration2To3(): void
+	public function runMigration2To3General(): void
 	{
-		error_log(print_r(('Action hook activated 2-3'), true)); // phpcs:ignore
+		error_log(print_r(('Action hook activated 2-3 general'), true)); // phpcs:ignore
 	}
 
 	/**
-	 * Run custom action after migration from verson 3 to 4.
+	 * Run custom action after migration from verson 2 to 3 - forms.
 	 *
 	 * @return void
 	 */
-	public function runMigration3To4(): void
+	public function runMigration2To3Forms(): void
 	{
-		error_log(print_r(('Action hook activated 3-4'), true)); // phpcs:ignore
+		error_log(print_r(('Action hook activated 2-3 forms'), true)); // phpcs:ignore
+	}
+
+	/**
+	 * Run custom action after migration from verson 2 to 3 - locale.
+	 *
+	 * @return void
+	 */
+	public function runMigration2To3Locale(): void
+	{
+		error_log(print_r(('Action hook activated 2-3 locale'), true)); // phpcs:ignore
+	}
+
+	/**
+	 * Run custom action after migration from verson 2 to 3 - labels.
+	 *
+	 * @return void
+	 */
+	public function runMigration2To3Labels(): void
+	{
+		error_log(print_r(('Action hook activated 2-3 labels'), true)); // phpcs:ignore
 	}
 }

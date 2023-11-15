@@ -461,10 +461,10 @@ class Filters
 			'forceMimetypeFromFs',
 		],
 		'migration' => [
-			'twoToThree',
-			'threeToFour',
-			'threeToFourLocale',
-			'threeToFourLabels',
+			'twoToThreeGeneral',
+			'twoToThreeForms',
+			'twoToThreeLocale',
+			'twoToThreeLabels',
 		],
 	];
 

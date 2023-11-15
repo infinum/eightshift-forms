@@ -192,7 +192,7 @@ export class ConditionalTags {
 		// Loop all fields.
 		for(const [name] of this.state.getStateElements(formId)) {
 			// Get element type.
-			const type = this.state.getStateElementType(name, formId);
+			const type = this.state.getStateElementTypeInternal(name, formId);
 
 			// Only select, checkbox and radio fields can have inner items.
 			if (type === 'select' || type === 'checkbox' || type === 'radio') {

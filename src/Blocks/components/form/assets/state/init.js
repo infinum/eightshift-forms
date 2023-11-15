@@ -373,7 +373,7 @@ export function setStateFormInitial(formId) {
 		const {
 			value,
 			name,
-			type,
+			type, // this is used as a native type not internal type.
 			disabled,
 		} = item;
 
@@ -687,6 +687,7 @@ export function setStateValuesPhoneInput(item, formId) {
 		value,
 	} = item;
 
+	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
 
@@ -710,6 +711,7 @@ export function setStateValuesSelect(item, formId) {
 		value,
 	} = item;
 
+	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 
 	if (getState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], formId)) {
@@ -731,6 +733,8 @@ export function setStateValuesCountry(item, formId) {
 		name,
 		value,
 	} = item;
+
+	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
 
 	let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
 
@@ -761,6 +765,8 @@ export function setStateValuesPhoneSelect(item, formId) {
 	const {
 		name,
 	} = item;
+
+	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
 
 	let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
 

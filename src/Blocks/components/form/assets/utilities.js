@@ -524,7 +524,7 @@ export class Utils {
 		// Replace string templates used for passing data via url.
 		for(const [name] of this.state.getStateElements(formId)) {
 			let value = this.state.getStateElementValue(name, formId);
-			const type = this.state.getStateElementTypeCustom(name, formId);
+			const type = this.state.getStateElementTypeInternal(name, formId);
 
 			// If checkbox split multiple.
 			if (type === 'checkbox') {
@@ -746,7 +746,7 @@ export class Utils {
 	 * @returns {string}
 	 */
 	getSelectSelectedValueByCustomData(type, value, choices) {
-		if (type == 'country' || type === 'phone') {
+		if (type == 'country' || type === 'tel') {
 			return choices?.config?.choices?.find((item) => item?.customProperties?.[this.state.getStateAttribute('selectCountryCode')] === value)?.value;
 		}
 
@@ -809,10 +809,10 @@ export class Utils {
 		const formId = this.state.getFormIdByElement(target);
 		const field = this.state.getFormFieldElementByChild(target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
-		const type = field.getAttribute(this.state.getStateAttribute('fieldTypeCustom'));
+		const type = this.state.getStateElementTypeInternal(name, formId);
 
 		switch (type) {
-			case 'phone':
+			case 'tel':
 				setStateValuesPhoneInput(target, formId);
 				break;
 			case 'radio':
@@ -862,10 +862,10 @@ export class Utils {
 		const formId = this.state.getFormIdByElement(target);
 		const field = this.state.getFormFieldElementByChild(target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
-		const type = field.getAttribute(this.state.getStateAttribute('fieldTypeCustom'));
+		const type = this.state.getStateElementTypeInternal(name, formId);
 
 		switch (type) {
-			case 'phone':
+			case 'tel':
 				setStateValuesPhoneSelect(target, formId);
 				break;
 			case 'country':
@@ -899,7 +899,7 @@ export class Utils {
 				});
 			}
 
-			if (type === 'phone') {
+			if (type === 'tel') {
 				const phone = this.state.getStateElementValueCountry(name, formId);
 				[...this.state.getStateElementByTypeInternal('country', formId)].forEach((country) => {
 					const name = country[StateEnum.NAME];
@@ -927,7 +927,9 @@ export class Utils {
 
 		if (input && value?.value) {
 			input.value = value?.value;
-			custom.setChoiceByValue(value?.prefix);
+			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
+				custom.setChoiceByValue(value?.prefix);
+			}
 			this.setOnInput(input);
 			this.setOnBlur(input);
 		}
@@ -964,6 +966,8 @@ export class Utils {
 		const custom = this.state.getStateElementCustom(name, formId);
 		const input = this.state.getStateElementInput(name, formId);
 
+		console.log(input, custom, value);
+
 		if (input && value) {
 			custom.setChoiceByValue(value);
 			this.setOnSelectChange(input, true);
@@ -981,8 +985,11 @@ export class Utils {
 	 * @returns {void}
 	 */
 	setCheckboxValue(formId, name, value) {
+		console.log(formId, name, value);
+
 		Object.entries(value).forEach(([innerName, innerValue]) => {
 			const innerInput = this.state.getStateElementItemsInput(name, innerName, formId);
+			// console.log(innerInput, innerValue);
 			if (innerInput && innerValue) {
 				innerInput.checked = true;
 				this.setOnInput(innerInput);

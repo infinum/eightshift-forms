@@ -171,27 +171,32 @@ export class Form {
 		// Regular submit.
 		this.state.getStateFormElement(formId).addEventListener('submit', this.onFormSubmitEvent);
 
-		// Setup select inputs.
+		// Select.
 		[...this.state.getStateElementByType('select', formId)].forEach((select) => {
 			this.setupSelectField(formId, select.name);
 		});
 
-		// Setup file single inputs.
+		// File.
 		[...this.state.getStateElementByType('file', formId)].forEach((file) => {
 			this.setupFileField(formId, file.name);
 		});
 
-		// Setup text inputs.
+		// Text.
 		[...this.state.getStateElementByType('text', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
 
-		// Setup number inputs.
+		// Hidden.
+		[...this.state.getStateElementByType('hidden', formId)].forEach((input) => {
+			this.setupInputField(formId, input.name);
+		});
+
+		// Number.
 		[...this.state.getStateElementByType('number', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
 
-		// Setup password inputs.
+		// Password.
 		[...this.state.getStateElementByType('password', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
@@ -201,23 +206,26 @@ export class Form {
 			this.setupDateField(formId, input.name);
 		});
 
+		// Tel.
 		[...this.state.getStateElementByType('tel', formId)].forEach((tel) => {
 			this.setupTelField(formId, tel.name);
 		});
 
+		// Checkbox.
 		[...this.state.getStateElementByType('checkbox', formId)].forEach((checkbox) => {
 			[...Object.values(checkbox.items)].forEach((checkboxItem) => {
 				this.setupRadioCheckboxField(formId, checkboxItem.value, checkboxItem.name);
 			});
 		});
 
+		// Radio.
 		[...this.state.getStateElementByType('radio', formId)].forEach((radio) => {
 			[...Object.values(radio.items)].forEach((radioItem) => {
 				this.setupRadioCheckboxField(formId, radioItem.value, radioItem.name);
 			});
 		});
 
-		// Setup textarea inputs.
+		// Textarea.
 		[...this.state.getStateElementByType('textarea', formId)].forEach((textarea) => {
 			this.setupTextareaField(formId, textarea.name);
 		});
@@ -987,18 +995,18 @@ export class Form {
 	 * @returns {void}
 	 */
 	setupDateField(formId, name) {
-		const input = this.state.getStateElementInput(name, formId);
+		const state = this.state;
+		const utils = this.utils;
+		const conditionalTags = this.conditionalTags;
+		const enrichment = this.enrichment;
+
+		const input = state.getStateElementInput(name, formId);
 
 		import('flatpickr').then((flatpickr) => {
-			const state = this.state;
-			const utils = this.utils;
-			const conditionalTags = this.conditionalTags;
-			const enrichment = this.enrichment;
-
 			flatpickr.default(input, {
-				enableTime: this.state.getStateElementTypeInternal(name, formId) === 'datetime',
-				dateFormat: input.getAttribute(this.state.getStateAttribute('dateOutputFormat')),
-				altFormat: input.getAttribute(this.state.getStateAttribute('datePreviewFormat')),
+				enableTime: state.getStateElementTypeInternal(name, formId) === 'datetime',
+				dateFormat: input.getAttribute(state.getStateAttribute('dateOutputFormat')),
+				altFormat: input.getAttribute(state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
 				onReady: function(selectedDates, value) {
 					state.setStateElementInitial(name, value, formId);
@@ -1031,9 +1039,9 @@ export class Form {
 	 */
 	setupSelectField(formId, name) {
 		let input = this.state.getStateElementInput(name, formId);
-		const typeInternal = this.state.getStateElementTypeCustom(name, formId);
+		const typeInternal = this.state.getStateElementTypeInternal(name, formId);
 
-		 if (typeInternal === 'phone') {
+		 if (typeInternal === 'tel') {
 			 input = this.state.getStateElementInputSelect(name, formId);
 		 }
 
@@ -1053,7 +1061,7 @@ export class Form {
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-				removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
+				removeItemButton: typeInternal !== 'tel', // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
 				searchFields: [
 					'label',

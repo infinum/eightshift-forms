@@ -106,10 +106,10 @@ export class Enrichment {
 			return;
 		}
 
-		const type = this.state.getStateElementTypeCustom(name, formId);
+		const type = this.state.getStateElementTypeInternal(name, formId);
 		let value = '';
 		switch (type) {
-			case 'phone':
+			case 'tel':
 				value = {
 					prefix: this.state.getStateElementValueCountry(name, formId)?.number,
 					value: this.state.getStateElementValue(name, formId),
@@ -293,12 +293,12 @@ export class Enrichment {
 				return;
 			}
 
-			switch (this.state.getStateElementTypeCustom(name, formId)) {
-				case 'phone':
+			switch (this.state.getStateElementTypeInternal(name, formId)) {
+				case 'tel':
 					this.utils.setPhoneValue(formId, name, value);
 					break;
 				case 'date':
-				case 'datetime-local':
+				case 'datetime':
 					this.utils.setDateValue(formId, name, value);
 					break;
 				case 'country':

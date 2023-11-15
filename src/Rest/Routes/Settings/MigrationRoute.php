@@ -140,14 +140,14 @@ class MigrationRoute extends AbstractBaseRoute
 		$type = $params['type'] ?? '';
 
 		switch ($type) {
-			case SettingsMigration::VERSION_2_3:
-				return $this->getMigration2To3();
-			case SettingsMigration::VERSION_3_4:
-				return $this->getMigration3To4();
-			case SettingsMigration::VERSION_3_4_LOCALE:
-				return $this->getMigration3To4Locale();
-			case SettingsMigration::VERSION_3_4_LABELS:
-				return $this->getMigration3To4Labels();
+			case SettingsMigration::VERSION_2_3_GENERAL:
+				return $this->getMigration2To3General();
+			case SettingsMigration::VERSION_2_3_FORMS:
+				return $this->getMigration2To3Forms();
+			case SettingsMigration::VERSION_2_3_LOCALE:
+				return $this->getMigration2To3Locale();
+			case SettingsMigration::VERSION_2_3_LABELS:
+				return $this->getMigration2To3Labels();
 			default:
 				return $this->getApiErrorOutput(
 					\__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
@@ -158,11 +158,11 @@ class MigrationRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Migration version 2-3.
+	 * Migration version 2-3 general.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getMigration2To3(): array
+	private function getMigration2To3General(): array
 	{
 		$config = [
 			'options' => [
@@ -213,20 +213,20 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 		}
 
-		$actionName = Filters::getFilterName(['migration', 'twoToThree']);
+		$actionName = Filters::getFilterName(['migration', 'twoToThreeGeneral']);
 		if (\has_action($actionName)) {
-			\do_action($actionName, SettingsMigration::VERSION_2_3);
+			\do_action($actionName, SettingsMigration::VERSION_2_3_GENERAL);
 		}
 
 		return $this->getApiSuccessOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
 	}
 
 	/**
-	 * Migration version 3-4.
+	 * Migration version 2-3 forms.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getMigration3To4(): array
+	private function getMigration2To3Forms(): array
 	{
 		$output = [];
 
@@ -274,7 +274,7 @@ class MigrationRoute extends AbstractBaseRoute
 			if ($this->isOptionCheckboxChecked($use, $use)) {
 				switch ($type) {
 					case SettingsHubspot::SETTINGS_TYPE_KEY:
-						$preCheck = $this->updateFormIntegration3To4($type, 'item-id', '', $id, $content);
+						$preCheck = $this->updateFormIntegration2To3Forms($type, 'item-id', '', $id, $content);
 
 						$output[$id] = [
 							'fatal' => $preCheck['fatal'],
@@ -286,7 +286,7 @@ class MigrationRoute extends AbstractBaseRoute
 						break;
 					case SettingsGreenhouse::SETTINGS_TYPE_KEY:
 					case SettingsWorkable::SETTINGS_TYPE_KEY:
-						$preCheck = $this->updateFormIntegration3To4($type, 'job-id', '', $id, $content);
+						$preCheck = $this->updateFormIntegration2To3Forms($type, 'job-id', '', $id, $content);
 
 						$output[$id] = [
 							'fatal' => $preCheck['fatal'],
@@ -301,7 +301,7 @@ class MigrationRoute extends AbstractBaseRoute
 					case SettingsActiveCampaign::SETTINGS_TYPE_KEY:
 					case SettingsGoodbits::SETTINGS_TYPE_KEY:
 					case SettingsMoments::SETTINGS_TYPE_KEY:
-						$preCheck = $this->updateFormIntegration3To4($type, 'list', '', $id, $content);
+						$preCheck = $this->updateFormIntegration2To3Forms($type, 'list', '', $id, $content);
 
 						$output[$id] = [
 							'fatal' => $preCheck['fatal'],
@@ -312,7 +312,7 @@ class MigrationRoute extends AbstractBaseRoute
 						];
 						break;
 					case SettingsAirtable::SETTINGS_TYPE_KEY:
-						$preCheck = $this->updateFormIntegration3To4($type, 'list', 'field', $id, $content);
+						$preCheck = $this->updateFormIntegration2To3Forms($type, 'list', 'field', $id, $content);
 
 						$output[$id] = [
 							'fatal' => $preCheck['fatal'],
@@ -323,7 +323,7 @@ class MigrationRoute extends AbstractBaseRoute
 						];
 						break;
 					case 'form': // Legacy blocks for Mailer integrations is called form and not mailer.
-						$preCheck = $this->updateFormMailer3To4($content);
+						$preCheck = $this->updateFormMailer2To3Forms($content);
 
 						$output[$id] = [
 							'fatal' => $preCheck['fatal'],
@@ -393,9 +393,9 @@ class MigrationRoute extends AbstractBaseRoute
 
 		$outputFinal['fatal'] = $outputFatal;
 
-		$actionName = Filters::getFilterName(['migration', 'threeToFour']);
+		$actionName = Filters::getFilterName(['migration', 'twoToThreeForms']);
 		if (\has_action($actionName)) {
-			\do_action($actionName, SettingsMigration::VERSION_3_4);
+			\do_action($actionName, SettingsMigration::VERSION_2_3_FORMS);
 		}
 
 		if (!$outputFinal['items']) {
@@ -406,17 +406,17 @@ class MigrationRoute extends AbstractBaseRoute
 		}
 
 		return $this->getApiSuccessOutput(
-			\__('Migration version 3 to 4 finished with success.', 'eightshift-forms'),
+			\__('Migration version 2 to 3 forms finished with success.', 'eightshift-forms'),
 			$outputFinal
 		);
 	}
 
 	/**
-	 * Migration version 3-4 locale.
+	 * Migration version 2-3 locale.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getMigration3To4Locale(): array
+	private function getMigration2To3Locale(): array
 	{
 		global $wpdb;
 
@@ -509,23 +509,23 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 		}
 
-		$actionName = Filters::getFilterName(['migration', 'threeToFourLocale']);
+		$actionName = Filters::getFilterName(['migration', 'twoToThreeLocale']);
 		if (\has_action($actionName)) {
-			\do_action($actionName, SettingsMigration::VERSION_3_4_LOCALE);
+			\do_action($actionName, SettingsMigration::VERSION_2_3_LOCALE);
 		}
 
 		return $this->getApiSuccessOutput(
-			\__('Migration version 3 to 4 locale finished with success.', 'eightshift-forms'),
+			\__('Migration version 2 to 3 locale finished with success.', 'eightshift-forms'),
 			$output
 		);
 	}
 
 	/**
-	 * Migration version 3-4 labels.
+	 * Migration version 2-3 labels.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getMigration3To4Labels(): array
+	private function getMigration2To3Labels(): array
 	{
 		$output = [];
 
@@ -571,13 +571,13 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 		}
 
-		$actionName = Filters::getFilterName(['migration', 'threeToFourLabels']);
+		$actionName = Filters::getFilterName(['migration', 'twoToThreeLabels']);
 		if (\has_action($actionName)) {
-			\do_action($actionName, SettingsMigration::VERSION_3_4_LABELS);
+			\do_action($actionName, SettingsMigration::VERSION_2_3_LABELS);
 		}
 
 		return $this->getApiSuccessOutput(
-			\__('Migration version 3 to 4 labels finished with success.', 'eightshift-forms'),
+			\__('Migration version 2 to 3 labels finished with success.', 'eightshift-forms'),
 			$output
 		);
 	}

@@ -29,13 +29,13 @@ trait MigrationHelper
 	/**
 	 * Update mailer forms.
 	 *
-	 * @version 3-4.
+	 * @version 2-3 forms.
 	 *
 	 * @param string $content Content of form.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function updateFormMailer3To4(string $content): array
+	private function updateFormMailer2To3Forms(string $content): array
 	{
 		$output = [
 			'msg' => [],
@@ -77,7 +77,7 @@ trait MigrationHelper
 	/**
 	 * Update integration forms.
 	 *
-	 * @version 3-4.
+	 * @version 2-3 forms.
 	 *
 	 * @param string $type Integration type.
 	 * @param string $itemIdKey Integration ID key.
@@ -87,7 +87,7 @@ trait MigrationHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function updateFormIntegration3To4(string $type, string $itemIdKey, string $innerIdKey, string $id, string $content): array
+	private function updateFormIntegration2To3Forms(string $type, string $itemIdKey, string $innerIdKey, string $id, string $content): array
 	{
 		$output = [
 			'msg' => [],
@@ -98,7 +98,7 @@ trait MigrationHelper
 		$itemId = $this->getSettingValue("{$type}-{$itemIdKey}", $id);
 		$innerId = $this->getSettingValue("{$type}-{$innerIdKey}", $id);
 		$blocks = \parse_blocks($content);
-		$integrationFields = $this->prepareIntegrationFields3To4($type, $id);
+		$integrationFields = $this->prepareIntegrationFields2To3Forms($type, $id);
 
 		if ($innerIdKey) {
 			if (isset($blocks[0]['innerBlocks'][0]['attrs']["{$type}IntegrationId"]) && isset($blocks[0]['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"])) {
@@ -226,7 +226,7 @@ trait MigrationHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareIntegrationFields3To4(string $type, string $id): array
+	private function prepareIntegrationFields2To3Forms(string $type, string $id): array
 	{
 		$output = [];
 
