@@ -29,7 +29,7 @@ export class Filter {
 
 		this.filterResetItems();
 
-		if (selectedValue !== 'all') {
+		if (selectedValue !== '') {
 			this.filterItems(selectedValue);
 		}
 	};

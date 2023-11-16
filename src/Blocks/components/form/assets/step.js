@@ -1,14 +1,14 @@
-import { State } from './state';
 import { prefix, setStateWindow } from './state/init';
-import { Utils } from './utilities';
 
 /**
  * Main step class.
  */
 export class Steps {
-	constructor() {
-		this.state = new State();
-		this.utils = new Utils();
+	constructor(utils) {
+		/** @type {import('./utils').Utils} */
+		this.utils = utils;
+		/** @type {import('./state').State} */
+		this.state = this.utils.getState();
 
 		this.STEP_DIRECTION_PREV = 'prev';
 		this.STEP_DIRECTION_NEXT = 'next';

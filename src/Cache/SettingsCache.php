@@ -68,11 +68,13 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 		$manifestForm = Components::getComponent('form');
 
 		$output = \array_values(\array_filter(\array_map(
-			static function ($key, $value) use ($manifestForm) {
+			function ($key, $value) use ($manifestForm) {
 				$icon = Helper::getProjectIcons($key);
 				$cache = $value['cache'] ?? [];
 
-				if ($cache) {
+				$isUsedKey = $value['use'] ?? '';
+
+				if ($cache && $isUsedKey && !$this->isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 					return [
 						'component' => 'card',
 						'cardTitle' => Filters::getSettingsLabels($key),

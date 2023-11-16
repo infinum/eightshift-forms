@@ -1,10 +1,11 @@
-import { Utils } from "../assets/utilities";
-import { State, ROUTES } from "../assets/state";
+import { ROUTES } from "../assets/state";
 
 export class TestApi {
 	constructor(options = {}) {
-		this.utils = new Utils();
-		this.state = new State();
+		/** @type {import('./../assets/utils').Utils} */
+		this.utils = options.utils;
+		/** @type {import('./../assets/state').State} */
+		this.state = this.utils.getState();
 
 		this.selector = options.selector;
 	}

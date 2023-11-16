@@ -5,6 +5,7 @@ import { Form } from './../assets/form';
 import manifest from './../manifest.json';
 import adminListingManifest from './../../admin-listing/manifest.json';
 import { setStateInitial } from '../assets/state/init';
+import { Utils } from '../assets/utils';
 
 domReady(() => {
 	// Global variable must be set for everything to work.
@@ -20,7 +21,11 @@ domReady(() => {
 	// Set initial state.
 	setStateInitial();
 
-	new Form().init();
+	// Load state helpers.
+	const utils = new Utils();
+
+	// Init form.
+	new Form(utils).init();
 
 	////////////////////////////////////////////////////////////////
 	// Cache
@@ -32,6 +37,7 @@ domReady(() => {
 	if (elementsCache.length) {
 		import('./cache').then(({ Cache }) => {
 			new Cache({
+				utils: utils,
 				selector: selectorCache,
 			}).init();
 		});
@@ -47,6 +53,7 @@ domReady(() => {
 	if (elementsMigration.length) {
 		import('./migration').then(({ Migration }) => {
 			new Migration({
+				utils: utils,
 				selector: selectorMigration,
 				outputSelector: `.${manifest.componentMigrationJsClass}-output`,
 			}).init();
@@ -63,6 +70,7 @@ domReady(() => {
 	if (elementsTransfer.length) {
 		import('./transfer').then(({ Transfer }) => {
 			new Transfer({
+				utils: utils,
 				selector: selectorTransfer,
 				itemSelector: `.${manifest.componentTransferJsClass}-item`,
 				uploadSelector: `.${manifest.componentTransferJsClass}-upload`,
@@ -82,6 +90,7 @@ domReady(() => {
 	if (elementsTestApi.length) {
 		import('./test-api').then(({ TestApi }) => {
 			new TestApi({
+				utils: utils,
 				selector: selectorTestApi,
 			}).init();
 		});
@@ -97,6 +106,7 @@ domReady(() => {
 	if (elementsFilter) {
 		import('./filter').then(({ Filter }) => {
 			new Filter({
+				utils: utils,
 				filterSelector: selectorFilter,
 				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
 			}).init();
@@ -113,6 +123,7 @@ domReady(() => {
 	if (elementsBulk) {
 		import('./bulk').then(({ Bulk }) => {
 			new Bulk({
+				utils: utils,
 				selector: selectorBulk,
 				itemsSelector: `${selectorBulk}-items`,
 				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
@@ -131,6 +142,7 @@ domReady(() => {
 	if (elementsLocations) {
 		import('./locations').then(({ Locations }) => {
 			new Locations({
+				utils: utils,
 				selector: selectorLocations,
 			}).init();
 		});
@@ -146,6 +158,7 @@ domReady(() => {
 	if (elementsManualImportApi) {
 		import('./manual-import-api').then(({ ManualImportApi }) => {
 			new ManualImportApi({
+				utils: utils,
 				selector: selectorManualImportApi,
 				outputSelector: `.${manifest.componentManualImportApiJsClass}-output`,
 				dataSelector: `.${manifest.componentManualImportApiJsClass}-data`,

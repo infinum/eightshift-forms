@@ -220,13 +220,6 @@ class FormAdminMenu extends AbstractAdminMenu
 		$filterOptions = Components::render(
 			'select-option',
 			[
-				'selectOptionLabel' => \__('Show all', 'eightshift-forms'),
-				'selectOptionValue' => 'all',
-			]
-		);
-		$filterOptions .= Components::render(
-			'select-option',
-			[
 				'selectOptionLabel' => \__('Not Configured', 'eightshift-forms'),
 				'selectOptionValue' => self::ADMIN_MENU_FILTER_NOT_CONFIGURED,
 			]
@@ -258,6 +251,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				'fieldSkip' => true,
 				'selectName' => 'filter',
 				'selectContent' => $filterOptions,
+				'selectPlaceholder' => \__('Show all', 'eightshift-forms'),
 			]
 		);
 

@@ -1,11 +1,7 @@
 /* global grecaptcha */
 
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import { State, ROUTES } from './state';
-import { Utils } from './utilities';
-import { Steps } from './step';
-import { Enrichment } from './enrichment';
-import { ConditionalTags } from './conditional-tags';
+import { ROUTES } from './state';
 import selectManifest from './../../select/manifest.json';
 import {
 	StateEnum,
@@ -20,12 +16,17 @@ import {
  * Main Forms class.
  */
 export class Form {
-	constructor() {
-		this.state = new State();
-		this.utils = new Utils();
-		this.enrichment = new Enrichment();
-		this.conditionalTags = new ConditionalTags();
-		this.steps = new Steps();
+	constructor(utils) {
+		/** @type {import('./utils').Utils} */
+		this.utils = utils;
+		/** @type {import('./state').State} */
+		this.state = this.utils.getState();
+		/** @type {import('./enrichment').Enrichment} */
+		this.enrichment = this.utils.getEnrichment();
+		/** @type {import('./conditional-tags').ConditionalTags}*/
+		this.conditionalTags = this.utils.getConditionalTags();
+		/** @type {import('./steps').Steps}*/
+		this.steps = this.utils.getSteps();
 
 		this.FORM_DATA = new FormData();
 
@@ -181,6 +182,11 @@ export class Form {
 			this.setupFileField(formId, file.name);
 		});
 
+		// Textarea.
+		[...this.state.getStateElementByType('textarea', formId)].forEach((textarea) => {
+			this.setupTextareaField(formId, textarea.name);
+		});
+
 		// Text.
 		[...this.state.getStateElementByType('text', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
@@ -223,11 +229,6 @@ export class Form {
 			[...Object.values(radio.items)].forEach((radioItem) => {
 				this.setupRadioCheckboxField(formId, radioItem.value, radioItem.name);
 			});
-		});
-
-		// Textarea.
-		[...this.state.getStateElementByType('textarea', formId)].forEach((textarea) => {
-			this.setupTextareaField(formId, textarea.name);
 		});
 
 		// Form loaded.
@@ -605,7 +606,7 @@ export class Form {
 			}
 
 			switch (internalType) {
-				case 'checkbox':
+				case StateEnum.TYPE_INT_CHECKBOX:
 					let indexCheck = 0; // eslint-disable-line no-case-declarations
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						if (disabled[checkName]) {
@@ -619,7 +620,7 @@ export class Form {
 						indexCheck++;
 					}
 					break;
-				case 'radio':
+				case StateEnum.TYPE_INT_RADIO:
 					let indexRadio = 0; // eslint-disable-line no-case-declarations
 					for(const [radioName, radioValue] of Object.entries(items)) {
 						if (disabled[radioName]) {
@@ -633,7 +634,7 @@ export class Form {
 						indexRadio++;
 					}
 					break;
-				case 'textarea':
+				case StateEnum.TYPE_INT_TEXTAREA:
 					if (disabled) {
 						break;
 					}
@@ -645,7 +646,7 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case 'tel':
+				case StateEnum.TYPE_INT_PHONE:
 					if (disabled) {
 						break;
 					}
@@ -660,7 +661,7 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case 'file':
+				case StateEnum.TYPE_INT_FILE:
 					if (disabled) {
 						break;
 					}
@@ -997,14 +998,12 @@ export class Form {
 	setupDateField(formId, name) {
 		const state = this.state;
 		const utils = this.utils;
-		const conditionalTags = this.conditionalTags;
-		const enrichment = this.enrichment;
 
 		const input = state.getStateElementInput(name, formId);
 
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
-				enableTime: state.getStateElementTypeInternal(name, formId) === 'datetime',
+				enableTime: state.getStateElementTypeInternal(name, formId) === StateEnum.TYPE_INT_DATE_TIME,
 				dateFormat: input.getAttribute(state.getStateAttribute('dateOutputFormat')),
 				altFormat: input.getAttribute(state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
@@ -1020,10 +1019,7 @@ export class Form {
 					utils.setFieldActiveState(formId, name);
 				},
 				onChange: function () {
-					utils.setOnDate(input);
-					enrichment.setLocalStorageFormPrefillItem(formId, name);
-					utils.setFieldFilledState(formId, name);
-					conditionalTags.setField(formId, name);
+					utils.setOnUserChangeDate(input);
 				},
 			});
 		});
@@ -1041,7 +1037,7 @@ export class Form {
 		let input = this.state.getStateElementInput(name, formId);
 		const typeInternal = this.state.getStateElementTypeInternal(name, formId);
 
-		 if (typeInternal === 'tel') {
+		 if (typeInternal === StateEnum.TYPE_INT_PHONE) {
 			 input = this.state.getStateElementInputSelect(name, formId);
 		 }
 
@@ -1061,7 +1057,7 @@ export class Form {
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-				removeItemButton: typeInternal !== 'tel', // Phone should not be able to remove prefix!
+				removeItemButton: typeInternal !== StateEnum.TYPE_INT_PHONE, // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
 				searchFields: [
 					'label',
@@ -1446,11 +1442,7 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
-		this.utils.setOnSelectChange(event.target);
-
-		this.enrichment.setLocalStorageFormPrefillItem(formId, name);
-
-		this.conditionalTags.setField(formId, name);
+		this.utils.setOnUserChangeSelect(event.target);
 
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
@@ -1474,11 +1466,7 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
-		this.utils.setOnInput(event.target);
-
-		this.enrichment.setLocalStorageFormPrefillItem(formId, name);
-
-		this.conditionalTags.setField(formId, name);
+		this.utils.setOnUserChangeInput(event.target);
 
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(

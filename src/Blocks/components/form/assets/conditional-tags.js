@@ -1,11 +1,8 @@
-
-import { State } from './state';
 import {
 	CONDITIONAL_TAGS_OPERATORS,
 	CONDITIONAL_TAGS_ACTIONS,
 	CONDITIONAL_TAGS_LOGIC,
 } from '../../conditional-tags/assets/utils';
-import { Utils } from './utilities';
 import {
 	prefix,
 	setStateWindow,
@@ -16,9 +13,11 @@ import {
  * Main conditon tags class.
  */
 export class ConditionalTags {
-	constructor() {
-		this.state = new State();
-		this.utils = new Utils();
+	constructor(utils) {
+		/** @type {import('./utils').Utils} */
+		this.utils = utils;
+		/** @type {import('./state').State} */
+		this.state = this.utils.getState();
 
 		// Simplify usage of constants
 		this.SHOW = CONDITIONAL_TAGS_ACTIONS.SHOW;
@@ -195,12 +194,16 @@ export class ConditionalTags {
 			const type = this.state.getStateElementTypeInternal(name, formId);
 
 			// Only select, checkbox and radio fields can have inner items.
-			if (type === 'select' || type === 'checkbox' || type === 'radio') {
+			if (
+				type === StateEnum.TYPE_INT_SELECT ||
+				type === StateEnum.TYPE_INT_CHECKBOX ||
+				type === StateEnum.TYPE_INT_RADIO
+			) {
 				// Prepare inner level outputs.
 				let innerOutput = {};
 
 				// Select fields can have multiple or single select inner options.
-				if (type === 'select') {
+				if (type === StateEnum.TYPE_INT_SELECT) {
 					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId) ? this.getFieldInnerSelectMultiple(formId, name) : this.getFieldInnerSelectSingle(formId, name);
 				} else {
 					// Checkbox and radio inner fields.
@@ -297,7 +300,7 @@ export class ConditionalTags {
 		// Loop all inner items.
 		for (const [fieldName, innerItems] of Object.entries(data?.inner ?? {})) {
 			// Get correct selector type.
-			let selectorType = this.state.getStateElementTypeInternal(fieldName, formId) === 'select' ? selectValueAttr : fieldNameAttr;
+			let selectorType = this.state.getStateElementTypeInternal(fieldName, formId) === StateEnum.TYPE_INT_SELECT ? selectValueAttr : fieldNameAttr;
 
 			// Loop all inner items.
 			innerItems.forEach((inner) => {

@@ -482,6 +482,9 @@ export class State {
 	getStateEventsStepsGoToPrevStep = () => {
 		return getState([StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP], StateEnum.EVENTS);
 	};
+	getStateEventsEnrichmentPrefill = () => {
+		return getState([StateEnum.EVENTS_ENRICHMENT_PREFILL], StateEnum.EVENTS);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Selectors getters.

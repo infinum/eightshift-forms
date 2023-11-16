@@ -1,15 +1,15 @@
-import { State } from './state';
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-import { prefix, setStateWindow } from './state/init';
-import { Utils } from './utilities';
+import { StateEnum, prefix, setStateWindow } from './state/init';
 
 /**
  * Enrichment class.
  */
 export class Enrichment {
-	constructor() {
-		this.state = new State();
-		this.utils = new Utils();
+	constructor(utils) {
+		/** @type {import('./utils').Utils} */
+		this.utils = utils;
+		/** @type {import('./state').State} */
+		this.state = this.utils.getState();
 
 		// Set all public methods.
 		this.publicMethods();
@@ -109,7 +109,7 @@ export class Enrichment {
 		const type = this.state.getStateElementTypeInternal(name, formId);
 		let value = '';
 		switch (type) {
-			case 'tel':
+			case StateEnum.TYPE_INT_PHONE:
 				value = {
 					prefix: this.state.getStateElementValueCountry(name, formId)?.number,
 					value: this.state.getStateElementValue(name, formId),
@@ -294,28 +294,30 @@ export class Enrichment {
 			}
 
 			switch (this.state.getStateElementTypeInternal(name, formId)) {
-				case 'tel':
-					this.utils.setPhoneValue(formId, name, value);
+				case StateEnum.TYPE_INT_PHONE:
+					this.utils.setManualPhoneValue(formId, name, value);
 					break;
-				case 'date':
-				case 'datetime':
-					this.utils.setDateValue(formId, name, value);
+				case StateEnum.TYPE_INT_DATE:
+				case StateEnum.TYPE_INT_DATE_TIME:
+					this.utils.setManualDateValue(formId, name, value);
 					break;
-				case 'country':
-				case 'select':
-					this.utils.setSelectValue(formId, name, value);
+				case StateEnum.TYPE_INT_COUNTRY:
+				case StateEnum.TYPE_INT_SELECT:
+					this.utils.setManualSelectValue(formId, name, value);
 					break;
-				case 'checkbox':
-					this.utils.setCheckboxValue(formId, name, value);
+				case StateEnum.TYPE_INT_CHECKBOX:
+					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
-				case 'radio':
-					this.utils.setRadioValue(formId, name, value);
+				case StateEnum.TYPE_INT_RADIO:
+					this.utils.setManualRadioValue(formId, name, value);
 					break;
 				default:
-					this.utils.setInputValue(formId, name, value);
+					this.utils.setManualInputValue(formId, name, value);
 					break;
 			}
 		});
+
+		this.utils.dispatchFormEvent(formId, this.state.getStateEventsEnrichmentPrefill(), data);
 	}
 
 	////////////////////////////////////////////////////////////////

@@ -1,16 +1,17 @@
 /* global grecaptcha */
 
-import { State, ROUTES} from './state';
+import { ROUTES } from './state';
 import { prefix, setStateWindow } from './state/init';
-import { Utils } from './utilities';
 
 /**
  * Captcha class.
  */
 export class Captcha {
-	constructor() {
-		this.state = new State();
-		this.utils = new Utils();
+	constructor(utils) {
+		/** @type {import('./utils').Utils} */
+		this.utils = utils;
+		/** @type {import('./state').State} */
+		this.state = this.utils.getState();
 
 		// Set all public methods.
 		this.publicMethods();

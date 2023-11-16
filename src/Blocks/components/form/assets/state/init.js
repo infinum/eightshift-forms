@@ -1,4 +1,5 @@
 /* global esFormsLocalization */
+
 import manifest from './../../manifest.json';
 import { CONDITIONAL_TAGS_ACTIONS } from '../../../conditional-tags/assets/utils';
 
@@ -116,6 +117,7 @@ export const StateEnum = {
 	EVENTS_AFTER_CAPTCHA_INIT: 'afterCaptchaInit',
 	EVENTS_STEPS_GO_TO_NEXT_STEP: 'goToNextStep',
 	EVENTS_STEPS_GO_TO_PREV_STEP: 'goToPrevStep',
+	EVENTS_ENRICHMENT_PREFILL: 'enrichmentPrefill',
 
 	SELECTORS: 'selectors',
 	SELECTORS_CLASS_ACTIVE: 'isActive',
@@ -164,6 +166,17 @@ export const StateEnum = {
 
 	ATTRIBUTES: 'attributes',
 	PARAMS: 'params',
+
+	TYPE_INT_INPUT: 'input',
+	TYPE_INT_TEXTAREA: 'textarea',
+	TYPE_INT_RADIO: 'radio',
+	TYPE_INT_CHECKBOX: 'checkbox',
+	TYPE_INT_PHONE: 'tel',
+	TYPE_INT_FILE: 'file',
+	TYPE_INT_COUNTRY: 'country',
+	TYPE_INT_DATE: 'date',
+	TYPE_INT_DATE_TIME: 'datetime',
+	TYPE_INT_SELECT: 'select',
 };
 
 ////////////////////////////////////////////////////////////////
@@ -272,6 +285,7 @@ export function setStateInitial() {
 	setState([StateEnum.EVENTS_AFTER_CAPTCHA_INIT], getStateEventName(StateEnum.EVENTS_AFTER_CAPTCHA_INIT), StateEnum.EVENTS);
 	setState([StateEnum.EVENTS_STEPS_GO_TO_NEXT_STEP], getStateEventName(StateEnum.EVENTS_STEPS_GO_TO_NEXT_STEP), StateEnum.EVENTS);
 	setState([StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP], getStateEventName(StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP), StateEnum.EVENTS);
+	setState([StateEnum.EVENTS_ENRICHMENT_PREFILL], getStateEventName(StateEnum.EVENTS_ENRICHMENT_PREFILL), StateEnum.EVENTS);
 
 	// Selectors.
 	setState([StateEnum.SELECTORS_CLASS_ACTIVE], `${manifest.componentClass}-is-active`, StateEnum.SELECTORS);

@@ -2,8 +2,7 @@
 
 import domReady from '@wordpress/dom-ready';
 import { setStateInitial } from './state/init';
-import { Utils } from "../assets/utilities";
-import { State } from './state';
+import { Utils } from './utils';
 
 // Global variable must be set for everything to work.
 if (typeof esFormsLocalization === 'undefined') {
@@ -14,27 +13,28 @@ if (typeof esFormsLocalization === 'undefined') {
 setStateInitial();
 
 // Load state helpers.
-const state = new State();
+const utils = new Utils();
+const state = utils.getState();
 
 domReady(() => {
 	// Load captcha if using initial.
 	if (state.getStateCaptchaIsUsed()) {
 		import('./captcha').then(({ Captcha }) => {
-			new Captcha().init();
+			new Captcha(utils).init();
 		});
 	}
 
 	if (!state.getStateSettingsFormDisableAutoInit()) {
 		if (document.querySelectorAll(state.getStateSelectorsForm())?.length) {
 			import('./form').then(({ Form }) => {
-				new Form().init();
+				new Form(utils).init();
 			});
 		}
 	} else {
 		import('./form').then(({ Form }) => {
-			new Form();
+			new Form(utils);
 
-			new Utils().dispatchFormEvent(window, state.getStateEventsFormManualInitLoaded());
+			utils.dispatchFormEvent(window, state.getStateEventsFormManualInitLoaded());
 		});
 	}
 });
