@@ -180,18 +180,19 @@ if ($hasForms) {
 	}
 }
 
-
 if (!empty($adminListingPageTitle)) {
+	$numberOfForms = count($formCardsToDisplay);
 	echo Components::render('intro', [
 		'introTitle' => $adminListingPageTitle,
-		'introSubtitle' => $adminListingSubTitle,
+		// Translators: %s is the number of forms.
+		'introSubtitle' => $numberOfForms === 1 ? __('Showing 1 form.', 'eightshift-forms') : sprintf(__('Showing %s forms.', 'eightshift-forms'), $numberOfForms),
 		'introIsHeading' => true,
 	]);
 }
 
 $topBar = [];
 
-if ($adminListingPageTitle || $adminListingSubTitle) {
+if ($adminListingPageTitle) {
 	$topBar = [
 		Components::render('layout', [
 			'layoutType' => !$isTrashPage ? 'first-five-left-others-right' : 'second-left-others-right',
