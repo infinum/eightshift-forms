@@ -10,6 +10,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestTypeInternal = Components::getSettings()['typeInternal'];
 
 $checkboxesName = Components::checkAttr('checkboxesName', $attributes, $manifest);
 if (!$checkboxesName) {
@@ -52,6 +53,7 @@ echo Components::render(
 		Components::props('field', $attributes, [
 			'fieldContent' => $checkboxes,
 			'fieldId' => $checkboxesName,
+			'fieldTypeInternal' => $manifestTypeInternal['checkboxes'],
 			'fieldName' => $checkboxesName,
 			'fieldIsRequired' => $checkboxesIsRequired,
 			'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

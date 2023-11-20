@@ -173,62 +173,58 @@ export class Form {
 		this.state.getStateFormElement(formId).addEventListener('submit', this.onFormSubmitEvent);
 
 		// Select.
-		[...this.state.getStateElementByType('select', formId)].forEach((select) => {
+		[
+			...this.state.getStateElementByTypeInternal('select', formId),
+			...this.state.getStateElementByTypeInternal('country', formId),
+		].forEach((select) => {
 			this.setupSelectField(formId, select.name);
 		});
 
 		// File.
-		[...this.state.getStateElementByType('file', formId)].forEach((file) => {
+		[...this.state.getStateElementByTypeInternal('file', formId)].forEach((file) => {
 			this.setupFileField(formId, file.name);
 		});
 
 		// Textarea.
-		[...this.state.getStateElementByType('textarea', formId)].forEach((textarea) => {
+		[...this.state.getStateElementByTypeInternal('textarea', formId)].forEach((textarea) => {
 			this.setupTextareaField(formId, textarea.name);
 		});
 
 		// Text.
-		[...this.state.getStateElementByType('text', formId)].forEach((input) => {
-			this.setupInputField(formId, input.name);
-		});
-
-		// Hidden.
-		[...this.state.getStateElementByType('hidden', formId)].forEach((input) => {
-			this.setupInputField(formId, input.name);
-		});
-
-		// Number.
-		[...this.state.getStateElementByType('number', formId)].forEach((input) => {
-			this.setupInputField(formId, input.name);
-		});
-
-		// Password.
-		[...this.state.getStateElementByType('password', formId)].forEach((input) => {
+		[...this.state.getStateElementByTypeInternal('input', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
 
 		// Date.
-		[...this.state.getStateElementByType('date', formId)].forEach((input) => {
+		[
+			...this.state.getStateElementByTypeInternal('date', formId),
+			...this.state.getStateElementByTypeInternal('dateTime', formId),
+		].forEach((input) => {
 			this.setupDateField(formId, input.name);
 		});
 
-		// Tel.
-		[...this.state.getStateElementByType('tel', formId)].forEach((tel) => {
-			this.setupTelField(formId, tel.name);
+		// Phone.
+		[...this.state.getStateElementByTypeInternal('phone', formId)].forEach((phone) => {
+			this.setupPhoneField(formId, phone.name);
 		});
 
 		// Checkbox.
-		[...this.state.getStateElementByType('checkbox', formId)].forEach((checkbox) => {
+		[...this.state.getStateElementByTypeInternal('checkbox', formId)].forEach((checkbox) => {
 			[...Object.values(checkbox.items)].forEach((checkboxItem) => {
 				this.setupRadioCheckboxField(formId, checkboxItem.value, checkboxItem.name);
 			});
 		});
 
 		// Radio.
-		[...this.state.getStateElementByType('radio', formId)].forEach((radio) => {
+		[...this.state.getStateElementByTypeInternal('radio', formId)].forEach((radio) => {
 			[...Object.values(radio.items)].forEach((radioItem) => {
 				this.setupRadioCheckboxField(formId, radioItem.value, radioItem.name);
 			});
+		});
+
+		// Rating.
+		[...this.state.getStateElementByTypeInternal('rating', formId)].forEach((rating) => {
+			this.setupRatingField(formId, rating.name);
 		});
 
 		// Form loaded.
@@ -606,7 +602,7 @@ export class Form {
 			}
 
 			switch (internalType) {
-				case StateEnum.TYPE_INT_CHECKBOX:
+				case this.state.getStateIntType('checkbox'):
 					let indexCheck = 0; // eslint-disable-line no-case-declarations
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						if (disabled[checkName]) {
@@ -620,7 +616,7 @@ export class Form {
 						indexCheck++;
 					}
 					break;
-				case StateEnum.TYPE_INT_RADIO:
+				case this.state.getStateIntType('radio'):
 					let indexRadio = 0; // eslint-disable-line no-case-declarations
 					for(const [radioName, radioValue] of Object.entries(items)) {
 						if (disabled[radioName]) {
@@ -634,7 +630,7 @@ export class Form {
 						indexRadio++;
 					}
 					break;
-				case StateEnum.TYPE_INT_TEXTAREA:
+				case this.state.getStateIntType('textarea'):
 					if (disabled) {
 						break;
 					}
@@ -646,7 +642,7 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case StateEnum.TYPE_INT_PHONE:
+				case this.state.getStateIntType('phone'):
 					if (disabled) {
 						break;
 					}
@@ -661,7 +657,7 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case StateEnum.TYPE_INT_FILE:
+				case this.state.getStateIntType('file'):
 					if (disabled) {
 						break;
 					}
@@ -948,14 +944,30 @@ export class Form {
 	}
 
 	/**
-	 * Setup tel field.
+	 * Setup rating field.
 	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 *
 	 * @returns {void}
 	 */
-	setupTelField(formId, name) {
+	setupRatingField(formId, name) {
+		[...this.state.getStateElementCustom(name, formId).children].forEach((star) => {
+			star.addEventListener('click', this.onRatingEvent);
+		});
+
+		this.setupInputField(formId, name);
+	}
+
+	/**
+	 * Setup phone field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	setupPhoneField(formId, name) {
 		this.setupInputField(formId, name);
 
 		if (this.state.getStateFormConfigPhoneDisablePicker(formId)) {
@@ -1003,7 +1015,7 @@ export class Form {
 
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
-				enableTime: state.getStateElementTypeInternal(name, formId) === StateEnum.TYPE_INT_DATE_TIME,
+				enableTime: state.getStateElementTypeInternal(name, formId) === this.state.getStateIntType('dateTime'),
 				dateFormat: input.getAttribute(state.getStateAttribute('dateOutputFormat')),
 				altFormat: input.getAttribute(state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
@@ -1037,7 +1049,7 @@ export class Form {
 		let input = this.state.getStateElementInput(name, formId);
 		const typeInternal = this.state.getStateElementTypeInternal(name, formId);
 
-		 if (typeInternal === StateEnum.TYPE_INT_PHONE) {
+		 if (typeInternal === this.state.getStateIntType('phone')) {
 			 input = this.state.getStateElementInputSelect(name, formId);
 		 }
 
@@ -1057,7 +1069,7 @@ export class Form {
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-				removeItemButton: typeInternal !== StateEnum.TYPE_INT_PHONE, // Phone should not be able to remove prefix!
+				removeItemButton: typeInternal !== this.state.getStateIntType('phone'), // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
 				searchFields: [
 					'label',
@@ -1479,6 +1491,33 @@ export class Form {
 	};
 
 	/**
+	 * On rating event.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onRatingEvent = (event) => {
+		const formId = this.state.getFormIdByElement(event.target);
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		const value = event.target.getAttribute(this.state.getStateAttribute('ratingValue'));
+
+		this.utils.setManualRatingValue(formId, name, value);
+
+		this.utils.setOnUserChangeInput(event.target);
+
+		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
+			debounce(
+				this.formSubmit(
+					formId, {
+						[this.FILTER_USE_ONLY_FIELDS]: [name]
+					}
+			), 100);
+		}
+	};
+
+	/**
 	 * On blur event for regular fields.
 	 *
 	 * @param {object} event Event callback.
@@ -1582,8 +1621,11 @@ export class Form {
 			setupInputField: (formId, name) => {
 				this.setupInputField(formId, name);
 			},
-			setupTelField: (formId, name) => {
-				this.setupTelField(formId, name);
+			setupRatingField: (formId, name) => {
+				this.setupRatingField(formId, name);
+			},
+			setupPhoneField: (formId, name) => {
+				this.setupPhoneField(formId, name);
 			},
 			setupRadioCheckboxField: (formId, value, name) => {
 				this.setupRadioCheckboxField(formId, value, name);
@@ -1617,6 +1659,9 @@ export class Form {
 			},
 			onInputEvent: (event) => {
 				this.onInputEvent(event);
+			},
+			onRatingEvent: (event) => {
+				this.onRatingEvent(event);
 			},
 			onBlurEvent: (event) => {
 				this.onBlurEvent(event);

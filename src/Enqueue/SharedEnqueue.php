@@ -43,9 +43,6 @@ trait SharedEnqueue
 		$restPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
 
 		return [
-			'customFormParams' => AbstractBaseRoute::CUSTOM_FORM_PARAMS,
-			'customFormDataAttributes' => AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES,
-
 			// Adding routes here, you must provide the same map to state STATE_ROUTES enum.
 			'restRoutes' => [
 				// Common.

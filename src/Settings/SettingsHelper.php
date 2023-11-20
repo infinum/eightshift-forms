@@ -714,12 +714,14 @@ trait SettingsHelper
 	 */
 	public function settingTestAliConnection(string $key): array
 	{
+		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+
 		return [
 			'component' => 'submit',
 			'submitValue' => \__('Test API connection', 'eightshift-forms'),
 			'submitVariant' => 'outline',
 			'submitAttrs' => [
-				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['testApiType'] => $key,
+				$manifestCustomFormAttrs['testApiType'] => $key,
 			],
 			'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
 		];

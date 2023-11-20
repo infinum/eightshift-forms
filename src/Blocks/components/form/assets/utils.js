@@ -312,7 +312,7 @@ export class Utils {
 			}
 
 			switch (this.state.getStateElementTypeInternal(name, formId)) {
-				case StateEnum.TYPE_INT_CHECKBOX:
+				case this.state.getStateIntType('checkbox'):
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						const trackingCheckName = trackingName?.[checkName];
 
@@ -325,7 +325,7 @@ export class Utils {
 						}
 					}
 					break;
-				case StateEnum.TYPE_INT_PHONE:
+				case this.state.getStateIntType('phone'):
 					let telValue = value; // eslint-disable-line no-case-declarations
 
 					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
@@ -494,56 +494,39 @@ export class Utils {
 		}
 
 		for (const [name] of this.state.getStateElements(formId)) {
-			const type = this.state.getStateElementType(name, formId);
-			const custom = this.state.getStateElementCustom(name, formId);
-			const input = this.state.getStateElementInput(name, formId);
-			const items = this.state.getStateElementItems(name, formId);
 			const initial = this.state.getStateElementInitial(name, formId);
 
-			// Skip select search field.
-			if (name === 'search_terms') {
-				continue;
-			}
-
-			switch (type) {
-				case 'checkbox':
-					this.state.setStateElementValue(name, {...initial}, formId);
-
-					for(const [innerName, innerValue] of Object.entries(initial)) {
-						items[innerName].input.checked = innerValue !== '';
-					}
+			switch (this.state.getStateElementTypeInternal(name, formId)) {
+				case this.state.getStateIntType('phone'):
+					this.setManualPhoneValue(
+						formId,
+						name,
+						{
+							value: initial,
+						}
+					);
 					break;
-				case 'radio':
-					this.state.setStateElementValue(name, initial, formId);
-
-					if (initial === '') {
-						Object.values(items).forEach((inner) => {
-							inner.input.checked = false;
-						});
-					} else {
-						items[initial].input.checked = true;
-					}
+				case this.state.getStateIntType('date'):
+				case this.state.getStateIntType('dateTime'):
+					this.setManualDateValue(formId, name, initial);
 					break;
-				case 'file':
-					this.state.setStateElementValue(name, initial, formId);
-					custom.removeAllFiles();
+				case this.state.getStateIntType('country'):
+				case this.state.getStateIntType('select'):
+					this.setManualSelectValue(formId, name, initial);
 					break;
-				case 'select':
-					this.state.setStateElementValue(name, initial, formId);
-					custom.setChoiceByValue(initial);
+				case this.state.getStateIntType('checkbox'):
+					this.setManualCheckboxValue(formId, name, initial);
 					break;
-				case 'date':
-					this.state.setStateElementValue(name, initial, formId);
-					custom.setDate(initial);
+				case this.state.getStateIntType('radio'):
+					this.setManualRadioValue(formId, name, initial);
+					break;
+				case this.state.getStateIntType('file'):
+					this.setManualFileValue(formId, name, initial);
 					break;
 				default:
-					this.state.setStateElementValue(name, initial, formId);
-					input.value = initial;
+					this.setManualInputValue(formId, name, initial);
 					break;
 			}
-
-			this.setFieldFilledState(formId, name);
-			this.unsetFieldError(formId, name);
 		}
 
 		// Remove focus from last input.
@@ -573,7 +556,7 @@ export class Utils {
 			const type = this.state.getStateElementTypeInternal(name, formId);
 
 			// If checkbox split multiple.
-			if (type === StateEnum.TYPE_INT_CHECKBOX) {
+			if (type === this.state.getStateIntType('checkbox')) {
 				value = Object.values(value)?.filter((n) => n);
 			}
 
@@ -792,7 +775,7 @@ export class Utils {
 	 * @returns {string}
 	 */
 	getSelectSelectedValueByCustomData(type, value, choices) {
-		if (type == StateEnum.TYPE_INT_COUNTRY || type === StateEnum.TYPE_INT_PHONE) {
+		if (type == this.state.getStateIntType('country') || type === this.state.getStateIntType('phone')) {
 			return choices?.config?.choices?.find((item) => item?.customProperties?.[this.state.getStateAttribute('selectCountryCode')] === value)?.value;
 		}
 
@@ -858,13 +841,13 @@ export class Utils {
 		const type = this.state.getStateElementTypeInternal(name, formId);
 
 		switch (type) {
-			case StateEnum.TYPE_INT_PHONE:
+			case this.state.getStateIntType('phone'):
 				setStateValuesPhoneInput(target, formId);
 				break;
-			case StateEnum.TYPE_INT_RADIO:
+			case this.state.getStateIntType('radio'):
 				setStateValuesRadio(target, formId);
 				break;
-			case StateEnum.TYPE_INT_CHECKBOX:
+			case this.state.getStateIntType('checkbox'):
 				setStateValuesCheckbox(target, formId);
 				break;
 			default:
@@ -919,10 +902,10 @@ export class Utils {
 		const type = this.state.getStateElementTypeInternal(name, formId);
 
 		switch (type) {
-			case StateEnum.TYPE_INT_PHONE:
+			case this.state.getStateIntType('phone'):
 				setStateValuesPhoneSelect(target, formId);
 				break;
-			case StateEnum.TYPE_INT_COUNTRY:
+			case this.state.getStateIntType('country'):
 				setStateValuesCountry(target, formId);
 				break;
 			default:
@@ -939,9 +922,9 @@ export class Utils {
 		}
 
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
-			if (type === StateEnum.TYPE_INT_COUNTRY) {
+			if (type === this.state.getStateIntType('country')) {
 				const country = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateElementByTypeInternal(StateEnum.TYPE_INT_PHONE, formId)].forEach((tel) => {
+				[...this.state.getStateElementByTypeInternal(this.state.getStateIntType('phone'), formId)].forEach((tel) => {
 					const name = tel[StateEnum.NAME];
 					const value = this.state.getStateElementValue(name, formId);
 
@@ -953,9 +936,9 @@ export class Utils {
 				});
 			}
 
-			if (type === StateEnum.TYPE_INT_PHONE) {
+			if (type === this.state.getStateIntType('phone')) {
 				const phone = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateElementByTypeInternal(StateEnum.TYPE_INT_COUNTRY, formId)].forEach((country) => {
+				[...this.state.getStateElementByTypeInternal(this.state.getStateIntType('country'), formId)].forEach((country) => {
 					const name = country[StateEnum.NAME];
 
 					this.state.getStateElementCustom(name, formId).setChoiceByValue(phone.label);
@@ -984,7 +967,7 @@ export class Utils {
 		const input = this.state.getStateElementInput(name, formId);
 		const custom = this.state.getStateElementCustom(name, formId);
 
-		if (input && value?.value) {
+		if (input) {
 			input.value = value?.value;
 			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
 				custom.setChoiceByValue(value?.prefix);
@@ -1011,7 +994,7 @@ export class Utils {
 		const custom = this.state.getStateElementCustom(name, formId);
 		const input = this.state.getStateElementInput(name, formId);
 
-		if (input && value) {
+		if (input) {
 			custom.setDate(value, true, custom?.config?.dateFormat);
 		}
 
@@ -1033,7 +1016,10 @@ export class Utils {
 		const custom = this.state.getStateElementCustom(name, formId);
 		const input = this.state.getStateElementInput(name, formId);
 
-		if (input && value) {
+		if (input) {
+			if (typeof value !== 'string') {
+				custom.removeActiveItems();
+			}
 			custom.setChoiceByValue(value);
 			this.setOnUserChangeSelect(input, true);
 			this.setOnBlur(input);
@@ -1056,8 +1042,8 @@ export class Utils {
 	setManualCheckboxValue(formId, name, value) {
 		Object.entries(value).forEach(([innerName, innerValue]) => {
 			const innerInput = this.state.getStateElementItemsInput(name, innerName, formId);
-			if (innerInput && innerValue) {
-				innerInput.checked = true;
+			if (innerInput) {
+				innerInput.checked = innerValue;
 				this.setOnUserChangeInput(innerInput);
 				this.setOnBlur(innerInput);
 			}
@@ -1082,8 +1068,14 @@ export class Utils {
 
 		const innerInput = items?.[value]?.input;
 
-		if (innerInput && value) {
-			innerInput.checked = true;
+		if (value === '') {
+			Object.values(items).forEach((inner) => {
+				inner.input.checked = false;
+			});
+		}
+
+		if (innerInput) {
+			innerInput.checked = value;
 			this.setOnUserChangeInput(innerInput);
 			this.setOnBlur(innerInput);
 		}
@@ -1105,8 +1097,47 @@ export class Utils {
 	setManualInputValue(formId, name, value) {
 		const input = this.state.getStateElementInput(name, formId);
 
-		if (input && value) {
+		if (input) {
 			input.value = value;
+			this.setOnUserChangeInput(input);
+			this.setOnBlur(input);
+		}
+
+		this.enrichment.setLocalStorageFormPrefillItem(formId, name);
+
+		this.conditionalTags.setField(formId, name);
+	}
+
+	/**
+	 * Set manual field value - Rating.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object} value Field value.
+	 * 
+	 * @returns {void}
+	 */
+	setManualRatingValue(formId, name, value) {
+		this.state.getStateElementCustom(name, formId).setAttribute(this.state.getStateAttribute('ratingValue'), value);
+		this.setManualInputValue(formId, name, value);
+	}
+
+	/**
+	 * Set manual field value - File
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object} value Field value.
+	 * 
+	 * @returns {void}
+	 */
+	setManualFileValue(formId, name, value) {
+		const input = this.state.getStateElementInput(name, formId);
+		const custom = this.state.getStateElementCustom(name, formId);
+
+		if (input) {
+			input.value = value;
+			custom.removeAllFiles();
 			this.setOnUserChangeInput(input);
 			this.setOnBlur(input);
 		}

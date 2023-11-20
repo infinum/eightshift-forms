@@ -457,7 +457,7 @@ class MomentsClient implements ClientInterface
 				case 'checkbox':
 					$value = \explode(AbstractBaseRoute::DELIMITER, $value);
 					break;
-				case 'tel':
+				case 'phone':
 					$value = \filter_var($value, \FILTER_SANITIZE_NUMBER_INT);
 					$value = \ltrim($value, '0');
 					break;

@@ -29,8 +29,25 @@
 		"eightshift-forms/phone",
 		"eightshift-forms/date",
 		"eightshift-forms/country",
-		"eightshift-forms/step"
+		"eightshift-forms/step",
+		"eightshift-forms/rating"
 	],
+	"typeInternal": {
+		"input": "input",
+		"textarea": "textarea",
+		"radio": "radio",
+		"radios": "radio",
+		"checkbox": "checkbox",
+		"checkboxes": "checkbox",
+		"phone": "phone",
+		"file": "file",
+		"country": "country",
+		"date": "date",
+		"dateTime": "datetime",
+		"select": "select",
+		"rating": "rating",
+		"submit": "submit"
+	},
 	"showAsMap": {
 		"options": [
 			{
@@ -401,5 +418,92 @@
 				"color": "#052E16"
 			}
 		]
+	},
+	"customFormParams": {
+		"formId": "es-form-form-id",
+		"postId": "es-form-post-id",
+		"type": "es-form-type",
+		"name": "es-form-field-name",
+		"steps": "es-form-steps",
+		"settingsType": "es-form-settings-type",
+		"singleSubmit": "es-form-single-submit",
+		"storage": "es-form-storage",
+		"action": "es-form-action",
+		"actionExternal": "es-form-action-external",
+		"conditionalTags": "es-form-conditional-tags",
+		"fileId": "es-form-file-id",
+		"hubspotCookie": "es-form-hubspot-cookie",
+		"hubspotPageName": "es-form-hubspot-page-name",
+		"hubspotPageUrl": "es-form-hubspot-page-url",
+		"mailchimpTags": "es-form-mailchimp-tags",
+		"captcha": "es-form-captcha",
+		"direct": "es-form-direct",
+		"itemId": "es-form-item-id",
+		"innerId": "es-form-inner-id"
+	},
+	"customFormAttrs": {
+		"formType": "data-form-type",
+		"formCustomName": "data-form-custom-name",
+		"formId": "data-form-id",
+		"formGeolocation": "data-form-geolocation",
+
+		"bulkId": "data-bulk-id",
+		"bulkType": "data-bulk-type",
+		"bulkItems": "data-bulk-items",
+
+		"stepId": "data-step-id",
+		"submitStepDirection": "data-step-direction",
+		"postId": "data-post-id",
+
+		"fieldId": "data-field-id",
+		"fieldName": "data-field-name",
+		"fieldType": "data-field-type",
+		"fieldPreventSubmit": "data-field-prevent-submit",
+		"fieldTypeCustom": "data-type-custom",
+		"fieldUncheckedValue": "data-unchecked-value",
+
+		"trackingEventName": "data-tracking-event-name",
+		"trackingAdditionalData": "data-tracking-additional-data",
+		"tracking": "data-tracking",
+		"cacheType": "data-cache-type",
+		"testApiType": "data-test-api-type",
+		"locationsId": "data-locations-id",
+		"migrationType": "data-migration-type",
+		"migrationExportItems": "data-migration-export-items",
+		"successRedirect": "data-success-redirect",
+		"successRedirectVariation": "data-success-redirect-variation",
+		"conditionalTags": "data-conditional-tags",
+		"typeSelector": "data-type-selector",
+		"actionExternal": "data-action-external",
+		"settingsType": "data-settings-type",
+		"groupSaveAsOneField": "data-group-save-as-one-field",
+
+		"datePreviewFormat": "data-preview-format",
+		"dateOutputFormat": "data-output-format",
+
+		"selectAllowSearch": "data-allow-search",
+		"selectIsMultiple": "data-is-multiple",
+		"selectPlaceholder": "data-placeholder",
+		"selectCustomProperties": "data-custom-properties",
+		"selectCountryCode": "data-country-code",
+		"selectCountryLabel": "data-country-label",
+		"selectCountryNumber": "data-country-number",
+		"selectOptionIsHidden": "data-option-is-hidden",
+		"selectId": "data-id",
+		"selectValue": "data-value",
+
+		"ratingValue": "data-rating",
+
+		"phoneSync": "data-phone-sync",
+		"phoneDisablePicker": "data-phone-disable-picker",
+		"saveAsJson": "data-save-as-json",
+		"downloads": "data-downloads",
+		"blockSsr": "data-block-ssr",
+		"disabledDefaultStyles": "data-disabled-default-styles",
+		"globalMsgHeadingSuccess": "data-msg-heading-success",
+		"globalMsgHeadingError": "data-msg-heading-error",
+		"hideCaptchaBadge": "data-hide-captcha-badge",
+		"reload": "data-reload",
+		"hubspotTypeId": "data-hubspot-type-id"
 	}
 }

@@ -195,15 +195,15 @@ export class ConditionalTags {
 
 			// Only select, checkbox and radio fields can have inner items.
 			if (
-				type === StateEnum.TYPE_INT_SELECT ||
-				type === StateEnum.TYPE_INT_CHECKBOX ||
-				type === StateEnum.TYPE_INT_RADIO
+				type === this.state.getStateIntType('select') ||
+				type === this.state.getStateIntType('checkbox') ||
+				type === this.state.getStateIntType('radio')
 			) {
 				// Prepare inner level outputs.
 				let innerOutput = {};
 
 				// Select fields can have multiple or single select inner options.
-				if (type === StateEnum.TYPE_INT_SELECT) {
+				if (type === this.state.getStateIntType('select')) {
 					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId) ? this.getFieldInnerSelectMultiple(formId, name) : this.getFieldInnerSelectSingle(formId, name);
 				} else {
 					// Checkbox and radio inner fields.
@@ -300,7 +300,7 @@ export class ConditionalTags {
 		// Loop all inner items.
 		for (const [fieldName, innerItems] of Object.entries(data?.inner ?? {})) {
 			// Get correct selector type.
-			let selectorType = this.state.getStateElementTypeInternal(fieldName, formId) === StateEnum.TYPE_INT_SELECT ? selectValueAttr : fieldNameAttr;
+			let selectorType = this.state.getStateElementTypeInternal(fieldName, formId) === this.state.getStateIntType('select') ? selectValueAttr : fieldNameAttr;
 
 			// Loop all inner items.
 			innerItems.forEach((inner) => {

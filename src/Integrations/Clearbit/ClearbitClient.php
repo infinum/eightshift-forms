@@ -14,7 +14,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
@@ -142,7 +141,7 @@ class ClearbitClient implements ClearbitClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$customFields = \array_flip(Components::flattenArray(Components::getSettings()['customFormParams']));
 
 		foreach ($params as $key => $param) {
 			// Remove unecesery fields.

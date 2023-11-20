@@ -8,12 +8,12 @@
 
 use EightshiftForms\AdminMenus\FormAdminMenu;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSection = Components::getComponent('admin-settings-section');
 $manifestUtils = Components::getComponent('utils');
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
@@ -135,7 +135,7 @@ if ($hasForms) {
 				'data-integration-is-active' => wp_json_encode($activeIntegrationIsActive),
 				'data-integration-is-valid' => wp_json_encode($activeIntegrationIsValid),
 				'data-integration-is-api-valid' => wp_json_encode($activeIntegrationIsApiValid),
-				AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkId'] => $id,
+				$manifestCustomFormAttrs['bulkId'] => $id,
 			],
 			'cardTitle' => '<a href="' . $editLink . '">' . $formTitle . ($adminListingIsDeveloperMode ? " ({$id})" : '') . '</a>',
 			'cardSubTitle' => $errorText . $subtitle,
@@ -150,7 +150,7 @@ if ($hasForms) {
 						'url' => $settingsLocationLink,
 						'internal' => true,
 						'isButton' => true,
-						'additionalAttrs' => [AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['locationsId'] => $id],
+						'additionalAttrs' => [$manifestCustomFormAttrs['locationsId'] => $id],
 						'additionalClass' => $componentJsLocationsClass,
 					] : [],
 					[
@@ -231,7 +231,7 @@ if ($adminListingPageTitle) {
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Restore', 'eightshift-forms'),
 					'additionalAttributes' => [
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'restore',
+						$manifestCustomFormAttrs['bulkType'] => 'restore',
 					],
 				]),
 				Components::render('container', [
@@ -240,7 +240,7 @@ if ($adminListingPageTitle) {
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Delete permanently', 'eightshift-forms'),
 					'additionalAttributes' => [
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'delete-perminentely',
+						$manifestCustomFormAttrs['bulkType'] => 'delete-perminentely',
 					],
 				]),
 				Components::render('container', [
@@ -249,7 +249,7 @@ if ($adminListingPageTitle) {
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Delete', 'eightshift-forms'),
 					'additionalAttributes' => [
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'delete',
+						$manifestCustomFormAttrs['bulkType'] => 'delete',
 					],
 				]),
 				Components::render('container', [
@@ -258,7 +258,7 @@ if ($adminListingPageTitle) {
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Sync', 'eightshift-forms'),
 					'additionalAttributes' => [
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'sync',
+						$manifestCustomFormAttrs['bulkType'] => 'sync',
 					],
 				]),
 				Components::render('container', [
@@ -267,7 +267,7 @@ if ($adminListingPageTitle) {
 					'containerTag' => 'button',
 					'containerContent' => esc_html__('Duplicate', 'eightshift-forms'),
 					'additionalAttributes' => [
-						AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkType'] => 'duplicate',
+						$manifestCustomFormAttrs['bulkType'] => 'duplicate',
 					],
 				]),
 				Components::render('container', [
@@ -326,7 +326,7 @@ echo Components::render('layout', [
 	]),
 	'additionalClass' => "{$componentJsBulkClass}-items",
 	'additionalAttributes' => [
-		AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['bulkItems'] => wp_json_encode([]),
+		$manifestCustomFormAttrs['bulkItems'] => wp_json_encode([]),
 	],
 ]);
 

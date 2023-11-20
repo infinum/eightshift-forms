@@ -9,11 +9,11 @@
 use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\Encryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
 $globalManifest = Components::getSettings();
 $manifestInvalid = Components::getComponent('invalid');
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
@@ -85,7 +85,7 @@ $hasGeolocation = false;
 
 if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 	$hasGeolocation = true;
-	$formAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['formGeolocation']] = Encryption::encryptor(wp_json_encode([
+	$formAttrs[$manifestCustomFormAttrs['formGeolocation']] = Encryption::encryptor(wp_json_encode([
 		'id' => $formsFormPostId,
 		'geo' => $formsFormGeolocation,
 		'alt' => $formsFormGeolocationAlternatives,

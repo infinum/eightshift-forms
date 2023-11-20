@@ -19,7 +19,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
@@ -862,7 +861,7 @@ class Helper
 	 */
 	public static function removeUneceseryParamFields(array $params, array $additional = []): array
 	{
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$customFields = \array_flip(Components::flattenArray(Components::getSettings()['customFormParams']));
 		$additional = \array_flip($additional);
 
 		return \array_filter(

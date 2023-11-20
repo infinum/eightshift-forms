@@ -8,9 +8,11 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestGlobal = Components::getSettings();
+$manifestCustomFormAttrs = $manifestGlobal['customFormAttrs'];
+$manifestTypeInternal = $manifestGlobal['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -45,11 +47,11 @@ $selectClass = Components::classnames([
 ]);
 
 if ($selectUseSearch) {
-	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch']] = esc_attr($selectUseSearch);
+	$selectAttrs[$manifestCustomFormAttrs['selectAllowSearch']] = esc_attr($selectUseSearch);
 }
 
 if ($selectIsMultiple) {
-	$selectAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectIsMultiple']] = esc_attr($selectIsMultiple);
+	$selectAttrs[$manifestCustomFormAttrs['selectIsMultiple']] = esc_attr($selectIsMultiple);
 	$selectAttrs['multiple'] = 'true';
 }
 
@@ -106,6 +108,7 @@ echo Components::render(
 			'fieldContent' => $select,
 			'fieldId' => $selectName,
 			'fieldName' => $selectName,
+			'fieldTypeInternal' => $manifestTypeInternal['select'],
 			'fieldIsRequired' => $selectIsRequired,
 			'fieldDisabled' => !empty($selectIsDisabled),
 			'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

@@ -7,10 +7,10 @@
  */
 
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -36,11 +36,11 @@ if (has_filter($filterName) && !is_admin()) {
 	$headings = apply_filters($filterName, []);
 
 	if (isset($headings['success'])) {
-		$globalMsgAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['globalMsgHeadingSuccess']] = $headings['success'];
+		$globalMsgAttrs[$manifestCustomFormAttrs['globalMsgHeadingSuccess']] = $headings['success'];
 	}
 
 	if (isset($headings['error'])) {
-		$globalMsgAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['globalMsgHeadingError']] = $headings['error'];
+		$globalMsgAttrs[$manifestCustomFormAttrs['globalMsgHeadingError']] = $headings['error'];
 	}
 }
 

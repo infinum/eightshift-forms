@@ -4,12 +4,13 @@ import {
 	StateEnum,
 	getStateEventName,
 	getState,
-	getStateAttribute,
-	getStateAttributes,
 	prefix,
 	setState,
 	setStateWindow,
 	getStateTop,
+	getStateAttribute,
+	getStateIntType,
+	getStateParam,
 } from './state/init';
 
 export class State {
@@ -257,11 +258,9 @@ export class State {
 	////////////////////////////////////////////////////////////////
 	// Element getters.
 	////////////////////////////////////////////////////////////////
-	getStateElementByType = (type, formId) => {
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE, type, formId);
-	};
 	getStateElementByTypeInternal = (type, formId) => {
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_INTERNAL, type, formId);
+		const intType = this.getStateIntType(type);
+		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_INTERNAL, intType, formId);
 	};
 	getStateElementByHasError = (type, formId) => {
 		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.HAS_ERROR, type, formId);
@@ -553,6 +552,9 @@ export class State {
 	getStateSelectorsField = () => {
 		return getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS);
 	};
+	getStateSelectorsRating = () => {
+		return getState([StateEnum.SELECTORS_RATING], StateEnum.SELECTORS);
+	};
 	getStateSelectorsFieldStyle = () => {
 		return getState([StateEnum.SELECTORS_FIELD_STYLE], StateEnum.SELECTORS);
 	};
@@ -561,9 +563,6 @@ export class State {
 	// Attributes getters.
 	////////////////////////////////////////////////////////////////
 
-	getStateAttributes = () => {
-		return getStateAttributes();
-	};
 	getStateAttribute = (name) => {
 		return getStateAttribute(name);
 	};
@@ -571,12 +570,17 @@ export class State {
 	////////////////////////////////////////////////////////////////
 	// Params getters.
 	////////////////////////////////////////////////////////////////
-	
-	getStateParams = () => {
-		return getStateTop(StateEnum.PARAMS);
-	};
+
 	getStateParam = (name) => {
-		return this.getStateParams()[name];
+		return getStateParam(name);
+	};
+
+	////////////////////////////////////////////////////////////////
+	// Internal Type getters.
+	////////////////////////////////////////////////////////////////
+
+	getStateIntType = (name) => {
+		return getStateIntType(name);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -593,13 +597,13 @@ export class State {
 		return element.closest(this.getStateSelectorsField());
 	};
 	getFormId = (element) => {
-		return element.getAttribute(getStateAttribute('formId'));
+		return element.getAttribute(this.getStateAttribute('formId'));
 	};
 	getFormIdByElement = (element) => {
-		return this.getFormElementByChild(element).getAttribute(getStateAttribute('formId'));
+		return this.getFormElementByChild(element).getAttribute(this.getStateAttribute('formId'));
 	};
 	getFieldNameByElement = (element) => {
-		return this.getFormFieldElementByChild(element).getAttribute(getStateAttribute('fieldName'));
+		return this.getFormFieldElementByChild(element).getAttribute(this.getStateAttribute('fieldName'));
 	};
 	getRestUrl = (value) => {
 		return getRestUrl(value);

@@ -9,11 +9,13 @@
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Blocks\SettingsBlocks;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSelect = Components::getComponent('select');
+$manifestGlobal = Components::getSettings();
+$manifestCustomFormAttrs = $manifestGlobal['customFormAttrs'];
+$manifestTypeInternal = $manifestGlobal['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -72,7 +74,7 @@ if ($phoneAttrs) {
 
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attributes);
-$phoneSelectUseSearchAttr = AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectAllowSearch'];
+$phoneSelectUseSearchAttr = $manifestCustomFormAttrs['selectAllowSearch'];
 
 $options = [];
 $filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'];
@@ -91,15 +93,15 @@ if (has_filter($filterName)) {
 		$value = $option[2] ?? '';
 
 		$customProperties = [
-			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryCode'] => $code,
-			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryLabel'] => $label,
-			AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCountryNumber'] => $value,
+			$manifestCustomFormAttrs['selectCountryCode'] => $code,
+			$manifestCustomFormAttrs['selectCountryLabel'] => $label,
+			$manifestCustomFormAttrs['selectCountryNumber'] => $value,
 		];
 
 		$options[] = '
 			<option
 				value="' . $value . '"
-				' . AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCustomProperties'] . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
+				' . $manifestCustomFormAttrs['selectCustomProperties'] . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $settings['phone']['preselectedValue'], false) . '
 			>+' . $value . '</option>';
 	}
@@ -131,6 +133,7 @@ echo Components::render(
 			'fieldContent' => $phone,
 			'fieldId' => $phoneName,
 			'fieldName' => $phoneName,
+			'fieldTypeInternal' => $manifestTypeInternal['phone'],
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),
 			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

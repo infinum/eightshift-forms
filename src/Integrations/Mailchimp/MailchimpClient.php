@@ -21,6 +21,7 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * MailchimpClient integration class.
@@ -525,7 +526,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function prepareTags(array $params): array
 	{
-		$key = AbstractBaseRoute::CUSTOM_FORM_PARAMS['mailchimpTags'];
+		$key = Components::getSettings()['customFormParams']['mailchimpTags'];
 
 		if (!isset($params[$key])) {
 			return [];

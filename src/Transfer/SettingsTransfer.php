@@ -12,7 +12,6 @@ namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -109,6 +108,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 		}
 
 		$manifestForm = Components::getComponent('form');
+		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -137,7 +137,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_GLOBAL_SETTINGS,
+													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 												],
 												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 											],
@@ -156,7 +156,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_ALL,
+													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_ALL,
 												],
 												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 											],
@@ -180,8 +180,8 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export selected', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_EXPORT_FORMS,
-													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationExportItems'] => '',
+													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_FORMS,
+													$manifestCustomFormAttrs['migrationExportItems'] => '',
 												],
 												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 											],
@@ -253,7 +253,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Import JSON', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::TYPE_IMPORT,
+													$manifestCustomFormAttrs['migrationType'] => self::TYPE_IMPORT,
 												],
 												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
 											],

@@ -10,6 +10,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestTypeInternal = Components::getSettings()['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -103,6 +104,7 @@ echo Components::render(
 			'fieldContent' => $input,
 			'fieldId' => $inputName,
 			'fieldName' => $inputName,
+			'fieldTypeInternal' => $manifestTypeInternal['input'],
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldUseError' => $inputType !== 'hidden',

@@ -181,7 +181,7 @@ class HubspotClient implements HubspotClientInterface
 			$output = [];
 
 			$allowedTypes = [
-				'text' => 0,
+				'input' => 0,
 				'textarea' => 1,
 			];
 
@@ -226,13 +226,14 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$paramsPrepared = $this->prepareParams($params);
 		$paramsFiles = $this->prepareFiles($files, $formId);
+		$manifestCustomFormParams = Components::getSettings()['customFormParams'];
 
 		$body = [
 			'context' => [
 				'ipAddress' => $this->security->getIpAddress(),
-				'hutk' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotCookie']]['value'],
-				'pageUri' => Helper::cleanPageUrl($params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotPageUrl']]['value']),
-				'pageName' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['hubspotPageName']]['value'],
+				'hutk' => $params[$manifestCustomFormParams['hubspotCookie']]['value'],
+				'pageUri' => Helper::cleanPageUrl($params[$manifestCustomFormParams['hubspotPageUrl']]['value']),
+				'pageName' => $params[$manifestCustomFormParams['hubspotPageName']]['value'],
 			],
 		];
 
@@ -310,7 +311,7 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$properties = [];
 
-		$customFields = \array_flip(Components::flattenArray(AbstractBaseRoute::CUSTOM_FORM_PARAMS));
+		$customFields = \array_flip(Components::flattenArray(Components::getSettings()['customFormParams']));
 
 		if ($params) {
 			foreach ($params as $key => $value) {
