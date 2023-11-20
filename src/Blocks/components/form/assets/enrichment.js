@@ -308,6 +308,9 @@ export class Enrichment {
 				case this.state.getStateIntType('checkbox'):
 					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
+				case this.state.getStateIntType('radio'):
+					this.utils.setManualRadioValue(formId, name, value);
+					break;
 				case this.state.getStateIntType('rating'):
 					this.utils.setManualRatingValue(formId, name, value);
 					break;

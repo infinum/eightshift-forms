@@ -44,15 +44,13 @@ export const RatingEditor = (attributes) => {
 	);
 
 	return (
-		<>
-			<FieldEditor
-				{...props('field', attributes, {
-					fieldContent: rating,
-					fieldIsRequired: checkAttr('ratingIsRequired', attributes, manifest),
-				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
-			/>
-		</>
+		<FieldEditor
+			{...props('field', attributes, {
+				fieldContent: rating,
+				fieldIsRequired: checkAttr('ratingIsRequired', attributes, manifest),
+			})}
+			additionalFieldClass={additionalFieldClass}
+			selectorClass={componentName}
+		/>
 	);
 };

@@ -41,10 +41,6 @@ $ratingClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$ratingStarClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'star'),
-]);
-
 if (!$ratingValue || !is_numeric($ratingValue)) {
 	$ratingValue = '0';
 }
@@ -70,7 +66,7 @@ $stars = '';
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
 		<div
-			class="' . esc_attr($ratingStarClass) . '"
+			class="' . esc_attr("{$componentClass}__star") . '"
 			' . $manifestCustomFormAttrs['ratingValue'] . '="' . $i . '"
 		>
 		' . $icons['rating'] .
