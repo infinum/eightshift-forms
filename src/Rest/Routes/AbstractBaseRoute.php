@@ -17,6 +17,7 @@ use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use WP_REST_Request;
@@ -35,99 +36,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	 * Use trait Upload_Helper inside class.
 	 */
 	use UploadHelper;
-
-	/**
-	 * List of all custom form params used.
-	 */
-	public const CUSTOM_FORM_PARAMS = [
-		'formId' => 'es-form-form-id',
-		'postId' => 'es-form-post-id',
-		'type' => 'es-form-type',
-		'name' => 'es-form-field-name',
-		'steps' => 'es-form-steps',
-		'settingsType' => 'es-form-settings-type',
-		'singleSubmit' => 'es-form-single-submit',
-		'storage' => 'es-form-storage',
-		'action' => 'es-form-action',
-		'actionExternal' => 'es-form-action-external',
-		'conditionalTags' => 'es-form-conditional-tags',
-		'fileId' => 'es-form-file-id',
-		'hubspotCookie' => 'es-form-hubspot-cookie',
-		'hubspotPageName' => 'es-form-hubspot-page-name',
-		'hubspotPageUrl' => 'es-form-hubspot-page-url',
-		'mailchimpTags' => 'es-form-mailchimp-tags',
-		'captcha' => 'es-form-captcha',
-		'direct' => 'es-form-direct',
-		'itemId' => 'es-form-item-id',
-		'innerId' => 'es-form-inner-id',
-	];
-
-	/**
-	 * List of all custom form data attributes used.
-	 */
-	public const CUSTOM_FORM_DATA_ATTRIBUTES = [
-		'formType' => 'data-form-type',
-		'formCustomName' => 'data-form-custom-name',
-		'formId' => 'data-form-id',
-		'formGeolocation' => 'data-form-geolocation',
-
-		'bulkId' => 'data-bulk-id',
-		'bulkType' => 'data-bulk-type',
-		'bulkItems' => 'data-bulk-items',
-
-		'stepId' => 'data-step-id',
-		'submitStepDirection' => 'data-step-direction',
-		'postId' => 'data-post-id',
-
-		'fieldId' => 'data-field-id',
-		'fieldName' => 'data-field-name',
-		'fieldType' => 'data-field-type',
-		'fieldPreventSubmit' => 'data-field-prevent-submit',
-		'fieldTypeCustom' => 'data-type-custom',
-		'fieldUncheckedValue' => 'data-unchecked-value',
-
-		'trackingEventName' => 'data-tracking-event-name',
-		'trackingAdditionalData' => 'data-tracking-additional-data',
-		'tracking' => 'data-tracking',
-		'cacheType' => 'data-cache-type',
-		'testApiType' => 'data-test-api-type',
-		'locationsId' => 'data-locations-id',
-		'migrationType' => 'data-migration-type',
-		'migrationExportItems' => 'data-migration-export-items',
-		'successRedirect' => 'data-success-redirect',
-		'successRedirectVariation' => 'data-success-redirect-variation',
-		'conditionalTags' => 'data-conditional-tags',
-		'typeSelector' => 'data-type-selector',
-		'actionExternal' => 'data-action-external',
-		'settingsType' => 'data-settings-type',
-		'groupSaveAsOneField' => 'data-group-save-as-one-field',
-
-		'datePreviewFormat' => 'data-preview-format',
-		'dateOutputFormat' => 'data-output-format',
-
-		'selectAllowSearch' => 'data-allow-search',
-		'selectIsMultiple' => 'data-is-multiple',
-		'selectPlaceholder' => 'data-placeholder',
-		'selectCustomProperties' => 'data-custom-properties',
-		'selectCountryCode' => 'data-country-code',
-		'selectCountryLabel' => 'data-country-label',
-		'selectCountryNumber' => 'data-country-number',
-		'selectOptionIsHidden' => 'data-option-is-hidden',
-		'selectId' => 'data-id',
-		'selectValue' => 'data-value',
-
-		'phoneSync' => 'data-phone-sync',
-		'phoneDisablePicker' => 'data-phone-disable-picker',
-		'saveAsJson' => 'data-save-as-json',
-		'downloads' => 'data-downloads',
-		'blockSsr' => 'data-block-ssr',
-		'disabledDefaultStyles' => 'data-disabled-default-styles',
-		'globalMsgHeadingSuccess' => 'data-msg-heading-success',
-		'globalMsgHeadingError' => 'data-msg-heading-error',
-		'hideCaptchaBadge' => 'data-hide-captcha-badge',
-		'reload' => 'data-reload',
-		'hubspotTypeId' => 'data-hubspot-type-id',
-	];
 
 	/**
 	 * Status error const.
@@ -343,57 +251,59 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			$params
 		);
 
+		$manifestCustomFormParams = Components::getSettings()['customFormParams'];
+
 		$output = [];
 
 		// If this route is for public form prepare all params.
 		foreach ($paramsOutput as $key => $value) {
 			switch ($key) {
 				// Used for direct import from settings.
-				case self::CUSTOM_FORM_PARAMS['direct']:
+				case $manifestCustomFormParams['direct']:
 					$output['directImport'] = (bool) $value['value'];
 					break;
 				// Used for direct import from settings.
-				case self::CUSTOM_FORM_PARAMS['itemId']:
+				case $manifestCustomFormParams['itemId']:
 					$output['itemId'] = $value['value'];
 					break;
 				// Used for direct import from settings.
-				case self::CUSTOM_FORM_PARAMS['innerId']:
+				case $manifestCustomFormParams['innerId']:
 					$output['innerId'] = $value['value'];
 					break;
-				case self::CUSTOM_FORM_PARAMS['formId']:
+				case $manifestCustomFormParams['formId']:
 					$output['formId'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['postId']:
+				case $manifestCustomFormParams['postId']:
 					$output['postId'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['type']:
+				case $manifestCustomFormParams['type']:
 					$output['type'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['action']:
+				case $manifestCustomFormParams['action']:
 					$output['action'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['captcha']:
+				case $manifestCustomFormParams['captcha']:
 					$output['captcha'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['actionExternal']:
+				case $manifestCustomFormParams['actionExternal']:
 					$output['actionExternal'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['settingsType']:
+				case $manifestCustomFormParams['settingsType']:
 					$output['settingsType'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['storage']:
+				case $manifestCustomFormParams['storage']:
 					$output['storage'] = $value['value'];
 					$value['value'] = (!empty($value['value'])) ? \json_decode($value['value'], true) : [];
 					$output['params'][$key] = $value;
 					break;
-				case self::CUSTOM_FORM_PARAMS['steps']:
+				case $manifestCustomFormParams['steps']:
 					$output['apiSteps'] = [
 						'fields' => $value['value'],
 						'current' => $value['custom'],
@@ -468,11 +378,13 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			return [];
 		}
 
+		$manifestCustomFormParams = Components::getSettings()['customFormParams'];
+
 		return \array_merge(
 			$file,
 			[
-				'id' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['fileId']]['value'] ?? '',
-				'fieldName' => $params[AbstractBaseRoute::CUSTOM_FORM_PARAMS['name']]['value'] ?? '',
+				'id' => $params[$manifestCustomFormParams['fileId']]['value'] ?? '',
+				'fieldName' => $params[$manifestCustomFormParams['name']]['value'] ?? '',
 			]
 		);
 	}

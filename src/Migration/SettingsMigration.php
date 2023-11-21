@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
@@ -105,6 +104,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 		}
 
 		$manifestForm = Components::getComponent('form');
+		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -128,7 +128,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3_LOCALE,
+									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_LOCALE,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
@@ -148,7 +148,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3_GENERAL,
+									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_GENERAL,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
@@ -168,7 +168,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3_FORMS,
+									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_FORMS,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],
@@ -188,7 +188,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['migrationType'] => self::VERSION_2_3_LABELS,
+									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_LABELS,
 								],
 								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
 							],

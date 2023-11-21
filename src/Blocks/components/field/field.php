@@ -8,10 +8,10 @@
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
 if (!$fieldUse) {
@@ -73,6 +73,7 @@ $fieldInlineBeforeAfterContent = Components::checkAttr('fieldInlineBeforeAfterCo
 $fieldIsFiftyFiftyHorizontal = Components::checkAttr('fieldIsFiftyFiftyHorizontal', $attributes, $manifest);
 $fieldTypeCustom = Components::checkAttr('fieldTypeCustom', $attributes, $manifest);
 $fieldTracking = Components::checkAttr('fieldTracking', $attributes, $manifest);
+$fieldTypeInternal = Components::checkAttr('fieldTypeInternal', $attributes, $manifest);
 
 $fieldStyleOutput = [];
 $filterName = Filters::getFilterName(['block', 'field', 'styleClasses']);
@@ -120,23 +121,23 @@ if ($fieldType === 'fieldset') {
 }
 
 if ($fieldConditionalTags) {
-	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $fieldConditionalTags;
+	$fieldAttrs[$manifestCustomFormAttrs['conditionalTags']] = $fieldConditionalTags;
 }
 
 if ($fieldName) {
-	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $fieldName;
+	$fieldAttrs[$manifestCustomFormAttrs['fieldName']] = $fieldName;
 }
 
-if ($blockName) {
-	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $blockName;
+if ($fieldTypeInternal) {
+	$fieldAttrs[$manifestCustomFormAttrs['fieldType']] = $fieldTypeInternal;
 }
 
 if ($fieldTypeCustom) {
-	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldTypeCustom']] = $fieldTypeCustom;
+	$fieldAttrs[$manifestCustomFormAttrs['fieldTypeCustom']] = $fieldTypeCustom;
 }
 
 if ($fieldTracking) {
-	$fieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = $fieldTracking;
+	$fieldAttrs[$manifestCustomFormAttrs['tracking']] = $fieldTracking;
 }
 
 $fieldAttrsOutput = '';

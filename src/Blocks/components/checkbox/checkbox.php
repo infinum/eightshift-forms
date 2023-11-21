@@ -6,10 +6,10 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
@@ -77,17 +77,17 @@ $conditionalTags = Components::render(
 );
 
 if ($conditionalTags) {
-	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
+	$checkboxFieldAttrs[$manifestCustomFormAttrs['conditionalTags']] = $conditionalTags;
 }
 
-$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $checkboxValue;
+$checkboxFieldAttrs[$manifestCustomFormAttrs['fieldName']] = $checkboxValue;
 
 if ($componentName) {
-	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;
+	$checkboxFieldAttrs[$manifestCustomFormAttrs['fieldType']] = 'checkbox';
 }
 
 if ($checkboxTracking) {
-	$checkboxFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['tracking']] = esc_attr($checkboxTracking);
+	$checkboxFieldAttrs[$manifestCustomFormAttrs['tracking']] = esc_attr($checkboxTracking);
 }
 
 $checkboxFieldAttrsOutput = '';

@@ -6,10 +6,10 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $selectOptionValue = Components::checkAttr('selectOptionValue', $attributes, $manifest);
 $selectOptionAsPlaceholder = Components::checkAttr('selectOptionAsPlaceholder', $attributes, $manifest);
@@ -31,13 +31,13 @@ $conditionalTags = Components::render(
 
 $customAttributes = [];
 
-$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectOptionIsHidden']] = $selectOptionIsHidden;
+$customAttributes[$manifestCustomFormAttrs['selectOptionIsHidden']] = $selectOptionIsHidden;
 
 if ($conditionalTags) {
-	$customAttributes[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
+	$customAttributes[$manifestCustomFormAttrs['conditionalTags']] = $conditionalTags;
 }
 
-$selectOptionAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['selectCustomProperties']] = wp_json_encode($customAttributes);
+$selectOptionAttrs[$manifestCustomFormAttrs['selectCustomProperties']] = wp_json_encode($customAttributes);
 
 $selectOptionAttrsOutput = '';
 if ($selectOptionAttrs) {

@@ -8,9 +8,11 @@
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestGlobal = Components::getSettings();
+$manifestCustomFormAttrs = $manifestGlobal['customFormAttrs'];
+$manifestTypeInternal = $manifestGlobal['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -52,11 +54,11 @@ if ($datePlaceholder) {
 }
 
 if ($datePreviewFormat) {
-	$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['datePreviewFormat']] = esc_attr($datePreviewFormat);
+	$dateAttrs[$manifestCustomFormAttrs['datePreviewFormat']] = esc_attr($datePreviewFormat);
 }
 
 if ($dateOutputFormat) {
-	$dateAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['dateOutputFormat']] = esc_attr($dateOutputFormat);
+	$dateAttrs[$manifestCustomFormAttrs['dateOutputFormat']] = esc_attr($dateOutputFormat);
 }
 
 if ($dateUseLabelAsPlaceholder) {
@@ -93,6 +95,7 @@ echo Components::render(
 		Components::props('field', $attributes, [
 			'fieldContent' => $date,
 			'fieldId' => $dateName,
+			'fieldTypeInternal' => $manifestTypeInternal[$dateType === 'date' ? 'date' : 'dateTime'],
 			'fieldName' => $dateName,
 			'fieldIsRequired' => $dateIsRequired,
 			'fieldDisabled' => !empty($dateIsDisabled),

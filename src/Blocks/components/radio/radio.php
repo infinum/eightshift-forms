@@ -6,10 +6,10 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
@@ -60,13 +60,13 @@ $conditionalTags = Components::render(
 );
 
 if ($conditionalTags) {
-	$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['conditionalTags']] = $conditionalTags;
+	$radioFieldAttrs[$manifestCustomFormAttrs['conditionalTags']] = $conditionalTags;
 }
 
-$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldName']] = $radioValue;
+$radioFieldAttrs[$manifestCustomFormAttrs['fieldName']] = $radioValue;
 
 if ($componentName) {
-	$radioFieldAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['fieldType']] = $componentName;
+	$radioFieldAttrs[$manifestCustomFormAttrs['fieldType']] = 'radio';
 }
 
 $radioFieldAttrsOutput = '';

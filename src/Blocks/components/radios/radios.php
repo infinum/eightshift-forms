@@ -10,6 +10,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
+$manifestTypeInternal = Components::getSettings()['typeInternal'];
 
 $radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
 if (!$radiosName) {
@@ -54,6 +55,7 @@ echo Components::render(
 			'fieldContent' => $radios,
 			'fieldName' => $radiosName,
 			'fieldIsRequired' => $radiosIsRequired,
+			'fieldTypeInternal' => $manifestTypeInternal['radios'],
 			'fieldId' => $radiosName,
 			'fieldTracking' => $radiosTracking,
 			'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

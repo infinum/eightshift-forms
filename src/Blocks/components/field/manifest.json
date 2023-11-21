@@ -106,6 +106,9 @@
 		"fieldTypeCustom": {
 			"type": "string"
 		},
+		"fieldTypeInternal": {
+			"type": "string"
+		},
 		"fieldTracking": {
 			"type": "string"
 		},

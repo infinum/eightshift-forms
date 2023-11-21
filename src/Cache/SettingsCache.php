@@ -12,7 +12,6 @@ namespace EightshiftForms\Cache;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
@@ -66,9 +65,10 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		$manifestForm = Components::getComponent('form');
+		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 		$output = \array_values(\array_filter(\array_map(
-			function ($key, $value) use ($manifestForm) {
+			function ($key, $value) use ($manifestForm, $manifestCustomFormAttrs) {
 				$icon = Helper::getProjectIcons($key);
 				$cache = $value['cache'] ?? [];
 
@@ -85,8 +85,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['cacheType'] => $key,
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['reload'] => 'false',
+									$manifestCustomFormAttrs['cacheType'] => $key,
+									$manifestCustomFormAttrs['reload'] => 'false',
 								],
 								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
 							],
@@ -120,8 +120,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['cacheType'] => 'all',
-									AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['reload'] => 'false',
+									$manifestCustomFormAttrs['cacheType'] => 'all',
+									$manifestCustomFormAttrs['reload'] => 'false',
 								],
 								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
 							],

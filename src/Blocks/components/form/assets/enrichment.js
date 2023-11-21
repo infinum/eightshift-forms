@@ -1,5 +1,5 @@
 import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
-import { StateEnum, prefix, setStateWindow } from './state/init';
+import { prefix, setStateWindow } from './state/init';
 
 /**
  * Enrichment class.
@@ -109,7 +109,7 @@ export class Enrichment {
 		const type = this.state.getStateElementTypeInternal(name, formId);
 		let value = '';
 		switch (type) {
-			case StateEnum.TYPE_INT_PHONE:
+			case this.state.getStateIntType('phone'):
 				value = {
 					prefix: this.state.getStateElementValueCountry(name, formId)?.number,
 					value: this.state.getStateElementValue(name, formId),
@@ -294,22 +294,25 @@ export class Enrichment {
 			}
 
 			switch (this.state.getStateElementTypeInternal(name, formId)) {
-				case StateEnum.TYPE_INT_PHONE:
+				case this.state.getStateIntType('phone'):
 					this.utils.setManualPhoneValue(formId, name, value);
 					break;
-				case StateEnum.TYPE_INT_DATE:
-				case StateEnum.TYPE_INT_DATE_TIME:
+				case this.state.getStateIntType('date'):
+				case this.state.getStateIntType('dateTime'):
 					this.utils.setManualDateValue(formId, name, value);
 					break;
-				case StateEnum.TYPE_INT_COUNTRY:
-				case StateEnum.TYPE_INT_SELECT:
+				case this.state.getStateIntType('country'):
+				case this.state.getStateIntType('select'):
 					this.utils.setManualSelectValue(formId, name, value);
 					break;
-				case StateEnum.TYPE_INT_CHECKBOX:
+				case this.state.getStateIntType('checkbox'):
 					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
-				case StateEnum.TYPE_INT_RADIO:
+				case this.state.getStateIntType('radio'):
 					this.utils.setManualRadioValue(formId, name, value);
+					break;
+				case this.state.getStateIntType('rating'):
+					this.utils.setManualRatingValue(formId, name, value);
 					break;
 				default:
 					this.utils.setManualInputValue(formId, name, value);

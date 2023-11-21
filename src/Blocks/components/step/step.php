@@ -7,11 +7,11 @@
  */
 
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestField = Components::getComponent('field');
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
@@ -38,7 +38,7 @@ if (!$stepContent) {
 $stepAttrs = [];
 
 if ($stepName) {
-	$stepAttrs[AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['stepId']] = esc_attr($stepName);
+	$stepAttrs[$manifestCustomFormAttrs['stepId']] = esc_attr($stepName);
 }
 
 $stepAttrsOutput = '';
@@ -81,7 +81,7 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $prevButtonComponent,
 							'submitAttrs' => [
-								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['submitStepDirection'] => 'prev',
+								$manifestCustomFormAttrs['submitStepDirection'] => 'prev',
 							],
 						]),
 						[
@@ -111,7 +111,7 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $nextButtonComponent,
 							'submitAttrs' => [
-								AbstractBaseRoute::CUSTOM_FORM_DATA_ATTRIBUTES['submitStepDirection'] => 'next',
+								$manifestCustomFormAttrs['submitStepDirection'] => 'next',
 							],
 						]),
 						[

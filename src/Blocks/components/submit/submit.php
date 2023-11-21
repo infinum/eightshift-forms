@@ -11,6 +11,7 @@ use EightshiftForms\Helpers\Helper;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');
+$manifestTypeInternal = Components::getSettings()['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -62,6 +63,7 @@ echo Components::render(
 			'fieldContent' => $button,
 			'fieldId' => $submitName,
 			'fieldUseError' => false,
+			'fieldTypeInternal' => $manifestTypeInternal['submit'],
 			'fieldDisabled' => !empty($submitIsDisabled),
 			'fieldTracking' => $submitTracking,
 			'fieldUniqueId' => $submitUniqueId,
