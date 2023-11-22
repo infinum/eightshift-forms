@@ -228,7 +228,7 @@ export class Steps {
 
 	/**
 	 * Set progress bar.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} nextStep Next step Id.
 	 * @param {array} flow Flow to update.
@@ -243,8 +243,6 @@ export class Steps {
 			// Update count state when we have something from api.
 			if (progressBarItems > 0) {
 				this.state.setStateFormStepsProgressBarCount(progressBarItems, formId);
-			} else {
-				this.state.setStateFormStepsProgressBarCount(this.state.getStateFormStepsProgressBarCountInitial(formId), formId);
 			}
 
 			// Clear current progress bar.
