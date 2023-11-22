@@ -416,6 +416,12 @@ export class State {
 	getStateEnrichmentIsUsed = () => {
 		return getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
+	getStateEnrichmentIsPrefillUsed = () => {
+		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+	};
+	getStateEnrichmentIsPrefillUrlUsed = () => {
+		return getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+	};
 	getStateEnrichmentExpiration = () => {
 		return getState([StateEnum.ENRICHMENT_EXPIRATION], StateEnum.ENRICHMENT);
 	};

@@ -52,6 +52,8 @@ export const StateEnum = {
 	SAVE_AS_JSON: 'saveAsJson',
 	IS_ADMIN: 'isAdmin',
 	IS_USED: 'isUsed',
+	IS_USED_PREFILL: 'isUsedPrefill',
+	IS_USED_PREFILL_URL: 'isUsedPrefillUrl',
 	NONCE: 'nonce',
 
 	// Conditional tags
@@ -260,8 +262,10 @@ export function setStateInitial() {
 	// Enrichment.
 	const enrichment = esFormsLocalization.enrichment ?? {};
 	setState([StateEnum.IS_USED], Boolean(enrichment.isUsed), StateEnum.ENRICHMENT);
-
+	
 	if (enrichment.isUsed) {
+		setState([StateEnum.IS_USED_PREFILL], Boolean(enrichment.isUsedPrefill), StateEnum.ENRICHMENT);
+		setState([StateEnum.IS_USED_PREFILL_URL], Boolean(enrichment.isUsedPrefillUrl), StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_EXPIRATION], enrichment.expiration, StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_EXPIRATION_PREFILL], enrichment.expirationPrefill, StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_ALLOWED], Object.values(enrichment.allowed), StateEnum.ENRICHMENT);

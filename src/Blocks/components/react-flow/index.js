@@ -166,7 +166,7 @@ export const MultiflowFormsReactFlow = ({formFields, stepMultiflowRules}) => {
 	} = outputMultiFlowPreviewData(formFields, stepMultiflowRules);
 
 	return (
-		<div style={{ height: '100%', minWidth: '70vw', minHeight: '500px' }}>
+		<div style={{ height: '500px', minWidth: '70vw', minHeight: '500px' }}>
 			<ReactFlow
 				nodes={nodes}
 				edges={edges}

@@ -538,6 +538,11 @@ class MailchimpClient implements MailchimpClientInterface
 			return [];
 		}
 
+		// For multi select field.
+		if (\is_array($value)) {
+			return $value;
+		}
+
 		return \explode(AbstractBaseRoute::DELIMITER, $params[$key]['value']);
 	}
 

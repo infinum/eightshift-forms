@@ -68,7 +68,7 @@ export class Enrichment {
 	 */
 	setLocalStorageFormPrefill(formId) {
 		// Check if enrichment is used.
-		if (!this.state.getStateEnrichmentIsUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsPrefillUsed()) {
 			return;
 		}
 
@@ -85,7 +85,7 @@ export class Enrichment {
 	 */
 	setUrlParamsFormPrefill(formId) {
 		// Check if enrichment is used.
-		if (!this.state.getStateEnrichmentIsUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsPrefillUrlUsed()) {
 			return;
 		}
 
@@ -102,7 +102,7 @@ export class Enrichment {
 	 */
 	setLocalStorageFormPrefillItem(formId, name) {
 		// Check if enrichment is used.
-		if (!this.state.getStateEnrichmentIsUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsPrefillUsed()) {
 			return;
 		}
 

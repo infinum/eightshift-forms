@@ -51,6 +51,16 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 	public const SETTINGS_ENRICHMENT_USE_KEY = 'enrichment-use';
 
 	/**
+	 * Enrichment prefill use key.
+	 */
+	public const SETTINGS_ENRICHMENT_PREFILL_USE_KEY = 'enrichment-prefill-use';
+
+	/**
+	 * Enrichment prefill url use key.
+	 */
+	public const SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY = 'enrichment-prefill-url-use';
+
+	/**
 	 * Allowed tags key.
 	 */
 	public const SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY = 'enrichment-allowed-tags';
@@ -127,6 +137,9 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 
 		$enrichment = $this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
 
+		$isUsedPrefill = $this->isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY);
+		$isUsedPrefillUrl = $this->isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY);
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -200,21 +213,70 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Prefill', 'eightshift-forms'),
+						'tabLabel' => \__('Prefill from storage', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'input',
-								'inputName' => $this->getOptionName(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
-								'inputFieldLabel' => \__('Clear form prefill storage after', 'eightshift-forms'),
-								'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
-								'inputType' => 'number',
-								'inputMin' => 0,
-								'inputMax' => 100,
-								'inputStep' => 1,
-								'inputPlaceholder' => Enrichment::ENRICHMENT_PREFILL_EXPIRATION,
-								'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
-								'inputFieldInlineBeforeAfterContent' => true,
-								'inputValue' => $this->getOptionValue(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingName(self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
+								'checkboxesFieldHelp' => \__("
+									If a user doesn't finish submitting a form, the enrichment prefill feature remembers their inputs in localStorage.
+									When they visit the form again, the prefill feature will automatically input the previous data.
+									However, if the form is successfully submitted, this data will be erased.
+									<br/><br/>
+									It is important to note that this feature needs to be disclosed in your privacy policy page.", 'eightshift-forms'),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use enrichment prefill', 'eightshift-forms'),
+										'checkboxIsChecked' => $isUsedPrefill,
+										'checkboxValue' => self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+							...($isUsedPrefill ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'input',
+									'inputName' => $this->getOptionName(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
+									'inputFieldLabel' => \__('Clear form prefill storage after', 'eightshift-forms'),
+									'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
+									'inputType' => 'number',
+									'inputMin' => 0,
+									'inputMax' => 100,
+									'inputStep' => 1,
+									'inputPlaceholder' => Enrichment::ENRICHMENT_PREFILL_EXPIRATION,
+									'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
+									'inputFieldInlineBeforeAfterContent' => true,
+									'inputValue' => $this->getOptionValue(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
+								],
+							] : []),
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Prefill from URL', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => $this->getSettingName(self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
+								'checkboxesFieldHelp' => \__("Allow all your forms to be prefilled using URL params.", 'eightshift-forms'),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use enrichment prefill from URL', 'eightshift-forms'),
+										'checkboxIsChecked' => $isUsedPrefillUrl,
+										'checkboxValue' => self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
 							],
 						],
 					],

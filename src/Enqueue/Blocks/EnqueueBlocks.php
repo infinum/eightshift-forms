@@ -239,12 +239,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['enrichment'] = \array_merge(
 				[
 					'isUsed' => true,
+					'isUsedPrefill' => $this->isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
+					'isUsedPrefillUrl' => $this->isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
 				],
 				$this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
 			);
 		} else {
 			$output['enrichment'] = [
 				'isUsed' => false,
+				'isUsedPrefill' => false,
+				'isUsedPrefillUrl' => false,
 			];
 		}
 
@@ -291,14 +295,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$additionalBlocksFilterName = Filters::getFilterName(['blocks', 'additionalBlocks']);
 		$formsStyleOptionsFilterName = Filters::getFilterName(['block', 'forms', 'styleOptions']);
 		$fieldStyleOptionsFilterName = Filters::getFilterName(['block', 'field', 'styleOptions']);
-		$customDataOptionsFilterName = Filters::getFilterName(['block', 'customData', 'options']);
 		$breakpointsFilterName = Filters::getFilterName(['blocks', 'breakpoints']);
 		$formSelectorTemplatesFilterName = Filters::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
 		$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
-		$output['customDataBlockOptions'] = \apply_filters($customDataOptionsFilterName, []);
 		$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
 		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);

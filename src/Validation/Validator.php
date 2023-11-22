@@ -536,18 +536,8 @@ class Validator extends AbstractValidation
 		}
 
 		foreach ($block['attrs'] as $attributeKey => $attributeValue) {
-			switch ($name) {
-				// TODO: test this.
-				case 'custom-data':
-					$type = $block['attrs']['customDataFieldType'] ?? '';
-					$attrName = Components::kebabToCamelCase("{$name}-{$type}");
-					$id = $block['attrs']["{$name}Name"] ?? '';
-					break;
-				default:
-					$attrName = Components::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
-					$id = $block['attrs']["{$attrName}Name"] ?? '';
-					break;
-			}
+			$attrName = Components::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
+			$id = $block['attrs']["{$attrName}Name"] ?? '';
 
 			// Get all validation fields with the correct prefix.
 			$valid = \array_flip(

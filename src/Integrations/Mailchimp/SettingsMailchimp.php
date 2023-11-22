@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Mailchimp;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\FiltersOuputMock;
-use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
@@ -22,7 +21,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsMailchimp class.
  */
-class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, ServiceInterface
+class SettingsMailchimp implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
@@ -33,11 +32,6 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	 * Use general helper trait.
 	 */
 	use FiltersOuputMock;
-
-	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_mailchimp';
 
 	/**
 	 * Filter global settings key.
@@ -93,7 +87,6 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
@@ -112,84 +105,6 @@ class SettingsMailchimp implements SettingInterface, SettingGlobalInterface, Ser
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		// Bailout if global config is not valid.
-		if (!$this->isSettingsGlobalValid()) {
-			return $this->getSettingOutputNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
-		}
-
-		// Output additonal tabs for config.
-		$output = [
-			'component' => 'tabs',
-			'tabsContent' => [
-				[
-					'component' => 'tab',
-					'tabLabel' => \__('Audience tags', 'eightshift-forms'),
-					'tabContent' => [
-						[
-							'component' => 'intro',
-							'introSubtitle' => \__('In these settings, you can control the work and feel of audience tags.', 'eightshift-forms'),
-						],
-						[
-							'component' => 'select',
-							'selectName' => $this->getSettingName(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY),
-							'selectFieldLabel' => \__('Tag visibility', 'eightshift-forms'),
-							'selectFieldHelp' => \__('Select the way you want to show/use tags in your form.', 'eightshift-forms'),
-							'selectValue' => $this->getSettingValue(self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
-							'selectSingleSubmit' => true,
-							'selectPlaceholder' => \__('Select tag visibility', 'eightshift-forms'),
-							'selectContent' => [
-								[
-									'component' => 'select-option',
-									'selectOptionLabel' => \__('Don\'t use tags', 'eightshift-forms'),
-									'selectOptionValue' => 'none',
-									'selectOptionIsSelected' => $this->isSettingChecked('none', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
-								],
-								[
-									'component' => 'select-option',
-									'selectOptionLabel' => \__('Use as hidden field', 'eightshift-forms'),
-									'selectOptionValue' => 'hidden',
-									'selectOptionIsSelected' => $this->isSettingChecked('hidden', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
-								],
-								[
-									'component' => 'select-option',
-									'selectOptionLabel' => \__('Use as a select field', 'eightshift-forms'),
-									'selectOptionValue' => 'select',
-									'selectOptionIsSelected' => $this->isSettingChecked('select', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
-								],
-								[
-									'component' => 'select-option',
-									'selectOptionLabel' => \__('Use as checkbox field', 'eightshift-forms'),
-									'selectOptionValue' => 'checkboxes',
-									'selectOptionIsSelected' => $this->isSettingChecked('checkboxes', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
-								],
-								[
-									'component' => 'select-option',
-									'selectOptionLabel' => \__('Use as radio field', 'eightshift-forms'),
-									'selectOptionValue' => 'radios',
-									'selectOptionIsSelected' => $this->isSettingChecked('radios', self::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId),
-								],
-							]
-						],
-					],
-				],
-			],
-		];
-
-		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			$output,
-		];
 	}
 
 	/**

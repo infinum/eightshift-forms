@@ -60,8 +60,6 @@ class Testfilters implements ServiceInterface
 
 			'es_forms_block_country_alternative_data_set' => ['getBlockCountryAlternativeDataSet'],
 
-			'es_forms_block_custom_data_options' => ['getBlockCustomDataOptions'],
-
 			'es_forms_block_submit_component' => ['getBlockSubmitComponent'],
 
 			'es_forms_block_submit_component_prev' => ['getBlockSubmitComponentPrev'],
@@ -513,60 +511,6 @@ class Testfilters implements ServiceInterface
 					'jp',
 					'gb',
 					'fr',
-				],
-			],
-		];
-	}
-
-	/**
-	 * Add to custom data block
-	 *
-	 * These filters will add the necessary data for the custom data block to work. Field data option selector will not be shown unless a filter is added. This option is shown in Block Editor.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function getBlockCustomDataOptions(): array
-	{
-		return [
-			[
-				'label' => '',
-				'value' => '',
-				'items' => [],
-			],
-			[
-				'label' => 'Blog posts',
-				'value' => 'blog-posts',
-				"items" => [
-					[
-						'label' => '',
-						'value' => ''
-					],
-					[
-						'label' => 'Post 1',
-						'value' => 'post1'
-					],
-					[
-						"label" => "Post 2",
-						"value" => "post2"
-					],
-				],
-			],
-			[
-				"label" => "Jobs",
-				"value" => "jobs",
-				"items" => [
-					[
-						'label' => '',
-						'value' => ''
-					],
-					[
-						'label' => 'Job 1',
-						'value' => 'job1'
-					],
-					[
-						"label" => "Job 2",
-						"value" => "job2"
-					],
 				],
 			],
 		];

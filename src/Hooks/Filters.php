@@ -140,7 +140,6 @@ class Filters
 		],
 		SettingsMailchimp::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsMailchimp::FILTER_SETTINGS_NAME,
 			'fields' => Mailchimp::FILTER_FORM_FIELDS_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
 			'use' => SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
@@ -366,10 +365,6 @@ class Filters
 			],
 			'date' => [
 				'additionalContent',
-			],
-			'customData' => [
-				'options',
-				'data',
 			],
 			'submit' => [
 				'component',

@@ -327,7 +327,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		if ($tagsItems) {
 			$output = [
 				...$output,
-				...$this->getTagsFields($formId, $tagsItems),
+				$this->getTagsFields($formId, $tagsItems),
 			];
 		}
 
@@ -363,124 +363,29 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 
 		$customTagParamName = Components::getSettings()['customFormParams']['mailchimpTags'];
 
-		switch ($this->getSettingValue(SettingsMailchimp::SETTINGS_MAILCHIMP_LIST_TAGS_SHOW_KEY, $formId)) {
-			case 'select':
-				return [
-					[
-						'component' => 'select',
-						'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-						'selectName' => $customTagParamName,
-						'selectTracking' => $customTagParamName,
-						'selectContent' => \array_values(
-							\array_map(
-								function ($option) {
-									$name = $option['name'] ?? '';
+		return [
+			'component' => 'select',
+			'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
+			'selectName' => $customTagParamName,
+			'selectTracking' => $customTagParamName,
+			'selectContent' => \array_values(
+				\array_map(
+					function ($option) {
+						$name = $option['name'] ?? '';
 
-									return [
-										'component' => 'select-option',
-										'selectOptionLabel' => $name,
-										'selectOptionValue' => $name,
-										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
-											'selectOptionValue',
-										], false),
-									];
-								},
-								$items
-							),
-						),
-						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
-							'selectIsRequired',
-							'selectFieldHidden',
-						]),
-					],
-				];
-			case 'checkboxes':
-				return [
-					[
-						'component' => 'checkboxes',
-						'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
-						'checkboxesName' => $customTagParamName,
-						'checkboxesContent' => \array_map(
-							function ($option) use ($customTagParamName) {
-								$name = $option['name'] ?? '';
-
-								return [
-									'component' => 'checkbox',
-									'checkboxLabel' => $name,
-									'checkboxValue' => $name,
-									'checkboxTracking' => $customTagParamName,
-									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-										'checkboxValue',
-									], false),
-								];
-							},
-							$items
-						),
-						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-							'checkboxesIsRequired',
-							'checkboxesFieldHidden',
-						]),
-					]
-				];
-			case 'radios':
-				return [
-					[
-						'component' => 'radios',
-						'radiosFieldLabel' => \__('Tags', 'eightshift-forms'),
-						'radiosName' => $customTagParamName,
-						'radiosTracking' => $customTagParamName,
-						'radiosContent' => \array_map(
-							function ($option) {
-								$name = $option['name'] ?? '';
-
-								return [
-									'component' => 'radio',
-									'radioLabel' => $name,
-									'radioValue' => $name,
-									'radioDisabledOptions' => $this->prepareDisabledOptions('radio', [
-										'radioValue',
-									], false),
-								];
-							},
-							$items
-						),
-						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
-							'radiosIsRequired',
-							'radiosFieldHidden',
-						]),
-					],
-				];
-			case 'hidden':
-				return [
-					[
-						'component' => 'checkboxes',
-						'checkboxesFieldLabel' => \__('Tags', 'eightshift-forms'),
-						'checkboxesFieldHidden' => true,
-						'checkboxesName' => $customTagParamName,
-						'checkboxesContent' => \array_map(
-							function ($option) use ($customTagParamName) {
-								$name = $option['name'] ?? '';
-
-								return [
-									'component' => 'checkbox',
-									'checkboxLabel' => $name,
-									'checkboxValue' => $name,
-									'checkboxTracking' => $customTagParamName,
-									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-										'checkboxValue',
-									], false),
-								];
-							},
-							$items
-						),
-						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-							'checkboxesIsRequired',
-							'checkboxesFieldHidden'
-						]),
-					],
-				];
-			default:
-				return [];
-		}
+						return [
+							'component' => 'select-option',
+							'selectOptionLabel' => $name,
+							'selectOptionValue' => $name,
+							'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+								'selectOptionValue',
+							], false),
+						];
+					},
+					$items
+				),
+			),
+			'selectDisabledOptions' => $this->prepareDisabledOptions('select'),
+		];
 	}
 }
