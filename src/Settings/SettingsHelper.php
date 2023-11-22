@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Trait that holds all generic helpers used in classes.
+ * Trait that holds all helpers for settings.
  *
  * @package EightshiftLibs\Settings
  */

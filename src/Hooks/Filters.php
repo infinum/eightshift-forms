@@ -56,6 +56,7 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -90,6 +91,10 @@ class Filters
 			'settings' => SettingsGeneral::FILTER_SETTINGS_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 		],
+		SettingsSettings::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsSettings::FILTER_SETTINGS_GLOBAL_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+		],
 		SettingsValidation::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsValidation::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
@@ -97,6 +102,15 @@ class Filters
 			'cache' => [
 				Validator::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME,
 			]
+		],
+		SettingsBlocks::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsBlocks::FILTER_SETTINGS_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'countryOutput' => SettingsBlocks::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME,
+			'cache' => [
+				SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
+			],
 		],
 		SettingsCaptcha::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
@@ -113,23 +127,16 @@ class Filters
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 			'use' => SettingsEnrichment::SETTINGS_ENRICHMENT_USE_KEY,
 		],
-		SettingsBlocks::SETTINGS_TYPE_KEY => [
-			'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
-			'settings' => SettingsBlocks::FILTER_SETTINGS_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
-			'countryOutput' => SettingsBlocks::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME,
-			'cache' => [
-				SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
-			],
-		],
-		SettingsSettings::SETTINGS_TYPE_KEY => [
-			'settingsGlobal' => SettingsSettings::FILTER_SETTINGS_GLOBAL_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
-		],
 		SettingsSecurity::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsSecurity::FILTER_SETTINGS_GLOBAL_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
 			'use' => SettingsSecurity::SETTINGS_SECURITY_USE_KEY,
+		],
+		SettingsEntries::SETTINGS_TYPE_KEY => [
+			'settingsGlobal' => SettingsEntries::FILTER_SETTINGS_GLOBAL_NAME,
+			'settings' => SettingsEntries::FILTER_SETTINGS_NAME,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'use' => SettingsEntries::SETTINGS_ENTRIES_USE_KEY,
 		],
 		SettingsMailer::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
@@ -507,6 +514,10 @@ class Filters
 			SettingsSecurity::SETTINGS_TYPE_KEY => [
 				'title' => \__('Security', 'eightshift-forms'),
 				'desc' => \__('Prevent your forms from being misused and your website from being exploited.', 'eightshift-forms'),
+			],
+			SettingsEntries::SETTINGS_TYPE_KEY => [
+				'title' => \__('Entries', 'eightshift-forms'),
+				'desc' => \__('Collect form entires in your project database.', 'eightshift-forms'),
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),

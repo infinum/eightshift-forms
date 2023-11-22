@@ -1,0 +1,36 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "admin-entries",
+	"title": "Admin Entries",
+	"componentClass": "es-admin-entries",
+	"attributes": {
+		"adminEntriesPageTitle": {
+			"type": "string"
+		},
+		"adminEntriesSubTitle": {
+			"type": "string"
+		},
+		"adminEntriesBackLink": {
+			"type": "string"
+		},
+		"adminEntriesFormEditLink": {
+			"type": "string"
+		},
+		"adminEntriesSidebar": {
+			"type": "array"
+		},
+		"adminEntriesForm": {
+			"type": "string"
+		},
+		"adminEntriesType": {
+			"type": "string"
+		},
+		"adminEntriesIsGlobal": {
+			"type": "boolean",
+			"default": false
+		},
+		"adminEntriesNotice": {
+			"type": "string"
+		}
+	}
+}
