@@ -75,7 +75,7 @@ class MigrationRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidatorInterface $validator Inject validation methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(

@@ -49,8 +49,8 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
+	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 */
 	public function __construct(
 		LabelsInterface $labels,

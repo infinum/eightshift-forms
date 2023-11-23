@@ -42,7 +42,7 @@ class Captcha implements CaptchaInterface
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
+	 * @param LabelsInterface $labels Inject labels methods.
 	 */
 	public function __construct(LabelsInterface $labels)
 	{

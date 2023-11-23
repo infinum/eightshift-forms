@@ -20,7 +20,7 @@ use EightshiftForms\Validation\ValidatorInterface;
 /**
  * Class SubmitValidateStepRoute
  */
-class SubmitValidateStepRoute extends SubmitForm
+class SubmitValidateStepRoute extends AbstractFormSubmit
 {
 	/**
 	 * Use general helper trait.
@@ -35,11 +35,11 @@ class SubmitValidateStepRoute extends SubmitForm
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
-	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
-	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
+	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
+	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param SecurityInterface $security Inject security methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,

@@ -17,16 +17,15 @@ use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftForms\Rest\Routes\SubmitForm;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
-use EightshiftForms\Validation\Validator;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class FormSubmitPipedriveRoute
  */
-class FormSubmitPipedriveRoute extends SubmitForm
+class FormSubmitPipedriveRoute extends AbstractFormSubmit
 {
 	/**
 	 * Route slug.
@@ -43,11 +42,11 @@ class FormSubmitPipedriveRoute extends SubmitForm
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
-	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
-	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
+	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
+	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param PipedriveClientInterface $pipedriveClient Inject Pipedrive which holds Pipedrive connect data.
 	 */
@@ -88,53 +87,23 @@ class FormSubmitPipedriveRoute extends SubmitForm
 	 */
 	protected function submitAction(array $formDataReference)
 	{
-
 		$formId = $formDataReference['formId'];
-		$params = $formDataReference['params'];
-		$files = $formDataReference['files'];
 
 		// Send application to Hubspot.
 		$response = $this->pipedriveClient->postApplication(
-			$params,
-			$files,
+			$formDataReference['params'],
+			$formDataReference['files'],
 			$formId
 		);
 
-		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
-
-		// There is no need to utput integrations validation issues because Pipedrive doesn't control the form.
-
-		// Skip fallback email if integration is disabled.
-		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
-			// Send fallback email.
-			$this->formSubmitMailer->sendFallbackEmail($response);
-		}
-
 		$formDataReference['emailResponseTags'] = $this->getEmailResponseTags($response);
-
-		// Send email if it is configured in the backend.
-		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
-			$this->formSubmitMailer->sendEmails($formDataReference);
-		}
-
-		$labelsOutput = $this->labels->getLabel($response['message'], $formId);
-		$responseOutput = $response;
-
-		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !$validation) {
-			$this->formSubmitMailer->sendFallbackEmail($response);
-
-			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
-
-			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
-			$responseOutput = $fakeResponse;
-		}
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getIntegrationApiOutput(
-				$responseOutput,
-				$labelsOutput,
+			$this->getIntegrationCommonSubmitAction(
+				$response,
+				$formDataReference,
+				$formId,
 			)
 		);
 	}

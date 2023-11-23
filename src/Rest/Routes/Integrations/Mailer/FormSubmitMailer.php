@@ -49,7 +49,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * Create a new instance that injects classes
 	 *
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
-	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
+	 * @param LabelsInterface $labels Inject labels methods.
 	 */
 	public function __construct(
 		MailerInterface $mailer,

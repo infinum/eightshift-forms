@@ -108,7 +108,7 @@ class Validator extends AbstractValidation
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
-	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
 	 */
 	public function __construct(
 		LabelsInterface $labels,

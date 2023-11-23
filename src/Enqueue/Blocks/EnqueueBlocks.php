@@ -65,7 +65,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
 	public function __construct(

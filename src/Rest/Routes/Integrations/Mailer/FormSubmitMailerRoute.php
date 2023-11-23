@@ -14,7 +14,7 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\SubmitForm;
+use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -22,7 +22,7 @@ use EightshiftForms\Validation\ValidatorInterface;
 /**
  * Class FormSubmitMailerRoute
  */
-class FormSubmitMailerRoute extends SubmitForm
+class FormSubmitMailerRoute extends AbstractFormSubmit
 {
 	/**
 	 * Route slug.
@@ -32,11 +32,11 @@ class FormSubmitMailerRoute extends SubmitForm
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
-	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
-	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
+	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
+	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 */
 	public function __construct(
@@ -75,7 +75,7 @@ class FormSubmitMailerRoute extends SubmitForm
 	protected function submitAction(array $formDataReference)
 	{
 		return \rest_ensure_response(
-			$this->formSubmitMailer->sendEmails($formDataReference)
+			$this->getFormSubmitMailer()->sendEmails($formDataReference)
 		);
 	}
 }

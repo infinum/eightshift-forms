@@ -45,7 +45,7 @@ class TransferRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
+	 * @param ValidatorInterface $validator Inject validation methods.
 	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
 	public function __construct(

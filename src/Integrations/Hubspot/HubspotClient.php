@@ -80,7 +80,7 @@ class HubspotClient implements HubspotClientInterface
 	 * Create a new admin instance.
 	 *
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
-	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
+	 * @param SecurityInterface $security Inject security methods.
 	 */
 	public function __construct(
 		EnrichmentInterface $enrichment,
@@ -865,8 +865,13 @@ class HubspotClient implements HubspotClientInterface
 			}
 
 			$name = $items['name'] ?? '';
+			$value = $items['value'] ?? [];
 
-			foreach ($items['value'] as $file) {
+			if (!$name || !$value) {
+				continue;
+			}
+
+			foreach ($value as $file) {
 				$fileUrl = $this->postFileMedia($file, $formId);
 
 				if (!$fileUrl) {
