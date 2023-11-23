@@ -9,6 +9,10 @@
 		},
 		"tabContent": {
 			"type": "string"
+		},
+		"tabFull": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

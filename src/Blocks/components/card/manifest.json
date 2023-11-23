@@ -25,6 +25,9 @@
 		"cardContent": {
 			"type": "string"
 		},
+		"cardContentDetails": {
+			"type": "string"
+		},
 		"cardPadded": {
 			"type": "boolean",
 			"default": false

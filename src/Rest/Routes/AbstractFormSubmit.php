@@ -18,6 +18,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -88,13 +89,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * @var SecurityInterface
 	 */
 	protected $security;
-
-	/**
-	 * Instance variable of EntriesInterface data.
-	 *
-	 * @var EntriesInterface
-	 */
-	protected $entries;
 
 	/**
 	 * Route types.
@@ -329,7 +323,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 		// Save entries to DB.
 		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			$this->getEntries()->saveEntry($formDataReference);
+			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
 
 		return $this->getIntegrationApiOutput(
@@ -396,16 +390,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	protected function getSecurity()
 	{
 		return $this->security;
-	}
-
-	/**
-	 * Returns entries class.
-	 *
-	 * @return EntriesInterface
-	 */
-	protected function getEntries()
-	{
-		return $this->entries;
 	}
 
 	/**

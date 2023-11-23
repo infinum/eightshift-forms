@@ -140,14 +140,17 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 
 		$isUsed = $this->isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 
+		$entries = EntriesHelper::getEntries($formId);
+
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
+				'tabsFull' => true,
 				'tabsContent' => [
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('E-mail', 'eightshift-forms'),
+						'tabLabel' => \__('Options', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'checkboxes',
@@ -166,6 +169,17 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 							],
 						],
 					],
+					$entries ?
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Entries', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'admin-entries',
+								'adminEntriesForms' => $entries,
+							],
+						],
+					] : [],
 				],
 			],
 		];

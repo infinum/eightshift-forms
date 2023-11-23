@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Db;
 
-use EightshiftForms\Entries\Entries;
+use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -36,7 +36,7 @@ class CreateEntriesTable implements ServiceInterface
 	public function createTable(): void
 	{
 		global $wpdb;
-		$tableName = $wpdb->prefix . Entries::TABLE_NAME;
+		$tableName = $wpdb->prefix . EntriesHelper::TABLE_NAME;
 
 		$charsetCollate = $wpdb->get_charset_collate();
 

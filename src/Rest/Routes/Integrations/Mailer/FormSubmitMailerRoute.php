@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Entries\EntriesInterface;
+use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
@@ -39,7 +39,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
-	 * @param EntriesInterface $entries Inject entries methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 */
 	public function __construct(
@@ -48,7 +47,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
-		EntriesInterface $entries,
 		FormSubmitMailerInterface $formSubmitMailer
 	) {
 		$this->validator = $validator;
@@ -56,7 +54,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->security = $security;
-		$this->entries = $entries;
 		$this->formSubmitMailer = $formSubmitMailer;
 	}
 
@@ -80,11 +77,10 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected function submitAction(array $formDataReference)
 	{
 		$formId = $formDataReference['formId'];
-		$params = $formDataReference['params'];
 
 		// Save entries to DB.
 		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			$this->getEntries()->setEntryValue($formDataReference, $formId);
+			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
 
 		return \rest_ensure_response(

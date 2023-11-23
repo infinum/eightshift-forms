@@ -16,6 +16,7 @@ $componentJsTabClass = $manifestTabs['componentJsTabClass'] ?? '';
 
 $tabLabel = Components::checkAttr('tabLabel', $attributes, $manifest);
 $tabContent = Components::checkAttr('tabContent', $attributes, $manifest);
+$tabFull = Components::checkAttr('tabFull', $attributes, $manifest);
 
 $tabLabelClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'label'),
@@ -24,6 +25,7 @@ $tabLabelClass = Components::classnames([
 
 $tabContentClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'content'),
+	Components::selector($tabFull, $componentClass, 'content', 'full'),
 ]);
 
 if (!$tabLabel || !$tabContent) {

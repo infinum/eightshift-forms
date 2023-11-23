@@ -28,6 +28,7 @@ $cardShowButtonsOnHover = Components::checkAttr('cardShowButtonsOnHover', $attri
 $cardIndented = Components::checkAttr('cardIndented', $attributes, $manifest);
 $cardBulk = Components::checkAttr('cardBulk', $attributes, $manifest);
 $cardId = Components::checkAttr('cardId', $attributes, $manifest);
+$cardContentDetails = Components::checkAttr('cardContentDetails', $attributes, $manifest);
 
 $cardClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -154,6 +155,12 @@ $cardClass = Components::classnames([
 	<?php if ($cardContent) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 			<?php echo wp_kses_post($cardContent); ?>
+		</div>
+	<?php } ?>
+
+	<?php if ($cardContentDetails) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__content-details"); ?>">
+			<?php echo wp_kses_post($cardContentDetails); ?>
 		</div>
 	<?php } ?>
 </div>

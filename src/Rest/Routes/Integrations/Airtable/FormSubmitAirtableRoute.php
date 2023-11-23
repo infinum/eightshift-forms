@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Entries\EntriesInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
@@ -47,7 +46,6 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
-	 * @param EntriesInterface $entries Inject entries methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
@@ -57,7 +55,6 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
-		EntriesInterface $entries,
 		FormSubmitMailerInterface $formSubmitMailer,
 		ClientInterface $airtableClient
 	) {
@@ -66,7 +63,6 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->security = $security;
-		$this->entries = $entries;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->airtableClient = $airtableClient;
 	}
