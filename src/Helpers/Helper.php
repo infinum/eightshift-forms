@@ -834,7 +834,17 @@ class Helper
 	 */
 	public static function isBlockEditor(): bool
 	{
-		return \function_exists('get_current_screen') && \get_current_screen()->is_block_editor();
+		if (!\function_exists('get_current_screen')) {
+			return false;
+		}
+
+		$currentScreen = \get_current_screen();
+
+		if (!\method_exists($currentScreen, 'is_block_editor')) {
+			return false;
+		}
+
+		return $currentScreen->is_block_editor();
 	}
 
 	/**

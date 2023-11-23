@@ -15,8 +15,8 @@ use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
+use EightshiftForms\Rest\Routes\SubmitForm;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\Validator;
@@ -25,33 +25,12 @@ use EightshiftForms\Validation\ValidatorInterface;
 /**
  * Class FormSubmitMailchimpRoute
  */
-class FormSubmitMailchimpRoute extends AbstractFormSubmit
+class FormSubmitMailchimpRoute extends SubmitForm
 {
 	/**
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = SettingsMailchimp::SETTINGS_TYPE_KEY;
-
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
 
 	/**
 	 * Instance variable for Mailchimp data.
@@ -61,53 +40,32 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 	protected $mailchimpClient;
 
 	/**
-	 * Instance variable of FormSubmitMailerInterface data.
-	 *
-	 * @var FormSubmitMailerInterface
-	 */
-	public $formSubmitMailer;
-
-	/**
-	 * Instance variable of CaptchaInterface data.
-	 *
-	 * @var CaptchaInterface
-	 */
-	protected $captcha;
-
-	/**
-	 * Instance variable of SecurityInterface data.
-	 *
-	 * @var SecurityInterface
-	 */
-	protected $security;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param MailchimpClientInterface $mailchimpClient Inject Mailchimp which holds Mailchimp connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
-		MailchimpClientInterface $mailchimpClient,
-		FormSubmitMailerInterface $formSubmitMailer,
 		CaptchaInterface $captcha,
-		SecurityInterface $security
+		SecurityInterface $security,
+		FormSubmitMailerInterface $formSubmitMailer,
+		MailchimpClientInterface $mailchimpClient
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
-		$this->mailchimpClient = $mailchimpClient;
-		$this->formSubmitMailer = $formSubmitMailer;
 		$this->captcha = $captcha;
 		$this->security = $security;
+		$this->formSubmitMailer = $formSubmitMailer;
+		$this->mailchimpClient = $mailchimpClient;
 	}
 
 	/**
@@ -118,56 +76,6 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 	protected function getRouteName(): string
 	{
 		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Returns validator class.
-	 *
-	 * @return ValidatorInterface
-	 */
-	protected function getValidator()
-	{
-		return $this->validator;
-	}
-
-	/**
-	 * Returns validator patterns class.
-	 *
-	 * @return ValidationPatternsInterface
-	 */
-	protected function getValidatorPatterns()
-	{
-		return $this->validationPatterns;
-	}
-
-	/**
-	 * Returns validator labels class.
-	 *
-	 * @return LabelsInterface
-	 */
-	protected function getValidatorLabels()
-	{
-		return $this->labels;
-	}
-
-	/**
-	 * Returns captcha class.
-	 *
-	 * @return CaptchaInterface
-	 */
-	protected function getCaptcha()
-	{
-		return $this->captcha;
-	}
-
-	/**
-	 * Returns securicty class.
-	 *
-	 * @return SecurityInterface
-	 */
-	protected function getSecurity()
-	{
-		return $this->security;
 	}
 
 	/**

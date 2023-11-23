@@ -10,9 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
@@ -154,7 +151,7 @@ class FormEntriesAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
-		return Components::render($this->getViewComponent(), $attributes);
+		return '';
 	}
 
 	/**
@@ -171,16 +168,6 @@ class FormEntriesAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : SettingsDashboard::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		return [
-			// translators: %s replaces form title name.
-			'adminSettingsPageTitle' => \esc_html__('Entries', 'eightshift-forms'),
-			'adminSettingsBackLink' => Helper::getListingPageUrl(),
-			'adminSettingsSidebar' => $this->settings->getSettingsSidebar(),
-			'adminSettingsForm' => $this->settings->getSettingsForm($type, '0'),
-			'adminSettingsType' => $type,
-			'adminSettingsIsGlobal' => true,
-		];
+		return [];
 	}
 }

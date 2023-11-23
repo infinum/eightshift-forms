@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Db;
 
+use EightshiftForms\Entries\Entries;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -17,13 +18,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class CreateEntriesTable implements ServiceInterface
 {
-	/**
-	 * Job name.
-	 *
-	 * @var string
-	 */
-	public const TABLE_NAME = 'es_forms_entries';
-
 	/**
 	 * Register all the hooks
 	 *
@@ -42,19 +36,18 @@ class CreateEntriesTable implements ServiceInterface
 	public function createTable(): void
 	{
 		global $wpdb;
-		$table_name = $wpdb->prefix . self::TABLE_NAME;
+		$tableName = $wpdb->prefix . Entries::TABLE_NAME;
 
-		$charset_collate = $wpdb->get_charset_collate();
+		$charsetCollate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$tableName} (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			form_id int(11) NOT NULL,
 			entry_value LONGTEXT NOT NULL,
 			PRIMARY KEY  (id)
-		) $charset_collate;";
+		) $charsetCollate;";
 
-			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-			dbDelta($sql);
+		require_once(\ABSPATH . 'wp-admin/includes/upgrade.php');
+		\dbDelta($sql);
 	}
 }
-

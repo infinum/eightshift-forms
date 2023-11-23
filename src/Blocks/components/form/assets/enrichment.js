@@ -142,6 +142,10 @@ export class Enrichment {
 			return;
 		}
 
+		if (!newStorage) {
+			return;
+		}
+
 		// Add current timestamp to new storage.
 		newStorage.timestamp = Date.now();
 

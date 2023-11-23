@@ -15,54 +15,19 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\SubmitForm;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 
 /**
  * Class FormSubmitCustomRoute
  */
-class FormSubmitCustomRoute extends AbstractFormSubmit
+class FormSubmitCustomRoute extends SubmitForm
 {
 	/**
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = 'custom';
-
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
-
-	/**
-	 * Instance variable of CaptchaInterface data.
-	 *
-	 * @var CaptchaInterface
-	 */
-	protected $captcha;
-
-	/**
-	 * Instance variable of SecurityInterface data.
-	 *
-	 * @var SecurityInterface
-	 */
-	protected $security;
 
 	/**
 	 * Create a new instance that injects classes
@@ -95,56 +60,6 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	protected function getRouteName(): string
 	{
 		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Returns validator class.
-	 *
-	 * @return ValidatorInterface
-	 */
-	protected function getValidator()
-	{
-		return $this->validator;
-	}
-
-	/**
-	 * Returns validator patterns class.
-	 *
-	 * @return ValidationPatternsInterface
-	 */
-	protected function getValidatorPatterns()
-	{
-		return $this->validationPatterns;
-	}
-
-	/**
-	 * Returns validator labels class.
-	 *
-	 * @return LabelsInterface
-	 */
-	protected function getValidatorLabels()
-	{
-		return $this->labels;
-	}
-
-	/**
-	 * Returns captcha class.
-	 *
-	 * @return CaptchaInterface
-	 */
-	protected function getCaptcha()
-	{
-		return $this->captcha;
-	}
-
-	/**
-	 * Returns securicty class.
-	 *
-	 * @return SecurityInterface
-	 */
-	protected function getSecurity()
-	{
-		return $this->security;
 	}
 
 	/**

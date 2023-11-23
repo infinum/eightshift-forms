@@ -19,8 +19,8 @@ use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
+use EightshiftForms\Rest\Routes\SubmitForm;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\Validator;
@@ -29,33 +29,12 @@ use EightshiftForms\Validation\ValidatorInterface;
 /**
  * Class FormSubmitHubspotRoute
  */
-class FormSubmitHubspotRoute extends AbstractFormSubmit
+class FormSubmitHubspotRoute extends SubmitForm
 {
 	/**
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = SettingsHubspot::SETTINGS_TYPE_KEY;
-
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
 
 	/**
 	 * Instance variable for Hubspot data.
@@ -72,56 +51,35 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	protected $clearbitClient;
 
 	/**
-	 * Instance variable of FormSubmitMailerInterface data.
-	 *
-	 * @var FormSubmitMailerInterface
-	 */
-	public $formSubmitMailer;
-
-	/**
-	 * Instance variable of CaptchaInterface data.
-	 *
-	 * @var CaptchaInterface
-	 */
-	protected $captcha;
-
-	/**
-	 * Instance variable of SecurityInterface data.
-	 *
-	 * @var SecurityInterface
-	 */
-	protected $security;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject ValidatorInterface which holds validation methods.
 	 * @param ValidationPatternsInterface $validationPatterns Inject ValidationPatternsInterface which holds validation methods.
 	 * @param LabelsInterface $labels Inject LabelsInterface which holds labels data.
-	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
-	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param CaptchaInterface $captcha Inject CaptchaInterface which holds captcha data.
 	 * @param SecurityInterface $security Inject SecurityInterface which holds security data.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
+	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
 		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
-		HubspotClientInterface $hubspotClient,
-		ClearbitClientInterface $clearbitClient,
-		FormSubmitMailerInterface $formSubmitMailer,
 		CaptchaInterface $captcha,
-		SecurityInterface $security
+		SecurityInterface $security,
+		FormSubmitMailerInterface $formSubmitMailer,
+		HubspotClientInterface $hubspotClient,
+		ClearbitClientInterface $clearbitClient
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;
 		$this->labels = $labels;
-		$this->hubspotClient = $hubspotClient;
-		$this->clearbitClient = $clearbitClient;
-		$this->formSubmitMailer = $formSubmitMailer;
 		$this->captcha = $captcha;
 		$this->security = $security;
+		$this->formSubmitMailer = $formSubmitMailer;
+		$this->hubspotClient = $hubspotClient;
+		$this->clearbitClient = $clearbitClient;
 	}
 
 	/**
@@ -132,56 +90,6 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	protected function getRouteName(): string
 	{
 		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Returns validator class.
-	 *
-	 * @return ValidatorInterface
-	 */
-	protected function getValidator()
-	{
-		return $this->validator;
-	}
-
-	/**
-	 * Returns validator patterns class.
-	 *
-	 * @return ValidationPatternsInterface
-	 */
-	protected function getValidatorPatterns()
-	{
-		return $this->validationPatterns;
-	}
-
-	/**
-	 * Returns validator labels class.
-	 *
-	 * @return LabelsInterface
-	 */
-	protected function getValidatorLabels()
-	{
-		return $this->labels;
-	}
-
-	/**
-	 * Returns captcha class.
-	 *
-	 * @return CaptchaInterface
-	 */
-	protected function getCaptcha()
-	{
-		return $this->captcha;
-	}
-
-	/**
-	 * Returns securicty class.
-	 *
-	 * @return SecurityInterface
-	 */
-	protected function getSecurity()
-	{
-		return $this->security;
 	}
 
 	/**

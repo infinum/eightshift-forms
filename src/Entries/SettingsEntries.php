@@ -27,7 +27,7 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Filter settings key.
 	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_mailer';
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_entries';
 
 	/**
 	 * Filter global settings key.
@@ -38,6 +38,11 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 	 * Filter settings is Valid key.
 	 */
 	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_entires';
+
+	/**
+	 * Filter settings global is Valid key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_entries';
 
 	/**
 	 * Settings key.
@@ -80,6 +85,7 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**
