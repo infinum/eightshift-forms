@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Entries\EntriesInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
@@ -46,6 +47,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
+	 * @param EntriesInterface $entries Inject entries methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
 	 */
@@ -55,6 +57,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
+		EntriesInterface $entries,
 		FormSubmitMailerInterface $formSubmitMailer,
 		ActiveCampaignClientInterface $activeCampaignClient
 	) {
@@ -63,6 +66,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->security = $security;
+		$this->entries = $entries;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->activeCampaignClient = $activeCampaignClient;
 	}
@@ -75,56 +79,6 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	protected function getRouteName(): string
 	{
 		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Returns validator class.
-	 *
-	 * @return ValidatorInterface
-	 */
-	protected function getValidator()
-	{
-		return $this->validator;
-	}
-
-	/**
-	 * Returns validator patterns class.
-	 *
-	 * @return ValidationPatternsInterface
-	 */
-	protected function getValidatorPatterns()
-	{
-		return $this->validationPatterns;
-	}
-
-	/**
-	 * Returns validator labels class.
-	 *
-	 * @return LabelsInterface
-	 */
-	protected function getValidatorLabels()
-	{
-		return $this->labels;
-	}
-
-	/**
-	 * Returns captcha class.
-	 *
-	 * @return CaptchaInterface
-	 */
-	protected function getCaptcha()
-	{
-		return $this->captcha;
-	}
-
-	/**
-	 * Returns securicty class.
-	 *
-	 * @return SecurityInterface
-	 */
-	protected function getSecurity()
-	{
-		return $this->security;
 	}
 
 	/**

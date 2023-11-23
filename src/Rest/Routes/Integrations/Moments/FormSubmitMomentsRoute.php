@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Entries\EntriesInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Labels\LabelsInterface;
@@ -46,6 +47,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
+	 * @param EntriesInterface $entries Inject entries methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
 	 */
@@ -55,6 +57,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
+		EntriesInterface $entries,
 		FormSubmitMailerInterface $formSubmitMailer,
 		ClientInterface $momentsClient
 	) {
@@ -63,6 +66,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->security = $security;
+		$this->entries = $entries;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->momentsClient = $momentsClient;
 	}

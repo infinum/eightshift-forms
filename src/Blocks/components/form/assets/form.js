@@ -1502,10 +1502,11 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const value = event.target.getAttribute(this.state.getStateAttribute('ratingValue'));
+		const input = this.state.getStateElementInput(name, formId);
 
 		this.utils.setManualRatingValue(formId, name, value);
 
-		this.utils.setOnUserChangeInput(event.target);
+		this.utils.setOnUserChangeInput(input);
 
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(

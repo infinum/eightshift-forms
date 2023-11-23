@@ -10,6 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
+use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+
 /**
  * Entries class.
  */
@@ -30,21 +34,58 @@ class Entries implements EntriesInterface
 	 *
 	 * @return boolean
 	 */
-	public function setEntryValue(array $values, string $formId): bool
+	public function setEntryValue(array $formDataReference, string $formId): bool
 	{
 		global $wpdb;
+		
+		$type = $formDataReference['type'] ?? '';
+		$params = $formDataReference['params'] ?? [];
 
-		$wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$this->getFullTableName(),
-			[
-				'form_id' => (int) $formId,
-				'entry_value' => $values,
-			],
-			[
-				'%d',
-				'%s',
-			]
-		);
+		$output = [];
+
+		switch ($type) {
+			case SettingsMailer::SETTINGS_TYPE_KEY:
+				$params = Helper::removeUneceseryParamFields($params);
+
+				foreach ($params as $param) {
+					$name = $param['name'] ?? '';
+					$value = $param['value'] ?? '';
+
+					if (!$name || !$value) {
+						continue;
+					}
+
+					if (gettype($value) === 'array') {
+						$value = implode(AbstractBaseRoute::DELIMITER, $value);
+					}
+
+					$output[$name] = $value;
+				}
+				break;
+			
+			default:
+				break;
+		}
+
+		if (!$output) {
+			return false;
+
+		}
+
+		error_log( print_r( ( $output ), true ) );
+		
+
+		// $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// 	$this->getFullTableName(),
+		// 	[
+		// 		'form_id' => (int) $formId,
+		// 		'entry_value' => $values,
+		// 	],
+		// 	[
+		// 		'%d',
+		// 		'%s',
+		// 	]
+		// );
 
 		return true;
 	}

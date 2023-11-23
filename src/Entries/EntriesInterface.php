@@ -16,4 +16,13 @@ namespace EightshiftForms\Entries;
 interface EntriesInterface
 {
 
+	/**
+	 * Get entry value.
+	 *
+	 * @param array<string, mixed> $values Values to store.
+	 * @param string $formId Form Id.
+	 *
+	 * @return boolean
+	 */
+	public function setEntryValue(array $values, string $formId): bool;
 }

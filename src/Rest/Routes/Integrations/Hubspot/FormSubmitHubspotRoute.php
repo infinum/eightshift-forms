@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Entries\EntriesInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
@@ -57,6 +58,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
+	 * @param EntriesInterface $entries Inject entries methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param HubspotClientInterface $hubspotClient Inject HubSpot which holds HubSpot connect data.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
@@ -67,6 +69,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
+		EntriesInterface $entries,
 		FormSubmitMailerInterface $formSubmitMailer,
 		HubspotClientInterface $hubspotClient,
 		ClearbitClientInterface $clearbitClient
@@ -76,6 +79,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		$this->labels = $labels;
 		$this->captcha = $captcha;
 		$this->security = $security;
+		$this->entries = $entries;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;

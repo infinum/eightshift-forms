@@ -517,7 +517,7 @@ class Filters
 			],
 			SettingsEntries::SETTINGS_TYPE_KEY => [
 				'title' => \__('Entries', 'eightshift-forms'),
-				'desc' => \__('Collect form entires in your project database.', 'eightshift-forms'),
+				'desc' => \__('Collect form entries in your project database.', 'eightshift-forms'),
 			],
 			SettingsMailer::SETTINGS_TYPE_KEY => [
 				'title' => \__('Mailer', 'eightshift-forms'),

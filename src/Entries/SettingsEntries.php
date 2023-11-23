@@ -32,12 +32,12 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Filter global settings key.
 	 */
-	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_entires';
+	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_entries';
 
 	/**
 	 * Filter settings is Valid key.
 	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_entires';
+	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_entries';
 
 	/**
 	 * Filter settings global is Valid key.
@@ -47,33 +47,33 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Settings key.
 	 */
-	public const SETTINGS_TYPE_KEY = 'entires';
+	public const SETTINGS_TYPE_KEY = 'entries';
 
 	/**
-	 * Entires use key.
+	 * Entries use key.
 	 */
-	public const SETTINGS_ENTRIES_USE_KEY = 'entires-use';
+	public const SETTINGS_ENTRIES_USE_KEY = 'entries-use';
 
 	/**
 	 * Entries settings Use key.
 	 */
-	public const SETTINGS_ENTRIES_SETTINGS_USE_KEY = 'entires-settings-use';
+	public const SETTINGS_ENTRIES_SETTINGS_USE_KEY = 'entries-settings-use';
 
 
 	/**
 	 * Data data key.
 	 */
-	public const SETTINGS_ENTRIES_DATA_KEY = 'entires-data';
+	public const SETTINGS_ENTRIES_DATA_KEY = 'entries-data';
 
 	/**
 	 * Rate limit key.
 	 */
-	public const SETTINGS_ENTRIES_RATE_LIMIT_KEY = 'entires-rate-limit';
+	public const SETTINGS_ENTRIES_RATE_LIMIT_KEY = 'entries-rate-limit';
 
 	/**
 	 * Rate limit window key.
 	 */
-	public const SETTINGS_ENTRIES_RATE_LIMIT_WINDOW_KEY = 'entires-rate-limit-window';
+	public const SETTINGS_ENTRIES_RATE_LIMIT_WINDOW_KEY = 'entries-rate-limit-window';
 
 	/**
 	 * Register all the hooks
