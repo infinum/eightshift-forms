@@ -64,7 +64,9 @@ export class Bulk {
 
 		const formData = new FormData();
 
-		formData.append('type', event.target?.getAttribute(this.state.getStateAttribute('bulkType')));
+		const field = this.state.getFormFieldElementByChild(event.target);
+
+		formData.append('type', field?.getAttribute(this.state.getStateAttribute('bulkType')));
 		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
 
 		this.utils.showLoader(this.FORM_ID);

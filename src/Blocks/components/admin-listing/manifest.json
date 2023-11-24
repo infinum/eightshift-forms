@@ -12,30 +12,18 @@
 		"adminListingPageTitle": {
 			"type": "string"
 		},
-		"adminListingSubTitle": {
-			"type": "string"
+		"adminListingItemsCount": {
+			"type": "integer",
+			"default": 0
 		},
-		"adminListingForms": {
+		"adminListingItems": {
 			"type": "array"
 		},
-		"adminListingNewFormLink": {
-			"type": "string"
+		"adminListingNoItems": {
+			"type": "array"
 		},
-		"adminListingTrashLink": {
-			"type": "string"
-		},
-		"adminListingType": {
-			"type": "string"
-		},
-		"adminListingListingLink": {
-			"type": "string"
-		},
-		"adminListingIntegrations": {
-			"type": "string"
-		},
-		"adminListingIsDeveloperMode": {
-			"type": "boolean",
-			"default": false
+		"adminListingTopItems": {
+			"type": "array"
 		}
 	}
 }

@@ -1,9 +1,12 @@
 export class Filter {
-	constructor(options) {
+	constructor(options={}) {
+		/** @type {import('./../assets/utils').Utils} */
+		this.utils = options.utils;
+		/** @type {import('./../assets/state').State} */
+		this.state = this.utils.getState();
+
 		this.filterSelector = options.filterSelector;
 		this.itemSelector = options.itemSelector;
-
-		this.CLASS_HIDDEN = 'es-form-is-hidden';
 	}
 
 	init = () => {
@@ -13,7 +16,7 @@ export class Filter {
 
 		this.setActiveFilterByUrl();
 
-		document.querySelector(`${this.filterSelector} select`).addEventListener('change', this.onChange, true);
+		document.querySelector(this.filterSelector).addEventListener('change', this.onChange, true);
 	};
 
 	// Handle form submit and all logic.
@@ -40,22 +43,23 @@ export class Filter {
 		const param = url.searchParams.get('filter');
 
 		if (param) {
-			document.querySelector(`${this.filterSelector} select option[value=${param}]`).selected = true;
+			document.querySelector(`${this.filterSelector} option[value=${param}]`).selected = true;
 			this.setActiveItemsByFilter(param);
 		}
 	};
 
 	filterItems = (selectedValue) => {
 		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
-			if (item.getAttribute('data-integration-type') !== selectedValue) {
-				item?.classList?.add(this.CLASS_HIDDEN);
+			console.log(item);
+			if (item.getAttribute(this.state.getStateAttribute('adminIntegrationType')) !== selectedValue) {
+				item?.classList?.add(this.state.getStateSelectorsClassHidden());
 			}
 		});
 	};
 
 	filterResetItems = () => {
 		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
-			item?.classList?.remove(this.CLASS_HIDDEN);
+			item?.classList?.remove(this.state.getStateSelectorsClassHidden());
 		});
 	};
 

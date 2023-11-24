@@ -128,10 +128,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'introTitle' => \__('Export', 'eightshift-forms'),
 									],
 									[
-										'component' => 'card',
-										'cardTitle' => \__('Global settings'),
-										'cardIcon' => Helper::getProjectIcons('settings'),
-										'cardContent' => [
+										'component' => 'card-inline',
+										'cardInlineTitle' => \__('Global settings'),
+										'cardInlineIcon' => Helper::getProjectIcons('settings'),
+										'cardInlineRightContent' => [
 											[
 												'component' => 'submit',
 												'submitValue' => \__('Export', 'eightshift-forms'),
@@ -139,7 +139,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitAttrs' => [
 													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+												'additionalClass' => $manifestForm['componentTransferJsClass'],
 											],
 										],
 									],
@@ -147,10 +147,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'component' => 'divider',
 									],
 									[
-										'component' => 'card',
-										'cardTitle' => \__('Everything'),
-										'cardIcon' => Helper::getProjectIcons('allChecked'),
-										'cardContent' => [
+										'component' => 'card-inline',
+										'cardInlineTitle' => \__('Everything'),
+										'cardInlineIcon' => Helper::getProjectIcons('allChecked'),
+										'cardInlineRightContent' => [
 											[
 												'component' => 'submit',
 												'submitValue' => \__('Export', 'eightshift-forms'),
@@ -158,7 +158,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitAttrs' => [
 													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_ALL,
 												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+												'additionalClass' => $manifestForm['componentTransferJsClass'],
 											],
 										],
 									],
@@ -166,15 +166,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'component' => 'divider',
 									],
 									[
-										'component' => 'card',
-										'cardTitle' => \__('Forms', 'eightshift-forms'),
-										'cardIcon' => Helper::getProjectIcons('form'),
-									],
-									$this->getFormsList(),
-									[
-										'component' => 'card',
-										'cardVertical' => true,
-										'cardContent' => [
+										'component' => 'card-inline',
+										'cardInlineTitle' => \__('Forms', 'eightshift-forms'),
+										'cardInlineIcon' => Helper::getProjectIcons('form'),
+										'cardInlineRightContent' => [
 											[
 												'component' => 'submit',
 												'submitValue' => \__('Export selected', 'eightshift-forms'),
@@ -183,10 +178,11 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_FORMS,
 													$manifestCustomFormAttrs['migrationExportItems'] => '',
 												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
+												'additionalClass' => $manifestForm['componentTransferJsClass'],
 											],
 										],
 									],
+									$this->getFormsList(),
 								]
 							],
 						],
@@ -245,19 +241,13 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'additionalClass' => $manifestForm['componentTransferJsClass'] . '-upload',
 									],
 									[
-										'component' => 'card',
-										'cardVertical' => 'true',
-										'cardContent' => [
-											[
-												'component' => 'submit',
-												'submitValue' => \__('Import JSON', 'eightshift-forms'),
-												'submitVariant' => 'outline',
-												'submitAttrs' => [
-													$manifestCustomFormAttrs['migrationType'] => self::TYPE_IMPORT,
-												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'] . ' es-submit--transfer',
-											],
+										'component' => 'submit',
+										'submitValue' => \__('Import JSON', 'eightshift-forms'),
+										'submitVariant' => 'outline',
+										'submitAttrs' => [
+											$manifestCustomFormAttrs['migrationType'] => self::TYPE_IMPORT,
 										],
+										'additionalClass' => $manifestForm['componentTransferJsClass'],
 									],
 								],
 							],
@@ -287,7 +277,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'component' => 'submit',
 								'submitValue' => \__('Manual import', 'eightshift-forms'),
 								'submitVariant' => 'outline',
-								'additionalClass' => "{$manifestForm['componentManualImportApiJsClass']} es-submit--manual-import-api",
+								'additionalClass' => $manifestForm['componentManualImportApiJsClass'],
 							],
 							[
 								'component' => 'textarea',

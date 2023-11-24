@@ -504,6 +504,8 @@
 		"globalMsgHeadingError": "data-msg-heading-error",
 		"hideCaptchaBadge": "data-hide-captcha-badge",
 		"reload": "data-reload",
-		"hubspotTypeId": "data-hubspot-type-id"
+		"hubspotTypeId": "data-hubspot-type-id",
+
+		"adminIntegrationType": "data-integration-type"
 	}
 }

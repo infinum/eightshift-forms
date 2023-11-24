@@ -50,7 +50,6 @@ use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Integrations\Workable\Workable;
 use EightshiftForms\Integrations\Workable\WorkableClient;
 use EightshiftForms\Blocks\SettingsBlocks;
-use EightshiftForms\Location\SettingsLocation;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -279,10 +278,6 @@ class Filters
 		],
 		SettingsCache::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
-		],
-		SettingsLocation::SETTINGS_TYPE_KEY => [
-			'settings' => SettingsLocation::FILTER_SETTINGS_NAME,
 			'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
 		],
 		SettingsFallback::SETTINGS_TYPE_KEY => [
@@ -601,10 +596,6 @@ class Filters
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'title' => \__('Cache', 'eightshift-forms'),
 				'desc' => \__('Force data re-fetch for certain integrations.', 'eightshift-forms'),
-			],
-			SettingsLocation::SETTINGS_TYPE_KEY => [
-				'title' => \__('Locations', 'eightshift-forms'),
-				'desc' => \__('See where on the site a form is used.', 'eightshift-forms'),
 			],
 			SettingsFallback::SETTINGS_TYPE_KEY => [
 				'title' => \__('Fallback e-mails', 'eightshift-forms'),

@@ -69,17 +69,16 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 
 		$output = \array_values(\array_filter(\array_map(
 			function ($key, $value) use ($manifestForm, $manifestCustomFormAttrs) {
-				$icon = Helper::getProjectIcons($key);
 				$cache = $value['cache'] ?? [];
 
 				$isUsedKey = $value['use'] ?? '';
 
-				if ($cache && $isUsedKey && !$this->isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+				if ($cache && $isUsedKey && $this->isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 					return [
-						'component' => 'card',
-						'cardTitle' => Filters::getSettingsLabels($key),
-						'cardIcon' => $icon,
-						'cardContent' => [
+						'component' => 'card-inline',
+						'cardInlineTitle' => Filters::getSettingsLabels($key),
+						'cardInlineIcon' => Helper::getProjectIcons($key),
+						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Clear', 'eightshift-forms'),
@@ -88,7 +87,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 									$manifestCustomFormAttrs['cacheType'] => $key,
 									$manifestCustomFormAttrs['reload'] => 'false',
 								],
-								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
+								'additionalClass' => $manifestForm['componentCacheJsClass'],
 							],
 						],
 					];
@@ -102,7 +101,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
+				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
 					...$output,
 					[
@@ -110,11 +109,11 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 						'dividerExtraVSpacing' => true,
 					],
 					[
-						'component' => 'card',
-						'cardTitle' => 'All caches',
-						'cardSubTitle' => 'Use with caution!',
-						'cardIcon' => Helper::getProjectIcons('allChecked'),
-						'cardContent' => [
+						'component' => 'card-inline',
+						'cardInlineTitle' => 'All caches',
+						'cardInlineSubContent' => 'Use with caution!',
+						'cardInlineIcon' => Helper::getProjectIcons('allChecked'),
+						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Clear', 'eightshift-forms'),
@@ -123,7 +122,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 									$manifestCustomFormAttrs['cacheType'] => 'all',
 									$manifestCustomFormAttrs['reload'] => 'false',
 								],
-								'additionalClass' => $manifestForm['componentCacheJsClass'] . ' es-submit--cache-clear',
+								'additionalClass' => $manifestForm['componentCacheJsClass'],
 							],
 						],
 					],

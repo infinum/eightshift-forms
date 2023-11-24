@@ -1,0 +1,44 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "card-inline",
+	"title": "Card inline",
+	"componentClass": "es-card-inline",
+	"components": {
+		"checkbox": "checkbox"
+	},
+	"attributes": {
+		"cardInlineTitle": {
+			"type": "string"
+		},
+		"cardInlineTitleLink": {
+			"type": "string"
+		},
+		"cardInlineSubTitle": {
+			"type": "string"
+		},
+		"cardInlineSubContent": {
+			"type": "string"
+		},
+		"cardInlineLeftContent": {
+			"type": "string"
+		},
+		"cardInlineIcon": {
+			"type": "string"
+		},
+		"cardInlineRightContent": {
+			"type": "string"
+		},
+		"cardInlineLastItem": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardInlineIndented": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardInlineInvalid": {
+			"type": "boolean",
+			"default": false
+		}
+	}
+}

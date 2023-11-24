@@ -38,8 +38,8 @@ abstract class AbstractFormBuilder
 		'tabContent',
 		'layout',
 		'layoutContent',
-		'card',
-		'cardContent',
+		'cardInline',
+		'cardInlineRightContent',
 	];
 
 	/**
@@ -52,7 +52,7 @@ abstract class AbstractFormBuilder
 		'tabs',
 		'tab',
 		'layout',
-		'card',
+		'cardInline',
 	];
 
 	/**

@@ -9,16 +9,26 @@
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
+$manifest = Components::getComponent('admin-listing');
+$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+$componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
+
 $items = $attributes['items'] ?? [];
 $emptyContent = $attributes['emptyContent'] ?? '';
 $integrationType = $attributes['type'] ?? '';
-
+$additionalAttributes = $attributes['additionalAttributes'] ?? [];
 $sectionClass = $attributes['sectionClass'] ?? '';
 
 ?>
 <div
-	class="<?php echo esc_attr("{$sectionClass}__item-details js-es-admin-listing-item") ?>"
-	data-integration-type="<?php echo esc_attr($integrationType); ?>"
+	class="<?php echo esc_attr("{$sectionClass}__item-details {$componentJsItemClass}") ?>"
+	<?php
+	foreach ($additionalAttributes as $key => $value) {
+		if (!empty($key) && !empty($value)) {
+			echo wp_kses_post(" {$key}='" . $value . "'");
+		}
+	}
+	?>
 >
 	<?php
 	if ($items) {
@@ -27,29 +37,27 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 			$viewLink = $item['viewLink'] ?? '';
 			$formTitle = $item['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
-			echo Components::render('card', [
-				'cardTitle' => '<a href="' . $editLink . '">' . $formTitle . '</a>',
-				'cardIndented' => true,
-				'cardBulk' => true,
-				'cardShowButtonsOnHover' => true,
-				'cardIcon' => Helper::getProjectIcons('post'),
-				'cardTrailingButtons' => [
-					[
-						'label' => __('Edit', 'eightshift-forms'),
-						'url' => $editLink,
-						'internal' => true,
-					],
-					[
-						'label' => __('View', 'eightshift-forms'),
-						'url' => $viewLink,
-						'internal' => true,
-					],
-				],
+			echo Components::render('card-inline', [
+				'cardInlineTitle' => $formTitle,
+				'cardInlineTitleLink' => $editLink,
+				'cardInlineIndented' => true,
+				'cardInlineIcon' => Helper::getProjectIcons('post'),
+				'cardInlineRightContent' => Components::ensureString([
+					Components::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => $viewLink,
+						'submitValue' => \__('Edit', 'eightshift-forms'),
+					]),
+				]),
 			]);
 		}
-	} else { ?>
-		<div class="<?php echo esc_attr("{$sectionClass}__item-details-empty") ?>">
-			<?php echo esc_html($emptyContent); ?>
-		</div>
-	<?php } ?>
+	} else {
+		echo Components::render('card-inline', [
+			'cardInlineTitle' => $emptyContent,
+			'cardInlineIndented' => true,
+			'cardInlineInvalid' => true,
+		]);
+	}
+	?>
 </div>

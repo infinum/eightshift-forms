@@ -119,10 +119,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
 					[
-						'component' => 'card',
-						'cardTitle' => \__('Version 2 &rarr; Version 3 - locale', 'eightshift-forms'),
-						'cardSubTitle' => \__('Major changes to form settings name based on locale.', 'eightshift-forms'),
-						'cardContent' => [
+						'component' => 'card-inline',
+						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - locale', 'eightshift-forms'),
+						'cardInlineSubContent' => \__('Major changes to form settings name based on locale.', 'eightshift-forms'),
+						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
@@ -130,7 +130,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitAttrs' => [
 									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_LOCALE,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+								'additionalClass' => $manifestForm['componentMigrationJsClass'],
 							],
 						],
 					],
@@ -139,10 +139,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'dividerExtraVSpacing' => true,
 					],
 					[
-						'component' => 'card',
-						'cardTitle' => \__('Version 2 &rarr; Version 3 - general', 'eightshift-forms'),
-						'cardSubTitle' => \__('Changes to options and custom meta names for fallback emails.', 'eightshift-forms'),
-						'cardContent' => [
+						'component' => 'card-inline',
+						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - general', 'eightshift-forms'),
+						'cardInlineSubContent' => \__('Changes to options and custom meta names for fallback emails.', 'eightshift-forms'),
+						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
@@ -150,7 +150,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitAttrs' => [
 									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_GENERAL,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+								'additionalClass' => $manifestForm['componentMigrationJsClass'],
 							],
 						],
 					],
@@ -159,10 +159,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'dividerExtraVSpacing' => true,
 					],
 					[
-						'component' => 'card',
-						'cardTitle' => \__('Version 2 &rarr; Version 3 - forms', 'eightshift-forms'),
-						'cardSubTitle' => \__('Major changes to integrations, settings and form editing. If you experience timeout issues, disable all integrations and run the migration with only one integration active at a time.', 'eightshift-forms'),
-						'cardContent' => [
+						'component' => 'card-inline',
+						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - forms', 'eightshift-forms'),
+						'cardInlineSubContent' => \__('Major changes to integrations, settings and form editing. If you experience timeout issues, disable all integrations and run the migration with only one integration active at a time.', 'eightshift-forms'),
+						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
@@ -170,7 +170,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitAttrs' => [
 									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_FORMS,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+								'additionalClass' => $manifestForm['componentMigrationJsClass'],
 							],
 						],
 					],
@@ -179,10 +179,10 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'dividerExtraVSpacing' => true,
 					],
 					[
-						'component' => 'card',
-						'cardTitle' => \__('Version 2 &rarr; Version 3 - labels', 'eightshift-forms'),
-						'cardSubTitle' => \__('Small changes to field labels.', 'eightshift-forms'),
-						'cardContent' => [
+						'component' => 'card-inline',
+						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - labels', 'eightshift-forms'),
+						'cardInlineSubContent' => \__('Small changes to field labels.', 'eightshift-forms'),
+						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
@@ -190,7 +190,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitAttrs' => [
 									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_LABELS,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'] . ' es-submit--migration',
+								'additionalClass' => $manifestForm['componentMigrationJsClass'],
 							],
 						],
 					],

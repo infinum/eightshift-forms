@@ -8,6 +8,7 @@ export class Locations {
 		this.state = this.utils.getState();
 
 		this.selector = options.selector;
+		this.itemSelector = options.itemSelector;
 		this.FORM_ID = 0;
 	}
 
@@ -22,10 +23,11 @@ export class Locations {
 		event.preventDefault();
 
 		const item = event.target;
+		const field = this.state.getFormFieldElementByChild(item);
 
 		const formData = new FormData();
 
-		formData.append('id', item.getAttribute(this.state.getStateAttribute('locationsId')));
+		formData.append('id', field.getAttribute(this.state.getStateAttribute('locationsId')));
 		this.utils.showLoader(this.FORM_ID, false);
 
 		// Populate body data.
@@ -52,7 +54,7 @@ export class Locations {
 
 				if (response.status === 'success') {
 					item.classList.add(this.state.getStateSelectorsClassHidden());
-					item.parentNode.parentNode.parentNode.parentNode.insertAdjacentHTML('afterend', response.data.output);
+					item.closest(this.itemSelector).insertAdjacentHTML('afterend', response.data.output);
 				}
 			});
 	};

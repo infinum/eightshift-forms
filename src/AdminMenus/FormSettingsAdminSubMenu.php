@@ -101,7 +101,10 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getTitle(): string
 	{
-		return \esc_html__('Form settings', 'eightshift-forms');
+		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : SettingsGeneral::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		// translators: %s replaces form title name.
+		return \sprintf(\esc_html__('Form settings - %s', 'eightshift-forms'), \ucfirst(\esc_html($type)));
 	}
 
 	/**

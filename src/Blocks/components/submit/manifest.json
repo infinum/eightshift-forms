@@ -31,6 +31,13 @@
 			"type": "boolean",
 			"default": false
 		},
+		"submitButtonAsLink": {
+			"type": "boolean",
+			"default": false
+		},
+		"submitButtonAsLinkUrl": {
+			"type": "string"
+		},
 		"submitTracking": {
 			"type": "string"
 		},

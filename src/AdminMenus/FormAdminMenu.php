@@ -197,9 +197,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	protected function processAttributes($attr): array
 	{
-		$status = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$trashLink = Helper::getFormsTrashPageUrl();
-		$listingLink = '';
+		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		$title = \esc_html__('Forms', 'eightshift-forms');
 
@@ -211,12 +209,305 @@ class FormAdminMenu extends AbstractAdminMenu
 			}
 		}
 
-		if ($status === 'trash') {
+		if ($type === 'trash') {
 			$title = \esc_html__('Deleted forms', 'eightshift-forms');
-			$trashLink = '';
-			$listingLink = Helper::getListingPageUrl();
 		}
 
+		$items = $this->formsListing->getFormsList($type);
+
+		return [
+			'adminListingPageTitle' => $title,
+			'adminListingItemsCount' => count($items),
+			'adminListingItems' => $this->getListingItems($items, $type),
+			'adminListingTopItems' => $this->getTopBarItems($type),
+			'adminListingNoItems' => $this->getNoItemsMessage($type),
+		];
+	}
+
+	private function getNoItemsMessage(string $type): array
+	{
+		$isTrashPage = $type === 'trash';
+		$newUrl = Helper::getNewFormPageUrl();
+		$listingUrl = Helper::getListingPageUrl();
+
+		if (!$isTrashPage) {
+			$output = [
+				Components::render('highlighted-content', [
+					'highlightedContentTitle' => __('You have no forms', 'eightshift-forms'),
+					'highlightedContentSubtitle' => '<br /><a class="es-submit es-submit--outline" href="' . $newUrl . '">' . __('Add your first form', 'eightshift-forms') . '</a>',
+					'highlightedContentIcon' => 'emptyStateFormList',
+				]),
+			];
+		} else {
+			$output = [
+				Components::render('highlighted-content', [
+					'highlightedContentTitle' => __('Trash is empty', 'eightshift-forms'),
+					'highlightedContentSubtitle' => '<br /><a class="es-submit es-submit--outline" href="' . $listingUrl . '">' . __('Go to your forms', 'eightshift-forms') . '</a>',
+					'highlightedContentIcon' => 'emptyStateTrash',
+				]),
+			];
+		}
+
+		return $output;
+	}
+
+	private function getTopBarItems(string $type): array
+	{
+		$manifest = Components::getComponent('admin-listing');
+		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+
+		$componentJsBulkClass = $manifest['componentJsBulkClass'] ?? '';
+		$componentJsSelectAllClass = $manifest['componentJsSelectAllClass'] ?? '';
+		$componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
+
+		$isTrashPage = $type === 'trash';
+
+		$left = [
+			Components::render('checkbox', [
+				'checkboxValue' => 'all',
+				'checkboxName' => 'all',
+				'additionalClass' => $componentJsSelectAllClass,
+			]),
+		];
+
+		if (!$isTrashPage) {
+			$left = [
+				...$left,
+				Components::render('select',[
+					'fieldSkip' => true,
+					'selectName' => 'filter',
+					'selectContent' => $this->getFilterOptions(),
+					'selectPlaceholder' => \__('Show all', 'eightshift-forms'),
+					'additionalClass' => $componentJsFilterClass,
+				]),
+				Components::render('submit', [
+					'submitVariant' => 'ghost',
+					'submitValue' => \__('Delete', 'eightshift-forms'),
+					'additionalClass' => $componentJsBulkClass,
+					'submitAttrs' => [
+						$manifestCustomFormAttrs['bulkType'] => 'delete',
+					],
+				]),
+				Components::render('submit', [
+					'submitVariant' => 'ghost',
+					'submitValue' => \__('Sync', 'eightshift-forms'),
+					'additionalClass' => $componentJsBulkClass,
+					'submitAttrs' => [
+						$manifestCustomFormAttrs['bulkType'] => 'sync',
+					],
+				]),
+				Components::render('submit', [
+					'submitVariant' => 'ghost',
+					'submitValue' => \__('Duplicate', 'eightshift-forms'),
+					'additionalClass' => $componentJsBulkClass,
+					'submitAttrs' => [
+						$manifestCustomFormAttrs['bulkType'] => 'duplicate',
+					],
+				]),
+			];
+		} else {
+			$left = [
+				...$left,
+				Components::render('submit', [
+					'submitVariant' => 'ghost',
+					'submitButtonAsLink' => true,
+					'submitButtonAsLinkUrl' => Helper::getListingPageUrl(),
+					'submitValue' => \__('Back', 'eightshift-forms'),
+					'submitIcon' => Helper::getProjectIcons('arrowLeft')
+				]),
+			];
+		}
+
+		if (!$isTrashPage) {
+			$right = [
+				Components::render('submit', [
+					'submitVariant' => 'outline',
+					'submitButtonAsLink' => true,
+					'submitButtonAsLinkUrl' => Helper::getFormsTrashPageUrl(),
+					'submitValue' => \__('Trashed', 'eightshift-forms'),
+				]),
+				Components::render('submit', [
+					'submitButtonAsLink' => true,
+					'submitButtonAsLinkUrl' => Helper::getNewFormPageUrl(),
+					'submitValue' => \__('Create', 'eightshift-forms'),
+					'submitIcon' => Helper::getProjectIcons('addHighContrast')
+				]),
+			];
+		} else {
+			$right = [
+				Components::render('submit', [
+					'submitVariant' => 'ghost',
+					'submitValue' => \__('Restore', 'eightshift-forms'),
+					'additionalClass' => $componentJsBulkClass,
+					'submitAttrs' => [
+						$manifestCustomFormAttrs['bulkType'] => 'restore',
+					],
+				]),
+				Components::render('submit', [
+					'submitVariant' => 'ghost',
+					'submitValue' => \__('Delete permanently', 'eightshift-forms'),
+					'additionalClass' => $componentJsBulkClass,
+					'submitAttrs' => [
+						$manifestCustomFormAttrs['bulkType'] => 'delete-perminentely',
+					],
+				]),
+			];
+		}
+
+		return [
+			'left' => Components::ensureString($left),
+			'right' => Components::ensureString($right),
+		];
+	}
+
+	private function getListingItems(array $items, string $type) : array
+	{
+		$output = [];
+		$isTrashPage = $type === 'trash';
+
+		$isDevMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
+
+		$manifest = Components::getComponent('admin-listing');
+		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+		$componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
+
+		foreach ($items as $item) {
+			$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$title = $item['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$editLink = $item['editLink'] ?? '#';
+			$postType = $item['postType'] ?? '';
+			$activeIntegration = $item['activeIntegration'] ?? [];
+
+			$cardIcon = $activeIntegration['icon'] ?: Helper::getProjectIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+			if ($postType === 'post') {
+				$cardIcon = Helper::getProjectIcons('post');
+			} elseif ($postType === 'page') {
+				$cardIcon = Helper::getProjectIcons('page');
+			}
+
+			if (!$title) {
+				// Translators: %s is the form ID.
+				$title = sprintf(__('Form %s', 'eightshift-forms'), $id);
+			}
+
+			$isValid = $this->isIntegrationValid($item);
+
+			$output[] = Components::render('card-inline', [
+				'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
+				'cardInlineTitleLink' => $editLink,
+				'cardInlineSubTitle' => !$isTrashPage ? implode(', ', $this->getSubtitle($item)) : '',
+				'cardInlineIcon' => $cardIcon,
+				'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
+				'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type)),
+				'cardInlineInvalid' => !$isValid,
+				'additionalAttributes' => [
+					$manifestCustomFormAttrs['adminIntegrationType'] => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
+					$manifestCustomFormAttrs['bulkId'] => $id,
+				],
+				'additionalClass' => Components::classnames([
+					$componentJsItemClass,
+				]),
+			]);
+		}
+
+		return $output;
+	}
+
+	private function isIntegrationValid(array $item): bool
+	{
+		$isActive = $item['activeIntegration']['isActive'] ?? false;
+		$isValid = $item['activeIntegration']['isValid'] ?? false;
+		$isApiValid = $item['activeIntegration']['isApiValid'] ?? false;
+
+		return $isActive && $isValid && $isApiValid;
+	}
+
+	private function getSubtitle(array $item): array
+	{
+		$output = [];
+
+		$status = $item['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$postType = $item['postType'] ?? '';
+		$isActive = $item['activeIntegration']['isActive'] ?? false;
+		$isValid = $item['activeIntegration']['isValid'] ?? false;
+		$isApiValid = $item['activeIntegration']['isApiValid'] ?? false;
+
+		if ($status !== 'publish') {
+			$output[] = ucfirst($status);
+
+			if ($postType) {
+				$output[] = ucfirst($postType);
+			}
+		}
+
+		if (!$isActive) {
+			$output[] = '<span class="error-text">' . esc_html__('Integration not enabled', 'eightshift-forms') . '</span>';
+		}
+
+		if (!$isValid) {
+			$output[] = '<span class="error-text">' . esc_html__('Form configuration not valid', 'eightshift-forms') . '</span>';
+		}
+
+		if (!$isApiValid) {
+			$output[] = '<span class="error-text">' . esc_html__('Missing form fields', 'eightshift-forms') . '</span>';
+		}
+
+		return $output;
+	}
+
+	private function getLeftContent(array $item): array
+	{
+		$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		return [
+			Components::render('checkbox', [
+				'checkboxValue' => $id,
+				'checkboxName' => $id,
+			]),
+		];
+	}
+
+	private function getRightContent(array $item, string $type): array
+	{
+		$manifest = Components::getComponent('admin-listing');
+		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+
+		$componentJsLocationsClass = $manifest['componentJsLocationsClass'] ?? '';
+
+		$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$settingsLink = $item['settingsLink'] ?? '';
+
+		$isTrashPage = $type === 'trash';
+
+		$output = [
+			Components::render('submit', [
+				'submitVariant' => 'ghost',
+				'submitValue' => \__('Locations', 'eightshift-forms'),
+				'submitAttrs' => [
+					$manifestCustomFormAttrs['locationsId'] => $id
+				],
+				'additionalClass' => $componentJsLocationsClass,
+			]),
+		];
+
+		if (!$isTrashPage) {
+			$output = [
+				...$output,
+				Components::render('submit', [
+					'submitVariant' => 'ghost',
+					'submitButtonAsLink' => true,
+					'submitButtonAsLinkUrl' => $settingsLink,
+					'submitValue' => \__('Settings', 'eightshift-forms'),
+				]),
+			];
+		}
+
+		return $output;
+	}
+
+	private function getFilterOptions(): string
+	{
 		$filterOptions = Components::render(
 			'select-option',
 			[
@@ -245,25 +536,6 @@ class FormAdminMenu extends AbstractAdminMenu
 			);
 		}
 
-		$filter = Components::render(
-			'select',
-			[
-				'fieldSkip' => true,
-				'selectName' => 'filter',
-				'selectContent' => $filterOptions,
-				'selectPlaceholder' => \__('Show all', 'eightshift-forms'),
-			]
-		);
-
-		return [
-			'adminListingPageTitle' => $title,
-			'adminListingNewFormLink' => Helper::getNewFormPageUrl(),
-			'adminListingTrashLink' => $trashLink,
-			'adminListingForms' => $this->formsListing->getFormsList($status),
-			'adminListingType' => $status,
-			'adminListingListingLink' => $listingLink,
-			'adminListingIntegrations' => $filter,
-			'adminListingIsDeveloperMode' => \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY),
-		];
+		return $filterOptions;
 	}
 }

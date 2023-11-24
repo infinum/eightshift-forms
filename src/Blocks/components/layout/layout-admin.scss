@@ -75,7 +75,8 @@
 		}
 	}
 
-	&[data-layout-type='layout-v-stack-card'] {
+	&[data-layout-type='layout-v-stack-card'],
+	&[data-layout-type='layout-v-stack-clean'] {
 		> #{$this}__wrap {
 			display: flex;
 			flex-direction: column;
@@ -89,9 +90,15 @@
 
 			max-width: var(--global-esf-max-width);
 
-			> *:first-child:not(:last-child):is(.es-intro):not(:has(+ .es-divider)) {
-				margin-bottom: 1rem;
-			}
+			// > *:first-child:not(:last-child):is(.es-intro):not(:has(+ .es-divider)) {
+			// 	margin-bottom: 1rem;
+			// }
+		}
+	}
+
+	&[data-layout-type='layout-v-stack-clean'] {
+		> #{$this}__wrap {
+			gap: 0.3125rem;
 		}
 	}
 

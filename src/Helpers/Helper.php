@@ -927,4 +927,57 @@ class Helper
 			\do_action('qm/debug', $data); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 		}
 	}
+
+	/**
+	 * Return all posts where form is assigned.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, mixed>
+	 */
+	public static function getBlockLocations(string $formId): array
+	{
+		global $wpdb;
+
+		$items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT ID, post_type, post_title, post_status
+				 FROM $wpdb->posts
+				 WHERE post_content
+				 LIKE %s
+				 AND (post_status='publish' OR post_status='draft')
+				",
+				"%\"formsFormPostId\":\"{$formId}\"%"
+			)
+		);
+
+		if (!$items) {
+			return [];
+		}
+
+		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
+
+		return \array_map(
+			function ($item) use ($isDeveloperMode) {
+				$id = $item->ID;
+				$title = $item->post_title; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+				$title = $isDeveloperMode ? "{$id} - {$title}" : $title;
+
+				return [
+					'id' => $id,
+					'postType' => $item->post_type, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+					'title' => $title,
+					'status' => $item->post_status, // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+					'editLink' => Helper::getFormEditPageUrl((string) $id),
+					'viewLink' => \get_permalink($id),
+					'activeIntegration' => [
+						'isActive' => true,
+						'isValid' => true,
+						'isApiValid' => true,
+					]
+				];
+			},
+			$items
+		);
+	}
 }

@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Location\SettingsLocationInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
@@ -31,23 +30,6 @@ class LocationsRoute extends AbstractBaseRoute
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = 'locations';
-
-	/**
-	 * Instance variable for HubSpot form data.
-	 *
-	 * @var SettingsLocationInterface
-	 */
-	protected $settingsLocation;
-
-	/**
-	 * Create a new instance.
-	 *
-	 * @param SettingsLocationInterface $settingsLocation Inject IntegrationSyncDiff which holds sync data.
-	 */
-	public function __construct(SettingsLocationInterface $settingsLocation)
-	{
-		$this->settingsLocation = $settingsLocation;
-	}
 
 	/**
 	 * Get the base url of the route
@@ -107,15 +89,21 @@ class LocationsRoute extends AbstractBaseRoute
 
 		$id = $params['id'] ?? '';
 
+		$type = Helper::getFormTypeById($id);
+		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					'output' => Components::renderPartial('component', 'admin-listing', 'item-details', [
-						'items' => $this->settingsLocation->getBlockLocations($id),
+						'items' => Helper::getBlockLocations($id),
 						'type' => Helper::getFormTypeById($id),
 						'sectionClass' => Components::getComponent('admin-listing')['componentClass'],
-						'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms')
+						'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms'),
+						'additionalAttributes' => [
+							$manifestCustomFormAttrs['adminIntegrationType'] => $type,
+						],
 					]),
 				],
 				$debug

@@ -43,7 +43,7 @@ if ($hasForms) {
 		}
 		$outputContent .= '</ul>';
 
-		$formCardsToDisplay[] = Components::render('card', [
+		$formCardsToDisplay[] = Components::render('card-inline', [
 			'additionalClass' => Components::classnames([
 				$componentJsItemClass,
 			]),

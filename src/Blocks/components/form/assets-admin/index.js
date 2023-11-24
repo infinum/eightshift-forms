@@ -144,6 +144,7 @@ domReady(() => {
 			new Locations({
 				utils: utils,
 				selector: selectorLocations,
+				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
 			}).init();
 		});
 	}

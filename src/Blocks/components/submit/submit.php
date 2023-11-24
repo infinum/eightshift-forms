@@ -27,6 +27,8 @@ $submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest
 $submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
 $submitVariant = Components::checkAttr('submitVariant', $attributes, $manifest);
 $submitButtonComponent = Components::checkAttr('submitButtonComponent', $attributes, $manifest);
+$submitButtonAsLink = Components::checkAttr('submitButtonAsLink', $attributes, $manifest);
+$submitButtonAsLinkUrl = Components::checkAttr('submitButtonAsLinkUrl', $attributes, $manifest);
 
 $submitClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -40,7 +42,7 @@ $additionalContent = Helper::getBlockAdditionalContentViaFilter('submit', $attri
 
 $submitIconContent = '';
 if ($submitIcon) {
-	$submitIconContent = $manifestUtils['icons'][$submitIcon];
+	$submitIconContent = $submitIcon;
 }
 
 $button = '
@@ -50,6 +52,16 @@ $button = '
 	><span class="' . $componentClass . '__inner">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
 	' . $additionalContent . '
 ';
+
+if ($submitButtonAsLink) {
+	$button = '
+	<a
+		href="' . esc_url($submitButtonAsLinkUrl) . '"
+		class="' . esc_attr($submitClass) . '"
+	><span class="' . $componentClass . '__inner">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
+	' . $additionalContent . '
+	';
+}
 
 // Used if you want to provide external component for button.
 if ($submitButtonComponent) {

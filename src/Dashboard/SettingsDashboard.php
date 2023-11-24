@@ -67,16 +67,20 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				continue;
 			}
 
-			$icon = Helper::getProjectIcons($key);
-			$type = $value['type'];
-
 			$checked = $this->isOptionCheckboxChecked($use, $use);
 
 			$item = [
-				'component' => 'card',
-				'cardTitle' => Filters::getSettingsLabels($key),
-				'cardIcon' => $icon,
-				'cardContent' => [
+				'component' => 'card-inline',
+				'cardInlineTitle' => Filters::getSettingsLabels($key),
+				'cardInlineIcon' => Helper::getProjectIcons($key),
+				'cardInlineRightContent' => [
+					$checked ? [
+						'component' => 'submit',
+						'submitVariant' => 'ghost',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => Helper::getSettingsGlobalPageUrl($key),
+						'submitValue' => \__('Edit', 'eightshift-forms'),
+					] : [],
 					[
 						'component' => 'checkboxes',
 						'checkboxesName' => $this->getOptionName($use),
@@ -95,16 +99,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				]
 			];
 
-			if ($checked) {
-				$item['cardTrailingButtons'] = [
-					[
-						'label' => \__('Edit', 'eightshift-forms'),
-						'url' => Helper::getSettingsGlobalPageUrl($key),
-					],
-				];
-			}
-
-			$filtered[$type][] = $item;
+			$filtered[$value['type']][] = $item;
 		}
 
 		$output = [
@@ -123,7 +118,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 					],
 					...$value,
 				],
-				'layoutType' => 'layout-v-stack-card',
+				'layoutType' => 'layout-v-stack-clean',
 			];
 		}
 
