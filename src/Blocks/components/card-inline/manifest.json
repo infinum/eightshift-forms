@@ -16,7 +16,7 @@
 		"cardInlineSubTitle": {
 			"type": "string"
 		},
-		"cardInlineSubContent": {
+		"cardInlineContent": {
 			"type": "string"
 		},
 		"cardInlineLeftContent": {
@@ -33,6 +33,10 @@
 			"default": false
 		},
 		"cardInlineIndented": {
+			"type": "boolean",
+			"default": false
+		},
+		"cardInlineUseHover": {
 			"type": "boolean",
 			"default": false
 		},

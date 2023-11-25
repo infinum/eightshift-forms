@@ -111,7 +111,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'card-inline',
 						'cardInlineTitle' => 'All caches',
-						'cardInlineSubContent' => 'Use with caution!',
+						'cardInlineContent' => 'Use with caution!',
 						'cardInlineIcon' => Helper::getProjectIcons('allChecked'),
 						'cardInlineRightContent' => [
 							[

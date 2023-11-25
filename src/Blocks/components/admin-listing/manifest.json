@@ -12,9 +12,12 @@
 		"adminListingPageTitle": {
 			"type": "string"
 		},
-		"adminListingItemsCount": {
-			"type": "integer",
-			"default": 0
+		"adminListingPageSubTitle": {
+			"type": "string"
+		},
+		"adminListingShowNoItems": {
+			"type": "boolean",
+			"default": false
 		},
 		"adminListingItems": {
 			"type": "array"

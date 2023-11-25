@@ -47,7 +47,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $viewLink,
-						'submitValue' => \__('Edit', 'eightshift-forms'),
+						'submitValue' => \__('View', 'eightshift-forms'),
 					]),
 				]),
 			]);

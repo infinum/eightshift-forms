@@ -137,6 +137,18 @@ class Helper
 	}
 
 	/**
+	 * Method that returns entries page url.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return string
+	 */
+	public static function getFormsEntriesPageUrl(string $formId): string
+	{
+		return self::getListingPageUrl() . "&type=entries&formId={$formId}";
+	}
+
+	/**
 	 * Method that returns form edit page url.
 	 *
 	 * @param string $formId Form ID.

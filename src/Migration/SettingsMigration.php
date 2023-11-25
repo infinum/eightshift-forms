@@ -121,7 +121,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'card-inline',
 						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - locale', 'eightshift-forms'),
-						'cardInlineSubContent' => \__('Major changes to form settings name based on locale.', 'eightshift-forms'),
+						'cardInlineContent' => \__('Major changes to form settings name based on locale.', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
@@ -141,7 +141,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'card-inline',
 						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - general', 'eightshift-forms'),
-						'cardInlineSubContent' => \__('Changes to options and custom meta names for fallback emails.', 'eightshift-forms'),
+						'cardInlineContent' => \__('Changes to options and custom meta names for fallback emails.', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
@@ -161,7 +161,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'card-inline',
 						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - forms', 'eightshift-forms'),
-						'cardInlineSubContent' => \__('Major changes to integrations, settings and form editing. If you experience timeout issues, disable all integrations and run the migration with only one integration active at a time.', 'eightshift-forms'),
+						'cardInlineContent' => \__('Major changes to integrations, settings and form editing. If you experience timeout issues, disable all integrations and run the migration with only one integration active at a time.', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
@@ -181,7 +181,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 					[
 						'component' => 'card-inline',
 						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - labels', 'eightshift-forms'),
-						'cardInlineSubContent' => \__('Small changes to field labels.', 'eightshift-forms'),
+						'cardInlineContent' => \__('Small changes to field labels.', 'eightshift-forms'),
 						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',

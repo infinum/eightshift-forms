@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -18,13 +17,14 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 $cardInlineTitle = Components::checkAttr('cardInlineTitle', $attributes, $manifest);
 $cardInlineTitleLink = Components::checkAttr('cardInlineTitleLink', $attributes, $manifest);
 $cardInlineSubTitle = Components::checkAttr('cardInlineSubTitle', $attributes, $manifest);
-$cardInlineSubContent = Components::checkAttr('cardInlineSubContent', $attributes, $manifest);
+$cardInlineContent = Components::checkAttr('cardInlineContent', $attributes, $manifest);
 $cardInlineIcon = Components::checkAttr('cardInlineIcon', $attributes, $manifest);
 $cardInlineRightContent = Components::checkAttr('cardInlineRightContent', $attributes, $manifest);
 $cardInlineLeftContent = Components::checkAttr('cardInlineLeftContent', $attributes, $manifest);
 $cardInlineLastItem = Components::checkAttr('cardInlineLastItem', $attributes, $manifest);
 $cardInlineInvalid = Components::checkAttr('cardInlineInvalid', $attributes, $manifest);
 $cardInlineIndented = Components::checkAttr('cardInlineIndented', $attributes, $manifest);
+$cardInlineUseHover = Components::checkAttr('cardInlineUseHover', $attributes, $manifest);
 
 $cardInlineClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -32,6 +32,7 @@ $cardInlineClass = Components::classnames([
 	Components::selector($cardInlineLastItem, $componentClass, '', 'last'),
 	Components::selector($cardInlineInvalid, $componentClass, '', 'invalid'),
 	Components::selector($cardInlineIndented, $componentClass, '', 'indented'),
+	Components::selector($cardInlineUseHover, $componentClass, '', 'use-hover'),
 ]);
 
 ?>
@@ -47,55 +48,57 @@ $cardInlineClass = Components::classnames([
 	}
 	?>
 >
-	<div class="<?php echo esc_attr("{$componentClass}__left-wrap"); ?>">
-		<?php if ($cardInlineLeftContent) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__left"); ?>">
-				<?php echo $cardInlineLeftContent; ?>
-			</div>
-		<?php } ?>
-
-		<?php if ($cardInlineIcon) { ?>
-			<?php if ($cardInlineTitleLink) { ?>
-				<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-					<?php echo wp_kses_post($cardInlineIcon); ?>
-				</a>
-			<?php } else { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-					<?php echo wp_kses_post($cardInlineIcon); ?>
+	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
+		<div class="<?php echo esc_attr("{$componentClass}__left-wrap"); ?>">
+			<?php if ($cardInlineLeftContent) { ?>
+				<div class="<?php echo esc_attr("{$componentClass}__left"); ?>">
+					<?php echo $cardInlineLeftContent; ?>
 				</div>
 			<?php } ?>
-		<?php } ?>
 
-		<div class="<?php echo esc_attr("{$componentClass}__title-wrap"); ?>">
-			<?php if ($cardInlineTitle) { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
-					<?php if ($cardInlineTitleLink) { ?>
-						<a href="<?php echo esc_url($cardInlineTitleLink); ?>"  class="<?php echo esc_attr("{$componentClass}__title-link"); ?>">
+			<?php if ($cardInlineIcon) { ?>
+				<?php if ($cardInlineTitleLink) { ?>
+					<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
+						<?php echo wp_kses_post($cardInlineIcon); ?>
+					</a>
+				<?php } else { ?>
+					<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
+						<?php echo wp_kses_post($cardInlineIcon); ?>
+					</div>
+				<?php } ?>
+			<?php } ?>
+
+			<div class="<?php echo esc_attr("{$componentClass}__title-wrap"); ?>">
+				<?php if ($cardInlineTitle) { ?>
+					<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
+						<?php if ($cardInlineTitleLink) { ?>
+							<a href="<?php echo esc_url($cardInlineTitleLink); ?>"  class="<?php echo esc_attr("{$componentClass}__title-link"); ?>">
+								<?php echo wp_kses_post($cardInlineTitle); ?>
+							</a>
+						<?php } else { ?>
 							<?php echo wp_kses_post($cardInlineTitle); ?>
-						</a>
-					<?php } else { ?>
-						<?php echo wp_kses_post($cardInlineTitle); ?>
-					<?php } ?>
-				</div>
-			<?php } ?>
+						<?php } ?>
+					</div>
+				<?php } ?>
 
-			<?php if ($cardInlineSubTitle) { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
-					<?php echo wp_kses_post($cardInlineSubTitle); ?>
-				</div>
-			<?php } ?>
+				<?php if ($cardInlineSubTitle) { ?>
+					<div class="<?php echo esc_attr("{$componentClass}__subtitle"); ?>">
+						<?php echo wp_kses_post($cardInlineSubTitle); ?>
+					</div>
+				<?php } ?>
+			</div>
 		</div>
 
-		<?php if ($cardInlineSubContent) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__subcontent"); ?>">
-				<?php echo wp_kses_post($cardInlineSubContent); ?>
+		<?php if ($cardInlineRightContent) { ?>
+			<div class="<?php echo esc_attr("{$componentClass}__right-wrap"); ?>">
+				<?php echo wp_kses_post($cardInlineRightContent); ?>
 			</div>
 		<?php } ?>
 	</div>
 
-	<?php if ($cardInlineRightContent) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__right-wrap"); ?>">
-			<?php echo wp_kses_post($cardInlineRightContent); ?>
+	<?php if ($cardInlineContent) { ?>
+		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+			<?php echo wp_kses_post($cardInlineContent); ?>
 		</div>
 	<?php } ?>
 </div>

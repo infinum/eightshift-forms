@@ -121,6 +121,27 @@ class EntriesHelper
 	}
 
 	/**
+	 * Get entries count by form ID.
+	 *
+	 * @param string $formId Form Id.
+	 * 
+	 * @return string
+	 */
+	public static function getEntriesCount(string $formId): string
+	{
+		global $wpdb;
+
+		$tableName = self::getFullTableName();
+
+		return $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$tableName} WHERE form_id = %d",
+				(int) $formId
+			)
+		) ?: '0';
+	}
+
+	/**
 	 * Set entry.
 	 *
 	 * @param array<string, mixed> $values Values to store.
@@ -131,23 +152,54 @@ class EntriesHelper
 	public static function setEntry(array $data, string $formId): bool
 	{
 		global $wpdb;
-		error_log( print_r( ( $data ), true ) );
 
 		$output = \wp_json_encode($data);
+
+		$time = \current_time('mysql', true);
 
 		$result = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			self::getFullTableName(),
 			[
 				'form_id' => (int) $formId,
 				'entry_value' => $output,
+				'created_at' => $time,
 			],
 			[
 				'%d',
 				'%s',
+				'%s',
 			]
 		);
 
-		error_log( print_r( ( $result ), true ) );
+		if (\is_wp_error($result)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Delete entry.
+	 *
+	 * @param string $id Entry Id.
+	 *
+	 * @return boolean
+	 */
+	public static function deleteEntry(string $id): bool
+	{
+		global $wpdb;
+
+		$tableName = self::getFullTableName();
+
+		$result = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$tableName,
+			[
+				'id' => (int) $id,
+			],
+			[
+				'%d',
+			]
+		);
 
 		if (\is_wp_error($result)) {
 			return false;
@@ -169,6 +221,7 @@ class EntriesHelper
 			'id' => $data['id'] ?? '',
 			'formId' => $data['form_id'] ?? '',
 			'entryValue' => isset($data['entry_value']) ? json_decode($data['entry_value'], true) : [],
+			'createdAt' => $data['created_at'] ?? '',
 		];
 	}
 

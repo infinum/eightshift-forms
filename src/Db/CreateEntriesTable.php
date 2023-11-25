@@ -44,6 +44,7 @@ class CreateEntriesTable implements ServiceInterface
 			id int(11) NOT NULL AUTO_INCREMENT,
 			form_id int(11) NOT NULL,
 			entry_value LONGTEXT NOT NULL,
+			created_at DATETIME NOT NULL,
 			PRIMARY KEY  (id)
 		) $charsetCollate;";
 

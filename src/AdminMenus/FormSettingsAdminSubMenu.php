@@ -57,7 +57,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'admin_menu',
 			function () {
 				\add_submenu_page(
-					'',
+					$this->getParentMenu(),
 					$this->getTitle(),
 					$this->getMenuTitle(),
 					$this->getCapability(),
@@ -146,7 +146,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getParentMenu(): string
 	{
-		return self::PARENT_MENU_SLUG;
+		return '';
 	}
 
 	/**

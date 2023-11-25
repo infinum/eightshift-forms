@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
@@ -157,6 +158,12 @@ class BulkRoute extends AbstractBaseRoute
 			case 'duplicate':
 				$output = $this->duplicate($ids);
 				break;
+			case 'duplicate-entry':
+				$output = $this->duplicateEntry($ids);
+				break;
+			case 'delete-entry':
+				$output = $this->deleteEntry($ids);
+				break;
 		}
 
 		switch ($output['status']) {
@@ -206,33 +213,46 @@ class BulkRoute extends AbstractBaseRoute
 		switch ($type) {
 			case 'sync':
 				$msg = \esc_html__('synced', 'eightshift-forms');
+				$intrernaType = 'forms';
 				break;
 			case 'delete':
 				$msg = \esc_html__('deleted', 'eightshift-forms');
+				$intrernaType = 'forms';
 				break;
 			case 'restore':
 				$msg = \esc_html__('restored', 'eightshift-forms');
+				$intrernaType = 'forms';
 				break;
 			case 'delete-perminentely':
 				$msg = \esc_html__('deleted perminently', 'eightshift-forms');
+				$intrernaType = 'forms';
 				break;
 			case 'duplicate':
 				$msg = \esc_html__('duplicate', 'eightshift-forms');
+				$intrernaType = 'forms';
+				break;
+			case 'delete-entry':
+				$msg = \esc_html__('deleted', 'eightshift-forms');
+				$intrernaType = 'entries';
+				break;
+			case 'duplicate-entry':
+				$msg = \esc_html__('duplicate', 'eightshift-forms');
+				$intrernaType = 'entries';
 				break;
 		}
 
 		if (!$details) {
 			return [
 				'status' => 'error',
-				// translators: %s replaces type.
-				'msg' => \sprintf(\esc_html__('There are no forms in your list to %s.', 'eightshift-forms'), $msg),
+				// translators: %s replaces form msg type.
+				'msg' => \sprintf(\esc_html__('There are no %1$s in your list to %2$s.', 'eightshift-forms'), $intrernaType, $msg),
 			];
 		}
 
 		if (\count($details) > 1) {
 			$msgOutput = [
 				// translators: %s replaces type.
-				\sprintf(\esc_html__('Not all forms were %s with success. Please check the following log.', 'eightshift-forms'), $msg),
+				\sprintf(\esc_html__('Not all forms were %s with success. Please check the following log.', 'eightshift-forms'), $intrernaType, $msg),
 			];
 
 			if ($error) {
@@ -260,20 +280,20 @@ class BulkRoute extends AbstractBaseRoute
 			return [
 				'status' => 'success',
 				// translators: %s replaces form msg type.
-				'msg' => \sprintf(\esc_html__('Success, all forms were %s.', 'eightshift-forms'), $msg),
+				'msg' => \sprintf(\esc_html__('Success, all selected %1$s were %2$s.', 'eightshift-forms'), $intrernaType, $msg),
 			];
 		}
 
 		if ($skip) {
 			return [
 				'status' => 'warning',
-				'msg' => \esc_html__('Warning, all forms were skipped.', 'eightshift-forms'),
+				'msg' => sprintf(\esc_html__('Warning, all selected %s were skipped.', 'eightshift-forms'), $intrernaType),
 			];
 		}
 
 		return [
 			'status' => 'error',
-			'msg' => \esc_html__('There was and error on all forms.', 'eightshift-forms'),
+			'msg' => sprintf(\esc_html__('There was and error on all selected %s.', 'eightshift-forms'), $intrernaType),
 		];
 	}
 
@@ -373,6 +393,37 @@ class BulkRoute extends AbstractBaseRoute
 	}
 
 	/**
+	 * Delete entry by Ids.
+	 *
+	 * @param array<int> $ids Form Ids.
+	 *
+	 * @return array<int>
+	 */
+	private function deleteEntry(array $ids): array
+	{
+		$output = [];
+
+		foreach ($ids as $id) {
+			$title = \get_the_title($id);
+
+			if (!$title) {
+				// translators: %s replaces form id.
+				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
+			}
+
+			$action = EntriesHelper::deleteEntry((string) $id);
+
+			if ($action) {
+				$output['success'][] = $title;
+			} else {
+				$output['error'][] = $title;
+			}
+		}
+
+		return $this->output($output, 'delete-entry');
+	}
+
+	/**
 	 * Restore forms by Ids.
 	 *
 	 * @param array<int> $ids Form Ids.
@@ -437,5 +488,38 @@ class BulkRoute extends AbstractBaseRoute
 		}
 
 		return $this->output($output, 'duplicate');
+	}
+
+	/**
+	 * Duplicate entry by Ids.
+	 *
+	 * @param array<int> $ids Entry Ids.
+	 *
+	 * @return array<int>
+	 */
+	private function duplicateEntry(array $ids): array
+	{
+		$output = [];
+
+		foreach ($ids as $id) {
+			$title = \get_the_title($id);
+
+			if (!$title) {
+				// translators: %s replaces form id.
+				$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
+			}
+
+			$entry = EntriesHelper::getEntry((string) $id);
+
+			$action  = EntriesHelper::setEntry($entry['entryValue'] ?? [], $entry['formId'] ?? '');
+
+			if ($action) {
+				$output['success'][] = $title;
+			} else {
+				$output['error'][] = $title;
+			}
+		}
+
+		return $this->output($output, 'duplicate-entry');
 	}
 }

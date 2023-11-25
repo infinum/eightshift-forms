@@ -21,7 +21,8 @@ $componentJsBulkClass = $manifest['componentJsBulkClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
-$adminListingItemsCount = Components::checkAttr('adminListingItemsCount', $attributes, $manifest);
+$adminListingPageSubTitle = Components::checkAttr('adminListingPageSubTitle', $attributes, $manifest);
+$adminListingShowNoItems = Components::checkAttr('adminListingShowNoItems', $attributes, $manifest);
 $adminListingItems = Components::checkAttr('adminListingItems', $attributes, $manifest);
 $adminListingTopItems = Components::checkAttr('adminListingTopItems', $attributes, $manifest);
 $adminListingNoItems = Components::checkAttr('adminListingNoItems', $attributes, $manifest);
@@ -42,7 +43,7 @@ $help = Components::render('container', [
 		echo Components::render('intro', [
 			'introTitle' => $adminListingPageTitle,
 			// Translators: %s is the number of forms.
-			'introSubtitle' => $adminListingItemsCount === 1 ? __('Showing 1 form.', 'eightshift-forms') : sprintf(__('Showing %s forms.', 'eightshift-forms'), $adminListingItemsCount),
+			'introSubtitle' => $adminListingPageSubTitle,
 			'introIsHeading' => true,
 		]);
 	}
@@ -61,16 +62,16 @@ $help = Components::render('container', [
 							Components::render('container', [
 								'containerClass' => "{$componentClass}__top-bar-left",
 								'containerUse' => !empty($adminListingTopItems['left']),
-								'containerContent' => $adminListingTopItems['left'],
+								'containerContent' => $adminListingTopItems['left'] ?? '',
 							]),
 							Components::render('container', [
 								'containerClass' => "{$componentClass}__top-bar-right",
 								'containerUse' => !empty($adminListingTopItems['right']),
-								'containerContent' => $adminListingTopItems['right'],
+								'containerContent' => $adminListingTopItems['right'] ?? '',
 							]),
 						]),
 					]),
-					$adminListingItemsCount === 0 ?
+					$adminListingShowNoItems ?
 					Components::ensureString($adminListingNoItems) :
 					Components::ensureString($adminListingItems),
 				]),
