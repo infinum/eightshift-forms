@@ -27,6 +27,8 @@ export class Form {
 		this.conditionalTags = this.utils.getConditionalTags();
 		/** @type {import('./steps').Steps}*/
 		this.steps = this.utils.getSteps();
+		/** @type {import('./geolocation').Geolocation}*/
+		this.geolocation = this.utils.getGeolocation();
 
 		this.FORM_DATA = new FormData();
 
@@ -159,6 +161,9 @@ export class Form {
 		// Init enrichment prefill.
 		this.enrichment.setLocalStorageFormPrefill(formId);
 		this.enrichment.setUrlParamsFormPrefill(formId);
+
+		// Init geolocation.
+		this.geolocation.initOne(formId);
 	}
 
 	/**
@@ -199,8 +204,8 @@ export class Form {
 		[
 			...this.state.getStateElementByTypeInternal('date', formId),
 			...this.state.getStateElementByTypeInternal('dateTime', formId),
-		].forEach((input) => {
-			this.setupDateField(formId, input.name);
+		].forEach((date) => {
+			this.setupDateField(formId, date.name);
 		});
 
 		// Phone.
@@ -1131,16 +1136,6 @@ export class Form {
 				},
 			});
 
-			// Detect if we have country cookie and set value to the select.
-			// This is here because of caching and we need to set the value after the select is loaded.
-			const countryCookie = cookies?.getCookie('esForms-country')?.toLocaleLowerCase();
-			if (countryCookie) {
-				const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, choices);
-				if (selectValue) {
-					choices?.setChoiceByValue(selectValue);
-				}
-			}
-
 			this.state.setStateElementLoaded(name, true, formId);
 			this.state.setStateElementCustom(name, choices, formId);
 
@@ -1320,9 +1315,106 @@ export class Form {
 
 		// Clear form state only.
 		[...formIds].forEach((formId) => {
-			[...this.state.getStateElementByType('textarea', formId)].forEach((textarea) => {
-				this.state.getStateElementCustom(textarea.name, formId).destroy(this.state.getStateElementInput(textarea.name, formId));
+			this.state.getStateFormElement(formId).removeEventListener('submit', this.onFormSubmitEvent);
+
+			// Select.
+			[
+				...this.state.getStateElementByTypeInternal('select', formId),
+				...this.state.getStateElementByTypeInternal('country', formId),
+			].forEach((select) => {
+				this.state.getStateElementCustom(select.name, formId).destroy();
 			});
+
+			// File.
+			[...this.state.getStateElementByTypeInternal('file', formId)].forEach((file) => {
+				this.state.getStateElementCustom(file.name, formId).destroy();
+				this.state.getStateElementField(file.name, formId).removeEventListener('click', this.onFileWrapClickEvent);
+				const input = this.state.getStateElementInput(file.name, formId);
+				input.removeEventListener('focus', this.onFocusEvent);
+				input.removeEventListener('blur', this.onBlurEvent);
+			});
+
+			// Textarea.
+			[...this.state.getStateElementByTypeInternal('textarea', formId)].forEach((textarea) => {
+				const input = this.state.getStateElementInput(textarea.name, formId);
+
+				this.state.getStateElementCustom(textarea.name, formId).destroy(input);
+				input.removeEventListener('keydown', this.onFocusEvent);
+				input.removeEventListener('focus', this.onFocusEvent);
+				input.removeEventListener('blur', this.onBlurEvent);
+				input.removeEventListener('input', this.onInputEvent);
+			});
+
+			// Text.
+			[...this.state.getStateElementByTypeInternal('input', formId)].forEach((text) => {
+				const input = this.state.getStateElementInput(text.name, formId);
+
+				input.removeEventListener('keydown', this.onFocusEvent);
+				input.removeEventListener('focus', this.onFocusEvent);
+				input.removeEventListener('blur', this.onBlurEvent);
+				input.removeEventListener('input', this.onInputEvent);
+			});
+
+			// Date.
+			[
+				...this.state.getStateElementByTypeInternal('date', formId),
+				...this.state.getStateElementByTypeInternal('dateTime', formId),
+			].forEach((date) => {
+				this.state.getStateElementCustom(date.name, formId).destroy();
+			});
+
+			// Phone.
+			[...this.state.getStateElementByTypeInternal('phone', formId)].forEach((phone) => {
+				this.state.getStateElementCustom(phone.name, formId).destroy();
+
+				const input = this.state.getStateElementInput(phone.name, formId);
+
+				input.removeEventListener('keydown', this.onFocusEvent);
+				input.removeEventListener('focus', this.onFocusEvent);
+				input.removeEventListener('blur', this.onBlurEvent);
+				input.removeEventListener('input', this.onInputEvent);
+			});
+
+			// Checkbox.
+			[...this.state.getStateElementByTypeInternal('checkbox', formId)].forEach((checkbox) => {
+				[...Object.values(checkbox.items)].forEach((checkboxItem) => {
+
+					const input = this.state.getStateElementItemsInput(checkboxItem.name, checkboxItem.value, formId);
+
+					input.removeEventListener('keydown', this.onFocusEvent);
+					input.removeEventListener('focus', this.onFocusEvent);
+					input.removeEventListener('blur', this.onBlurEvent);
+					input.removeEventListener('input', this.onInputEvent);
+				});
+			});
+
+				// Radio.
+			[...this.state.getStateElementByTypeInternal('radio', formId)].forEach((radio) => {
+				[...Object.values(radio.items)].forEach((radioItem) => {
+					const input = this.state.getStateElementItemsInput(radioItem.name, radioItem.value, formId);
+
+					input.removeEventListener('keydown', this.onFocusEvent);
+					input.removeEventListener('focus', this.onFocusEvent);
+					input.removeEventListener('blur', this.onBlurEvent);
+					input.removeEventListener('input', this.onInputEvent);
+				});
+			});
+
+			// Rating.
+			[...this.state.getStateElementByTypeInternal('rating', formId)].forEach((rating) => {
+				[...this.state.getStateElementCustom(rating.name, formId).children].forEach((star) => {
+					star.removeEventListener('click', this.onRatingEvent);
+				});
+			});
+
+			// Remove Enrichment.
+			this.enrichment.removeEvents(formId);
+
+			// Remove conditional tags.
+			this.conditionalTags.removeEvents(formId);
+
+			// Remove steps.
+			this.steps.removeEvents(formId);
 
 			removeStateForm(formId);
 		});

@@ -40,6 +40,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"cardInlineUseDivider": {
+			"type": "boolean",
+			"default": false
+		},
 		"cardInlineInvalid": {
 			"type": "boolean",
 			"default": false

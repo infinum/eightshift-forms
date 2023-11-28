@@ -83,7 +83,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 		if (Helper::isEightshiftFormsAdminPages()) {
 			$output = \array_merge(
-				$this->getEnqueueSharedInlineCommonItems(),
+				$this->getEnqueueSharedInlineCommonItems(false),
 				[
 					'nonce' => \wp_create_nonce('wp_rest'),
 					'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),

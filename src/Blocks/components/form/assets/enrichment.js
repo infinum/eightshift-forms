@@ -108,15 +108,21 @@ export class Enrichment {
 
 		const type = this.state.getStateElementTypeInternal(name, formId);
 		let value = '';
+		let valueData = this.state.getStateElementValue(name, formId);
+
+		if (typeof valueData === 'undefined') {
+			valueData = '';
+		}
+
 		switch (type) {
 			case this.state.getStateIntType('phone'):
 				value = {
 					prefix: this.state.getStateElementValueCountry(name, formId)?.number,
-					value: this.state.getStateElementValue(name, formId),
+					value: valueData,
 				};
 				break;
 			default:
-				value = this.state.getStateElementValue(name, formId);
+				value = valueData;
 				break;
 		}
 
@@ -328,6 +334,27 @@ export class Enrichment {
 	}
 
 	////////////////////////////////////////////////////////////////
+	// Other
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Remove all event listeners from elements.
+	 * 
+	 * @returns {vodi}
+	 */
+	removeEvents(formId) {
+		this.state.getStateFormElement(formId).removeEventListener(
+			this.state.getStateEventsFormJsLoaded(),
+			this.onPrefillEvent
+		);
+
+		this.state.getStateFormElement(formId).removeEventListener(
+			this.state.getStateEventsFormJsLoaded(),
+			this.onUrlParamsPrefillEvent
+		);
+	}
+
+	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
 
@@ -444,6 +471,9 @@ export class Enrichment {
 			},
 			prefillByData: (formId, data) => {
 				this.prefillByData(formId, data);
+			},
+			removeEvents: () => {
+				this.removeEvents();
 			},
 			onUrlParamsPrefillEvent: (event) => {
 				this.onUrlParamsPrefillEvent(event);

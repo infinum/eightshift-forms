@@ -19,6 +19,7 @@ use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
 use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
 use EightshiftForms\Rest\Routes\Settings\BulkRoute;
 use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
+use EightshiftForms\Rest\Routes\Settings\ExportRoute;
 use EightshiftForms\Rest\Routes\Settings\LocationsRoute;
 use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
 use EightshiftForms\Rest\Routes\Settings\SettingsSubmitRoute;
@@ -36,22 +37,32 @@ trait SharedEnqueue
 	/**
 	 * Get enqueue shared inline varables.
 	 *
+	 * @param boolean $isPublic If enqueue is public or not.
+	 *
 	 * @return array<mixed>
 	 */
-	public function getEnqueueSharedInlineCommonItems(): array
+	public function getEnqueueSharedInlineCommonItems(bool $isPublic = true): array
 	{
 		$restPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
 
-		return [
-			// Adding routes here, you must provide the same map to state STATE_ROUTES enum.
-			'restRoutes' => [
-				// Common.
-				'prefix' => \get_rest_url(\get_current_blog_id()) . $restPrefixProject,
-				'prefixProject' => $restPrefixProject,
-				'prefixSubmit' => AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,
-				'prefixTestApi' => AbstractTestApi::ROUTE_PREFIX_TEST_API,
-				'files' => SubmitFilesRoute::ROUTE_SLUG,
+		$outputPublic = [
+			// Common.
+			'prefix' => \get_rest_url(\get_current_blog_id()) . $restPrefixProject,
+			'prefixProject' => $restPrefixProject,
+			'prefixSubmit' => AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT,
+			'prefixTestApi' => AbstractTestApi::ROUTE_PREFIX_TEST_API,
+			'files' => SubmitFilesRoute::ROUTE_SLUG,
 
+			// Public.
+			'captcha' => SubmitCaptchaRoute::ROUTE_SLUG,
+			'geolocation' => SubmitGeolocationRoute::ROUTE_SLUG,
+			'validationStep' => SubmitValidateStepRoute::ROUTE_SLUG,
+		];
+
+		$outputPrivate = [];
+
+		if (!$isPublic) {
+			$outputPrivate = [
 				// Admin.
 				'settings' => SettingsSubmitRoute::ROUTE_SLUG,
 				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
@@ -59,8 +70,9 @@ trait SharedEnqueue
 				'transfer' => TransferRoute::ROUTE_SLUG,
 				'bulk' => BulkRoute::ROUTE_SLUG,
 				'locations' => LocationsRoute::ROUTE_SLUG,
+				'export' => ExportRoute::ROUTE_SLUG,
 
-				// Editor.
+					// Editor.
 				'prefixIntegrationItemsInner' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
 				'prefixIntegrationItems' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS,
 				'prefixIntegrationEditor' => AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_EDITOR,
@@ -68,12 +80,11 @@ trait SharedEnqueue
 				'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
 				'formFields' => FormFieldsRoute::ROUTE_SLUG,
 				'countriesGeolocation' => GeolocationCountriesRoute::ROUTE_SLUG,
+			];
+		}
 
-				// Public.
-				'captcha' => SubmitCaptchaRoute::ROUTE_SLUG,
-				'geolocation' => SubmitGeolocationRoute::ROUTE_SLUG,
-				'validationStep' => SubmitValidateStepRoute::ROUTE_SLUG,
-			]
+		return [
+			'restRoutes' => \array_merge($outputPublic, $outputPrivate),
 		];
 	}
 }

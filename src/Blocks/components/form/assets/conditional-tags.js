@@ -715,6 +715,22 @@ export class ConditionalTags {
 	}
 
 	////////////////////////////////////////////////////////////////
+	// Other
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Remove all event listeners from elements.
+	 * 
+	 * @returns {vodi}
+	 */
+	removeEvents(formId) {
+		this.state.getStateFormElement(formId).removeEventListener(
+			this.state.getStateEventsFormJsLoaded(),
+			this.onInitEvent
+		);
+	}
+
+	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
 	/**
@@ -807,6 +823,9 @@ export class ConditionalTags {
 			},
 			getIgnoreFields: (formId) => {
 				return this.getIgnoreFields(formId);
+			},
+			removeEvents: () => {
+				this.removeEvents();
 			},
 			onInitEvent: (event) => {
 				this.onInitEvent(event);

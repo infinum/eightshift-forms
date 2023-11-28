@@ -113,28 +113,28 @@ class Filters
 		],
 		SettingsCaptcha::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
 			'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 		],
 		SettingsGeolocation::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsGeolocation::FILTER_SETTINGS_GLOBAL_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
 			'use' => SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY,
 		],
 		SettingsEnrichment::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsEnrichment::FILTER_SETTINGS_GLOBAL_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
 			'use' => SettingsEnrichment::SETTINGS_ENRICHMENT_USE_KEY,
 		],
 		SettingsSecurity::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsSecurity::FILTER_SETTINGS_GLOBAL_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
 			'use' => SettingsSecurity::SETTINGS_SECURITY_USE_KEY,
 		],
 		SettingsEntries::SETTINGS_TYPE_KEY => [
 			'settingsGlobal' => SettingsEntries::FILTER_SETTINGS_GLOBAL_NAME,
 			'settings' => SettingsEntries::FILTER_SETTINGS_NAME,
-			'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+			'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
 			'use' => SettingsEntries::SETTINGS_ENTRIES_USE_KEY,
 		],
 		SettingsMailer::SETTINGS_TYPE_KEY => [
@@ -627,6 +627,9 @@ class Filters
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_GENERAL => [
 				'title' => \__('General', 'eightshift-forms'),
+			],
+			Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED => [
+				'title' => \__('Advanced', 'eightshift-forms'),
 			],
 			Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION => [
 				'title' => \__('Integrations', 'eightshift-forms'),

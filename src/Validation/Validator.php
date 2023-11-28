@@ -69,6 +69,8 @@ class Validator extends AbstractValidation
 		'isUrl',
 		'accept',
 		'minSize',
+		'min',
+		'max',
 		'maxSize',
 		'minCount',
 		'maxCount',
@@ -273,6 +275,18 @@ class Validator extends AbstractValidation
 					case 'isUrl':
 						if (!$this->isUrl($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->getValidationLabel('validationUrl', $formId);
+						}
+						break;
+					// Check validation for min number value.
+					case 'min':
+						if ((string) $dataValue > (string) $inputValue) {
+							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMin', $formId), $dataValue);
+						}
+						break;
+					// Check validation for min number value.
+					case 'max':
+						if ((string) $dataValue < (string) $inputValue) {
+							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMax', $formId), $dataValue);
 						}
 						break;
 					// Check validation for min array items length.

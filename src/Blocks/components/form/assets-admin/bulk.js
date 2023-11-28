@@ -17,8 +17,6 @@ export class Bulk {
 	}
 
 	init() {
-		this.toggleDisableButton();
-
 		document.querySelector(`${this.selectAllSelector} input`)?.addEventListener('click', this.onClickSelectAll, true);
 
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
@@ -34,16 +32,12 @@ export class Bulk {
 	}
 
 	onClickSelectAll = (event) => {
-		const items = document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems'));
-
-		const output = items ? JSON.parse(items) : [];
-
 		[...document.querySelectorAll(`${this.itemSelector} input`)].forEach((element) => {
 			const item = element?.closest(this.itemSelector);
 
 			if (!item?.classList?.contains(this.state.getStateSelectorsClassHidden())) {
 				element.checked = event.target.checked;
-				this.selectItem(parseInt(element.name), !output.length);
+				this.selectItem(parseInt(element.name), element.checked);
 			}
 		});
 
@@ -65,6 +59,12 @@ export class Bulk {
 		const formData = new FormData();
 
 		const field = this.state.getFormFieldElementByChild(event.target);
+		const type = field?.getAttribute(this.state.getStateAttribute('bulkType'));
+
+		// Can be fake to prevent submit and use button toggles for other things like export.
+		if (type === 'fake') {
+			return;
+		}
 
 		formData.append('type', field?.getAttribute(this.state.getStateAttribute('bulkType')));
 		formData.append('ids', document.querySelector(this.itemsSelector)?.getAttribute(this.state.getStateAttribute('bulkItems')));
@@ -145,9 +145,9 @@ export class Bulk {
 
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			if (!ids.length) {
-				element.classList.add(this.state.getStateSelectorsClassDisabled());
+				element.disabled = true;
 			} else {
-				element.classList.remove(this.state.getStateSelectorsClassDisabled());
+				element.disabled = false;
 			}
 		});
 	}

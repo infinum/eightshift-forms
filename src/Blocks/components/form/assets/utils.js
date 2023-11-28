@@ -1,5 +1,6 @@
 import { ConditionalTags } from './conditional-tags';
 import { Enrichment } from './enrichment';
+import { Geolocation } from './geolocation';
 import { State } from './state';
 import { StateEnum,
 	prefix,
@@ -23,6 +24,7 @@ export class Utils {
 		this.enrichment = new Enrichment(this);
 		this.conditionalTags = new ConditionalTags(this);
 		this.steps = new Steps(this);
+		this.geolocation = new Geolocation(this);
 
 		this.GLOBAL_MSG_TIMEOUT_ID = undefined;
 
@@ -44,7 +46,7 @@ export class Utils {
 	}
 
 	/**
-	 * Get state class.
+	 * Get enrichment class.
 	 *
 	 * @returns {Enrichment}
 	 */
@@ -53,7 +55,7 @@ export class Utils {
 	}
 
 	/**
-	 * Get state class.
+	 * Get conditional tags class.
 	 *
 	 * @returns {ConditionalTags}
 	 */
@@ -62,12 +64,21 @@ export class Utils {
 	}
 
 	/**
-	 * Get state class.
+	 * Get steps class.
 	 *
 	 * @returns {Steps}
 	 */
 	getSteps() {
 		return this.steps;
+	}
+
+	/**
+	 * Get geolocation class.
+	 *
+	 * @returns {Geolocation}
+	 */
+	getGeolocation() {
+		return this.geolocation;
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -926,13 +937,11 @@ export class Utils {
 				const country = this.state.getStateElementValueCountry(name, formId);
 				[...this.state.getStateElementByTypeInternal(this.state.getStateIntType('phone'), formId)].forEach((tel) => {
 					const name = tel[StateEnum.NAME];
-					const value = this.state.getStateElementValue(name, formId);
 
-					this.state.getStateElementCustom(name, formId).setChoiceByValue(country.number);
-					this.state.setStateElementValueCountry(name, country, formId);
-					if (value) {
-						this.state.setStateElementValueCombined(name, `${country.number}${value}`, formId);
-					}
+					this.setManualPhoneValue(formId, name, {
+						prefix: country.number,
+						value: this.state.getStateElementValue(name, formId),
+					});
 				});
 			}
 
@@ -941,9 +950,7 @@ export class Utils {
 				[...this.state.getStateElementByTypeInternal(this.state.getStateIntType('country'), formId)].forEach((country) => {
 					const name = country[StateEnum.NAME];
 
-					this.state.getStateElementCustom(name, formId).setChoiceByValue(phone.label);
-					this.state.setStateElementValueCountry(name, phone, formId);
-					this.state.setStateElementValue(name, phone.label, formId);
+					this.setManualSelectValue(formId, name, phone?.label);
 				});
 			}
 		}
@@ -964,13 +971,20 @@ export class Utils {
 	 * @returns {void}
 	 */
 	setManualPhoneValue(formId, name, value) {
+		let newValue = value?.value;
+
+		if (typeof newValue === 'undefined') {
+			newValue = '';
+		}
 		const input = this.state.getStateElementInput(name, formId);
 		const custom = this.state.getStateElementCustom(name, formId);
+		const inputSelect = this.state.getStateElementInputSelect(name, formId);
 
 		if (input) {
-			input.value = value?.value;
+			input.value = newValue;
 			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
 				custom.setChoiceByValue(value?.prefix);
+				this.setOnUserChangeSelect(inputSelect, true);
 			}
 			this.setOnUserChangeInput(input);
 			this.setOnBlur(input);

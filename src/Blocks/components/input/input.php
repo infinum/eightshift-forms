@@ -44,18 +44,6 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-if ($inputType === 'number') {
-	if ($inputMin || $inputMin === 0) {
-		$inputAttrs['min'] = esc_attr($inputMin);
-	}
-	if ($inputMax || $inputMax === 0) {
-		$inputAttrs['max'] = esc_attr($inputMax);
-	}
-	if ($inputStep || $inputStep === 0) {
-		$inputAttrs['step'] = esc_attr($inputStep);
-	}
-}
-
 // Override types.
 if ($inputType === 'email' || $inputType === 'url') {
 	$inputType = 'text';

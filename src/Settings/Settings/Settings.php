@@ -50,6 +50,13 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	public const SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS = 'sidebar-miscellaneous';
 
 	/**
+	 * Settings sidebar type - advanced.
+	 *
+	 * @var string
+	 */
+	public const SETTINGS_SIEDBAR_TYPE_ADVANCED = 'sidebar-advanced';
+
+	/**
 	 * Setting local type name.
 	 *
 	 * @var string

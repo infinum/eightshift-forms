@@ -252,6 +252,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			];
 		}
 
+		// Geolocation config.
+		$output['geolocation'] = [
+			'isUsed' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
+		];
+
 		// Check if Captcha data is set and valid.
 		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output['captcha'] = [
@@ -290,7 +295,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		parent::enqueueBlockEditorScript();
 
-		$output = $this->getEnqueueSharedInlineCommonItems();
+		$output = $this->getEnqueueSharedInlineCommonItems(false);
 
 		$additionalBlocksFilterName = Filters::getFilterName(['blocks', 'additionalBlocks']);
 		$formsStyleOptionsFilterName = Filters::getFilterName(['block', 'forms', 'styleOptions']);

@@ -114,7 +114,7 @@ domReady(() => {
 	}
 
 	////////////////////////////////////////////////////////////////
-	// Bullk
+	// Bulk
 	////////////////////////////////////////////////////////////////
 
 	const selectorBulk = `.${adminListingManifest.componentJsBulkClass}`;
@@ -128,6 +128,23 @@ domReady(() => {
 				itemsSelector: `${selectorBulk}-items`,
 				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
 				selectAllSelector: `.${adminListingManifest.componentJsSelectAllClass}`,
+			}).init();
+		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Export
+	////////////////////////////////////////////////////////////////
+
+	const selectorExport = `.${adminListingManifest.componentJsExportClass}`;
+	const elementsExport = document.querySelector(selectorExport);
+
+	if (elementsExport) {
+		import('./export').then(({ Export }) => {
+			new Export({
+				utils: utils,
+				selector: selectorExport,
+				itemsSelector: `${selectorBulk}-items`,
 			}).init();
 		});
 	}

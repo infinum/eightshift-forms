@@ -410,6 +410,14 @@ export class State {
 	};
 
 	////////////////////////////////////////////////////////////////
+	// Geolocation getters.
+	////////////////////////////////////////////////////////////////
+
+	getStateGeolocationIsUsed = () => {
+		return getState([StateEnum.IS_USED], StateEnum.GEOLOCATION) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+	};
+
+	////////////////////////////////////////////////////////////////
 	// Enrichment getters.
 	////////////////////////////////////////////////////////////////
 
@@ -656,6 +664,7 @@ export const ROUTES = {
 	TRANSFER: esFormsLocalization?.restRoutes?.transfer,
 	BULK: esFormsLocalization?.restRoutes?.bulk,
 	LOCATIONS: esFormsLocalization?.restRoutes?.locations,
+	EXPORT: esFormsLocalization?.restRoutes?.export,
 
 	// Editor.
 	PREFIX_INTEGRATIONS_ITEMS_INNER: esFormsLocalization?.restRoutes?.prefixIntegrationItemsInner,

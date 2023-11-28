@@ -6,7 +6,7 @@
 	"settingsPageUrl": "admin.php?page=es-settings",
 	"globalSettingsPageUrl": "admin.php?page=es-settings-global",
 	"dashboardPageUrl": "admin.php?page=es-settings-global&type=dashboard",
-	"locationsPageUrl": "admin.php?page=es-settings&type=location",
+	"locationsPageUrl": "admin.php?page=es-forms&type=locations",
 	"editFormUrl": "post.php?action=edit",
 	"config": {
 		"outputCssGlobally": true,

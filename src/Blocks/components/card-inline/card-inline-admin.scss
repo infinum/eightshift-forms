@@ -2,7 +2,7 @@
 	$this: &;
 	position: relative;
 	transition: {
-		duration: .3s;
+		duration: 0.3s;
 		property: opacity;
 		timing-function: ease-in-out;
 	}
@@ -16,7 +16,7 @@
 		pointer-events: none;
 		position: absolute;
 		transition: {
-			duration: .3s;
+			duration: 0.3s;
 			property: opacity, background-color;
 			timing-function: ease-in-out;
 		}
@@ -54,21 +54,29 @@
 			opacity: 1;
 
 			&::before {
-				opacity: .85;
+				opacity: 0.85;
 				z-index: 1;
 			}
-	
+
 			#{$this}__right-wrap {
 				opacity: 1;
 			}
 		}
 	}
 
+	&--use-divider {
+		border-bottom: 1px solid var(--global-colors-esf-gray-200);
+	}
+
+	&--last {
+		border-bottom: none;
+	}
+
 	&__icon {
 		display: inline-flex;
 		color: initial;
 		transition: {
-			duration: .3s;
+			duration: 0.3s;
 			property: color;
 			timing-function: ease-in-out;
 		}
@@ -137,7 +145,6 @@
 			property: opacity;
 			timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 			duration: 0.25s;
-			delay: 0.15s;
 		}
 	}
 

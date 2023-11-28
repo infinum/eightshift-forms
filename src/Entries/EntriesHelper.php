@@ -27,7 +27,7 @@ class EntriesHelper
 	/**
 	 * Get entry by form data reference.
 	 *
-	 * @param array<string, mixed> $values Values to store.
+	 * @param array<string, mixed> $formDataReference Form data reference.
 	 * @param string $formId Form Id.
 	 *
 	 * @return boolean
@@ -62,7 +62,7 @@ class EntriesHelper
 	 * Get entry by ID.
 	 *
 	 * @param string $id Entry Id.
-	 * 
+	 *
 	 * @return array<string, mixed>
 	 */
 	public static function getEntry(string $id): array
@@ -71,13 +71,21 @@ class EntriesHelper
 
 		$tableName = self::getFullTableName();
 
-		$output = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->prepare(
-				"SELECT * FROM {$tableName} WHERE id = %d",
-				(int) $id
-			),
-			ARRAY_A
-		);
+		$output = \wp_cache_get($id, self::TABLE_NAME . 'entry');
+
+		if (!$output) {
+			$output = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$wpdb->prepare(
+					"SELECT * FROM {$tableName} WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					[
+						(int) $id
+					]
+				),
+				\ARRAY_A
+			);
+
+			\wp_cache_add($id, $output, self::TABLE_NAME . 'entry');
+		}
 
 		if (\is_wp_error($output) || !$output) {
 			return [];
@@ -90,8 +98,8 @@ class EntriesHelper
 	 * Get entries by form ID.
 	 *
 	 * @param string $formId Form Id.
-	 * 
-	 * @return array<string, mixed>
+	 *
+	 * @return array<mixed>
 	 */
 	public static function getEntries(string $formId): array
 	{
@@ -99,13 +107,21 @@ class EntriesHelper
 
 		$tableName = self::getFullTableName();
 
-		$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->prepare(
-				"SELECT * FROM {$tableName} WHERE form_id = %d",
-				(int) $formId
-			),
-			ARRAY_A
-		);
+		$output = \wp_cache_get($formId, self::TABLE_NAME . 'entries');
+
+		if (!$output) {
+			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$wpdb->prepare(
+					"SELECT * FROM {$tableName} WHERE form_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					[
+						(int) $formId
+					]
+				),
+				\ARRAY_A
+			);
+
+			\wp_cache_add($formId, $output, self::TABLE_NAME . 'entries');
+		}
 
 		if (\is_wp_error($output) || !$output) {
 			return [];
@@ -124,7 +140,7 @@ class EntriesHelper
 	 * Get entries count by form ID.
 	 *
 	 * @param string $formId Form Id.
-	 * 
+	 *
 	 * @return string
 	 */
 	public static function getEntriesCount(string $formId): string
@@ -133,18 +149,29 @@ class EntriesHelper
 
 		$tableName = self::getFullTableName();
 
-		return $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$tableName} WHERE form_id = %d",
-				(int) $formId
-			)
-		) ?: '0';
+		$output = \wp_cache_get($formId, self::TABLE_NAME . 'entries_count');
+
+		if (!$output) {
+			$output = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$tableName} WHERE form_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					[
+						(int) $formId
+					]
+				)
+			) ?: '0'; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+			\wp_cache_add($formId, $output, self::TABLE_NAME . 'entries_count');
+		}
+
+
+		return $output;
 	}
 
 	/**
 	 * Set entry.
 	 *
-	 * @param array<string, mixed> $values Values to store.
+	 * @param array<string, mixed> $data Data to save.
 	 * @param string $formId Form Id.
 	 *
 	 * @return boolean
@@ -191,7 +218,7 @@ class EntriesHelper
 
 		$tableName = self::getFullTableName();
 
-		$result = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$output = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$tableName,
 			[
 				'id' => (int) $id,
@@ -201,8 +228,12 @@ class EntriesHelper
 			]
 		);
 
-		if (\is_wp_error($result)) {
+		if (\is_wp_error($output)) {
 			return false;
+		}
+
+		if (\wp_cache_get($id, self::TABLE_NAME . 'entry')) {
+			\wp_cache_delete($id, self::TABLE_NAME . 'entry');
 		}
 
 		return true;
@@ -220,7 +251,7 @@ class EntriesHelper
 		return [
 			'id' => $data['id'] ?? '',
 			'formId' => $data['form_id'] ?? '',
-			'entryValue' => isset($data['entry_value']) ? json_decode($data['entry_value'], true) : [],
+			'entryValue' => isset($data['entry_value']) ? \json_decode($data['entry_value'], true) : [],
 			'createdAt' => $data['created_at'] ?? '',
 		];
 	}

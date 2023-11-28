@@ -7,11 +7,14 @@
  */
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getComponent('admin-listing');
 $manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 $componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
+
+$isDevMode = apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 $items = $attributes['items'] ?? [];
 $emptyContent = $attributes['emptyContent'] ?? '';
@@ -33,21 +36,23 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 	<?php
 	if ($items) {
 		foreach ($items as $item) {
-			$editLink = $item['editLink'] ?? '';
-			$viewLink = $item['viewLink'] ?? '';
-			$formTitle = $item['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$postType = $item['postType'] ?? '';
+
+			$itemTitle = get_the_title($id);
 
 			echo Components::render('card-inline', [
-				'cardInlineTitle' => $formTitle,
-				'cardInlineTitleLink' => $editLink,
+				// translators: %1$s is the post type, %2$s is the post title.
+				'cardInlineTitle' => sprintf(__('%1$s - %2$s', 'eightshift-forms'), ucfirst($postType), $itemTitle) . ($isDevMode ? " ({$id})" : ''),
+				'cardInlineTitleLink' => $item['editLink'] ?? '',
 				'cardInlineIndented' => true,
 				'cardInlineIcon' => Helper::getProjectIcons('post'),
 				'cardInlineRightContent' => Components::ensureString([
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => $viewLink,
-						'submitValue' => \__('View', 'eightshift-forms'),
+						'submitButtonAsLinkUrl' => $item['viewLink'] ?? '',
+						'submitValue' => __('View', 'eightshift-forms'),
 					]),
 				]),
 			]);

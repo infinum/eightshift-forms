@@ -209,6 +209,7 @@ class BulkRoute extends AbstractBaseRoute
 		$skip = $details['skip'] ?? [];
 
 		$msg = '';
+		$intrernaType = 'forms';
 
 		switch ($type) {
 			case 'sync':
@@ -287,13 +288,15 @@ class BulkRoute extends AbstractBaseRoute
 		if ($skip) {
 			return [
 				'status' => 'warning',
-				'msg' => sprintf(\esc_html__('Warning, all selected %s were skipped.', 'eightshift-forms'), $intrernaType),
+				// translators: %s replaces form msg type.
+				'msg' => \sprintf(\esc_html__('Warning, all selected %s were skipped.', 'eightshift-forms'), $intrernaType),
 			];
 		}
 
 		return [
 			'status' => 'error',
-			'msg' => sprintf(\esc_html__('There was and error on all selected %s.', 'eightshift-forms'), $intrernaType),
+			// translators: %s replaces form msg type.
+			'msg' => \sprintf(\esc_html__('There was and error on all selected %s.', 'eightshift-forms'), $intrernaType),
 		];
 	}
 
@@ -408,7 +411,7 @@ class BulkRoute extends AbstractBaseRoute
 
 			if (!$title) {
 				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
+				$title = \sprintf(\esc_html__('Entry %s', 'eightshift-forms'), $id);
 			}
 
 			$action = EntriesHelper::deleteEntry((string) $id);

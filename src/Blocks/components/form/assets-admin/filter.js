@@ -50,7 +50,6 @@ export class Filter {
 
 	filterItems = (selectedValue) => {
 		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
-			console.log(item);
 			if (item.getAttribute(this.state.getStateAttribute('adminIntegrationType')) !== selectedValue) {
 				item?.classList?.add(this.state.getStateSelectorsClassHidden());
 			}

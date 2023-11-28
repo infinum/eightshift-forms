@@ -140,8 +140,6 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 
 		$isUsed = $this->isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 
-		$entries = EntriesHelper::getEntries($formId);
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -169,17 +167,6 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 							],
 						],
 					],
-					$entries ?
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Entries', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'admin-entries',
-								'adminEntriesForms' => $entries,
-							],
-						],
-					] : [],
 				],
 			],
 		];
@@ -207,7 +194,13 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__("Entries", 'eightshift-forms'),
+								'introSubtitle' => \__('Entries collection will allow you to store every form submition into the database and preview the data from WordPress admin.', 'eightshift-forms'),
+							],
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('In order to use entries collection you need to activate it on every form you would like to use it.', 'eightshift-forms'),
+								'introIsHighlighted' => true,
+								'introIsHighlightedImportant' => true,
 							],
 						],
 					],

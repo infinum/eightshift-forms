@@ -105,6 +105,8 @@ export const StateEnum = {
 	ENRICHMENT_EXPIRATION_PREFILL: 'expirationPrefill',
 	ENRICHMENT_ALLOWED: 'allowed',
 
+	GEOLOCATION: 'geolocation',
+
 	EVENTS: 'events',
 	EVENTS_BEFORE_FORM_SUBMIT: 'beforeFormSubmit',
 	EVENTS_AFTER_FORM_SUBMIT: 'afterFormSubmit',
@@ -206,6 +208,7 @@ export function setStateInitial() {
 		[StateEnum.FORMS]: [],
 		[StateEnum.CAPTCHA]: {},
 		[StateEnum.ENRICHMENT]: {},
+		[StateEnum.GEOLOCATION]: {},
 		[StateEnum.SETTINGS]: {},
 		[StateEnum.EVENTS]: {},
 		[StateEnum.SELECTORS]: {},
@@ -258,6 +261,10 @@ export function setStateInitial() {
 		setState([StateEnum.CAPTCHA_LOAD_ON_INIT], Boolean(captcha.loadOnInit), StateEnum.CAPTCHA);
 		setState([StateEnum.CAPTCHA_HIDE_BADGE], Boolean(captcha.hideBadge), StateEnum.CAPTCHA);
 	}
+
+	// Geolocation.
+	const geolocation = esFormsLocalization.geolocation ?? {};
+	setState([StateEnum.IS_USED], Boolean(geolocation.isUsed), StateEnum.GEOLOCATION);
 
 	// Enrichment.
 	const enrichment = esFormsLocalization.enrichment ?? {};

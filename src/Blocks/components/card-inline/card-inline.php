@@ -25,6 +25,7 @@ $cardInlineLastItem = Components::checkAttr('cardInlineLastItem', $attributes, $
 $cardInlineInvalid = Components::checkAttr('cardInlineInvalid', $attributes, $manifest);
 $cardInlineIndented = Components::checkAttr('cardInlineIndented', $attributes, $manifest);
 $cardInlineUseHover = Components::checkAttr('cardInlineUseHover', $attributes, $manifest);
+$cardInlineUseDivider = Components::checkAttr('cardInlineUseDivider', $attributes, $manifest);
 
 $cardInlineClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
@@ -33,6 +34,7 @@ $cardInlineClass = Components::classnames([
 	Components::selector($cardInlineInvalid, $componentClass, '', 'invalid'),
 	Components::selector($cardInlineIndented, $componentClass, '', 'indented'),
 	Components::selector($cardInlineUseHover, $componentClass, '', 'use-hover'),
+	Components::selector($cardInlineUseDivider, $componentClass, '', 'use-divider'),
 ]);
 
 ?>
@@ -52,7 +54,7 @@ $cardInlineClass = Components::classnames([
 		<div class="<?php echo esc_attr("{$componentClass}__left-wrap"); ?>">
 			<?php if ($cardInlineLeftContent) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__left"); ?>">
-					<?php echo $cardInlineLeftContent; ?>
+					<?php echo wp_kses_post($cardInlineLeftContent); ?>
 				</div>
 			<?php } ?>
 

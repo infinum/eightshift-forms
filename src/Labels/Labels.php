@@ -206,6 +206,10 @@ class Labels implements LabelsInterface
 			'validationEmail' => \__('This e-mail is not valid.', 'eightshift-forms'),
 			'validationEmailTld' => \__('This e-mails top level domain is not valid.', 'eightshift-forms'),
 			'validationUrl' => \__('This URL is not valid.', 'eightshift-forms'),
+			// translators: %s used for displaying min number to the user.
+			'validationMin' => \__('This field value is less than expected. Minimal number should be %s.', 'eightshift-forms'),
+			// translators: %s used for displaying max number to the user.
+			'validationMax' => \__('This field value is more than expected. Maximal number should be %s.', 'eightshift-forms'),
 			// translators: %s used for displaying length min number to the user.
 			'validationMinLength' => \__('This field value has less characters than expected. We expect minimum %s characters.', 'eightshift-forms'),
 			// translators: %s used for displaying length max number to the user.

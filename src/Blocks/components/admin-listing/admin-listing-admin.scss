@@ -24,13 +24,17 @@
 }
 
 .es-admin-listing__form {
-	.es-loader svg {
-		left: auto;
-		top: auto;
-		right: 1.25rem;
-		bottom: 1.25rem;
-		position: fixed;
-		transform: none;
+	.es-loader {
+		z-index: 10;
+
+		svg {
+			left: auto;
+			top: auto;
+			right: 1.25rem;
+			bottom: 1.25rem;
+			position: fixed;
+			transform: none;
+		}
 	}
 
 	.es-global-msg {
