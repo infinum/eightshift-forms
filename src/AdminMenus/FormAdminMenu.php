@@ -295,11 +295,26 @@ class FormAdminMenu extends AbstractAdminMenu
 		$listingUrl = Helper::getListingPageUrl();
 
 		switch ($type) {
+			case 'locations':
+				$output = [
+					Components::render('highlighted-content', [
+						'highlightedContentTitle' => \__('Location list is empty', 'eightshift-forms'),
+						// Translators: %s is the link to the forms listing page.
+						'highlightedContentSubtitle' => \sprintf(\__('
+							Your form is not assigned to any location.<br />
+							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), $listingUrl),
+						'highlightedContentIcon' => 'emptyStateLocations',
+					]),
+				];
+				break;
 			case 'trash':
 				$output = [
 					Components::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Trash is empty', 'eightshift-forms'),
-						'highlightedContentSubtitle' => '<br /><a class="es-submit es-submit--outline" href="' . $listingUrl . '">' . \__('Go to your forms', 'eightshift-forms') . '</a>',
+						'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
+						// Translators: %s is the link to the forms listing page.
+						'highlightedContentSubtitle' => \sprintf(\__('
+							Your don\'t have any form in trash.<br />
+							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), $listingUrl),
 						'highlightedContentIcon' => 'emptyStateTrash',
 					]),
 				];
@@ -307,9 +322,12 @@ class FormAdminMenu extends AbstractAdminMenu
 			case 'entries':
 				$output = [
 					Components::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Entries list is empty', 'eightshift-forms'),
-						'highlightedContentSubtitle' => '<br /><a class="es-submit es-submit--outline" href="' . $listingUrl . '">' . \__('Go to your forms', 'eightshift-forms') . '</a>',
-						'highlightedContentIcon' => 'emptyStateTrash',
+						'highlightedContentTitle' => \__('Entrie list is empty', 'eightshift-forms'),
+						// Translators: %s is the link to the forms listing page.
+						'highlightedContentSubtitle' => \sprintf(\__('
+							You don\'t have any form entries on this form.<br />
+							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), $listingUrl),
+						'highlightedContentIcon' => 'emptyStateEntries',
 					]),
 				];
 				break;
@@ -317,7 +335,10 @@ class FormAdminMenu extends AbstractAdminMenu
 				$output = [
 					Components::render('highlighted-content', [
 						'highlightedContentTitle' => \__('You have no forms', 'eightshift-forms'),
-						'highlightedContentSubtitle' => '<br /><a class="es-submit es-submit--outline" href="' . $newUrl . '">' . \__('Add your first form', 'eightshift-forms') . '</a>',
+						// Translators: %s is the link to the forms listing page.
+						'highlightedContentSubtitle' => \sprintf(\__('
+							You don\'t have any forms to show.<br />
+							<br /><a class="es-submit es-submit--outline" href="%s">Add your first form</a>', 'eightshift-forms'), $newUrl),
 						'highlightedContentIcon' => 'emptyStateFormList',
 					]),
 				];
@@ -558,10 +579,8 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$content = '<ul class="is-list">';
 					foreach ($entryValue as $entryKey => $entryValue) {
-						$entryValue = \str_replace(AbstractBaseRoute::DELIMITER, ', ', $entryValue);
-
 						if (\gettype($entryValue) === 'array') {
-							$entryValue = \implode(',  ', $entryValue);
+							$entryValue = \implode(AbstractBaseRoute::DELIMITER, $entryValue);
 						}
 
 						$content .= "<li><strong>{$entryKey}</strong>: {$entryValue}</li>";

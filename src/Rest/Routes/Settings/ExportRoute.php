@@ -131,10 +131,15 @@ class ExportRoute extends AbstractBaseRoute
 
 			foreach ($entryValues as $key => $value) {
 				$outputInner[$key] = $value;
+
+				if (\gettype($value) === 'array') {
+					$outputInner[$key] = \implode(AbstractBaseRoute::DELIMITER, $value);
+				}
 			}
 
 			$output[] = $outputInner;
 		}
+
 
 		if (!$output) {
 			return \rest_ensure_response(
