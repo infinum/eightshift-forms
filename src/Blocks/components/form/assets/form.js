@@ -1315,44 +1315,44 @@ export class Form {
 
 		// Clear form state only.
 		[...formIds].forEach((formId) => {
-			this.state.getStateFormElement(formId).removeEventListener('submit', this.onFormSubmitEvent);
+			this.state.getStateFormElement(formId)?.removeEventListener('submit', this.onFormSubmitEvent);
 
 			// Select.
 			[
 				...this.state.getStateElementByTypeInternal('select', formId),
 				...this.state.getStateElementByTypeInternal('country', formId),
 			].forEach((select) => {
-				this.state.getStateElementCustom(select.name, formId).destroy();
+				this.state.getStateElementCustom(select.name, formId)?.destroy();
 			});
 
 			// File.
 			[...this.state.getStateElementByTypeInternal('file', formId)].forEach((file) => {
-				this.state.getStateElementCustom(file.name, formId).destroy();
-				this.state.getStateElementField(file.name, formId).removeEventListener('click', this.onFileWrapClickEvent);
+				this.state.getStateElementCustom(file.name, formId)?.destroy();
+				this.state.getStateElementField(file.name, formId)?.removeEventListener('click', this.onFileWrapClickEvent);
 				const input = this.state.getStateElementInput(file.name, formId);
-				input.removeEventListener('focus', this.onFocusEvent);
-				input.removeEventListener('blur', this.onBlurEvent);
+				input?.removeEventListener('focus', this.onFocusEvent);
+				input?.removeEventListener('blur', this.onBlurEvent);
 			});
 
 			// Textarea.
 			[...this.state.getStateElementByTypeInternal('textarea', formId)].forEach((textarea) => {
 				const input = this.state.getStateElementInput(textarea.name, formId);
 
-				this.state.getStateElementCustom(textarea.name, formId).destroy(input);
-				input.removeEventListener('keydown', this.onFocusEvent);
-				input.removeEventListener('focus', this.onFocusEvent);
-				input.removeEventListener('blur', this.onBlurEvent);
-				input.removeEventListener('input', this.onInputEvent);
+				this.state.getStateElementCustom(textarea.name, formId)?.destroy(input);
+				input?.removeEventListener('keydown', this.onFocusEvent);
+				input?.removeEventListener('focus', this.onFocusEvent);
+				input?.removeEventListener('blur', this.onBlurEvent);
+				input?.removeEventListener('input', this.onInputEvent);
 			});
 
 			// Text.
 			[...this.state.getStateElementByTypeInternal('input', formId)].forEach((text) => {
 				const input = this.state.getStateElementInput(text.name, formId);
 
-				input.removeEventListener('keydown', this.onFocusEvent);
-				input.removeEventListener('focus', this.onFocusEvent);
-				input.removeEventListener('blur', this.onBlurEvent);
-				input.removeEventListener('input', this.onInputEvent);
+				input?.removeEventListener('keydown', this.onFocusEvent);
+				input?.removeEventListener('focus', this.onFocusEvent);
+				input?.removeEventListener('blur', this.onBlurEvent);
+				input?.removeEventListener('input', this.onInputEvent);
 			});
 
 			// Date.
@@ -1360,19 +1360,19 @@ export class Form {
 				...this.state.getStateElementByTypeInternal('date', formId),
 				...this.state.getStateElementByTypeInternal('dateTime', formId),
 			].forEach((date) => {
-				this.state.getStateElementCustom(date.name, formId).destroy();
+				this.state.getStateElementCustom(date.name, formId)?.destroy();
 			});
 
 			// Phone.
 			[...this.state.getStateElementByTypeInternal('phone', formId)].forEach((phone) => {
-				this.state.getStateElementCustom(phone.name, formId).destroy();
+				this.state.getStateElementCustom(phone.name, formId)?.destroy();
 
 				const input = this.state.getStateElementInput(phone.name, formId);
 
-				input.removeEventListener('keydown', this.onFocusEvent);
-				input.removeEventListener('focus', this.onFocusEvent);
-				input.removeEventListener('blur', this.onBlurEvent);
-				input.removeEventListener('input', this.onInputEvent);
+				input?.removeEventListener('keydown', this.onFocusEvent);
+				input?.removeEventListener('focus', this.onFocusEvent);
+				input?.removeEventListener('blur', this.onBlurEvent);
+				input?.removeEventListener('input', this.onInputEvent);
 			});
 
 			// Checkbox.
@@ -1381,10 +1381,10 @@ export class Form {
 
 					const input = this.state.getStateElementItemsInput(checkboxItem.name, checkboxItem.value, formId);
 
-					input.removeEventListener('keydown', this.onFocusEvent);
-					input.removeEventListener('focus', this.onFocusEvent);
-					input.removeEventListener('blur', this.onBlurEvent);
-					input.removeEventListener('input', this.onInputEvent);
+					input?.removeEventListener('keydown', this.onFocusEvent);
+					input?.removeEventListener('focus', this.onFocusEvent);
+					input?.removeEventListener('blur', this.onBlurEvent);
+					input?.removeEventListener('input', this.onInputEvent);
 				});
 			});
 
@@ -1393,17 +1393,17 @@ export class Form {
 				[...Object.values(radio.items)].forEach((radioItem) => {
 					const input = this.state.getStateElementItemsInput(radioItem.name, radioItem.value, formId);
 
-					input.removeEventListener('keydown', this.onFocusEvent);
-					input.removeEventListener('focus', this.onFocusEvent);
-					input.removeEventListener('blur', this.onBlurEvent);
-					input.removeEventListener('input', this.onInputEvent);
+					input?.removeEventListener('keydown', this.onFocusEvent);
+					input?.removeEventListener('focus', this.onFocusEvent);
+					input?.removeEventListener('blur', this.onBlurEvent);
+					input?.removeEventListener('input', this.onInputEvent);
 				});
 			});
 
 			// Rating.
 			[...this.state.getStateElementByTypeInternal('rating', formId)].forEach((rating) => {
 				[...this.state.getStateElementCustom(rating.name, formId).children].forEach((star) => {
-					star.removeEventListener('click', this.onRatingEvent);
+					star?.removeEventListener('click', this.onRatingEvent);
 				});
 			});
 
