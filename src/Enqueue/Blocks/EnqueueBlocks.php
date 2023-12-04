@@ -329,4 +329,19 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		\wp_add_inline_script($this->getBlockEditorScriptsHandle(), "const esFormsLocalization = {$output}", 'before');
 	}
+
+	/**
+	 * List of admin script dependencies
+	 *
+	 * @return string[] List of all the admin dependencies.
+	 */
+	protected function getAdminScriptDependencies(): array
+	{
+		return \array_merge(
+			parent::getAdminScriptDependencies(),
+			[
+				'lodash',
+			]
+		);
+	}
 }
