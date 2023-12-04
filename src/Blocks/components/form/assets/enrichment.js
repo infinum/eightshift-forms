@@ -419,7 +419,7 @@ export class Enrichment {
 			return;
 		}
 
-		this.prefillByData(formId,data);
+		this.prefillByData(formId, data);
 	};
 
 	////////////////////////////////////////////////////////////////

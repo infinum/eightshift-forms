@@ -373,11 +373,6 @@ export class Form {
 
 		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccess(), response);
 
-		// Remove local storage for prefill.
-		if (this.state.getStateEnrichmentIsUsed()) {
-			this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
-		}
-
 		if (this.state.getStateConfigIsAdmin()) {
 			// Set global msg.
 			this.utils.setGlobalMsg(formId, message, status);
@@ -390,6 +385,11 @@ export class Form {
 			this.utils.gtmSubmit(formId, status);
 
 			if (this.state.getStateFormConfigSuccessRedirect(formId)) {
+				// Remove local storage for prefill.
+				if (this.state.getStateEnrichmentIsUsed()) {
+					this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
+				}
+
 				// Redirect to url and update url params from from data.
 				this.utils.redirectToUrl(formId);
 			} else {
@@ -398,6 +398,11 @@ export class Form {
 
 				// Set global msg.
 				this.utils.setGlobalMsg(formId, message, status);
+
+				// Remove local storage for prefill.
+				if (this.state.getStateEnrichmentIsUsed()) {
+					this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
+				}
 
 				// Do normal success without redirect.
 				// Do the actual redirect after some time for custom form processed externally.

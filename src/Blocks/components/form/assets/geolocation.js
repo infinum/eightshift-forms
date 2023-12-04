@@ -97,7 +97,6 @@ export class Geolocation {
 
 				const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, custom);
 				if (selectValue) {
-					console.log(formId, name, selectValue);
 					this.utils.setManualPhoneValue(
 						formId,
 						name,
