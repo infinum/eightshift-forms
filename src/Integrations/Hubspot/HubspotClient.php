@@ -181,7 +181,7 @@ class HubspotClient implements HubspotClientInterface
 			$output = [];
 
 			$allowedTypes = [
-				'input' => 0,
+				'text' => 0,
 				'textarea' => 1,
 			];
 
