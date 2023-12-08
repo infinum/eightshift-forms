@@ -41,9 +41,6 @@ function setNoneEightshiftBlocksFieldAttributes( settings, name ) {
 				...settings.attributes,
 				...select(STORE_NAME).getComponent('field').attributes,
 				...select(STORE_NAME).getComponent('conditional-tags').attributes,
-				fieldName: {
-					type: 'string',
-				}
 			},
 		};
 	}
