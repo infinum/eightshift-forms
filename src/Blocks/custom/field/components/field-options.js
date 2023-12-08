@@ -7,24 +7,22 @@ import { FieldOptionsExternalBlocks, FieldOptionsLayout } from './../../../compo
 // This block is only used if you want to include custom external blocks to forms.
 export const FieldOptions = ({ attributes, setAttributes }) => {
 	return (
-		<>
-			<PanelBody title={__('Field', 'eightshift-forms')}>
-				<FieldOptionsLayout
-					{...props('field', attributes, {
-						setAttributes,
-					})}
-					prefix={'field'}
-					fieldWidthLarge={attributes.fieldWidthLarge}
-					fieldWidthDesktop={attributes.fieldWidthDesktop}
-					fieldWidthTablet={attributes.fieldWidthTablet}
-					fieldWidthMobile={attributes.fieldWidthMobile}
-				/>
+		<PanelBody title={__('Field', 'eightshift-forms')}>
+			<FieldOptionsLayout
+				{...props('field', attributes, {
+					setAttributes,
+				})}
+				prefix={'field'}
+				fieldWidthLarge={attributes.fieldWidthLarge}
+				fieldWidthDesktop={attributes.fieldWidthDesktop}
+				fieldWidthTablet={attributes.fieldWidthTablet}
+				fieldWidthMobile={attributes.fieldWidthMobile}
+			/>
 
-				<FieldOptionsExternalBlocks
-					attributes={attributes}
-					setAttributes={setAttributes}
-				/>
-			</PanelBody>
-		</>
+			<FieldOptionsExternalBlocks
+				attributes={attributes}
+				setAttributes={setAttributes}
+			/>
+		</PanelBody>
 	);
 };
