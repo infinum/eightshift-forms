@@ -7,6 +7,7 @@ export const FieldEditor = ({ attributes, children, clientId }) => {
 			attributes={attributes}
 			children={children}
 			clientId={clientId}
+			fieldName={attributes?.fieldName}
 		/>
 	);
 };

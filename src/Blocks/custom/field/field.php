@@ -13,7 +13,12 @@ echo Components::render(
 	array_merge(
 		Components::props('field', $attributes),
 		[
-			'selectorClass' => 'field'
+			'selectorClass' => 'field',
+			'fieldFieldIsNoneFormBlock' => true,
+			'fieldFieldConditionalTags' => Components::render(
+				'conditional-tags',
+				Components::props('conditionalTags', $attributes)
+			),
 		]
 	)
 );

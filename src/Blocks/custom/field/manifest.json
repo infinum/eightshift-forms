@@ -11,7 +11,8 @@
 		"field"
 	],
 	"components": {
-		"field": "field"
+		"field": "field",
+		"conditionalTags": "conditionalTags"
 	},
 	"parent": [
 		"eightshift-forms/form"
