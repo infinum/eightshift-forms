@@ -563,7 +563,7 @@ export function setStateFormInitial(formId) {
 
 	const customFields = formElement?.querySelectorAll(getState([StateEnum.SELECTORS_FIELD_NO_FORMS_BLOCK], StateEnum.SELECTORS)) ?? {};
 
-	// Loop all fields for conditional tags later because we need to have all state set.
+	// Loop all fields for conditional tags later because we need to have all state set beforehand.
 	for (const field of Object.values(customFields)) {
 		const name = field.getAttribute(getStateAttribute('fieldName'));
 

@@ -37,7 +37,7 @@ export const FileOptions = (attributes) => {
 					attribute={getAttrKey('fileName', attributes, manifest)}
 					disabledOptions={fileDisabledOptions}
 					setAttributes={setAttributes}
-					type={'file'}
+					type='file'
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>

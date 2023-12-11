@@ -36,9 +36,9 @@ export const FieldOptionsExternalBlocks = ({
 			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
 				<NameField
 					value={attributes?.fieldName}
-					attribute={'fieldName'}
+					attribute='fieldName'
 					setAttributes={setAttributes}
-					type={'custom field'}
+					type='custom field'
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
@@ -51,7 +51,7 @@ export const FieldOptionsExternalBlocks = ({
 				conditionalTagsRules={attributes?.conditionalTagsRules}
 				conditionalTagsBlockName={attributes?.fieldName}
 				conditionalTagsIsHidden={attributes?.conditionalTagsIsHidden}
-				useCustom={true}
+				useCustom
 			/>
 		</>
 	);

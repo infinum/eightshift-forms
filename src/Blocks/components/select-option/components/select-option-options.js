@@ -31,7 +31,7 @@ export const SelectOptionOptions = (attributes) => {
 					attribute={getAttrKey('selectOptionValue', attributes, manifest)}
 					disabledOptions={selectOptionDisabledOptions}
 					setAttributes={setAttributes}
-					type={'select-option'}
+					type='select-option'
 					label={__('Value', 'eightshift-forms')}
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}

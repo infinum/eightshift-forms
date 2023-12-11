@@ -54,9 +54,7 @@ export const RadiosOptions = (attributes) => {
 				value={radiosShowAs}
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'radios')}
 				disabled={isOptionDisabled(getAttrKey('radiosShowAs', attributes, manifest), radiosDisabledOptions)}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('radiosShowAs', attributes, manifest)]: value });
-				}}
+				onChange={(value) => setAttributes({ [getAttrKey('radiosShowAs', attributes, manifest)]: value })}
 				additionalSelectClasses='es-w-40'
 				simpleValue
 				inlineLabel

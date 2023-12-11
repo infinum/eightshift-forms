@@ -46,7 +46,7 @@ export const FieldEditorExternalBlocks = ({
 							<ConditionalTagsEditor
 								{...props('conditionalTags', attributes)}
 								conditionalTagsUse={attributes?.conditionalTagsUse}
-								useCustom={true}
+								useCustom
 							/>
 						}
 					</div>

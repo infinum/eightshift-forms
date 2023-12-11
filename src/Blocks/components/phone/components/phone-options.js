@@ -48,7 +48,7 @@ export const PhoneOptions = (attributes) => {
 					attribute={getAttrKey('phoneName', attributes, manifest)}
 					disabledOptions={phoneDisabledOptions}
 					setAttributes={setAttributes}
-					type={'phone'}
+					type='phone'
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>

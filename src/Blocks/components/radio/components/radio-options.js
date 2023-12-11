@@ -44,7 +44,7 @@ export const RadioOptions = (attributes) => {
 					attribute={getAttrKey('radioValue', attributes, manifest)}
 					disabledOptions={radioDisabledOptions}
 					setAttributes={setAttributes}
-					type={'radio'}
+					type='radio'
 					label={__('Value', 'eightshift-forms')}
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
@@ -116,7 +116,7 @@ export const RadioOptions = (attributes) => {
 						/>
 					</> :
 					<MediaPlaceholder
-						accept={'image/*'}
+						accept='image/*'
 						multiple = {false}
 						allowedTypes={['image']}
 						onSelect={({ url }) => setAttributes({ [getAttrKey('radioIcon', attributes, manifest)]: url })}

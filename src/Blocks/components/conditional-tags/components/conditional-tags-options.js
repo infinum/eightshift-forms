@@ -251,8 +251,8 @@ export const ConditionalTagsOptions = (attributes) => {
 					<Section showIf={conditionalTagsUse} noBottomSpacing>
 						{conditionalTagsIsHidden &&
 							<Notification
-								text={__('Your field is hidden! It is important to remember that this may result in unforeseen consequences when used with conditional tags.', 'eightshift-forms')}
-								type={'warning'}
+								text={__('Field is hidden. This might introduce issues if used with conditional tags.', 'eightshift-forms')}
+								type='warning'
 							/>
 						}
 

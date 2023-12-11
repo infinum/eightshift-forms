@@ -47,7 +47,7 @@ export const CheckboxOptions = (attributes) => {
 					disabledOptions={checkboxDisabledOptions}
 					setAttributes={setAttributes}
 					label={__('Value', 'eightshift-forms')}
-					type={'checkbox'}
+					type='checkbox'
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>

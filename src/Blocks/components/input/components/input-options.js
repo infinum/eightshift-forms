@@ -90,7 +90,7 @@ export const InputOptions = (attributes) => {
 					disabledOptions={inputDisabledOptions}
 					setAttributes={setAttributes}
 					show={showInputName}
-					type={'input'}
+					type='input'
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>

@@ -73,9 +73,7 @@ export const CheckboxesOptions = (attributes) => {
 				value={checkboxesShowAs}
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'checkboxes')}
 				disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value });
-				}}
+				onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
 				additionalSelectClasses='es-w-40'
 				simpleValue
 				inlineLabel

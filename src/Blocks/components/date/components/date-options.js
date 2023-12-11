@@ -58,7 +58,7 @@ export const DateOptions = (attributes) => {
 					attribute={getAttrKey('dateName', attributes, manifest)}
 					disabledOptions={dateDisabledOptions}
 					setAttributes={setAttributes}
-					type={'date'}
+					type='date'
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>

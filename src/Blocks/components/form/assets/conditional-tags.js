@@ -147,12 +147,12 @@ export class ConditionalTags {
 	 * @returns {void}
 	 */
 	initFields(formId) {
-		// Set all rules for all form field.
+		// Set all rules for all form fields.
 		for(const [name] of this.state.getStateElements(formId)) {
 			this.setFieldsRulesAll(formId, name);
 		}
 
-		// Set all rules for all none form fields.
+		// Set all rules for all non-form fields.
 		for(const [name] of this.state.getStateElementsFields(formId)) {
 			this.setFieldsRulesAll(formId, name);
 		}
@@ -233,7 +233,7 @@ export class ConditionalTags {
 			}
 		}
 
-		// Loop all no forms fields.
+		// Loop all non-form fields.
 		for(const [name] of this.state.getStateElementsFields(formId)) {
 			// Set top level fields state.
 			const check = this.getFieldTopLevel(formId, name, true);
@@ -389,7 +389,7 @@ export class ConditionalTags {
 	 *
 	 * @param {string} fromId Form Id.
 	 * @param {string} name Field Name.
-	 * @param {bool} isNoneFormBlock Is none form block.
+	 * @param {bool} isNoneFormBlock Is non-Forms block.
 	 *
 	 * @returns {bool}
 	 */

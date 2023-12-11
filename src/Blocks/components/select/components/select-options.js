@@ -55,7 +55,7 @@ export const SelectOptions = (attributes) => {
 					attribute={getAttrKey('selectName', attributes, manifest)}
 					disabledOptions={selectDisabledOptions}
 					setAttributes={setAttributes}
-					type={'select'}
+					type='select'
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
@@ -67,9 +67,7 @@ export const SelectOptions = (attributes) => {
 				value={selectShowAs}
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'select')}
 				disabled={isOptionDisabled(getAttrKey('selectShowAs', attributes, manifest), selectDisabledOptions)}
-				onChange={(value) => {
-					setAttributes({ [getAttrKey('selectShowAs', attributes, manifest)]: value });
-				}}
+				onChange={(value) => setAttributes({ [getAttrKey('selectShowAs', attributes, manifest)]: value })}
 				additionalSelectClasses='es-w-40'
 				simpleValue
 				inlineLabel

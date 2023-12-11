@@ -128,7 +128,7 @@
 			"type": "boolean",
 			"default": false
 		},
-		"fieldIsNoneFormBlock":{
+		"fieldIsNoneFormBlock": {
 			"type": "boolean",
 			"default": false
 		}
