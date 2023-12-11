@@ -115,9 +115,9 @@ export const FieldEditor = (attributes) => {
 	const LabelDefault = () => (
 		<>
 			{!fieldHideLabel &&
-				<label className={labelClass} htmlFor="id">
+				<div className={labelClass}>
 					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
-				</label>
+				</div>
 			}
 		</>
 	);
@@ -125,9 +125,9 @@ export const FieldEditor = (attributes) => {
 	const LegendDefault = () => (
 		<>
 			{!fieldHideLabel &&
-				<legend className={labelClass}>
+				<div className={labelClass}>
 					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
-				</legend>
+				</div>
 			}
 		</>
 	);

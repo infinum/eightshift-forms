@@ -69,15 +69,17 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	/**
 	 * Method that returns frontend style with check.
 	 *
+	 * @param string $hook Hook name.
+	 *
 	 * @return mixed
 	 */
-	public function enqueueStylesLocal()
+	public function enqueueStylesLocal(string $hook)
 	{
 		if ($this->isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
-		$this->enqueueStyles();
+		$this->enqueueStyles($hook);
 	}
 
 	/**

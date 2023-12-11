@@ -394,10 +394,10 @@ export function setStateFormInitial(formId) {
 	// Steps.
 	setSteps(formElement, formId);
 
-	const formFields = formElement?.querySelectorAll('input, select, textarea') ?? {};
+	const formFields = formElement?.querySelectorAll('input, select, textarea') ?? [];
 
 	// Loop all fields.
-	for (const item of Object.values(formFields)) {
+	[...formFields].forEach((item) => {
 		const {
 			value,
 			name,
@@ -406,7 +406,7 @@ export function setStateFormInitial(formId) {
 		} = item;
 
 		if (name === 'search_terms') {
-			continue;
+			return;
 		}
 
 		const field = formElement.querySelector(`${getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)}[${getStateAttribute('fieldName')}="${name}"]`);
@@ -535,7 +535,7 @@ export function setStateFormInitial(formId) {
 		setState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], item?.classList?.contains(getState([StateEnum.SELECTORS_SUBMIT_SINGLE], StateEnum.SELECTORS).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.SAVE_AS_JSON], Boolean(item.getAttribute(getStateAttribute('saveAsJson'))), formId);
-	}
+	});
 
 	// Loop all fields for conditional tags later because we need to have all state set.
 	for (const item of Object.values(formFields)) {
@@ -561,10 +561,11 @@ export function setStateFormInitial(formId) {
 		}
 	}
 
-	const customFields = formElement?.querySelectorAll(getState([StateEnum.SELECTORS_FIELD_NO_FORMS_BLOCK], StateEnum.SELECTORS)) ?? {};
+	const customFields = formElement?.querySelectorAll(getState([StateEnum.SELECTORS_FIELD_NO_FORMS_BLOCK], StateEnum.SELECTORS)) ?? [];
 
 	// Loop all fields for conditional tags later because we need to have all state set beforehand.
-	for (const field of Object.values(customFields)) {
+	[...customFields].forEach((field) => {
+			
 		const name = field.getAttribute(getStateAttribute('fieldName'));
 
 		// Conditional tags.
@@ -574,7 +575,7 @@ export function setStateFormInitial(formId) {
 
 			setStateConditionalTags(field, name, true, formId);
 		}
-	}
+	});
 }
 
 /**

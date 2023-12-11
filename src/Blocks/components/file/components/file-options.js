@@ -68,7 +68,7 @@ export const FileOptions = (attributes) => {
 					label={<IconLabel icon={icons.fileType} label={__('Accepted file types', 'eightshift-forms')} />}
 					value={fileAccept}
 					help={__('Separate items with a comma.', 'eightshift-forms')}
-					placeholder='e.g. .jpg,.png,.pdf'
+					placeholder={__('e.g. .jpg,.png,.pdf', 'eightshift-forms')}
 					onChange={(value) => setAttributes({ [getAttrKey('fileAccept', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileAccept', attributes, manifest), fileDisabledOptions)}
 				/>

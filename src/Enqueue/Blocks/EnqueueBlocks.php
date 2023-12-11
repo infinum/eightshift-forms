@@ -100,9 +100,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Enqueue blocks style for editor only.
 	 *
+	 * @param string $hook Hook name.
+	 *
 	 * @return void
 	 */
-	public function enqueueBlockEditorStyle(): void
+	public function enqueueBlockEditorStyle(string $hook): void
 	{
 		$handle = $this->getBlockEditorStyleHandle();
 
@@ -140,15 +142,17 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Method that returns editor and frontend style with check.
 	 *
+	 * @param string $hook Hook name.
+	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendStyleLocal(): void
+	public function enqueueBlockFrontendStyleLocal(string $hook): void
 	{
 		if ($this->isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return;
 		}
 
-		$this->enqueueBlockFrontendStyle();
+		$this->enqueueBlockFrontendStyle($hook);
 	}
 
 	/**
@@ -198,11 +202,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Frontend.
 	 *
+	 * @param string $hook Hook name.
+	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendScript(): void
+	public function enqueueBlockFrontendScript(string $hook): void
 	{
-		parent::enqueueBlockFrontendScript();
+		parent::enqueueBlockFrontendScript($hook);
 
 		$output = $this->getEnqueueSharedInlineCommonItems();
 
@@ -284,16 +290,18 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Editor.
 	 *
+	 * @param string $hook Hook name.
+	 *
 	 * @return void
 	 */
-	public function enqueueBlockEditorScript(): void
+	public function enqueueBlockEditorScript(string $hook): void
 	{
 		// If not admin exit.
 		if (!\is_admin()) {
 			return;
 		}
 
-		parent::enqueueBlockEditorScript();
+		parent::enqueueBlockEditorScript($hook);
 
 		$output = $this->getEnqueueSharedInlineCommonItems(false);
 
