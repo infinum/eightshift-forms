@@ -10,13 +10,16 @@ import {
 	checkAttr,
 	outputCssVariables,
 	STORE_NAME,
+	props,
 } from '@eightshift/frontend-libs/scripts';
-import { VisibilityHidden } from './../../utils';
+import { MissingName, VisibilityHidden } from './../../utils';
+import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const FieldEditorExternalBlocks = ({
 	attributes,
 	children,
-	clientId
+	clientId,
+	fieldName,
 }) => {
 	const manifest = select(STORE_NAME).getComponent('field');
 
@@ -36,6 +39,16 @@ export const FieldEditorExternalBlocks = ({
 				<div className={`${componentClass}__content`}>
 					<div className={`${componentClass}__content-wrap`}>
 						{children}
+
+						<MissingName value={fieldName} />
+
+						{fieldName &&
+							<ConditionalTagsEditor
+								{...props('conditionalTags', attributes)}
+								conditionalTagsUse={attributes?.conditionalTagsUse}
+								useCustom
+							/>
+						}
 					</div>
 				</div>
 			</div>
@@ -102,9 +115,9 @@ export const FieldEditor = (attributes) => {
 	const LabelDefault = () => (
 		<>
 			{!fieldHideLabel &&
-				<label className={labelClass} htmlFor="id">
+				<div className={labelClass}>
 					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
-				</label>
+				</div>
 			}
 		</>
 	);
@@ -112,9 +125,9 @@ export const FieldEditor = (attributes) => {
 	const LegendDefault = () => (
 		<>
 			{!fieldHideLabel &&
-				<legend className={labelClass}>
+				<div className={labelClass}>
 					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
-				</legend>
+				</div>
 			}
 		</>
 	);

@@ -272,8 +272,15 @@ export class State {
 		const items = getState([StateEnum.ELEMENTS], formId);
 		return items ? Object.entries(items) : [];
 	};
+	getStateElementsFields = (formId) => {
+		const items = getState([StateEnum.ELEMENTS_FIELDS], formId);
+		return items ? Object.entries(items) : [];
+	};
 	getStateElementConditionalTagsDefaults = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], formId);
+	};
+	getStateElementFieldConditionalTagsDefaults = (name, formId) => {
+		return getState([StateEnum.ELEMENTS_FIELDS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], formId);
 	};
 	getStateElementConditionalTagsDefaultsInner = (name, innerName, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], formId);
@@ -281,11 +288,17 @@ export class State {
 	getStateElementConditionalTagsRef = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], formId);
 	};
+	getStateElementFieldConditionalTagsRef = (name, formId) => {
+		return getState([StateEnum.ELEMENTS_FIELDS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], formId);
+	};
 	getStateElementConditionalTagsRefInner = (name, innerName, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_REF], formId);
 	};
 	getStateElementConditionalTagsTags = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], formId);
+	};
+	getStateElementFieldConditionalTagsTags = (name, formId) => {
+		return getState([StateEnum.ELEMENTS_FIELDS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], formId);
 	};
 	getStateElementConditionalTagsTagsInner = (name, innerName, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS], formId);

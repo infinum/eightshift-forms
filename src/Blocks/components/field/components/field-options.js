@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { TextareaControl, TextControl } from '@wordpress/components';
 import { isObject } from 'lodash';
@@ -18,8 +19,43 @@ import {
 	getDefaultBreakpointNames,
 	ucfirst,
 	MultiSelect,
+	props,
 } from '@eightshift/frontend-libs/scripts';
-import { isOptionDisabled } from '../../utils';
+import { isOptionDisabled, NameField } from '../../utils';
+import { ConditionalTagsOptions } from '../../../components/conditional-tags/components/conditional-tags-options';
+
+export const FieldOptionsExternalBlocks = ({
+	attributes,
+	setAttributes,
+}) => {
+
+	const [isNameChanged, setIsNameChanged] = useState(false);
+
+	return (
+		<>
+			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+				<NameField
+					value={attributes?.fieldName}
+					attribute='fieldName'
+					setAttributes={setAttributes}
+					type='custom field'
+					isChanged={isNameChanged}
+					setIsChanged={setIsNameChanged}
+				/>
+			</Section>
+
+			<ConditionalTagsOptions
+				{...props('conditionalTags', attributes)}
+				setAttributes={setAttributes}
+				conditionalTagsUse={attributes?.conditionalTagsUse}
+				conditionalTagsRules={attributes?.conditionalTagsRules}
+				conditionalTagsBlockName={attributes?.fieldName}
+				conditionalTagsIsHidden={attributes?.conditionalTagsIsHidden}
+				useCustom
+			/>
+		</>
+	);
+};
 
 export const FieldOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('field');
@@ -155,7 +191,6 @@ export const FieldOptionsMore = (attributes) => {
 		<Section
 			icon={icons.moreH}
 			label={__('More options', 'eightshift-forms')}
-			noBottomSpacing
 			collapsable
 		>
 			<>

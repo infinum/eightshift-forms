@@ -147,8 +147,13 @@ export class ConditionalTags {
 	 * @returns {void}
 	 */
 	initFields(formId) {
-		// Set all rules for all fields.
+		// Set all rules for all form fields.
 		for(const [name] of this.state.getStateElements(formId)) {
+			this.setFieldsRulesAll(formId, name);
+		}
+
+		// Set all rules for all non-form fields.
+		for(const [name] of this.state.getStateElementsFields(formId)) {
 			this.setFieldsRulesAll(formId, name);
 		}
 
@@ -223,6 +228,15 @@ export class ConditionalTags {
 
 			// Set top level fields state.
 			const check = this.getFieldTopLevel(formId, name);
+			if (check) {
+				output.top.push(name);
+			}
+		}
+
+		// Loop all non-form fields.
+		for(const [name] of this.state.getStateElementsFields(formId)) {
+			// Set top level fields state.
+			const check = this.getFieldTopLevel(formId, name, true);
 			if (check) {
 				output.top.push(name);
 			}
@@ -375,15 +389,18 @@ export class ConditionalTags {
 	 *
 	 * @param {string} fromId Form Id.
 	 * @param {string} name Field Name.
+	 * @param {bool} isNoneFormBlock Is non-Forms block.
 	 *
 	 * @returns {bool}
 	 */
-	getFieldTopLevel(formId, name) {
+	getFieldTopLevel(formId, name, isNoneFormBlock = false) {
 		// Find defaults to know what direction to use.
-		const defaultState = this.state.getStateElementConditionalTagsDefaults(name, formId);
+		const defaultState = !isNoneFormBlock ? this.state.getStateElementConditionalTagsDefaults(name, formId) : this.state.getStateElementFieldConditionalTagsDefaults(name, formId);
+
+		const ref = !isNoneFormBlock ? this.state.getStateElementConditionalTagsRef(name, formId) : this.state.getStateElementFieldConditionalTagsRef(name, formId);
 
 		// Check if conditions are valid or not. This is where the magic happens.
-		const isValid = this.state.getStateElementConditionalTagsRef(name, formId)?.map((validItem) => validItem.every(Boolean)).some(Boolean);
+		const isValid = ref?.map((validItem) => validItem.every(Boolean)).some(Boolean);
 
 		// In case if option is visible by default.
 		if (isValid && defaultState === this.SHOW) {
@@ -654,11 +671,17 @@ export class ConditionalTags {
 	 * @returns {void}
 	 */
 	setFieldsRules(formId, name) {
-		// Opulate current ref state.
-		let output = this.state.getStateElementConditionalTagsRef(name, formId);
+		// Populate current ref state.
+		let output = this.state.getStateElementConditionalTagsRef(name, formId) ?? [];
+		let data = this.state.getStateElementConditionalTagsTags(name, formId) ?? [];
+
+		if (data.length === 0) {
+			output = this.state.getStateElementFieldConditionalTagsRef(name, formId) ?? [];
+			data = this.state.getStateElementFieldConditionalTagsTags(name, formId) ?? [];
+		}
 
 		// Loop all conditional tags.
-		this.state.getStateElementConditionalTagsTags(name, formId).forEach((items, parent) => {
+		data.forEach((items, parent) => {
 			// Loop all inner fields.
 			items.forEach((inner, index) => {
 				// Placeholder value to chack later.
@@ -797,8 +820,8 @@ export class ConditionalTags {
 			ouputStyles: (formId, data, stateName) => {
 				this.ouputStyles(formId, data, stateName);
 			},
-			getFieldTopLevel: (formId, name) => {
-				return this.getFieldTopLevel(formId, name);
+			getFieldTopLevel: (formId, name, isNoneFormBlock = false) => {
+				return this.getFieldTopLevel(formId, name, isNoneFormBlock);
 			},
 			getFieldInner: (formId, name) => {
 				return this.getFieldInner(formId, name);

@@ -49,9 +49,9 @@ export const CheckboxEditor = (attributes) => {
 			<VisibilityHidden value={checkboxIsHidden} label={__('Checkbox', 'eightshift-forms')} />
 
 			<div className={`${componentClass}__content`}>
-				<label className={checkboxLabelClass} htmlFor="id">
+				<div className={checkboxLabelClass}>
 					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}} />
-				</label>
+				</div>
 
 				<MissingName value={checkboxValue} />
 

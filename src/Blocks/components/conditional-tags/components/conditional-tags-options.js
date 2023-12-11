@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
-import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
+import { TextControl, Button, Modal } from '@wordpress/components';
 import {
 	icons,
 	getAttrKey,
@@ -29,6 +29,7 @@ export const ConditionalTagsOptions = (attributes) => {
 
 	const {
 		setAttributes,
+		useCustom,
 	} = attributes;
 
 	const postId = select('core/editor').getCurrentPostId();
@@ -44,10 +45,13 @@ export const ConditionalTagsOptions = (attributes) => {
 		});
 	}, [isModalOpen, postId]);
 
-	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
-	const conditionalTagsRules = checkAttr('conditionalTagsRules', attributes, manifest);
-	const conditionalTagsBlockName = checkAttr('conditionalTagsBlockName', attributes, manifest);
-	const conditionalTagsIsHidden = checkAttr('conditionalTagsIsHidden', attributes, manifest);
+	const conditionalTagsUse = !useCustom ? checkAttr('conditionalTagsUse', attributes, manifest) : attributes?.conditionalTagsUse;
+	const conditionalTagsRules = !useCustom ? checkAttr('conditionalTagsRules', attributes, manifest) : attributes?.conditionalTagsRules;
+	const conditionalTagsBlockName = !useCustom ? checkAttr('conditionalTagsBlockName', attributes, manifest) : attributes?.conditionalTagsBlockName;
+	const conditionalTagsIsHidden = !useCustom ? checkAttr('conditionalTagsIsHidden', attributes, manifest) : attributes?.conditionalTagsIsHidden;
+
+	const conditionalTagsUseKey = !useCustom ? getAttrKey('conditionalTagsUse', attributes, manifest) : 'conditionalTagsUse';
+	const conditionalTagsRulesKey = !useCustom ? getAttrKey('conditionalTagsRules', attributes, manifest) : 'conditionalTagsRules';
 
 	const ConditionalTagsType = () => {
 		if (!formFields) {
@@ -64,7 +68,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					options={getConstantsOptions(CONDITIONAL_TAGS_ACTIONS_LABELS)}
 					onChange={(value) => {
 						conditionalTagsRules[0] = value;
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 					}}
 					noBottomSpacing
 					simpleValue
@@ -99,7 +103,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					icon={icons.plusCircleFillAlt}
 					onClick={() => {
 						conditionalTagsRules[1].push([[formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '']]);
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 					}}
 					className='es-rounded-1 es-mt-4'
 				>
@@ -139,7 +143,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					onChange={(value) => {
 						conditionalTagsRules[1][parent][index][0] = value;
 						conditionalTagsRules[1][parent][index][2] = '';
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 					}}
 					noBottomSpacing
 					simpleValue
@@ -152,7 +156,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					options={getConstantsOptions(CONDITIONAL_TAGS_OPERATORS_LABELS)}
 					onChange={(value) => {
 						conditionalTagsRules[1][parent][index][1] = value;
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 					}}
 					noBottomSpacing
 					simpleValue
@@ -164,7 +168,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				{!showRuleValuePicker ?
 					<TextControl
 						value={inputCheck}
-						onBlur={() => setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] })}
+						onBlur={() => setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] })}
 						onChange={(value) => {
 							conditionalTagsRules[1][parent][index][2] = value;
 							setInputCheck(value);
@@ -176,7 +180,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						options={formFieldOptions}
 						onChange={(value) => {
 							conditionalTagsRules[1][parent][index][2] = value;
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+							setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 						}}
 						noBottomSpacing
 						simpleValue
@@ -190,7 +194,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						icon={icons.plusCircleFillAlt}
 						onClick={() => {
 							conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, ''];
-							setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+							setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 						}}
 						className='es-rounded-1'
 					>
@@ -206,7 +210,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						if (conditionalTagsRules[1][parent].length === 0) {
 							conditionalTagsRules[1].splice(parent, 1);
 						}
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: [...conditionalTagsRules] });
+						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 					}}
 					label={__('Remove', 'eightshift-forms')}
 					className='es-ml-auto es-rounded-1!'
@@ -218,95 +222,90 @@ export const ConditionalTagsOptions = (attributes) => {
 	const rulesCount = conditionalTagsRules?.[1]?.length && conditionalTagsRules?.[1]?.flat()?.length;
 
 	return (
-		<>
-		{formFields?.length < 1 ?
-			<PanelBody>
-				<Control
-					icon={icons.conditionalVisibility}
-					label={__('Conditional visibility', 'eightshift-forms')}
-					additionalLabelClasses='es-font-weight-500'
-					noBottomSpacing
-				>
-					<IconLabel
-						icon={icons.warningFillTransparent}
-						label={__('Feature unavailable', 'eightshift-forms')}
-						subtitle={__('It looks like your field has a missing name.', 'eightshift-forms')}
-						additionalClasses='es-nested-color-yellow-500!'
-						addSubtitleGap
-						standalone
+		<Section
+			icon={icons.conditionalVisibility}
+			label={__('Conditional visibility', 'eightshift-forms')}
+		>
+			<>
+			{formFields?.length < 1 ?
+				<IconLabel
+					icon={icons.warningFillTransparent}
+					label={__('Feature unavailable', 'eightshift-forms')}
+					subtitle={__('It looks like your field has a missing name.', 'eightshift-forms')}
+					additionalClasses='es-nested-color-yellow-500!'
+					addSubtitleGap
+					standalone
+				/> :
+				<>
+					<IconToggle
+						label={__('Use conditional visibility', 'eightshift-forms')}
+						checked={conditionalTagsUse}
+						onChange={(value) => {
+							setAttributes({ [conditionalTagsUseKey]: value });
+							setAttributes({ [conditionalTagsRulesKey]: !value ? undefined : [CONDITIONAL_TAGS_ACTIONS.HIDE, []]});
+						}}
+						noBottomSpacing={!conditionalTagsUse}
+						additionalClasses='es-font-weight-500'
 					/>
-				</Control>
-			</PanelBody> :
-			<PanelBody>
-				<IconToggle
-					icon={icons.conditionalVisibility}
-					label={__('Conditional visibility', 'eightshift-forms')}
-					checked={conditionalTagsUse}
-					onChange={(value) => {
-						setAttributes({ [getAttrKey('conditionalTagsUse', attributes, manifest)]: value });
-						setAttributes({ [getAttrKey('conditionalTagsRules', attributes, manifest)]: !value ? undefined : [CONDITIONAL_TAGS_ACTIONS.HIDE, []]});
-					}}
-					noBottomSpacing={!conditionalTagsUse}
-					additionalClasses='es-font-weight-500'
-				/>
 
-				<Section showIf={conditionalTagsUse} noBottomSpacing>
-					{conditionalTagsIsHidden &&
-						<Notification
-							text={__('Your field is hidden! It is important to remember that this may result in unforeseen consequences when used with conditional tags.', 'eightshift-forms')}
-							type={'warning'}
-						/>
-					}
+					<Section showIf={conditionalTagsUse} noBottomSpacing>
+						{conditionalTagsIsHidden &&
+							<Notification
+								text={__('Field is hidden. This might introduce issues if used with conditional tags.', 'eightshift-forms')}
+								type='warning'
+							/>
+						}
 
-					<Control
-						icon={icons.conditionH}
-						label={__('Rules', 'eightshift-forms')}
-						// Translators: %d refers to the number of active rules
-						subtitle={(rulesCount > 0) && sprintf(__('%d rules', 'eightshift-forms'), rulesCount)}
-						noBottomSpacing
-						inlineLabel
-					>
-						<Button
-							variant='tertiary'
-							onClick={() => setIsModalOpen(true)}
-							className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
+						<Control
+							icon={icons.conditionH}
+							label={__('Rules', 'eightshift-forms')}
+							// Translators: %d refers to the number of active rules
+							subtitle={(rulesCount > 0) && sprintf(__('%d rules', 'eightshift-forms'), rulesCount)}
+							noBottomSpacing
+							inlineLabel
 						>
-							{(rulesCount > 0) ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
-						</Button>
-					</Control>
-	
-					{isModalOpen &&
-						<Modal
-							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
-							className='es-modal-max-width-5xl es-rounded-3!'
-							title={<IconLabel icon={icons.conditionalVisibility} label={__('Conditional visibility', 'eightshift-forms')} standalone />}
-							onRequestClose={() => setIsModalOpen(false)}
-						>
-							<div className='es-v-spaced'>
-								<ConditionalTagsType />
-							</div>
+							<Button
+								variant='tertiary'
+								onClick={() => setIsModalOpen(true)}
+								className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
+							>
+								{(rulesCount > 0) ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
+							</Button>
+						</Control>
 
-							<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
-								<IconLabel
-									icon={icons.lightBulb}
-									label={__('If you can\'t find a field, make sure the form is saved, and all fields have a name set.', 'eightshift-forms')}
-									additionalClasses='es-nested-color-yellow-500!'
-									standalone
-								/>
-	
-								<Button
-									variant='primary'
-									onClick={() => setIsModalOpen(false)}
-									className='es-rounded-1.5!'
-								>
-									{__('Save', 'eightshift-forms')}
-								</Button>
-							</div>
-						</Modal>
-					}
-				</Section>
-			</PanelBody>
-		}
-		</>
+						{isModalOpen &&
+							<Modal
+								overlayClassName='es-conditional-tags-modal es-geolocation-modal'
+								className='es-modal-max-width-5xl es-rounded-3!'
+								title={<IconLabel icon={icons.conditionalVisibility} label={__('Conditional visibility', 'eightshift-forms')} standalone />}
+								onRequestClose={() => setIsModalOpen(false)}
+							>
+								<div className='es-v-spaced'>
+									<ConditionalTagsType />
+								</div>
+
+								<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
+									<IconLabel
+										icon={icons.lightBulb}
+										label={__('If you can\'t find a field, make sure the form is saved, and all fields have a name set.', 'eightshift-forms')}
+										additionalClasses='es-nested-color-yellow-500!'
+										standalone
+									/>
+
+									<Button
+										variant='primary'
+										onClick={() => setIsModalOpen(false)}
+										className='es-rounded-1.5!'
+									>
+										{__('Save', 'eightshift-forms')}
+									</Button>
+								</div>
+							</Modal>
+						}
+					</Section>
+				</>
+			}
+			</>
+		</Section>
 	);
 };

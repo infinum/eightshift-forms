@@ -9,9 +9,10 @@ export const ConditionalTagsEditor = (attributes) => {
 
 	const {
 		isFormPicker = false,
+		useCustom,
 	} = attributes;
 
-	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
+	const conditionalTagsUse = !useCustom ? checkAttr('conditionalTagsUse', attributes, manifest) : attributes?.conditionalTagsUse;
 
 	if (!conditionalTagsUse) {
 		return null;

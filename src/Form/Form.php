@@ -140,7 +140,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		$formsNamespace = Components::getSettingsNamespace();
 		$manifest = Components::getBlock('forms');
-
 		$formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
 		$formsSuccessRedirectVariation = Components::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
 		$formsSuccessRedirectVariationUrl = Components::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
@@ -248,7 +247,10 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						// Find all forms attribtues added to a custom block.
 						$customUsedAttrsDiff = \array_intersect_key(
 							$inBlock['attrs'] ?? [],
-							Components::getComponent('field')['attributes']
+							\array_merge(
+								Components::getComponent('field')['attributes'],
+								Components::getComponent('conditional-tags')['attributes'],
+							)
 						);
 
 						// Change the forms attributes to a correct prefix and remove them from the original block.

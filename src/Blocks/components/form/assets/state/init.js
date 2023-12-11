@@ -16,6 +16,7 @@ export const StateEnum = {
 	// State names.
 	ISLOADED: 'isloaded',
 	ELEMENTS: 'elements',
+	ELEMENTS_FIELDS: 'elementsFields',
 	FORM: 'form',
 	FORMS: 'forms',
 
@@ -167,6 +168,7 @@ export const StateEnum = {
 	SELECTORS_GLOBAL_MSG: 'globalMsg',
 	SELECTORS_GROUP: 'group',
 	SELECTORS_FIELD: 'field',
+	SELECTORS_FIELD_NO_FORMS_BLOCK: 'fieldCustom',
 	SELECTORS_RATING: 'rating',
 	SELECTORS_FIELD_STYLE: 'fieldStyle',
 
@@ -322,6 +324,7 @@ export function setStateInitial() {
 	setState([StateEnum.SELECTORS_GLOBAL_MSG], `.${manifest.componentJsClass}-global-msg`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_GROUP], `.${manifest.componentJsClass}-group`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_FIELD], `.${manifest.componentJsClass}-field`, StateEnum.SELECTORS);
+	setState([StateEnum.SELECTORS_FIELD_NO_FORMS_BLOCK], `.${manifest.componentJsClass}-field-custom`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_RATING], `.${manifest.componentJsClass}-rating`, StateEnum.SELECTORS);
 	setState([StateEnum.SELECTORS_FIELD_STYLE], `.${manifest.componentClass}-field`, StateEnum.SELECTORS);
 }
@@ -338,6 +341,7 @@ export function setStateFormInitial(formId) {
 	window[prefix].state[`form_${formId}`] = {};
 	window[prefix].state[`form_${formId}`] = {
 		[StateEnum.ELEMENTS]: {},
+		[StateEnum.ELEMENTS_FIELDS]: {},
 		[StateEnum.FORM]: {},
 	};
 
@@ -390,10 +394,10 @@ export function setStateFormInitial(formId) {
 	// Steps.
 	setSteps(formElement, formId);
 
-	const formFields = formElement?.querySelectorAll('input, select, textarea') ?? {};
+	const formFields = formElement?.querySelectorAll('input, select, textarea') ?? [];
 
 	// Loop all fields.
-	for (const item of Object.values(formFields)) {
+	[...formFields].forEach((item) => {
 		const {
 			value,
 			name,
@@ -402,7 +406,7 @@ export function setStateFormInitial(formId) {
 		} = item;
 
 		if (name === 'search_terms') {
-			continue;
+			return;
 		}
 
 		const field = formElement.querySelector(`${getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)}[${getStateAttribute('fieldName')}="${name}"]`);
@@ -531,7 +535,7 @@ export function setStateFormInitial(formId) {
 		setState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], item?.classList?.contains(getState([StateEnum.SELECTORS_SUBMIT_SINGLE], StateEnum.SELECTORS).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.SAVE_AS_JSON], Boolean(item.getAttribute(getStateAttribute('saveAsJson'))), formId);
-	}
+	});
 
 	// Loop all fields for conditional tags later because we need to have all state set.
 	for (const item of Object.values(formFields)) {
@@ -547,16 +551,31 @@ export function setStateFormInitial(formId) {
 
 		const field = formElement.querySelector(`${getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)}[${getStateAttribute('fieldName')}="${name}"]`);
 
-		
 		if (type ==='radio' || type ==='checkbox') {
 			setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
 		}
 
 		// Conditional tags.
 		if (field) {
-			setStateConditionalTags(field, name, formId);
+			setStateConditionalTags(field, name, false, formId);
 		}
 	}
+
+	const customFields = formElement?.querySelectorAll(getState([StateEnum.SELECTORS_FIELD_NO_FORMS_BLOCK], StateEnum.SELECTORS)) ?? [];
+
+	// Loop all fields for conditional tags later because we need to have all state set beforehand.
+	[...customFields].forEach((field) => {
+			
+		const name = field.getAttribute(getStateAttribute('fieldName'));
+
+		// Conditional tags.
+		if (name) {
+			setState([StateEnum.ELEMENTS_FIELDS, name, StateEnum.NAME], name, formId);
+			setState([StateEnum.ELEMENTS_FIELDS, name, StateEnum.FIELD], field, formId);
+
+			setStateConditionalTags(field, name, true, formId);
+		}
+	});
 }
 
 /**
@@ -806,16 +825,19 @@ export function setStateValuesPhoneSelect(item, formId) {
  *
  * @param {object} field Field object.
  * @param {string} name Field name.
+ * @param {boolean} isNoneFormBlock Is none form block.
  * @param {string} formId Form ID.
  *
  * @returns {void}
  */
-export function setStateConditionalTags(field, name, formId) {
+export function setStateConditionalTags(field, name, isNoneFormBlock = false, formId) {
 	const conditionalTags = field.getAttribute(getStateAttribute('conditionalTags'));
 
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], CONDITIONAL_TAGS_ACTIONS.SHOW, formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], [], formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], [], formId);
+	const parentStorage = isNoneFormBlock ? StateEnum.ELEMENTS_FIELDS : StateEnum.ELEMENTS;
+
+	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], CONDITIONAL_TAGS_ACTIONS.SHOW, formId);
+	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], [], formId);
+	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], [], formId);
 
 	if (!conditionalTags) {
 		return;
@@ -834,10 +856,10 @@ export function setStateConditionalTags(field, name, formId) {
 		return;
 	}
 
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], tag[0], formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], output, formId);
+	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], tag[0], formId);
+	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], output, formId);
 
-	setStateConditionalTagsInner(name, formId, output);
+	setStateConditionalTagsInner(name, formId, output, isNoneFormBlock);
 }
 
 
@@ -880,7 +902,7 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], tag[0], formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS], output, formId);
 
-	setStateConditionalTagsInner(name, formId, output, innerName);
+	setStateConditionalTagsInner(name, formId, output, false, innerName);
 }
 
 /**
@@ -889,12 +911,15 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
  * @param {string} name Field name.
  * @param {string} formId Form ID.
  * @param {array} tags Tags array.
+ * @param {boolean} isNoneFormBlock Is none form block.
  * @param {string} innerName Conditional tag inner name.
  *
  * @returns {void}
  */
-export function setStateConditionalTagsInner(name, formId, tags, innerName = '') {
+export function setStateConditionalTagsInner(name, formId, tags, isNoneFormBlock = false, innerName = '') {
 	const refOutput = [];
+
+	const parentStorage = isNoneFormBlock ? StateEnum.ELEMENTS_FIELDS : StateEnum.ELEMENTS;
 
 	const isInner = Boolean(innerName);
 
@@ -918,10 +943,10 @@ export function setStateConditionalTagsInner(name, formId, tags, innerName = '')
 
 	if (isInner) {
 		setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], eventsOutput, formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_REF], refOutput, formId);
+		setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_REF], refOutput, formId);
 	} else {
 		setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], eventsOutput, formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], refOutput, formId);
+		setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], refOutput, formId);
 	}
 }
 

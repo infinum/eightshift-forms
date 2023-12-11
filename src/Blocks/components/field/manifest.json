@@ -4,6 +4,7 @@
 	"title": "Field",
 	"componentClass": "es-field",
 	"componentJsClass": "js-es-block-field",
+	"componentJsCustomClass": "js-es-block-field-custom",
 	"example": {
 		"attributes": {
 			"fieldContent": "Content",
@@ -124,6 +125,10 @@
 			"default": false
 		},
 		"fieldIsFiftyFiftyHorizontal": {
+			"type": "boolean",
+			"default": false
+		},
+		"fieldIsNoneFormBlock": {
 			"type": "boolean",
 			"default": false
 		}

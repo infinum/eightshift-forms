@@ -48,9 +48,9 @@ export const RadioEditor = (attributes) => {
 			<VisibilityHidden value={radioIsHidden} label={__('Radio', 'eightshift-forms')} />
 
 			<div className={`${componentClass}__content`}>
-				<label className={radioLabelClass} htmlFor="id">
+				<div className={radioLabelClass}>
 					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: radioLabel ? radioLabel : __('Please enter radio label in sidebar or this radio will not show on the frontend.', 'eightshift-forms')}} />
-				</label>
+				</div>
 
 				<MissingName value={radioValue} />
 

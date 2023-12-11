@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
 import { props } from '@eightshift/frontend-libs/scripts';
-import { FieldOptionsLayout } from './../../../components/field/components/field-options';
+import { FieldOptionsExternalBlocks, FieldOptionsLayout } from './../../../components/field/components/field-options';
 
 // This block is only used if you want to include custom external blocks to forms.
 export const FieldOptions = ({ attributes, setAttributes }) => {
@@ -17,6 +17,11 @@ export const FieldOptions = ({ attributes, setAttributes }) => {
 				fieldWidthDesktop={attributes.fieldWidthDesktop}
 				fieldWidthTablet={attributes.fieldWidthTablet}
 				fieldWidthMobile={attributes.fieldWidthMobile}
+			/>
+
+			<FieldOptionsExternalBlocks
+				attributes={attributes}
+				setAttributes={setAttributes}
 			/>
 		</PanelBody>
 	);

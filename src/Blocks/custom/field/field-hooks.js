@@ -35,13 +35,12 @@ function setNoneEightshiftBlocksFieldAttributes( settings, name ) {
 
 	// Change only none forms blocks in forms post type.
 	if (esFormsLocalization?.postType === 'eightshift-forms' && !name.includes('eightshift-forms')) {
-		const { attributes } = select(STORE_NAME).getComponent('field');
-
 		return {
 			...settings,
 			attributes: {
 				...settings.attributes,
-				...attributes,
+				...select(STORE_NAME).getComponent('field').attributes,
+				...select(STORE_NAME).getComponent('conditional-tags').attributes,
 			},
 		};
 	}
