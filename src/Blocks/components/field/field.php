@@ -31,8 +31,6 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockName = $attributes['blockName'] ?? '';
-$componentJsClass = $manifest['componentJsClass'] ?? '';
-$componentJsCustomClass = $manifest['componentJsCustomClass'] ?? '';
 
 // Update media breakpoints from the filter.
 $filterName = Filters::getFilterName(['blocks', 'mediaBreakpoints']);
@@ -103,8 +101,8 @@ $fieldClass = Components::classnames([
 	Components::selector($additionalFieldClass, $additionalFieldClass),
 	Components::selector($fieldDisabled, Helper::getStateSelector('isDisabled')),
 	Components::selector($fieldHidden, Helper::getStateSelector('isHidden')),
-	Components::selector($componentJsClass, $componentJsClass),
-	Components::selector($fieldIsNoneFormBlock, $componentJsCustomClass),
+	Helper::getStateSelector('field'),
+	Components::selector($fieldIsNoneFormBlock, Helper::getStateSelector('fieldNoFormsBlock')),
 	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
 	Components::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
 	...$fieldStyleOutput,

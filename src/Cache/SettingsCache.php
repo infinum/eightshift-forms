@@ -64,10 +64,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$manifestForm = Components::getComponent('form');
-
 		$output = \array_values(\array_filter(\array_map(
-			function ($key, $value) use ($manifestForm) {
+			function ($key, $value) {
 				$cache = $value['cache'] ?? [];
 
 				$isUsedKey = $value['use'] ?? '';
@@ -86,7 +84,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 									Helper::getStateAttribute('cacheType') => $key,
 									Helper::getStateAttribute('reload') => 'false',
 								],
-								'additionalClass' => $manifestForm['componentCacheJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('cacheDelete'),
 							],
 						],
 					];
@@ -121,7 +119,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 									Helper::getStateAttribute('cacheType') => 'all',
 									Helper::getStateAttribute('reload') => 'false',
 								],
-								'additionalClass' => $manifestForm['componentCacheJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('cacheDelete'),
 							],
 						],
 					],

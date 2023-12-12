@@ -6,13 +6,12 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestTabs = Components::getComponent('tabs');
-
 $componentClass = $manifest['componentClass'] ?? '';
-$componentJsTabClass = $manifestTabs['componentJsTabClass'] ?? '';
 
 $tabLabel = Components::checkAttr('tabLabel', $attributes, $manifest);
 $tabContent = Components::checkAttr('tabContent', $attributes, $manifest);
@@ -20,7 +19,7 @@ $tabFull = Components::checkAttr('tabFull', $attributes, $manifest);
 
 $tabLabelClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'label'),
-	Components::selector($componentJsTabClass, $componentJsTabClass),
+	Helper::getStateSelectorAdmin('tabsItem'),
 ]);
 
 $tabContentClass = Components::classnames([

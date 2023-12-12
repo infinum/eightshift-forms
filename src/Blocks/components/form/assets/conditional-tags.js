@@ -196,19 +196,19 @@ export class ConditionalTags {
 		// Loop all fields.
 		for(const [name] of this.state.getStateElements(formId)) {
 			// Get element type.
-			const type = this.state.getStateElementTypeInternal(name, formId);
+			const type = this.state.getStateElementTypeField(name, formId);
 
 			// Only select, checkbox and radio fields can have inner items.
 			if (
-				type === this.state.getStateFieldType('select') ||
-				type === this.state.getStateFieldType('checkbox') ||
-				type === this.state.getStateFieldType('radio')
+				type === 'select' ||
+				type === 'checkbox' ||
+				type === 'radio'
 			) {
 				// Prepare inner level outputs.
 				let innerOutput = {};
 
 				// Select fields can have multiple or single select inner options.
-				if (type === this.state.getStateFieldType('select')) {
+				if (type === 'select') {
 					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId) ? this.getFieldInnerSelectMultiple(formId, name) : this.getFieldInnerSelectSingle(formId, name);
 				} else {
 					// Checkbox and radio inner fields.
@@ -314,7 +314,7 @@ export class ConditionalTags {
 		// Loop all inner items.
 		for (const [fieldName, innerItems] of Object.entries(data?.inner ?? {})) {
 			// Get correct selector type.
-			let selectorType = this.state.getStateElementTypeInternal(fieldName, formId) === this.state.getStateFieldType('select') ? selectValueAttr : fieldNameAttr;
+			let selectorType = this.state.getStateElementTypeField(fieldName, formId) === 'select' ? selectValueAttr : fieldNameAttr;
 
 			// Loop all inner items.
 			innerItems.forEach((inner) => {
@@ -580,7 +580,7 @@ export class ConditionalTags {
 	 * @returns {bool}
 	 */
 	getToggleParent(formId, name, currentState) {
-		if (this.state.getStateElementType(name, formId) === 'select') {
+		if (this.state.getStateElementTypeField(name, formId) === 'select') {
 			// Get choices object.
 			const items = this.state.getStateElementCustom(name, formId)?.config?.choices;
 
@@ -627,7 +627,7 @@ export class ConditionalTags {
 				let value = '';
 
 				// Get element type.
-				const type = this.state.getStateElementType(innerName, formId);
+				const type = this.state.getStateElementTypeField(innerName, formId);
 
 				// Bailout if type is missing.
 				if (!type) {
@@ -688,7 +688,7 @@ export class ConditionalTags {
 				let value = '';
 
 				// Get element type.
-				const type = this.state.getStateElementType(inner[0], formId);
+				const type = this.state.getStateElementTypeField(inner[0], formId);
 
 				// Bailout if type is missing.
 				if (!type) {

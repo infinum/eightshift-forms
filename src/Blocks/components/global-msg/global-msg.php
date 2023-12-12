@@ -14,7 +14,6 @@ $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentJsClass = $manifest['componentJsClass'] ?? '';
 $globalMsgAttrs = [];
 
 $globalMsgValue = Components::checkAttr('globalMsgValue', $attributes, $manifest);
@@ -22,7 +21,7 @@ $globalMsgValue = Components::checkAttr('globalMsgValue', $attributes, $manifest
 $globalMsgClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($componentJsClass, $componentJsClass),
+	Helper::getStateSelector('globalMsg'),
 ]);
 
 $headings = [

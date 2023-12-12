@@ -3,7 +3,6 @@
 	"componentName": "rating",
 	"title": "Rating",
 	"componentClass": "es-rating",
-	"componentJsClass": "js-es-block-rating",
 	"example": {
 		"attributes": {
 			"ratingName": "Name",

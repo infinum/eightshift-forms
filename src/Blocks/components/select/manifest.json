@@ -3,7 +3,6 @@
 	"componentName": "select",
 	"title": "Select",
 	"componentClass": "es-select",
-	"componentJsSingleSubmitClass": "js-es-block-single-submit",
 	"example": {
 		"attributes": {
 			"selectContent": "",

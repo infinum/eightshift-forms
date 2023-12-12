@@ -259,9 +259,9 @@ export class State {
 	////////////////////////////////////////////////////////////////
 	// Element getters.
 	////////////////////////////////////////////////////////////////
-	getStateElementByTypeInternal = (type, formId) => {
+	getStateElementByTypeField = (type, formId) => {
 		const intType = this.getStateFieldType(type);
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_INTERNAL, intType, formId);
+		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_FIELD, intType, formId);
 	};
 	getStateElementByHasError = (type, formId) => {
 		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.HAS_ERROR, type, formId);
@@ -316,8 +316,8 @@ export class State {
 	getStateElementLoaded = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.LOADED], formId);
 	};
-	getStateElementTypeInternal = (name, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], formId);
+	getStateElementTypeField = (name, formId) => {
+		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_FIELD], formId);
 	};
 	getStateElementTypeCustom = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], formId);
@@ -363,9 +363,6 @@ export class State {
 	};
 	getStateElementTracking = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], formId);
-	};
-	getStateElementType = (name, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE], formId);
 	};
 	getStateElementInputSelect = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], formId);

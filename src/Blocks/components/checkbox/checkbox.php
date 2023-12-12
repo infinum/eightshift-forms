@@ -16,7 +16,6 @@ $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
 if (!$checkboxValue) {
@@ -55,7 +54,7 @@ $checkboxClass = Components::classnames([
 
 $checkboxInputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'input'),
-	Components::selector($checkboxSingleSubmit, $componentJsSingleSubmitClass),
+	Components::selector($checkboxSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 $checkboxAttrs['value'] = esc_attr($checkboxValue);

@@ -104,8 +104,6 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$manifestForm = Components::getComponent('form');
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -130,7 +128,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitAttrs' => [
 									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_LOCALE,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -150,7 +148,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitAttrs' => [
 									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_GENERAL,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -170,7 +168,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitAttrs' => [
 									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_FORMS,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -190,7 +188,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitAttrs' => [
 									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_LABELS,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -206,7 +204,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
 						'textareaIsPreventSubmit' => true,
 						'textareaIsReadOnly' => true,
-						'additionalClass' => "{$manifestForm['componentMigrationJsClass']}-output",
+						'additionalClass' => Helper::getStateSelectorAdmin('migrationOutput'),
 					],
 				],
 			],

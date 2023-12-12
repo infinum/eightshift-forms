@@ -4,7 +4,6 @@
 	"title": "Form",
 	"description" : "Allows selecting the form that should be displayed",
 	"category": "eightshift-forms",
-	"componentJsClass": "js-es-block-forms",
 	"icon": {
 		"src": "esf-form"
 	},

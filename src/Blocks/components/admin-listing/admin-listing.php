@@ -11,13 +11,11 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSection = Components::getComponent('admin-settings-section');
-$manifestUtils = Components::getComponent('utils');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
-$componentJsBulkClass = $manifest['componentJsBulkClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
 $adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
@@ -78,7 +76,7 @@ $help = Components::render('container', [
 			]),
 			$help,
 		]),
-		'additionalClass' => "{$componentJsBulkClass}-items",
+		'additionalClass' => Helper::getStateSelectorAdmin('listingBulkItems'),
 		'additionalAttributes' => [
 			Helper::getStateAttribute('bulkItems') => wp_json_encode([]),
 		],
@@ -91,7 +89,7 @@ $help = Components::render('container', [
 // This is fake form to be able to init state for global msg.
 
 $formClasses = Components::classnames([
-	Components::getComponent('form')['componentFormJsClass'],
+	Helper::getStateSelector('form'),
 	Components::selector($componentClass, $componentClass, 'form'),
 ]);
 ?>

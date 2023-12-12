@@ -106,7 +106,6 @@ export class Enrichment {
 			return;
 		}
 
-		const type = this.state.getStateElementTypeInternal(name, formId);
 		let value = '';
 		let valueData = this.state.getStateElementValue(name, formId);
 
@@ -114,8 +113,8 @@ export class Enrichment {
 			valueData = '';
 		}
 
-		switch (type) {
-			case this.state.getStateFieldType('phone'):
+		switch (this.state.getStateElementTypeField(name, formId)) {
+			case 'phone':
 				value = {
 					prefix: this.state.getStateElementValueCountry(name, formId)?.number,
 					value: valueData,
@@ -303,25 +302,25 @@ export class Enrichment {
 				return;
 			}
 
-			switch (this.state.getStateElementTypeInternal(name, formId)) {
-				case this.state.getStateFieldType('phone'):
+			switch (this.state.getStateElementTypeField(name, formId)) {
+				case 'phone':
 					this.utils.setManualPhoneValue(formId, name, value);
 					break;
-				case this.state.getStateFieldType('date'):
-				case this.state.getStateFieldType('dateTime'):
+				case 'date':
+				case 'dateTime':
 					this.utils.setManualDateValue(formId, name, value);
 					break;
-				case this.state.getStateFieldType('country'):
-				case this.state.getStateFieldType('select'):
+				case 'country':
+				case 'select':
 					this.utils.setManualSelectValue(formId, name, value);
 					break;
-				case this.state.getStateFieldType('checkbox'):
+				case 'checkbox':
 					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
-				case this.state.getStateFieldType('radio'):
+				case 'radio':
 					this.utils.setManualRadioValue(formId, name, value);
 					break;
-				case this.state.getStateFieldType('rating'):
+				case 'rating':
 					this.utils.setManualRatingValue(formId, name, value);
 					break;
 				default:

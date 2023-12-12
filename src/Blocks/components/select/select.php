@@ -14,7 +14,6 @@ $manifestGlobal = Components::getSettings();
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 if (!$selectName) {
@@ -41,7 +40,7 @@ $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attr
 $selectClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'select'),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($selectSingleSubmit, $componentJsSingleSubmitClass),
+	Components::selector($selectSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 if ($selectUseSearch) {

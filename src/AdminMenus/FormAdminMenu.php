@@ -358,12 +358,10 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	private function getTopBarItems(string $type, string $formId): array
 	{
-		$manifest = Components::getComponent('admin-listing');
-
-		$componentJsBulkClass = $manifest['componentJsBulkClass'] ?? '';
-		$componentJsSelectAllClass = $manifest['componentJsSelectAllClass'] ?? '';
-		$componentJsFilterClass = $manifest['componentJsFilterClass'] ?? '';
-		$componentJsExportClass = $manifest['componentJsExportClass'] ?? '';
+		$bulkSelector = Helper::getStateSelectorAdmin('listingBulk');
+		$filterSelector = Helper::getStateSelectorAdmin('listingFilter');
+		$exportSelector = Helper::getStateSelectorAdmin('listingExport');
+		$selectAllSelector = Helper::getStateSelectorAdmin('listingSelectAll');
 
 		$left = [];
 		$right = [];
@@ -385,7 +383,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					Components::render('checkbox', [
 						'checkboxValue' => 'all',
 						'checkboxName' => 'all',
-						'additionalClass' => $componentJsSelectAllClass,
+						'additionalClass' => $selectAllSelector,
 					]),
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
@@ -398,7 +396,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
 						'submitIsDisabled' => true,
-						'additionalClass' => $componentJsBulkClass,
+						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
 							Helper::getStateAttribute('bulkType') => 'delete-entry',
 						],
@@ -407,7 +405,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Duplicate', 'eightshift-forms'),
 						'submitIsDisabled' => true,
-						'additionalClass' => $componentJsBulkClass,
+						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
 							Helper::getStateAttribute('bulkType') => 'duplicate-entry',
 						],
@@ -419,7 +417,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Export to CSV', 'eightshift-forms'),
 						'submitIsDisabled' => true,
-						'additionalClass' => "{$componentJsExportClass} {$componentJsBulkClass}",
+						'additionalClass' => "{$exportSelector} {$bulkSelector}",
 						'submitAttrs' => [
 							Helper::getStateAttribute('bulkType') => 'fake',
 							Helper::getStateAttribute('formId') => $formId,
@@ -432,7 +430,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					Components::render('checkbox', [
 						'checkboxValue' => 'all',
 						'checkboxName' => 'all',
-						'additionalClass' => $componentJsSelectAllClass,
+						'additionalClass' => $selectAllSelector,
 					]),
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
@@ -448,7 +446,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Restore', 'eightshift-forms'),
 						'submitIsDisabled' => true,
-						'additionalClass' => $componentJsBulkClass,
+						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
 							Helper::getStateAttribute('bulkType') => 'restore',
 						],
@@ -457,7 +455,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete permanently', 'eightshift-forms'),
 						'submitIsDisabled' => true,
-						'additionalClass' => $componentJsBulkClass,
+						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
 							Helper::getStateAttribute('bulkType') => 'delete-perminentely',
 						],
@@ -469,20 +467,20 @@ class FormAdminMenu extends AbstractAdminMenu
 					Components::render('checkbox', [
 						'checkboxValue' => 'all',
 						'checkboxName' => 'all',
-						'additionalClass' => $componentJsSelectAllClass,
+						'additionalClass' => $selectAllSelector,
 					]),
 					Components::render('select', [
 						'fieldSkip' => true,
 						'selectName' => 'filter',
 						'selectContent' => $this->getFilterOptions(),
 						'selectPlaceholder' => \__('Show all', 'eightshift-forms'),
-						'additionalClass' => $componentJsFilterClass,
+						'additionalClass' => $filterSelector,
 					]),
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
 						'submitIsDisabled' => true,
-						'additionalClass' => $componentJsBulkClass,
+						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
 							Helper::getStateAttribute('bulkType') => 'delete',
 						],
@@ -491,7 +489,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Sync', 'eightshift-forms'),
 						'submitIsDisabled' => true,
-						'additionalClass' => $componentJsBulkClass,
+						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
 							Helper::getStateAttribute('bulkType') => 'sync',
 						],
@@ -500,7 +498,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Duplicate', 'eightshift-forms'),
 						'submitIsDisabled' => true,
-						'additionalClass' => $componentJsBulkClass,
+						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
 							Helper::getStateAttribute('bulkType') => 'duplicate',
 						],
@@ -544,7 +542,6 @@ class FormAdminMenu extends AbstractAdminMenu
 		$isDevMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 		$manifest = Components::getComponent('admin-listing');
-		$componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
 
 		switch ($type) {
 			case 'locations':
@@ -598,7 +595,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							Helper::getStateAttribute('bulkId') => $id,
 						],
 						'additionalClass' => Components::classnames([
-							$componentJsItemClass,
+							Helper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
 
@@ -635,7 +632,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							Helper::getStateAttribute('bulkId') => $id,
 						],
 						'additionalClass' => Components::classnames([
-							$componentJsItemClass,
+							Helper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
 				}
@@ -758,7 +755,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitAttrs' => [
 							Helper::getStateAttribute('locationsId') => $formId
 						],
-						'additionalClass' => $manifest['componentJsLocationsClass'] ?? '',
+						'additionalClass' => Helper::getStateSelectorAdmin('listingLocations'),
 					]),
 					($entriesCount > 0) ?
 					Components::render('submit', [

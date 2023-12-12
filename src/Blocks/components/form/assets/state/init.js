@@ -37,7 +37,7 @@ export const StateEnum = {
 	IS_DISABLED: 'disabled',
 	TYPE: 'type',
 	TYPE_SETTINGS: 'typeSettings',
-	TYPE_INTERNAL: 'typeInternal',
+	TYPE_FIELD: 'typeField',
 	TYPE_CUSTOM: 'typeCustom',
 	NAME: 'name',
 	ERROR: 'error',
@@ -126,9 +126,10 @@ export const StateEnum = {
 
 	ATTRIBUTES: 'attributes',
 	PARAMS: 'params',
-	TYPE_INT: 'typeInt',
+	FIELD_TYPE: 'fieldType',
 	EVENTS: 'events',
 	SELECTORS: 'selectors',
+	SELECTORS_ADMIN: 'selectorsAdmin',
 };
 
 ////////////////////////////////////////////////////////////////
@@ -168,30 +169,41 @@ export function setStateInitial() {
 		[StateEnum.SETTINGS]: {},
 		[StateEnum.EVENTS]: {},
 		[StateEnum.SELECTORS]: {},
+		[StateEnum.SELECTORS_ADMIN]: {},
 		[StateEnum.ATTRIBUTES]: {},
 		[StateEnum.PARAMS]: {},
-		[StateEnum.TYPE_INT]: {},
+		[StateEnum.FIELD_TYPE]: {},
 		[StateEnum.CONFIG]: {},
 	};
 
 	// Selectors.
-	for (const [key, item] of Object.entries(globalManifest.enums.customSelectors ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.selectors ?? {})) {
 		setState([key], item, StateEnum.SELECTORS);
 	}
 
+	// Selectors Admin.
+	for (const [key, item] of Object.entries(globalManifest.enums.selectorsAdmin ?? {})) {
+		setState([key], item, StateEnum.SELECTORS_ADMIN);
+	}
+
 	// Attributes.
-	for (const [key, item] of Object.entries(globalManifest.enums.customFormAttrs ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.attrs ?? {})) {
 		setState([key], item, StateEnum.ATTRIBUTES);
 	}
 
 	// Params.
-	for (const [key, item] of Object.entries(globalManifest.enums.customFormParams ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.params ?? {})) {
 		setState([key], item, StateEnum.PARAMS);
 	}
 
 	// Type Int.
+	for (const [key, item] of Object.entries(globalManifest.enums.events ?? {})) {
+		setState([key], item, StateEnum.EVENTS);
+	}
+
+	// Type Int.
 	for (const [key, item] of Object.entries(globalManifest.enums.typeInternal ?? {})) {
-		setState([key], item, StateEnum.TYPE_INT);
+		setState([key], item, StateEnum.FIELD_TYPE);
 	}
 
 	// Config.
@@ -313,7 +325,7 @@ export function setStateFormInitial(formId) {
 		const {
 			value,
 			name,
-			type, // this is used as a native type not internal type.
+			type, // this is used as a native type not field type.
 			disabled,
 		} = item;
 
@@ -359,7 +371,7 @@ export function setStateFormInitial(formId) {
 				// Combined fields like phone can have field null.
 				const isMultiple = Boolean(item.getAttribute(getStateAttribute('selectIsMultiple'))); // eslint-disable-line no-case-declarations
 
-				if (item.options.length && (fieldType === getStateFieldType('phone') || fieldType === getStateFieldType('country'))) {
+				if (item.options.length && (fieldType === 'phone' || fieldType === 'country')) {
 					let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
 
 					if (typeof customData === 'string') {
@@ -371,7 +383,7 @@ export function setStateFormInitial(formId) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData[getStateAttribute('selectCountryNumber')], formId);
 				}
 
-				if (fieldType !== getStateFieldType('phone')) {
+				if (fieldType !== 'phone') {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
 
@@ -425,7 +437,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 
-				if (fieldType === getStateFieldType('rating')) {
+				if (fieldType === 'rating') {
 					setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], field.querySelector(getStateSelector('rating', true)), formId);
 				}
 
@@ -436,8 +448,7 @@ export function setStateFormInitial(formId) {
 				break;
 		}
 
-		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], type, formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], fieldType, formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_FIELD], fieldType, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.HAS_ERROR], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.LOADED], false, formId);
@@ -990,6 +1001,18 @@ export function getStateSelector(name, usePrefix = false) {
 }
 
 /**
+ * Get state selector admin.
+ * 
+ * @param {string} name Name key to get.
+ * @param {boolean} usePrefix Use prefix.
+ *
+ * @returns {string}
+ */
+export function getStateSelectorAdmin(name, usePrefix = false) {
+	return usePrefix ? `.${getStateTop(StateEnum.SELECTORS_ADMIN)[name]}` : getStateTop(StateEnum.SELECTORS_ADMIN)[name];
+}
+
+/**
  * Get state attribute.
  *
  * @returns {string}
@@ -999,12 +1022,12 @@ export function getStateAttribute(name) {
 }
 
 /**
- * Get state internal type.
+ * Get state field type.
  *
  * @returns {string}
  */
 export function getStateFieldType(name) {
-	return getStateTop(StateEnum.TYPE_INT)[name];
+	return getStateTop(StateEnum.FIELD_TYPE)[name];
 }
 
 /**

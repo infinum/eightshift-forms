@@ -18,7 +18,6 @@ $manifestSettings = Components::getSettings();
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
 $blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$manifestSettings['blockClassPrefix']}-{$manifest['blockName']}";
-$componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Check formPost ID prop.
 $formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
@@ -101,7 +100,7 @@ if ($formAttrs) {
 
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	Components::selector($componentJsClass, $componentJsClass),
+	Helper::getStateSelector('forms'),
 	Components::selector($hasGeolocation, Helper::getStateSelector('isGeoLoading')),
 	$attributes['className'] ?? '',
 	...$formsStyleOutput,

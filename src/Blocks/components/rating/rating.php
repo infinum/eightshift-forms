@@ -14,7 +14,6 @@ $icons = Components::getComponent('utils')['icons'];
 $manifestGlobal = Components::getSettings();
 
 $componentClass = $manifest['componentClass'] ?? '';
-$componentJsClass = $manifest['componentJsClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $ratingName = Components::checkAttr('ratingName', $attributes, $manifest);
@@ -35,8 +34,8 @@ $ratingHideLabel = false;
 
 $ratingClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($additionalClass, $additionalClass),
+	Helper::getStateSelector('rating'),
 ]);
 
 if (!$ratingValue || !is_numeric($ratingValue)) {

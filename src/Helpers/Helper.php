@@ -994,6 +994,18 @@ class Helper
 	}
 
 	/**
+	 * Return selector admin enum values by name.
+	 *
+	 * @param string $name Name of the enum.
+	 *
+	 * @return string
+	 */
+	public static function getStateSelectorAdmin(string $name): string
+	{
+		return Components::getSettings()['enums']['selectorsAdmin'][$name] ?? '';
+	}
+
+	/**
 	 * Return selector enum values by name.
 	 *
 	 * @param string $name Name of the enum.
@@ -1002,7 +1014,7 @@ class Helper
 	 */
 	public static function getStateSelector(string $name): string
 	{
-		return Components::getSettings()['enums']['customSelectors'][$name] ?? '';
+		return Components::getSettings()['enums']['selectors'][$name] ?? '';
 	}
 
 	/**
@@ -1014,7 +1026,7 @@ class Helper
 	 */
 	public static function getStateAttribute(string $name): string
 	{
-		return Components::getSettings()['enums']['customFormAttrs'][$name] ?? '';
+		return Components::getSettings()['enums']['attrs'][$name] ?? '';
 	}
 
 	/**
@@ -1024,7 +1036,7 @@ class Helper
 	 */
 	public static function getStateParams(): array
 	{
-		return Components::getSettings()['enums']['customFormParams'] ?? [];
+		return Components::getSettings()['enums']['params'] ?? [];
 	}
 
 	/**

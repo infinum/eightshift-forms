@@ -15,7 +15,6 @@ $manifestSettings = Components::getSettings();
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $radioValue = Components::checkAttr('radioValue', $attributes, $manifest);
 if (!$radioValue) {
@@ -43,7 +42,7 @@ $radioClass = Components::classnames([
 
 $radioInputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'input'),
-	Components::selector($radioSingleSubmit, $componentJsSingleSubmitClass),
+	Components::selector($radioSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 $radioAttrs['value'] = esc_attr($radioValue);

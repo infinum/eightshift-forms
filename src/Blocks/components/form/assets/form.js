@@ -181,56 +181,56 @@ export class Form {
 
 		// Select.
 		[
-			...this.state.getStateElementByTypeInternal('select', formId),
-			...this.state.getStateElementByTypeInternal('country', formId),
+			...this.state.getStateElementByTypeField('select', formId),
+			...this.state.getStateElementByTypeField('country', formId),
 		].forEach((select) => {
 			this.setupSelectField(formId, select.name);
 		});
 
 		// File.
-		[...this.state.getStateElementByTypeInternal('file', formId)].forEach((file) => {
+		[...this.state.getStateElementByTypeField('file', formId)].forEach((file) => {
 			this.setupFileField(formId, file.name);
 		});
 
 		// Textarea.
-		[...this.state.getStateElementByTypeInternal('textarea', formId)].forEach((textarea) => {
+		[...this.state.getStateElementByTypeField('textarea', formId)].forEach((textarea) => {
 			this.setupTextareaField(formId, textarea.name);
 		});
 
 		// Text.
-		[...this.state.getStateElementByTypeInternal('input', formId)].forEach((input) => {
+		[...this.state.getStateElementByTypeField('input', formId)].forEach((input) => {
 			this.setupInputField(formId, input.name);
 		});
 
 		// Date.
 		[
-			...this.state.getStateElementByTypeInternal('date', formId),
-			...this.state.getStateElementByTypeInternal('dateTime', formId),
+			...this.state.getStateElementByTypeField('date', formId),
+			...this.state.getStateElementByTypeField('dateTime', formId),
 		].forEach((date) => {
 			this.setupDateField(formId, date.name);
 		});
 
 		// Phone.
-		[...this.state.getStateElementByTypeInternal('phone', formId)].forEach((phone) => {
+		[...this.state.getStateElementByTypeField('phone', formId)].forEach((phone) => {
 			this.setupPhoneField(formId, phone.name);
 		});
 
 		// Checkbox.
-		[...this.state.getStateElementByTypeInternal('checkbox', formId)].forEach((checkbox) => {
+		[...this.state.getStateElementByTypeField('checkbox', formId)].forEach((checkbox) => {
 			[...Object.values(checkbox.items)].forEach((checkboxItem) => {
 				this.setupRadioCheckboxField(formId, checkboxItem.value, checkboxItem.name);
 			});
 		});
 
 		// Radio.
-		[...this.state.getStateElementByTypeInternal('radio', formId)].forEach((radio) => {
+		[...this.state.getStateElementByTypeField('radio', formId)].forEach((radio) => {
 			[...Object.values(radio.items)].forEach((radioItem) => {
 				this.setupRadioCheckboxField(formId, radioItem.value, radioItem.name);
 			});
 		});
 
 		// Rating.
-		[...this.state.getStateElementByTypeInternal('rating', formId)].forEach((rating) => {
+		[...this.state.getStateElementByTypeField('rating', formId)].forEach((rating) => {
 			this.setupRatingField(formId, rating.name);
 		});
 
@@ -573,7 +573,7 @@ export class Form {
 		for (const [key] of this.state.getStateElements(formId)) { // eslint-disable-line no-unused-vars
 
 			const name = key;
-			const internalType = this.state.getStateElementTypeInternal(key, formId);
+			const internalType = this.state.getStateElementTypeField(key, formId);
 			const value = this.state.getStateElementValue(key, formId);
 			const typeCustom = this.state.getStateElementTypeCustom(key, formId);
 			const saveAsJson = this.state.getStateElementSaveAsJson(key, formId);
@@ -614,7 +614,7 @@ export class Form {
 			}
 
 			switch (internalType) {
-				case this.state.getStateFieldType('checkbox'):
+				case 'checkbox':
 					let indexCheck = 0; // eslint-disable-line no-case-declarations
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						if (disabled[checkName]) {
@@ -628,7 +628,7 @@ export class Form {
 						indexCheck++;
 					}
 					break;
-				case this.state.getStateFieldType('radio'):
+				case 'radio':
 					let indexRadio = 0; // eslint-disable-line no-case-declarations
 					for(const [radioName, radioValue] of Object.entries(items)) {
 						if (disabled[radioName]) {
@@ -642,7 +642,7 @@ export class Form {
 						indexRadio++;
 					}
 					break;
-				case this.state.getStateFieldType('textarea'):
+				case 'textarea':
 					if (disabled) {
 						break;
 					}
@@ -654,7 +654,7 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case this.state.getStateFieldType('phone'):
+				case 'phone':
 					if (disabled) {
 						break;
 					}
@@ -669,7 +669,7 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case this.state.getStateFieldType('file'):
+				case 'file':
 					if (disabled) {
 						break;
 					}
@@ -1027,7 +1027,7 @@ export class Form {
 
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
-				enableTime: state.getStateElementTypeInternal(name, formId) === this.state.getStateFieldType('dateTime'),
+				enableTime: state.getStateElementTypeField(name, formId) === 'dateTime',
 				dateFormat: input.getAttribute(state.getStateAttribute('dateOutputFormat')),
 				altFormat: input.getAttribute(state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
@@ -1059,9 +1059,9 @@ export class Form {
 	 */
 	setupSelectField(formId, name) {
 		let input = this.state.getStateElementInput(name, formId);
-		const typeInternal = this.state.getStateElementTypeInternal(name, formId);
+		const typeInternal = this.state.getStateElementTypeField(name, formId);
 
-		 if (typeInternal === this.state.getStateFieldType('phone')) {
+		 if (typeInternal === 'phone') {
 			 input = this.state.getStateElementInputSelect(name, formId);
 		 }
 
@@ -1081,7 +1081,7 @@ export class Form {
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-				removeItemButton: typeInternal !== this.state.getStateFieldType('phone'), // Phone should not be able to remove prefix!
+				removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
 				searchFields: [
 					'label',
@@ -1326,14 +1326,14 @@ export class Form {
 
 			// Select.
 			[
-				...this.state.getStateElementByTypeInternal('select', formId),
-				...this.state.getStateElementByTypeInternal('country', formId),
+				...this.state.getStateElementByTypeField('select', formId),
+				...this.state.getStateElementByTypeField('country', formId),
 			].forEach((select) => {
 				this.state.getStateElementCustom(select.name, formId)?.destroy();
 			});
 
 			// File.
-			[...this.state.getStateElementByTypeInternal('file', formId)].forEach((file) => {
+			[...this.state.getStateElementByTypeField('file', formId)].forEach((file) => {
 				this.state.getStateElementCustom(file.name, formId)?.destroy();
 				this.state.getStateElementField(file.name, formId)?.removeEventListener('click', this.onFileWrapClickEvent);
 				const input = this.state.getStateElementInput(file.name, formId);
@@ -1342,7 +1342,7 @@ export class Form {
 			});
 
 			// Textarea.
-			[...this.state.getStateElementByTypeInternal('textarea', formId)].forEach((textarea) => {
+			[...this.state.getStateElementByTypeField('textarea', formId)].forEach((textarea) => {
 				const input = this.state.getStateElementInput(textarea.name, formId);
 
 				this.state.getStateElementCustom(textarea.name, formId)?.destroy(input);
@@ -1353,7 +1353,7 @@ export class Form {
 			});
 
 			// Text.
-			[...this.state.getStateElementByTypeInternal('input', formId)].forEach((text) => {
+			[...this.state.getStateElementByTypeField('input', formId)].forEach((text) => {
 				const input = this.state.getStateElementInput(text.name, formId);
 
 				input?.removeEventListener('keydown', this.onFocusEvent);
@@ -1364,14 +1364,14 @@ export class Form {
 
 			// Date.
 			[
-				...this.state.getStateElementByTypeInternal('date', formId),
-				...this.state.getStateElementByTypeInternal('dateTime', formId),
+				...this.state.getStateElementByTypeField('date', formId),
+				...this.state.getStateElementByTypeField('dateTime', formId),
 			].forEach((date) => {
 				this.state.getStateElementCustom(date.name, formId)?.destroy();
 			});
 
 			// Phone.
-			[...this.state.getStateElementByTypeInternal('phone', formId)].forEach((phone) => {
+			[...this.state.getStateElementByTypeField('phone', formId)].forEach((phone) => {
 				this.state.getStateElementCustom(phone.name, formId)?.destroy();
 
 				const input = this.state.getStateElementInput(phone.name, formId);
@@ -1383,7 +1383,7 @@ export class Form {
 			});
 
 			// Checkbox.
-			[...this.state.getStateElementByTypeInternal('checkbox', formId)].forEach((checkbox) => {
+			[...this.state.getStateElementByTypeField('checkbox', formId)].forEach((checkbox) => {
 				[...Object.values(checkbox.items)].forEach((checkboxItem) => {
 
 					const input = this.state.getStateElementItemsInput(checkboxItem.name, checkboxItem.value, formId);
@@ -1396,7 +1396,7 @@ export class Form {
 			});
 
 				// Radio.
-			[...this.state.getStateElementByTypeInternal('radio', formId)].forEach((radio) => {
+			[...this.state.getStateElementByTypeField('radio', formId)].forEach((radio) => {
 				[...Object.values(radio.items)].forEach((radioItem) => {
 					const input = this.state.getStateElementItemsInput(radioItem.name, radioItem.value, formId);
 
@@ -1408,7 +1408,7 @@ export class Form {
 			});
 
 			// Rating.
-			[...this.state.getStateElementByTypeInternal('rating', formId)].forEach((rating) => {
+			[...this.state.getStateElementByTypeField('rating', formId)].forEach((rating) => {
 				[...this.state.getStateElementCustom(rating.name, formId).children].forEach((star) => {
 					star?.removeEventListener('click', this.onRatingEvent);
 				});

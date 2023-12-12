@@ -721,7 +721,7 @@ trait SettingsHelper
 			'submitAttrs' => [
 				Helper::getStateAttribute('testApiType') => $key,
 			],
-			'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+			'additionalClass' => Helper::getStateSelectorAdmin('testApi') . ' es-submit--api-test',
 		];
 	}
 
