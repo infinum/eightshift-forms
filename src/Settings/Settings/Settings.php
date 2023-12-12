@@ -14,7 +14,6 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Settings class.

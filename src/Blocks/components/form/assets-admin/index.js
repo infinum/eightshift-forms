@@ -2,7 +2,6 @@
 
 import domReady from '@wordpress/dom-ready';
 import { Form } from './../assets/form';
-import manifest from './../manifest.json';
 import { getStateSelectorAdmin, setStateInitial } from '../assets/state/init';
 import { Utils } from '../assets/utils';
 

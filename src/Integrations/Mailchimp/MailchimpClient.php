@@ -21,7 +21,6 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * MailchimpClient integration class.

@@ -17,7 +17,6 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * SettingsHelper trait.

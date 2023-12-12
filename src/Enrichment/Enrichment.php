@@ -13,7 +13,6 @@ namespace EightshiftForms\Enrichment;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Enrichment class.

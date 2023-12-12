@@ -12,7 +12,6 @@ namespace EightshiftForms\Cache;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

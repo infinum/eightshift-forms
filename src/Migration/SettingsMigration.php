@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Migration;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

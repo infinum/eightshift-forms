@@ -1,6 +1,5 @@
 /* global esFormsLocalization */
 
-import manifest from './../../manifest.json';
 import globalManifest from './../../../../manifest.json';
 import { CONDITIONAL_TAGS_ACTIONS } from '../../../conditional-tags/assets/utils';
 

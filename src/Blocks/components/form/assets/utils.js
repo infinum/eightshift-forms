@@ -159,11 +159,10 @@ export class Utils {
 	 * Show loader.
 	 *
 	 * @param {string} formId Form Id.
-	 * @param {boolean} disableOverlay Disable overlay.
 	 *
 	 * @returns {void}
 	 */
-	showLoader(formId, disableOverlay = true) {
+	showLoader(formId) {
 		this.state.getStateFormElement(formId)?.classList?.add(this.state.getStateSelector('isLoading'));
 		this.state.getStateFormLoader(formId)?.classList?.add(this.state.getStateSelector('isActive'));
 	}

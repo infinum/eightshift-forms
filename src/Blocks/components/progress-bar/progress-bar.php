@@ -44,7 +44,7 @@ $progressBarClass = Components::classnames([
 		echo Components::renderPartial('component', $manifest['componentName'], 'multistep', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 			'steps' => $progressBarSteps,
 			'componentClass' => $componentClass,
-			'JsClass' => Helper::getStateSelector('stepProgressBar'),
+			'jsClass' => Helper::getStateSelector('stepProgressBar'),
 			'hideLabels' => Components::checkAttr('progressBarHideLabels', $attributes, $manifest),
 		]);
 	} else {

@@ -18,13 +18,13 @@ if (!$steps) {
 }
 
 $componentClass = $attributes['componentClass'] ?? '';
-$JsClass = $attributes['JsClass'] ?? '';
+$jsClass = $attributes['jsClass'] ?? '';
 
 $hideLabels = $attributes['hideLabels'] ?? false;
 
 $progressBarItemClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'item'),
-	Components::selector($JsClass, $JsClass),
+	Components::selector($jsClass, $jsClass),
 ]);
 
 foreach ($steps as $step) {
