@@ -73,7 +73,7 @@ export class Enrichment {
 		}
 
 		this.state.getStateFormElement(formId).addEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onPrefillEvent
 		);
 	}
@@ -90,7 +90,7 @@ export class Enrichment {
 		}
 
 		this.state.getStateFormElement(formId).addEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onUrlParamsPrefillEvent
 		);
 	}
@@ -115,7 +115,7 @@ export class Enrichment {
 		}
 
 		switch (type) {
-			case this.state.getStateIntType('phone'):
+			case this.state.getStateFieldType('phone'):
 				value = {
 					prefix: this.state.getStateElementValueCountry(name, formId)?.number,
 					value: valueData,
@@ -304,24 +304,24 @@ export class Enrichment {
 			}
 
 			switch (this.state.getStateElementTypeInternal(name, formId)) {
-				case this.state.getStateIntType('phone'):
+				case this.state.getStateFieldType('phone'):
 					this.utils.setManualPhoneValue(formId, name, value);
 					break;
-				case this.state.getStateIntType('date'):
-				case this.state.getStateIntType('dateTime'):
+				case this.state.getStateFieldType('date'):
+				case this.state.getStateFieldType('dateTime'):
 					this.utils.setManualDateValue(formId, name, value);
 					break;
-				case this.state.getStateIntType('country'):
-				case this.state.getStateIntType('select'):
+				case this.state.getStateFieldType('country'):
+				case this.state.getStateFieldType('select'):
 					this.utils.setManualSelectValue(formId, name, value);
 					break;
-				case this.state.getStateIntType('checkbox'):
+				case this.state.getStateFieldType('checkbox'):
 					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
-				case this.state.getStateIntType('radio'):
+				case this.state.getStateFieldType('radio'):
 					this.utils.setManualRadioValue(formId, name, value);
 					break;
-				case this.state.getStateIntType('rating'):
+				case this.state.getStateFieldType('rating'):
 					this.utils.setManualRatingValue(formId, name, value);
 					break;
 				default:
@@ -330,7 +330,7 @@ export class Enrichment {
 			}
 		});
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEventsEnrichmentPrefill(), data);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('enrichmentPrefill'), data);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -344,12 +344,12 @@ export class Enrichment {
 	 */
 	removeEvents(formId) {
 		this.state.getStateFormElement(formId).removeEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onPrefillEvent
 		);
 
 		this.state.getStateFormElement(formId).removeEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onUrlParamsPrefillEvent
 		);
 	}

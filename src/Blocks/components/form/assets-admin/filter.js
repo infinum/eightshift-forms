@@ -51,14 +51,14 @@ export class Filter {
 	filterItems = (selectedValue) => {
 		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
 			if (item.getAttribute(this.state.getStateAttribute('adminIntegrationType')) !== selectedValue) {
-				item?.classList?.add(this.state.getStateSelectorsClassHidden());
+				item?.classList?.add(this.state.getStateSelector('isHidden'));
 			}
 		});
 	};
 
 	filterResetItems = () => {
 		[...document.querySelectorAll(this.itemSelector)].forEach((item) => {
-			item?.classList?.remove(this.state.getStateSelectorsClassHidden());
+			item?.classList?.remove(this.state.getStateSelector('isHidden'));
 		});
 	};
 

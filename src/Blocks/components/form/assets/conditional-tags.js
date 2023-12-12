@@ -60,7 +60,7 @@ export class ConditionalTags {
 
 		// Listen to every field element change.
 		this.state.getStateFormElement(formId).addEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
 	}
@@ -200,15 +200,15 @@ export class ConditionalTags {
 
 			// Only select, checkbox and radio fields can have inner items.
 			if (
-				type === this.state.getStateIntType('select') ||
-				type === this.state.getStateIntType('checkbox') ||
-				type === this.state.getStateIntType('radio')
+				type === this.state.getStateFieldType('select') ||
+				type === this.state.getStateFieldType('checkbox') ||
+				type === this.state.getStateFieldType('radio')
 			) {
 				// Prepare inner level outputs.
 				let innerOutput = {};
 
 				// Select fields can have multiple or single select inner options.
-				if (type === this.state.getStateIntType('select')) {
+				if (type === this.state.getStateFieldType('select')) {
 					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId) ? this.getFieldInnerSelectMultiple(formId, name) : this.getFieldInnerSelectSingle(formId, name);
 				} else {
 					// Checkbox and radio inner fields.
@@ -284,7 +284,7 @@ export class ConditionalTags {
 		// Get attributes.
 		const fieldNameAttr = this.state.getStateAttribute('fieldName');
 		const formIdAttr = this.state.getStateAttribute('formId');
-		const formSelector = this.state.getStateSelectorsForm();
+		const formSelector = this.state.getStateSelector('form', true);
 		const selectValueAttr = this.state.getStateAttribute('selectValue');
 
 		// New array for top final so we don't mutate the original object.
@@ -314,7 +314,7 @@ export class ConditionalTags {
 		// Loop all inner items.
 		for (const [fieldName, innerItems] of Object.entries(data?.inner ?? {})) {
 			// Get correct selector type.
-			let selectorType = this.state.getStateElementTypeInternal(fieldName, formId) === this.state.getStateIntType('select') ? selectValueAttr : fieldNameAttr;
+			let selectorType = this.state.getStateElementTypeInternal(fieldName, formId) === this.state.getStateFieldType('select') ? selectValueAttr : fieldNameAttr;
 
 			// Loop all inner items.
 			innerItems.forEach((inner) => {
@@ -748,7 +748,7 @@ export class ConditionalTags {
 	 */
 	removeEvents(formId) {
 		this.state.getStateFormElement(formId).removeEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
 	}

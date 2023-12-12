@@ -10,7 +10,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestTypeInternal = Components::getSettings()['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -92,7 +91,7 @@ echo Components::render(
 			'fieldContent' => $file,
 			'fieldId' => $fileName,
 			'fieldName' => $fileName,
-			'fieldTypeInternal' => $manifestTypeInternal['file'],
+			'fieldTypeInternal' => Helper::getStateFieldType('file'),
 			'fieldDisabled' => !empty($fileIsDisabled),
 			'fieldIsRequired' => $fileIsRequired,
 			'fieldTypeCustom' => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

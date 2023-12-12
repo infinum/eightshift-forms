@@ -359,7 +359,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	private function getTopBarItems(string $type, string $formId): array
 	{
 		$manifest = Components::getComponent('admin-listing');
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 		$componentJsBulkClass = $manifest['componentJsBulkClass'] ?? '';
 		$componentJsSelectAllClass = $manifest['componentJsSelectAllClass'] ?? '';
@@ -401,7 +400,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $componentJsBulkClass,
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['bulkType'] => 'delete-entry',
+							Helper::getStateAttribute('bulkType') => 'delete-entry',
 						],
 					]),
 					Components::render('submit', [
@@ -410,7 +409,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $componentJsBulkClass,
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['bulkType'] => 'duplicate-entry',
+							Helper::getStateAttribute('bulkType') => 'duplicate-entry',
 						],
 					]),
 				];
@@ -422,8 +421,8 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => "{$componentJsExportClass} {$componentJsBulkClass}",
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['bulkType'] => 'fake',
-							$manifestCustomFormAttrs['formId'] => $formId,
+							Helper::getStateAttribute('bulkType') => 'fake',
+							Helper::getStateAttribute('formId') => $formId,
 						],
 					]),
 				];
@@ -451,7 +450,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $componentJsBulkClass,
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['bulkType'] => 'restore',
+							Helper::getStateAttribute('bulkType') => 'restore',
 						],
 					]),
 					Components::render('submit', [
@@ -460,7 +459,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $componentJsBulkClass,
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['bulkType'] => 'delete-perminentely',
+							Helper::getStateAttribute('bulkType') => 'delete-perminentely',
 						],
 					]),
 				];
@@ -485,7 +484,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $componentJsBulkClass,
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['bulkType'] => 'delete',
+							Helper::getStateAttribute('bulkType') => 'delete',
 						],
 					]),
 					Components::render('submit', [
@@ -494,7 +493,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $componentJsBulkClass,
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['bulkType'] => 'sync',
+							Helper::getStateAttribute('bulkType') => 'sync',
 						],
 					]),
 					Components::render('submit', [
@@ -503,7 +502,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $componentJsBulkClass,
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['bulkType'] => 'duplicate',
+							Helper::getStateAttribute('bulkType') => 'duplicate',
 						],
 					]),
 				];
@@ -545,7 +544,6 @@ class FormAdminMenu extends AbstractAdminMenu
 		$isDevMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
 		$manifest = Components::getComponent('admin-listing');
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 		$componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
 
 		switch ($type) {
@@ -597,7 +595,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineUseDivider' => true,
 						'cardInlineLastItem' => $i === $count - 1,
 						'additionalAttributes' => [
-							$manifestCustomFormAttrs['bulkId'] => $id,
+							Helper::getStateAttribute('bulkId') => $id,
 						],
 						'additionalClass' => Components::classnames([
 							$componentJsItemClass,
@@ -633,8 +631,8 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineInvalid' => !$isValid,
 						'cardInlineUseHover' => true,
 						'additionalAttributes' => [
-							$manifestCustomFormAttrs['adminIntegrationType'] => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
-							$manifestCustomFormAttrs['bulkId'] => $id,
+							Helper::getStateAttribute('adminIntegrationType') => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
+							Helper::getStateAttribute('bulkId') => $id,
 						],
 						'additionalClass' => Components::classnames([
 							$componentJsItemClass,
@@ -733,7 +731,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	private function getRightContent(array $item, string $type): array
 	{
 		$manifest = Components::getComponent('admin-listing');
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 		$formId = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
@@ -759,7 +756,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Locations', 'eightshift-forms'),
 						'submitAttrs' => [
-							$manifestCustomFormAttrs['locationsId'] => $formId
+							Helper::getStateAttribute('locationsId') => $formId
 						],
 						'additionalClass' => $manifest['componentJsLocationsClass'] ?? '',
 					]),

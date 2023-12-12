@@ -108,7 +108,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 		}
 
 		$manifestForm = Components::getComponent('form');
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
@@ -137,7 +136,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_GLOBAL_SETTINGS,
+													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 												],
 												'additionalClass' => $manifestForm['componentTransferJsClass'],
 											],
@@ -156,7 +155,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_ALL,
+													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_ALL,
 												],
 												'additionalClass' => $manifestForm['componentTransferJsClass'],
 											],
@@ -175,8 +174,8 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export selected', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_FORMS,
-													$manifestCustomFormAttrs['migrationExportItems'] => '',
+													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_FORMS,
+													Helper::getStateAttribute('migrationExportItems') => '',
 												],
 												'additionalClass' => $manifestForm['componentTransferJsClass'],
 											],
@@ -245,7 +244,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'submitValue' => \__('Import JSON', 'eightshift-forms'),
 										'submitVariant' => 'outline',
 										'submitAttrs' => [
-											$manifestCustomFormAttrs['migrationType'] => self::TYPE_IMPORT,
+											Helper::getStateAttribute('migrationType') => self::TYPE_IMPORT,
 										],
 										'additionalClass' => $manifestForm['componentTransferJsClass'],
 									],

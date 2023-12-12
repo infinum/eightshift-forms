@@ -141,7 +141,7 @@ class ClearbitClient implements ClearbitClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(Components::getSettings()['customFormParams']));
+		$customFields = \array_flip(Components::flattenArray(Helper::getStateParams()));
 
 		foreach ($params as $key => $param) {
 			// Remove unecesery fields.

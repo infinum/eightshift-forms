@@ -11,7 +11,7 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+$manifestSettings = Components::getSettings();
 
 $fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
 if (!$fieldUse) {
@@ -101,8 +101,8 @@ $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentClass, $componentClass, '', $selectorClass),
 	Components::selector($additionalFieldClass, $additionalFieldClass),
-	Components::selector($fieldDisabled, 'es-form-is-disabled'),
-	Components::selector($fieldHidden, 'es-form-is-hidden'),
+	Components::selector($fieldDisabled, Helper::getStateSelector('isDisabled')),
+	Components::selector($fieldHidden, Helper::getStateSelector('isHidden')),
 	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($fieldIsNoneFormBlock, $componentJsCustomClass),
 	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
@@ -124,23 +124,23 @@ if ($fieldType === 'fieldset') {
 }
 
 if ($fieldConditionalTags) {
-	$fieldAttrs[$manifestCustomFormAttrs['conditionalTags']] = $fieldConditionalTags;
+	$fieldAttrs[Helper::getStateAttribute('conditionalTags')] = $fieldConditionalTags;
 }
 
 if ($fieldName) {
-	$fieldAttrs[$manifestCustomFormAttrs['fieldName']] = $fieldName;
+	$fieldAttrs[Helper::getStateAttribute('fieldName')] = $fieldName;
 }
 
 if ($fieldTypeInternal) {
-	$fieldAttrs[$manifestCustomFormAttrs['fieldType']] = $fieldTypeInternal;
+	$fieldAttrs[Helper::getStateAttribute('fieldType')] = $fieldTypeInternal;
 }
 
 if ($fieldTypeCustom) {
-	$fieldAttrs[$manifestCustomFormAttrs['fieldTypeCustom']] = $fieldTypeCustom;
+	$fieldAttrs[Helper::getStateAttribute('fieldTypeCustom')] = $fieldTypeCustom;
 }
 
 if ($fieldTracking) {
-	$fieldAttrs[$manifestCustomFormAttrs['tracking']] = $fieldTracking;
+	$fieldAttrs[Helper::getStateAttribute('tracking')] = $fieldTracking;
 }
 
 $fieldAttrsOutput = '';

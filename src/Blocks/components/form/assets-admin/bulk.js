@@ -35,7 +35,7 @@ export class Bulk {
 		[...document.querySelectorAll(`${this.itemSelector} input`)].forEach((element) => {
 			const item = element?.closest(this.itemSelector);
 
-			if (!item?.classList?.contains(this.state.getStateSelectorsClassHidden())) {
+			if (!item?.classList?.contains(this.state.getStateSelector('isHidden'))) {
 				element.checked = event.target.checked;
 				this.selectItem(parseInt(element.name), element.checked);
 			}
@@ -116,9 +116,9 @@ export class Bulk {
 		const output = items ? JSON.parse(items) : [];
 
 		if (!output.length) {
-			button.classList.add(this.state.getStateSelectorsClassActive());
+			button.classList.add(this.state.getStateSelector('isActive'));
 		} else {
-			button.classList.remove(this.state.getStateSelectorsClassActive());
+			button.classList.remove(this.state.getStateSelector('isActive'));
 		}
 	}
 
@@ -153,7 +153,7 @@ export class Bulk {
 	}
 
 	isDisableButton(element) {
-		return element.classList.contains(this.state.getStateSelectorsClassDisabled());
+		return element.classList.contains(this.state.getStateSelector('isDisabled'));
 	}
 
 	onGlobalMsgFocus = () => {

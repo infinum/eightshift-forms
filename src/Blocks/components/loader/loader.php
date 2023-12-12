@@ -15,14 +15,12 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
-$loaderIsActive = Components::checkAttr('loaderIsActive', $attributes, $manifest);
 $loaderIsGeolocation = Components::checkAttr('loaderIsGeolocation', $attributes, $manifest);
 
 $loaderClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($componentJsClass, $componentJsClass),
-	Components::selector($loaderIsActive && $componentClass, 'is-active'),
 	Components::selector($loaderIsGeolocation && $componentClass, $componentClass, 'geolocation'),
 	Components::selector(!$loaderIsGeolocation && $componentClass, $componentClass, 'form'),
 ]);

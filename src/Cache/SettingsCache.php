@@ -65,10 +65,9 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		$manifestForm = Components::getComponent('form');
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 		$output = \array_values(\array_filter(\array_map(
-			function ($key, $value) use ($manifestForm, $manifestCustomFormAttrs) {
+			function ($key, $value) use ($manifestForm) {
 				$cache = $value['cache'] ?? [];
 
 				$isUsedKey = $value['use'] ?? '';
@@ -84,8 +83,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									$manifestCustomFormAttrs['cacheType'] => $key,
-									$manifestCustomFormAttrs['reload'] => 'false',
+									Helper::getStateAttribute('cacheType') => $key,
+									Helper::getStateAttribute('reload') => 'false',
 								],
 								'additionalClass' => $manifestForm['componentCacheJsClass'],
 							],
@@ -119,8 +118,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									$manifestCustomFormAttrs['cacheType'] => 'all',
-									$manifestCustomFormAttrs['reload'] => 'false',
+									Helper::getStateAttribute('cacheType') => 'all',
+									Helper::getStateAttribute('reload') => 'false',
 								],
 								'additionalClass' => $manifestForm['componentCacheJsClass'],
 							],

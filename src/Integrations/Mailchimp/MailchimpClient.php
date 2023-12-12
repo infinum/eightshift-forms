@@ -526,7 +526,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function prepareTags(array $params): array
 	{
-		$key = Components::getSettings()['customFormParams']['mailchimpTags'];
+		$key = Helper::getStateParam('mailchimpTags');
 
 		if (!isset($params[$key])) {
 			return [];

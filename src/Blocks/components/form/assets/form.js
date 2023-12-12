@@ -66,10 +66,10 @@ export class Form {
 	initOnlyForms() {
 		if (this.state.getStateConfigIsAdmin()) {
 			// If is admin do normal init.
-			this.initOnlyFormsInner(document.querySelector(this.state.getStateSelectorsForm())?.getAttribute(this.state.getStateAttribute('formId')) || 0);
+			this.initOnlyFormsInner(document.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || 0);
 		} else {
 			// Find all forms elements
-			const forms = document.querySelectorAll(this.state.getStateSelectorsForms());
+			const forms = document.querySelectorAll(this.state.getStateSelector('forms', true));
 			if (!forms.length) {
 				this.utils.removeFormsWithMissingFormsBlock();
 				return;
@@ -93,7 +93,7 @@ export class Form {
 	 * @param {object} formsElement Forms element.
 	 */
 	initGolocationForm(formsElement) {
-		const forms = formsElement?.querySelectorAll(this.state.getStateSelectorsForm());
+		const forms = formsElement?.querySelectorAll(this.state.getStateSelector('form', true));
 
 		const formData = new FormData();
 
@@ -136,12 +136,14 @@ export class Form {
 			});
 
 			// Remove loading class from forms element.
-			formsElement?.classList?.remove(this.state.getStateSelectorsClassGeolocationLoading());
+			formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
 		});
 	}
 
 	/**
 	 * Init only forms - inner items.
+	 *
+	 * @param {string} formId Form Id.
 	 * 
 	 * @returns {void}
 	 */
@@ -246,7 +248,7 @@ export class Form {
 	 */
 	formSubmit(formId, filter = {}) {
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEventsBeforeFormSubmit());
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('beforeFormSubmit'));
 
 		this.setFormData(formId, filter);
 
@@ -346,7 +348,7 @@ export class Form {
 	 */
 	formSubmitBefore(formId, response) {
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmit(), response);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmit'), response);
 
 		// Clear all errors.
 		this.utils.resetErrors(formId);
@@ -371,7 +373,7 @@ export class Form {
 			data,
 		} = response;
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccess(), response);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitSuccess'), response);
 
 		if (this.state.getStateConfigIsAdmin()) {
 			// Set global msg.
@@ -442,7 +444,7 @@ export class Form {
 
 		// Dispatch event.
 		if (data?.validation !== undefined) {
-			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitErrorValidation(), response);
+			this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitErrorValidation'), response);
 
 			this.utils.outputErrors(formId, data?.validation);
 
@@ -450,7 +452,7 @@ export class Form {
 				this.steps.goToStepWithError(formId, data?.validation);
 			}
 		} else {
-			this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitError(), response);
+			this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitError'), response);
 		}
 	}
 
@@ -474,7 +476,7 @@ export class Form {
 		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
 
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitEnd(), response);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitEnd'), response);
 	}
 
 	/**
@@ -612,7 +614,7 @@ export class Form {
 			}
 
 			switch (internalType) {
-				case this.state.getStateIntType('checkbox'):
+				case this.state.getStateFieldType('checkbox'):
 					let indexCheck = 0; // eslint-disable-line no-case-declarations
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						if (disabled[checkName]) {
@@ -626,7 +628,7 @@ export class Form {
 						indexCheck++;
 					}
 					break;
-				case this.state.getStateIntType('radio'):
+				case this.state.getStateFieldType('radio'):
 					let indexRadio = 0; // eslint-disable-line no-case-declarations
 					for(const [radioName, radioValue] of Object.entries(items)) {
 						if (disabled[radioName]) {
@@ -640,7 +642,7 @@ export class Form {
 						indexRadio++;
 					}
 					break;
-				case this.state.getStateIntType('textarea'):
+				case this.state.getStateFieldType('textarea'):
 					if (disabled) {
 						break;
 					}
@@ -652,7 +654,7 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case this.state.getStateIntType('phone'):
+				case this.state.getStateFieldType('phone'):
 					if (disabled) {
 						break;
 					}
@@ -667,7 +669,7 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case this.state.getStateIntType('file'):
+				case this.state.getStateFieldType('file'):
 					if (disabled) {
 						break;
 					}
@@ -705,7 +707,7 @@ export class Form {
 	 */
 	getFormDataGroup(formId) {
 		const output = [];
-		const groups = this.state.getStateFormElement(formId).querySelectorAll(`${this.state.getStateSelectorsGroup()}`);
+		const groups = this.state.getStateFormElement(formId).querySelectorAll(`${this.state.getStateSelector('group', true)}`);
 
 		// Check if we are saving group items in one key.
 		if (!groups.length) {
@@ -1025,7 +1027,7 @@ export class Form {
 
 		import('flatpickr').then((flatpickr) => {
 			flatpickr.default(input, {
-				enableTime: state.getStateElementTypeInternal(name, formId) === this.state.getStateIntType('dateTime'),
+				enableTime: state.getStateElementTypeInternal(name, formId) === this.state.getStateFieldType('dateTime'),
 				dateFormat: input.getAttribute(state.getStateAttribute('dateOutputFormat')),
 				altFormat: input.getAttribute(state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
@@ -1059,7 +1061,7 @@ export class Form {
 		let input = this.state.getStateElementInput(name, formId);
 		const typeInternal = this.state.getStateElementTypeInternal(name, formId);
 
-		 if (typeInternal === this.state.getStateIntType('phone')) {
+		 if (typeInternal === this.state.getStateFieldType('phone')) {
 			 input = this.state.getStateElementInputSelect(name, formId);
 		 }
 
@@ -1079,7 +1081,7 @@ export class Form {
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
-				removeItemButton: typeInternal !== this.state.getStateIntType('phone'), // Phone should not be able to remove prefix!
+				removeItemButton: typeInternal !== this.state.getStateFieldType('phone'), // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
 				searchFields: [
 					'label',
@@ -1224,14 +1226,14 @@ export class Form {
 			// On add one file add selectors for UX.
 			dropzone.on("addedfile", (file) => {
 				setTimeout(() => {
-					file?.previewTemplate?.classList?.add(this.state.getStateSelectorsClassActive());
+					file?.previewTemplate?.classList?.add(this.state.getStateSelector('isActive'));
 				}, 200);
 
 				setTimeout(() => {
-					file?.previewTemplate?.classList?.add(this.state.getStateSelectorsClassFilled());
+					file?.previewTemplate?.classList?.add(this.state.getStateSelector('isFilled'));
 				}, 1200);
 
-				field?.classList?.remove(this.state.getStateSelectorsClassActive());
+				field?.classList?.remove(this.state.getStateSelector('isActive'));
 
 				this.state.setStateElementValue(name, 'true', formId);
 
@@ -1243,10 +1245,10 @@ export class Form {
 				const custom = this.state.getStateElementCustom(name, formId);
 
 				if (custom.files.length === 0) {
-					field?.classList?.remove(this.state.getStateSelectorsClassFilled());
+					field?.classList?.remove(this.state.getStateSelector('isFilled'));
 				}
 
-				field?.classList?.remove(this.state.getStateSelectorsClassActive());
+				field?.classList?.remove(this.state.getStateSelector('isActive'));
 				this.state.setStateElementValue(name, '', formId);
 
 				// Remove main filed validation error.
@@ -1291,7 +1293,7 @@ export class Form {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.validation?.[file?.upload?.uuid];
 				}
 
-				field?.classList?.add(this.state.getStateSelectorsClassFilled());
+				field?.classList?.add(this.state.getStateSelector('isFilled'));
 			});
 
 			// Trigger on wrap click.
@@ -1449,7 +1451,7 @@ export class Form {
 			let direction = field.getAttribute(this.state.getStateAttribute('submitStepDirection'));
 
 			// If button is hidden prevent submiting the form.
-			if (field?.classList?.contains(this.state.getStateSelectorsClassHidden())) {
+			if (field?.classList?.contains(this.state.getStateSelector('isHidden'))) {
 				return;
 			}
 
@@ -1525,7 +1527,7 @@ export class Form {
 
 		this.state.getStateElementCustom(name, formId).hiddenFileInput.click();
 
-		field?.classList?.add(this.state.getStateSelectorsClassActive());
+		field?.classList?.add(this.state.getStateSelector('isActive'));
 	};
 
 	/**

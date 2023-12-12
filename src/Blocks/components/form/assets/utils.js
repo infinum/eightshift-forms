@@ -164,12 +164,8 @@ export class Utils {
 	 * @returns {void}
 	 */
 	showLoader(formId, disableOverlay = true) {
-		this.state.getStateFormElement(formId)?.classList?.add(this.state.getStateSelectorsClassLoading());
-		this.state.getStateFormLoader(formId)?.classList?.add(this.state.getStateSelectorsClassActive());
-
-		if (!disableOverlay) {
-			this.state.getStateFormLoader(formId)?.classList?.add(this.state.getStateSelectorsClassLoaderDisableOverlay());
-		}
+		this.state.getStateFormElement(formId)?.classList?.add(this.state.getStateSelector('isLoading'));
+		this.state.getStateFormLoader(formId)?.classList?.add(this.state.getStateSelector('isActive'));
 	}
 
 	/**
@@ -180,9 +176,8 @@ export class Utils {
 	 * @returns {void}
 	 */
 	hideLoader(formId) {
-		this.state.getStateFormElement(formId)?.classList?.remove(this.state.getStateSelectorsClassLoading());
-		this.state.getStateFormLoader(formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
-		this.state.getStateFormLoader(formId)?.classList?.remove(this.state.getStateSelectorsClassLoaderDisableOverlay());
+		this.state.getStateFormElement(formId)?.classList?.remove(this.state.getStateSelector('isLoading'));
+		this.state.getStateFormLoader(formId)?.classList?.remove(this.state.getStateSelector('isActive'));
 	}
 
 	/**
@@ -200,7 +195,7 @@ export class Utils {
 			return;
 		}
 
-		error?.classList?.remove(this.state.getStateSelectorsClassHasError());
+		error?.classList?.remove(this.state.getStateSelector('hasError'));
 		this.state.setStateElementHasError(name, false, formId);
 		error.innerHTML = '';
 	}
@@ -220,7 +215,7 @@ export class Utils {
 			return;
 		}
 
-		error?.classList?.add(this.state.getStateSelectorsClassHasError());
+		error?.classList?.add(this.state.getStateSelector('hasError'));
 		this.state.setStateElementHasError(name, true, formId);
 		error.innerHTML = msg;
 	}
@@ -259,7 +254,7 @@ export class Utils {
 			return;
 		}
 
-		messageContainer?.classList?.remove(this.state.getStateSelectorsClassActive());
+		messageContainer?.classList?.remove(this.state.getStateSelector('isActive'));
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
 	}
@@ -278,7 +273,7 @@ export class Utils {
 			return;
 		}
 
-		messageContainer?.classList?.add(this.state.getStateSelectorsClassActive());
+		messageContainer?.classList?.add(this.state.getStateSelector('isActive'));
 		messageContainer.dataset.status = status;
 
 		// Scroll to msg if the condition is right.
@@ -323,7 +318,7 @@ export class Utils {
 			}
 
 			switch (this.state.getStateElementTypeInternal(name, formId)) {
-				case this.state.getStateIntType('checkbox'):
+				case this.state.getStateFieldType('checkbox'):
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						const trackingCheckName = trackingName?.[checkName];
 
@@ -336,7 +331,7 @@ export class Utils {
 						}
 					}
 					break;
-				case this.state.getStateIntType('phone'):
+				case this.state.getStateFieldType('phone'):
 					let telValue = value; // eslint-disable-line no-case-declarations
 
 					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
@@ -403,7 +398,7 @@ export class Utils {
 
 				this.dispatchFormEvent(
 					formId,
-					this.state.getStateEventsAfterGtmDataPush(), {
+					this.state.getStateEvent('afterGtmDataPush'), {
 						gtmData,
 						additionalDataItems,
 					}
@@ -453,7 +448,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	setFieldActiveState(formId, name) {
-		this.state.getStateElementField(name, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
+		this.state.getStateElementField(name, formId)?.classList?.add(this.state.getStateSelector('isActive'));
 	}
 
 	/**
@@ -465,7 +460,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	unsetActiveState(formId, name) {
-		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
+		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelector('isActive'));
 	}
 
 	/**
@@ -477,7 +472,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	setFilledState(formId, name) {
-		this.state.getStateElementField(name, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
+		this.state.getStateElementField(name, formId)?.classList?.add(this.state.getStateSelector('isFilled'));
 	}
 
 	/**
@@ -489,7 +484,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	unsetFilledState(formId, name) {
-		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelectorsClassFilled());
+		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelector('isFilled'));
 	}
 
 	/**
@@ -508,7 +503,7 @@ export class Utils {
 			const initial = this.state.getStateElementInitial(name, formId);
 
 			switch (this.state.getStateElementTypeInternal(name, formId)) {
-				case this.state.getStateIntType('phone'):
+				case this.state.getStateFieldType('phone'):
 					this.setManualPhoneValue(
 						formId,
 						name,
@@ -517,21 +512,21 @@ export class Utils {
 						}
 					);
 					break;
-				case this.state.getStateIntType('date'):
-				case this.state.getStateIntType('dateTime'):
+				case this.state.getStateFieldType('date'):
+				case this.state.getStateFieldType('dateTime'):
 					this.setManualDateValue(formId, name, initial);
 					break;
-				case this.state.getStateIntType('country'):
-				case this.state.getStateIntType('select'):
+				case this.state.getStateFieldType('country'):
+				case this.state.getStateFieldType('select'):
 					this.setManualSelectValue(formId, name, initial);
 					break;
-				case this.state.getStateIntType('checkbox'):
+				case this.state.getStateFieldType('checkbox'):
 					this.setManualCheckboxValue(formId, name, initial);
 					break;
-				case this.state.getStateIntType('radio'):
+				case this.state.getStateFieldType('radio'):
 					this.setManualRadioValue(formId, name, initial);
 					break;
-				case this.state.getStateIntType('file'):
+				case this.state.getStateFieldType('file'):
 					this.setManualFileValue(formId, name, initial);
 					break;
 				default:
@@ -544,7 +539,7 @@ export class Utils {
 		document.activeElement.blur();
 
 		// Dispatch event.
-		this.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitReset());
+		this.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitReset'));
 	}
 
 	/**
@@ -567,7 +562,7 @@ export class Utils {
 			const type = this.state.getStateElementTypeInternal(name, formId);
 
 			// If checkbox split multiple.
-			if (type === this.state.getStateIntType('checkbox')) {
+			if (type === this.state.getStateFieldType('checkbox')) {
 				value = Object.values(value)?.filter((n) => n);
 			}
 
@@ -626,7 +621,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	redirectToUrlByReference(formId, redirectUrl, reload = false) {
-		this.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitSuccessBeforeRedirect(), redirectUrl);
+		this.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitSuccessBeforeRedirect'), redirectUrl);
 
 		if (!this.state.getStateSettingsDisableNativeRedirectOnSuccess(formId)) {
 			// Do the actual redirect after some time.
@@ -660,7 +655,7 @@ export class Utils {
 				this.state.setStateFormIsLoaded(true, formId);
 
 				// Triger event that form is fully loaded.
-				this.dispatchFormEvent(formId, this.state.getStateEventsFormJsLoaded());
+				this.dispatchFormEvent(formId, this.state.getStateEvent('formJsLoaded'));
 			}
 			iterations++;
 		}, 100);
@@ -786,7 +781,7 @@ export class Utils {
 	 * @returns {string}
 	 */
 	getSelectSelectedValueByCustomData(type, value, choices) {
-		if (type == this.state.getStateIntType('country') || type === this.state.getStateIntType('phone')) {
+		if (type == this.state.getStateFieldType('country') || type === this.state.getStateFieldType('phone')) {
 			return choices?.config?.choices?.find((item) => item?.customProperties?.[this.state.getStateAttribute('selectCountryCode')] === value)?.value;
 		}
 
@@ -799,8 +794,8 @@ export class Utils {
 	 * @returns {void}
 	 */
 	removeFormsWithMissingFormsBlock() {
-		[...document.querySelectorAll(this.state.getStateSelectorsForm())].forEach((form) => {
-			if (!form?.closest(this.state.getStateSelectorsForms())) {
+		[...document.querySelectorAll(this.state.getStateSelector('form', true))].forEach((form) => {
+			if (!form?.closest(this.state.getStateSelector('forms', true))) {
 				form.innerHTML = this.state.getStateSettingsFormMisconfiguredMsg();
 			}
 		});
@@ -852,13 +847,13 @@ export class Utils {
 		const type = this.state.getStateElementTypeInternal(name, formId);
 
 		switch (type) {
-			case this.state.getStateIntType('phone'):
+			case this.state.getStateFieldType('phone'):
 				setStateValuesPhoneInput(target, formId);
 				break;
-			case this.state.getStateIntType('radio'):
+			case this.state.getStateFieldType('radio'):
 				setStateValuesRadio(target, formId);
 				break;
-			case this.state.getStateIntType('checkbox'):
+			case this.state.getStateFieldType('checkbox'):
 				setStateValuesCheckbox(target, formId);
 				break;
 			default:
@@ -913,10 +908,10 @@ export class Utils {
 		const type = this.state.getStateElementTypeInternal(name, formId);
 
 		switch (type) {
-			case this.state.getStateIntType('phone'):
+			case this.state.getStateFieldType('phone'):
 				setStateValuesPhoneSelect(target, formId);
 				break;
-			case this.state.getStateIntType('country'):
+			case this.state.getStateFieldType('country'):
 				setStateValuesCountry(target, formId);
 				break;
 			default:
@@ -933,9 +928,9 @@ export class Utils {
 		}
 
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
-			if (type === this.state.getStateIntType('country')) {
+			if (type === this.state.getStateFieldType('country')) {
 				const country = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateElementByTypeInternal(this.state.getStateIntType('phone'), formId)].forEach((tel) => {
+				[...this.state.getStateElementByTypeInternal('phone', formId)].forEach((tel) => {
 					const name = tel[StateEnum.NAME];
 
 					this.setManualPhoneValue(formId, name, {
@@ -945,9 +940,9 @@ export class Utils {
 				});
 			}
 
-			if (type === this.state.getStateIntType('phone')) {
+			if (type === this.state.getStateFieldType('phone')) {
 				const phone = this.state.getStateElementValueCountry(name, formId);
-				[...this.state.getStateElementByTypeInternal(this.state.getStateIntType('country'), formId)].forEach((country) => {
+				[...this.state.getStateElementByTypeInternal('country', formId)].forEach((country) => {
 					const name = country[StateEnum.NAME];
 
 					this.setManualSelectValue(formId, name, phone?.label);

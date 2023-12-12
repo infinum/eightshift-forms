@@ -8,16 +8,16 @@
 
 use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\Encryption;
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$globalManifest = Components::getSettings();
 $manifestInvalid = Components::getComponent('invalid');
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+$manifestSettings = Components::getSettings();
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
-$blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
+$blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$manifestSettings['blockClassPrefix']}-{$manifest['blockName']}";
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 
 // Check formPost ID prop.
@@ -85,7 +85,7 @@ $hasGeolocation = false;
 
 if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 	$hasGeolocation = true;
-	$formAttrs[$manifestCustomFormAttrs['formGeolocation']] = Encryption::encryptor(wp_json_encode([
+	$formAttrs[Helper::getStateAttribute('formGeolocation')] = Encryption::encryptor(wp_json_encode([
 		'id' => $formsFormPostId,
 		'geo' => $formsFormGeolocation,
 		'alt' => $formsFormGeolocationAlternatives,
@@ -102,7 +102,7 @@ if ($formAttrs) {
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
 	Components::selector($componentJsClass, $componentJsClass),
-	Components::selector($hasGeolocation, 'es-form-is-geolocation-loading'),
+	Components::selector($hasGeolocation, Helper::getStateSelector('isGeoLoading')),
 	$attributes['className'] ?? '',
 	...$formsStyleOutput,
 ]);

@@ -11,7 +11,6 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getComponent('admin-listing');
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 $componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
 
 $isDevMode = apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);

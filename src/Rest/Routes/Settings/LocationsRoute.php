@@ -90,7 +90,6 @@ class LocationsRoute extends AbstractBaseRoute
 		$id = $params['id'] ?? '';
 
 		$type = Helper::getFormTypeById($id);
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 		return \rest_ensure_response(
 			$this->getApiSuccessOutput(
@@ -102,7 +101,7 @@ class LocationsRoute extends AbstractBaseRoute
 						'sectionClass' => Components::getComponent('admin-listing')['componentClass'],
 						'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms'),
 						'additionalAttributes' => [
-							$manifestCustomFormAttrs['adminIntegrationType'] => $type,
+							Helper::getStateAttribute('adminIntegrationType') => $type,
 						],
 					]),
 				],

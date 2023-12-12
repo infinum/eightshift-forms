@@ -6,12 +6,13 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestField = Components::getComponent('field');
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
+$manifestSettings = Components::getSettings();
 
 $componentClass = $manifest['componentClass'] ?? '';
 $componentJsClass = $manifest['componentJsClass'] ?? '';
@@ -25,10 +26,12 @@ $stepContent = Components::checkAttr('stepContent', $attributes, $manifest);
 $stepSubmit = Components::checkAttr('stepSubmit', $attributes, $manifest);
 $stepPrevLabel = Components::checkAttr('stepPrevLabel', $attributes, $manifest);
 $stepNextLabel = Components::checkAttr('stepNextLabel', $attributes, $manifest);
+$stepIsActive = Components::checkAttr('stepIsActive', $attributes, $manifest);
 
 $stepClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentJsClass, $componentJsClass),
+	Components::selector($stepIsActive, Helper::getStateSelector('isActive')),
 ]);
 
 if (!$stepContent) {
@@ -38,7 +41,7 @@ if (!$stepContent) {
 $stepAttrs = [];
 
 if ($stepName) {
-	$stepAttrs[$manifestCustomFormAttrs['stepId']] = esc_attr($stepName);
+	$stepAttrs[Helper::getStateAttribute('stepId')] = esc_attr($stepName);
 }
 
 $stepAttrsOutput = '';
@@ -81,7 +84,7 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $prevButtonComponent,
 							'submitAttrs' => [
-								$manifestCustomFormAttrs['submitStepDirection'] => 'prev',
+								Helper::getStateAttribute('submitStepDirection') => 'prev',
 							],
 						]),
 						[
@@ -111,7 +114,7 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $nextButtonComponent,
 							'submitAttrs' => [
-								$manifestCustomFormAttrs['submitStepDirection'] => 'next',
+								Helper::getStateAttribute('submitStepDirection') => 'next',
 							],
 						]),
 						[

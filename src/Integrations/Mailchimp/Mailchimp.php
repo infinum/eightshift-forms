@@ -361,13 +361,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return [];
 		}
 
-		$customTagParamName = Components::getSettings()['customFormParams']['mailchimpTags'];
-
 		return [
 			'component' => 'select',
 			'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-			'selectName' => $customTagParamName,
-			'selectTracking' => $customTagParamName,
+			'selectName' => Helper::getStateParam('mailchimpTags'),
+			'selectTracking' => Helper::getStateParam('mailchimpTags'),
 			'selectContent' => \array_values(
 				\array_map(
 					function ($option) {

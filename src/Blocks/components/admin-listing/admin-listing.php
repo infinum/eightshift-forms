@@ -6,12 +6,12 @@
  * @package EightshiftForms\Blocks.
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSection = Components::getComponent('admin-settings-section');
 $manifestUtils = Components::getComponent('utils');
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
@@ -80,7 +80,7 @@ $help = Components::render('container', [
 		]),
 		'additionalClass' => "{$componentJsBulkClass}-items",
 		'additionalAttributes' => [
-			$manifestCustomFormAttrs['bulkItems'] => wp_json_encode([]),
+			Helper::getStateAttribute('bulkItems') => wp_json_encode([]),
 		],
 	]);
 	?>

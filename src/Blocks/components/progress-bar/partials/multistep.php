@@ -6,10 +6,10 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(dirname(__DIR__, 2));
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $steps = $attributes['steps'] ?? [];
 
@@ -35,7 +35,7 @@ foreach ($steps as $step) {
 		continue;
 	}
 
-	$progressBarAttrs[$manifestCustomFormAttrs['stepId']] = esc_attr($name);
+	$progressBarAttrs[Helper::getStateAttribute('stepId')] = esc_attr($name);
 
 	$progressBarAttrsOutput = '';
 	foreach ($progressBarAttrs as $key => $value) {

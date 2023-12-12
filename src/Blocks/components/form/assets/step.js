@@ -34,7 +34,7 @@ export class Steps {
 		}
 
 		this.state.getStateFormElement(formId).addEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
 	}
@@ -84,7 +84,7 @@ export class Steps {
 		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
 
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEventsAfterFormSubmitEnd(), response);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitEnd'), response);
 	}
 
 	/**
@@ -109,15 +109,15 @@ export class Steps {
 
 		// Hide next button on last step.
 		if (nextStep === this.state.getStateFormStepsLastStep(formId)) {
-			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelectorsClassHidden());
+			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
 		}
 
 		// Hide next button direted from the api.
 		if (disableNextButton) {
-			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelectorsClassHidden());
+			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
 		}
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToNextStep());
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('stepsGoToNextStep'));
 	}
 
 	/**
@@ -137,7 +137,7 @@ export class Steps {
 
 		this.setChangeStep(formId, nextStep, newFlow);
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEventsStepsGoToPrevStep());
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('stepsGoToPrevStep'));
 	}
 
 	/**
@@ -181,7 +181,7 @@ export class Steps {
 		this.setChangeStep(formId, firstStep, []);
 
 		// Hide prev button.
-		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`)?.classList?.add(this.state.getStateSelectorsClassHidden());
+		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
 	}
 
 	/**
@@ -203,17 +203,17 @@ export class Steps {
 		const currentStep = this.state.getStateFormStepsCurrent(formId);
 
 		// Remove active from current step.
-		this.state.getStateFormStepsElement(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormStepsElement(currentStep, formId)?.classList?.remove(this.state.getStateSelector('isActive'));
 
 		// Add active to new step.
-		this.state.getStateFormStepsElement(nextStep, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
+		this.state.getStateFormStepsElement(nextStep, formId)?.classList?.add(this.state.getStateSelector('isActive'));
 
 		// Reset filled steps.
-		this.state.getStateFormStepsElements(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelectorsClassFilled()));
+		this.state.getStateFormStepsElements(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
 
 		// Add filled to all filled steps.
 		flow.forEach((item) => {
-			this.state.getStateFormStepsElement(item, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
+			this.state.getStateFormStepsElement(item, formId)?.classList?.add(this.state.getStateSelector('isFilled'));
 		});
 
 		// Set progress bar.
@@ -255,7 +255,7 @@ export class Steps {
 
 				// Output active elements.
 				if ((flow?.length === 0 && index === 0) || (flow?.length > 0 && index <= flow?.length)) {
-					node.classList.add(this.state.getStateSelectorsClassFilled());
+					node.classList.add(this.state.getStateSelector('isFilled'));
 				}
 
 				// Append div element to progress bar.
@@ -267,17 +267,17 @@ export class Steps {
 			const currentStep = this.state.getStateFormStepsCurrent(formId);
 
 			// Remove active from current step.
-			this.state.getStateFormStepsElementProgressBar(currentStep, formId)?.classList?.remove(this.state.getStateSelectorsClassActive());
+			this.state.getStateFormStepsElementProgressBar(currentStep, formId)?.classList?.remove(this.state.getStateSelector('isActive'));
 	
 			// Add active to new step.
-			this.state.getStateFormStepsElementProgressBar(nextStep, formId)?.classList?.add(this.state.getStateSelectorsClassActive());
+			this.state.getStateFormStepsElementProgressBar(nextStep, formId)?.classList?.add(this.state.getStateSelector('isActive'));
 	
 			// Reset filled steps.
-			this.state.getStateFormStepsElementsProgressBar(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelectorsClassFilled()));
+			this.state.getStateFormStepsElementsProgressBar(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
 
 			// Add filled to all filled steps.
 			flow.forEach((item) => {
-				this.state.getStateFormStepsElementProgressBar(item, formId)?.classList?.add(this.state.getStateSelectorsClassFilled());
+				this.state.getStateFormStepsElementProgressBar(item, formId)?.classList?.add(this.state.getStateSelector('isFilled'));
 			});
 		}
 	}
@@ -320,7 +320,7 @@ export class Steps {
 	 */
 	removeEvents(formId) {
 		this.state.getStateFormElement(formId).removeEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
 	}

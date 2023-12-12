@@ -97,7 +97,7 @@ export class Transfer {
 	};
 
 	onClickItem = (event) => {
-		const button = document.querySelector(`${this.state.getStateSelectorsField()}[${this.state.getStateAttribute('migrationType')}='export-forms']`);
+		const button = document.querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('migrationType')}='export-forms']`);
 		const items = button.getAttribute(this.state.getStateAttribute('migrationExportItems'));
 
 		let output = items ? items.split(",") : [];

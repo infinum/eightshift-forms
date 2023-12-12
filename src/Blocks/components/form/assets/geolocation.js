@@ -32,7 +32,7 @@ export class Geolocation {
 
 		// Set select fields based on geolocation.
 		this.state.getStateFormElement(formId).addEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);
 	}
@@ -49,7 +49,7 @@ export class Geolocation {
 	 */
 	removeEvents(formId) {
 		this.state.getStateFormElement(formId).removeEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);
 	}

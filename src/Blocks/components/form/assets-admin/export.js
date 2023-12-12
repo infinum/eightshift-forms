@@ -78,7 +78,7 @@ export class Export {
 	};
 
 	isDisableButton(element) {
-		return element.classList.contains(this.state.getStateSelectorsClassDisabled());
+		return element.classList.contains(this.state.getStateSelector('isDisabled'));
 	}
 
 	downloadCSVFromJson(arrayOfJson) {
