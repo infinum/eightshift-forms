@@ -17,7 +17,6 @@ use EightshiftForms\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use WP_REST_Request;
@@ -251,59 +250,57 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			$params
 		);
 
-		$manifestCustomFormParams = Components::getSettings()['customFormParams'];
-
 		$output = [];
 
 		// If this route is for public form prepare all params.
 		foreach ($paramsOutput as $key => $value) {
 			switch ($key) {
 				// Used for direct import from settings.
-				case $manifestCustomFormParams['direct']:
+				case Helper::getStateParam('direct'):
 					$output['directImport'] = (bool) $value['value'];
 					break;
 				// Used for direct import from settings.
-				case $manifestCustomFormParams['itemId']:
+				case Helper::getStateParam('itemId'):
 					$output['itemId'] = $value['value'];
 					break;
 				// Used for direct import from settings.
-				case $manifestCustomFormParams['innerId']:
+				case Helper::getStateParam('innerId'):
 					$output['innerId'] = $value['value'];
 					break;
-				case $manifestCustomFormParams['formId']:
+				case Helper::getStateParam('formId'):
 					$output['formId'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case $manifestCustomFormParams['postId']:
+				case Helper::getStateParam('postId'):
 					$output['postId'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case $manifestCustomFormParams['type']:
+				case Helper::getStateParam('type'):
 					$output['type'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case $manifestCustomFormParams['action']:
+				case Helper::getStateParam('action'):
 					$output['action'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case $manifestCustomFormParams['captcha']:
+				case Helper::getStateParam('captcha'):
 					$output['captcha'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case $manifestCustomFormParams['actionExternal']:
+				case Helper::getStateParam('actionExternal'):
 					$output['actionExternal'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case $manifestCustomFormParams['settingsType']:
+				case Helper::getStateParam('settingsType'):
 					$output['settingsType'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case $manifestCustomFormParams['storage']:
+				case Helper::getStateParam('storage'):
 					$output['storage'] = $value['value'];
 					$value['value'] = (!empty($value['value'])) ? \json_decode($value['value'], true) : [];
 					$output['params'][$key] = $value;
 					break;
-				case $manifestCustomFormParams['steps']:
+				case Helper::getStateParam('steps'):
 					$output['apiSteps'] = [
 						'fields' => $value['value'],
 						'current' => $value['custom'],
@@ -378,13 +375,11 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			return [];
 		}
 
-		$manifestCustomFormParams = Components::getSettings()['customFormParams'];
-
 		return \array_merge(
 			$file,
 			[
-				'id' => $params[$manifestCustomFormParams['fileId']]['value'] ?? '',
-				'fieldName' => $params[$manifestCustomFormParams['name']]['value'] ?? '',
+				'id' => $params[Helper::getStateParam('fileId')]['value'] ?? '',
+				'fieldName' => $params[Helper::getStateParam('name')]['value'] ?? '',
 			]
 		);
 	}

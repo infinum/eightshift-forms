@@ -883,7 +883,7 @@ class Helper
 	 */
 	public static function removeUneceseryParamFields(array $params, array $additional = []): array
 	{
-		$customFields = \array_flip(Components::flattenArray(Components::getSettings()['customFormParams']));
+		$customFields = \array_flip(Components::flattenArray(self::getStateParams()));
 		$additional = \array_flip($additional);
 
 		return \array_filter(
@@ -991,5 +991,75 @@ class Helper
 			},
 			$items
 		);
+	}
+
+	/**
+	 * Return selector admin enum values by name.
+	 *
+	 * @param string $name Name of the enum.
+	 *
+	 * @return string
+	 */
+	public static function getStateSelectorAdmin(string $name): string
+	{
+		return Components::getSettings()['enums']['selectorsAdmin'][$name] ?? '';
+	}
+
+	/**
+	 * Return selector enum values by name.
+	 *
+	 * @param string $name Name of the enum.
+	 *
+	 * @return string
+	 */
+	public static function getStateSelector(string $name): string
+	{
+		return Components::getSettings()['enums']['selectors'][$name] ?? '';
+	}
+
+	/**
+	 * Return attribute enum values by name.
+	 *
+	 * @param string $name Name of the enum.
+	 *
+	 * @return string
+	 */
+	public static function getStateAttribute(string $name): string
+	{
+		return Components::getSettings()['enums']['attrs'][$name] ?? '';
+	}
+
+	/**
+	 * Return all params enum values.
+	 *
+	 * @return array<string>
+	 */
+	public static function getStateParams(): array
+	{
+		return Components::getSettings()['enums']['params'] ?? [];
+	}
+
+	/**
+	 * Return param enum values by name.
+	 *
+	 * @param string $name Name of the enum.
+	 *
+	 * @return string
+	 */
+	public static function getStateParam(string $name): string
+	{
+		return self::getStateParams()[$name] ?? '';
+	}
+
+	/**
+	 * Return field type internal enum values by name.
+	 *
+	 * @param string $name Name of the enum.
+	 *
+	 * @return string
+	 */
+	public static function getStateFieldType(string $name): string
+	{
+		return Components::getSettings()['enums']['typeInternal'][$name] ?? '';
 	}
 }

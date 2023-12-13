@@ -15,7 +15,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Query;
 
@@ -107,9 +106,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$manifestForm = Components::getComponent('form');
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -137,9 +133,9 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_GLOBAL_SETTINGS,
+													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'],
+												'additionalClass' => Helper::getStateSelectorAdmin('transfer'),
 											],
 										],
 									],
@@ -156,9 +152,9 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_ALL,
+													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_ALL,
 												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'],
+												'additionalClass' => Helper::getStateSelectorAdmin('transfer'),
 											],
 										],
 									],
@@ -175,10 +171,10 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'submitValue' => \__('Export selected', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													$manifestCustomFormAttrs['migrationType'] => self::TYPE_EXPORT_FORMS,
-													$manifestCustomFormAttrs['migrationExportItems'] => '',
+													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_FORMS,
+													Helper::getStateAttribute('migrationExportItems') => '',
 												],
-												'additionalClass' => $manifestForm['componentTransferJsClass'],
+												'additionalClass' => Helper::getStateSelectorAdmin('transfer'),
 											],
 										],
 									],
@@ -224,7 +220,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'checkboxAsToggle' => true,
 												'checkboxAsToggleSize' => 'medium',
 												'checkboxLabel' => \__('Override existing forms', 'eightshift-forms'),
-												'additionalClass' => "{$manifestForm['componentTransferJsClass']}-existing",
+												'additionalClass' => Helper::getStateSelectorAdmin('transferExisting'),
 											],
 										],
 									],
@@ -238,16 +234,16 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'fileIsRequired' => true,
 										'fileFieldLabel' => \__('Backup file (JSON)', 'eightshift-forms'),
 										'fileAccept' => 'json',
-										'additionalClass' => $manifestForm['componentTransferJsClass'] . '-upload',
+										'additionalClass' => Helper::getStateSelectorAdmin('transferUpload'),
 									],
 									[
 										'component' => 'submit',
 										'submitValue' => \__('Import JSON', 'eightshift-forms'),
 										'submitVariant' => 'outline',
 										'submitAttrs' => [
-											$manifestCustomFormAttrs['migrationType'] => self::TYPE_IMPORT,
+											Helper::getStateAttribute('migrationType') => self::TYPE_IMPORT,
 										],
-										'additionalClass' => $manifestForm['componentTransferJsClass'],
+										'additionalClass' => Helper::getStateSelectorAdmin('transfer'),
 									],
 								],
 							],
@@ -271,13 +267,13 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'textareaSize' => 'big',
 								'textareaLimitHeight' => true,
 								'textareaIsPreventSubmit' => true,
-								'additionalClass' => "{$manifestForm['componentManualImportApiJsClass']}-data",
+								'additionalClass' => Helper::getStateSelectorAdmin('manualImportApiData'),
 							],
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Manual import', 'eightshift-forms'),
 								'submitVariant' => 'outline',
-								'additionalClass' => $manifestForm['componentManualImportApiJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('manualImportApi'),
 							],
 							[
 								'component' => 'textarea',
@@ -287,7 +283,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'textareaIsPreventSubmit' => true,
 								'textareaLimitHeight' => true,
 								'textareaIsReadOnly' => true,
-								'additionalClass' => "{$manifestForm['componentManualImportApiJsClass']}-output",
+								'additionalClass' => Helper::getStateSelectorAdmin('manualImportApiOutput'),
 							],
 						],
 					],
@@ -304,8 +300,6 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function getFormsList(): array
 	{
-		$manifestForm = Components::getComponent('form');
-
 		$args = [
 			'post_type' => Forms::POST_TYPE_SLUG,
 			'no_found_rows' => true,
@@ -332,7 +326,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 				'component' => 'checkbox',
 				'checkboxLabel' => $title,
 				'checkboxValue' => $id,
-				'additionalClass' => "{$manifestForm['componentTransferJsClass']}-item",
+				'additionalClass' => Helper::getStateSelectorAdmin('transferItem'),
 			];
 		}
 

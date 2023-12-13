@@ -13,9 +13,6 @@ use EightshiftForms\Blocks\SettingsBlocks;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSelect = Components::getComponent('select');
-$manifestGlobal = Components::getSettings();
-$manifestCustomFormAttrs = $manifestGlobal['customFormAttrs'];
-$manifestTypeInternal = $manifestGlobal['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -74,7 +71,7 @@ if ($phoneAttrs) {
 
 // Additional content filter.
 $additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attributes);
-$phoneSelectUseSearchAttr = $manifestCustomFormAttrs['selectAllowSearch'];
+$phoneSelectUseSearchAttr = Helper::getStateAttribute('selectAllowSearch');
 
 $options = [];
 $filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'];
@@ -93,15 +90,15 @@ if (has_filter($filterName)) {
 		$value = $option[2] ?? '';
 
 		$customProperties = [
-			$manifestCustomFormAttrs['selectCountryCode'] => $code,
-			$manifestCustomFormAttrs['selectCountryLabel'] => $label,
-			$manifestCustomFormAttrs['selectCountryNumber'] => $value,
+			Helper::getStateAttribute('selectCountryCode') => $code,
+			Helper::getStateAttribute('selectCountryLabel') => $label,
+			Helper::getStateAttribute('selectCountryNumber') => $value,
 		];
 
 		$options[] = '
 			<option
 				value="' . $value . '"
-				' . $manifestCustomFormAttrs['selectCustomProperties'] . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
+				' . Helper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $settings['phone']['preselectedValue'], false) . '
 			>+' . $value . '</option>';
 	}
@@ -133,7 +130,7 @@ echo Components::render(
 			'fieldContent' => $phone,
 			'fieldId' => $phoneName,
 			'fieldName' => $phoneName,
-			'fieldTypeInternal' => $manifestTypeInternal['phone'],
+			'fieldTypeInternal' => Helper::getStateFieldType('phone'),
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),
 			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

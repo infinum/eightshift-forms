@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -86,7 +87,6 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDataReference)
 	{
-		$manifestCustomFormParams = Components::getSettings()['customFormParams'];
 		$debug = [
 			'formDataReference' => $formDataReference,
 		];
@@ -94,7 +94,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 		$params = $formDataReference['params'];
 
 		// Remove unnecessary internal params before continue.
-		$customFields = \array_flip(Components::flattenArray($manifestCustomFormParams));
+		$customFields = \array_flip(Components::flattenArray(Helper::getStateParams()));
 
 		// Remove unnecessary params.
 		foreach ($params as $key => $value) {

@@ -6,16 +6,15 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
 if (!$checkboxValue) {
@@ -48,13 +47,13 @@ $checkboxClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($checkboxIsDisabled, 'es-form-is-disabled'),
-	Components::selector($checkboxIsHidden, 'es-form-is-hidden'),
+	Components::selector($checkboxIsDisabled, Helper::getStateSelector('isDisabled')),
+	Components::selector($checkboxIsHidden, Helper::getStateSelector('isHidden')),
 ]);
 
 $checkboxInputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'input'),
-	Components::selector($checkboxSingleSubmit, $componentJsSingleSubmitClass),
+	Components::selector($checkboxSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 $checkboxAttrs['value'] = esc_attr($checkboxValue);
@@ -77,17 +76,17 @@ $conditionalTags = Components::render(
 );
 
 if ($conditionalTags) {
-	$checkboxFieldAttrs[$manifestCustomFormAttrs['conditionalTags']] = $conditionalTags;
+	$checkboxFieldAttrs[Helper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 
-$checkboxFieldAttrs[$manifestCustomFormAttrs['fieldName']] = $checkboxValue;
+$checkboxFieldAttrs[Helper::getStateAttribute('fieldName')] = $checkboxValue;
 
 if ($componentName) {
-	$checkboxFieldAttrs[$manifestCustomFormAttrs['fieldType']] = 'checkbox';
+	$checkboxFieldAttrs[Helper::getStateAttribute('fieldType')] = 'checkbox';
 }
 
 if ($checkboxTracking) {
-	$checkboxFieldAttrs[$manifestCustomFormAttrs['tracking']] = esc_attr($checkboxTracking);
+	$checkboxFieldAttrs[Helper::getStateAttribute('tracking')] = esc_attr($checkboxTracking);
 }
 
 $checkboxFieldAttrsOutput = '';

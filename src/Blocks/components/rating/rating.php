@@ -11,12 +11,8 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $icons = Components::getComponent('utils')['icons'];
-$manifestGlobal = Components::getSettings();
-$manifestCustomFormAttrs = $manifestGlobal['customFormAttrs'];
-$manifestTypeInternal = $manifestGlobal['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
-$componentJsClass = $manifest['componentJsClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $ratingName = Components::checkAttr('ratingName', $attributes, $manifest);
@@ -37,8 +33,8 @@ $ratingHideLabel = false;
 
 $ratingClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($componentJsClass, $componentJsClass),
 	Components::selector($additionalClass, $additionalClass),
+	Helper::getStateSelector('rating'),
 ]);
 
 if (!$ratingValue || !is_numeric($ratingValue)) {
@@ -49,7 +45,7 @@ if ($ratingAmount < $ratingValue) {
 	$ratingValue = $ratingAmount;
 }
 
-$ratingAttrs[$manifestCustomFormAttrs['ratingValue']] = $ratingValue;
+$ratingAttrs[Helper::getStateAttribute('ratingValue')] = $ratingValue;
 
 $ratingAttrsOutput = '';
 if ($ratingAttrs) {
@@ -67,7 +63,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
 		<div
 			class="' . esc_attr("{$componentClass}__star") . '"
-			' . $manifestCustomFormAttrs['ratingValue'] . '="' . $i . '"
+			' . Helper::getStateAttribute('ratingValue') . '="' . $i . '"
 		>
 		' . $icons['rating'] .
 		'</div>';
@@ -99,7 +95,7 @@ echo Components::render(
 			'fieldContent' => $rating,
 			'fieldId' => $ratingName,
 			'fieldName' => $ratingName,
-			'fieldTypeInternal' => $manifestTypeInternal['rating'],
+			'fieldTypeInternal' => Helper::getStateFieldType('rating'),
 			'fieldIsRequired' => $ratingIsRequired,
 			'fieldDisabled' => !empty($ratingIsDisabled),
 			'fieldTypeCustom' => $ratingTypeCustom ?: 'rating', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

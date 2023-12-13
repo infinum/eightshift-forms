@@ -17,7 +17,6 @@ use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * SettingsHelper trait.
@@ -714,16 +713,14 @@ trait SettingsHelper
 	 */
 	public function settingTestAliConnection(string $key): array
 	{
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
-
 		return [
 			'component' => 'submit',
 			'submitValue' => \__('Test API connection', 'eightshift-forms'),
 			'submitVariant' => 'outline',
 			'submitAttrs' => [
-				$manifestCustomFormAttrs['testApiType'] => $key,
+				Helper::getStateAttribute('testApiType') => $key,
 			],
-			'additionalClass' => Components::getComponent('form')['componentTestApiJsClass'] . ' es-submit--api-test',
+			'additionalClass' => Helper::getStateSelectorAdmin('testApi') . ' es-submit--api-test',
 		];
 	}
 

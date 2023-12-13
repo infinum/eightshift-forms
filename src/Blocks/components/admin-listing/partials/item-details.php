@@ -11,8 +11,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getComponent('admin-listing');
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
-$componentJsItemClass = $manifest['componentJsItemClass'] ?? '';
+$selectorJsItem = Helper::getStateSelectorAdmin('listingItem');
 
 $isDevMode = apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
 
@@ -24,7 +23,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 
 ?>
 <div
-	class="<?php echo esc_attr("{$sectionClass}__item-details {$componentJsItemClass}") ?>"
+	class="<?php echo esc_attr("{$sectionClass}__item-details {$selectorJsItem}") ?>"
 	<?php
 	foreach ($additionalAttributes as $key => $value) {
 		if (!empty($key) && !empty($value)) {

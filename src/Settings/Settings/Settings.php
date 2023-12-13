@@ -14,7 +14,6 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Settings class.
@@ -136,8 +135,6 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public function getSettingsForm(string $type, string $formId): string
 	{
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
-
 		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
@@ -156,10 +153,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		$data = \apply_filters($filter, $formId);
 
 		$formAdditionalProps['formAttrs'] = [
-			$manifestCustomFormAttrs['formId'] => $formId,
-			$manifestCustomFormAttrs['formType'] => $internalType,
-			$manifestCustomFormAttrs['settingsType'] => $type,
-			$manifestCustomFormAttrs['successRedirect'] => Helper::getCurrentUrl(),
+			Helper::getStateAttribute('formId') => $formId,
+			Helper::getStateAttribute('formType') => $internalType,
+			Helper::getStateAttribute('settingsType') => $type,
+			Helper::getStateAttribute('successRedirect') => Helper::getCurrentUrl(),
 		];
 
 		// Populate and build form.

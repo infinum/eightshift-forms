@@ -3,8 +3,6 @@
 	"componentName": "tabs",
 	"title": "Tabs",
 	"componentClass": "es-tabs",
-	"componentJsClass": "js-es-tabs",
-	"componentJsTabClass": "js-es-tabs-item",
 	"attributes": {
 		"tabsContent": {
 			"type": "string"

@@ -1,6 +1,5 @@
 /* global esFormsLocalization */
 
-import manifest from './../../manifest.json';
 import globalManifest from './../../../../manifest.json';
 import { CONDITIONAL_TAGS_ACTIONS } from '../../../conditional-tags/assets/utils';
 
@@ -37,7 +36,7 @@ export const StateEnum = {
 	IS_DISABLED: 'disabled',
 	TYPE: 'type',
 	TYPE_SETTINGS: 'typeSettings',
-	TYPE_INTERNAL: 'typeInternal',
+	TYPE_FIELD: 'typeField',
 	TYPE_CUSTOM: 'typeCustom',
 	NAME: 'name',
 	ERROR: 'error',
@@ -108,36 +107,6 @@ export const StateEnum = {
 
 	GEOLOCATION: 'geolocation',
 
-	EVENTS: 'events',
-	EVENTS_BEFORE_FORM_SUBMIT: 'beforeFormSubmit',
-	EVENTS_AFTER_FORM_SUBMIT: 'afterFormSubmit',
-	EVENTS_AFTER_FORM_SUBMIT_SUCCESS: 'afterFormSubmitSuccess',
-	EVENTS_AFTER_FORM_SUBMIT_ERROR: 'afterFormSubmitError',
-	EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION: 'afterFormSubmitErrorValidation',
-	EVENTS_AFTER_FORM_SUBMIT_END: 'afterFormSubmitEnd',
-	EVENTS_AFTER_GTM_DATA_PUSH: 'afterGtmDataPush',
-	EVENTS_AFTER_FORM_SUBMIT_RESET: 'afterFormSubmitReset',
-	EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT: 'afterFormSubmitSuccessBeforeRedirect',
-	EVENTS_FORM_JS_LOADED: 'jsFormLoaded',
-	EVENTS_FORM_MANUAL_INIT_LOADED: 'manualInitLoaded',
-	EVENTS_AFTER_CAPTCHA_INIT: 'afterCaptchaInit',
-	EVENTS_STEPS_GO_TO_NEXT_STEP: 'goToNextStep',
-	EVENTS_STEPS_GO_TO_PREV_STEP: 'goToPrevStep',
-	EVENTS_ENRICHMENT_PREFILL: 'enrichmentPrefill',
-
-	SELECTORS: 'selectors',
-	SELECTORS_CLASS_ACTIVE: 'isActive',
-	SELECTORS_CLASS_FILLED: 'isFilled',
-	SELECTORS_CLASS_LOADING: 'isLoading',
-	SELECTORS_CLASS_HIDDEN: 'isHidden',
-	SELECTORS_CLASS_HIDDEN_CT: 'isHiddenCt',
-	SELECTORS_CLASS_VISIBLE: 'isVisible',
-	SELECTORS_CLASS_VISIBLE_CT: 'isVisibleCt',
-	SELECTORS_CLASS_DISABLED: 'isDisabled',
-	SELECTORS_CLASS_HAS_ERROR: 'hasError',
-	SELECTORS_CLASS_LOADER_DISABLE_OVERLAY: 'isDisableOverlay',
-	SELECTORS_CLASS_GEOLOCATION_LOADING: 'isGeolocationLoading',
-
 	TRACKING: 'tracking',
 	TRACKING_EVENT_NAME: 'eventName',
 	TRACKING_EVENT_ADDITIONAL_DATA: 'eventAdditionalData',
@@ -154,27 +123,12 @@ export const StateEnum = {
 	STEPS_PROGRESS_BAR: 'progressBar',
 	STEPS_ELEMENTS_PROGRESS_BAR: 'elementsProgressBar',
 
-	// Specific selectors.
-	SELECTORS_PREFIX: 'prefix',
-	SELECTORS_FORMS: 'forms',
-	SELECTORS_FORM: 'form',
-	SELECTORS_SUBMIT_SINGLE: 'singleSubmit',
-	SELECTORS_STEP: 'step',
-	SELECTORS_STEP_PROGRESS_BAR: 'stepProgressBar',
-	SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW: 'stepProgressBarMultiflow',
-	SELECTORS_STEP_SUBMIT: 'stepSubmit',
-	SELECTORS_ERROR: 'error',
-	SELECTORS_LOADER: 'loader',
-	SELECTORS_GLOBAL_MSG: 'globalMsg',
-	SELECTORS_GROUP: 'group',
-	SELECTORS_FIELD: 'field',
-	SELECTORS_FIELD_NO_FORMS_BLOCK: 'fieldCustom',
-	SELECTORS_RATING: 'rating',
-	SELECTORS_FIELD_STYLE: 'fieldStyle',
-
 	ATTRIBUTES: 'attributes',
 	PARAMS: 'params',
-	TYPE_INT: 'typeInt',
+	FIELD_TYPE: 'fieldType',
+	EVENTS: 'events',
+	SELECTORS: 'selectors',
+	SELECTORS_ADMIN: 'selectorsAdmin',
 };
 
 ////////////////////////////////////////////////////////////////
@@ -214,25 +168,41 @@ export function setStateInitial() {
 		[StateEnum.SETTINGS]: {},
 		[StateEnum.EVENTS]: {},
 		[StateEnum.SELECTORS]: {},
+		[StateEnum.SELECTORS_ADMIN]: {},
 		[StateEnum.ATTRIBUTES]: {},
 		[StateEnum.PARAMS]: {},
-		[StateEnum.TYPE_INT]: {},
+		[StateEnum.FIELD_TYPE]: {},
 		[StateEnum.CONFIG]: {},
 	};
 
+	// Selectors.
+	for (const [key, item] of Object.entries(globalManifest.enums.selectors ?? {})) {
+		setState([key], item, StateEnum.SELECTORS);
+	}
+
+	// Selectors Admin.
+	for (const [key, item] of Object.entries(globalManifest.enums.selectorsAdmin ?? {})) {
+		setState([key], item, StateEnum.SELECTORS_ADMIN);
+	}
+
 	// Attributes.
-	for (const [key, item] of Object.entries(globalManifest.customFormAttrs ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.attrs ?? {})) {
 		setState([key], item, StateEnum.ATTRIBUTES);
 	}
 
 	// Params.
-	for (const [key, item] of Object.entries(globalManifest.customFormParams ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.params ?? {})) {
 		setState([key], item, StateEnum.PARAMS);
 	}
 
 	// Type Int.
-	for (const [key, item] of Object.entries(globalManifest.typeInternal ?? {})) {
-		setState([key], item, StateEnum.TYPE_INT);
+	for (const [key, item] of Object.entries(globalManifest.enums.events ?? {})) {
+		setState([key], item, StateEnum.EVENTS);
+	}
+
+	// Type Int.
+	for (const [key, item] of Object.entries(globalManifest.enums.typeInternal ?? {})) {
+		setState([key], item, StateEnum.FIELD_TYPE);
 	}
 
 	// Config.
@@ -280,53 +250,6 @@ export function setStateInitial() {
 		setState([StateEnum.ENRICHMENT_ALLOWED], Object.values(enrichment.allowed), StateEnum.ENRICHMENT);
 		setState([StateEnum.NAME], 'es-storage', StateEnum.ENRICHMENT);
 	}
-
-	// Events.
-	setState([StateEnum.EVENTS_BEFORE_FORM_SUBMIT], getStateEventName(StateEnum.EVENTS_BEFORE_FORM_SUBMIT), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_FORM_SUBMIT], getStateEventName(StateEnum.EVENTS_AFTER_FORM_SUBMIT), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT], getStateEventName(StateEnum.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_SUCCESS], getStateEventName(StateEnum.EVENTS_AFTER_FORM_SUBMIT_SUCCESS), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_RESET], getStateEventName(StateEnum.EVENTS_AFTER_FORM_SUBMIT_RESET), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_ERROR], getStateEventName(StateEnum.EVENTS_AFTER_FORM_SUBMIT_ERROR), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION], getStateEventName(StateEnum.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_END], getStateEventName(StateEnum.EVENTS_AFTER_FORM_SUBMIT_END), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_GTM_DATA_PUSH], getStateEventName(StateEnum.EVENTS_AFTER_GTM_DATA_PUSH), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_FORM_JS_LOADED], getStateEventName(StateEnum.EVENTS_FORM_JS_LOADED), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_FORM_MANUAL_INIT_LOADED], getStateEventName(StateEnum.EVENTS_FORM_MANUAL_INIT_LOADED), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_AFTER_CAPTCHA_INIT], getStateEventName(StateEnum.EVENTS_AFTER_CAPTCHA_INIT), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_STEPS_GO_TO_NEXT_STEP], getStateEventName(StateEnum.EVENTS_STEPS_GO_TO_NEXT_STEP), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP], getStateEventName(StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP), StateEnum.EVENTS);
-	setState([StateEnum.EVENTS_ENRICHMENT_PREFILL], getStateEventName(StateEnum.EVENTS_ENRICHMENT_PREFILL), StateEnum.EVENTS);
-
-	// Selectors.
-	setState([StateEnum.SELECTORS_CLASS_ACTIVE], `${manifest.componentClass}-is-active`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_FILLED], `${manifest.componentClass}-is-filled`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_LOADING], `${manifest.componentClass}-is-loading`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_HIDDEN], `${manifest.componentClass}-is-hidden`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_HIDDEN_CT], `${manifest.componentClass}-is-hidden-ct`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_VISIBLE], `${manifest.componentClass}-is-visible`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_VISIBLE_CT], `${manifest.componentClass}-is-visible-ct`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_DISABLED], `${manifest.componentClass}-is-disabled`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_HAS_ERROR], `${manifest.componentClass}-has-error`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_LOADER_DISABLE_OVERLAY], `${manifest.componentClass}-is-disable-overlay`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_CLASS_GEOLOCATION_LOADING], `${manifest.componentClass}-is-geolocation-loading`, StateEnum.SELECTORS);
-
-	setState([StateEnum.SELECTORS_PREFIX], `.${manifest.componentJsClass}`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_FORMS], `.${manifest.componentJsClass}-forms`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_FORM], `.${manifest.componentJsClass}-form`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_SUBMIT_SINGLE], `.${manifest.componentJsClass}-single-submit`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_STEP], `.${manifest.componentJsClass}-step`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], `.${manifest.componentJsClass}-step-progress-bar`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW], `.${manifest.componentJsClass}-step-progress-bar-multiflow`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_STEP_SUBMIT], `.${manifest.componentJsClass}-step-trigger`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_ERROR], `.${manifest.componentJsClass}-error`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_LOADER], `.${manifest.componentJsClass}-loader`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_GLOBAL_MSG], `.${manifest.componentJsClass}-global-msg`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_GROUP], `.${manifest.componentJsClass}-group`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_FIELD], `.${manifest.componentJsClass}-field`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_FIELD_NO_FORMS_BLOCK], `.${manifest.componentJsClass}-field-custom`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_RATING], `.${manifest.componentJsClass}-rating`, StateEnum.SELECTORS);
-	setState([StateEnum.SELECTORS_FIELD_STYLE], `.${manifest.componentClass}-field`, StateEnum.SELECTORS);
 }
 
 /**
@@ -353,9 +276,9 @@ export function setStateFormInitial(formId) {
 	let formElement = '';
 
 	if (formId === 0) {
-		formElement = document.querySelector(getState([StateEnum.SELECTORS_FORM], StateEnum.SELECTORS));
+		formElement = document.querySelector(getStateSelector('form', true));
 	} else {
-		formElement = document.querySelector(`${getState([StateEnum.SELECTORS_FORM], StateEnum.SELECTORS)}[${getStateAttribute('formId')}="${formId}"]`);
+		formElement = document.querySelector(`${getStateSelector('form', true)}[${getStateAttribute('formId')}="${formId}"]`);
 	}
 
 	setState([StateEnum.FORM, StateEnum.POST_ID],formElement?.getAttribute(getStateAttribute('postId')), formId);
@@ -367,7 +290,7 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.ACTION], formElement?.getAttribute('action'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formElement?.getAttribute(getStateAttribute('actionExternal')), formId);
 	setState([StateEnum.FORM, StateEnum.TYPE_SETTINGS], formElement?.getAttribute(getStateAttribute('settingsType')), formId);
-	setState([StateEnum.FORM, StateEnum.LOADER], formElement?.querySelector(getState([StateEnum.SELECTORS_LOADER], StateEnum.SELECTORS)), formId);
+	setState([StateEnum.FORM, StateEnum.LOADER], formElement?.querySelector(getStateSelector('loader', true)), formId);
 	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_NAME], formElement?.getAttribute(getStateAttribute('trackingEventName')), formId);
 	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_ADDITIONAL_DATA], JSON.parse(formElement?.getAttribute(getStateAttribute('trackingAdditionalData')) ?? '{}'), formId);
 
@@ -378,7 +301,7 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement?.getAttribute(getStateAttribute('successRedirectVariation')), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_DOWNLOADS], JSON.parse(formElement?.getAttribute(getStateAttribute('downloads')) ?? '{}'), formId);
 
-	const globalMsg = formElement?.querySelector(getState([StateEnum.SELECTORS_GLOBAL_MSG], StateEnum.SELECTORS));
+	const globalMsg = formElement?.querySelector(getStateSelector('globalMsg', true));
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.ELEMENT], globalMsg, formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_SUCCESS], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingSuccess')), formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingError')), formId);
@@ -401,7 +324,7 @@ export function setStateFormInitial(formId) {
 		const {
 			value,
 			name,
-			type, // this is used as a native type not internal type.
+			type, // this is used as a native type not field type.
 			disabled,
 		} = item;
 
@@ -409,7 +332,7 @@ export function setStateFormInitial(formId) {
 			return;
 		}
 
-		const field = formElement.querySelector(`${getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)}[${getStateAttribute('fieldName')}="${name}"]`);
+		const field = formElement.querySelector(`${getStateSelector('field', true)}[${getStateAttribute('fieldName')}="${name}"]`);
 		const fieldType = field?.getAttribute(getStateAttribute('fieldType'));
 
 		// Make changes depending on the field type.
@@ -447,7 +370,7 @@ export function setStateFormInitial(formId) {
 				// Combined fields like phone can have field null.
 				const isMultiple = Boolean(item.getAttribute(getStateAttribute('selectIsMultiple'))); // eslint-disable-line no-case-declarations
 
-				if (item.options.length && (fieldType === getStateIntType('phone') || fieldType === getStateIntType('country'))) {
+				if (item.options.length && (fieldType === 'phone' || fieldType === 'country')) {
 					let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
 
 					if (typeof customData === 'string') {
@@ -459,7 +382,7 @@ export function setStateFormInitial(formId) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData[getStateAttribute('selectCountryNumber')], formId);
 				}
 
-				if (fieldType !== getStateIntType('phone')) {
+				if (fieldType !== 'phone') {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
 
@@ -513,8 +436,8 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 
-				if (fieldType === getStateIntType('rating')) {
-					setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], field.querySelector(getState([StateEnum.SELECTORS_RATING], StateEnum.SELECTORS)), formId);
+				if (fieldType === 'rating') {
+					setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], field.querySelector(getStateSelector('rating', true)), formId);
 				}
 
 				if (field.getAttribute(getStateAttribute('fieldPreventSubmit'))) {
@@ -524,15 +447,14 @@ export function setStateFormInitial(formId) {
 				break;
 		}
 
-		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE], type, formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], fieldType, formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_FIELD], fieldType, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.HAS_ERROR], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.LOADED], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.NAME], name, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.FIELD], field, formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.ERROR], field?.querySelector(getState([StateEnum.SELECTORS_ERROR], StateEnum.SELECTORS)), formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], item?.classList?.contains(getState([StateEnum.SELECTORS_SUBMIT_SINGLE], StateEnum.SELECTORS).substring(1)), formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.ERROR], field?.querySelector(getStateSelector('error', true)), formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], item?.classList?.contains(getStateSelector('submitSingle', true).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.SAVE_AS_JSON], Boolean(item.getAttribute(getStateAttribute('saveAsJson'))), formId);
 	});
@@ -549,7 +471,7 @@ export function setStateFormInitial(formId) {
 			continue;
 		}
 
-		const field = formElement.querySelector(`${getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS)}[${getStateAttribute('fieldName')}="${name}"]`);
+		const field = formElement.querySelector(`${getStateSelector('field', true)}[${getStateAttribute('fieldName')}="${name}"]`);
 
 		if (type ==='radio' || type ==='checkbox') {
 			setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
@@ -561,7 +483,7 @@ export function setStateFormInitial(formId) {
 		}
 	}
 
-	const customFields = formElement?.querySelectorAll(getState([StateEnum.SELECTORS_FIELD_NO_FORMS_BLOCK], StateEnum.SELECTORS)) ?? [];
+	const customFields = formElement?.querySelectorAll(getStateSelector('fieldNoFormsBlock', true)) ?? [];
 
 	// Loop all fields for conditional tags later because we need to have all state set beforehand.
 	[...customFields].forEach((field) => {
@@ -587,7 +509,7 @@ export function setStateFormInitial(formId) {
  * * @returns {void}
  */
 export function setSteps(formElement, formId) {
-	const steps = formElement?.querySelectorAll(getState([StateEnum.SELECTORS_STEP], StateEnum.SELECTORS));
+	const steps = formElement?.querySelectorAll(getStateSelector('step', true));
 	setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.IS_USED], false, formId);
 
 	if (steps?.length) {
@@ -601,7 +523,7 @@ export function setSteps(formElement, formId) {
 
 		const stepsOrder = [];
 		Object.values(steps).forEach((item, index) => {
-			const stepFields = item?.querySelectorAll(getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS));
+			const stepFields = item?.querySelectorAll(getStateSelector('field', true));
 			const stepId = String(item.getAttribute(getStateAttribute('stepId')));
 			const stepOutput = [];
 
@@ -626,7 +548,7 @@ export function setSteps(formElement, formId) {
 		});
 		setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], stepsOrder, formId);
 
-		const stepsProgressBarMultiflow = formElement.querySelector(getState([StateEnum.SELECTORS_STEP_PROGRESS_BAR_MULTIFLOW], StateEnum.SELECTORS));
+		const stepsProgressBarMultiflow = formElement.querySelector(getStateSelector('stepProgressBarMultiflow', true));
 
 		if (stepsProgressBarMultiflow) {
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR], stepsProgressBarMultiflow, formId);
@@ -635,7 +557,7 @@ export function setSteps(formElement, formId) {
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_IS_MULTIFLOW], true, formId);
 		}
 
-		const stepsProgressBar = formElement.querySelector(getState([StateEnum.SELECTORS_STEP_PROGRESS_BAR], StateEnum.SELECTORS));
+		const stepsProgressBar = formElement.querySelector(getStateSelector('stepProgressBar', true));
 
 		if (stepsProgressBar) {
 			setState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_PROGRESS_BAR], stepsProgressBar, formId);
@@ -1061,10 +983,32 @@ export function getStateTop(name) {
  *
  * @returns {string}
  */
-export function getStateEventName(name) {
-	const output = name.charAt(0).toUpperCase() + name.slice(1);
+export function getStateEvent(name) {
+	return getStateTop(StateEnum.EVENTS)[name];
+}
 
-	return `${prefix}${output}`;
+/**
+ * Get state selector.
+ * 
+ * @param {string} name Name key to get.
+ * @param {boolean} usePrefix Use prefix.
+ *
+ * @returns {string}
+ */
+export function getStateSelector(name, usePrefix = false) {
+	return usePrefix ? `.${getStateTop(StateEnum.SELECTORS)[name]}` : getStateTop(StateEnum.SELECTORS)[name];
+}
+
+/**
+ * Get state selector admin.
+ * 
+ * @param {string} name Name key to get.
+ * @param {boolean} usePrefix Use prefix.
+ *
+ * @returns {string}
+ */
+export function getStateSelectorAdmin(name, usePrefix = false) {
+	return usePrefix ? `.${getStateTop(StateEnum.SELECTORS_ADMIN)[name]}` : getStateTop(StateEnum.SELECTORS_ADMIN)[name];
 }
 
 /**
@@ -1077,12 +1021,12 @@ export function getStateAttribute(name) {
 }
 
 /**
- * Get state internal type.
+ * Get state field type.
  *
  * @returns {string}
  */
-export function getStateIntType(name) {
-	return getStateTop(StateEnum.TYPE_INT)[name];
+export function getStateFieldType(name) {
+	return getStateTop(StateEnum.FIELD_TYPE)[name];
 }
 
 /**

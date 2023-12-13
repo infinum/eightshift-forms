@@ -3,13 +3,6 @@
 	"componentName": "form",
 	"title": "form",
 	"componentClass": "es-form",
-	"componentJsClass": "js-es-block",
-	"componentFormJsClass": "js-es-block-form",
-	"componentCacheJsClass": "js-es-cache-delete",
-	"componentMigrationJsClass": "js-es-migration",
-	"componentTransferJsClass": "js-es-transfer",
-	"componentTestApiJsClass": "js-es-api-test",
-	"componentManualImportApiJsClass": "js-es-manual-import-api",
 	"components": {
 		"loader": "loader",
 		"field": "field",

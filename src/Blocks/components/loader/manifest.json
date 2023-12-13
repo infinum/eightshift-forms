@@ -3,12 +3,7 @@
 	"componentName": "loader",
 	"title": "Loader",
 	"componentClass": "es-loader",
-	"componentJsClass": "js-es-block-loader",
 	"attributes": {
-		"loaderIsActive": {
-			"type": "boolean",
-			"default": false
-		},
 		"loaderIsGeolocation": {
 			"type": "boolean",
 			"default": false

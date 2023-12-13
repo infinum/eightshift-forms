@@ -10,13 +10,9 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestGlobal = Components::getSettings();
-$manifestCustomFormAttrs = $manifestGlobal['customFormAttrs'];
-$manifestTypeInternal = $manifestGlobal['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $selectName = Components::checkAttr('selectName', $attributes, $manifest);
 if (!$selectName) {
@@ -43,15 +39,15 @@ $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attr
 $selectClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'select'),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($selectSingleSubmit, $componentJsSingleSubmitClass),
+	Components::selector($selectSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 if ($selectUseSearch) {
-	$selectAttrs[$manifestCustomFormAttrs['selectAllowSearch']] = esc_attr($selectUseSearch);
+	$selectAttrs[Helper::getStateAttribute('selectAllowSearch')] = esc_attr($selectUseSearch);
 }
 
 if ($selectIsMultiple) {
-	$selectAttrs[$manifestCustomFormAttrs['selectIsMultiple']] = esc_attr($selectIsMultiple);
+	$selectAttrs[Helper::getStateAttribute('selectIsMultiple')] = esc_attr($selectIsMultiple);
 	$selectAttrs['multiple'] = 'true';
 }
 
@@ -108,7 +104,7 @@ echo Components::render(
 			'fieldContent' => $select,
 			'fieldId' => $selectName,
 			'fieldName' => $selectName,
-			'fieldTypeInternal' => $manifestTypeInternal['select'],
+			'fieldTypeInternal' => Helper::getStateFieldType('select'),
 			'fieldIsRequired' => $selectIsRequired,
 			'fieldDisabled' => !empty($selectIsDisabled),
 			'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

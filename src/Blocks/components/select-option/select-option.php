@@ -6,10 +6,10 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $selectOptionValue = Components::checkAttr('selectOptionValue', $attributes, $manifest);
 $selectOptionAsPlaceholder = Components::checkAttr('selectOptionAsPlaceholder', $attributes, $manifest);
@@ -31,13 +31,13 @@ $conditionalTags = Components::render(
 
 $customAttributes = [];
 
-$customAttributes[$manifestCustomFormAttrs['selectOptionIsHidden']] = $selectOptionIsHidden;
+$customAttributes[Helper::getStateAttribute('selectOptionIsHidden')] = $selectOptionIsHidden;
 
 if ($conditionalTags) {
-	$customAttributes[$manifestCustomFormAttrs['conditionalTags']] = $conditionalTags;
+	$customAttributes[Helper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 
-$selectOptionAttrs[$manifestCustomFormAttrs['selectCustomProperties']] = wp_json_encode($customAttributes);
+$selectOptionAttrs[Helper::getStateAttribute('selectCustomProperties')] = wp_json_encode($customAttributes);
 
 $selectOptionAttrsOutput = '';
 if ($selectOptionAttrs) {

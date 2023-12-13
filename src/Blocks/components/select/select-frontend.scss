@@ -49,8 +49,6 @@ div.es-select {
 				display: flex;
 				align-items: center;
 				flex-wrap: wrap;
-
-				@include conditional-tags-styles;
 			}
 
 			.choices__input {

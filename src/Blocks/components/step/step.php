@@ -6,16 +6,14 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestField = Components::getComponent('field');
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $componentClass = $manifest['componentClass'] ?? '';
-$componentJsClass = $manifest['componentJsClass'] ?? '';
-$componentJsTriggerClass = $manifest['componentJsTriggerClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentFieldClass = $manifestField['componentClass'] ?? '';
@@ -25,10 +23,12 @@ $stepContent = Components::checkAttr('stepContent', $attributes, $manifest);
 $stepSubmit = Components::checkAttr('stepSubmit', $attributes, $manifest);
 $stepPrevLabel = Components::checkAttr('stepPrevLabel', $attributes, $manifest);
 $stepNextLabel = Components::checkAttr('stepNextLabel', $attributes, $manifest);
+$stepIsActive = Components::checkAttr('stepIsActive', $attributes, $manifest);
 
 $stepClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Components::selector($componentJsClass, $componentJsClass),
+	Helper::getStateSelector('step'),
+	Components::selector($stepIsActive, Helper::getStateSelector('isActive')),
 ]);
 
 if (!$stepContent) {
@@ -38,7 +38,7 @@ if (!$stepContent) {
 $stepAttrs = [];
 
 if ($stepName) {
-	$stepAttrs[$manifestCustomFormAttrs['stepId']] = esc_attr($stepName);
+	$stepAttrs[Helper::getStateAttribute('stepId')] = esc_attr($stepName);
 }
 
 $stepAttrsOutput = '';
@@ -47,8 +47,6 @@ if ($stepAttrs) {
 		$stepAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
-
-$jsSelector = Components::selector($componentJsTriggerClass, $componentJsTriggerClass);
 
 $prevButtonComponent = '';
 $nextButtonComponent = '';
@@ -68,7 +66,7 @@ $nextButtonComponent = '';
 				if (has_filter($filterNameComponentPrev)) {
 					$prevButtonComponent = apply_filters($filterNameComponentPrev, [
 						'value' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'jsSelector' => $jsSelector,
+						'jsSelector' => Helper::getStateSelector('stepSubmit'),
 						'attributes' => $attributes,
 					]);
 				}
@@ -81,14 +79,14 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $prevButtonComponent,
 							'submitAttrs' => [
-								$manifestCustomFormAttrs['submitStepDirection'] => 'prev',
+								Helper::getStateAttribute('submitStepDirection') => 'prev',
 							],
 						]),
 						[
 							'additionalFieldClass' => Components::classnames([
 								Components::selector($componentFieldClass, $componentFieldClass, '', 'submit-prev'),
 							]),
-							'additionalClass' => $jsSelector,
+							'additionalClass' => Helper::getStateSelector('stepSubmit'),
 						]
 					)
 				);
@@ -98,7 +96,7 @@ $nextButtonComponent = '';
 				if (has_filter($filterNameComponentNext)) {
 					$nextButtonComponent = apply_filters($filterNameComponentNext, [
 						'value' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'jsSelector' => $jsSelector,
+						'jsSelector' => Helper::getStateSelector('stepSubmit'),
 						'attributes' => $attributes,
 					]);
 				}
@@ -111,14 +109,14 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $nextButtonComponent,
 							'submitAttrs' => [
-								$manifestCustomFormAttrs['submitStepDirection'] => 'next',
+								Helper::getStateAttribute('submitStepDirection') => 'next',
 							],
 						]),
 						[
 							'additionalFieldClass' => Components::classnames([
 								Components::selector($componentFieldClass, $componentFieldClass, '', 'submit-next'),
 							]),
-							'additionalClass' => $jsSelector,
+							'additionalClass' => Helper::getStateSelector('stepSubmit'),
 						]
 					)
 				);

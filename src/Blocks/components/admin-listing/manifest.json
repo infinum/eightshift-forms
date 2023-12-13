@@ -3,12 +3,6 @@
 	"componentName": "admin-listing",
 	"title": "Admin Listing",
 	"componentClass": "es-admin-listing",
-	"componentJsFilterClass": "js-es-admin-listing-filter",
-	"componentJsItemClass": "js-es-admin-listing-item",
-	"componentJsLocationsClass": "js-es-admin-listing-locations",
-	"componentJsBulkClass": "js-es-admin-listing-bulk",
-	"componentJsExportClass": "js-es-admin-listing-export",
-	"componentJsSelectAllClass": "js-es-admin-listing-select-all",
 	"attributes": {
 		"adminListingPageTitle": {
 			"type": "string"

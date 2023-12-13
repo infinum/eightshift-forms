@@ -6,13 +6,13 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalGroupClass = $attributes['additionalGroupClass'] ?? '';
-$componentJsClass = $manifest['componentJsClass'] ?? '';
 
 $groupLabel = Components::checkAttr('groupLabel', $attributes, $manifest);
 $groupSublabel = Components::checkAttr('groupSublabel', $attributes, $manifest);
@@ -27,7 +27,7 @@ $groupClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalGroupClass, $additionalGroupClass),
 	Components::selector($groupStyle, $componentClass, '', $groupStyle),
-	Components::selector($componentJsClass, $componentJsClass),
+	Helper::getStateSelector('group'),
 ]);
 
 ?>

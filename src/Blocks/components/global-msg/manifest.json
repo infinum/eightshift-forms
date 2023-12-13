@@ -3,7 +3,6 @@
 	"componentName": "global-msg",
 	"title": "Global Msg",
 	"componentClass": "es-global-msg",
-	"componentJsClass": "js-es-block-global-msg",
 	"example": {
 		"attributes": {
 			"globalMsgValue": "Value"

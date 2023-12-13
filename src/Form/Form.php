@@ -338,6 +338,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					$innerBlock['attrs']["{$blockName}FormHasSteps"] = true;
 
 					$inBlockOutput = \array_values($inBlockOutput);
+
+					// Populate the first step as active so we don't have loading state.
+					$inBlockOutput[0]['attrs']["stepStepIsActive"] = true;
 				}
 
 				$innerBlockOutput[] = [

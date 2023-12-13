@@ -16,14 +16,12 @@ use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $blockSsr = $attributes['blockSsr'] ?? false;
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
-$componentFormJsClass = $manifest['componentFormJsClass'] ?? '';
 
 $attributes = apply_filters(
 	Form::FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS,
@@ -65,49 +63,49 @@ $formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($componentFormJsClass, $componentFormJsClass),
+	Helper::getStateSelector('form'),
 ]);
 
 if ($formDataTypeSelector) {
-	$formAttrs[$manifestCustomFormAttrs['typeSelector']] = esc_attr($formDataTypeSelector);
+	$formAttrs[Helper::getStateAttribute('typeSelector')] = esc_attr($formDataTypeSelector);
 }
 
 if ($formSuccessRedirect) {
-	$formAttrs[$manifestCustomFormAttrs['successRedirect']] = esc_attr($formSuccessRedirect);
+	$formAttrs[Helper::getStateAttribute('successRedirect')] = esc_attr($formSuccessRedirect);
 }
 
 if ($formSuccessRedirectVariation) {
-	$formAttrs[$manifestCustomFormAttrs['successRedirectVariation']] = Encryption::encryptor($formSuccessRedirectVariation);
+	$formAttrs[Helper::getStateAttribute('successRedirectVariation')] = Encryption::encryptor($formSuccessRedirectVariation);
 }
 
 if ($formTrackingEventName) {
-	$formAttrs[$manifestCustomFormAttrs['trackingEventName']] = esc_attr($formTrackingEventName);
+	$formAttrs[Helper::getStateAttribute('trackingEventName')] = esc_attr($formTrackingEventName);
 }
 
 if ($formTrackingAdditionalData) {
-	$formAttrs[$manifestCustomFormAttrs['trackingAdditionalData']] = esc_attr($formTrackingAdditionalData);
+	$formAttrs[Helper::getStateAttribute('trackingAdditionalData')] = esc_attr($formTrackingAdditionalData);
 }
 
 if ($formPhoneSync) {
-	$formAttrs[$manifestCustomFormAttrs['phoneSync']] = esc_attr($formPhoneSync);
+	$formAttrs[Helper::getStateAttribute('phoneSync')] = esc_attr($formPhoneSync);
 }
 
 if ($formPhoneDisablePicker) {
-	$formAttrs[$manifestCustomFormAttrs['phoneDisablePicker']] = esc_attr($formPhoneDisablePicker);
+	$formAttrs[Helper::getStateAttribute('phoneDisablePicker')] = esc_attr($formPhoneDisablePicker);
 }
 
 if ($formCustomName) {
-	$formAttrs[$manifestCustomFormAttrs['formCustomName']] = esc_attr($formCustomName);
+	$formAttrs[Helper::getStateAttribute('formCustomName')] = esc_attr($formCustomName);
 }
 
 if ($formPostId) {
-	$formAttrs[$manifestCustomFormAttrs['formId']] = esc_attr($formPostId);
+	$formAttrs[Helper::getStateAttribute('formId')] = esc_attr($formPostId);
 }
 
-$formAttrs[$manifestCustomFormAttrs['postId']] = esc_attr((string) get_the_ID());
+$formAttrs[Helper::getStateAttribute('postId')] = esc_attr((string) get_the_ID());
 
 if ($formType) {
-	$formAttrs[$manifestCustomFormAttrs['formType']] = esc_html($formType);
+	$formAttrs[Helper::getStateAttribute('formType')] = esc_html($formType);
 }
 
 if ($formConditionalTags) {
@@ -118,7 +116,7 @@ if ($formConditionalTags) {
 		$rawConditionalTagData = wp_json_encode(array_map(fn ($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
 	}
 
-	$formAttrs[$manifestCustomFormAttrs['conditionalTags']] = esc_html($rawConditionalTagData);
+	$formAttrs[Helper::getStateAttribute('conditionalTags')] = esc_html($rawConditionalTagData);
 }
 
 if ($formDownloads || $formSuccessRedirectVariationUrl) {
@@ -161,7 +159,7 @@ if ($formDownloads || $formSuccessRedirectVariationUrl) {
 		}
 	}
 
-	$formAttrs[$manifestCustomFormAttrs['downloads']] = wp_json_encode($downloadsOutput);
+	$formAttrs[Helper::getStateAttribute('downloads')] = wp_json_encode($downloadsOutput);
 }
 
 if ($formId) {
@@ -177,15 +175,15 @@ if ($formAction) {
 }
 
 if ($formActionExternal) {
-	$formAttrs[$manifestCustomFormAttrs['actionExternal']] = esc_attr($formActionExternal);
+	$formAttrs[Helper::getStateAttribute('actionExternal')] = esc_attr($formActionExternal);
 }
 
 if ($formMethod) {
 	$formAttrs['method'] = esc_attr($formMethod);
 }
 
-$formAttrs[$manifestCustomFormAttrs['blockSsr']] = wp_json_encode($blockSsr);
-$formAttrs[$manifestCustomFormAttrs['disabledDefaultStyles']] = wp_json_encode($formDisabledDefaultStyles);
+$formAttrs[Helper::getStateAttribute('blockSsr')] = wp_json_encode($blockSsr);
+$formAttrs[Helper::getStateAttribute('disabledDefaultStyles')] = wp_json_encode($formDisabledDefaultStyles);
 
 $formAttrsOutput = '';
 if ($formAttrs) {

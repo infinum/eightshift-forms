@@ -28,7 +28,7 @@ export class Locations {
 		const formData = new FormData();
 
 		formData.append('id', field.getAttribute(this.state.getStateAttribute('locationsId')));
-		this.utils.showLoader(this.FORM_ID, false);
+		this.utils.showLoader(this.FORM_ID);
 
 		// Populate body data.
 		const body = {
@@ -53,7 +53,7 @@ export class Locations {
 				this.utils.hideLoader(this.FORM_ID);
 
 				if (response.status === 'success') {
-					item.classList.add(this.state.getStateSelectorsClassHidden());
+					item.classList.add(this.state.getStateSelector('isHidden'));
 					item.closest(this.itemSelector).insertAdjacentHTML('afterend', response.data.output);
 				}
 			});

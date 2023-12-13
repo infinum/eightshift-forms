@@ -2,9 +2,7 @@
 
 import domReady from '@wordpress/dom-ready';
 import { Form } from './../assets/form';
-import manifest from './../manifest.json';
-import adminListingManifest from './../../admin-listing/manifest.json';
-import { setStateInitial } from '../assets/state/init';
+import { getStateSelectorAdmin, setStateInitial } from '../assets/state/init';
 import { Utils } from '../assets/utils';
 
 domReady(() => {
@@ -31,10 +29,9 @@ domReady(() => {
 	// Cache
 	////////////////////////////////////////////////////////////////
 
-	const selectorCache = `.${manifest.componentCacheJsClass}`;
-	const elementsCache = document.querySelectorAll(selectorCache);
+	const selectorCache = getStateSelectorAdmin('cacheDelete', true);
 
-	if (elementsCache.length) {
+	if (document.querySelectorAll(selectorCache).length) {
 		import('./cache').then(({ Cache }) => {
 			new Cache({
 				utils: utils,
@@ -47,15 +44,14 @@ domReady(() => {
 	// Migration
 	////////////////////////////////////////////////////////////////
 
-	const selectorMigration = `.${manifest.componentMigrationJsClass}`;
-	const elementsMigration = document.querySelectorAll(selectorMigration);
+	const selectorMigration = getStateSelectorAdmin('migration', true);
 
-	if (elementsMigration.length) {
+	if (document.querySelectorAll(selectorMigration).length) {
 		import('./migration').then(({ Migration }) => {
 			new Migration({
 				utils: utils,
 				selector: selectorMigration,
-				outputSelector: `.${manifest.componentMigrationJsClass}-output`,
+				outputSelector: getStateSelectorAdmin('migrationOutput', true),
 			}).init();
 		});
 	}
@@ -64,17 +60,16 @@ domReady(() => {
 	// Transfer
 	////////////////////////////////////////////////////////////////
 
-	const selectorTransfer = `.${manifest.componentTransferJsClass}`;
-	const elementsTransfer = document.querySelectorAll(selectorTransfer);
+	const selectorTransfer = getStateSelectorAdmin('transfer', true);
 
-	if (elementsTransfer.length) {
+	if (document.querySelectorAll(selectorTransfer).length) {
 		import('./transfer').then(({ Transfer }) => {
 			new Transfer({
 				utils: utils,
 				selector: selectorTransfer,
-				itemSelector: `.${manifest.componentTransferJsClass}-item`,
-				uploadSelector: `.${manifest.componentTransferJsClass}-upload`,
-				overrideExistingSelector: `.${manifest.componentTransferJsClass}-existing`,
+				itemSelector: getStateSelectorAdmin('transferItem', true),
+				uploadSelector: getStateSelectorAdmin('transferUpload', true),
+				overrideExistingSelector: getStateSelectorAdmin('transferExisting', true),
 				uploadConfirmMsg: esFormsLocalization.uploadConfirmMsg,
 			}).init();
 		});
@@ -84,10 +79,9 @@ domReady(() => {
 	// Test api
 	////////////////////////////////////////////////////////////////
 
-	const selectorTestApi = `.${manifest.componentTestApiJsClass}`;
-	const elementsTestApi = document.querySelectorAll(selectorTestApi);
+	const selectorTestApi = getStateSelectorAdmin('testApi', true);
 
-	if (elementsTestApi.length) {
+	if (document.querySelectorAll(selectorTestApi).length) {
 		import('./test-api').then(({ TestApi }) => {
 			new TestApi({
 				utils: utils,
@@ -100,15 +94,14 @@ domReady(() => {
 	// Filter
 	////////////////////////////////////////////////////////////////
 
-	const selectorFilter = `.${adminListingManifest.componentJsFilterClass}`;
-	const elementsFilter = document.querySelector(selectorFilter);
+	const selectorFilter = getStateSelectorAdmin('listingFilter', true);
 
-	if (elementsFilter) {
+	if (document.querySelector(selectorFilter)) {
 		import('./filter').then(({ Filter }) => {
 			new Filter({
 				utils: utils,
 				filterSelector: selectorFilter,
-				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
+				itemSelector: getStateSelectorAdmin('listingItem', true),
 			}).init();
 		});
 	}
@@ -117,17 +110,16 @@ domReady(() => {
 	// Bulk
 	////////////////////////////////////////////////////////////////
 
-	const selectorBulk = `.${adminListingManifest.componentJsBulkClass}`;
-	const elementsBulk = document.querySelector(selectorBulk);
+	const selectorBulk = getStateSelectorAdmin('listingBulk', true);
 
-	if (elementsBulk) {
+	if (document.querySelector(selectorBulk)) {
 		import('./bulk').then(({ Bulk }) => {
 			new Bulk({
 				utils: utils,
 				selector: selectorBulk,
-				itemsSelector: `${selectorBulk}-items`,
-				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
-				selectAllSelector: `.${adminListingManifest.componentJsSelectAllClass}`,
+				itemsSelector: getStateSelectorAdmin('listingBulkItems', true),
+				itemSelector: getStateSelectorAdmin('listingItem', true),
+				selectAllSelector: getStateSelectorAdmin('listingSelectAll', true),
 			}).init();
 		});
 	}
@@ -136,15 +128,14 @@ domReady(() => {
 	// Export
 	////////////////////////////////////////////////////////////////
 
-	const selectorExport = `.${adminListingManifest.componentJsExportClass}`;
-	const elementsExport = document.querySelector(selectorExport);
+	const selectorExport = getStateSelectorAdmin('listingExport', true);
 
-	if (elementsExport) {
+	if (document.querySelector(selectorExport)) {
 		import('./export').then(({ Export }) => {
 			new Export({
 				utils: utils,
 				selector: selectorExport,
-				itemsSelector: `${selectorBulk}-items`,
+				itemsSelector: getStateSelectorAdmin('listingBulkItems', true),
 			}).init();
 		});
 	}
@@ -153,15 +144,14 @@ domReady(() => {
 	// Locations
 	////////////////////////////////////////////////////////////////
 
-	const selectorLocations = `.${adminListingManifest.componentJsLocationsClass}`;
-	const elementsLocations = document.querySelector(selectorLocations);
+	const selectorLocations = getStateSelectorAdmin('listingLocations', true);
 
-	if (elementsLocations) {
+	if (document.querySelector(selectorLocations)) {
 		import('./locations').then(({ Locations }) => {
 			new Locations({
 				utils: utils,
 				selector: selectorLocations,
-				itemSelector: `.${adminListingManifest.componentJsItemClass}`,
+				itemSelector: getStateSelectorAdmin('listingItem', true),
 			}).init();
 		});
 	}
@@ -170,16 +160,31 @@ domReady(() => {
 	// Manual import api
 	////////////////////////////////////////////////////////////////
 
-	const selectorManualImportApi = `.${manifest.componentManualImportApiJsClass}`;
-	const elementsManualImportApi = document.querySelector(selectorManualImportApi);
+	const selectorManualImportApi = getStateSelectorAdmin('manualImportApi', true);
 
-	if (elementsManualImportApi) {
+	if (document.querySelector(selectorManualImportApi)) {
 		import('./manual-import-api').then(({ ManualImportApi }) => {
 			new ManualImportApi({
 				utils: utils,
 				selector: selectorManualImportApi,
-				outputSelector: `.${manifest.componentManualImportApiJsClass}-output`,
-				dataSelector: `.${manifest.componentManualImportApiJsClass}-data`,
+				outputSelector: getStateSelectorAdmin('manualImportApiOutput', true),
+				dataSelector: getStateSelectorAdmin('manualImportApiData', true),
+			}).init();
+		});
+	}
+
+
+	////////////////////////////////////////////////////////////////
+	// Tabs
+	////////////////////////////////////////////////////////////////
+
+	const selectorTabs = getStateSelectorAdmin('tabs', true);
+
+	if (document.querySelectorAll(selectorTabs).length) {
+		import('./tabs').then(({ Tabs }) => {
+			new Tabs({
+				tabsSelector: selectorTabs,
+				tabSelector: getStateSelectorAdmin('tabsItem', true),
 			}).init();
 		});
 	}

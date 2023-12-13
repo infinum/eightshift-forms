@@ -25,7 +25,7 @@ domReady(() => {
 	}
 
 	if (!state.getStateSettingsFormDisableAutoInit()) {
-		if (document.querySelectorAll(state.getStateSelectorsForm())?.length) {
+		if (document.querySelectorAll(state.getStateSelector('form', true))?.length) {
 			import('./form').then(({ Form }) => {
 				new Form(utils).init();
 			});
@@ -34,7 +34,7 @@ domReady(() => {
 		import('./form').then(({ Form }) => {
 			new Form(utils);
 
-			utils.dispatchFormEvent(window, state.getStateEventsFormManualInitLoaded());
+			utils.dispatchFormEvent(window, state.getStateEvent('formManualInitLoaded'));
 		});
 	}
 });

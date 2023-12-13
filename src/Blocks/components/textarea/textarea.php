@@ -10,9 +10,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestGlobal = Components::getSettings();
-$manifestCustomFormAttrs = $manifestGlobal['customFormAttrs'];
-$manifestTypeInternal = $manifestGlobal['typeInternal'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -51,12 +48,12 @@ $textareaClass = Components::classnames([
 ]);
 
 if ($textareaSaveAsJson) {
-	$textareaAttrs[$manifestCustomFormAttrs['saveAsJson']] = esc_attr($textareaSaveAsJson);
+	$textareaAttrs[Helper::getStateAttribute('saveAsJson')] = esc_attr($textareaSaveAsJson);
 }
 
 // Set to use in settings for preventing field submit.
 if ($textareaIsPreventSubmit) {
-	$textareaFieldAttrs[$manifestCustomFormAttrs['fieldPreventSubmit']] = esc_attr($textareaIsPreventSubmit);
+	$textareaFieldAttrs[Helper::getStateAttribute('fieldPreventSubmit')] = esc_attr($textareaIsPreventSubmit);
 }
 
 if ($textareaPlaceholder) {
@@ -96,7 +93,7 @@ echo Components::render(
 			'fieldContent' => $textarea,
 			'fieldId' => $textareaName,
 			'fieldName' => $textareaName,
-			'fieldTypeInternal' => $manifestTypeInternal['textarea'],
+			'fieldTypeInternal' => Helper::getStateFieldType('textarea'),
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),
 			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

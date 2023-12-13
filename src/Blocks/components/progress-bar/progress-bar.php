@@ -6,14 +6,13 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentJsClass = $manifest['componentJsClass'] ?? '';
-$componentJsMultiflowClass = $manifest['componentJsMultiflowClass'] ?? '';
 
 $progressBarUse = Components::checkAttr('progressBarUse', $attributes, $manifest);
 
@@ -32,8 +31,8 @@ $progressBarMultiflowUse = Components::checkAttr('progressBarMultiflowUse', $att
 $progressBarClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($progressBarMultiflowUse, $componentClass, '', 'multiflow'),
-	Components::selector(!$progressBarMultiflowUse, $componentJsClass),
-	Components::selector($progressBarMultiflowUse, $componentJsMultiflowClass),
+	Components::selector(!$progressBarMultiflowUse, Helper::getStateSelector('stepProgressBar')),
+	Components::selector($progressBarMultiflowUse, Helper::getStateSelector('stepProgressBarMultiflow')),
 	Components::selector(!$progressBarMultiflowUse, $componentClass, '', 'multistep'),
 	Components::selector($additionalClass, $additionalClass),
 ]);
@@ -45,7 +44,7 @@ $progressBarClass = Components::classnames([
 		echo Components::renderPartial('component', $manifest['componentName'], 'multistep', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 			'steps' => $progressBarSteps,
 			'componentClass' => $componentClass,
-			'componentJsClass' => $componentJsClass,
+			'jsClass' => Helper::getStateSelector('stepProgressBar'),
 			'hideLabels' => Components::checkAttr('progressBarHideLabels', $attributes, $manifest),
 		]);
 	} else {

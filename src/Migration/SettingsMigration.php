@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -103,9 +103,6 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 			return $this->getSettingOutputNoActiveFeature();
 		}
 
-		$manifestForm = Components::getComponent('form');
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
-
 		return [
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 			[
@@ -128,9 +125,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_LOCALE,
+									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_LOCALE,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -148,9 +145,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_GENERAL,
+									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_GENERAL,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -168,9 +165,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_FORMS,
+									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_FORMS,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -188,9 +185,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									$manifestCustomFormAttrs['migrationType'] => self::VERSION_2_3_LABELS,
+									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_LABELS,
 								],
-								'additionalClass' => $manifestForm['componentMigrationJsClass'],
+								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -206,7 +203,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
 						'textareaIsPreventSubmit' => true,
 						'textareaIsReadOnly' => true,
-						'additionalClass' => "{$manifestForm['componentMigrationJsClass']}-output",
+						'additionalClass' => Helper::getStateSelectorAdmin('migrationOutput'),
 					],
 				],
 			],

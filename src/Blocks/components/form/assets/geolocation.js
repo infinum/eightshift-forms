@@ -32,7 +32,7 @@ export class Geolocation {
 
 		// Set select fields based on geolocation.
 		this.state.getStateFormElement(formId).addEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);
 	}
@@ -49,7 +49,7 @@ export class Geolocation {
 	 */
 	removeEvents(formId) {
 		this.state.getStateFormElement(formId).removeEventListener(
-			this.state.getStateEventsFormJsLoaded(),
+			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);
 	}
@@ -74,12 +74,12 @@ export class Geolocation {
 		}
 
 		[
-			...this.state.getStateElementByTypeInternal('select', formId),
-			...this.state.getStateElementByTypeInternal('country', formId),
+			...this.state.getStateElementByTypeField('select', formId),
+			...this.state.getStateElementByTypeField('country', formId),
 		].forEach((select) => {
 			const name = select.name;
 
-			const typeInternal = this.state.getStateElementTypeInternal(name, formId);
+			const typeInternal = this.state.getStateElementTypeField(name, formId);
 			const custom = this.state.getStateElementCustom(name, formId);
 
 			const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, custom);
@@ -89,10 +89,10 @@ export class Geolocation {
 		});
 
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
-			[...this.state.getStateElementByTypeInternal('phone', formId)].forEach((phone) => {
+			[...this.state.getStateElementByTypeField('phone', formId)].forEach((phone) => {
 				const name = phone.name;
 
-				const typeInternal = this.state.getStateElementTypeInternal(name, formId);
+				const typeInternal = this.state.getStateElementTypeField(name, formId);
 				const custom = this.state.getStateElementCustom(name, formId);
 
 				const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, custom);

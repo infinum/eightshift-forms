@@ -16,7 +16,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -109,8 +108,6 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 	 */
 	private function getFields(array $data, string $formId): array
 	{
-		$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
-
 		$output = [];
 
 		if (!$data) {
@@ -177,7 +174,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputIsRequired' => $isRequired,
 							'inputValue' => $value,
 							'inputFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$isRequired ? 'inputIsRequired' : '',
@@ -218,7 +215,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'dateValue' => $value,
 							'datePreviewFormat' => Helper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
 							'dateFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 								$isRequired ? 'dateIsRequired' : '',
@@ -245,7 +242,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputIsRequired' => $isRequired,
 							'inputValue' => $value,
 							'inputFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$isRequired ? 'inputIsRequired' : '',
@@ -278,7 +275,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'phoneIsNumber' => true,
 							'phoneValue' => $value,
 							'phoneFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 								$isRequired ? 'phoneIsRequired' : '',
@@ -301,7 +298,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'textareaIsRequired' => $isRequired,
 							'textareaValue' => $value,
 							'textareaFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$isRequired ? 'textareaIsRequired' : '',
@@ -331,7 +328,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'fileValue' => $value,
 							'fileIsMultiple' => !empty($isMultiple),
 							'fileFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 								$isRequired ? 'fileIsRequired' : '',
@@ -360,7 +357,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'selectIsRequired' => $isRequired,
 							'selectValue' => $value,
 							'selectFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'selectContent' => \array_filter(\array_values(\array_map(
 								function ($selectOption) use ($selectedOption) {
@@ -396,7 +393,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesName' => $name,
 							'checkboxesIsRequired' => $isRequired,
 							'checkboxesFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'checkboxesContent' => [
 								[
@@ -427,7 +424,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesFieldLabel' => $label,
 							'checkboxesIsRequired' => $isRequired,
 							'checkboxesFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'checkboxesContent' => \array_map(
 								function ($checkbox) use ($name, $selectedOption) {
@@ -462,7 +459,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'radiosIsRequired' => $isRequired,
 							'radiosTracking' => $name,
 							'radiosFieldAttrs' => [
-								$manifestCustomFormAttrs['hubspotTypeId'] => $objectTypeId,
+								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'radiosContent' => \array_map(
 								function ($radio) use ($selectedOption) {

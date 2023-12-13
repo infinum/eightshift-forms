@@ -6,15 +6,14 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
-$componentJsSingleSubmitClass = $manifest['componentJsSingleSubmitClass'] ?? '';
 
 $radioValue = Components::checkAttr('radioValue', $attributes, $manifest);
 if (!$radioValue) {
@@ -36,13 +35,13 @@ $radioIsHidden = Components::checkAttr('radioIsHidden', $attributes, $manifest);
 $radioClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($radioIsDisabled, 'es-form-is-disabled'),
-	Components::selector($radioIsHidden, 'es-form-is-hidden'),
+	Components::selector($radioIsDisabled, Helper::getStateSelector('isDisabled')),
+	Components::selector($radioIsHidden, Helper::getStateSelector('isHidden')),
 ]);
 
 $radioInputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'input'),
-	Components::selector($radioSingleSubmit, $componentJsSingleSubmitClass),
+	Components::selector($radioSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 $radioAttrs['value'] = esc_attr($radioValue);
@@ -60,13 +59,13 @@ $conditionalTags = Components::render(
 );
 
 if ($conditionalTags) {
-	$radioFieldAttrs[$manifestCustomFormAttrs['conditionalTags']] = $conditionalTags;
+	$radioFieldAttrs[Helper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 
-$radioFieldAttrs[$manifestCustomFormAttrs['fieldName']] = $radioValue;
+$radioFieldAttrs[Helper::getStateAttribute('fieldName')] = $radioValue;
 
 if ($componentName) {
-	$radioFieldAttrs[$manifestCustomFormAttrs['fieldType']] = 'radio';
+	$radioFieldAttrs[Helper::getStateAttribute('fieldType')] = 'radio';
 }
 
 $radioFieldAttrsOutput = '';

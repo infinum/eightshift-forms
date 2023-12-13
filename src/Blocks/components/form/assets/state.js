@@ -2,15 +2,16 @@
 
 import {
 	StateEnum,
-	getStateEventName,
 	getState,
 	prefix,
 	setState,
 	setStateWindow,
 	getStateTop,
 	getStateAttribute,
-	getStateIntType,
+	getStateSelector,
+	getStateFieldType,
 	getStateParam,
+	getStateEvent,
 } from './state/init';
 
 export class State {
@@ -258,9 +259,9 @@ export class State {
 	////////////////////////////////////////////////////////////////
 	// Element getters.
 	////////////////////////////////////////////////////////////////
-	getStateElementByTypeInternal = (type, formId) => {
-		const intType = this.getStateIntType(type);
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_INTERNAL, intType, formId);
+	getStateElementByTypeField = (type, formId) => {
+		const intType = this.getStateFieldType(type);
+		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_FIELD, intType, formId);
 	};
 	getStateElementByHasError = (type, formId) => {
 		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.HAS_ERROR, type, formId);
@@ -315,8 +316,8 @@ export class State {
 	getStateElementLoaded = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.LOADED], formId);
 	};
-	getStateElementTypeInternal = (name, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_INTERNAL], formId);
+	getStateElementTypeField = (name, formId) => {
+		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_FIELD], formId);
 	};
 	getStateElementTypeCustom = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], formId);
@@ -362,9 +363,6 @@ export class State {
 	};
 	getStateElementTracking = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], formId);
-	};
-	getStateElementType = (name, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE], formId);
 	};
 	getStateElementInputSelect = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], formId);
@@ -460,130 +458,19 @@ export class State {
 	};
 
 	////////////////////////////////////////////////////////////////
-	// Events getters.
+	// Event getters.
 	////////////////////////////////////////////////////////////////
 
-	getStateEventName = (name) => {
-		getStateEventName(name);
-	};
-	getStateEventsBeforeFormSubmit = () => {
-		return getState([StateEnum.EVENTS_BEFORE_FORM_SUBMIT], StateEnum.EVENTS);
-	};
-	getStateEventsAfterFormSubmit = () => {
-		return getState([StateEnum.EVENTS_AFTER_FORM_SUBMIT], StateEnum.EVENTS);
-	};
-	getStateEventsAfterFormSubmitSuccessBeforeRedirect = () => {
-		return getState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_SUCCESS_BEFORE_REDIRECT], StateEnum.EVENTS);
-	};
-	getStateEventsAfterFormSubmitSuccess = () => {
-		return getState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_SUCCESS], StateEnum.EVENTS);
-	};
-	getStateEventsAfterFormSubmitReset = () => {
-		return getState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_RESET], StateEnum.EVENTS);
-	};
-	getStateEventsAfterFormSubmitError = () => {
-		return getState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_ERROR], StateEnum.EVENTS);
-	};
-	getStateEventsAfterFormSubmitErrorValidation = () => {
-		return getState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_ERROR_VALIDATION], StateEnum.EVENTS);
-	};
-	getStateEventsAfterFormSubmitEnd = () => {
-		return getState([StateEnum.EVENTS_AFTER_FORM_SUBMIT_END], StateEnum.EVENTS);
-	};
-	getStateEventsAfterGtmDataPush = () => {
-		return getState([StateEnum.EVENTS_AFTER_GTM_DATA_PUSH], StateEnum.EVENTS);
-	};
-	getStateEventsFormJsLoaded = () => {
-		return getState([StateEnum.EVENTS_FORM_JS_LOADED], StateEnum.EVENTS);
-	};
-	getStateEventsFormManualInitLoaded = () => {
-		return getState([StateEnum.EVENTS_FORM_MANUAL_INIT_LOADED], StateEnum.EVENTS);
-	};
-	getStateEventsAfterCaptchaInit = () => {
-		return getState([StateEnum.EVENTS_AFTER_CAPTCHA_INIT], StateEnum.EVENTS);
-	};
-	getStateEventsStepsGoToNextStep = () => {
-		return getState([StateEnum.EVENTS_STEPS_GO_TO_NEXT_STEP], StateEnum.EVENTS);
-	};
-	getStateEventsStepsGoToPrevStep = () => {
-		return getState([StateEnum.EVENTS_STEPS_GO_TO_PREV_STEP], StateEnum.EVENTS);
-	};
-	getStateEventsEnrichmentPrefill = () => {
-		return getState([StateEnum.EVENTS_ENRICHMENT_PREFILL], StateEnum.EVENTS);
+	getStateEvent = (name) => {
+		return getStateEvent(name);
 	};
 
 	////////////////////////////////////////////////////////////////
-	// Selectors getters.
+	// Selector getters.
 	////////////////////////////////////////////////////////////////
 
-	getStateSelectorsClassActive = () => {
-		return getState([StateEnum.SELECTORS_CLASS_ACTIVE], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassFilled = () => {
-		return getState([StateEnum.SELECTORS_CLASS_FILLED], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassLoading = () => {
-		return getState([StateEnum.SELECTORS_CLASS_LOADING], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassHidden = () => {
-		return getState([StateEnum.SELECTORS_CLASS_HIDDEN], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassVisible = () => {
-		return getState([StateEnum.SELECTORS_CLASS_VISIBLE], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassLoaderDisableOverlay = () => {
-		return getState([StateEnum.SELECTORS_CLASS_LOADER_DISABLE_OVERLAY], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassHiddenConditionalTags = () => {
-		return getState([StateEnum.SELECTORS_CLASS_HIDDEN_CT], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassVisibleConditionalTags = () => {
-		return getState([StateEnum.SELECTORS_CLASS_VISIBLE_CT], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassDisabled = () => {
-		return getState([StateEnum.SELECTORS_CLASS_DISABLED], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassHasError = () => {
-		return getState([StateEnum.SELECTORS_CLASS_HAS_ERROR], StateEnum.SELECTORS);
-	};
-	getStateSelectorsClassGeolocationLoading = () => {
-		return getState([StateEnum.SELECTORS_CLASS_GEOLOCATION_LOADING], StateEnum.SELECTORS);
-	};
-	getStateSelectorsForm = () => {
-		return getState([StateEnum.SELECTORS_FORM], StateEnum.SELECTORS);
-	};
-	getStateSelectorsForms = () => {
-		return getState([StateEnum.SELECTORS_FORMS], StateEnum.SELECTORS);
-	};
-	getStateSelectorsSubmitSingle = () => {
-		return getState([StateEnum.SELECTORS_SUBMIT_SINGLE], StateEnum.SELECTORS);
-	};
-	getStateSelectorsStep = () => {
-		return getState([StateEnum.SELECTORS_STEP], StateEnum.SELECTORS);
-	};
-	getStateSelectorsStepSubmit = () => {
-		return getState([StateEnum.SELECTORS_STEP_SUBMIT], StateEnum.SELECTORS);
-	};
-	getStateSelectorsError = () => {
-		return getState([StateEnum.SELECTORS_ERROR], StateEnum.SELECTORS);
-	};
-	getStateSelectorsLoader = () => {
-		return getState([StateEnum.SELECTORS_LOADER], StateEnum.SELECTORS);
-	};
-	getStateSelectorsGlobalMsg = () => {
-		return getState([StateEnum.SELECTORS_GLOBAL_MSG], StateEnum.SELECTORS);
-	};
-	getStateSelectorsGroup = () => {
-		return getState([StateEnum.SELECTORS_GROUP], StateEnum.SELECTORS);
-	};
-	getStateSelectorsField = () => {
-		return getState([StateEnum.SELECTORS_FIELD], StateEnum.SELECTORS);
-	};
-	getStateSelectorsRating = () => {
-		return getState([StateEnum.SELECTORS_RATING], StateEnum.SELECTORS);
-	};
-	getStateSelectorsFieldStyle = () => {
-		return getState([StateEnum.SELECTORS_FIELD_STYLE], StateEnum.SELECTORS);
+	getStateSelector = (name, usePrefix = false) => {
+		return getStateSelector(name, usePrefix);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -603,11 +490,11 @@ export class State {
 	};
 
 	////////////////////////////////////////////////////////////////
-	// Internal Type getters.
+	// Field Type getters.
 	////////////////////////////////////////////////////////////////
 
-	getStateIntType = (name) => {
-		return getStateIntType(name);
+	getStateFieldType = (name) => {
+		return getStateFieldType(name);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -618,10 +505,10 @@ export class State {
 		return Object?.values(Object?.fromEntries(Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem))); // eslint-disable-line no-unused-vars
 	};
 	getFormElementByChild = (element) => {
-		return element.closest(this.getStateSelectorsForm());
+		return element.closest(this.getStateSelector('form', true));
 	};
 	getFormFieldElementByChild = (element) => {
-		return element.closest(this.getStateSelectorsField());
+		return element.closest(this.getStateSelector('field', true));
 	};
 	getFormId = (element) => {
 		return element.getAttribute(this.getStateAttribute('formId'));

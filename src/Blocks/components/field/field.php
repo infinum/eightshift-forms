@@ -11,7 +11,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestCustomFormAttrs = Components::getSettings()['customFormAttrs'];
 
 $fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
 if (!$fieldUse) {
@@ -31,8 +30,6 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockName = $attributes['blockName'] ?? '';
-$componentJsClass = $manifest['componentJsClass'] ?? '';
-$componentJsCustomClass = $manifest['componentJsCustomClass'] ?? '';
 
 // Update media breakpoints from the filter.
 $filterName = Filters::getFilterName(['blocks', 'mediaBreakpoints']);
@@ -101,10 +98,10 @@ $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentClass, $componentClass, '', $selectorClass),
 	Components::selector($additionalFieldClass, $additionalFieldClass),
-	Components::selector($fieldDisabled, 'es-form-is-disabled'),
-	Components::selector($fieldHidden, 'es-form-is-hidden'),
-	Components::selector($componentJsClass, $componentJsClass),
-	Components::selector($fieldIsNoneFormBlock, $componentJsCustomClass),
+	Components::selector($fieldDisabled, Helper::getStateSelector('isDisabled')),
+	Components::selector($fieldHidden, Helper::getStateSelector('isHidden')),
+	Helper::getStateSelector('field'),
+	Components::selector($fieldIsNoneFormBlock, Helper::getStateSelector('fieldNoFormsBlock')),
 	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
 	Components::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
 	...$fieldStyleOutput,
@@ -124,23 +121,23 @@ if ($fieldType === 'fieldset') {
 }
 
 if ($fieldConditionalTags) {
-	$fieldAttrs[$manifestCustomFormAttrs['conditionalTags']] = $fieldConditionalTags;
+	$fieldAttrs[Helper::getStateAttribute('conditionalTags')] = $fieldConditionalTags;
 }
 
 if ($fieldName) {
-	$fieldAttrs[$manifestCustomFormAttrs['fieldName']] = $fieldName;
+	$fieldAttrs[Helper::getStateAttribute('fieldName')] = $fieldName;
 }
 
 if ($fieldTypeInternal) {
-	$fieldAttrs[$manifestCustomFormAttrs['fieldType']] = $fieldTypeInternal;
+	$fieldAttrs[Helper::getStateAttribute('fieldType')] = $fieldTypeInternal;
 }
 
 if ($fieldTypeCustom) {
-	$fieldAttrs[$manifestCustomFormAttrs['fieldTypeCustom']] = $fieldTypeCustom;
+	$fieldAttrs[Helper::getStateAttribute('fieldTypeCustom')] = $fieldTypeCustom;
 }
 
 if ($fieldTracking) {
-	$fieldAttrs[$manifestCustomFormAttrs['tracking']] = $fieldTracking;
+	$fieldAttrs[Helper::getStateAttribute('tracking')] = $fieldTracking;
 }
 
 $fieldAttrsOutput = '';

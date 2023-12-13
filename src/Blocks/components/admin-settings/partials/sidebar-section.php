@@ -34,7 +34,6 @@ foreach ($items as $key => $innerItems) {
 					$label = $item['label'] ?? '';
 					$desc = $item['desc'] ?? '';
 					$url = $item['url'] ?? '';
-					$internalType = $item['type'] ?? '';
 					$icon = $item['icon'] ?? '';
 					$internalKey = $item['key'] ?? '';
 

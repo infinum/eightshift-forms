@@ -15,7 +15,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -361,13 +360,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			return [];
 		}
 
-		$customTagParamName = Components::getSettings()['customFormParams']['mailchimpTags'];
-
 		return [
 			'component' => 'select',
 			'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-			'selectName' => $customTagParamName,
-			'selectTracking' => $customTagParamName,
+			'selectName' => Helper::getStateParam('mailchimpTags'),
+			'selectTracking' => Helper::getStateParam('mailchimpTags'),
 			'selectContent' => \array_values(
 				\array_map(
 					function ($option) {
