@@ -85,7 +85,7 @@ export class Form {
 
 					// Bailout if 0 as formId === 0 can only be used in admin.
 					if (formId === '0') {
-						throw new Error(`It looks like we can't find formId for you forms, please check if you have set the attribute "${this.state.getStateAttribute('formId')}" on the form element.`);
+						throw new Error(`It looks like we can't find formId for your form, please check if you have set the attribute "${this.state.getStateAttribute('formId')}" on the form element.`);
 					}
 
 					// If forms element don't have geolocation data attribute, init forms the regular way.
