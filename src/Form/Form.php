@@ -339,7 +339,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 					$inBlockOutput = \array_values($inBlockOutput);
 
-					// Poulate the first step as active so we don't have loading state.
+					// Populate the first step as active so we don't have loading state.
 					$inBlockOutput[0]['attrs']["stepStepIsActive"] = true;
 				}
 

@@ -1030,7 +1030,7 @@ class Helper
 	}
 
 	/**
-	 * Return params enum values.
+	 * Return all params enum values.
 	 *
 	 * @return array<string>
 	 */

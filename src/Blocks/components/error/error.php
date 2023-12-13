@@ -23,7 +23,6 @@ $errorClass = Components::classnames([
 	Components::selector($selectorClass, $selectorClass, $componentClass),
 	Components::selector($additionalErrorClass, $additionalErrorClass),
 	Helper::getStateSelector('error'),
-
 ]);
 
 // The content of the div is one-lined to prevent generation of spaces, which breaks the :empty pseudoselector.
