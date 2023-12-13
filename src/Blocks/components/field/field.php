@@ -11,7 +11,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestSettings = Components::getSettings();
 
 $fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
 if (!$fieldUse) {

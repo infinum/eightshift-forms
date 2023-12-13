@@ -11,7 +11,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $icons = Components::getComponent('utils')['icons'];
-$manifestGlobal = Components::getSettings();
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';

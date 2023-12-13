@@ -13,7 +13,6 @@ use EightshiftForms\Blocks\SettingsBlocks;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSelect = Components::getComponent('select');
-$manifestGlobal = Components::getSettings();
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';

@@ -10,7 +10,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestGlobal = Components::getSettings();
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
