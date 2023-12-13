@@ -66,7 +66,7 @@ export class Form {
 	initOnlyForms() {
 		if (this.state.getStateConfigIsAdmin()) {
 			// If is admin do normal init.
-			this.initOnlyFormsInner(document.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || 0);
+			this.initOnlyFormsInner(document.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0');
 		} else {
 			// Find all forms elements
 			const forms = document.querySelectorAll(this.state.getStateSelector('forms', true));
@@ -81,8 +81,15 @@ export class Form {
 					// If forms element have geolocation data attribute, init geolocation via ajax.
 					this.initGolocationForm(formsItems);
 				} else {
+					const formId = formsItems?.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0';
+
+					// Bailout if 0 as formId === 0 can only be used in admin.
+					if (formId === '0') {
+						throw new Error(`It looks like we can't find formId for your form, please check if you have set the attribute "${this.state.getStateAttribute('formId')}" on the form element.`);
+					}
+
 					// If forms element don't have geolocation data attribute, init forms the regular way.
-					this.initOnlyFormsInner(formsItems?.children?.[0]?.getAttribute(this.state.getStateAttribute('formId')) || 0);
+					this.initOnlyFormsInner(formId);
 				}
 			});
 		}
