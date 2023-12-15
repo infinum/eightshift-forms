@@ -54,9 +54,9 @@ export class Captcha {
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
 				try {
-					await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
-						this.formSubmitCaptchaInvisible(token, true, actionName);
-					});
+					const token = await grecaptcha.enterprise.execute(siteKey, {action: actionName});
+
+					this.formSubmitCaptchaInvisible(token, true, actionName);
 				} catch (error) {
 					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad"`);
 				}
@@ -64,9 +64,9 @@ export class Captcha {
 		} else {
 			grecaptcha.ready(async () => {
 				try {
-					await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
-						this.formSubmitCaptchaInvisible(token, false, actionName);
-					});
+					const token = await grecaptcha.execute(siteKey, {action: actionName});
+
+					this.formSubmitCaptchaInvisible(token, false, actionName);
 				} catch (error) {
 					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad"`);
 				}

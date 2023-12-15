@@ -505,15 +505,15 @@ export class Form {
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
 				try {
-					await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
-						this.setFormDataCaptcha({
-							token,
-							isEnterprise: true,
-							action: actionName,
-						});
-	
-						this.formSubmit(formId, filter);
+					const token = await grecaptcha.enterprise.execute(siteKey, {action: actionName});
+
+					this.setFormDataCaptcha({
+						token,
+						isEnterprise: true,
+						action: actionName,
 					});
+
+					this.formSubmit(formId, filter);
 				} catch (error) {
 					this.utils.formSubmitErrorFatal(
 						this.state.getStateSettingsFormCaptchaErrorMsg(),
@@ -525,14 +525,15 @@ export class Form {
 		} else {
 			grecaptcha.ready(async () => {
 				try {
-					await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
-						this.setFormDataCaptcha({
-							token,
-							isEnterprise: false,
-							action: actionName,
-						});
-						this.formSubmit(formId, filter);
+					const token = await grecaptcha.execute(siteKey, {action: actionName});
+
+					this.setFormDataCaptcha({
+						token,
+						isEnterprise: false,
+						action: actionName,
 					});
+
+					this.formSubmit(formId, filter);
 				} catch (error) {
 					this.utils.formSubmitErrorFatal(
 						this.state.getStateSettingsFormCaptchaErrorMsg(),
