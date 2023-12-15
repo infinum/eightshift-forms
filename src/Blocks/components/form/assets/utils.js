@@ -795,7 +795,7 @@ export class Utils {
 		);
 
 		// Reset timeout for after each submit.
-		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
 			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 		}
 
