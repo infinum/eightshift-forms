@@ -770,6 +770,44 @@ export class Utils {
 	}
 
 	/**
+	 * Actions to run under try/catch block for any fatal issues.
+	 *
+	 * @param {string} msg Error msg text.
+	 * @param {string} type Function used.
+	 * @param {string} formId Form Id.
+	 *
+	 * @throws Error.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitErrorFatal(msg, type, formId) {
+		// Clear all errors.
+		this.resetErrors(formId);
+
+		// Remove loader.
+		this.hideLoader(formId);
+
+		// Set global msg.
+		this.setGlobalMsg(
+			formId,
+			msg ?? this.state.getStateSettingsFormServerErrorMsg(),
+			'error'
+		);
+
+		// Reset timeout for after each submit.
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
+			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+		}
+
+		// Hide global msg in any case after some time.
+		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
+			this.unsetGlobalMsg(formId);
+		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+
+		throw new Error(`API response returned fatal error. Function used: "${type}"`);
+	}
+
+	/**
 	 * Get selected value by custom data of select for country and phone.
 	 *
 	 * @param {string} type Type for field.
@@ -1244,6 +1282,9 @@ export class Utils {
 			},
 			formSubmitErrorContentType: (response, type, formId) => {
 				this.formSubmitErrorContentType(response, type, formId);
+			},
+			formSubmitErrorFatal: (msg, type, formId) => {
+				this.formSubmitErrorFatal(msg, type, formId);
 			},
 			getSelectSelectedValueByCustomData: (type, value, choices) => {
 				return this.getSelectSelectedValueByCustomData(type, value, choices);

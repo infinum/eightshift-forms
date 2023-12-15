@@ -89,6 +89,7 @@ export const StateEnum = {
 	SETTINGS_FILE_REMOVE_LABEL: 'fileRemoveLabel',
 	SETTINGS_FORM_DISABLE_AUTO_INIT: 'formDisableAutoInit',
 	SETTINGS_FORM_SERVER_ERROR_MSG: 'formServerErrorMsg',
+	SETTINGS_FORM_CAPTCHA_ERROR_MSG: 'formCaptchaErrorMsg',
 	SETTINGS_FORM_MISCONFIGURED_MSG: 'formMisconfigured',
 
 	CAPTCHA: 'captcha',
@@ -219,6 +220,7 @@ export function setStateInitial() {
 	setState([StateEnum.SETTINGS_FILE_REMOVE_LABEL], esFormsLocalization.fileRemoveLabel ?? '', StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_DISABLE_AUTO_INIT], Boolean(esFormsLocalization.formDisableAutoInit), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_SERVER_ERROR_MSG], esFormsLocalization.formServerErrorMsg ?? '', StateEnum.SETTINGS);
+	setState([StateEnum.SETTINGS_FORM_CAPTCHA_ERROR_MSG], esFormsLocalization.formCaptchaErrorMsg ?? '', StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_MISCONFIGURED_MSG], esFormsLocalization.formMisconfigured ?? '', StateEnum.SETTINGS);
 
 	// Captcha.

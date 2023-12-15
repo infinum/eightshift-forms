@@ -408,6 +408,7 @@ class Labels implements LabelsInterface
 			'captchaWrongAction' => \__('The Captcha response "action" is not valid.', 'eightshift-forms'),
 			'captchaIncorrectCaptchaSol' => \__('The Captcha keys are not valid. Please check your site and secret key configuration.', 'eightshift-forms'),
 			'captchaScoreSpam' => \__('The automated system detected this request as a potential spam request. Please try again.', 'eightshift-forms'),
+			'captchaBrowserError' => \__('The Captcha check encountered an error. Please try again.', 'eightshift-forms'),
 		];
 	}
 

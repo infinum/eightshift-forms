@@ -44,6 +44,16 @@ export class ManualImportApi {
 					}));
 				}
 
+				if (item.postId) {
+					formData.append(this.state.getStateParam('postId'), JSON.stringify({
+						name: this.state.getStateParam('postId'),
+						value: item.postId,
+						type: 'text',
+						typeCustom: 'text',
+						custom: '',
+					}));
+				}
+
 				if (item.type) {
 					formData.append(this.state.getStateParam('type'), JSON.stringify({
 						name: this.state.getStateParam('type'),
@@ -146,8 +156,16 @@ export class ManualImportApi {
 			return output;
 		}
 
-		[...items].forEach((item) => {
+		let itemsOutput = items;
+
+		// Check if items is iterable. One or multiple items.
+		if (typeof items[Symbol.iterator] !== 'function') {
+			itemsOutput = [items];
+		}
+
+		[...itemsOutput].forEach((item) => {
 			output.push({
+				postId: item.postId,
 				formId: item.formId,
 				type: item.integration,
 				params: item.params,

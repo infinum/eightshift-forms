@@ -425,6 +425,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			$formDataReference['innerId'] = $params['innerId'] ?? '';
 			$formDataReference['type'] = $params['type'] ?? '';
 			$formDataReference['formId'] = $params['formId'] ?? '';
+			$formDataReference['postId'] = $params['postId'] ?? '';
 			$formDataReference['params'] = $params['params'] ?? [];
 			$formDataReference['files'] = $params['files'] ?? [];
 		} else {

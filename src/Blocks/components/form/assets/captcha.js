@@ -53,15 +53,23 @@ export class Captcha {
 
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
-				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
+				try {
+					const token = await grecaptcha.enterprise.execute(siteKey, {action: actionName});
+
 					this.formSubmitCaptchaInvisible(token, true, actionName);
-				});
+				} catch (error) {
+					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad"`);
+				}
 			});
 		} else {
 			grecaptcha.ready(async () => {
-				await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
+				try {
+					const token = await grecaptcha.execute(siteKey, {action: actionName});
+
 					this.formSubmitCaptchaInvisible(token, false, actionName);
-				});
+				} catch (error) {
+					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad"`);
+				}
 			});
 		}
 	}
