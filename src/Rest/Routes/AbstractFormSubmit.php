@@ -299,7 +299,15 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			// Prevent fallback email if we have validation errors parsed.
 			if (!$disableFallbackEmail) {
 				// Send fallback email.
-				$this->getFormSubmitMailer()->sendFallbackEmail($response);
+				$this->getFormSubmitMailer()->sendFallbackEmail(
+					\array_merge(
+						$response,
+						[
+							// Attach postID to the response because it is not available in the client's response.
+							'postId' => $formDataReference['postId'] ?? '',
+						]
+					)
+				);
 			}
 		}
 
@@ -313,7 +321,15 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 		// Output fake success and send fallback email.
 		if ($response['isDisabled'] && !$validation) {
-			$this->getFormSubmitMailer()->sendFallbackEmail($response);
+			$this->getFormSubmitMailer()->sendFallbackEmail(
+				\array_merge(
+					$response,
+					[
+						// Attach postID to the response because it is not available in the client's response.
+						'postId' => $formDataReference['postId'] ?? '',
+					]
+				)
+			);
 
 			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
 

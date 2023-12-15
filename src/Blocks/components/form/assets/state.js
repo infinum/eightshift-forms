@@ -252,6 +252,9 @@ export class State {
 	getStateSettingsFormServerErrorMsg = () => {
 		return getState([StateEnum.SETTINGS_FORM_SERVER_ERROR_MSG], StateEnum.SETTINGS);
 	};
+	getStateSettingsFormCaptchaErrorMsg = () => {
+		return getState([StateEnum.SETTINGS_FORM_CAPTCHA_ERROR_MSG], StateEnum.SETTINGS);
+	};
 	getStateSettingsFormMisconfiguredMsg = () => {
 		return getState([StateEnum.SETTINGS_FORM_MISCONFIGURED_MSG], StateEnum.SETTINGS);
 	};

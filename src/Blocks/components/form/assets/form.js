@@ -504,26 +504,42 @@ export class Form {
 
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha.enterprise.ready(async () => {
-				await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
-					this.setFormDataCaptcha({
-						token,
-						isEnterprise: true,
-						action: actionName,
+				try {
+					await grecaptcha.enterprise.execute(siteKey, {action: actionName}).then((token) => {
+						this.setFormDataCaptcha({
+							token,
+							isEnterprise: true,
+							action: actionName,
+						});
+	
+						this.formSubmit(formId, filter);
 					});
-
-					this.formSubmit(formId, filter);
-				});
+				} catch (error) {
+					this.utils.formSubmitErrorFatal(
+						this.state.getStateSettingsFormCaptchaErrorMsg(),
+						'runFormCaptcha',
+						formId
+					);
+				}
 			});
 		} else {
 			grecaptcha.ready(async () => {
-				await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
-					this.setFormDataCaptcha({
-						token,
-						isEnterprise: false,
-						action: actionName,
+				try {
+					await grecaptcha.execute(siteKey, {action: actionName}).then((token) => {
+						this.setFormDataCaptcha({
+							token,
+							isEnterprise: false,
+							action: actionName,
+						});
+						this.formSubmit(formId, filter);
 					});
-					this.formSubmit(formId, filter);
-				});
+				} catch (error) {
+					this.utils.formSubmitErrorFatal(
+						this.state.getStateSettingsFormCaptchaErrorMsg(),
+						'runFormCaptcha',
+						formId
+					);
+				}
 			});
 		}
 	}
