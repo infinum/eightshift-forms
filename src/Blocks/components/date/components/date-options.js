@@ -81,7 +81,6 @@ export const DateOptions = (attributes) => {
 				{...props('field', attributes, {
 					fieldDisabledOptions: dateDisabledOptions,
 				})}
-				showFieldHideLabel={false}
 			/>
 
 			<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>

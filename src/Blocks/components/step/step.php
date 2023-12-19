@@ -75,7 +75,6 @@ $nextButtonComponent = '';
 					'submit',
 					array_merge(
 						Components::props('submit', $attributes, [
-							'submitFieldHideLabel' => true,
 							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $prevButtonComponent,
 							'submitAttrs' => [
@@ -105,7 +104,6 @@ $nextButtonComponent = '';
 					'submit',
 					array_merge(
 						Components::props('submit', $attributes, [
-							'submitFieldHideLabel' => true,
 							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $nextButtonComponent,
 							'submitAttrs' => [

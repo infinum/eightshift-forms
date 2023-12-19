@@ -74,11 +74,11 @@ export const CheckboxesOptions = (attributes) => {
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'checkboxes')}
 				disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
-				additionalSelectClasses='es-w-40'
 				simpleValue
 				inlineLabel
 				noSearch
 				clearable
+				placeholder={__('Choose an alternative', 'eightshift-forms')}
 			/>
 
 			<FieldOptions

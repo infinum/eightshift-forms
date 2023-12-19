@@ -53,7 +53,6 @@ export const CountryOptions = (attributes) => {
 				{...props('field', attributes, {
 					fieldDisabledOptions: countryDisabledOptions,
 				})}
-				showFieldHideLabel={false}
 			/>
 
 			<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>

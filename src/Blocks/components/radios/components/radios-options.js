@@ -55,11 +55,11 @@ export const RadiosOptions = (attributes) => {
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'radios')}
 				disabled={isOptionDisabled(getAttrKey('radiosShowAs', attributes, manifest), radiosDisabledOptions)}
 				onChange={(value) => setAttributes({ [getAttrKey('radiosShowAs', attributes, manifest)]: value })}
-				additionalSelectClasses='es-w-40'
 				simpleValue
 				inlineLabel
 				noSearch
 				clearable
+				placeholder={__('Choose an alternative', 'eightshift-forms')}
 			/>
 
 			<FieldOptions

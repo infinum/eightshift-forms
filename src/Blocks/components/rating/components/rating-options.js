@@ -65,7 +65,6 @@ export const RatingOptions = (attributes) => {
 				{...props('field', attributes, {
 					fieldDisabledOptions: ratingDisabledOptions,
 				})}
-				showFieldHideLabel={false}
 			/>
 
 			<FieldOptionsLayout

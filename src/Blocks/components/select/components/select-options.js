@@ -68,18 +68,17 @@ export const SelectOptions = (attributes) => {
 				options={globalManifest.showAsMap.options.filter((item) => item.value !== 'select')}
 				disabled={isOptionDisabled(getAttrKey('selectShowAs', attributes, manifest), selectDisabledOptions)}
 				onChange={(value) => setAttributes({ [getAttrKey('selectShowAs', attributes, manifest)]: value })}
-				additionalSelectClasses='es-w-40'
 				simpleValue
 				inlineLabel
 				noSearch
 				clearable
+				placeholder={__('Choose an alternative', 'eightshift-forms')}
 			/>
 
 			<FieldOptions
 				{...props('field', attributes, {
 					fieldDisabledOptions: selectDisabledOptions,
 				})}
-				showFieldHideLabel={false}
 			/>
 
 			<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>

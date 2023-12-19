@@ -41,6 +41,7 @@ export const FieldOptionsExternalBlocks = ({
 					type='custom field'
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
+					isOptional
 				/>
 			</Section>
 
