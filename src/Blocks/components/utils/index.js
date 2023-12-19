@@ -343,11 +343,11 @@ export const MissingName = ({
 		return null;
 	}
 
-	const style = classnames([
+	const style = classnames(
 		'es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center',
-		!isOptional ? 'es-bg-red-500' : 'es-bg-yellow-500',
-		selector(className, className),
-	]);
+		isOptional ? 'es-bg-yellow-500' : 'es-bg-red-500',
+		className,
+	);
 
 	return (
 		<div className={style}>
