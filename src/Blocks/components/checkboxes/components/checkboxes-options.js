@@ -79,6 +79,7 @@ export const CheckboxesOptions = (attributes) => {
 				inlineLabel
 				noSearch
 				clearable
+				placeholder={__('Choose alternative', 'eightshift-forms')}
 			/>
 
 			<FieldOptions

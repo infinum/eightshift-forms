@@ -40,7 +40,10 @@ export const FieldEditorExternalBlocks = ({
 					<div className={`${componentClass}__content-wrap`}>
 						{children}
 
-						<MissingName value={fieldName} />
+						<MissingName
+							value={fieldName}
+							isOptional
+						/>
 
 						{fieldName &&
 							<ConditionalTagsEditor

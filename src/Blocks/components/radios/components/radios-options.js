@@ -60,6 +60,7 @@ export const RadiosOptions = (attributes) => {
 				inlineLabel
 				noSearch
 				clearable
+				placeholder={__('Choose alternative', 'eightshift-forms')}
 			/>
 
 			<FieldOptions

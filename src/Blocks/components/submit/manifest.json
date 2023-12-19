@@ -44,10 +44,6 @@
 		"submitAttrs": {
 			"type": "object"
 		},
-		"submitFieldHideLabel": {
-			"type": "boolean",
-			"default": true
-		},
 		"submitServerSideRender": {
 			"type": "boolean",
 			"default": false

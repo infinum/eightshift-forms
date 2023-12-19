@@ -97,25 +97,32 @@ $select = '
 	' . $additionalContent . '
 ';
 
+$fieldOutput = [
+	'fieldContent' => $select,
+	'fieldId' => $selectName,
+	'fieldName' => $selectName,
+	'fieldTypeInternal' => Helper::getStateFieldType('select'),
+	'fieldIsRequired' => $selectIsRequired,
+	'fieldDisabled' => !empty($selectIsDisabled),
+	'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldTracking' => $selectTracking,
+	'fieldConditionalTags' => Components::render(
+		'conditional-tags',
+		Components::props('conditionalTags', $attributes)
+	),
+	'fieldAttrs' => $selectFieldAttrs,
+];
+
+
+// Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
+if ($selectHideLabel) {
+	$fieldOutput['fieldHideLabel'] = true;
+}
+
 echo Components::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
-			'fieldContent' => $select,
-			'fieldId' => $selectName,
-			'fieldName' => $selectName,
-			'fieldTypeInternal' => Helper::getStateFieldType('select'),
-			'fieldIsRequired' => $selectIsRequired,
-			'fieldDisabled' => !empty($selectIsDisabled),
-			'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldTracking' => $selectTracking,
-			'fieldHideLabel' => $selectHideLabel,
-			'fieldConditionalTags' => Components::render(
-				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => $selectFieldAttrs,
-		]),
+		Components::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',

@@ -1066,6 +1066,9 @@ export class Form {
 				onOpen: function () {
 					utils.setFieldActiveState(formId, name);
 				},
+				onClose: function () {
+					utils.unsetActiveState(formId, name);
+				},
 				onChange: function () {
 					utils.setOnUserChangeDate(input);
 				},
@@ -1176,9 +1179,9 @@ export class Form {
 
 			this.utils.setFieldFilledState(formId, name);
 
-			choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
-			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
-			choices?.containerOuter?.element.addEventListener('change', this.onSelectChangeEvent);
+			choices?.passedElement?.element.addEventListener('showDropdown', this.onFocusEvent);
+			choices?.passedElement?.element.addEventListener('hideDropdown', this.onBlurEvent);
+			choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
 		});
 	}
 
@@ -1578,6 +1581,10 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
 		this.utils.setOnUserChangeSelect(event.target);
+
+		if (!this.state.getStateElementValue(name, formId) || !this.state.getStateElementValue(name, formId)?.length) {
+			this.utils.unsetFilledState(formId, name);
+		}
 
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(

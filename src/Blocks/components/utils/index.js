@@ -332,14 +332,21 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
  *
  * @returns Component
  */
-export const MissingName = ({ value, asPlaceholder, className = '' }) => {
+export const MissingName = ({
+	value,
+	asPlaceholder,
+	className = '',
+	isOptional = false,
+}) => {
 	if (value || asPlaceholder) {
 		return null;
 	}
 
+	const style = !isOptional ? 'es-bg-red-500' : 'es-bg-yellow-500';
+
 	return (
-		<div className={`es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-bg-red-500 es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center ${className}`}>
-			<Tooltip text={__('Name not set!', 'eightshift-forms')}>
+		<div className={`es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white ${style} es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center ${className}`}>
+			<Tooltip text={!isOptional ? __('Name not set!', 'eightshift-forms') : __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')}>
 				{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
 			</Tooltip>
 		</div>
@@ -392,6 +399,7 @@ export const NameField = ({
 	show = true,
 	type,
 	isChanged = false,
+	isOptional = false,
 	setIsChanged,
 }) => {
 
@@ -403,8 +411,12 @@ export const NameField = ({
 				<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
 
 				<AnimatedContentVisibility showIf={!value}>
-					<Tooltip text={__('The form may not work correctly.', 'eightshift-forms')}>
-						<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span>
+					<Tooltip text={!isOptional ? __('The form may not work correctly.', 'eightshift-forms') : __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms')}>
+						{
+							!isOptional ? 
+							<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span> :
+							<span className='es-color-pure-white es-bg-yellow-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Optional', 'eightshift-forms')}</span>
+						}
 					</Tooltip>
 				</AnimatedContentVisibility>
 

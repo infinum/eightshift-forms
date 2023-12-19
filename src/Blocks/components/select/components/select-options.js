@@ -73,13 +73,13 @@ export const SelectOptions = (attributes) => {
 				inlineLabel
 				noSearch
 				clearable
+				placeholder={__('Choose alternative', 'eightshift-forms')}
 			/>
 
 			<FieldOptions
 				{...props('field', attributes, {
 					fieldDisabledOptions: selectDisabledOptions,
 				})}
-				showFieldHideLabel={false}
 			/>
 
 			<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>

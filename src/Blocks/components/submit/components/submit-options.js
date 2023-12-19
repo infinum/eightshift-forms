@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { icons, checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
-import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
+import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
 
 export const SubmitOptions = (attributes) => {
@@ -28,12 +28,6 @@ export const SubmitOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('submitValue', attributes, manifest), submitDisabledOptions)}
 				/>
 			</Section>
-
-			<FieldOptions
-				{...props('field', attributes, {
-					fieldDisabledOptions: submitDisabledOptions,
-				})}
-			/>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {

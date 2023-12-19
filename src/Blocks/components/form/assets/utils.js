@@ -194,7 +194,7 @@ export class Utils {
 			return;
 		}
 
-		error?.classList?.remove(this.state.getStateSelector('hasError'));
+		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelector('hasError'));
 		this.state.setStateElementHasError(name, false, formId);
 		error.innerHTML = '';
 	}
@@ -214,7 +214,7 @@ export class Utils {
 			return;
 		}
 
-		error?.classList?.add(this.state.getStateSelector('hasError'));
+		this.state.getStateElementField(name, formId)?.classList?.add(this.state.getStateSelector('hasError'));
 		this.state.setStateElementHasError(name, true, formId);
 		error.innerHTML = msg;
 	}
