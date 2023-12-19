@@ -18,6 +18,7 @@ import {
 	unlockPostEditing,
 	unescapeHTML,
 	getUnique,
+	selector,
 } from '@eightshift/frontend-libs/scripts';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
@@ -342,10 +343,14 @@ export const MissingName = ({
 		return null;
 	}
 
-	const style = !isOptional ? 'es-bg-red-500' : 'es-bg-yellow-500';
+	const style = classnames([
+		'es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center',
+		!isOptional ? 'es-bg-red-500' : 'es-bg-yellow-500',
+		selector(className, className),
+	]);
 
 	return (
-		<div className={`es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white ${style} es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center ${className}`}>
+		<div className={style}>
 			<Tooltip text={!isOptional ? __('Name not set!', 'eightshift-forms') : __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')}>
 				{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
 			</Tooltip>
