@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Entries;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 
 /**
  * EntriesHelper class.
@@ -37,6 +38,12 @@ class EntriesHelper
 		$params = $formDataReference['params'] ?? [];
 
 		$output = [];
+
+		// Filter params.
+		$filterName = Filters::getFilterName(['entries', 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params, $formId) ?? [];
+		}
 
 		$params = Helper::removeUneceseryParamFields($params);
 

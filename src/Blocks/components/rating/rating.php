@@ -38,7 +38,7 @@ $ratingClass = Components::classnames([
 ]);
 
 if (!$ratingValue || !is_numeric($ratingValue)) {
-	$ratingValue = '0';
+	$ratingValue = '';
 }
 
 if ($ratingAmount < $ratingValue) {

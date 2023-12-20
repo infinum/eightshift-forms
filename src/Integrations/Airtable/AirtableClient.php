@@ -166,7 +166,7 @@ class AirtableClient implements ClientInterface
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
 		$body = [
-			'fields' => $this->prepareParams($params),
+			'fields' => $this->prepareParams($params, $formId),
 		];
 
 		$filterName = Filters::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostId']);
@@ -348,23 +348,25 @@ class AirtableClient implements ClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params): array
+	private function prepareParams(array $params, string $formId): array
 	{
 		$output = [];
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
+		// Filter params.
 		$filterName = Filters::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params) ?? [];
+			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';

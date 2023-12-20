@@ -189,7 +189,7 @@ class MailchimpClient implements MailchimpClientInterface
 			'status_if_new' => 'subscribed',
 			'status' => 'subscribed',
 			'tags' => $this->prepareTags($params),
-			'merge_fields' => $this->prepareParams($params),
+			'merge_fields' => $this->prepareParams($params, $formId),
 		];
 
 
@@ -463,23 +463,25 @@ class MailchimpClient implements MailchimpClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params): array
+	private function prepareParams(array $params, string $formId): array
 	{
 		$output = [];
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
+		// Filter params.
 		$filterName = Filters::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params) ?? [];
+			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
