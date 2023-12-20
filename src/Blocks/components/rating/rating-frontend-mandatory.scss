@@ -50,7 +50,8 @@
 		}
 	}
 
-	&[data-rating="0"] #{$this}__star path {
+	&[data-rating="0"] #{$this}__star path,
+	&[data-rating=""] #{$this}__star path {
 		color: var(--es-rating-icon-color);
 		fill: var(--es-rating-icon-color);
 	}

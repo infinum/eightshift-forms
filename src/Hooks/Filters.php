@@ -392,6 +392,9 @@ class Filters
 			'pharLocation',
 		],
 		'integrations' => [
+			SettingsMailer::SETTINGS_TYPE_KEY => [
+				'prePostParams',
+			],
 			SettingsMailchimp::SETTINGS_TYPE_KEY => [
 				'data',
 				'prePostParams',
@@ -450,6 +453,15 @@ class Filters
 				'order',
 				'prePostId',
 			],
+			SettingsJira::SETTINGS_TYPE_KEY => [
+				'prePostParams',
+			],
+			SettingsPipedrive::SETTINGS_TYPE_KEY => [
+				'prePostParams',
+			],
+		],
+		'entries' => [
+			'prePostParams',
 		],
 		'enrichment' => [
 			'manualMap',

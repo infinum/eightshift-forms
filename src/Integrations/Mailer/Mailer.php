@@ -13,6 +13,7 @@ namespace EightshiftForms\Integrations\Mailer;
 use CURLFile;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -51,13 +52,11 @@ class Mailer implements MailerInterface
 		array $responseFields = []
 	): bool {
 
-		$fields = Helper::removeUneceseryParamFields($fields);
-
 		// Send email.
 		return \wp_mail(
-			$this->getTemplate('to', $fields, $to),
-			$this->getTemplate('subject', $fields, $subject),
-			$this->getTemplate('message', $fields, $template, $responseFields),
+			$this->getTemplate('to', $fields, $formId, $to),
+			$this->getTemplate('subject', $fields, $formId, $subject),
+			$this->getTemplate('message', $fields, $formId, $template, $responseFields),
 			$this->getHeader(
 				$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 				$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
@@ -203,15 +202,16 @@ class Mailer implements MailerInterface
 	 *
 	 * @param string $type Type for the template. Available: to, subject, message.
 	 * @param array<string, mixed> $items All items to output.
+	 * @param string $formId FormId value.
 	 * @param string $template Additional description.
 	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
 	 *
 	 * @return string
 	 */
-	private function getTemplate(string $type, array $items, string $template = '', array $responseFields = []): string
+	private function getTemplate(string $type, array $items, string $formId, string $template = '', array $responseFields = []): string
 	{
 		$params = \array_merge(
-			$this->prepareParams($items),
+			$this->prepareParams($items, $formId),
 			$responseFields
 		);
 
@@ -236,12 +236,22 @@ class Mailer implements MailerInterface
 	 * Prepare params.
 	 *
 	 * @param array<string, mixed> $params Params to prepare.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function prepareParams(array $params): array
+	private function prepareParams(array $params, string $formId): array
 	{
 		$output = [];
+
+		// Filter params.
+		$filterName = Filters::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params, $formId) ?? [];
+		}
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';

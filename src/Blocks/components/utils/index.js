@@ -18,7 +18,6 @@ import {
 	unlockPostEditing,
 	unescapeHTML,
 	getUnique,
-	selector,
 } from '@eightshift/frontend-libs/scripts';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';

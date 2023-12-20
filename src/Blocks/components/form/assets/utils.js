@@ -528,6 +528,9 @@ export class Utils {
 				case 'file':
 					this.setManualFileValue(formId, name, initial);
 					break;
+				case 'rating':
+					this.setManualRatingValue(formId, name, initial);
+					break;
 				default:
 					this.setManualInputValue(formId, name, initial);
 					break;

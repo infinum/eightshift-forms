@@ -307,24 +307,30 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					];
 					break;
 				default:
-					$fileType = $value['type'] ?? '';
-					$fileValue = $value['value'] ?? '';
+					// All other "normal" fields.
+					$fieldType = $value['type'] ?? '';
+					$fieldValue = $value['value'] ?? '';
 
-					if ($fileType === 'file') {
-						$output['files'][$key] = $fileValue ? \array_merge(
+					if ($fieldType === 'file') {
+						$output['files'][$key] = $fieldValue ? \array_merge(
 							$value,
 							[
 								'value' => \array_map(
 									function ($item) {
 										return $this->getFilePath($item);
 									},
-									\explode(self::DELIMITER, $fileValue)
+									\explode(self::DELIMITER, $fieldValue)
 								),
 							]
 						) : $value;
-					} else {
-						$output['params'][$key] = $value;
+						break;
 					}
+
+					if ($fieldType === 'rating' && $fieldValue === '0') {
+						$value['value'] = '';
+					}
+
+					$output['params'][$key] = $value;
 
 					break;
 			}

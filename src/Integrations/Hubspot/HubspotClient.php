@@ -224,7 +224,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$paramsPrepared = $this->prepareParams($params);
+		$paramsPrepared = $this->prepareParams($params, $formId);
 		$paramsFiles = $this->prepareFiles($files, $formId);
 
 		$body = [
@@ -781,23 +781,25 @@ class HubspotClient implements HubspotClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function prepareParams(array $params): array
+	private function prepareParams(array $params, string $formId): array
 	{
 		$output = [];
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
+		// Filter params.
 		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params) ?? [];
+			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';

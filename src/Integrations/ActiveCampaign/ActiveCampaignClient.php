@@ -141,7 +141,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$params = $this->prepareParams($params);
+		$params = $this->prepareParams($params, $formId);
 
 		// Map body.
 		$requestBody = [
@@ -608,25 +608,27 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params): array
+	private function prepareParams(array $params, string $formId): array
 	{
 		$output = [];
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
+		// Filter params.
+		$filterName = Filters::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params, $formId) ?? [];
+		}
+
 		// Remove unecesery params.
 		$params = Helper::removeUneceseryParamFields($params);
 
 		$standardFields = \array_flip(ActiveCampaign::STANDARD_FIELDS);
-
-		$filterName = Filters::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params) ?? [];
-		}
 
 		// Map params.
 		foreach ($params as $param) {

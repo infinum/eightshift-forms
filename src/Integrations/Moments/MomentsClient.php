@@ -135,7 +135,7 @@ class MomentsClient implements ClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$body = $this->prepareParams($params);
+		$body = $this->prepareParams($params, $formId);
 
 		$filterName = Filters::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
@@ -422,23 +422,25 @@ class MomentsClient implements ClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params): array
+	private function prepareParams(array $params, string $formId): array
 	{
 		$output = [];
 
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
-
+		// Filter params.
 		$filterName = Filters::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params) ?? [];
+			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
+
+		// Remove unecesery params.
+		$params = Helper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';
