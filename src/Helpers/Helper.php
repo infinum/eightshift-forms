@@ -850,7 +850,7 @@ class Helper
 			return false;
 		}
 
-		$currentScreen = \get_current_screen();
+		$currentScreen = \get_current_screen() ?? '';
 
 		if (!\method_exists($currentScreen, 'is_block_editor')) {
 			return false;
