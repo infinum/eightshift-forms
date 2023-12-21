@@ -473,7 +473,6 @@ class Filters
 			'twoToThreeGeneral',
 			'twoToThreeForms',
 			'twoToThreeLocale',
-			'twoToThreeLabels',
 		],
 	];
 

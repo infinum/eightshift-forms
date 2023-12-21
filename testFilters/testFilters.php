@@ -109,7 +109,6 @@ class Testfilters implements ServiceInterface
 			// Validation actions.
 			'es_forms_migration_two_to_three_general' => ['runMigration2To3General'],
 			'es_forms_migration_two_to_three_forms' => ['runMigration2To3Forms'],
-			'es_forms_migration_two_to_three_labels' => ['runMigration2To3Labels'],
 			'es_forms_migration_two_to_three_locale' => ['runMigration2To3Locale'],
 			// ---------------------------------------------------------------------------------------------------------
 		];
@@ -913,15 +912,5 @@ class Testfilters implements ServiceInterface
 	public function runMigration2To3Locale(): void
 	{
 		error_log(print_r(('Action hook activated 2-3 locale'), true)); // phpcs:ignore
-	}
-
-	/**
-	 * Run custom action after migration from verson 2 to 3 - labels.
-	 *
-	 * @return void
-	 */
-	public function runMigration2To3Labels(): void
-	{
-		error_log(print_r(('Action hook activated 2-3 labels'), true)); // phpcs:ignore
 	}
 }

@@ -61,11 +61,6 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	public const VERSION_2_3_LOCALE = '2-3-locale';
 
 	/**
-	 * Version 2-3 labels key.
-	 */
-	public const VERSION_2_3_LABELS = '2-3-labels';
-
-	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -166,26 +161,6 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
 									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_FORMS,
-								],
-								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
-							],
-						],
-					],
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					],
-					[
-						'component' => 'card-inline',
-						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - labels', 'eightshift-forms'),
-						'cardInlineSubTitle' => \__('Small changes to field labels.', 'eightshift-forms'),
-						'cardInlineRightContent' => [
-							[
-								'component' => 'submit',
-								'submitValue' => \__('Migrate', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
-									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_LABELS,
 								],
 								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
 							],
