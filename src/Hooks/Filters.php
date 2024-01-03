@@ -76,6 +76,13 @@ class Filters
 	public const FILTER_PREFIX = 'es_forms';
 
 	/**
+	 * Filter name triggered when main forms plugins is loaded.
+	 *
+	 * @var string
+	 */
+	public const FILTER_LOADED_NAME = self::FILTER_PREFIX . '_loaded';
+
+	/**
 	 * Settings internal types.
 	 *
 	 * @var string
