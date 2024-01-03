@@ -108,7 +108,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 						return $item['cache'];
 					}
 				},
-				Filters::ALL
+				Filters::getSettingsFiltersData()
 			));
 
 			if ($allItems) {
@@ -117,7 +117,8 @@ class CacheDeleteRoute extends AbstractBaseRoute
 				}
 			}
 		} else {
-			if (!isset(Filters::ALL[$type]['cache'])) {
+			$cacheTypes = Filters::getSettingsFiltersData()[$type]['cache'] ?? [];
+			if (!$cacheTypes) {
 				return \rest_ensure_response(
 					$this->getApiErrorOutput(
 						\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
@@ -127,7 +128,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 				);
 			}
 
-			foreach (Filters::ALL[$type]['cache'] as $item) {
+			foreach ($cacheTypes as $item) {
 				\delete_transient($item);
 			}
 		}

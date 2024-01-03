@@ -169,7 +169,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Check if integration filter exists.
-		$integrationFilterName = Filters::ALL[$type]['fields'] ?? '';
+		$integrationFilterName = Filters::getSettingsFiltersData()[$type]['fields'] ?? '';
 		if (!\has_filter($integrationFilterName)) {
 			return [
 				'formId' => $formId,
@@ -338,7 +338,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Check if integration filter exists.
-		$integrationFilterName = Filters::ALL[$contentType]['fields'] ?? '';
+		$integrationFilterName = Filters::getSettingsFiltersData()[$contentType]['fields'] ?? '';
 		if (!\has_filter($integrationFilterName)) {
 			return [
 				'formId' => $formId,

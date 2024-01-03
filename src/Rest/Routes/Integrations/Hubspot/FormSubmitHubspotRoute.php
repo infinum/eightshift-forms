@@ -146,7 +146,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 				$clearbitResponse = $this->clearbitClient->getApplication(
 					$email,
 					$params,
-					$this->getOptionValueGroup(Filters::ALL[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map']),
+					$this->getOptionValueGroup(Filters::getSettingsFiltersData()[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map']),
 					$itemId,
 					$formId
 				);

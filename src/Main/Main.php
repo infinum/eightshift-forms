@@ -39,4 +39,16 @@ class Main extends AbstractMain
 	{
 		\add_action('plugins_loaded', [$this, 'registerServices']);
 	}
+
+	/**
+	 * Reguster all the services and trigger custom action hook used for addons.
+	 *
+	 * @return void
+	 */
+	public function registerServices(): void
+	{
+		parent::registerServices();
+
+		\do_action('es_forms_loaded');
+	}
 }

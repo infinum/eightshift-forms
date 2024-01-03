@@ -124,7 +124,7 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 			return $output;
 		}
 
-		foreach (Filters::ALL[SettingsPipedrive::SETTINGS_TYPE_KEY]['emailTemplateTags'] as $key => $value) {
+		foreach (Filters::getSettingsFiltersData()[SettingsPipedrive::SETTINGS_TYPE_KEY]['emailTemplateTags'] as $key => $value) {
 			$output[$key] = $body[$value] ?? '';
 		}
 

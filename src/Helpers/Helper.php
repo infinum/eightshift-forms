@@ -911,7 +911,7 @@ class Helper
 	 */
 	public static function canIntegrationUseSync(string $integrationName): bool
 	{
-		return isset(Filters::ALL[$integrationName]['fields']);
+		return isset(Filters::getSettingsFiltersData()[$integrationName]['fields']);
 	}
 
 	/**

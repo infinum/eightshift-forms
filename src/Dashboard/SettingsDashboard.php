@@ -60,7 +60,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 	{
 		$filtered = [];
 
-		foreach (Filters::ALL as $key => $value) {
+		foreach (Filters::getSettingsFiltersData() as $key => $value) {
 			$use = $value['use'] ?? '';
 
 			if (!$use) {
@@ -69,10 +69,12 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 
 			$checked = $this->isOptionCheckboxChecked($use, $use);
 
+			$labels = $value['labels'] ?? [];
+
 			$item = [
 				'component' => 'card-inline',
-				'cardInlineTitle' => Filters::getSettingsLabels($key),
-				'cardInlineIcon' => Helper::getProjectIcons($key),
+				'cardInlineTitle' => $labels['title'] ?? '',
+				'cardInlineIcon' => $labels['icon'] ?? '',
 				'cardInlineRightContent' => [
 					$checked ? [
 						'component' => 'submit',

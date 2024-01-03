@@ -180,8 +180,9 @@ class MigrationRoute extends AbstractBaseRoute
 		}
 
 		// Migrate each integration fallback.
-		foreach (Filters::ALL as $key => $value) {
-			if ($value['type'] !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+		foreach (Filters::getSettingsFiltersData() as $key => $value) {
+			$type = $value['type'] ?? '';
+			if ($type !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
 				continue;
 			}
 
@@ -266,7 +267,7 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 
 			// Bailout integrations that are disabled.
-			$use = Filters::ALL[$type]['use'] ?? '';
+			$use = Filters::getSettingsFiltersData()[$type]['use'] ?? '';
 
 			// Skip deactivated integrations.
 			if ($this->isOptionCheckboxChecked($use, $use)) {

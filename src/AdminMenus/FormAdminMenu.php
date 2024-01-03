@@ -795,8 +795,10 @@ class FormAdminMenu extends AbstractAdminMenu
 
 		$activeIntegration = \array_flip($this->getActiveIntegrations());
 
-		foreach (Filters::ALL as $key => $value) {
-			if ($value['type'] !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+		foreach (Filters::getSettingsFiltersData() as $key => $value) {
+			$type = $value['type'] ?? '';
+
+			if ($type !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
 				continue;
 			}
 

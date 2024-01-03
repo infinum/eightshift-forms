@@ -455,7 +455,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					'type' => $type,
 					'itemId' => '',
 					'innerId' => '',
-					'fieldsOnly' => isset(Filters::ALL[$formSettingsType][$type]) ? \apply_filters(Filters::ALL[$formSettingsType][$type], $formId) : [],
+					'fieldsOnly' => isset(Filters::getSettingsFiltersData()[$formSettingsType][$type]) ? \apply_filters(Filters::getSettingsFiltersData()[$formSettingsType][$type], $formId) : [],
 				];
 			} else {
 				$formDataReference = Helper::getFormDetailsById($formId);

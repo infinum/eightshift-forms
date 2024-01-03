@@ -89,8 +89,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 					];
 				}
 			},
-			\array_keys(Filters::ALL),
-			Filters::ALL
+			\array_keys(Filters::getSettingsFiltersData()),
+			Filters::getSettingsFiltersData()
 		)));
 
 		return [

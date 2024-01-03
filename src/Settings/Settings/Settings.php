@@ -86,8 +86,18 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		}
 
 		$output = [];
+		$items = Filters::getSettingsFiltersData();
 
-		foreach (Filters::ALL as $key => $value) {
+		// Load addinal sidebar from addons.
+		$filterName = Filters::getFilterName(['admin', 'settings', 'config']);
+		if (\has_filter($filterName)) {
+			$items = \array_merge(
+				$items,
+				\apply_filters($filterName, [])
+			);
+		}
+
+		foreach ($items as $key => $value) {
 			// Determin if there is filter key name.
 			if (!isset($value[$internalType])) {
 				continue;
@@ -110,12 +120,14 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 				continue;
 			}
 
+			$labels = $value['labels'] ?? [];
+
 			// Populate sidebar data.
 			$output[$type][] = [
-				'label' => Filters::getSettingsLabels($key),
-				'desc' => Filters::getSettingsLabels($key, 'desc'),
+				'label' => $labels['title'] ?? '',
+				'desc' => $labels['desc'] ?? '',
 				'url' => $formId ? Helper::getSettingsPageUrl($formId, $key) : Helper::getSettingsGlobalPageUrl($key),
-				'icon' => Helper::getProjectIcons($key),
+				'icon' => $labels['icon'] ?? '',
 				'type' => $type,
 				'key' => $key,
 			];
@@ -142,7 +154,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		}
 
 		// Find settings page.
-		$filter = Filters::ALL[$type][$internalType] ?? '';
+		$filter = Filters::getSettingsFiltersData()[$type][$internalType] ?? '';
 
 		// Determine if there is a filter for settings page.
 		if (!\has_filter($filter)) {

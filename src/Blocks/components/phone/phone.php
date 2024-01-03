@@ -74,7 +74,7 @@ $additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attrib
 $phoneSelectUseSearchAttr = Helper::getStateAttribute('selectAllowSearch');
 
 $options = [];
-$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'];
+$filterName = Filters::getSettingsFiltersData()[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'];
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $phoneFormPostId);

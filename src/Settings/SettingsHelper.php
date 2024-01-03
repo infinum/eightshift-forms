@@ -487,7 +487,7 @@ trait SettingsHelper
 		}
 
 		$type = $integrationDetails['typeFilter'];
-		$useFilter = Filters::ALL[$type]['use'] ?? '';
+		$useFilter = Filters::getSettingsFiltersData()[$type]['use'] ?? '';
 
 		return [
 			'label' => $integrationDetails['label'],
@@ -508,14 +508,16 @@ trait SettingsHelper
 	{
 		$output = [];
 
-		foreach (Filters::ALL as $key => $value) {
-			$useFilter = Filters::ALL[$key]['use'] ?? '';
+		foreach (Filters::getSettingsFiltersData() as $key => $value) {
+			$useFilter = $value['use'] ?? '';
 
 			if (!$useFilter) {
 				continue;
 			}
 
-			if (Filters::ALL[$key]['type'] !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+			$type = $value['type'] ?? '';
+
+			if ($type !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
 				continue;
 			}
 
@@ -642,7 +644,7 @@ trait SettingsHelper
 	 */
 	public function getFormResponseTags(string $formType): string
 	{
-		$tags = Filters::ALL[$formType]['emailTemplateTags'] ?? [];
+		$tags = Filters::getSettingsFiltersData()[$formType]['emailTemplateTags'] ?? [];
 
 		if ($tags) {
 			return $this->getFormFieldNames(\array_keys($tags));
