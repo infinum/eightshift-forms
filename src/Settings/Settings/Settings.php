@@ -98,8 +98,8 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			];
 		}
 
-		// Return all settings data.
-		return $output;
+		// Return all settings data with the correct order.
+		return $this->sortSettingsByOrder($output);
 	}
 
 	/**

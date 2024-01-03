@@ -805,4 +805,46 @@ trait SettingsHelper
 			'inputIsDisabled' => $options['isDisabled'],
 			];
 	}
+
+	/**
+	 * Get settings in the correct order by order value.
+	 *
+	 * @param array<mixed> $data Data to sort.
+	 *
+	 * @return array<mixed>
+	 */
+	public function sortSettingsByOrder(array $data): array
+	{
+		$correctOrder = [];
+		$output = [];
+
+		// Generate correct order of settings.
+		foreach (Filters::getSettingsFiltersData() as $key => $item) {
+			$order = $item['order'] ?? 0;
+			if (!$order) {
+				continue;
+			}
+
+			if (!\is_int($order)) {
+				continue;
+			}
+
+			$correctOrder[$order] = $key;
+		}
+
+		// Sort the array.
+		\ksort($correctOrder);
+
+		// Output the sorted array.
+		foreach ([...$correctOrder] as $key) {
+			if (!\array_key_exists($key, $data)) {
+				continue;
+			}
+
+			$output[$key] = $data[$key];
+		}
+
+		// Return the sorted array.
+		return $output;
+	}
 }

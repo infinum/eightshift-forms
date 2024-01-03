@@ -85,6 +85,7 @@ class Filters
 	public const SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING = 'sidebar-troubleshooting';
 	public const SETTINGS_INTERNAL_TYPE_MISCELLANEOUS = 'sidebar-miscellaneous';
 	public const SETTINGS_INTERNAL_TYPE_ADVANCED = 'sidebar-advanced';
+	public const SETTINGS_INTERNAL_TYPE_ADDON = 'sidebar-addon';
 
 	/**
 	 * All public filters.
@@ -271,6 +272,7 @@ class Filters
 			// GENERAL.
 			// ------------------------------
 			self::SETTINGS_INTERNAL_TYPE_GENERAL => [
+				'order' => 1,
 				'labels' => [
 					'title' => \__('General', 'eightshift-forms'),
 				],
@@ -314,6 +316,7 @@ class Filters
 			// ADVANCED.
 			// ------------------------------
 			self::SETTINGS_INTERNAL_TYPE_ADVANCED => [
+				'order' => 2,
 				'labels' => [
 					'title' => \__('Advanced', 'eightshift-forms'),
 				],
@@ -380,6 +383,7 @@ class Filters
 			// INTEGRATIONS.
 			// ------------------------------
 			self::SETTINGS_INTERNAL_TYPE_INTEGRATION => [
+				'order' => 3,
 				'labels' => [
 					'title' => \__('Integrations', 'eightshift-forms'),
 				],
@@ -583,6 +587,7 @@ class Filters
 			// MISCELLANEOUS.
 			// ------------------------------
 			self::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS => [
+				'order' => 4,
 				'labels' => [
 					'title' => \__('Miscellaneous', 'eightshift-forms'),
 					'desc' => \__('Settings for various miscellaneous options.', 'eightshift-forms'),
@@ -607,9 +612,20 @@ class Filters
 				],
 			],
 			// ------------------------------
+			// ADD-ONS.
+			// ------------------------------
+			self::SETTINGS_INTERNAL_TYPE_ADDON => [
+				'order' => 5,
+				'labels' => [
+					'title' => \__('Add-ons', 'eightshift-forms'),
+					'desc' => \__('Settings for various add-on plugins.', 'eightshift-forms'),
+				],
+			],
+			// ------------------------------
 			// TROUBLESHOOTING.
 			// ------------------------------
 			self::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING => [
+				'order' => 6,
 				'labels' => [
 					'title' => \__('Troubleshooting', 'eightshift-forms'),
 					'desc' => \__('Settings for various troubleshooting and debugging options.', 'eightshift-forms'),

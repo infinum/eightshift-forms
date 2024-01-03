@@ -60,7 +60,18 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 	{
 		$filtered = [];
 
-		foreach (Filters::getSettingsFiltersData() as $key => $value) {
+		$items = Filters::getSettingsFiltersData();
+
+		// Load addinal sidebar from addons.
+		$filterName = Filters::getFilterName(['admin', 'settings', 'config']);
+		if (\has_filter($filterName)) {
+			$items = \array_merge(
+				$items,
+				\apply_filters($filterName, [])
+			);
+		}
+
+		foreach ($items as $key => $value) {
 			$use = $value['use'] ?? '';
 
 			if (!$use) {
@@ -108,7 +119,8 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
 		];
 
-		foreach ($filtered as $key => $value) {
+		// Order output in the correct order.
+		foreach ($this->sortSettingsByOrder($filtered) as $key => $value) {
 			$output[] = [
 				'component' => 'layout',
 				'layoutContent' => [

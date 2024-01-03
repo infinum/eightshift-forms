@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Main;
 
+use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftLibs\Main\AbstractMain;
 
 /**
@@ -49,6 +50,6 @@ class Main extends AbstractMain
 	{
 		parent::registerServices();
 
-		\do_action('es_forms_loaded');
+		\do_action(Filters::FILTER_PREFIX . '_loaded');
 	}
 }
