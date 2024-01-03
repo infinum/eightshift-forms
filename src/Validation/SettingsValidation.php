@@ -21,7 +21,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsValidation class.
  */
-class SettingsValidation implements SettingInterface, SettingGlobalInterface, ServiceInterface
+class SettingsValidation implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.

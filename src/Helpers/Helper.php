@@ -304,6 +304,18 @@ class Helper
 	}
 
 	/**
+	 * Convert string from kebab to snake case.
+	 *
+	 * @param string $stringToConvert String to convert.
+	 *
+	 * @return string
+	 */
+	public static function kebabToSnakeCase(string $stringToConvert): string
+	{
+		return \str_replace('-', '_', $stringToConvert);
+	}
+
+	/**
 	 * Output the form type used by checking the post_content and extracting the block used for the integration.
 	 *
 	 * @param string $formId Form ID to check.
@@ -418,7 +430,7 @@ class Helper
 
 		$output['type'] = $type;
 		$output['typeFilter'] = $blockName['name'];
-		$output['label'] = Filters::getSettingsLabels($type, 'title');
+		$output['label'] = Filters::getSettingsLabels($type);
 		$output['icon'] = Helper::getProjectIcons($type);
 		$output['itemId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationId"] ?? '';
 		$output['innerId'] = $blocks['innerBlocks'][0]['attrs']["{$type}IntegrationInnerId"] ?? '';

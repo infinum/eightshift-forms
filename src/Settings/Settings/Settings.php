@@ -18,43 +18,8 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 /**
  * Settings class.
  */
-class Settings extends AbstractFormBuilder implements SettingsInterface
+class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 {
-	/**
-	 * Settings sidebar type - general.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_GENERAL = 'sidebar-general';
-
-	/**
-	 * Settings sidebar type - integration.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_INTEGRATION = 'sidebar-integration';
-
-	/**
-	 * Settings sidebar type - troubleshooting.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING = 'sidebar-troubleshooting';
-
-	/**
-	 * Settings sidebar type - miscellaneous.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS = 'sidebar-miscellaneous';
-
-	/**
-	 * Settings sidebar type - advanced.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_ADVANCED = 'sidebar-advanced';
-
 	/**
 	 * Setting local type name.
 	 *
@@ -108,7 +73,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 			// Skip integration forms if they are not used in the Block editor.
 			// Mailer should be available on all integrations because it can be used as a backup option.
 			if ($key !== SettingsMailer::SETTINGS_TYPE_KEY) {
-				if ($formId && $type === Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
+				if ($formId && $type === Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
 					continue;
 				}
 			}

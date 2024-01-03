@@ -39,7 +39,6 @@ use EightshiftForms\Integrations\Moments\MomentsClient;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Migration\SettingsMigration;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Documentation\SettingsDocumentation;
 use EightshiftForms\General\SettingsGeneral;
@@ -75,6 +74,17 @@ class Filters
 	 * @var string
 	 */
 	public const FILTER_PREFIX = 'es_forms';
+
+	/**
+	 * Settings internal types.
+	 *
+	 * @var string
+	 */
+	public const SETTINGS_INTERNAL_TYPE_GENERAL = 'sidebar-general';
+	public const SETTINGS_INTERNAL_TYPE_INTEGRATION = 'sidebar-integration';
+	public const SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING = 'sidebar-troubleshooting';
+	public const SETTINGS_INTERNAL_TYPE_MISCELLANEOUS = 'sidebar-miscellaneous';
+	public const SETTINGS_INTERNAL_TYPE_ADVANCED = 'sidebar-advanced';
 
 	/**
 	 * All public filters.
@@ -260,14 +270,14 @@ class Filters
 			// ------------------------------
 			// GENERAL.
 			// ------------------------------
-			Settings::SETTINGS_SIEDBAR_TYPE_GENERAL => [
+			self::SETTINGS_INTERNAL_TYPE_GENERAL => [
 				'labels' => [
 					'title' => \__('General', 'eightshift-forms'),
 				],
 			],
 			SettingsDashboard::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsDashboard::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+				'type' => self::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('Dashboard', 'eightshift-forms'),
 					'desc' => \__('Choose the features you want to use in your project.', 'eightshift-forms'),
@@ -276,14 +286,14 @@ class Filters
 			SettingsGeneral::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsGeneral::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsGeneral::FILTER_SETTINGS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+				'type' => self::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('General', 'eightshift-forms'),
 				],
 			],
 			SettingsSettings::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsSettings::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+				'type' => self::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('Settings', 'eightshift-forms'),
 					'desc' => \__('Disable default scripts and styles, configure behaviors after form submission.', 'eightshift-forms'),
@@ -292,7 +302,7 @@ class Filters
 			SettingsValidation::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsValidation::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+				'type' => self::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'cache' => [
 					Validator::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME,
 				],
@@ -303,14 +313,14 @@ class Filters
 			// ------------------------------
 			// ADVANCED.
 			// ------------------------------
-			Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED => [
+			self::SETTINGS_INTERNAL_TYPE_ADVANCED => [
 				'labels' => [
 					'title' => \__('Advanced', 'eightshift-forms'),
 				],
 			],
 			SettingsCaptcha::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
+				'type' => self::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 				'labels' => [
 					'title' => \__('Spam prevention', 'eightshift-forms'),
@@ -319,7 +329,7 @@ class Filters
 			],
 			SettingsGeolocation::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsGeolocation::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
+				'type' => self::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY,
 				'labels' => [
 					'title' => \__('Geolocation', 'eightshift-forms'),
@@ -328,7 +338,7 @@ class Filters
 			],
 			SettingsEnrichment::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsEnrichment::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
+				'type' => self::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsEnrichment::SETTINGS_ENRICHMENT_USE_KEY,
 				'labels' => [
 					'title' => \__('Enrichment', 'eightshift-forms'),
@@ -338,7 +348,7 @@ class Filters
 			SettingsBlocks::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsBlocks::FILTER_SETTINGS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_GENERAL,
+				'type' => self::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'countryOutput' => SettingsBlocks::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME,
 				'cache' => [
 					SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
@@ -349,7 +359,7 @@ class Filters
 			],
 			SettingsSecurity::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsSecurity::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
+				'type' => self::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsSecurity::SETTINGS_SECURITY_USE_KEY,
 				'labels' => [
 					'title' => \__('Security', 'eightshift-forms'),
@@ -359,7 +369,7 @@ class Filters
 			SettingsEntries::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsEntries::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsEntries::FILTER_SETTINGS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_ADVANCED,
+				'type' => self::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsEntries::SETTINGS_ENTRIES_USE_KEY,
 				'labels' => [
 					'title' => \__('Entries', 'eightshift-forms'),
@@ -369,7 +379,7 @@ class Filters
 			// ------------------------------
 			// INTEGRATIONS.
 			// ------------------------------
-			Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION => [
+			self::SETTINGS_INTERNAL_TYPE_INTEGRATION => [
 				'labels' => [
 					'title' => \__('Integrations', 'eightshift-forms'),
 				],
@@ -378,7 +388,7 @@ class Filters
 				'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsMailer::FILTER_SETTINGS_NAME,
 				'valid' => SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
 				'labels' => [
 					'title' => \__('Mailer', 'eightshift-forms'),
@@ -388,7 +398,7 @@ class Filters
 			SettingsMailchimp::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Mailchimp::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
 				'cache' => [
 					MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
@@ -402,7 +412,7 @@ class Filters
 			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Greenhouse::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY,
 				'cache' => [
 					GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
@@ -417,7 +427,7 @@ class Filters
 				'settingsGlobal' => SettingsHubspot::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
 				'fields' => Hubspot::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY,
 				'cache' => [
 					HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
@@ -432,7 +442,7 @@ class Filters
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsMailerlite::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Mailerlite::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY,
 				'cache' => [
 					MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
@@ -446,7 +456,7 @@ class Filters
 			SettingsGoodbits::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsGoodbits::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY,
 				'labels' => [
 					'title' => \__('Goodbits', 'eightshift-forms'),
@@ -463,7 +473,7 @@ class Filters
 						'map' => SettingsHubspot::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
 					],
 				],
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsClearbit::SETTINGS_CLEARBIT_USE_KEY,
 				'labels' => [
 					'title' => \__('Clearbit', 'eightshift-forms'),
@@ -474,7 +484,7 @@ class Filters
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => ActiveCampaign::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY,
 				'cache' => [
 					ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME,
@@ -488,7 +498,7 @@ class Filters
 			SettingsAirtable::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Airtable::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY,
 				'cache' => [
 					AirtableClient::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME,
@@ -502,7 +512,7 @@ class Filters
 			SettingsMoments::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Moments::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsMoments::SETTINGS_MOMENTS_USE_KEY,
 				'cache' => [
 					MomentsClient::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME,
@@ -517,7 +527,7 @@ class Filters
 			SettingsWorkable::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsWorkable::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Workable::FILTER_FORM_FIELDS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsWorkable::SETTINGS_WORKABLE_USE_KEY,
 				'cache' => [
 					WorkableClient::CACHE_WORKABLE_ITEMS_TRANSIENT_NAME,
@@ -531,7 +541,7 @@ class Filters
 			SettingsJira::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsJira::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsJira::FILTER_SETTINGS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsJira::SETTINGS_JIRA_USE_KEY,
 				'cache' => [
 					JiraClient::CACHE_JIRA_PROJECTS_TRANSIENT_NAME,
@@ -552,7 +562,7 @@ class Filters
 			SettingsPipedrive::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsPipedrive::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsPipedrive::FILTER_SETTINGS_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION,
+				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 				'cache' => [
 					PipedriveClient::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME,
@@ -572,7 +582,7 @@ class Filters
 			// ------------------------------
 			// MISCELLANEOUS.
 			// ------------------------------
-			Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS => [
+			self::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS => [
 				'labels' => [
 					'title' => \__('Miscellaneous', 'eightshift-forms'),
 					'desc' => \__('Settings for various miscellaneous options.', 'eightshift-forms'),
@@ -580,7 +590,7 @@ class Filters
 			],
 			SettingsWpml::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsWpml::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
+				'type' => self::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
 				'use' => SettingsWpml::SETTINGS_WPML_USE_KEY,
 				'labels' => [
 					'title' => \__('WPML', 'eightshift-forms'),
@@ -589,7 +599,7 @@ class Filters
 			],
 			SettingsCloudflare::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCloudflare::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS,
+				'type' => self::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
 				'use' => SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 				'labels' => [
 					'title' => \__('Cloudflare', 'eightshift-forms'),
@@ -599,7 +609,7 @@ class Filters
 			// ------------------------------
 			// TROUBLESHOOTING.
 			// ------------------------------
-			Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING => [
+			self::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING => [
 				'labels' => [
 					'title' => \__('Troubleshooting', 'eightshift-forms'),
 					'desc' => \__('Settings for various troubleshooting and debugging options.', 'eightshift-forms'),
@@ -607,7 +617,7 @@ class Filters
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+				'type' => self::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'labels' => [
 					'title' => \__('Cache', 'eightshift-forms'),
 					'desc' => \__('Force data re-fetch for certain integrations.', 'eightshift-forms'),
@@ -616,7 +626,7 @@ class Filters
 			SettingsFallback::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsFallback::FILTER_SETTINGS_GLOBAL_NAME,
 				'valid' => SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+				'type' => self::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsFallback::SETTINGS_FALLBACK_USE_KEY,
 				'labels' => [
 					'title' => \__('Fallback e-mails', 'eightshift-forms'),
@@ -625,7 +635,7 @@ class Filters
 			],
 			SettingsMigration::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsMigration::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+				'type' => self::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsMigration::SETTINGS_MIGRATION_USE_KEY,
 				'labels' => [
 					'title' => \__('Migration', 'eightshift-forms'),
@@ -635,7 +645,7 @@ class Filters
 			SettingsTransfer::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsTransfer::FILTER_SETTINGS_GLOBAL_NAME,
 				'valid' => SettingsTransfer::FILTER_SETTINGS_IS_VALID_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+				'type' => self::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsTransfer::SETTINGS_TRANSFER_USE_KEY,
 				'labels' => [
 					'title' => \__('Import/export', 'eightshift-forms'),
@@ -645,7 +655,7 @@ class Filters
 			SettingsDebug::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsDebug::FILTER_SETTINGS_GLOBAL_NAME,
 				'valid' => SettingsDebug::FILTER_SETTINGS_IS_VALID_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+				'type' => self::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsDebug::SETTINGS_DEBUG_USE_KEY,
 				'labels' => [
 					'title' => \__('Debug', 'eightshift-forms'),
@@ -654,7 +664,7 @@ class Filters
 			],
 			SettingsDocumentation::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsDocumentation::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Settings::SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING,
+				'type' => self::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'labels' => [
 					'title' => \__('Documentation', 'eightshift-forms'),
 					'desc' => \__('Need help? Interested in learning more? Find resources here.', 'eightshift-forms'),
@@ -821,15 +831,59 @@ class Filters
 	 */
 	public static function getFilterName(array $names): string
 	{
+		$filters = \wp_cache_get(self::FILTER_PREFIX . '_filters_public_list', self::FILTER_PREFIX);
+
+		// Cache filter names for faster access.
+		if (!$filters) {
+			$filters = self::getAllPublicFiltersNames(self::ALL_PUBLIC);
+
+			\wp_cache_add(self::FILTER_PREFIX . '_filters_public_list', $filters, self::FILTER_PREFIX, \HOUR_IN_SECONDS);
+		}
+
+		// List of all keys provided for the filter name.
 		$names = \array_map(
 			function ($item) {
-				return Helper::camelToSnakeCase($item);
+				return Helper::kebabToSnakeCase(Helper::camelToSnakeCase($item));
 			},
 			$names
 		);
 
+		// Create a string from array.
 		$names = \implode('_', $names);
 
-		return self::FILTER_PREFIX . "_{$names}";
+		// Create a full filter name.
+		$filterName = self::FILTER_PREFIX . "_{$names}";
+
+		if (!\in_array($filterName, $filters, true)) {
+			// translators: %s is the filter name.
+			\trigger_error(\sprintf(\esc_html__("You are using `%s` filter that doesn't exist. Please check the documentation for the correct filter name!", 'eightshift-forms'), \esc_attr($filterName)), \E_USER_WARNING); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+			return '';
+		}
+
+		return $filterName;
+	}
+
+	/**
+	 * Get list of all full filter names build from array.
+	 *
+	 * @param array<mixed> $data Array of data.
+	 * @param string $prefix Prefix to add to all filter names.
+	 *
+	 * @return array<int, string>
+	 */
+	private static function getAllPublicFiltersNames(array $data, string $prefix = ''): array
+	{
+		$output = [];
+
+		foreach ($data as $key => $value) {
+			if (\is_array($value)) {
+				$nestedKeys = self::getAllPublicFiltersNames($value, $prefix . Helper::kebabToSnakeCase(Helper::camelToSnakeCase($key)) . '_');
+				$output = \array_merge($output, $nestedKeys);
+			} else {
+				$output[] = self::FILTER_PREFIX . '_' . $prefix . Helper::kebabToSnakeCase(Helper::camelToSnakeCase($value));
+			}
+		}
+
+		return $output;
 	}
 }

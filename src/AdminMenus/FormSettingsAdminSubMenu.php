@@ -13,7 +13,7 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsInterface;
+use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -32,16 +32,16 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable for all settings.
 	 *
-	 * @var SettingsInterface
+	 * @var SettingsBuilderInterface
 	 */
 	protected $settings;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsInterface $settings Settings data for injecting the form.
+	 * @param SettingsBuilderInterface $settings Settings builder data for injecting the form.
 	 */
-	public function __construct(SettingsInterface $settings)
+	public function __construct(SettingsBuilderInterface $settings)
 	{
 		$this->settings = $settings;
 	}

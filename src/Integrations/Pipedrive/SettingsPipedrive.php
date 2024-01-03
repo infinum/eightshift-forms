@@ -23,7 +23,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsPipedrive class.
  */
-class SettingsPipedrive implements ServiceInterface, SettingGlobalInterface, SettingInterface
+class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.

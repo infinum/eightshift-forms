@@ -13,7 +13,7 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Dashboard\SettingsDashboard;
-use EightshiftForms\Settings\Settings\SettingsInterface;
+use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -24,16 +24,16 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable for global settings.
 	 *
-	 * @var SettingsInterface
+	 * @var SettingsBuilderInterface
 	 */
 	protected $settings;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsInterface $settings Inject form global settings data.
+	 * @param SettingsBuilderInterface $settings Inject form global settings data.
 	 */
-	public function __construct(SettingsInterface $settings)
+	public function __construct(SettingsBuilderInterface $settings)
 	{
 		$this->settings = $settings;
 	}

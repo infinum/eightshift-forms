@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 /**
- * Interface for SettingsInterface
+ * Interface for SettingsBuilderInterface
  */
-interface SettingsInterface
+interface SettingsBuilderInterface
 {
 	/**
 	 * Get all settings sidebar array for building settings page.

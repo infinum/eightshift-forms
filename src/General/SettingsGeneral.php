@@ -21,7 +21,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsGeneral class.
  */
-class SettingsGeneral implements SettingInterface, SettingGlobalInterface, ServiceInterface
+class SettingsGeneral implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.

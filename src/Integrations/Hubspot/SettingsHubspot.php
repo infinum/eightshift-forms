@@ -23,7 +23,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsHubspot class.
  */
-class SettingsHubspot implements SettingInterface, SettingGlobalInterface, ServiceInterface
+class SettingsHubspot implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.

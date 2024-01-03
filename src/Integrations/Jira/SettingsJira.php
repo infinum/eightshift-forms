@@ -23,7 +23,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsJira class.
  */
-class SettingsJira implements ServiceInterface, SettingGlobalInterface, SettingInterface
+class SettingsJira implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.

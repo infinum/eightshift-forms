@@ -11,13 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Entries;
 
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsEntries class.
  */
-class SettingsEntries implements SettingGlobalInterface, ServiceInterface
+class SettingsEntries implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.

@@ -29,7 +29,6 @@ use EightshiftForms\Migration\MigrationHelper;
 use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -182,7 +181,7 @@ class MigrationRoute extends AbstractBaseRoute
 		// Migrate each integration fallback.
 		foreach (Filters::getSettingsFiltersData() as $key => $value) {
 			$type = $value['type'] ?? '';
-			if ($type !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+			if ($type !== Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 				continue;
 			}
 

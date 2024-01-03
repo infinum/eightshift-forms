@@ -15,6 +15,7 @@ use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -22,7 +23,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsBlocks class.
  */
-class SettingsBlocks implements SettingGlobalInterface, ServiceInterface
+class SettingsBlocks implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.

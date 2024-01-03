@@ -14,7 +14,6 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 
@@ -517,7 +516,7 @@ trait SettingsHelper
 
 			$type = $value['type'] ?? '';
 
-			if ($type !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+			if ($type !== Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 				continue;
 			}
 

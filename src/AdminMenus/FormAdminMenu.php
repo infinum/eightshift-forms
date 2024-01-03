@@ -17,7 +17,6 @@ use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Listing\FormListingInterface;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
@@ -798,7 +797,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		foreach (Filters::getSettingsFiltersData() as $key => $value) {
 			$type = $value['type'] ?? '';
 
-			if ($type !== Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION) {
+			if ($type !== Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 				continue;
 			}
 

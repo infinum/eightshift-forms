@@ -171,7 +171,6 @@ class EntriesHelper
 			\wp_cache_add($formId, $output, self::TABLE_NAME . 'entries_count');
 		}
 
-
 		return $output;
 	}
 

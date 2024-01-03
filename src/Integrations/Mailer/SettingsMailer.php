@@ -21,7 +21,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsMailer class.
  */
-class SettingsMailer implements SettingInterface, SettingGlobalInterface, ServiceInterface
+class SettingsMailer implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Use general helper trait.
