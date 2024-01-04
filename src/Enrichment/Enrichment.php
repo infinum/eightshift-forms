@@ -12,18 +12,13 @@ namespace EightshiftForms\Enrichment;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\FiltersOuputMock;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 
 /**
  * Enrichment class.
  */
 class Enrichment implements EnrichmentInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Use general helper trait.
 	 */
@@ -74,7 +69,7 @@ class Enrichment implements EnrichmentInterface
 		}
 
 		$tags = [];
-		$tagsAdditional = $this->getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1);
+		$tagsAdditional = SettingsHelper::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1);
 
 		if ($tagsAdditional) {
 			$tagsAdditional = \str_replace(' ', \PHP_EOL, $tagsAdditional);
@@ -90,8 +85,8 @@ class Enrichment implements EnrichmentInterface
 			$tags = $tagsAdditional;
 		}
 
-		$expiration = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY);
-		$expirationPrefill = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY);
+		$expiration = SettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY);
+		$expirationPrefill = SettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY);
 
 		$fullAllowed = [
 			...$tags,
@@ -100,7 +95,7 @@ class Enrichment implements EnrichmentInterface
 
 		$map = [];
 		foreach ($fullAllowed as $value) {
-			$itemValue = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $value);
+			$itemValue = SettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $value);
 
 			if ($itemValue) {
 				$itemValue = \str_replace(' ', '', $itemValue);

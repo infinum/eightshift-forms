@@ -30,7 +30,7 @@ use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsSettings;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -42,11 +42,6 @@ use WP_REST_Request;
  */
 class MigrationRoute extends AbstractBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Use API helper trait.
 	 */
@@ -170,12 +165,12 @@ class MigrationRoute extends AbstractBaseRoute
 		];
 
 		// Migrate global fallback.
-		$globalFallback = $this->getOptionValue($config['options']['old']);
+		$globalFallback = SettingsHelper::getOptionValue($config['options']['old']);
 
 		if ($globalFallback) {
-			\update_option($this->getOptionName($config['options']['new']), \maybe_unserialize($globalFallback));
-			\update_option($this->getOptionName($config['options']['use']), \maybe_unserialize($config['options']['use']));
-			\delete_option($this->getOptionName($config['options']['old']));
+			\update_option(SettingsHelper::getOptionName($config['options']['new']), \maybe_unserialize($globalFallback));
+			\update_option(SettingsHelper::getOptionName($config['options']['use']), \maybe_unserialize($config['options']['use']));
+			\delete_option(SettingsHelper::getOptionName($config['options']['old']));
 		}
 
 		// Migrate each integration fallback.
@@ -185,11 +180,11 @@ class MigrationRoute extends AbstractBaseRoute
 				continue;
 			}
 
-			$globalIntegrationFallback = $this->getOptionValue($config['options']['old'] . '-' . $key);
+			$globalIntegrationFallback = SettingsHelper::getOptionValue($config['options']['old'] . '-' . $key);
 
 			if ($globalIntegrationFallback) {
-				\update_option($this->getOptionName($config['options']['new'] . '-' . $key), \maybe_unserialize($globalIntegrationFallback));
-				\delete_option($this->getOptionName($config['options']['old'] . '-' . $key));
+				\update_option(SettingsHelper::getOptionName($config['options']['new'] . '-' . $key), \maybe_unserialize($globalIntegrationFallback));
+				\delete_option(SettingsHelper::getOptionName($config['options']['old'] . '-' . $key));
 			}
 		}
 
@@ -203,11 +198,11 @@ class MigrationRoute extends AbstractBaseRoute
 		];
 
 		foreach ($configDelimiter as $key) {
-			$option = $this->getOptionValue($key);
+			$option = SettingsHelper::getOptionValue($key);
 			if ($option) {
 				$option = \explode(', ', $option);
 				$option = \implode(AbstractBaseRoute::DELIMITER, $option);
-				\update_option($this->getOptionName($key), \maybe_unserialize($option));
+				\update_option(SettingsHelper::getOptionName($key), \maybe_unserialize($option));
 			}
 		}
 
@@ -269,7 +264,7 @@ class MigrationRoute extends AbstractBaseRoute
 			$use = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type]['use'] ?? '';
 
 			// Skip deactivated integrations.
-			if ($this->isOptionCheckboxChecked($use, $use)) {
+			if (SettingsHelper::isOptionCheckboxChecked($use, $use)) {
 				switch ($type) {
 					case SettingsHubspot::SETTINGS_TYPE_KEY:
 						$preCheck = $this->updateFormIntegration2To3Forms($type, 'item-id', '', $id, $content);
@@ -342,8 +337,8 @@ class MigrationRoute extends AbstractBaseRoute
 						break;
 				}
 
-				\delete_option($this->getOptionName("{$type}-clearbit-email-field"));
-				\delete_option($this->getOptionName("{$type}-integration-fields"));
+				\delete_option(SettingsHelper::getOptionName("{$type}-clearbit-email-field"));
+				\delete_option(SettingsHelper::getOptionName("{$type}-integration-fields"));
 			}
 		}
 

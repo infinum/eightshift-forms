@@ -15,7 +15,6 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Listing\FormListingInterface;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Admin_Bar;
@@ -25,11 +24,6 @@ use WP_Admin_Bar;
  */
 class FormAdminBarMenu implements ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Instance variable for listing data.
 	 *

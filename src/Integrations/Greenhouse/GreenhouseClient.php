@@ -15,7 +15,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\General\General;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -27,11 +27,6 @@ use EightshiftForms\Validation\Validator;
  */
 class GreenhouseClient implements ClientInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Use API helper trait.
 	 */
@@ -212,7 +207,7 @@ class GreenhouseClient implements ClientInterface
 			$paramsFiles,
 			$itemId,
 			$formId,
-			$this->isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
+			SettingsHelper::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
 			true
 		);
 
@@ -460,7 +455,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getBoardToken(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getBoardTokenGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY)['value'];
+		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getBoardTokenGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY)['value'];
 	}
 
 	/**
@@ -470,6 +465,6 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return \base64_encode($this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)['value']); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return \base64_encode(SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)['value']); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 }

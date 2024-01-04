@@ -11,9 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Dashboard;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -21,11 +22,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use dashboard helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter settings key.
 	 */
@@ -69,7 +65,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				continue;
 			}
 
-			$checked = $this->isOptionCheckboxChecked($use, $use);
+			$checked = SettingsHelper::isOptionCheckboxChecked($use, $use);
 
 			$labels = $value['labels'] ?? [];
 
@@ -87,7 +83,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 					] : [],
 					[
 						'component' => 'checkboxes',
-						'checkboxesName' => $this->getOptionName($use),
+						'checkboxesName' => SettingsHelper::getOptionName($use),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
@@ -107,11 +103,11 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 		}
 
 		$output = [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 		];
 
 		// Order output in the correct order.
-		foreach ($this->sortSettingsByOrder($filtered) as $key => $value) {
+		foreach (SettingsHelper::sortSettingsByOrder($filtered) as $key => $value) {
 			$output[] = [
 				'component' => 'layout',
 				'layoutContent' => [

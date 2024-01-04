@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
@@ -146,7 +147,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 				$clearbitResponse = $this->clearbitClient->getApplication(
 					$email,
 					$params,
-					$this->getOptionValueGroup(\apply_filters(Filters::FILTER_SETTINGS_DATA, [])[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map'] ?? []),
+					SettingsHelper::getOptionValueGroup(\apply_filters(Filters::FILTER_SETTINGS_DATA, [])[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map'] ?? []),
 					$itemId,
 					$formId
 				);

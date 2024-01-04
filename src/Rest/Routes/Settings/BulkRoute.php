@@ -14,7 +14,6 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Transfer\TransferInterface;
 use WP_REST_Request;
 
@@ -23,11 +22,6 @@ use WP_REST_Request;
  */
 class BulkRoute extends AbstractBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */

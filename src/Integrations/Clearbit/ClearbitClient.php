@@ -13,7 +13,7 @@ namespace EightshiftForms\Integrations\Clearbit;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
@@ -22,11 +22,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
  */
 class ClearbitClient implements ClearbitClientInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Helper trait.
 	 */
@@ -337,6 +332,6 @@ class ClearbitClient implements ClearbitClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
+		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
 	}
 }

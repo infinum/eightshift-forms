@@ -15,7 +15,6 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -25,11 +24,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 class SettingsSubmitRoute extends AbstractFormSubmit
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Create a new instance that injects classes
 	 *

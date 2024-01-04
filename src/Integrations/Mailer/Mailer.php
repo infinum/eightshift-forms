@@ -14,7 +14,7 @@ use CURLFile;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use Parsedown;
 
@@ -23,11 +23,6 @@ use Parsedown;
  */
 class Mailer implements MailerInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Send email function for form ID.
 	 *
@@ -57,8 +52,8 @@ class Mailer implements MailerInterface
 			$this->getTemplate('subject', $fields, $formId, $subject),
 			$this->getTemplate('message', $fields, $formId, $template, $responseFields),
 			$this->getHeader(
-				$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
-				$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
+				SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+				SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
 			),
 			$this->prepareFiles($files)
 		);
@@ -134,8 +129,8 @@ class Mailer implements MailerInterface
 			}
 		}
 
-		$to = $this->getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
-		$cc = $this->getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration);
+		$to = SettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$cc = SettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration);
 		$headers = [
 			$this->getType()
 		];

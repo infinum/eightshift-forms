@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
 use WP_REST_Request;
 
 /**
@@ -20,11 +19,6 @@ use WP_REST_Request;
  */
 class ExportRoute extends AbstractBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */

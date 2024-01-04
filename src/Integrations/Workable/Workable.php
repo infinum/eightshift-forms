@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Workable;
 
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\ClientInterface;
@@ -22,11 +22,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Workable extends AbstractFormBuilder implements MapperInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter form fields.
 	 *
@@ -224,7 +219,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 					}
 					break;
 				case 'file':
-					$maxFileSize = $this->getOptionValueWithFallback(SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT);
+					$maxFileSize = SettingsHelper::getOptionValueWithFallback(SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT);
 
 					$output[] = [
 						'component' => 'file',

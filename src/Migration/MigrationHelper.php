@@ -13,7 +13,7 @@ namespace EightshiftForms\Migration;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -21,11 +21,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 trait MigrationHelper
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Update mailer forms.
 	 *
@@ -95,8 +90,8 @@ trait MigrationHelper
 			'data' => [],
 		];
 
-		$itemId = $this->getSettingValue("{$type}-{$itemIdKey}", $id);
-		$innerId = $this->getSettingValue("{$type}-{$innerIdKey}", $id);
+		$itemId = SettingsHelper::getSettingValue("{$type}-{$itemIdKey}", $id);
+		$innerId = SettingsHelper::getSettingValue("{$type}-{$innerIdKey}", $id);
 		$blocks = \parse_blocks($content);
 		$integrationFields = $this->prepareIntegrationFields2To3Forms($type, $id);
 
@@ -230,7 +225,7 @@ trait MigrationHelper
 	{
 		$output = [];
 
-		$integrationFields = $this->getSettingValueGroup("{$type}-integration-fields", $id);
+		$integrationFields = SettingsHelper::getSettingValueGroup("{$type}-integration-fields", $id);
 
 		if (!$integrationFields) {
 			return [];

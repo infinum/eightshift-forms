@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\CronJobs;
 
 use EightshiftForms\Security\SettingsSecurity;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -19,11 +19,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Security implements ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Job name.
 	 *
@@ -83,6 +78,6 @@ class Security implements ServiceInterface
 	 */
 	public function getJobCallback()
 	{
-		\delete_option($this->getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY));
+		\delete_option(SettingsHelper::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY));
 	}
 }

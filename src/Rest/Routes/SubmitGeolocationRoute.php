@@ -13,7 +13,6 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Throwable;
 use WP_REST_Request;
@@ -23,11 +22,6 @@ use WP_REST_Request;
  */
 class SubmitGeolocationRoute extends AbstractBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */

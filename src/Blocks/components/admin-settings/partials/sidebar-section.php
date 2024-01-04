@@ -17,7 +17,7 @@ if (!$items) {
 	return $output;
 }
 
-$data = \apply_filters(Filters::FILTER_SETTINGS_DATA, []);
+$data = apply_filters(Filters::FILTER_SETTINGS_DATA, []);
 
 $sectionClass = $attributes['sectionClass'] ?? '';
 $adminSettingsType = $attributes['adminSettingsType'] ?? '';

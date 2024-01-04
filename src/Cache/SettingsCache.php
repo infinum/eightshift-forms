@@ -11,8 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Cache;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -21,11 +22,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsCache implements SettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -71,7 +67,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 
 				$isUsedKey = $value['use'] ?? '';
 
-				if ($cache && $isUsedKey && $this->isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+				if ($cache && $isUsedKey && SettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 					return [
 						'component' => 'card-inline',
 						'cardInlineTitle' => $value['labels']['title'] ?? '',
@@ -96,7 +92,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 		)));
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',

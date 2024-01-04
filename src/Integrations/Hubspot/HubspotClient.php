@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -29,11 +29,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 class HubspotClient implements HubspotClientInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Use API helper trait.
 	 */
@@ -274,7 +269,7 @@ class HubspotClient implements HubspotClientInterface
 			$paramsFiles,
 			$itemId,
 			$formId,
-			$this->isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)
+			SettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
@@ -374,7 +369,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function postFileMedia(string $file, string $formId): string
 	{
-		$folder = $this->getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
+		$folder = SettingsHelper::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
 
 		if (!$folder) {
 			$folder = self::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY;
@@ -896,7 +891,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
+		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
 	}
 
 	/**

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Form;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as HelpersComponents;
 
 /**
@@ -19,11 +18,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as HelpersComponents
  */
 abstract class AbstractFormBuilder
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Nested keys for inner blocks
 	 *

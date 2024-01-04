@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
+use EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -19,11 +20,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -62,7 +58,7 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_CLOUDFLARE_USE_KEY, self::SETTINGS_CLOUDFLARE_USE_KEY);
+		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLOUDFLARE_USE_KEY, self::SETTINGS_CLOUDFLARE_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -78,13 +74,13 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_CLOUDFLARE_USE_KEY, self::SETTINGS_CLOUDFLARE_USE_KEY)) {
-			return $this->getSettingOutputNoActiveFeature();
+		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLOUDFLARE_USE_KEY, self::SETTINGS_CLOUDFLARE_USE_KEY)) {
+			return SettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			$this->settingMiscDisclamer(),
+			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelper::getMiscDisclamer(),
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Features affected by Cloudflare are:', 'eightshift-forms'),

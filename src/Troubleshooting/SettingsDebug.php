@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
+use EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -19,11 +20,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -82,7 +78,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
+		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -98,12 +94,12 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY)) {
-			return $this->getSettingOutputNoActiveFeature();
+		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY)) {
+			return SettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				'introSubtitle' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
@@ -117,12 +113,12 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => '',
-						'checkboxesName' => $this->getOptionName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
+						'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Bypass validation', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -135,7 +131,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Bypass captcha', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -148,7 +144,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__("Don't clear form after submission", 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -161,7 +157,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Developer mode', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -179,7 +175,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Stop form syncing', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -192,7 +188,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Skip internal cache', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CACHE_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -205,7 +201,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Output Query Monitor log', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_QM_LOG, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_QM_LOG, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_QM_LOG,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -218,7 +214,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Enable disabled fields admin overrides', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -244,6 +240,6 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 			return false;
 		}
 
-		return $this->isOptionCheckboxChecked($settingKey, self::SETTINGS_DEBUG_DEBUGGING_KEY);
+		return SettingsHelper::isOptionCheckboxChecked($settingKey, self::SETTINGS_DEBUG_DEBUGGING_KEY);
 	}
 }

@@ -72,7 +72,7 @@ $placeholder = $countryPlaceholder ? Components::render(
 ) : '';
 
 $options = [];
-$filterName = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'];
+$filterName = apply_filters(Filters::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $countryFormPostId);

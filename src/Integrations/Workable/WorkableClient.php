@@ -14,7 +14,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
@@ -30,11 +30,6 @@ class WorkableClient implements ClientInterface
 	 * Use trait Upload_Helper inside class.
 	 */
 	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
 
 	/**
 	 * Use API helper trait.
@@ -191,7 +186,7 @@ class WorkableClient implements ClientInterface
 			$paramsFiles,
 			$itemId,
 			$formId,
-			$this->isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, SettingsWorkable::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY)
+			SettingsHelper::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, SettingsWorkable::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
@@ -540,7 +535,7 @@ class WorkableClient implements ClientInterface
 	 */
 	private function getSubdomain(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), SettingsWorkable::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
+		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), SettingsWorkable::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
 	}
 
 	/**
@@ -550,7 +545,7 @@ class WorkableClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), SettingsWorkable::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
+		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), SettingsWorkable::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
 	}
 
 	/**

@@ -14,6 +14,7 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Helpers\SettingsHelper;
 
 /**
  * Settings class.
@@ -71,7 +72,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			$isUsedKey = $value['use'] ?? '';
 
 			// Bailout if used key is missing.
-			if ($isUsedKey && !$this->isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+			if ($isUsedKey && !SettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 				continue;
 			}
 
@@ -89,7 +90,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		}
 
 		// Return all settings data with the correct order.
-		return $this->sortSettingsByOrder($output);
+		return SettingsHelper::sortSettingsByOrder($output);
 	}
 
 	/**

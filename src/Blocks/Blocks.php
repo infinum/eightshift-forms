@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Blocks;
 
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
 use WP_Block_Editor_Context;
 
@@ -20,11 +19,6 @@ use WP_Block_Editor_Context;
  */
 class Blocks extends AbstractBlocks
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Blocks unique string filter name constant.
 	 *

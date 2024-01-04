@@ -11,9 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Labels\Labels;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -23,11 +24,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsValidation implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter settings key.
 	 */
@@ -107,7 +103,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 		$key = "{$formType}Success";
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -117,10 +113,10 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingName($key),
+								'inputName' => SettingsHelper::getSettingName($key),
 								'inputFieldLabel' => \ucfirst($key),
 								'inputPlaceholder' => $this->labels->getLabels()[$key],
-								'inputValue' => $this->getSettingValue($key, $formId),
+								'inputValue' => SettingsHelper::getSettingValue($key, $formId),
 							],
 						],
 					],
@@ -157,15 +153,15 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 
 			$messagesOutput[] = [
 				'component' => 'input',
-				'inputName' => $this->getOptionName($key),
+				'inputName' => SettingsHelper::getOptionName($key),
 				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
-				'inputValue' => $this->getOptionValue($key),
+				'inputValue' => SettingsHelper::getOptionValue($key),
 			];
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -176,12 +172,12 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getOptionName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+								'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use top level domain validation on all email fields', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+										'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
 										'checkboxValue' => self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -194,7 +190,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => $this->getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaName' => SettingsHelper::getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Custom validation patterns', 'eightshift-forms'),
@@ -208,7 +204,7 @@ class SettingsValidation implements SettingGlobalInterface, SettingInterface, Se
 									<ul>
 									%2\$s
 									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
-								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
+								'textareaValue' => SettingsHelper::getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
 							],
 						],
 					],

@@ -729,7 +729,7 @@ class Filters implements ServiceInterface
 
 		// Populate additional items from filters, used for add-ons.
 		$filterName = Helper::getFilterName(['admin', 'settings', 'data']);
-		
+
 		if (\has_filter($filterName)) {
 			foreach (\apply_filters($filterName, []) as $keyItem => $valueItem) {
 				if (

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
@@ -37,11 +36,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * Use trait Upload_Helper inside class.
 	 */
 	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
 
 	/**
 	 * Use general helper trait.

@@ -13,11 +13,11 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\IntegrationsHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Listing\FormListingInterface;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
@@ -26,11 +26,6 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
  */
 class FormAdminMenu extends AbstractAdminMenu
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Instance variable for listing data.
 	 *
@@ -792,7 +787,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			]
 		);
 
-		$activeIntegration = \array_flip($this->getActiveIntegrations());
+		$activeIntegration = \array_flip(IntegrationsHelper::getActiveIntegrations());
 
 		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			$type = $value['type'] ?? '';

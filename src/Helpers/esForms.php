@@ -8,7 +8,7 @@
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -24,14 +24,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 function esFormsGetFormIdByName(string $formId): string
 {
-	$class = (
-		new class() // phpcs:ignore
-		{
-			use SettingsHelper;
-		}
-	);
-
-	return $class->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+	return SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
 }
 
 /**

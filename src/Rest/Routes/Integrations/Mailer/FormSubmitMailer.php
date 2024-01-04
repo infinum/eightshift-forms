@@ -14,18 +14,13 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 
 /**
  * Class FormSubmitMailer
  */
 class FormSubmitMailer implements FormSubmitMailerInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Use API helper trait.
 	 */
@@ -92,9 +87,9 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		// Send email.
 		$response = $this->mailer->sendFormEmail(
 			$formId,
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
+			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
+			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
 			$params,
 			$responseTags
@@ -149,7 +144,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			return false;
 		}
 
-		$senderEmail = $params[$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId)]['value'] ?? '';
+		$senderEmail = $params[SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId)]['value'] ?? '';
 
 		if (!$senderEmail) {
 			return false;
@@ -159,8 +154,8 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		return $this->mailer->sendFormEmail(
 			$formId,
 			$senderEmail,
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 			$files,
 			$params
 		);

@@ -12,7 +12,7 @@ namespace EightshiftForms\Settings\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\IntegrationsHelper;
 use WP_Query;
 
 /**
@@ -20,11 +20,6 @@ use WP_Query;
  */
 class FormsListing implements FormListingInterface
 {
-	/**
-	 * Use dashboard helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Get Forms List.
 	 *
@@ -65,7 +60,7 @@ class FormsListing implements FormListingInterface
 				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
 				'entriesLink' => Helper::getFormsEntriesPageUrl((string) $id),
 				'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
-				'activeIntegration' => $this->getIntegrationDetailsById((string) $id),
+				'activeIntegration' => IntegrationsHelper::getIntegrationDetailsById((string) $id),
 				'useSync' => true,
 			];
 		}

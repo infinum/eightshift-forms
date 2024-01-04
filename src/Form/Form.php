@@ -16,7 +16,7 @@ use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -25,11 +25,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Form extends AbstractFormBuilder implements ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Use filters mock helper trait.
 	 */
@@ -106,7 +101,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Custom form name.
-		$customFormName = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+		$customFormName = SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
 		if ($customFormName) {
 			$attributes["{$prefix}CustomName"] = $customFormName;
 		}
@@ -117,10 +112,10 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		if (\has_filter($filterName)) {
 			$attributes["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
 		} else {
-			$attributes["{$prefix}PhoneSync"] = !$this->isSettingCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
+			$attributes["{$prefix}PhoneSync"] = !SettingsHelper::isSettingCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
 		}
 
-		$attributes["{$prefix}PhoneDisablePicker"] = $this->isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
+		$attributes["{$prefix}PhoneDisablePicker"] = SettingsHelper::isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
 
 		return $attributes;
 	}
@@ -150,7 +145,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
 		$formsCustomName = Components::checkAttr('formsCustomName', $attributes, $manifest);
 
-		$checkStyleEnqueue = $this->isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
+		$checkStyleEnqueue = SettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
 		// Iterate blocks an children by passing them form ID.
 		foreach ($blocks as $block) {

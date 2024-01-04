@@ -22,7 +22,6 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
-use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use RecursiveArrayIterator;
@@ -33,36 +32,6 @@ use RecursiveIteratorIterator;
  */
 class Helper
 {
-	/**
-	 * Set locale depending on default locale or hook override.
-	 *
-	 * @return string
-	 */
-	public static function getLocale(): string
-	{
-		$locale = '';
-		$localeInit = '';
-
-		$filterName = Helper::getFilterName(['general', 'locale']);
-		if (\has_filter($filterName)) {
-			$locale = \apply_filters($filterName, $localeInit);
-		}
-
-		$useWpml = \apply_filters(SettingsWpml::FILTER_SETTINGS_IS_VALID_NAME, []);
-		if ($useWpml) {
-			$defaultLanguage = \apply_filters('wpml_default_language', null);
-			$currentLanguage = \apply_filters('wpml_current_language', null);
-
-			if ($defaultLanguage === $currentLanguage) {
-				$locale = $localeInit;
-			} else {
-				$locale = $currentLanguage;
-			}
-		}
-
-		return $locale;
-	}
-
 	/**
 	 * Method that returns listing page url.
 	 *

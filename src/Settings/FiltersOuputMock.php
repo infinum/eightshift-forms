@@ -12,17 +12,13 @@ namespace EightshiftForms\Settings;
 
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\SettingsHelper;
 
 /**
  * FiltersOuputMock trait.
  */
 trait FiltersOuputMock
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Return enrichment manual map data filter output.
 	 *
@@ -104,7 +100,7 @@ trait FiltersOuputMock
 		}
 
 		$data = [
-			...$this->getOptionValueGroup(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
+			...SettingsHelper::getOptionValueGroup(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
 			...$filterData,
 		];
 
@@ -129,7 +125,7 @@ trait FiltersOuputMock
 		$data = '';
 		$filterUsed = false;
 
-		$data = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		$data = SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
 
 		$filterName = Helper::getFilterName(['block', 'form', 'successRedirectVariation']);
 		if (\has_filter($filterName)) {
@@ -162,13 +158,13 @@ trait FiltersOuputMock
 		$filterUsed = false;
 
 		// Find global settings per integration.
-		$dataGlobal = $this->getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
+		$dataGlobal = SettingsHelper::getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
 
 		// Populate final output.
 		$data = $dataGlobal;
 
 		// Find local settings for form.
-		$dataLocal = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
+		$dataLocal = SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
 
 		if ($dataLocal) {
 			$data = $dataLocal;
@@ -210,7 +206,7 @@ trait FiltersOuputMock
 	{
 		$filterUsed = false;
 
-		$data = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+		$data = SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
 
 		$filterName = Helper::getFilterName(['block', 'form', 'trackingEventName']);
 		if (\has_filter($filterName)) {
@@ -245,9 +241,9 @@ trait FiltersOuputMock
 		$filterUsed = false;
 
 		$filterName = Helper::getFilterName(['block', 'form', 'trackingAdditionalData']);
-		$trackingAdditionalData = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
-		$trackingAdditionalDataSuccess = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
-		$trackingAdditionalDataError = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
+		$trackingAdditionalData = SettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
+		$trackingAdditionalDataSuccess = SettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
+		$trackingAdditionalDataError = SettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
 		$trackingAdditionalDataFilterValue = \has_filter($filterName) ? \apply_filters($filterName, $type, $formId) : [];
 
 		if ($trackingAdditionalData || $trackingAdditionalDataFilterValue || $trackingAdditionalDataSuccess || $trackingAdditionalDataError) {

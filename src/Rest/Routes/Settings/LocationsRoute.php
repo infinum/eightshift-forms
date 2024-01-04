@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
@@ -21,11 +20,6 @@ use WP_REST_Request;
  */
 class LocationsRoute extends AbstractBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */

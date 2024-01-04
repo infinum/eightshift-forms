@@ -12,7 +12,6 @@ use EightshiftForms\Form\Form;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');

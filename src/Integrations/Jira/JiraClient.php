@@ -16,7 +16,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
@@ -26,11 +26,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
  */
 class JiraClient implements JiraClientInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Helper trait.
 	 */
@@ -201,7 +196,7 @@ class JiraClient implements JiraClientInterface
 			[],
 			'',
 			$formId,
-			$this->isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)
+			SettingsHelper::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
@@ -231,7 +226,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	public function getBaseUrlOutputPrefix(): string
 	{
-		$output = $this->getOptionValue(SettingsJira::SETTINGS_JIRA_API_BOARD_URL_KEY);
+		$output = SettingsHelper::getOptionValue(SettingsJira::SETTINGS_JIRA_API_BOARD_URL_KEY);
 
 		if (!$output) {
 			$output = $this->getApiBoard();
@@ -304,7 +299,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	public function isSelfHosted(): bool
 	{
-		return (bool) $this->getOptionValue(SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY);
+		return (bool) SettingsHelper::getOptionValue(SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY);
 	}
 
 	/**
@@ -486,18 +481,18 @@ class JiraClient implements JiraClientInterface
 	{
 		$output = [];
 
-		$selectedProject = $this->getSettingValue(SettingsJira::SETTINGS_JIRA_PROJECT_KEY, $formId);
+		$selectedProject = SettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
 		if (!$selectedProject) {
 			return $output;
 		}
 
-		$selectedIssueType = $this->getSettingValue(SettingsJira::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
+		$selectedIssueType = SettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
 		if (!$selectedIssueType) {
 			return $output;
 		}
 
-		$title = $this->getSettingValue(SettingsJira::SETTINGS_JIRA_TITLE_KEY, $formId);
+		$title = SettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_TITLE_KEY, $formId);
 		if (!$title) {
 			return $output;
 		}
@@ -516,7 +511,7 @@ class JiraClient implements JiraClientInterface
 
 		$formTitle = \get_the_title((int) $formId);
 
-		$additionalDescription = $this->getSettingValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
+		$additionalDescription = SettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
 
 		$output = [
 			'project' => [
@@ -536,7 +531,7 @@ class JiraClient implements JiraClientInterface
 			];
 
 			// Standard fields output.
-			if (!$this->getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			if (!SettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
 				$contentOutput = [];
 
 				$i = 0;
@@ -671,7 +666,7 @@ class JiraClient implements JiraClientInterface
 			}
 
 			// Custom fields maps output.
-			$mapParams = $this->getSettingValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
+			$mapParams = SettingsHelper::getSettingValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
 			if ($mapParams) {
 				foreach ($mapParams as $key => $value) {
 					if (!$value) {
@@ -687,7 +682,7 @@ class JiraClient implements JiraClientInterface
 			$descriptionOutput = \sprintf(\__('Data populated from the WordPress "%1$s" form: %2$s %2$s', 'eightshift-forms'), \esc_html($formTitle), \PHP_EOL);
 
 			// Standard fields output.
-			if (!$this->getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			if (!SettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
 				$i = 0;
 				foreach ($params as $param) {
 					$value = $param['value'] ?? '';
@@ -816,7 +811,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyJira(), SettingsJira::SETTINGS_JIRA_API_KEY_KEY)['value'];
+		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyJira(), SettingsJira::SETTINGS_JIRA_API_KEY_KEY)['value'];
 	}
 
 	/**
@@ -826,7 +821,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiBoard(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiBoardJira(), SettingsJira::SETTINGS_JIRA_API_BOARD_KEY)['value'];
+		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiBoardJira(), SettingsJira::SETTINGS_JIRA_API_BOARD_KEY)['value'];
 	}
 
 	/**
@@ -836,6 +831,6 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiUser(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiUserJira(), SettingsJira::SETTINGS_JIRA_API_USER_KEY)['value'];
+		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUserJira(), SettingsJira::SETTINGS_JIRA_API_USER_KEY)['value'];
 	}
 }
