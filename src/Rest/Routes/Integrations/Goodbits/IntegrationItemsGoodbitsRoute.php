@@ -12,7 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Goodbits;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
-use EightshiftForms\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 

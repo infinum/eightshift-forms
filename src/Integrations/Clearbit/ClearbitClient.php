@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
