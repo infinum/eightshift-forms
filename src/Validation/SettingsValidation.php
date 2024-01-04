@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Labels\Labels;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

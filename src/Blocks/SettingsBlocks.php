@@ -12,12 +12,12 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\GeolocationInterface;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
-use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**

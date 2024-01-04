@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 
 /**
  * Class ValidationPatterns

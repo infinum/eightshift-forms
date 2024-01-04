@@ -12,9 +12,9 @@ namespace EightshiftForms\Integrations\Workable;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;

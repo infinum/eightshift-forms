@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

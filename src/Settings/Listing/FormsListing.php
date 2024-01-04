@@ -11,8 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\IntegrationsHelper;
+use EightshiftForms\General\SettingsGeneral;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\IntegrationsHelper;
 use WP_Query;
 
 /**
@@ -55,7 +56,7 @@ class FormsListing implements FormListingInterface
 				'id' => $id,
 				'title' => \get_the_title($id),
 				'status' => \get_post_status($id),
-				'settingsLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id) : '',
+				'settingsLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY) : '',
 				'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
 				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
 				'entriesLink' => Helper::getFormsEntriesPageUrl((string) $id),

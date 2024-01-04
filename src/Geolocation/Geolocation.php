@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Misc\SettingsCloudflare;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
 use Exception;
 

@@ -13,7 +13,8 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Config\Config;
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Dashboard\SettingsDashboard;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -166,7 +167,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'id' => "{$prefix}-global-settings",
 					'parent' => $prefix,
 					'title' => \esc_html__('Global settings', 'eightshift-forms'),
-					'href' => Helper::getSettingsGlobalPageUrl(),
+					'href' => Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY),
 				],
 			);
 

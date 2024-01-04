@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;

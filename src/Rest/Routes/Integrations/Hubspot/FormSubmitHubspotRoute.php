@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;

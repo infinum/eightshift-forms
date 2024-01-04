@@ -6,9 +6,9 @@
  * @package EightshiftForms\Helpers
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 
 /**
  * EntriesHelper class.

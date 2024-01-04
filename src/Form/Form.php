@@ -10,12 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Form;
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Fields;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Helpers\IntegrationsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\IntegrationsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableFieldInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Fields\AbstractField;
 

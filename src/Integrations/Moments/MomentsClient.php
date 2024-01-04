@@ -12,12 +12,12 @@ namespace EightshiftForms\Integrations\Moments;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 

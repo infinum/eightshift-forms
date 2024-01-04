@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 
 /**
  * FiltersOuputMock class.

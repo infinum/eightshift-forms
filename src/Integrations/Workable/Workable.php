@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Workable;
 
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

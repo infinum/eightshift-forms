@@ -8,9 +8,11 @@
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Form\Form;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -206,13 +208,13 @@ if ($formAttrs) {
 			<?php } ?>
 
 			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
 				<?php echo $manifestUtils['icons']['settings']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsGlobalPageUrl()) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
 					<?php echo $manifestUtils['icons']['dashboard']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>

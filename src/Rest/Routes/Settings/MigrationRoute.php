@@ -12,7 +12,7 @@ namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
@@ -30,7 +30,7 @@ use EightshiftForms\Migration\SettingsMigration;
 use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsSettings;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\ValidatorInterface;

@@ -12,13 +12,13 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\IntegrationsHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\IntegrationsHelper;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**

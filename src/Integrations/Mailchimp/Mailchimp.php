@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

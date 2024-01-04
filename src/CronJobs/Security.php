@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\CronJobs;
 
 use EightshiftForms\Security\SettingsSecurity;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**

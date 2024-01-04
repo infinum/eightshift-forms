@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Captcha;
 
-use EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

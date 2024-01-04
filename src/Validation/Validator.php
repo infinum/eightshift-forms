@@ -13,7 +13,7 @@ namespace EightshiftForms\Validation;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Jira\SettingsJira;
@@ -22,7 +22,7 @@ use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 

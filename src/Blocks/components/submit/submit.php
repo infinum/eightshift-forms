@@ -7,7 +7,7 @@
  */
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');

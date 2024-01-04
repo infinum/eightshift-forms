@@ -12,7 +12,7 @@ namespace EightshiftForms\Captcha;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Throwable;

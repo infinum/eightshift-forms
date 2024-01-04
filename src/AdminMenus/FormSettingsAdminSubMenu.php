@@ -12,7 +12,7 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsDebug;

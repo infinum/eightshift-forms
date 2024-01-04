@@ -14,7 +14,7 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 
 /**
  * Class FormSubmitMailer

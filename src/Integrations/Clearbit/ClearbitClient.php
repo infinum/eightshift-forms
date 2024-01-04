@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**

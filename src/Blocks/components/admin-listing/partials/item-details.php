@@ -6,7 +6,7 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 

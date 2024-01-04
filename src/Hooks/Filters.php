@@ -12,7 +12,7 @@ namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
@@ -98,6 +98,10 @@ class Filters implements ServiceInterface
 	public const FILTER_SETTINGS_DATA = self::FILTER_PREFIX . '_settings_data';
 	public const FILTER_PUBLIC_FILTERS_DATA = self::FILTER_PREFIX . '_public_filters_data';
 	public const FILTER_SETTINGS_NONE_TRANSLATABLE_NAMES = self::FILTER_PREFIX . '_settings_none_translatable_names';
+
+	public const INTEGRATION_TYPE_DEFAULT = 'default';
+	public const INTEGRATION_TYPE_NO_BUILDER = 'no-builder';
+	public const INTEGRATION_TYPE_COMPLEX = 'complex';
 
 	/**
 	 * Register all the hooks
@@ -422,6 +426,7 @@ class Filters implements ServiceInterface
 				'settings' => SettingsMailer::FILTER_SETTINGS_NAME,
 				'valid' => SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
 				'labels' => [
 					'title' => \__('Mailer', 'eightshift-forms'),
@@ -432,6 +437,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Mailchimp::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
 				'cache' => [
 					MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
@@ -446,6 +452,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Greenhouse::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY,
 				'cache' => [
 					GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
@@ -461,6 +468,7 @@ class Filters implements ServiceInterface
 				'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
 				'fields' => Hubspot::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY,
 				'cache' => [
 					HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
@@ -476,6 +484,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsMailerlite::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Mailerlite::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY,
 				'cache' => [
 					MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
@@ -490,6 +499,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsGoodbits::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY,
 				'labels' => [
 					'title' => \__('Goodbits', 'eightshift-forms'),
@@ -518,6 +528,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => ActiveCampaign::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_COMPLEX,
 				'use' => SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY,
 				'cache' => [
 					ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME,
@@ -532,6 +543,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Airtable::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY,
 				'cache' => [
 					AirtableClient::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME,
@@ -546,6 +558,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Moments::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMoments::SETTINGS_MOMENTS_USE_KEY,
 				'cache' => [
 					MomentsClient::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME,
@@ -561,6 +574,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsWorkable::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Workable::FILTER_FORM_FIELDS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsWorkable::SETTINGS_WORKABLE_USE_KEY,
 				'cache' => [
 					WorkableClient::CACHE_WORKABLE_ITEMS_TRANSIENT_NAME,
@@ -575,6 +589,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsJira::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsJira::FILTER_SETTINGS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsJira::SETTINGS_JIRA_USE_KEY,
 				'cache' => [
 					JiraClient::CACHE_JIRA_PROJECTS_TRANSIENT_NAME,
@@ -596,6 +611,7 @@ class Filters implements ServiceInterface
 				'settingsGlobal' => SettingsPipedrive::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsPipedrive::FILTER_SETTINGS_NAME,
 				'type' => self::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => self::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 				'cache' => [
 					PipedriveClient::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME,

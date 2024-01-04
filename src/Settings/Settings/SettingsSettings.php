@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings\Settings;
 
-use EightshiftForms\Helpers\SettingsOutputHelper;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**

@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Query;

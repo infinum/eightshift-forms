@@ -20,7 +20,7 @@ use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 

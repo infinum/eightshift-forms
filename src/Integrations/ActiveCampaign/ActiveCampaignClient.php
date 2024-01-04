@@ -12,11 +12,11 @@ namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
-use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
