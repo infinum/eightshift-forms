@@ -51,7 +51,7 @@ $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', 
 $formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 $formCustomName = Components::checkAttr('formCustomName', $attributes, $manifest);
 
-$formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
+$formDataTypeSelectorFilterName = Helper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
 	Components::checkAttr('formDataTypeSelector', $attributes, $manifest),

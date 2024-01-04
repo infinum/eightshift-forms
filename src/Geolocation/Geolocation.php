@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Geolocation;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Settings\SettingsHelper;
@@ -115,7 +114,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$path = Helper::getDataManifestPath('geolocation', 'geoip.phar');
 
-		$filterName = Filters::getFilterName(['geolocation', 'pharLocation']);
+		$filterName = Helper::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -139,7 +138,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	{
 		$path = Helper::getDataManifestPath('geolocation', 'geoip.mmdb');
 
-		$filterName = Filters::getFilterName(['geolocation', 'dbLocation']);
+		$filterName = Helper::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -159,7 +158,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getCountriesList(): array
 	{
-		$filterName = Filters::getFilterName(['geolocation', 'countriesList']);
+		$filterName = Helper::getFilterName(['geolocation', 'countriesList']);
 
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $this->getCountries());

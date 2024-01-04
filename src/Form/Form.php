@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Form;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Blocks\SettingsBlocks;
@@ -114,7 +113,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Phone sync with country block.
 		$attributes["{$prefix}PhoneSync"] = '';
-		$filterName = Filters::getFilterName(['block', 'form', 'phoneSync']);
+		$filterName = Helper::getFilterName(['block', 'form', 'phoneSync']);
 		if (\has_filter($filterName)) {
 			$attributes["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
 		} else {

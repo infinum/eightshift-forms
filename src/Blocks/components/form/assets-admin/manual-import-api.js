@@ -10,6 +10,7 @@ export class ManualImportApi {
 		this.selector = options.selector;
 		this.outputSelector = options.outputSelector;
 		this.dataSelector = options.dataSelector;
+		this.importErrorMsg = options.importErrorMsg;
 	}
 
 	init () {
@@ -31,6 +32,20 @@ export class ManualImportApi {
 		const items = this.getIntegrationData(dataValue);
 
 		this.utils.showLoader(formId);
+
+		// Clear output everytime.
+		document.querySelector(this.outputSelector).value = '';
+
+		// If no items, show error and return.
+		if (!items.length) {
+			this.utils.hideLoader(formId);
+			this.utils.setGlobalMsg(
+				formId,
+				this.importErrorMsg,
+				'error'
+			);
+			return;
+		}
 
 		[...items].forEach((item, index) => {
 			setTimeout(() => {
@@ -150,7 +165,14 @@ export class ManualImportApi {
 			return output;
 		}
 
-		const items = JSON.parse(data);
+		let items = {};
+
+		// Check if we can parse data.
+		try {
+			items = JSON.parse(data);
+		} catch {
+			return output;
+		}
 
 		if (!items) {
 			return output;

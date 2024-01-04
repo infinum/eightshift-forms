@@ -29,7 +29,7 @@ $headings = [
 	'error' => '',
 ];
 
-$filterName = Filters::getFilterName(['block', 'form', 'globalMsgHeadings']);
+$filterName = Helper::getFilterName(['block', 'form', 'globalMsgHeadings']);
 
 if (has_filter($filterName) && !is_admin()) {
 	$headings = apply_filters($filterName, []);

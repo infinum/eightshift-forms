@@ -179,7 +179,7 @@ class MigrationRoute extends AbstractBaseRoute
 		}
 
 		// Migrate each integration fallback.
-		foreach (Filters::getSettingsFiltersData() as $key => $value) {
+		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			$type = $value['type'] ?? '';
 			if ($type !== Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 				continue;
@@ -211,7 +211,7 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 		}
 
-		$actionName = Filters::getFilterName(['migration', 'twoToThreeGeneral']);
+		$actionName = Helper::getFilterName(['migration', 'twoToThreeGeneral']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_GENERAL);
 		}
@@ -266,7 +266,7 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 
 			// Bailout integrations that are disabled.
-			$use = Filters::getSettingsFiltersData()[$type]['use'] ?? '';
+			$use = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type]['use'] ?? '';
 
 			// Skip deactivated integrations.
 			if ($this->isOptionCheckboxChecked($use, $use)) {
@@ -391,7 +391,7 @@ class MigrationRoute extends AbstractBaseRoute
 
 		$outputFinal['fatal'] = $outputFatal;
 
-		$actionName = Filters::getFilterName(['migration', 'twoToThreeForms']);
+		$actionName = Helper::getFilterName(['migration', 'twoToThreeForms']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_FORMS);
 		}
@@ -507,7 +507,7 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 		}
 
-		$actionName = Filters::getFilterName(['migration', 'twoToThreeLocale']);
+		$actionName = Helper::getFilterName(['migration', 'twoToThreeLocale']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_LOCALE);
 		}

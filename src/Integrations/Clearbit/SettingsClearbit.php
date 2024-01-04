@@ -104,7 +104,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return false;
 		}
 
-		$typeItems = Filters::getSettingsFiltersData()[self::SETTINGS_TYPE_KEY]['integration'];
+		$typeItems = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[self::SETTINGS_TYPE_KEY]['integration'];
 
 		if (!isset($typeItems[$type])) {
 			return false;

@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Settings;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\Helpers\Helper;
 
 /**
  * FiltersOuputMock trait.
@@ -36,7 +36,7 @@ trait FiltersOuputMock
 		$filterUsed = false;
 		$settingsFields = [];
 
-		$filterName = Filters::getFilterName(['enrichment', 'manualMap']);
+		$filterName = Helper::getFilterName(['enrichment', 'manualMap']);
 
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, '');
@@ -88,7 +88,7 @@ trait FiltersOuputMock
 		$filterData = [];
 		$filterUsed = false;
 
-		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectVariationOptions']);
+		$filterName = Helper::getFilterName(['block', 'form', 'successRedirectVariationOptions']);
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, []);
 
@@ -131,7 +131,7 @@ trait FiltersOuputMock
 
 		$data = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
 
-		$filterName = Filters::getFilterName(['block', 'form', 'successRedirectVariation']);
+		$filterName = Helper::getFilterName(['block', 'form', 'successRedirectVariation']);
 		if (\has_filter($filterName)) {
 			$dataFilter = \apply_filters($filterName, $type, $formId);
 
@@ -175,7 +175,7 @@ trait FiltersOuputMock
 		}
 
 		// Find local settings per integration or filter data.
-		$filterNameLocal = Filters::getFilterName(['block', 'form', 'successRedirectUrl']);
+		$filterNameLocal = Helper::getFilterName(['block', 'form', 'successRedirectUrl']);
 		if (\has_filter($filterNameLocal)) {
 			$dataFilter = \apply_filters($filterNameLocal, $type, $formId) ?? '';
 
@@ -212,7 +212,7 @@ trait FiltersOuputMock
 
 		$data = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
 
-		$filterName = Filters::getFilterName(['block', 'form', 'trackingEventName']);
+		$filterName = Helper::getFilterName(['block', 'form', 'trackingEventName']);
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, $type, $formId);
 
@@ -244,7 +244,7 @@ trait FiltersOuputMock
 		$settingsDetails = [];
 		$filterUsed = false;
 
-		$filterName = Filters::getFilterName(['block', 'form', 'trackingAdditionalData']);
+		$filterName = Helper::getFilterName(['block', 'form', 'trackingAdditionalData']);
 		$trackingAdditionalData = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
 		$trackingAdditionalDataSuccess = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
 		$trackingAdditionalDataError = $this->getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);

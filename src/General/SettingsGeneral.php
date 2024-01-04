@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\General;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
@@ -102,8 +101,8 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 			static function ($item, $key) {
 				return "<li><code>{$key}</code> - {$item}</li>";
 			},
-			Filters::getSpecialConstants('tracking'),
-			\array_keys(Filters::getSpecialConstants('tracking'))
+			Helper::getSpecialConstants('tracking'),
+			\array_keys(Helper::getSpecialConstants('tracking'))
 		);
 
 		$formDetails = Helper::getFormDetailsById($formId);

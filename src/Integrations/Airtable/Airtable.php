@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
@@ -317,7 +317,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		];
 
 		// Change the final output if necesery.
-		$filterName = Filters::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = Helper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

@@ -276,7 +276,7 @@ trait SettingsHelper
 	{
 		$sufix = '';
 
-		if (!Filters::isOptionNotTranslatable($key)) {
+		if (!isset(\array_flip(\apply_filters(Filters::FILTER_SETTINGS_NONE_TRANSLATABLE_NAMES, []))[$key])) {
 			$locale = Helper::getLocale();
 
 			if ($locale) {
@@ -339,10 +339,16 @@ trait SettingsHelper
 	 */
 	private function getIntroOutput(string $type): array
 	{
+		$data = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type]['labels'] ?? [];
+
+		if (!$data) {
+			return [];
+		}
+
 		return [
 			'component' => 'intro',
-			'introTitle' => Filters::getSettingsLabels($type),
-			'introSubtitle' => Filters::getSettingsLabels($type, 'desc'),
+			'introTitle' => $data['title'] ?? '',
+			'introSubtitle' => $data['desc'] ?? '',
 		];
 	}
 
@@ -373,14 +379,18 @@ trait SettingsHelper
 	 */
 	private function getSettingOutputNoValidGlobalConfig(string $type): array
 	{
-		$label = Filters::getSettingsLabels($type);
+		$title = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type]['labels']['title'] ?? [];
+
+		if (!$title) {
+			return [];
+		}
 
 		return [
 			[
 				'component' => 'highlighted-content',
 				'highlightedContentTitle' => \__('Some config required', 'eightshift-forms'),
 				// translators: %s will be replaced with the global settings url.
-				'highlightedContentSubtitle' => \sprintf(\__('Before using %1$s you need to configure it in <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
+				'highlightedContentSubtitle' => \sprintf(\__('Before using %1$s you need to configure it in <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a>.', 'eightshift-forms'), $title, Helper::getSettingsGlobalPageUrl($type)),
 				'highlightedContentIcon' => 'tools',
 			],
 		];
@@ -395,7 +405,11 @@ trait SettingsHelper
 	 */
 	private function getSettingOutputNoIntegrationFetchData(string $type): array
 	{
-		$label = Filters::getSettingsLabels($type);
+		$title = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type]['labels']['title'] ?? [];
+
+		if (!$title) {
+			return [];
+		}
 
 		return [
 			[
@@ -404,7 +418,7 @@ trait SettingsHelper
 				// translators: %s will be replaced with links.
 				'highlightedContentSubtitle' => \sprintf(\__('
 					We are sorry but we couldn\'t get any data from the external source. <br />
-					Please go to %1$s <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a> and check your API key.', 'eightshift-forms'), $label, Helper::getSettingsGlobalPageUrl($type)),
+					Please go to %1$s <a href="%2$s" target="_blank" rel="noopener noreferrer">global settings</a> and check your API key.', 'eightshift-forms'), $title, Helper::getSettingsGlobalPageUrl($type)),
 				'highlightedContentIcon' => 'error',
 			],
 		];
@@ -486,7 +500,7 @@ trait SettingsHelper
 		}
 
 		$type = $integrationDetails['typeFilter'];
-		$useFilter = Filters::getSettingsFiltersData()[$type]['use'] ?? '';
+		$useFilter = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type]['use'] ?? '';
 
 		return [
 			'label' => $integrationDetails['label'],
@@ -507,7 +521,7 @@ trait SettingsHelper
 	{
 		$output = [];
 
-		foreach (Filters::getSettingsFiltersData() as $key => $value) {
+		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			$useFilter = $value['use'] ?? '';
 
 			if (!$useFilter) {
@@ -643,7 +657,7 @@ trait SettingsHelper
 	 */
 	public function getFormResponseTags(string $formType): string
 	{
-		$tags = Filters::getSettingsFiltersData()[$formType]['emailTemplateTags'] ?? [];
+		$tags = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$formType]['emailTemplateTags'] ?? [];
 
 		if ($tags) {
 			return $this->getFormFieldNames(\array_keys($tags));
@@ -819,7 +833,7 @@ trait SettingsHelper
 		$output = [];
 
 		// Generate correct order of settings.
-		foreach (Filters::getSettingsFiltersData() as $key => $item) {
+		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $item) {
 			$order = $item['order'] ?? 0;
 			if (!$order) {
 				continue;

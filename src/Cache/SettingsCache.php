@@ -63,6 +63,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
+		$data = \apply_filters(Filters::FILTER_SETTINGS_DATA, []);
+
 		$output = \array_values(\array_filter(\array_map(
 			function ($key, $value) {
 				$cache = $value['cache'] ?? [];
@@ -72,8 +74,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 				if ($cache && $isUsedKey && $this->isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 					return [
 						'component' => 'card-inline',
-						'cardInlineTitle' => Filters::getSettingsLabels($key),
-						'cardInlineIcon' => Helper::getProjectIcons($key),
+						'cardInlineTitle' => $value['labels']['title'] ?? '',
+						'cardInlineIcon' => $value['labels']['icon'] ?? '',
 						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
@@ -89,8 +91,8 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 					];
 				}
 			},
-			\array_keys(Filters::getSettingsFiltersData()),
-			Filters::getSettingsFiltersData()
+			\array_keys($data),
+			$data
 		)));
 
 		return [

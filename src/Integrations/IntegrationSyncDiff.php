@@ -169,7 +169,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Check if integration filter exists.
-		$integrationFilterName = Filters::getSettingsFiltersData()[$type]['fields'] ?? '';
+		$integrationFilterName = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type]['fields'] ?? '';
 		if (!\has_filter($integrationFilterName)) {
 			return [
 				'formId' => $formId,
@@ -338,7 +338,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Check if integration filter exists.
-		$integrationFilterName = Filters::getSettingsFiltersData()[$contentType]['fields'] ?? '';
+		$integrationFilterName = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$contentType]['fields'] ?? '';
 		if (!\has_filter($integrationFilterName)) {
 			return [
 				'formId' => $formId,
@@ -1195,7 +1195,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$topLevelOrder = $orders['order'] ?? [];
 
 		// Provide a custom order from external filter.
-		$filterName = Filters::getFilterName(['integrations', $integrationType, 'order']);
+		$filterName = Helper::getFilterName(['integrations', $integrationType, 'order']);
 		if (\has_filter($filterName)) {
 			$filterOrder = \apply_filters($filterName, []);
 

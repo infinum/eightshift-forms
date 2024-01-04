@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Mailer;
 use CURLFile;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -245,7 +244,7 @@ class Mailer implements MailerInterface
 		$output = [];
 
 		// Filter params.
-		$filterName = Filters::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = Helper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftForms\Settings\SettingsHelper;
@@ -361,7 +361,7 @@ class ActiveCampaign extends AbstractFormBuilder implements MapperInterface, Ser
 		];
 
 		// Change the final output if necesery.
-		$filterName = Filters::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = Helper::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

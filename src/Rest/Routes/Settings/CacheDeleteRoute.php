@@ -101,6 +101,8 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			);
 		}
 
+		$data = \apply_filters(Filters::FILTER_SETTINGS_DATA, []);
+
 		if ($type === 'all') {
 			$allItems = Components::flattenArray(\array_map(
 				static function ($item) {
@@ -108,7 +110,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 						return $item['cache'];
 					}
 				},
-				Filters::getSettingsFiltersData()
+				$data
 			));
 
 			if ($allItems) {
@@ -117,7 +119,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 				}
 			}
 		} else {
-			$cacheTypes = Filters::getSettingsFiltersData()[$type]['cache'] ?? [];
+			$cacheTypes = $data[$type]['cache'] ?? [];
 			if (!$cacheTypes) {
 				return \rest_ensure_response(
 					$this->getApiErrorOutput(

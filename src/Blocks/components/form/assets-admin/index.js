@@ -169,6 +169,7 @@ domReady(() => {
 				selector: selectorManualImportApi,
 				outputSelector: getStateSelectorAdmin('manualImportApiOutput', true),
 				dataSelector: getStateSelectorAdmin('manualImportApiData', true),
+				importErrorMsg: esFormsLocalization.importErrorMsg,
 			}).init();
 		});
 	}

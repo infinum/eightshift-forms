@@ -51,18 +51,8 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		}
 
 		$output = [];
-		$items = Filters::getSettingsFiltersData();
 
-		// Load addinal sidebar from addons.
-		$filterName = Filters::getFilterName(['admin', 'settings', 'config']);
-		if (\has_filter($filterName)) {
-			$items = \array_merge(
-				$items,
-				\apply_filters($filterName, [])
-			);
-		}
-
-		foreach ($items as $key => $value) {
+		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			// Determin if there is filter key name.
 			if (!isset($value[$internalType])) {
 				continue;
@@ -119,7 +109,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		}
 
 		// Find settings page.
-		$filter = Filters::getSettingsFiltersData()[$type][$internalType] ?? '';
+		$filter = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type][$internalType] ?? '';
 
 		// Determine if there is a filter for settings page.
 		if (!\has_filter($filter)) {

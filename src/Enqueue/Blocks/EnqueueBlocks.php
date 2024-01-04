@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Blocks;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
@@ -23,6 +22,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Theme\EnqueueTheme;
 use EightshiftForms\Geolocation\SettingsGeolocation;
+use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
@@ -186,7 +186,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			return [];
 		}
 
-		$scriptsDependency = Filters::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependency = Helper::getFilterName(['general', 'scriptsDependency']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -213,9 +213,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output = $this->getEnqueueSharedInlineCommonItems();
 
 		// Frontend part.
-		$hideGlobalMessageTimeout = Filters::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
-		$redirectionTimeout = Filters::getFilterName(['block', 'form', 'redirectionTimeout']);
-		$fileRemoveLabel = Filters::getFilterName(['block', 'file', 'previewRemoveLabel']);
+		$hideGlobalMessageTimeout = Helper::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
+		$redirectionTimeout = Helper::getFilterName(['block', 'form', 'redirectionTimeout']);
+		$fileRemoveLabel = Helper::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
@@ -306,11 +306,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output = $this->getEnqueueSharedInlineCommonItems(false);
 
-		$additionalBlocksFilterName = Filters::getFilterName(['blocks', 'additionalBlocks']);
-		$formsStyleOptionsFilterName = Filters::getFilterName(['block', 'forms', 'styleOptions']);
-		$fieldStyleOptionsFilterName = Filters::getFilterName(['block', 'field', 'styleOptions']);
-		$breakpointsFilterName = Filters::getFilterName(['blocks', 'breakpoints']);
-		$formSelectorTemplatesFilterName = Filters::getFilterName(['block', 'formSelector', 'formTemplates']);
+		$additionalBlocksFilterName = Helper::getFilterName(['blocks', 'additionalBlocks']);
+		$formsStyleOptionsFilterName = Helper::getFilterName(['block', 'forms', 'styleOptions']);
+		$fieldStyleOptionsFilterName = Helper::getFilterName(['block', 'field', 'styleOptions']);
+		$breakpointsFilterName = Helper::getFilterName(['blocks', 'breakpoints']);
+		$formSelectorTemplatesFilterName = Helper::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);

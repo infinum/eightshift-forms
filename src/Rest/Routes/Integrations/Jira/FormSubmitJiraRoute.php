@@ -126,7 +126,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			return $output;
 		}
 
-		foreach (Filters::getSettingsFiltersData()[SettingsJira::SETTINGS_TYPE_KEY]['emailTemplateTags'] as $key => $value) {
+		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, [])[SettingsJira::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
 			$item = $body[$value] ?? '';
 
 			if ($key === 'jiraIssueUrl') {

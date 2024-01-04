@@ -62,11 +62,12 @@ use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * The Filters class, used for defining settings and integrations filter variables.
  */
-class Filters
+class Filters implements ServiceInterface
 {
 	/**
 	 * Prefix added to all filters.
@@ -94,177 +95,198 @@ class Filters
 	public const SETTINGS_INTERNAL_TYPE_ADVANCED = 'sidebar-advanced';
 	public const SETTINGS_INTERNAL_TYPE_ADDON = 'sidebar-addon';
 
+	public const FILTER_SETTINGS_DATA = self::FILTER_PREFIX . '_settings_data';
+	public const FILTER_PUBLIC_FILTERS_DATA = self::FILTER_PREFIX . '_public_filters_data';
+	public const FILTER_SETTINGS_NONE_TRANSLATABLE_NAMES = self::FILTER_PREFIX . '_settings_none_translatable_names';
+
 	/**
-	 * All public filters.
+	 * Register all the hooks
+	 *
+	 * @return void
 	 */
-	public const ALL_PUBLIC = [
-		'block' => [
-			'forms' => [
-				'styleOptions',
+	public function register(): void
+	{
+		\add_filter(self::FILTER_SETTINGS_DATA, [$this, 'getSettingsFiltersData']);
+		\add_filter(self::FILTER_PUBLIC_FILTERS_DATA, [$this, 'getPublicFilters']);
+		\add_filter(self::FILTER_SETTINGS_NONE_TRANSLATABLE_NAMES, [$this, 'getSettingsNoneTranslatableNames']);
+	}
+
+	/**
+	 * Get list of all public filters.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getPublicFilters(): array
+	{
+		return [
+			'block' => [
+				'forms' => [
+					'styleOptions',
+				],
+				'form' => [
+					'redirectionTimeout',
+					'hideGlobalMsgTimeout',
+					'successRedirectUrl',
+					'successRedirectVariation',
+					'successRedirectVariationOptions',
+					'trackingEventName',
+					'trackingAdditionalData',
+					'dataTypeSelector',
+					'phoneSync',
+					'globalMsgHeadings',
+					'additionalContent',
+				],
+				'formSelector' => [
+					'formTemplates',
+					'additionalContent',
+				],
+				'field' => [
+					'styleOptions',
+					'styleClasses',
+					'additionalContent',
+				],
+				'input' => [
+					'additionalContent',
+				],
+				'textarea' => [
+					'additionalContent',
+				],
+				'select' => [
+					'additionalContent',
+				],
+				'file' => [
+					'additionalContent',
+					'previewRemoveLabel',
+				],
+				'checkboxes' => [
+					'additionalContent',
+				],
+				'radios' => [
+					'additionalContent',
+				],
+				'phone' => [
+					'additionalContent',
+				],
+				'country' => [
+					'additionalContent',
+					'alternativeDataSet',
+				],
+				'date' => [
+					'additionalContent',
+				],
+				'submit' => [
+					'component',
+					'additionalContent',
+				],
+				'step' => [
+					'componentPrev',
+					'componentNext',
+				],
 			],
-			'form' => [
-				'redirectionTimeout',
-				'hideGlobalMsgTimeout',
-				'successRedirectUrl',
-				'successRedirectVariation',
-				'successRedirectVariationOptions',
-				'trackingEventName',
-				'trackingAdditionalData',
-				'dataTypeSelector',
-				'phoneSync',
-				'globalMsgHeadings',
-				'additionalContent',
+			'blocks' => [
+				'additionalBlocks',
+				'mediaBreakpoints',
 			],
-			'formSelector' => [
-				'formTemplates',
-				'additionalContent',
+			'general' => [
+				'httpRequestTimeout',
+				'locale',
+				'scriptsDependency',
 			],
-			'field' => [
-				'styleOptions',
-				'styleClasses',
-				'additionalContent',
+			'geolocation' => [
+				'countriesList',
+				'dbLocation',
+				'pharLocation',
 			],
-			'input' => [
-				'additionalContent',
+			'integrations' => [
+				SettingsMailer::SETTINGS_TYPE_KEY => [
+					'prePostParams',
+				],
+				SettingsMailchimp::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+				],
+				SettingsGreenhouse::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+				],
+				SettingsHubspot::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+					'filesOptions',
+				],
+				SettingsMailerlite::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+				],
+				SettingsGoodbits::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+				],
+				SettingsClearbit::SETTINGS_TYPE_KEY => [
+					'map',
+				],
+				SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+				],
+				SettingsAirtable::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+				],
+				SettingsMoments::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+				],
+				SettingsWorkable::SETTINGS_TYPE_KEY => [
+					'data',
+					'prePostParams',
+					'order',
+					'prePostId',
+				],
+				SettingsJira::SETTINGS_TYPE_KEY => [
+					'prePostParams',
+				],
+				SettingsPipedrive::SETTINGS_TYPE_KEY => [
+					'prePostParams',
+				],
 			],
-			'textarea' => [
-				'additionalContent',
-			],
-			'select' => [
-				'additionalContent',
-			],
-			'file' => [
-				'additionalContent',
-				'previewRemoveLabel',
-			],
-			'checkboxes' => [
-				'additionalContent',
-			],
-			'radios' => [
-				'additionalContent',
-			],
-			'phone' => [
-				'additionalContent',
-			],
-			'country' => [
-				'additionalContent',
-				'alternativeDataSet',
-			],
-			'date' => [
-				'additionalContent',
-			],
-			'submit' => [
-				'component',
-				'additionalContent',
-			],
-			'step' => [
-				'componentPrev',
-				'componentNext',
-			],
-		],
-		'blocks' => [
-			'additionalBlocks',
-			'mediaBreakpoints',
-		],
-		'general' => [
-			'httpRequestTimeout',
-			'locale',
-			'scriptsDependency',
-		],
-		'geolocation' => [
-			'countriesList',
-			'dbLocation',
-			'pharLocation',
-		],
-		'integrations' => [
-			SettingsMailer::SETTINGS_TYPE_KEY => [
+			'entries' => [
 				'prePostParams',
 			],
-			SettingsMailchimp::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
+			'enrichment' => [
+				'manualMap',
 			],
-			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
+			'validation' => [
+				'forceMimetypeFromFs',
 			],
-			SettingsHubspot::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
-				'filesOptions',
+			'migration' => [
+				'twoToThreeGeneral',
+				'twoToThreeForms',
+				'twoToThreeLocale',
 			],
-			SettingsMailerlite::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
+			'admin' => [
+				'settings' => [
+					'data',
+				],
 			],
-			SettingsGoodbits::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
-			],
-			SettingsClearbit::SETTINGS_TYPE_KEY => [
-				'map',
-			],
-			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
-			],
-			SettingsAirtable::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
-			],
-			SettingsMoments::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
-			],
-			SettingsWorkable::SETTINGS_TYPE_KEY => [
-				'data',
-				'prePostParams',
-				'order',
-				'prePostId',
-			],
-			SettingsJira::SETTINGS_TYPE_KEY => [
-				'prePostParams',
-			],
-			SettingsPipedrive::SETTINGS_TYPE_KEY => [
-				'prePostParams',
-			],
-		],
-		'entries' => [
-			'prePostParams',
-		],
-		'enrichment' => [
-			'manualMap',
-		],
-		'validation' => [
-			'forceMimetypeFromFs',
-		],
-		'migration' => [
-			'twoToThreeGeneral',
-			'twoToThreeForms',
-			'twoToThreeLocale',
-		],
-		'admin' => [
-			'settings' => [
-				'config',
-			],
-		],
-	];
+		];
+	}
 
 	/**
 	 * Get the settings filter data.
@@ -272,7 +294,7 @@ class Filters
 	 *
 	 * @return array<int|string, mixed>
 	 */
-	public static function getSettingsFiltersData(): array
+	public function getSettingsFiltersData(): array
 	{
 		$data = [
 			// ------------------------------
@@ -706,7 +728,8 @@ class Filters
 		}
 
 		// Populate additional items from filters, used for add-ons.
-		$filterName = Filters::getFilterName(['admin', 'settings', 'config']);
+		$filterName = Helper::getFilterName(['admin', 'settings', 'data']);
+		
 		if (\has_filter($filterName)) {
 			foreach (\apply_filters($filterName, []) as $keyItem => $valueItem) {
 				if (
@@ -718,7 +741,7 @@ class Filters
 					continue;
 				}
 
-				$data[$keyItem] = $valueItem['labels'];
+				$data[$keyItem] = $valueItem;
 			}
 		}
 
@@ -726,30 +749,13 @@ class Filters
 	}
 
 	/**
-	 * Get the settings labels and details by type and key.
-	 * This method is used to provide the ability to translate all strings.
+	 * Get the settings names that are not translatable, like API keys, secrets, etc.
 	 *
-	 * @param string $type Settings type from the Settings class.
-	 * @param string $key Key to output.
-	 *
-	 * @return string
+	 * @return array<int, string>
 	 */
-	public static function getSettingsLabels(string $type, string $key = 'title'): string
+	public function getSettingsNoneTranslatableNames(): array
 	{
-		$data = self::getSettingsFiltersData();
-		return isset($data[$type]['labels'][$key]) ? $data[$type]['labels'][$key] : '';
-	}
-
-	/**
-	 * Check if provided name is fixed or localized.
-	 *
-	 * @param string $name Setting or option name.
-	 *
-	 * @return boolean
-	 */
-	public static function isOptionNotTranslatable(string $name): bool
-	{
-		$list = \array_flip([
+		return [
 			SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 			SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY,
 			SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY,
@@ -821,92 +827,6 @@ class Filters
 			SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY,
 
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY,
-		]);
-
-		return isset($list[$name]);
-	}
-
-	/**
-	 * Get the settings labels and details by type and key.
-	 * This method is used to provide the ability to translate all strings.
-	 *
-	 * @param string $type Settings type from the Settings class.
-	 *
-	 * @return array<string, string>
-	 */
-	public static function getSpecialConstants(string $type): array
-	{
-		$data = [
-			'tracking' => [
-				'{invalidFieldsString}' => \__('comma-separated list of invalid fields', 'eightshift-forms'),
-				'{invalidFieldsArray}' => \__('array of invalid fields', 'eightshift-forms'),
-			],
 		];
-		return isset($data[$type]) ? $data[$type] : [];
-	}
-
-	/**
-	 * Get private filter name.
-	 *
-	 * @param array<int, string> $names Array of names.
-	 *
-	 * @return string
-	 */
-	public static function getFilterName(array $names): string
-	{
-		$filters = \wp_cache_get(self::FILTER_PREFIX . '_filters_public_list', self::FILTER_PREFIX);
-
-		// Cache filter names for faster access.
-		if (!$filters) {
-			$filters = self::getAllPublicFiltersNames(self::ALL_PUBLIC);
-
-			\wp_cache_add(self::FILTER_PREFIX . '_filters_public_list', $filters, self::FILTER_PREFIX, \HOUR_IN_SECONDS);
-		}
-
-		// List of all keys provided for the filter name.
-		$names = \array_map(
-			function ($item) {
-				return Helper::kebabToSnakeCase(Helper::camelToSnakeCase($item));
-			},
-			$names
-		);
-
-		// Create a string from array.
-		$names = \implode('_', $names);
-
-		// Create a full filter name.
-		$filterName = self::FILTER_PREFIX . "_{$names}";
-
-		if (!\in_array($filterName, $filters, true)) {
-			// translators: %s is the filter name.
-			\trigger_error(\sprintf(\esc_html__("You are using `%s` filter that doesn't exist. Please check the documentation for the correct filter name!", 'eightshift-forms'), \esc_attr($filterName)), \E_USER_WARNING); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
-			return '';
-		}
-
-		return $filterName;
-	}
-
-	/**
-	 * Get list of all full filter names build from array.
-	 *
-	 * @param array<mixed> $data Array of data.
-	 * @param string $prefix Prefix to add to all filter names.
-	 *
-	 * @return array<int, string>
-	 */
-	private static function getAllPublicFiltersNames(array $data, string $prefix = ''): array
-	{
-		$output = [];
-
-		foreach ($data as $key => $value) {
-			if (\is_array($value)) {
-				$nestedKeys = self::getAllPublicFiltersNames($value, $prefix . Helper::kebabToSnakeCase(Helper::camelToSnakeCase($key)) . '_');
-				$output = \array_merge($output, $nestedKeys);
-			} else {
-				$output[] = self::FILTER_PREFIX . '_' . $prefix . Helper::kebabToSnakeCase(Helper::camelToSnakeCase($value));
-			}
-		}
-
-		return $output;
 	}
 }

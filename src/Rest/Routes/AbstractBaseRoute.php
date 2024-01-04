@@ -450,12 +450,15 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				$type === Settings::SETTINGS_GLOBAL_TYPE_NAME ||
 				$type === 'fileUploadAdmin'
 			) {
+				// This provides filter name for setting.
+				$settingsName = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$formSettingsType][$type] ?? '';
+
 				$formDataReference = [
 					'formId' => $formId,
 					'type' => $type,
 					'itemId' => '',
 					'innerId' => '',
-					'fieldsOnly' => isset(Filters::getSettingsFiltersData()[$formSettingsType][$type]) ? \apply_filters(Filters::getSettingsFiltersData()[$formSettingsType][$type], $formId) : [],
+					'fieldsOnly' => !empty($settingsName) ? \apply_filters($settingsName, $formId) : [],
 				];
 			} else {
 				$formDataReference = Helper::getFormDetailsById($formId);

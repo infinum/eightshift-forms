@@ -794,7 +794,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 		$activeIntegration = \array_flip($this->getActiveIntegrations());
 
-		foreach (Filters::getSettingsFiltersData() as $key => $value) {
+		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			$type = $value['type'] ?? '';
 
 			if ($type !== Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
@@ -808,7 +808,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			$filterOptions .= Components::render(
 				'select-option',
 				[
-					'selectOptionLabel' => Filters::getSettingsLabels($key),
+					'selectOptionLabel' => $value['labels']['title'] ?? '',
 					'selectOptionValue' => $key,
 				]
 			);

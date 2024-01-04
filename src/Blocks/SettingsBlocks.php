@@ -377,7 +377,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 			];
 
 			$alternative = [];
-			$filterName = Filters::getFilterName(['block', 'country', 'alternativeDataSet']);
+			$filterName = Helper::getFilterName(['block', 'country', 'alternativeDataSet']);
 			if (\has_filter($filterName)) {
 				$alternative = \apply_filters($filterName, []);
 			}
