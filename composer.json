@@ -48,7 +48,7 @@
 		"erusev/parsedown": "^1.7.4",
 		"infinum/eightshift-libs": "^7.1.0",
 		"typisttech/imposter-plugin": "^0.6.2",
-		"eightshift/eightshift-forms-utils": "dev-develop"
+		"infinum/eightshift-forms-utils": "dev-develop"
 	},
 	"suggest": {
 		"ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",

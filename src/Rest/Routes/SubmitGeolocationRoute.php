@@ -12,7 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftForms\Helpers\Encryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Throwable;

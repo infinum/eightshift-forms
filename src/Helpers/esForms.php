@@ -10,7 +10,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
-use EightshiftForms\Helpers\Encryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**

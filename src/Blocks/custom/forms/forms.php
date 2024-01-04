@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Form\Form;
-use EightshiftForms\Helpers\Encryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
