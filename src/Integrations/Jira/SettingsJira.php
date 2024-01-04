@@ -13,11 +13,11 @@ namespace EightshiftForms\Integrations\Jira;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -26,11 +26,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsJira implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Filter settings key.
 	 */
@@ -383,7 +378,7 @@ class SettingsJira implements SettingGlobalInterface, SettingInterface, ServiceI
 			return SettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
 
 		return [

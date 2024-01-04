@@ -14,7 +14,6 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Entries\EntriesHelper;
@@ -36,11 +35,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	 * Use trait Upload_Helper inside class.
 	 */
 	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
 
 	/**
 	 * Instance variable of ValidatorInterface data.

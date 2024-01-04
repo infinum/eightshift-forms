@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailer;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -24,11 +24,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsMailer implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Filter settings key.
 	 */
@@ -431,7 +426,7 @@ class SettingsMailer implements SettingGlobalInterface, SettingInterface, Servic
 			return SettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 
 		return [
 			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),

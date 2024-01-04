@@ -12,10 +12,10 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -24,11 +24,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -133,7 +128,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 			return SettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY);
 
 		return [

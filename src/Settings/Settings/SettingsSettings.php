@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Helpers\SettingsOutputHelper;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -20,11 +19,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsSettings implements SettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Filter global settings key.
 	 */

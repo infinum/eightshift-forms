@@ -12,11 +12,11 @@ namespace EightshiftForms\Form;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -25,11 +25,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Form extends AbstractFormBuilder implements ServiceInterface
 {
-	/**
-	 * Use filters mock helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Filter form component atributes modifications key.
 	 */
@@ -74,26 +69,26 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Tracking event name.
-		$trackingEventName = $this->getTrackingEventNameFilterValue($type, $formId)['data'];
+		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($type, $formId)['data'];
 		if ($trackingEventName) {
 			$attributes["{$prefix}TrackingEventName"] = $trackingEventName;
 		}
 
 		// Provide additional data to tracking attr.
-		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($type, $formId)['data'];
+		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($type, $formId)['data'];
 		if ($trackingAdditionalData) {
 			$attributes["{$prefix}TrackingAdditionalData"] = \wp_json_encode($trackingAdditionalData);
 		}
 
 		// Success redirect url.
-		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($type, $formId)['data'];
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
 		if ($successRedirectUrl) {
 			$attributes["{$prefix}SuccessRedirect"] = $successRedirectUrl;
 		}
 
 		// Success redirect variation.
 		if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
-			$successRedirectUrl = $this->getSuccessRedirectVariationFilterValue($type, $formId)['data'];
+			$successRedirectUrl = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
 
 			if ($successRedirectUrl) {
 				$attributes["{$prefix}SuccessRedirectVariation"] = $successRedirectUrl;

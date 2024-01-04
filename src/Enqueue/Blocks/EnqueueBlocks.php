@@ -15,7 +15,6 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
@@ -24,6 +23,7 @@ use EightshiftForms\Enqueue\Theme\EnqueueTheme;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\IntegrationsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
@@ -37,11 +37,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Use shared helper trait.
 	 */
 	use SharedEnqueue;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
 
 	/**
 	 * Instance variable of ValidationPatternsInterface data.
@@ -245,7 +240,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 					'isUsedPrefill' => SettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
 					'isUsedPrefillUrl' => SettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
 				],
-				$this->getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
+				FiltersOuputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
 			);
 		} else {
 			$output['enrichment'] = [
@@ -317,7 +312,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['postType'] = \get_post_type() ? \get_post_type() : '';
 
 		$output['settings'] = [
-			'successRedirectVariations' => $this->getSuccessRedirectVariationOptionsFilterValue()['data'],
+			'successRedirectVariations' => FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue()['data'],
 		];
 
 		$output['use'] = [

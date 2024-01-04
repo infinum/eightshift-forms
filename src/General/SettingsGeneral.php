@@ -12,10 +12,10 @@ namespace EightshiftForms\General;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\SettingsOutputHelper;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
 use EightshiftForms\Settings\Settings\SettingInterface;
 use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -23,11 +23,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsGeneral implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Filter settings key.
 	 */
@@ -104,11 +99,11 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 		$formDetails = Helper::getFormDetailsById($formId);
 		$formType = $formDetails['type'] ?? '';
 
-		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($formType, $formId);
-		$successRedirectVariation = $this->getSuccessRedirectVariationFilterValue($formType, $formId);
-		$successRedirectVariationOptions = $this->getSuccessRedirectVariationOptionsFilterValue();
-		$trackingEventName = $this->getTrackingEventNameFilterValue($formType, $formId);
-		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($formType, $formId);
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
+		$successRedirectVariation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($formType, $formId);
+		$successRedirectVariationOptions = FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue();
+		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($formType, $formId);
+		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($formType, $formId);
 
 		return [
 			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -277,7 +272,7 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$successRedirectVariationOptions = $this->getSuccessRedirectVariationOptionsFilterValue();
+		$successRedirectVariationOptions = FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue();
 
 		return [
 			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),

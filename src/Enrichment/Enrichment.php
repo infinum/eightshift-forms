@@ -11,19 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Enrichment;
 
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Helpers\SettingsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 
 /**
  * Enrichment class.
  */
 class Enrichment implements EnrichmentInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Enrichment expiration time in days const.
 	 *
@@ -123,7 +118,7 @@ class Enrichment implements EnrichmentInterface
 	public function mapEnrichmentFields(array $params): array
 	{
 		// Get enrichment map.
-		$enrichment = $this->getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
+		$enrichment = FiltersOuputMock::getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
 
 		if (!$enrichment) {
 			return $params;

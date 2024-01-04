@@ -3,21 +3,21 @@
 /**
  * Class that holds data for mocking filters output used in seeting for better UX.
  *
- * @package EightshiftForms\Settings
+ * @package EightshiftForms\Hooks
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings;
+namespace EightshiftForms\Hooks;
 
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\SettingsHelper;
 
 /**
- * FiltersOuputMock trait.
+ * FiltersOuputMock class.
  */
-trait FiltersOuputMock
+final class FiltersOuputMock
 {
 	/**
 	 * Return enrichment manual map data filter output.
@@ -26,7 +26,7 @@ trait FiltersOuputMock
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getEnrichmentManualMapFilterValue(array $config): array
+	public static function getEnrichmentManualMapFilterValue(array $config): array
 	{
 		$settings = '';
 		$filterUsed = false;
@@ -62,7 +62,7 @@ trait FiltersOuputMock
 			}
 		}
 
-		$settingsOutput = $this->getSettingsDivWrap($settings, $filterUsed, false);
+		$settingsOutput = self::getSettingsDivWrap($settings, $filterUsed, false);
 
 		return [
 			'settings' => $settingsOutput,
@@ -77,7 +77,7 @@ trait FiltersOuputMock
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSuccessRedirectVariationOptionsFilterValue(): array
+	public static function getSuccessRedirectVariationOptionsFilterValue(): array
 	{
 		$settings = '';
 		$data = '';
@@ -105,7 +105,7 @@ trait FiltersOuputMock
 		];
 
 		return [
-			'settings' => $this->getSettingsDivWrap($settings, $filterUsed, false),
+			'settings' => self::getSettingsDivWrap($settings, $filterUsed, false),
 			'data' => $data,
 			'filterUsed' => $filterUsed,
 		];
@@ -119,7 +119,7 @@ trait FiltersOuputMock
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSuccessRedirectVariationFilterValue(string $type, string $formId): array
+	public static function getSuccessRedirectVariationFilterValue(string $type, string $formId): array
 	{
 		$settings = '';
 		$data = '';
@@ -138,7 +138,7 @@ trait FiltersOuputMock
 		}
 
 		return [
-			'settings' => $this->getSettingsDivWrap($settings, $filterUsed),
+			'settings' => self::getSettingsDivWrap($settings, $filterUsed),
 			'data' => $data,
 			'filterUsed' => $filterUsed,
 		];
@@ -152,7 +152,7 @@ trait FiltersOuputMock
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getSuccessRedirectUrlFilterValue(string $type, string $formId): array
+	public static function getSuccessRedirectUrlFilterValue(string $type, string $formId): array
 	{
 		$data = '';
 		$filterUsed = false;
@@ -185,10 +185,10 @@ trait FiltersOuputMock
 		return [
 			'data' => $data,
 
-			'settingsGlobal' => $this->getSettingsDivWrap(''),
+			'settingsGlobal' => self::getSettingsDivWrap(''),
 			'dataGlobal' => $dataGlobal,
 
-			'settingsLocal' => $this->getSettingsDivWrap('', $filterUsed),
+			'settingsLocal' => self::getSettingsDivWrap('', $filterUsed),
 			'dataLocal' => $dataLocal,
 			'filterUsed' => $filterUsed,
 		];
@@ -202,7 +202,7 @@ trait FiltersOuputMock
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getTrackingEventNameFilterValue(string $type, string $formId): array
+	public static function getTrackingEventNameFilterValue(string $type, string $formId): array
 	{
 		$filterUsed = false;
 
@@ -219,7 +219,7 @@ trait FiltersOuputMock
 		}
 
 		return [
-			'settings' => $this->getSettingsDivWrap('', $filterUsed),
+			'settings' => self::getSettingsDivWrap('', $filterUsed),
 			'data' => $data,
 			'filterUsed' => $filterUsed,
 		];
@@ -233,7 +233,7 @@ trait FiltersOuputMock
 	 *
 	 * @return array<string, array<mixed>>
 	 */
-	public function getTrackingAditionalDataFilterValue(string $type, string $formId): array
+	public static function getTrackingAditionalDataFilterValue(string $type, string $formId): array
 	{
 		$data = [];
 		$settings = '';
@@ -282,7 +282,7 @@ trait FiltersOuputMock
 				}
 				$settingsDetails[$key] .= '</ul>';
 
-				$settingsDetails[$key] = $this->getSettingsDivWrap($settingsDetails[$key], true, false);
+				$settingsDetails[$key] = self::getSettingsDivWrap($settingsDetails[$key], true, false);
 			}
 
 			$settings .= '</details>';
@@ -295,6 +295,10 @@ trait FiltersOuputMock
 		];
 	}
 
+	// --------------------------------------------------
+	// Private helper methods
+	// --------------------------------------------------
+
 	/**
 	 * Wrap output date with div for styling.
 	 *
@@ -304,7 +308,7 @@ trait FiltersOuputMock
 	 *
 	 * @return string
 	 */
-	private function getSettingsDivWrap(string $data, bool $used = false, bool $defaultPrefix = true): string
+	private static function getSettingsDivWrap(string $data, bool $used = false, bool $defaultPrefix = true): string
 	{
 		if (!$used) {
 			return $data;
