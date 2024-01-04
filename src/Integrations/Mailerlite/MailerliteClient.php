@@ -15,7 +15,7 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
@@ -25,11 +25,6 @@ use EightshiftForms\Validation\Validator;
  */
 class MailerliteClient implements ClientInterface
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Return Mailerlite base url.
 	 *
@@ -171,7 +166,7 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -189,11 +184,11 @@ class MailerliteClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -280,7 +275,7 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -316,7 +311,7 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,

@@ -17,7 +17,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 
@@ -26,16 +26,6 @@ use EightshiftForms\Validation\Validator;
  */
 class WorkableClient implements ClientInterface
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Transient cache name for items.
 	 */
@@ -178,7 +168,7 @@ class WorkableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsWorkable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -196,11 +186,11 @@ class WorkableClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -297,7 +287,7 @@ class WorkableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsWorkable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -320,7 +310,7 @@ class WorkableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsWorkable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -358,7 +348,7 @@ class WorkableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsWorkable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -498,7 +488,7 @@ class WorkableClient implements ClientInterface
 			}
 
 			foreach ($value as $file) {
-				$fileName = $this->getFileNameFromPath($file);
+				$fileName = UploadHelper::getFileNameFromPath($file);
 
 				if ($name === 'resume') {
 					$output[$name] = [

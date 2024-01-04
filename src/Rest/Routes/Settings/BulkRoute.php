@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\Settings;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Transfer\TransferInterface;
 use WP_REST_Request;
@@ -115,7 +116,7 @@ class BulkRoute extends AbstractBaseRoute
 
 		if (!$ids) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\__('There are no selected forms.', 'eightshift-forms'),
 					[],
 					$debug
@@ -126,7 +127,7 @@ class BulkRoute extends AbstractBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\__('Action type is missing.', 'eightshift-forms'),
 					[],
 					$debug
@@ -163,7 +164,7 @@ class BulkRoute extends AbstractBaseRoute
 		switch ($output['status']) {
 			case 'success':
 				return \rest_ensure_response(
-					$this->getApiSuccessOutput(
+					ApiHelper::getApiSuccessOutput(
 						$output['msg'] ?? \esc_html__('Success', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -171,7 +172,7 @@ class BulkRoute extends AbstractBaseRoute
 				);
 			case 'warning':
 				return \rest_ensure_response(
-					$this->getApiWarningOutput(
+					ApiHelper::getApiWarningOutput(
 						$output['msg'] ?? \esc_html__('Warning', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -179,7 +180,7 @@ class BulkRoute extends AbstractBaseRoute
 				);
 			default:
 				return \rest_ensure_response(
-					$this->getApiErrorOutput(
+					ApiHelper::getApiErrorOutput(
 						$output['msg'] ?? \esc_html__('Error', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug

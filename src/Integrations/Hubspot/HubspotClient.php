@@ -15,7 +15,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
@@ -29,11 +29,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 class HubspotClient implements HubspotClientInterface
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Transient cache name for items.
 	 */
@@ -261,7 +256,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -279,11 +274,11 @@ class HubspotClient implements HubspotClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -335,7 +330,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -349,11 +344,11 @@ class HubspotClient implements HubspotClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body)
 		);
@@ -546,7 +541,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -582,7 +577,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,

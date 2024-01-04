@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
@@ -86,7 +87,7 @@ class LocationsRoute extends AbstractBaseRoute
 		$type = Helper::getFormTypeById($id);
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			ApiHelper::getApiSuccessOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					'output' => Components::renderPartial('component', 'admin-listing', 'item-details', [

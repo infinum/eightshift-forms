@@ -15,27 +15,16 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
  * JiraClient integration class.
  */
 class JiraClient implements JiraClientInterface
 {
-	/**
-	 * Helper trait.
-	 */
-	use ObjectHelperTrait;
-
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Transient cache name for projects.
 	 */
@@ -188,7 +177,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -206,11 +195,11 @@ class JiraClient implements JiraClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -285,7 +274,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -381,7 +370,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -425,7 +414,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,

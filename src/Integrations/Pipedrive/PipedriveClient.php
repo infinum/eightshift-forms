@@ -16,26 +16,15 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
  * PipedriveClient integration class.
  */
 class PipedriveClient implements PipedriveClientInterface
 {
-	/**
-	 * Helper trait.
-	 */
-	use ObjectHelperTrait;
-
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Return Pipedrive base url.
 	 *
@@ -225,7 +214,7 @@ class PipedriveClient implements PipedriveClientInterface
 			$body = $organization['body'];
 
 			if ($code < 200 || $code > 299) {
-				return $this->getIntegrationApiErrorOutput(
+				return ApiHelper::getIntegrationApiErrorOutput(
 					$organization,
 					$this->getErrorMsg($body)
 				);
@@ -250,7 +239,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$body = $person['body'];
 
 		if ($code < 200 || $code > 299) {
-			return $this->getIntegrationApiErrorOutput(
+			return ApiHelper::getIntegrationApiErrorOutput(
 				$person,
 				$this->getErrorMsg($body)
 			);
@@ -276,7 +265,7 @@ class PipedriveClient implements PipedriveClientInterface
 			$body = $lead['body'];
 
 			if ($code < 200 || $code > 299) {
-				return $this->getIntegrationApiErrorOutput(
+				return ApiHelper::getIntegrationApiErrorOutput(
 					$lead,
 					$this->getErrorMsg($body)
 				);
@@ -297,7 +286,7 @@ class PipedriveClient implements PipedriveClientInterface
 		}
 
 		// On success return output.
-		return $this->getIntegrationApiSuccessOutput($person);
+		return ApiHelper::getIntegrationApiSuccessOutput($person);
 	}
 
 	/**
@@ -316,7 +305,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -390,7 +379,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -418,7 +407,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -453,7 +442,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,

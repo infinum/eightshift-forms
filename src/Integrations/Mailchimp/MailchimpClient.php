@@ -15,7 +15,7 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -26,11 +26,6 @@ use EightshiftForms\Validation\Validator;
  */
 class MailchimpClient implements MailchimpClientInterface
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Transient cache name for items.
 	 */
@@ -204,7 +199,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -222,11 +217,11 @@ class MailchimpClient implements MailchimpClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -321,7 +316,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -374,7 +369,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -410,7 +405,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -434,7 +429,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,

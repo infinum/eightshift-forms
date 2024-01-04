@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Helpers\ApiHelper;
 use WP_REST_Request;
 
 /**
@@ -78,7 +79,7 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 
 			if ($code >= 200 && $code <= 299) {
 				return \rest_ensure_response(
-					$this->getApiSuccessOutput(
+					ApiHelper::getApiSuccessOutput(
 						\esc_html__('The API test was successful.', 'eightshift-forms'),
 						$additionalOutput,
 						$debug
@@ -87,7 +88,7 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 			}
 
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
 					$additionalOutput,
 					$debug
@@ -96,7 +97,7 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					$e->getMessage(),
 					[],
 					\array_merge(

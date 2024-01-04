@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Entries\EntriesHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
@@ -84,7 +85,7 @@ class ExportRoute extends AbstractBaseRoute
 
 		if (!$ids) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\__('There are no selected entries.', 'eightshift-forms'),
 					[],
 					$debug
@@ -95,7 +96,7 @@ class ExportRoute extends AbstractBaseRoute
 		$formId = $params['formId'] ?? '';
 		if (!$formId) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\__('Form Id type is missing.', 'eightshift-forms'),
 					[],
 					$debug
@@ -137,7 +138,7 @@ class ExportRoute extends AbstractBaseRoute
 
 		if (!$output) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\__('Data for export is empty.', 'eightshift-forms'),
 					[],
 					$debug
@@ -146,7 +147,7 @@ class ExportRoute extends AbstractBaseRoute
 		}
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			ApiHelper::getApiSuccessOutput(
 				\__('Data export finished with success.', 'eightshift-forms'),
 				[
 					'output' => \wp_json_encode($output),

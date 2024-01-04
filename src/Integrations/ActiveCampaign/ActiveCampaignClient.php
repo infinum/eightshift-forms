@@ -15,7 +15,7 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 
@@ -24,11 +24,6 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
  */
 class ActiveCampaignClient implements ActiveCampaignClientInterface
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Transient cache name for items.
 	 */
@@ -154,7 +149,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -172,7 +167,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput(
+			return ApiHelper::getIntegrationApiSuccessOutput(
 				$details,
 				[
 					'contactId' => $body['contact']['id'],
@@ -194,7 +189,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg([
 				[
@@ -242,7 +237,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -256,11 +251,11 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -297,7 +292,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -310,11 +305,11 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -342,7 +337,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -369,7 +364,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		$this->getIntegrationApiErrorOutput(
+		ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -406,7 +401,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -424,7 +419,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		$this->getIntegrationApiErrorOutput(
+		ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -502,7 +497,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -571,7 +566,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url

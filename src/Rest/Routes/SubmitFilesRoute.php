@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -80,7 +81,7 @@ class SubmitFilesRoute extends AbstractFormSubmit
 	{
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			ApiHelper::getApiSuccessOutput(
 				\esc_html__('File upload success', 'eightshift-forms'),
 				[
 					'file' => $formDataReference['filesUpload']['id'] ?? '',

@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -85,7 +86,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		$currentStep = $formDataReference['apiSteps']['current'] ?? '';
 		if (!$currentStep) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -96,7 +97,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		$submittedNames = $formDataReference['apiSteps']['fields'] ?? [];
 		if (!$submittedNames) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -107,7 +108,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		$steps = $formDataReference['stepsSetup']['steps'] ?? [];
 		if (!$steps) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -128,7 +129,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 
 			if (!$params) {
 				return \rest_ensure_response(
-					$this->getApiErrorOutput(
+					ApiHelper::getApiErrorOutput(
 						\esc_html__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
 						[],
 						$debug
@@ -168,7 +169,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		}
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			ApiHelper::getApiSuccessOutput(
 				\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
 				[
 					'type' => $type,

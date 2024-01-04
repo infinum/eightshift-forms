@@ -18,7 +18,7 @@ use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 
@@ -27,11 +27,6 @@ use EightshiftForms\Validation\Validator;
  */
 class GreenhouseClient implements ClientInterface
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Return Greenhouse base url.
 	 *
@@ -199,7 +194,7 @@ class GreenhouseClient implements ClientInterface
 		}
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -218,11 +213,11 @@ class GreenhouseClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+			return ApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -305,7 +300,7 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return $this->getIntegrationApiReponseDetails(
+		return ApiHelper::getIntegrationApiReponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -353,7 +348,7 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,

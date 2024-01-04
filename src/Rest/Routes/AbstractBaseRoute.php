@@ -15,7 +15,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
@@ -26,16 +26,6 @@ use WP_REST_Request;
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
 	/**
 	 * Status error const.
 	 *
@@ -317,7 +307,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 							[
 								'value' => \array_map(
 									function ($item) {
-										return $this->getFilePath($item);
+										return UploadHelper::getFilePath($item);
 									},
 									\explode(self::DELIMITER, $fieldValue)
 								),
@@ -403,7 +393,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			return [];
 		}
 
-		return $this->getApiPermissionsErrorOutput();
+		return ApiHelper::getApiPermissionsErrorOutput();
 	}
 
 	/**

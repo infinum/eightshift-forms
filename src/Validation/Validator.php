@@ -32,11 +32,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 class Validator extends AbstractValidation
 {
 	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
 	 * Instance variable for labels data.
 	 *
 	 * @var LabelsInterface
@@ -191,7 +186,7 @@ class Validator extends AbstractValidation
 
 					// Check if wrong upload path.
 					foreach ($inputValue as $value) {
-						if ($this->isUploadError($value)) {
+						if (UploadHelper::isUploadError($value)) {
 							$output[$paramKey] = $this->getValidationLabel('validationFileNotLocated', $formId);
 							$isFilesError = true;
 							break;

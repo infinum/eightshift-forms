@@ -14,6 +14,7 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
@@ -83,7 +84,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If form action is not set or empty.
 		if (!$action) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					$this->labels->getLabel('customNoAction', $formId),
 					[],
 					$debug
@@ -93,7 +94,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 
 		if ($actionExternal) {
 			return \rest_ensure_response(
-				$this->getApiSuccessOutput(
+				ApiHelper::getApiSuccessOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					[
 						'processExternaly' => true,
@@ -122,7 +123,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If custom action request fails we'll return the generic error message.
 		if (!$customResponseCode || $customResponseCode > 399) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					$this->labels->getLabel('customError', $formId),
 					[],
 					$debug
@@ -132,7 +133,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			ApiHelper::getApiSuccessOutput(
 				$this->labels->getLabel('customSuccess', $formId),
 				[],
 				$debug

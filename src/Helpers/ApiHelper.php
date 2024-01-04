@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Trait that holds all api helpers used in classes.
+ * Class that holds all api helpers used in classes.
  *
- * @package EightshiftLibs\Rest
+ * @package EightshiftLibs\Helpers
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest;
+namespace EightshiftForms\Helpers;
 
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -16,9 +16,9 @@ use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
- * ApiHelper trait.
+ * ApiHelper class.
  */
-trait ApiHelper
+final class ApiHelper
 {
 	/**
 	 * Return API response array details.
@@ -42,7 +42,7 @@ trait ApiHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getIntegrationApiReponseDetails(
+	public static function getIntegrationApiReponseDetails(
 		string $integration,
 		$response,
 		string $url,
@@ -99,7 +99,7 @@ trait ApiHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getIntegrationApiErrorOutput(array $details, string $msg, array $additional = []): array
+	public static function getIntegrationApiErrorOutput(array $details, string $msg, array $additional = []): array
 	{
 		unset($details['status']);
 		unset($details['message']);
@@ -122,7 +122,7 @@ trait ApiHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getIntegrationApiSuccessOutput(array $details, array $additional = []): array
+	public static function getIntegrationApiSuccessOutput(array $details, array $additional = []): array
 	{
 		$integration = $details['integration'] ?? '';
 
@@ -148,7 +148,7 @@ trait ApiHelper
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function getIntegrationApiOutput(array $details, string $msg, array $additional = []): array
+	public static function getIntegrationApiOutput(array $details, string $msg, array $additional = []): array
 	{
 		$status = $details['status'] ?? AbstractBaseRoute::STATUS_ERROR;
 
@@ -166,14 +166,14 @@ trait ApiHelper
 		}
 
 		if ($status === AbstractBaseRoute::STATUS_SUCCESS) {
-			return $this->getApiSuccessOutput(
+			return self::getApiSuccessOutput(
 				$msg,
 				$additionalOutput,
 				$details
 			);
 		}
 
-		return $this->getApiErrorOutput(
+		return self::getApiErrorOutput(
 			$msg,
 			$additionalOutput,
 			$details
@@ -189,7 +189,7 @@ trait ApiHelper
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function getApiErrorOutput(string $msg, array $additional = [], array $debug = []): array
+	public static function getApiErrorOutput(string $msg, array $additional = [], array $debug = []): array
 	{
 		$output = [
 			'status' => AbstractBaseRoute::STATUS_ERROR,
@@ -219,7 +219,7 @@ trait ApiHelper
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function getApiSuccessOutput(string $msg, array $additional = [], array $debug = []): array
+	public static function getApiSuccessOutput(string $msg, array $additional = [], array $debug = []): array
 	{
 		$output = [
 			'status' => AbstractBaseRoute::STATUS_SUCCESS,
@@ -249,7 +249,7 @@ trait ApiHelper
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function getApiWarningOutput(string $msg, array $additional = [], array $debug = []): array
+	public static function getApiWarningOutput(string $msg, array $additional = [], array $debug = []): array
 	{
 		$output = [
 			'status' => AbstractBaseRoute::STATUS_WARNING,
@@ -275,9 +275,9 @@ trait ApiHelper
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getApiPermissionsErrorOutput(): array
+	public static function getApiPermissionsErrorOutput(): array
 	{
-		return $this->getApiErrorOutput(
+		return self::getApiErrorOutput(
 			\esc_html__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
 		);
 	}

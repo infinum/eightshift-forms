@@ -19,11 +19,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 class FileUploadJob implements ServiceInterface
 {
 	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
 	 * Job name.
 	 *
 	 * @var string
@@ -82,6 +77,6 @@ class FileUploadJob implements ServiceInterface
 	 */
 	public function getJobCallback()
 	{
-		$this->deleteUploadFolderContent();
+		UploadHelper::deleteUploadFolderContent();
 	}
 }

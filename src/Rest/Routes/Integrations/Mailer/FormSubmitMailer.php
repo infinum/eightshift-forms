@@ -13,7 +13,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 
 /**
@@ -21,11 +21,6 @@ use EightshiftForms\Helpers\SettingsHelper;
  */
 class FormSubmitMailer implements FormSubmitMailerInterface
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Instance variable of LabelsInterface data.
 	 *
@@ -77,7 +72,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
 				[],
 				$debug
@@ -97,7 +92,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// If email fails.
 		if (!$response) {
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorEmailSend', $formId),
 				[],
 				$debug
@@ -107,7 +102,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$this->sendConfirmationEmail($formId, $params, $files);
 
 		// Finish.
-		return $this->getApiSuccessOutput(
+		return ApiHelper::getApiSuccessOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
 			[],
 			$debug

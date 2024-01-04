@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
@@ -101,7 +102,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 
 		if (!$isGlobalSettingsValid) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('Global not configured', 'eightshift-forms'),
 					[],
 					$debug
@@ -113,7 +114,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 
 		if (!$itemId) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('Missing item ID.', 'eightshift-forms'),
 					[],
 					$debug
@@ -125,7 +126,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 
 		if (!$items) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('Items missing', 'eightshift-forms'),
 					[],
 					$debug
@@ -149,7 +150,7 @@ class IntegrationItemsInnerAirtableRoute extends AbstractBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			ApiHelper::getApiSuccessOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					[

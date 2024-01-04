@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Hooks\Filters;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -93,7 +94,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('Type key was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -122,7 +123,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			$cacheTypes = $data[$type]['cache'] ?? [];
 			if (!$cacheTypes) {
 				return \rest_ensure_response(
-					$this->getApiErrorOutput(
+					ApiHelper::getApiErrorOutput(
 						\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
 						[],
 						$debug
@@ -142,7 +143,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			ApiHelper::getApiSuccessOutput(
 				// translators: %s will be replaced with the form type.
 				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), \ucfirst($type)),
 				[],

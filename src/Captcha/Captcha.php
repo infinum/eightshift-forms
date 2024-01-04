@@ -12,7 +12,7 @@ namespace EightshiftForms\Captcha;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Throwable;
@@ -22,11 +22,6 @@ use Throwable;
  */
 class Captcha implements CaptchaInterface
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Instance variable of LabelsInterface data.
 	 *
@@ -62,7 +57,7 @@ class Captcha implements CaptchaInterface
 		];
 
 		if (!$token) {
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('captchaBadRequest'),
 				[],
 				$debug
@@ -77,7 +72,7 @@ class Captcha implements CaptchaInterface
 
 		// Generic error msg from WP.
 		if (\is_wp_error($response)) {
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('submitWpError'),
 				[],
 				$debug
@@ -88,7 +83,7 @@ class Captcha implements CaptchaInterface
 		try {
 			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		} catch (Throwable $t) {
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('captchaBadRequest'),
 				[],
 				$debug
@@ -177,7 +172,7 @@ class Captcha implements CaptchaInterface
 		// If error status returns error.
 		if ($error) {
 			// Bailout on error.
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$error['message'] ?? '',
 				[
 					'response' => $responseBody,
@@ -213,7 +208,7 @@ class Captcha implements CaptchaInterface
 			$errorCode = $responseBody['error-codes'][0] ?? '';
 
 			// Bailout on error.
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$this->labels->getLabel("captcha" . \ucfirst(Components::kebabToCamelCase($errorCode))),
 				[
 					'response' => $responseBody,
@@ -246,7 +241,7 @@ class Captcha implements CaptchaInterface
 
 		// Bailout if action is not correct.
 		if ($actionResponse !== $action) {
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('captchaWrongAction'),
 				[
 					'response' => $responseBody,
@@ -259,7 +254,7 @@ class Captcha implements CaptchaInterface
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
 					'response' => $responseBody,
@@ -268,7 +263,7 @@ class Captcha implements CaptchaInterface
 			);
 		}
 
-		return $this->getApiSuccessOutput(
+		return ApiHelper::getApiSuccessOutput(
 			'',
 			[
 				'response' => $responseBody,

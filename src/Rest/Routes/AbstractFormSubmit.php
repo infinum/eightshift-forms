@@ -19,6 +19,7 @@ use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStan
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -31,11 +32,6 @@ use WP_REST_Request;
  */
 abstract class AbstractFormSubmit extends AbstractBaseRoute
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -150,14 +146,14 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 						}
 					}
 
-					$uploadFile = $this->uploadFile($formDataReference['filesUpload']);
+					$uploadFile = UploadHelper::uploadFile($formDataReference['filesUpload']);
 					$uploadError = $uploadFile['errorOutput'] ?? '';
 					$uploadFileId = $formDataReference['filesUpload']['id'] ?? '';
 
 					// Upload files to temp folder.
 					$formDataReference['filesUpload'] = $uploadFile;
 
-					if ($this->isUploadError($uploadError)) {
+					if (UploadHelper::isUploadError($uploadError)) {
 						throw new UnverifiedRequestException(
 							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
 							[
@@ -237,7 +233,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					$e->getMessage(),
 					[
 						Validator::VALIDATOR_OUTPUT_KEY => $e->getData(),
@@ -319,7 +315,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				)
 			);
 
-			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
+			$fakeResponse = ApiHelper::getIntegrationApiSuccessOutput($response);
 
 			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
 			$responseOutput = $fakeResponse;
@@ -330,7 +326,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
 
-		return $this->getIntegrationApiOutput(
+		return ApiHelper::getIntegrationApiOutput(
 			$responseOutput,
 			$labelsOutput,
 		);

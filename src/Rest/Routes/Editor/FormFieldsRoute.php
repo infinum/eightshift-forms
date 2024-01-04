@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
@@ -103,7 +104,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 		if (!$formId) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('Form Id was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -123,7 +124,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 		if (!$fieldsOnly) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				ApiHelper::getApiErrorOutput(
 					\esc_html__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
 					[],
 					$debug
@@ -136,7 +137,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 		$steps = $data['stepsSetup'] ?? [];
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			ApiHelper::getApiSuccessOutput(
 				\esc_html__('Success.', 'eightshift-forms'),
 				[
 					'fields' => \array_values($fieldsOutput),

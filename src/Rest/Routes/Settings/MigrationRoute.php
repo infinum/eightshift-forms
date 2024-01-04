@@ -27,7 +27,7 @@ use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Migration\MigrationHelper;
 use EightshiftForms\Migration\SettingsMigration;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Helpers\SettingsHelper;
@@ -42,11 +42,6 @@ use WP_REST_Request;
  */
 class MigrationRoute extends AbstractBaseRoute
 {
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Use Migration helper trait.
 	 */
@@ -141,7 +136,7 @@ class MigrationRoute extends AbstractBaseRoute
 			case SettingsMigration::VERSION_2_3_LOCALE:
 				return $this->getMigration2To3Locale();
 			default:
-				return $this->getApiErrorOutput(
+				return ApiHelper::getApiErrorOutput(
 					\__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
 					[],
 					$debug
@@ -211,7 +206,7 @@ class MigrationRoute extends AbstractBaseRoute
 			\do_action($actionName, SettingsMigration::VERSION_2_3_GENERAL);
 		}
 
-		return $this->getApiSuccessOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
+		return ApiHelper::getApiSuccessOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
 	}
 
 	/**
@@ -235,7 +230,7 @@ class MigrationRoute extends AbstractBaseRoute
 
 		if (!$theQuery->have_posts()) {
 			\wp_reset_postdata();
-			return $this->getApiErrorOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
+			return ApiHelper::getApiErrorOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
 		}
 
 		while ($theQuery->have_posts()) {
@@ -392,13 +387,13 @@ class MigrationRoute extends AbstractBaseRoute
 		}
 
 		if (!$outputFinal['items']) {
-			return $this->getApiErrorOutput(
+			return ApiHelper::getApiErrorOutput(
 				\__('All forms returned and error. It looks like you allready migrated everything.', 'eightshift-forms'),
 				$outputFinal,
 			);
 		}
 
-		return $this->getApiSuccessOutput(
+		return ApiHelper::getApiSuccessOutput(
 			\__('Migration version 2 to 3 forms finished with success.', 'eightshift-forms'),
 			$outputFinal
 		);
@@ -507,7 +502,7 @@ class MigrationRoute extends AbstractBaseRoute
 			\do_action($actionName, SettingsMigration::VERSION_2_3_LOCALE);
 		}
 
-		return $this->getApiSuccessOutput(
+		return ApiHelper::getApiSuccessOutput(
 			\__('Migration version 2 to 3 locale finished with success.', 'eightshift-forms'),
 			$output
 		);

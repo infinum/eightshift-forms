@@ -64,7 +64,7 @@ if (\class_exists(Main::class)) {
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 
 	// Require public helper class.
-	require __DIR__ . "{$sep}src{$sep}Helpers{$sep}esForms.php";
+	require __DIR__ . "{$sep}src{$sep}Helpers{$sep}publicHelper.php";
 
 	// Require test filters.
 	require __DIR__ . "{$sep}testFilters{$sep}testFilters.php";

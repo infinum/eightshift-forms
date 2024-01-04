@@ -12,26 +12,15 @@ namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Rest\ApiHelper;
+use EightshiftForms\Helpers\ApiHelper;
 use EightshiftForms\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
  * ClearbitClient integration class.
  */
 class ClearbitClient implements ClearbitClientInterface
 {
-	/**
-	 * Helper trait.
-	 */
-	use ObjectHelperTrait;
-
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Return Clearbit base url.
 	 *
@@ -64,7 +53,7 @@ class ClearbitClient implements ClearbitClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = ApiHelper::getIntegrationApiReponseDetails(
 			SettingsClearbit::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -89,7 +78,7 @@ class ClearbitClient implements ClearbitClientInterface
 				}
 			}
 
-			return $this->getIntegrationApiSuccessOutput(
+			return ApiHelper::getIntegrationApiSuccessOutput(
 				$details,
 				[
 					'email' => $email,
@@ -99,7 +88,7 @@ class ClearbitClient implements ClearbitClientInterface
 		}
 
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return ApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[

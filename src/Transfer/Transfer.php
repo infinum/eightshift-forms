@@ -20,11 +20,6 @@ use WP_Query;
 class Transfer implements TransferInterface
 {
 	/**
-	 * Use trait UploadHelper inside class.
-	 */
-	use UploadHelper;
-
-	/**
 	 * Type global settings key.
 	 */
 	public const TYPE_GLOBAL_SETTINGS = 'globalSettings';
@@ -163,9 +158,9 @@ class Transfer implements TransferInterface
 	 */
 	public function getImport(string $upload, bool $override): bool
 	{
-		$filePath = $this->getFilePath($upload);
+		$filePath = UploadHelper::getFilePath($upload);
 
-		if ($this->isUploadError($filePath)) {
+		if (UploadHelper::isUploadError($filePath)) {
 			return false;
 		}
 
