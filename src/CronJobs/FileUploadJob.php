@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CronJobs;
 
-use EightshiftForms\Helpers\UploadHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**

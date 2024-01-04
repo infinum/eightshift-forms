@@ -13,7 +13,7 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\UploadHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Rest\ApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
