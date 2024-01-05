@@ -12,16 +12,17 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -219,9 +220,9 @@ class HubspotClient implements HubspotClientInterface
 		$body = [
 			'context' => [
 				'ipAddress' => $this->security->getIpAddress(),
-				'hutk' => $params[Helper::getStateParam('hubspotCookie')]['value'],
-				'pageUri' => Helper::cleanPageUrl($params[Helper::getStateParam('hubspotPageUrl')]['value']),
-				'pageName' => $params[Helper::getStateParam('hubspotPageName')]['value'],
+				'hutk' => $params[UtilsHelper::getStateParam('hubspotCookie')]['value'],
+				'pageUri' => Helper::cleanPageUrl($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value']),
+				'pageName' => $params[UtilsHelper::getStateParam('hubspotPageName')]['value'],
 			],
 		];
 
@@ -299,7 +300,7 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$properties = [];
 
-		$customFields = \array_flip(Components::flattenArray(Helper::getStateParams()));
+		$customFields = \array_flip(Components::flattenArray(UtilsHelper::getStateParams()));
 
 		if ($params) {
 			foreach ($params as $key => $value) {

@@ -14,9 +14,10 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Config\Config;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Admin_Bar;
 
@@ -87,7 +88,7 @@ class FormAdminBarMenu implements ServiceInterface
 				'id' => $prefix,
 				'parent' => null,
 				'group' => null,
-				'title' => ($isDevelopMode || $isDevelopModeQmLog) ? $mainLabel . Helper::getProjectIcons('warning') : $mainLabel,
+				'title' => ($isDevelopMode || $isDevelopModeQmLog) ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
 				'href' => Helper::getListingPageUrl(),
 				'meta' => [
 					'title' => ($isDevelopMode || $isDevelopModeQmLog) ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,

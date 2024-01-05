@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -116,9 +116,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_LOCALE,
+									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_LOCALE,
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -136,9 +136,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_GENERAL,
+									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_GENERAL,
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -156,9 +156,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_FORMS,
+									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_FORMS,
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -174,7 +174,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
 						'textareaIsPreventSubmit' => true,
 						'textareaIsReadOnly' => true,
-						'additionalClass' => Helper::getStateSelectorAdmin('migrationOutput'),
+						'additionalClass' => UtilsHelper::getStateSelectorAdmin('migrationOutput'),
 					],
 				],
 			],

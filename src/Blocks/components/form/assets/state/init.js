@@ -1,6 +1,7 @@
 /* global esFormsLocalization */
 
 import globalManifest from './../../../../manifest.json';
+import utilsManifest from './../../../../../../vendor/infinum/eightshift-forms-utils/src/manifest.json';
 import { CONDITIONAL_TAGS_ACTIONS } from '../../../conditional-tags/assets/utils';
 
 ////////////////////////////////////////////////////////////////
@@ -177,22 +178,22 @@ export function setStateInitial() {
 	};
 
 	// Selectors.
-	for (const [key, item] of Object.entries(globalManifest.enums.selectors ?? {})) {
+	for (const [key, item] of Object.entries(utilsManifest.enums.selectors ?? {})) {
 		setState([key], item, StateEnum.SELECTORS);
 	}
 
 	// Selectors Admin.
-	for (const [key, item] of Object.entries(globalManifest.enums.selectorsAdmin ?? {})) {
+	for (const [key, item] of Object.entries(utilsManifest.enums.selectorsAdmin ?? {})) {
 		setState([key], item, StateEnum.SELECTORS_ADMIN);
 	}
 
 	// Attributes.
-	for (const [key, item] of Object.entries(globalManifest.enums.attrs ?? {})) {
+	for (const [key, item] of Object.entries(utilsManifest.enums.attrs ?? {})) {
 		setState([key], item, StateEnum.ATTRIBUTES);
 	}
 
 	// Params.
-	for (const [key, item] of Object.entries(globalManifest.enums.params ?? {})) {
+	for (const [key, item] of Object.entries(utilsManifest.enums.params ?? {})) {
 		setState([key], item, StateEnum.PARAMS);
 	}
 

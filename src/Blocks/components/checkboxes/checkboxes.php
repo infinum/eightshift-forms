@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -52,7 +53,7 @@ echo Components::render(
 		Components::props('field', $attributes, [
 			'fieldContent' => $checkboxes,
 			'fieldId' => $checkboxesName,
-			'fieldTypeInternal' => Helper::getStateFieldType('checkboxes'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 			'fieldName' => $checkboxesName,
 			'fieldIsRequired' => $checkboxesIsRequired,
 			'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

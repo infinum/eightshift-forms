@@ -6,8 +6,9 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');
@@ -74,7 +75,7 @@ echo Components::render(
 			'fieldContent' => $button,
 			'fieldId' => $submitName,
 			'fieldUseError' => false,
-			'fieldTypeInternal' => Helper::getStateFieldType('submit'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('submit'),
 			'fieldDisabled' => !empty($submitIsDisabled),
 			'fieldTracking' => $submitTracking,
 			'fieldUniqueId' => $submitUniqueId,

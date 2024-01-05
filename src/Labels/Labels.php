@@ -3,7 +3,7 @@
 /**
  * Class that holds all labels.
  *
- * @package EightshiftLibs\Labels
+ * @package EightshiftForms\Labels
  */
 
 declare(strict_types=1);
@@ -20,7 +20,7 @@ use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 

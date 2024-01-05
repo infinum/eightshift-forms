@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Security;
 
 use EightshiftForms\Misc\SettingsCloudflare;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 
 /**
  * Security class.

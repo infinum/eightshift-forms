@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -26,8 +27,8 @@ $stepIsActive = Components::checkAttr('stepIsActive', $attributes, $manifest);
 
 $stepClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Helper::getStateSelector('step'),
-	Components::selector($stepIsActive, Helper::getStateSelector('isActive')),
+	UtilsHelper::getStateSelector('step'),
+	Components::selector($stepIsActive, UtilsHelper::getStateSelector('isActive')),
 ]);
 
 if (!$stepContent) {
@@ -37,7 +38,7 @@ if (!$stepContent) {
 $stepAttrs = [];
 
 if ($stepName) {
-	$stepAttrs[Helper::getStateAttribute('stepId')] = esc_attr($stepName);
+	$stepAttrs[UtilsHelper::getStateAttribute('stepId')] = esc_attr($stepName);
 }
 
 $stepAttrsOutput = '';
@@ -65,7 +66,7 @@ $nextButtonComponent = '';
 				if (has_filter($filterNameComponentPrev)) {
 					$prevButtonComponent = apply_filters($filterNameComponentPrev, [
 						'value' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'jsSelector' => Helper::getStateSelector('stepSubmit'),
+						'jsSelector' => UtilsHelper::getStateSelector('stepSubmit'),
 						'attributes' => $attributes,
 					]);
 				}
@@ -77,14 +78,14 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $prevButtonComponent,
 							'submitAttrs' => [
-								Helper::getStateAttribute('submitStepDirection') => 'prev',
+								UtilsHelper::getStateAttribute('submitStepDirection') => 'prev',
 							],
 						]),
 						[
 							'additionalFieldClass' => Components::classnames([
 								Components::selector($componentFieldClass, $componentFieldClass, '', 'submit-prev'),
 							]),
-							'additionalClass' => Helper::getStateSelector('stepSubmit'),
+							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
 						]
 					)
 				);
@@ -94,7 +95,7 @@ $nextButtonComponent = '';
 				if (has_filter($filterNameComponentNext)) {
 					$nextButtonComponent = apply_filters($filterNameComponentNext, [
 						'value' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'jsSelector' => Helper::getStateSelector('stepSubmit'),
+						'jsSelector' => UtilsHelper::getStateSelector('stepSubmit'),
 						'attributes' => $attributes,
 					]);
 				}
@@ -106,14 +107,14 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $nextButtonComponent,
 							'submitAttrs' => [
-								Helper::getStateAttribute('submitStepDirection') => 'next',
+								UtilsHelper::getStateAttribute('submitStepDirection') => 'next',
 							],
 						]),
 						[
 							'additionalFieldClass' => Components::classnames([
 								Components::selector($componentFieldClass, $componentFieldClass, '', 'submit-next'),
 							]),
-							'additionalClass' => Helper::getStateSelector('stepSubmit'),
+							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
 						]
 					)
 				);

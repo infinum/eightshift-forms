@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -78,10 +78,10 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('cacheType') => $key,
-									Helper::getStateAttribute('reload') => 'false',
+									UtilsHelper::getStateAttribute('cacheType') => $key,
+									UtilsHelper::getStateAttribute('reload') => 'false',
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('cacheDelete'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
 							],
 						],
 					];
@@ -106,17 +106,17 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 						'component' => 'card-inline',
 						'cardInlineTitle' => 'All caches',
 						'cardInlineSubTitle' => 'Use with caution!',
-						'cardInlineIcon' => Helper::getProjectIcons('allChecked'),
+						'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
 						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('cacheType') => 'all',
-									Helper::getStateAttribute('reload') => 'false',
+									UtilsHelper::getStateAttribute('cacheType') => 'all',
+									UtilsHelper::getStateAttribute('reload') => 'false',
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('cacheDelete'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
 							],
 						],
 					],

@@ -3,7 +3,7 @@
 /**
  * Enrichment data interface.
  *
- * @package EightshiftLibs\Enrichment
+ * @package EightshiftForms\Enrichment
  */
 
 declare(strict_types=1);

@@ -3,7 +3,7 @@
 /**
  * Interface that holds captcha.
  *
- * @package EightshiftLibs\Captcha
+ * @package EightshiftForms\Captcha
  */
 
 declare(strict_types=1);

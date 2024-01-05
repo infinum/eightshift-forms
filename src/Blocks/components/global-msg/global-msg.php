@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -20,7 +21,7 @@ $globalMsgValue = Components::checkAttr('globalMsgValue', $attributes, $manifest
 $globalMsgClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Helper::getStateSelector('globalMsg'),
+	UtilsHelper::getStateSelector('globalMsg'),
 ]);
 
 $headings = [
@@ -34,11 +35,11 @@ if (has_filter($filterName) && !is_admin()) {
 	$headings = apply_filters($filterName, []);
 
 	if (isset($headings['success'])) {
-		$globalMsgAttrs[Helper::getStateAttribute('globalMsgHeadingSuccess')] = $headings['success'];
+		$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingSuccess')] = $headings['success'];
 	}
 
 	if (isset($headings['error'])) {
-		$globalMsgAttrs[Helper::getStateAttribute('globalMsgHeadingError')] = $headings['error'];
+		$globalMsgAttrs[UtilsHelper::getStateAttribute('globalMsgHeadingError')] = $headings['error'];
 	}
 }
 

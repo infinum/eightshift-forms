@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;

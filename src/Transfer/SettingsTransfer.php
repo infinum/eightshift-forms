@@ -11,11 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
 use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Query;
 
@@ -122,16 +122,16 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									[
 										'component' => 'card-inline',
 										'cardInlineTitle' => \__('Global settings'),
-										'cardInlineIcon' => Helper::getProjectIcons('settings'),
+										'cardInlineIcon' => UtilsHelper::getUtilsIcons('settings'),
 										'cardInlineRightContent' => [
 											[
 												'component' => 'submit',
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_GLOBAL_SETTINGS,
+													UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_GLOBAL_SETTINGS,
 												],
-												'additionalClass' => Helper::getStateSelectorAdmin('transfer'),
+												'additionalClass' => UtilsHelper::getStateSelectorAdmin('transfer'),
 											],
 										],
 									],
@@ -141,16 +141,16 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									[
 										'component' => 'card-inline',
 										'cardInlineTitle' => \__('Everything'),
-										'cardInlineIcon' => Helper::getProjectIcons('allChecked'),
+										'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
 										'cardInlineRightContent' => [
 											[
 												'component' => 'submit',
 												'submitValue' => \__('Export', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_ALL,
+													UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_ALL,
 												],
-												'additionalClass' => Helper::getStateSelectorAdmin('transfer'),
+												'additionalClass' => UtilsHelper::getStateSelectorAdmin('transfer'),
 											],
 										],
 									],
@@ -160,17 +160,17 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 									[
 										'component' => 'card-inline',
 										'cardInlineTitle' => \__('Forms', 'eightshift-forms'),
-										'cardInlineIcon' => Helper::getProjectIcons('form'),
+										'cardInlineIcon' => UtilsHelper::getUtilsIcons('form'),
 										'cardInlineRightContent' => [
 											[
 												'component' => 'submit',
 												'submitValue' => \__('Export selected', 'eightshift-forms'),
 												'submitVariant' => 'outline',
 												'submitAttrs' => [
-													Helper::getStateAttribute('migrationType') => self::TYPE_EXPORT_FORMS,
-													Helper::getStateAttribute('migrationExportItems') => '',
+													UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_FORMS,
+													UtilsHelper::getStateAttribute('migrationExportItems') => '',
 												],
-												'additionalClass' => Helper::getStateSelectorAdmin('transfer'),
+												'additionalClass' => UtilsHelper::getStateSelectorAdmin('transfer'),
 											],
 										],
 									],
@@ -216,7 +216,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 												'checkboxAsToggle' => true,
 												'checkboxAsToggleSize' => 'medium',
 												'checkboxLabel' => \__('Override existing forms', 'eightshift-forms'),
-												'additionalClass' => Helper::getStateSelectorAdmin('transferExisting'),
+												'additionalClass' => UtilsHelper::getStateSelectorAdmin('transferExisting'),
 											],
 										],
 									],
@@ -230,16 +230,16 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 										'fileIsRequired' => true,
 										'fileFieldLabel' => \__('Backup file (JSON)', 'eightshift-forms'),
 										'fileAccept' => 'json',
-										'additionalClass' => Helper::getStateSelectorAdmin('transferUpload'),
+										'additionalClass' => UtilsHelper::getStateSelectorAdmin('transferUpload'),
 									],
 									[
 										'component' => 'submit',
 										'submitValue' => \__('Import JSON', 'eightshift-forms'),
 										'submitVariant' => 'outline',
 										'submitAttrs' => [
-											Helper::getStateAttribute('migrationType') => self::TYPE_IMPORT,
+											UtilsHelper::getStateAttribute('migrationType') => self::TYPE_IMPORT,
 										],
-										'additionalClass' => Helper::getStateSelectorAdmin('transfer'),
+										'additionalClass' => UtilsHelper::getStateSelectorAdmin('transfer'),
 									],
 								],
 							],
@@ -263,13 +263,13 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'textareaSize' => 'big',
 								'textareaLimitHeight' => true,
 								'textareaIsPreventSubmit' => true,
-								'additionalClass' => Helper::getStateSelectorAdmin('manualImportApiData'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('manualImportApiData'),
 							],
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Manual import', 'eightshift-forms'),
 								'submitVariant' => 'outline',
-								'additionalClass' => Helper::getStateSelectorAdmin('manualImportApi'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('manualImportApi'),
 							],
 							[
 								'component' => 'textarea',
@@ -279,7 +279,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'textareaIsPreventSubmit' => true,
 								'textareaLimitHeight' => true,
 								'textareaIsReadOnly' => true,
-								'additionalClass' => Helper::getStateSelectorAdmin('manualImportApiOutput'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('manualImportApiOutput'),
 							],
 						],
 					],
@@ -322,7 +322,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 				'component' => 'checkbox',
 				'checkboxLabel' => $title,
 				'checkboxValue' => $id,
-				'additionalClass' => Helper::getStateSelectorAdmin('transferItem'),
+				'additionalClass' => UtilsHelper::getStateSelectorAdmin('transferItem'),
 			];
 		}
 

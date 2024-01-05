@@ -12,7 +12,7 @@ namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
@@ -62,6 +62,7 @@ use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -738,7 +739,7 @@ class Filters implements ServiceInterface
 			$data[$keyData]['labels'] = \array_merge(
 				$valueData['labels'],
 				[
-					'icon' => Helper::getProjectIcons($keyData),
+					'icon' => UtilsHelper::getUtilsIcons($keyData),
 				],
 			);
 		}

@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -47,13 +48,13 @@ $checkboxClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($checkboxIsDisabled, Helper::getStateSelector('isDisabled')),
-	Components::selector($checkboxIsHidden, Helper::getStateSelector('isHidden')),
+	Components::selector($checkboxIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
+	Components::selector($checkboxIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);
 
 $checkboxInputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'input'),
-	Components::selector($checkboxSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
+	Components::selector($checkboxSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 $checkboxAttrs['value'] = esc_attr($checkboxValue);
@@ -76,17 +77,17 @@ $conditionalTags = Components::render(
 );
 
 if ($conditionalTags) {
-	$checkboxFieldAttrs[Helper::getStateAttribute('conditionalTags')] = $conditionalTags;
+	$checkboxFieldAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 
-$checkboxFieldAttrs[Helper::getStateAttribute('fieldName')] = $checkboxValue;
+$checkboxFieldAttrs[UtilsHelper::getStateAttribute('fieldName')] = $checkboxValue;
 
 if ($componentName) {
-	$checkboxFieldAttrs[Helper::getStateAttribute('fieldType')] = 'checkbox';
+	$checkboxFieldAttrs[UtilsHelper::getStateAttribute('fieldType')] = 'checkbox';
 }
 
 if ($checkboxTracking) {
-	$checkboxFieldAttrs[Helper::getStateAttribute('tracking')] = esc_attr($checkboxTracking);
+	$checkboxFieldAttrs[UtilsHelper::getStateAttribute('tracking')] = esc_attr($checkboxTracking);
 }
 
 $checkboxFieldAttrsOutput = '';

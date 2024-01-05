@@ -17,8 +17,9 @@ use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftForms\Helpers\IntegrationsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\IntegrationsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
 /**
@@ -352,10 +353,10 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	private function getTopBarItems(string $type, string $formId): array
 	{
-		$bulkSelector = Helper::getStateSelectorAdmin('listingBulk');
-		$filterSelector = Helper::getStateSelectorAdmin('listingFilter');
-		$exportSelector = Helper::getStateSelectorAdmin('listingExport');
-		$selectAllSelector = Helper::getStateSelectorAdmin('listingSelectAll');
+		$bulkSelector = UtilsHelper::getStateSelectorAdmin('listingBulk');
+		$filterSelector = UtilsHelper::getStateSelectorAdmin('listingFilter');
+		$exportSelector = UtilsHelper::getStateSelectorAdmin('listingExport');
+		$selectAllSelector = UtilsHelper::getStateSelectorAdmin('listingSelectAll');
 
 		$left = [];
 		$right = [];
@@ -368,7 +369,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => Helper::getListingPageUrl(),
 						'submitValue' => \__('Back', 'eightshift-forms'),
-						'submitIcon' => Helper::getProjectIcons('arrowLeft')
+						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
 				];
 				break;
@@ -384,7 +385,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => Helper::getListingPageUrl(),
 						'submitValue' => \__('Back', 'eightshift-forms'),
-						'submitIcon' => Helper::getProjectIcons('arrowLeft')
+						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
@@ -392,7 +393,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
-							Helper::getStateAttribute('bulkType') => 'delete-entry',
+							UtilsHelper::getStateAttribute('bulkType') => 'delete-entry',
 						],
 					]),
 					Components::render('submit', [
@@ -401,7 +402,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
-							Helper::getStateAttribute('bulkType') => 'duplicate-entry',
+							UtilsHelper::getStateAttribute('bulkType') => 'duplicate-entry',
 						],
 					]),
 				];
@@ -413,8 +414,8 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => "{$exportSelector} {$bulkSelector}",
 						'submitAttrs' => [
-							Helper::getStateAttribute('bulkType') => 'fake',
-							Helper::getStateAttribute('formId') => $formId,
+							UtilsHelper::getStateAttribute('bulkType') => 'fake',
+							UtilsHelper::getStateAttribute('formId') => $formId,
 						],
 					]),
 				];
@@ -431,7 +432,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => Helper::getListingPageUrl(),
 						'submitValue' => \__('Back', 'eightshift-forms'),
-						'submitIcon' => Helper::getProjectIcons('arrowLeft')
+						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
 				];
 
@@ -442,7 +443,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
-							Helper::getStateAttribute('bulkType') => 'restore',
+							UtilsHelper::getStateAttribute('bulkType') => 'restore',
 						],
 					]),
 					Components::render('submit', [
@@ -451,7 +452,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
-							Helper::getStateAttribute('bulkType') => 'delete-perminentely',
+							UtilsHelper::getStateAttribute('bulkType') => 'delete-perminentely',
 						],
 					]),
 				];
@@ -476,7 +477,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
-							Helper::getStateAttribute('bulkType') => 'delete',
+							UtilsHelper::getStateAttribute('bulkType') => 'delete',
 						],
 					]),
 					Components::render('submit', [
@@ -485,7 +486,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
-							Helper::getStateAttribute('bulkType') => 'sync',
+							UtilsHelper::getStateAttribute('bulkType') => 'sync',
 						],
 					]),
 					Components::render('submit', [
@@ -494,7 +495,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
-							Helper::getStateAttribute('bulkType') => 'duplicate',
+							UtilsHelper::getStateAttribute('bulkType') => 'duplicate',
 						],
 					]),
 				];
@@ -510,7 +511,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => Helper::getNewFormPageUrl(),
 						'submitValue' => \__('Create', 'eightshift-forms'),
-						'submitIcon' => Helper::getProjectIcons('addHighContrast')
+						'submitIcon' => UtilsHelper::getUtilsIcons('addHighContrast')
 					]),
 				];
 				break;
@@ -552,7 +553,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
 						'cardInlineUseHover' => true,
-						'cardInlineIcon' => Helper::getProjectIcons('post'),
+						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
 						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
 						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type)),
 					]);
@@ -580,16 +581,16 @@ class FormAdminMenu extends AbstractAdminMenu
 						// Translators: %s is the entry ID.
 						'cardInlineTitle' => \sprintf(\__('Entry %s', 'eightshift-forms'), $id),
 						'cardInlineSubTitle' => $createdAt,
-						'cardInlineIcon' => Helper::getProjectIcons('post'),
+						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
 						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
 						'cardInlineContent' => $content,
 						'cardInlineUseDivider' => true,
 						'cardInlineLastItem' => $i === $count - 1,
 						'additionalAttributes' => [
-							Helper::getStateAttribute('bulkId') => $id,
+							UtilsHelper::getStateAttribute('bulkId') => $id,
 						],
 						'additionalClass' => Components::classnames([
-							Helper::getStateSelectorAdmin('listingItem'),
+							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
 
@@ -603,7 +604,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$editLink = $item['editLink'] ?? '#';
 					$postType = $item['postType'] ?? '';
 					$activeIntegration = $item['activeIntegration'] ?? [];
-					$cardIcon = isset($activeIntegration['icon']) ? $activeIntegration['icon'] : Helper::getProjectIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					$cardIcon = isset($activeIntegration['icon']) ? $activeIntegration['icon'] : UtilsHelper::getUtilsIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 					if (!$title) {
 						// Translators: %s is the form ID.
@@ -622,11 +623,11 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineInvalid' => !$isValid,
 						'cardInlineUseHover' => true,
 						'additionalAttributes' => [
-							Helper::getStateAttribute('adminIntegrationType') => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
-							Helper::getStateAttribute('bulkId') => $id,
+							UtilsHelper::getStateAttribute('adminIntegrationType') => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
+							UtilsHelper::getStateAttribute('bulkId') => $id,
 						],
 						'additionalClass' => Components::classnames([
-							Helper::getStateSelectorAdmin('listingItem'),
+							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
 				}
@@ -747,9 +748,9 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Locations', 'eightshift-forms'),
 						'submitAttrs' => [
-							Helper::getStateAttribute('locationsId') => $formId
+							UtilsHelper::getStateAttribute('locationsId') => $formId
 						],
-						'additionalClass' => Helper::getStateSelectorAdmin('listingLocations'),
+						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 					]),
 					($entriesCount > 0) ?
 					Components::render('submit', [

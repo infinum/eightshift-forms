@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -97,10 +98,10 @@ $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentClass, $componentClass, '', $selectorClass),
 	Components::selector($additionalFieldClass, $additionalFieldClass),
-	Components::selector($fieldDisabled, Helper::getStateSelector('isDisabled')),
-	Components::selector($fieldHidden, Helper::getStateSelector('isHidden')),
-	Helper::getStateSelector('field'),
-	Components::selector($fieldIsNoneFormBlock, Helper::getStateSelector('fieldNoFormsBlock')),
+	Components::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
+	Components::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
+	UtilsHelper::getStateSelector('field'),
+	Components::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
 	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
 	Components::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
 	...$fieldStyleOutput,
@@ -120,23 +121,23 @@ if ($fieldType === 'fieldset') {
 }
 
 if ($fieldConditionalTags) {
-	$fieldAttrs[Helper::getStateAttribute('conditionalTags')] = $fieldConditionalTags;
+	$fieldAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = $fieldConditionalTags;
 }
 
 if ($fieldName) {
-	$fieldAttrs[Helper::getStateAttribute('fieldName')] = $fieldName;
+	$fieldAttrs[UtilsHelper::getStateAttribute('fieldName')] = $fieldName;
 }
 
 if ($fieldTypeInternal) {
-	$fieldAttrs[Helper::getStateAttribute('fieldType')] = $fieldTypeInternal;
+	$fieldAttrs[UtilsHelper::getStateAttribute('fieldType')] = $fieldTypeInternal;
 }
 
 if ($fieldTypeCustom) {
-	$fieldAttrs[Helper::getStateAttribute('fieldTypeCustom')] = $fieldTypeCustom;
+	$fieldAttrs[UtilsHelper::getStateAttribute('fieldTypeCustom')] = $fieldTypeCustom;
 }
 
 if ($fieldTracking) {
-	$fieldAttrs[Helper::getStateAttribute('tracking')] = $fieldTracking;
+	$fieldAttrs[UtilsHelper::getStateAttribute('tracking')] = $fieldTracking;
 }
 
 $fieldAttrsOutput = '';

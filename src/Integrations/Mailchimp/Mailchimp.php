@@ -11,8 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -356,8 +357,8 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		return [
 			'component' => 'select',
 			'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-			'selectName' => Helper::getStateParam('mailchimpTags'),
-			'selectTracking' => Helper::getStateParam('mailchimpTags'),
+			'selectName' => UtilsHelper::getStateParam('mailchimpTags'),
+			'selectTracking' => UtilsHelper::getStateParam('mailchimpTags'),
 			'selectContent' => \array_values(
 				\array_map(
 					function ($option) {

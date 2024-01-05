@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -91,7 +92,7 @@ echo Components::render(
 			'fieldContent' => $input,
 			'fieldId' => $inputName,
 			'fieldName' => $inputName,
-			'fieldTypeInternal' => Helper::getStateFieldType('input'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('input'),
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldUseError' => $inputType !== 'hidden',

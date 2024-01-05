@@ -11,10 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
  * Settings class.
@@ -121,10 +122,10 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		$data = \apply_filters($filter, $formId);
 
 		$formAdditionalProps['formAttrs'] = [
-			Helper::getStateAttribute('formId') => $formId,
-			Helper::getStateAttribute('formType') => $internalType,
-			Helper::getStateAttribute('settingsType') => $type,
-			Helper::getStateAttribute('successRedirect') => Helper::getCurrentUrl(),
+			UtilsHelper::getStateAttribute('formId') => $formId,
+			UtilsHelper::getStateAttribute('formType') => $internalType,
+			UtilsHelper::getStateAttribute('settingsType') => $type,
+			UtilsHelper::getStateAttribute('successRedirect') => Helper::getCurrentUrl(),
 		];
 
 		// Populate and build form.

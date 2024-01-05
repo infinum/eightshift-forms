@@ -12,8 +12,8 @@ namespace EightshiftForms\Settings\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftForms\Helpers\IntegrationsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\IntegrationsHelper;
 use WP_Query;
 
 /**

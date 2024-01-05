@@ -10,9 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
@@ -96,7 +97,7 @@ class LocationsRoute extends AbstractBaseRoute
 						'sectionClass' => Components::getComponent('admin-listing')['componentClass'],
 						'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms'),
 						'additionalAttributes' => [
-							Helper::getStateAttribute('adminIntegrationType') => $type,
+							UtilsHelper::getStateAttribute('adminIntegrationType') => $type,
 						],
 					]),
 				],

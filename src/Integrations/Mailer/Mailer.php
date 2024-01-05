@@ -12,9 +12,9 @@ namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
 use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftFormsVendor\EightshiftForms\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use Parsedown;
 

@@ -12,11 +12,12 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
 use EightshiftForms\Hooks\Filters;
-use EightshiftFormsVendor\EightshiftForms\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use WP_REST_Request;
@@ -246,51 +247,51 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		foreach ($paramsOutput as $key => $value) {
 			switch ($key) {
 				// Used for direct import from settings.
-				case Helper::getStateParam('direct'):
+				case UtilsHelper::getStateParam('direct'):
 					$output['directImport'] = (bool) $value['value'];
 					break;
 				// Used for direct import from settings.
-				case Helper::getStateParam('itemId'):
+				case UtilsHelper::getStateParam('itemId'):
 					$output['itemId'] = $value['value'];
 					break;
 				// Used for direct import from settings.
-				case Helper::getStateParam('innerId'):
+				case UtilsHelper::getStateParam('innerId'):
 					$output['innerId'] = $value['value'];
 					break;
-				case Helper::getStateParam('formId'):
+				case UtilsHelper::getStateParam('formId'):
 					$output['formId'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case Helper::getStateParam('postId'):
+				case UtilsHelper::getStateParam('postId'):
 					$output['postId'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case Helper::getStateParam('type'):
+				case UtilsHelper::getStateParam('type'):
 					$output['type'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case Helper::getStateParam('action'):
+				case UtilsHelper::getStateParam('action'):
 					$output['action'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case Helper::getStateParam('captcha'):
+				case UtilsHelper::getStateParam('captcha'):
 					$output['captcha'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case Helper::getStateParam('actionExternal'):
+				case UtilsHelper::getStateParam('actionExternal'):
 					$output['actionExternal'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case Helper::getStateParam('settingsType'):
+				case UtilsHelper::getStateParam('settingsType'):
 					$output['settingsType'] = $value['value'];
 					$output['params'][$key] = $value;
 					break;
-				case Helper::getStateParam('storage'):
+				case UtilsHelper::getStateParam('storage'):
 					$output['storage'] = $value['value'];
 					$value['value'] = (!empty($value['value'])) ? \json_decode($value['value'], true) : [];
 					$output['params'][$key] = $value;
 					break;
-				case Helper::getStateParam('steps'):
+				case UtilsHelper::getStateParam('steps'):
 					$output['apiSteps'] = [
 						'fields' => $value['value'],
 						'current' => $value['custom'],
@@ -374,8 +375,8 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 		return \array_merge(
 			$file,
 			[
-				'id' => $params[Helper::getStateParam('fileId')]['value'] ?? '',
-				'fieldName' => $params[Helper::getStateParam('name')]['value'] ?? '',
+				'id' => $params[UtilsHelper::getStateParam('fileId')]['value'] ?? '',
+				'fieldName' => $params[UtilsHelper::getStateParam('name')]['value'] ?? '',
 			]
 		);
 	}

@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -54,7 +55,7 @@ echo Components::render(
 			'fieldContent' => $radios,
 			'fieldName' => $radiosName,
 			'fieldIsRequired' => $radiosIsRequired,
-			'fieldTypeInternal' => Helper::getStateFieldType('radios'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
 			'fieldId' => $radiosName,
 			'fieldTracking' => $radiosTracking,
 			'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
