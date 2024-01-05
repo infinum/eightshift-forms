@@ -12,7 +12,7 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -199,13 +199,13 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			$formTitle = \esc_html__('No form title', 'eightshift-forms');
 		}
 
-		$integrationTypeUsed = Helper::getFormTypeById($formId);
-		$formEditLink = Helper::getFormEditPageUrl($formId);
+		$integrationTypeUsed = UtilsGeneralHelper::getFormTypeById($formId);
+		$formEditLink = UtilsGeneralHelper::getFormEditPageUrl($formId);
 
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
-			'adminSettingsBackLink' => Helper::getListingPageUrl(),
+			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
 			'adminSettingsFormEditLink' => $formEditLink,
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),

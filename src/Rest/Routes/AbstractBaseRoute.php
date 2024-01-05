@@ -12,9 +12,9 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -252,7 +252,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 							[
 								'value' => \array_map(
 									function ($item) {
-										return UploadHelper::getFilePath($item);
+										return UtilsUploadHelper::getFilePath($item);
 									},
 									\explode(UtilsConfig::DELIMITER, $fieldValue)
 								),
@@ -338,7 +338,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			return [];
 		}
 
-		return ApiHelper::getApiPermissionsErrorOutput();
+		return UtilsApiHelper::getApiPermissionsErrorOutput();
 	}
 
 	/**
@@ -396,7 +396,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					'fieldsOnly' => !empty($settingsName) ? \apply_filters($settingsName, $formId) : [],
 				];
 			} else {
-				$formDataReference = Helper::getFormDetailsById($formId);
+				$formDataReference = UtilsGeneralHelper::getFormDetailsById($formId);
 			}
 
 			// Populare params.

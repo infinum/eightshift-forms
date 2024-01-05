@@ -12,9 +12,9 @@ namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
 use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use Parsedown;
 
@@ -52,8 +52,8 @@ class Mailer implements MailerInterface
 			$this->getTemplate('subject', $fields, $formId, $subject),
 			$this->getTemplate('message', $fields, $formId, $template, $responseFields),
 			$this->getHeader(
-				SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
-				SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
+				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
 			),
 			$this->prepareFiles($files)
 		);
@@ -124,13 +124,13 @@ class Mailer implements MailerInterface
 					}
 					break;
 				default:
-					$filesOutput = Helper::recursiveFind($files, 'path');
+					$filesOutput = UtilsGeneralHelper::recursiveFind($files, 'path');
 					break;
 			}
 		}
 
-		$to = SettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
-		$cc = SettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration);
+		$to = UtilsSettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$cc = UtilsSettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration);
 		$headers = [
 			$this->getType()
 		];
@@ -239,13 +239,13 @@ class Mailer implements MailerInterface
 		$output = [];
 
 		// Filter params.
-		$filterName = Helper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';

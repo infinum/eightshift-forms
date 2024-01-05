@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -82,7 +82,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -98,12 +98,12 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TRANSFER_USE_KEY, self::SETTINGS_TRANSFER_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [

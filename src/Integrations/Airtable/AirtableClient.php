@@ -12,11 +12,11 @@ namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
@@ -158,7 +158,7 @@ class AirtableClient implements ClientInterface
 			'fields' => $this->prepareParams($params, $formId),
 		];
 
-		$filterName = Helper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
@@ -179,7 +179,7 @@ class AirtableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -187,21 +187,21 @@ class AirtableClient implements ClientInterface
 			$files,
 			$itemId,
 			$formId,
-			SettingsHelper::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return ApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return ApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body)
 		);
@@ -268,7 +268,7 @@ class AirtableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -277,7 +277,7 @@ class AirtableClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -304,7 +304,7 @@ class AirtableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelper::getIntegrationApiReponseDetails(
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -323,7 +323,7 @@ class AirtableClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -349,13 +349,13 @@ class AirtableClient implements ClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = Helper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
@@ -396,6 +396,6 @@ class AirtableClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY)['value'];
 	}
 }

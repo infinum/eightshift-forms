@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Security;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -73,7 +73,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -89,12 +89,12 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_SECURITY_USE_KEY, self::SETTINGS_SECURITY_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -111,7 +111,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
 								'inputFieldLabel' => \__('Number of requests', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -121,11 +121,11 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 								'inputPlaceholder' => Security::RATE_LIMIT,
 								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
-								'inputValue' => SettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
+								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
 							],
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
 								'inputFieldLabel' => \__('Limit window', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Define a time period in which the rate limit will be checked.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -135,7 +135,7 @@ class SettingsSecurity implements SettingGlobalInterface, ServiceInterface
 								'inputPlaceholder' => Security::RATE_LIMIT_WINDOW,
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
-								'inputValue' => SettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
+								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
 							],
 						],
 					],

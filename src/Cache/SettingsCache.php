@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -67,7 +67,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 
 				$isUsedKey = $value['use'] ?? '';
 
-				if ($cache && $isUsedKey && SettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+				if ($cache && $isUsedKey && UtilsSettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 					return [
 						'component' => 'card-inline',
 						'cardInlineTitle' => $value['labels']['title'] ?? '',
@@ -92,7 +92,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 		)));
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',

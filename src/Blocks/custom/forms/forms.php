@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Form\Form;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -84,7 +84,7 @@ $hasGeolocation = false;
 
 if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 	$hasGeolocation = true;
-	$formAttrs[UtilsHelper::getStateAttribute('formGeolocation')] = Encryption::encryptor(wp_json_encode([
+	$formAttrs[UtilsHelper::getStateAttribute('formGeolocation')] = UtilsEncryption::encryptor(wp_json_encode([
 		'id' => $formsFormPostId,
 		'geo' => $formsFormGeolocation,
 		'alt' => $formsFormGeolocationAlternatives,

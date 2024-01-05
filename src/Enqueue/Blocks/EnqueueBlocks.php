@@ -12,7 +12,7 @@ namespace EightshiftForms\Enqueue\Blocks;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\Settings\SettingsSettings;
@@ -21,8 +21,8 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Theme\EnqueueTheme;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\IntegrationsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
@@ -139,7 +139,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function enqueueBlockFrontendStyleLocal(string $hook): void
 	{
-		if (SettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return;
 		}
 
@@ -177,7 +177,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			return [];
 		}
 
-		$scriptsDependency = Helper::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependency = UtilsGeneralHelper::getFilterName(['general', 'scriptsDependency']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -204,26 +204,26 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output = $this->getEnqueueSharedInlineCommonItems();
 
 		// Frontend part.
-		$hideGlobalMessageTimeout = Helper::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
-		$redirectionTimeout = Helper::getFilterName(['block', 'form', 'redirectionTimeout']);
-		$fileRemoveLabel = Helper::getFilterName(['block', 'file', 'previewRemoveLabel']);
+		$hideGlobalMessageTimeout = UtilsGeneralHelper::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
+		$redirectionTimeout = UtilsGeneralHelper::getFilterName(['block', 'form', 'redirectionTimeout']);
+		$fileRemoveLabel = UtilsGeneralHelper::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
 		$output['fileRemoveLabel'] = \apply_filters($fileRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
-		$output['formDisableScrollToFieldOnError'] = SettingsHelper::isOptionCheckboxChecked(
+		$output['formDisableScrollToFieldOnError'] = UtilsSettingsHelper::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableScrollToGlobalMessageOnSuccess'] = SettingsHelper::isOptionCheckboxChecked(
+		$output['formDisableScrollToGlobalMessageOnSuccess'] = UtilsSettingsHelper::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableNativeRedirectOnSuccess'] = SettingsHelper::isOptionCheckboxChecked(
+		$output['formDisableNativeRedirectOnSuccess'] = UtilsSettingsHelper::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableAutoInit'] = SettingsHelper::isOptionCheckboxChecked(
+		$output['formDisableAutoInit'] = UtilsSettingsHelper::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 		);
@@ -237,8 +237,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['enrichment'] = \array_merge(
 				[
 					'isUsed' => true,
-					'isUsedPrefill' => SettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
-					'isUsedPrefillUrl' => SettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
+					'isUsedPrefill' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
+					'isUsedPrefillUrl' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
 				],
 				FiltersOuputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
 			);
@@ -259,12 +259,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output['captcha'] = [
 				'isUsed' => true,
-				'isEnterprise' => SettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
-				'siteKey' => SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'],
-				'submitAction' => SettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'initAction' => SettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'loadOnInit' => SettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
-				'hideBadge' => SettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+				'isEnterprise' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+				'siteKey' => UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'],
+				'submitAction' => UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				'initAction' => UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				'loadOnInit' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+				'hideBadge' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
 			];
 		} else {
 			$output['captcha'] = [
@@ -297,11 +297,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output = $this->getEnqueueSharedInlineCommonItems(false);
 
-		$additionalBlocksFilterName = Helper::getFilterName(['blocks', 'additionalBlocks']);
-		$formsStyleOptionsFilterName = Helper::getFilterName(['block', 'forms', 'styleOptions']);
-		$fieldStyleOptionsFilterName = Helper::getFilterName(['block', 'field', 'styleOptions']);
-		$breakpointsFilterName = Helper::getFilterName(['blocks', 'breakpoints']);
-		$formSelectorTemplatesFilterName = Helper::getFilterName(['block', 'formSelector', 'formTemplates']);
+		$additionalBlocksFilterName = UtilsGeneralHelper::getFilterName(['blocks', 'additionalBlocks']);
+		$formsStyleOptionsFilterName = UtilsGeneralHelper::getFilterName(['block', 'forms', 'styleOptions']);
+		$fieldStyleOptionsFilterName = UtilsGeneralHelper::getFilterName(['block', 'field', 'styleOptions']);
+		$breakpointsFilterName = UtilsGeneralHelper::getFilterName(['blocks', 'breakpoints']);
+		$formSelectorTemplatesFilterName = UtilsGeneralHelper::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
@@ -316,7 +316,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		];
 
 		$output['use'] = [
-			'activeIntegrations' => IntegrationsHelper::getActiveIntegrations(),
+			'activeIntegrations' => UtilsIntegrationsHelper::getActiveIntegrations(),
 			'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
 		];
 

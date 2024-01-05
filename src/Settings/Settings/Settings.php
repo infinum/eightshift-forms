@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
@@ -73,7 +73,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			$isUsedKey = $value['use'] ?? '';
 
 			// Bailout if used key is missing.
-			if ($isUsedKey && !SettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+			if ($isUsedKey && !UtilsSettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 				continue;
 			}
 
@@ -83,7 +83,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			$output[$type][] = [
 				'label' => $labels['title'] ?? '',
 				'desc' => $labels['desc'] ?? '',
-				'url' => $formId ? Helper::getSettingsPageUrl($formId, $key) : Helper::getSettingsGlobalPageUrl($key),
+				'url' => $formId ? UtilsGeneralHelper::getSettingsPageUrl($formId, $key) : UtilsGeneralHelper::getSettingsGlobalPageUrl($key),
 				'icon' => $labels['icon'] ?? '',
 				'type' => $type,
 				'key' => $key,
@@ -91,7 +91,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		}
 
 		// Return all settings data with the correct order.
-		return SettingsHelper::sortSettingsByOrder($output);
+		return UtilsSettingsHelper::sortSettingsByOrder($output);
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			UtilsHelper::getStateAttribute('formId') => $formId,
 			UtilsHelper::getStateAttribute('formType') => $internalType,
 			UtilsHelper::getStateAttribute('settingsType') => $type,
-			UtilsHelper::getStateAttribute('successRedirect') => Helper::getCurrentUrl(),
+			UtilsHelper::getStateAttribute('successRedirect') => UtilsGeneralHelper::getCurrentUrl(),
 		];
 
 		// Populate and build form.

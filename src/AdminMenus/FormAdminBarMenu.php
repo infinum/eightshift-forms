@@ -14,7 +14,7 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Config\Config;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -67,7 +67,7 @@ class FormAdminBarMenu implements ServiceInterface
 			return;
 		}
 
-		if (Helper::isBlockEditor()) {
+		if (UtilsGeneralHelper::isBlockEditor()) {
 			return;
 		}
 
@@ -89,7 +89,7 @@ class FormAdminBarMenu implements ServiceInterface
 				'parent' => null,
 				'group' => null,
 				'title' => ($isDevelopMode || $isDevelopModeQmLog) ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
-				'href' => Helper::getListingPageUrl(),
+				'href' => UtilsGeneralHelper::getListingPageUrl(),
 				'meta' => [
 					'title' => ($isDevelopMode || $isDevelopModeQmLog) ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
 				]
@@ -102,7 +102,7 @@ class FormAdminBarMenu implements ServiceInterface
 				'id' => $listingPrefix,
 				'parent' => $prefix,
 				'title' => \esc_html__('View all forms', 'eightshift-forms'),
-				'href' => Helper::getListingPageUrl(),
+				'href' => UtilsGeneralHelper::getListingPageUrl(),
 			],
 		);
 
@@ -158,7 +158,7 @@ class FormAdminBarMenu implements ServiceInterface
 				'id' => "{$prefix}-new-form",
 				'parent' => $prefix,
 				'title' => \esc_html__('Add new form', 'eightshift-forms'),
-				'href' => Helper::getNewFormPageUrl(),
+				'href' => UtilsGeneralHelper::getNewFormPageUrl(),
 			],
 		);
 
@@ -168,7 +168,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'id' => "{$prefix}-global-settings",
 					'parent' => $prefix,
 					'title' => \esc_html__('Global settings', 'eightshift-forms'),
-					'href' => Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY),
+					'href' => UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY),
 				],
 			);
 
@@ -187,7 +187,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'id' => "{$troubleshootingPrefix}-cache",
 					'parent' => $troubleshootingPrefix,
 					'title' => \esc_html__('Clear cache', 'eightshift-forms'),
-					'href' => Helper::getSettingsGlobalPageUrl(SettingsCache::SETTINGS_TYPE_KEY),
+					'href' => UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsCache::SETTINGS_TYPE_KEY),
 				],
 			);
 
@@ -196,7 +196,7 @@ class FormAdminBarMenu implements ServiceInterface
 					'id' => "{$troubleshootingPrefix}-debug",
 					'parent' => $troubleshootingPrefix,
 					'title' => \esc_html__('Debug', 'eightshift-forms'),
-					'href' => Helper::getSettingsGlobalPageUrl(SettingsDebug::SETTINGS_TYPE_KEY),
+					'href' => UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDebug::SETTINGS_TYPE_KEY),
 				],
 			);
 

@@ -6,11 +6,11 @@
  * @package EightshiftForms\Helpers
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -24,7 +24,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 function esFormsGetFormIdByName(string $formId): string
 {
-	return SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+	return UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
 }
 
 /**
@@ -36,7 +36,7 @@ function esFormsGetFormIdByName(string $formId): string
  */
 function esFormsDecryptor(string $value)
 {
-	return Encryption::decryptor($value);
+	return UtilsEncryption::decryptor($value);
 }
 
 /**
@@ -58,7 +58,7 @@ function esFormsGeolocationCountriesList(): array
  */
 function esFormsGetSelectOptionsArrayFromString(string $options): array
 {
-	return Helper::getSelectOptionsArrayFromString($options);
+	return UtilsGeneralHelper::getSelectOptionsArrayFromString($options);
 }
 
 /**

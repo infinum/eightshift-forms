@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -90,8 +90,8 @@ trait MigrationHelper
 			'data' => [],
 		];
 
-		$itemId = SettingsHelper::getSettingValue("{$type}-{$itemIdKey}", $id);
-		$innerId = SettingsHelper::getSettingValue("{$type}-{$innerIdKey}", $id);
+		$itemId = UtilsSettingsHelper::getSettingValue("{$type}-{$itemIdKey}", $id);
+		$innerId = UtilsSettingsHelper::getSettingValue("{$type}-{$innerIdKey}", $id);
 		$blocks = \parse_blocks($content);
 		$integrationFields = $this->prepareIntegrationFields2To3Forms($type, $id);
 
@@ -151,7 +151,7 @@ trait MigrationHelper
 		}
 
 		foreach ($syncFormOutput as $key => $block) {
-			$blockName = Helper::getBlockNameDetails($block['blockName'])['name'];
+			$blockName = UtilsGeneralHelper::getBlockNameDetails($block['blockName'])['name'];
 			$prefix = Components::kebabToCamelCase("{$blockName}-{$blockName}");
 			$name = $block['attrs']["{$prefix}Name"] ?? '';
 			$label = $block['attrs']["{$prefix}FieldLabel"] ?? '';
@@ -225,7 +225,7 @@ trait MigrationHelper
 	{
 		$output = [];
 
-		$integrationFields = SettingsHelper::getSettingValueGroup("{$type}-integration-fields", $id);
+		$integrationFields = UtilsSettingsHelper::getSettingValueGroup("{$type}-integration-fields", $id);
 
 		if (!$integrationFields) {
 			return [];

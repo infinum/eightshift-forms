@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -114,7 +114,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		}
 
 		// Find local but fallback to global settings.
-		$allowedFileTypes = SettingsHelper::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: SettingsHelper::getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$allowedFileTypes = UtilsSettingsHelper::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: UtilsSettingsHelper::getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		if ($allowedFileTypes) {
 			$allowedFileTypes = \str_replace('.', '', $allowedFileTypes);
@@ -208,7 +208,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'datePlaceholder' => $placeholder,
 							'dateIsRequired' => $isRequired,
 							'dateValue' => $value,
-							'datePreviewFormat' => Helper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
+							'datePreviewFormat' => UtilsGeneralHelper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
 							'dateFieldAttrs' => [
 								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
@@ -613,7 +613,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		];
 
 		// Change the final output if necesery.
-		$filterName = Helper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -75,7 +75,7 @@ if ($textareaAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('textarea', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('textarea', $attributes);
 
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"

@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -58,7 +58,7 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -74,13 +74,13 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			SettingsOutputHelper::getMiscDisclamer(),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getMiscDisclamer(),
 			[
 				'component' => 'intro',
 				'introSubtitle' => \__('In order for Eightshift forms to work correctly with WPML, you must enable translations in the WPML settings.', 'eightshift-forms'),

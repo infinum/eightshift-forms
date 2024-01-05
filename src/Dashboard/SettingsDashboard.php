@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Dashboard;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -65,7 +65,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 				continue;
 			}
 
-			$checked = SettingsHelper::isOptionCheckboxChecked($use, $use);
+			$checked = UtilsSettingsHelper::isOptionCheckboxChecked($use, $use);
 
 			$labels = $value['labels'] ?? [];
 
@@ -78,12 +78,12 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 						'component' => 'submit',
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => Helper::getSettingsGlobalPageUrl($key),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getSettingsGlobalPageUrl($key),
 						'submitValue' => \__('Edit', 'eightshift-forms'),
 					] : [],
 					[
 						'component' => 'checkboxes',
-						'checkboxesName' => SettingsHelper::getOptionName($use),
+						'checkboxesName' => UtilsSettingsHelper::getOptionName($use),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
@@ -103,11 +103,11 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 		}
 
 		$output = [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 		];
 
 		// Order output in the correct order.
-		foreach (SettingsHelper::sortSettingsByOrder($filtered) as $key => $value) {
+		foreach (UtilsSettingsHelper::sortSettingsByOrder($filtered) as $key => $value) {
 			$output[] = [
 				'component' => 'layout',
 				'layoutContent' => [

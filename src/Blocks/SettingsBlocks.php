@@ -12,11 +12,11 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\GeolocationInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -107,11 +107,11 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$overrideGlobalSettingsCountry = SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId);
-		$overrideGlobalSettingsPhone = SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId);
+		$overrideGlobalSettingsCountry = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId);
+		$overrideGlobalSettingsPhone = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -122,7 +122,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getSettingName(self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -143,9 +143,9 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 								[
 									'component' => 'select',
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
-									'selectName' => SettingsHelper::getSettingName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY),
+									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY),
 									'selectContent' => $this->getCountrySettingsList(
-										SettingsHelper::getSettingValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY, self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default', $formId),
+										UtilsSettingsHelper::getSettingValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY, self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default', $formId),
 										'items'
 									),
 								],
@@ -159,7 +159,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getSettingName(self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -176,9 +176,9 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 								[
 									'component' => 'select',
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
-									'selectName' => SettingsHelper::getSettingName(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY),
+									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY),
 									'selectContent' => $this->getCountrySettingsList(
-										SettingsHelper::getSettingValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY, self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default', $formId),
+										UtilsSettingsHelper::getSettingValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY, self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default', $formId),
 										'items'
 									),
 								],
@@ -190,12 +190,12 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getSettingName(self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Disable phone/country sync on change', 'eightshift-forms'),
-										'checkboxIsChecked' => SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -217,10 +217,10 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$disablePhoneCountryPicker = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
+		$disablePhoneCountryPicker = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -231,9 +231,9 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							[
 								'component' => 'select',
 								'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
-								'selectName' => SettingsHelper::getOptionName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY),
+								'selectName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY),
 								'selectContent' => $this->getCountrySettingsList(
-									SettingsHelper::getOptionValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default'),
+									UtilsSettingsHelper::getOptionValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default'),
 									'items'
 								),
 							],
@@ -261,7 +261,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -281,9 +281,9 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 								[
 									'component' => 'select',
 									'selectFieldLabel' => \__('Dataset used', 'eightshift-forms'),
-									'selectName' => SettingsHelper::getOptionName(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY),
+									'selectName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY),
 									'selectContent' => $this->getCountrySettingsList(
-										SettingsHelper::getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default'),
+										UtilsSettingsHelper::getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default'),
 										'items'
 									),
 								],
@@ -304,16 +304,16 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 	 */
 	public function getCountryDatasetValue(string $formId): array
 	{
-		if (SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId)) {
-			$countryDatasetValue = SettingsHelper::getSettingValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY, self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default', $formId);
+		if (UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId)) {
+			$countryDatasetValue = UtilsSettingsHelper::getSettingValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_KEY, self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default', $formId);
 		} else {
-			$countryDatasetValue = SettingsHelper::getOptionValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default');
+			$countryDatasetValue = UtilsSettingsHelper::getOptionValueWithFallback(self::SETTINGS_BLOCK_COUNTRY_DATA_SET_GLOBAL_KEY, 'default');
 		}
 
-		if (SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId)) {
-			$phoneDatasetValue = SettingsHelper::getSettingValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY, self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default', $formId);
+		if (UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY, self::SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY, $formId)) {
+			$phoneDatasetValue = UtilsSettingsHelper::getSettingValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY, self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default', $formId);
 		} else {
-			$phoneDatasetValue = SettingsHelper::getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default');
+			$phoneDatasetValue = UtilsSettingsHelper::getOptionValueWithFallback(self::SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY, 'default');
 		}
 
 		$geolocation = \strtolower($this->geolocation->getUsersGeolocation());
@@ -353,7 +353,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 		}
 
 		if (!$output) {
-			$countries = Helper::getCountrySelectList();
+			$countries = UtilsGeneralHelper::getCountrySelectList();
 			$output = [
 				'default' => [
 					'label' => \__('Default', 'eightshift-forms'),
@@ -372,7 +372,7 @@ class SettingsBlocks implements SettingGlobalInterface, SettingInterface, Servic
 			];
 
 			$alternative = [];
-			$filterName = Helper::getFilterName(['block', 'country', 'alternativeDataSet']);
+			$filterName = UtilsGeneralHelper::getFilterName(['block', 'country', 'alternativeDataSet']);
 			if (\has_filter($filterName)) {
 				$alternative = \apply_filters($filterName, []);
 			}

@@ -12,7 +12,7 @@ namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Enqueue\SharedEnqueue;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
@@ -83,7 +83,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 		$output = [];
 
-		if (Helper::isEightshiftFormsAdminPages()) {
+		if (UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
 			$output = \array_merge(
 				$this->getEnqueueSharedInlineCommonItems(false),
 				[

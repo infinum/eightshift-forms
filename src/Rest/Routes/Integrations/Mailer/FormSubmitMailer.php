@@ -13,8 +13,8 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
  * Class FormSubmitMailer
@@ -72,7 +72,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
-			return ApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
 				[],
 				$debug
@@ -82,9 +82,9 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		// Send email.
 		$response = $this->mailer->sendFormEmail(
 			$formId,
-			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
-			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
-			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
 			$params,
 			$responseTags
@@ -92,7 +92,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// If email fails.
 		if (!$response) {
-			return ApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorEmailSend', $formId),
 				[],
 				$debug
@@ -102,7 +102,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$this->sendConfirmationEmail($formId, $params, $files);
 
 		// Finish.
-		return ApiHelper::getApiSuccessOutput(
+		return UtilsApiHelper::getApiSuccessOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
 			[],
 			$debug
@@ -139,7 +139,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			return false;
 		}
 
-		$senderEmail = $params[SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId)]['value'] ?? '';
+		$senderEmail = $params[UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId)]['value'] ?? '';
 
 		if (!$senderEmail) {
 			return false;
@@ -149,8 +149,8 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		return $this->mailer->sendFormEmail(
 			$formId,
 			$senderEmail,
-			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
-			SettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 			$files,
 			$params
 		);

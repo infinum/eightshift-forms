@@ -13,15 +13,15 @@ namespace EightshiftForms\Validation;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Settings\Settings\Settings;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -186,7 +186,7 @@ class Validator extends AbstractValidation
 
 					// Check if wrong upload path.
 					foreach ($inputValue as $value) {
-						if (UploadHelper::isUploadError($value)) {
+						if (UtilsUploadHelper::isUploadError($value)) {
 							$output[$paramKey] = $this->getValidationLabel('validationFileNotLocated', $formId);
 							$isFilesError = true;
 							break;
@@ -243,7 +243,7 @@ class Validator extends AbstractValidation
 						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 						} else {
-							if (SettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
+							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
 								$path = \dirname(__FILE__) . '/manifest.json';
 
 								if (\file_exists($path)) {
@@ -530,7 +530,7 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
-		$blockDetails = Helper::getBlockNameDetails($block['blockName']);
+		$blockDetails = UtilsGeneralHelper::getBlockNameDetails($block['blockName']);
 
 		$name = $blockDetails['name'];
 		$namespace = $blockDetails['namespace'];

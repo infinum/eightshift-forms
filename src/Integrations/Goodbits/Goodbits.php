@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Goodbits;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -145,7 +145,7 @@ class Goodbits extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		];
 
 		// Change the final output if necesery.
-		$filterName = Helper::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

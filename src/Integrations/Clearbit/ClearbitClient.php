@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -54,7 +54,7 @@ class ClearbitClient implements ClearbitClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsClearbit::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -67,7 +67,7 @@ class ClearbitClient implements ClearbitClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -79,7 +79,7 @@ class ClearbitClient implements ClearbitClientInterface
 				}
 			}
 
-			return ApiHelper::getIntegrationApiSuccessOutput(
+			return UtilsApiHelper::getIntegrationApiSuccessOutput(
 				$details,
 				[
 					'email' => $email,
@@ -89,7 +89,7 @@ class ClearbitClient implements ClearbitClientInterface
 		}
 
 		// Output error.
-		return ApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -273,7 +273,7 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-ultimate-parent-domain' => $company['ultimateParent']['domain'] ?? '',
 		];
 
-		$filterName = Helper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $output) ?? [];
 		}
@@ -322,6 +322,6 @@ class ClearbitClient implements ClearbitClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
 	}
 }

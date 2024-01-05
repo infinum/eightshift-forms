@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -57,7 +57,7 @@ if ($ratingAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('rating', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('rating', $attributes);
 
 $stars = '';
 

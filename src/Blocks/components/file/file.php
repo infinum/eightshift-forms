@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -69,7 +69,7 @@ if ($fileAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('file', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('file', $attributes);
 
 $file = '
 	<input

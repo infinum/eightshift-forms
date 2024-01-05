@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
 /**
  * EntriesHelper class.
@@ -39,12 +39,12 @@ class EntriesHelper
 		$output = [];
 
 		// Filter params.
-		$filterName = Helper::getFilterName(['entries', 'prePostParams']);
+		$filterName = UtilsGeneralHelper::getFilterName(['entries', 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';

@@ -12,8 +12,8 @@ namespace EightshiftForms\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\IntegrationsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use WP_Query;
 
 /**
@@ -56,12 +56,12 @@ class FormsListing implements FormListingInterface
 				'id' => $id,
 				'title' => \get_the_title($id),
 				'status' => \get_post_status($id),
-				'settingsLink' => !$permanent ? Helper::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY) : '',
-				'editLink' => !$permanent ? Helper::getFormEditPageUrl((string) $id) : '',
-				'trashLink' => Helper::getFormTrashActionUrl((string) $id, $permanent),
-				'entriesLink' => Helper::getFormsEntriesPageUrl((string) $id),
-				'trashRestoreLink' => Helper::getFormTrashRestoreActionUrl((string) $id),
-				'activeIntegration' => IntegrationsHelper::getIntegrationDetailsById((string) $id),
+				'settingsLink' => !$permanent ? UtilsGeneralHelper::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY) : '',
+				'editLink' => !$permanent ? UtilsGeneralHelper::getFormEditPageUrl((string) $id) : '',
+				'trashLink' => UtilsGeneralHelper::getFormTrashActionUrl((string) $id, $permanent),
+				'entriesLink' => UtilsGeneralHelper::getFormsEntriesPageUrl((string) $id),
+				'trashRestoreLink' => UtilsGeneralHelper::getFormTrashRestoreActionUrl((string) $id),
+				'activeIntegration' => UtilsIntegrationsHelper::getIntegrationDetailsById((string) $id),
 				'useSync' => true,
 			];
 		}

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Validation\Validator;
@@ -19,7 +19,7 @@ use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStan
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -146,14 +146,14 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 						}
 					}
 
-					$uploadFile = UploadHelper::uploadFile($formDataReference['filesUpload']);
+					$uploadFile = UtilsUploadHelper::uploadFile($formDataReference['filesUpload']);
 					$uploadError = $uploadFile['errorOutput'] ?? '';
 					$uploadFileId = $formDataReference['filesUpload']['id'] ?? '';
 
 					// Upload files to temp folder.
 					$formDataReference['filesUpload'] = $uploadFile;
 
-					if (UploadHelper::isUploadError($uploadError)) {
+					if (UtilsUploadHelper::isUploadError($uploadError)) {
 						throw new UnverifiedRequestException(
 							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
 							[
@@ -233,7 +233,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					$e->getMessage(),
 					[
 						Validator::VALIDATOR_OUTPUT_KEY => $e->getData(),
@@ -315,7 +315,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 				)
 			);
 
-			$fakeResponse = ApiHelper::getIntegrationApiSuccessOutput($response);
+			$fakeResponse = UtilsApiHelper::getIntegrationApiSuccessOutput($response);
 
 			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
 			$responseOutput = $fakeResponse;
@@ -326,7 +326,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
 
-		return ApiHelper::getIntegrationApiOutput(
+		return UtilsApiHelper::getIntegrationApiOutput(
 			$responseOutput,
 			$labelsOutput,
 		);

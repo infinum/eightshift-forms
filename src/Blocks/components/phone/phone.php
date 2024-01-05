@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
@@ -72,7 +72,7 @@ if ($phoneAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('phone', $attributes);
 $phoneSelectUseSearchAttr = UtilsHelper::getStateAttribute('selectAllowSearch');
 
 $options = [];

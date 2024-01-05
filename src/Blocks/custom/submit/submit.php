@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -17,7 +17,7 @@ $ssr = $attributes['submitSubmitServerSideRender'] ?? false;
 
 // With this filder you can override default submit component and provide your own.
 if (!$ssr) {
-	$filterNameComponent = Helper::getFilterName(['block', 'submit', 'component']);
+	$filterNameComponent = UtilsGeneralHelper::getFilterName(['block', 'submit', 'component']);
 	if (has_filter($filterNameComponent)) {
 		$button = apply_filters($filterNameComponent, [
 			'value' => $attributes['submitSubmitValue'] ?? '',

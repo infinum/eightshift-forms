@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use WP_Query;
 
 /**
@@ -158,9 +158,9 @@ class Transfer implements TransferInterface
 	 */
 	public function getImport(string $upload, bool $override): bool
 	{
-		$filePath = UploadHelper::getFilePath($upload);
+		$filePath = UtilsUploadHelper::getFilePath($upload);
 
-		if (UploadHelper::isUploadError($filePath)) {
+		if (UtilsUploadHelper::isUploadError($filePath)) {
 			return false;
 		}
 

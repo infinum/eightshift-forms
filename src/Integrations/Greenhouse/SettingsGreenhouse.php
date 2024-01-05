@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Greenhouse;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -105,9 +105,9 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
-		$apiKey = SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGreenhouse(), self::SETTINGS_GREENHOUSE_API_KEY_KEY)['value'];
-		$boardToken = SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getBoardTokenGreenhouse(), self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY)['value'];
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
+		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGreenhouse(), self::SETTINGS_GREENHOUSE_API_KEY_KEY)['value'];
+		$boardToken = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getBoardTokenGreenhouse(), self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey) || empty($boardToken)) {
 			return false;
@@ -124,15 +124,15 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -143,12 +143,12 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => SettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => SettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -159,7 +159,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -168,8 +168,8 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									SettingsHelper::getSettingsDisabledOutputWithDebugFilter(
+								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getApiKeyGreenhouse(),
 										self::SETTINGS_GREENHOUSE_API_KEY_KEY,
 										'ES_API_KEY_GREENHOUSE'
@@ -180,8 +180,8 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getInputFieldWithGlobalVariable(
-									SettingsHelper::getSettingsDisabledOutputWithDebugFilter(
+								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getBoardTokenGreenhouse(),
 										self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY,
 										'ES_BOARD_TOKEN_GREENHOUSE'
@@ -192,7 +192,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
+								UtilsSettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -202,7 +202,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -215,7 +215,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Up to 25MB.', 'eightshift-forms'),
 								'inputFieldAfterContent' => 'MB',
@@ -224,7 +224,7 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 								'inputIsNumber' => true,
 								'inputIsRequired' => true,
 								'inputPlaceholder' => '5',
-								'inputValue' => SettingsHelper::getOptionValue(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 								'inputMin' => 1,
 								'inputMax' => 25,
 								'inputStep' => 1,
@@ -236,19 +236,19 @@ class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => \__('Disable default fields', 'eightshift-forms'),
-								'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Cover letter textarea', 'eightshift-forms'),
-										'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
 										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_COVER_LETTER,
 										'checkboxAsToggle' => true,
 									],
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Resume textarea', 'eightshift-forms'),
-										'checkboxIsChecked' => SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME, self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_KEY),
 										'checkboxValue' => self::SETTINGS_GREENHOUSE_DISABLE_DEFAULT_FIELDS_RESUME,
 										'checkboxAsToggle' => true,
 									],

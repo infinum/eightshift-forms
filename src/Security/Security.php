@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Security;
 
 use EightshiftForms\Misc\SettingsCloudflare;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
  * Security class.
@@ -45,8 +45,8 @@ class Security implements SecurityInterface
 		}
 
 		$key = SettingsSecurity::SETTINGS_SECURITY_DATA_KEY;
-		$keyName = SettingsHelper::getOptionName($key);
-		$data = SettingsHelper::getOptionValueGroup($key);
+		$keyName = UtilsSettingsHelper::getOptionName($key);
+		$data = UtilsSettingsHelper::getOptionValueGroup($key);
 		$ip = $this->getIpAddress(true);
 		$time = \time();
 
@@ -67,14 +67,14 @@ class Security implements SecurityInterface
 		$count = $user['count'] ?? 0;
 
 		// Reset the count if the time window has passed.
-		if (($time - $timestamp) > \intval(SettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
+		if (($time - $timestamp) > \intval(UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
 			unset($data[$ip]);
 			\update_option($keyName, $data);
 			return true;
 		}
 
 		// Check if the request count exceeds the rate limit.
-		if ($count >= \intval(SettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT))) {
+		if ($count >= \intval(UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT))) {
 			return false;
 		}
 
@@ -99,7 +99,7 @@ class Security implements SecurityInterface
 	{
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		if (SettingsHelper::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_CONNECTING_IP'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 

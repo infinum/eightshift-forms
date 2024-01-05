@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -137,8 +137,8 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
-		$apiKey = SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
+		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -158,11 +158,11 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 	{
 		// Bailout if global config is not valid.
 		if (!$this->isSettingsGlobalValid()) {
-			return SettingsOutputHelper::getNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
+			return UtilsSettingsOutputHelper::getNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
 		}
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -184,15 +184,15 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_HUBSPOT_USE_KEY, self::SETTINGS_HUBSPOT_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -203,12 +203,12 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => SettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => SettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -219,7 +219,7 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -228,8 +228,8 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									SettingsHelper::getSettingsDisabledOutputWithDebugFilter(
+								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getApiKeyHubspot(),
 										self::SETTINGS_HUBSPOT_API_KEY_KEY,
 										'ES_API_KEY_HUBSPOT'
@@ -240,7 +240,7 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
+								UtilsSettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -250,7 +250,7 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -263,7 +263,7 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 							],
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 								'inputFieldLabel' => \__('Allowed file types', 'eightshift-forms'),
 								'inputFieldHelp' => \sprintf(
 									// Translators: %s will be replaced with the link.
@@ -271,7 +271,7 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 									'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'
 								),
 								'inputType' => 'text',
-								'inputValue' => SettingsHelper::getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 							],
 						],
 					],
@@ -321,12 +321,12 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 			'tabContent' => [
 				[
 					'component' => 'input',
-					'inputName' => SettingsHelper::getSettingName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
+					'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY),
 					'inputPlaceholder' => HubspotClient::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY,
 					'inputFieldLabel' => \__('File uploads folder', 'eightshift-forms'),
 					'inputFieldHelp' => \__('All of the uploaded files will land inside this folder in the HubSpot file manager.', 'eightshift-forms'),
 					'inputType' => 'text',
-					'inputValue' => SettingsHelper::getSettingValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
+					'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId),
 				],
 				[
 					'component' => 'divider',
@@ -334,16 +334,16 @@ class SettingsHubspot implements SettingGlobalInterface, SettingInterface, Servi
 				],
 				[
 					'component' => 'input',
-					'inputName' => SettingsHelper::getSettingName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+					'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputFieldLabel' => \__('Upload allowed file types', 'eightshift-forms'),
 					'inputFieldHelp' => \sprintf(
 						// Translators: %s will be replaced with the link.
 						\__('Comma-separated list of <a href="%s" target="_blank">file type identifiers</a> (MIME types), e.g. <code>pdf</code>, <code>jpg</code>, <code>txt</code>.', 'eightshift-forms'),
 						'https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types'
 					),
-					'inputPlaceholder' => SettingsHelper::getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
+					'inputPlaceholder' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY),
 					'inputType' => 'text',
-					'inputValue' => SettingsHelper::getSettingValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),
+					'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId),
 				],
 			]
 		];

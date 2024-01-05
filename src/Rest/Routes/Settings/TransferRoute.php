@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Transfer\Transfer;
@@ -119,7 +119,7 @@ class TransferRoute extends AbstractBaseRoute
 
 				if (!$items) {
 					return \rest_ensure_response(
-						ApiHelper::getApiErrorOutput(
+						UtilsApiHelper::getApiErrorOutput(
 							\esc_html__('Please click on the forms you want to export.', 'eightshift-forms'),
 							[],
 							$debug
@@ -142,7 +142,7 @@ class TransferRoute extends AbstractBaseRoute
 
 				if (!$upload) {
 					return \rest_ensure_response(
-						ApiHelper::getApiErrorOutput(
+						UtilsApiHelper::getApiErrorOutput(
 							\esc_html__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
 							[],
 							$debug
@@ -157,7 +157,7 @@ class TransferRoute extends AbstractBaseRoute
 
 				if (!$uploadStatus) {
 					return \rest_ensure_response(
-						ApiHelper::getApiErrorOutput(
+						UtilsApiHelper::getApiErrorOutput(
 							\esc_html__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
 							[],
 							$debug
@@ -169,7 +169,7 @@ class TransferRoute extends AbstractBaseRoute
 				break;
 			default:
 				return \rest_ensure_response(
-					ApiHelper::getApiErrorOutput(
+					UtilsApiHelper::getApiErrorOutput(
 						\esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
 						[],
 						$debug
@@ -181,7 +181,7 @@ class TransferRoute extends AbstractBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			ApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessOutput(
 				// translators: %s will be replaced with the transfer internal type.
 				\sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
 				[

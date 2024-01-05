@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
@@ -112,7 +112,7 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 
 		if ($status === UtilsConfig::STATUS_ERROR) {
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					$message,
 					$syncForm,
 					$debug
@@ -121,7 +121,7 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 		}
 
 		return \rest_ensure_response(
-			ApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessOutput(
 				$message,
 				$syncForm,
 				$debug

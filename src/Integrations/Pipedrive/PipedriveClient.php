@@ -13,11 +13,11 @@ namespace EightshiftForms\Integrations\Pipedrive;
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
@@ -203,7 +203,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$code = 400;
 		$body = [];
 
-		if (SettingsHelper::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId)) {
+		if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId)) {
 			$organization = $this->postApplicationSingle(
 				'organizations',
 				$this->prepareParamsOrganization($params, $formId),
@@ -214,7 +214,7 @@ class PipedriveClient implements PipedriveClientInterface
 			$body = $organization['body'];
 
 			if ($code < 200 || $code > 299) {
-				return ApiHelper::getIntegrationApiErrorOutput(
+				return UtilsApiHelper::getIntegrationApiErrorOutput(
 					$organization,
 					$this->getErrorMsg($body)
 				);
@@ -239,7 +239,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$body = $person['body'];
 
 		if ($code < 200 || $code > 299) {
-			return ApiHelper::getIntegrationApiErrorOutput(
+			return UtilsApiHelper::getIntegrationApiErrorOutput(
 				$person,
 				$this->getErrorMsg($body)
 			);
@@ -247,7 +247,7 @@ class PipedriveClient implements PipedriveClientInterface
 
 		$personId = $person['body']['data']['id'] ?? '';
 
-		if (SettingsHelper::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, $formId)) {
+		if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, $formId)) {
 			$lead = $this->postApplicationSingle(
 				'leads',
 				$this->prepareParamsLead(
@@ -265,7 +265,7 @@ class PipedriveClient implements PipedriveClientInterface
 			$body = $lead['body'];
 
 			if ($code < 200 || $code > 299) {
-				return ApiHelper::getIntegrationApiErrorOutput(
+				return UtilsApiHelper::getIntegrationApiErrorOutput(
 					$lead,
 					$this->getErrorMsg($body)
 				);
@@ -286,7 +286,7 @@ class PipedriveClient implements PipedriveClientInterface
 		}
 
 		// On success return output.
-		return ApiHelper::getIntegrationApiSuccessOutput($person);
+		return UtilsApiHelper::getIntegrationApiSuccessOutput($person);
 	}
 
 	/**
@@ -305,7 +305,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		return ApiHelper::getIntegrationApiReponseDetails(
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -379,7 +379,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		return ApiHelper::getIntegrationApiReponseDetails(
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -387,7 +387,7 @@ class PipedriveClient implements PipedriveClientInterface
 			[],
 			'',
 			$formId,
-			SettingsHelper::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY)
 		);
 	}
 
@@ -407,7 +407,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -416,7 +416,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -442,7 +442,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -451,7 +451,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -474,7 +474,7 @@ class PipedriveClient implements PipedriveClientInterface
 	{
 		$output = [];
 
-		$personName = SettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
+		$personName = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
 		if (!$personName) {
 			return $output;
 		}
@@ -485,15 +485,15 @@ class PipedriveClient implements PipedriveClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = Helper::getFilterName(['integrations', SettingsPipedrive::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsPipedrive::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
-		$mapParams = SettingsHelper::getSettingValueGroup(SettingsPipedrive::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
+		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsPipedrive::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -516,7 +516,7 @@ class PipedriveClient implements PipedriveClientInterface
 
 		$output['add_time'] = \gmdate("Y-m-d H:i:s");
 
-		$label = SettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
+		$label = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
 		if ($label) {
 			$output['label'] = $label;
 		}
@@ -542,7 +542,7 @@ class PipedriveClient implements PipedriveClientInterface
 	{
 		$output = [];
 
-		$leadTitle = SettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId);
+		$leadTitle = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId);
 		if (!$leadTitle) {
 			return $output;
 		}
@@ -550,18 +550,18 @@ class PipedriveClient implements PipedriveClientInterface
 		$output['title'] = $leadTitle;
 
 
-		$label = SettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
+		$label = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
 		if ($label) {
 			$output['label_ids'] = [$label];
 		}
 
-		$leadValue = SettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
+		$leadValue = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
 		if ($leadValue) {
 			$value = \array_values(\array_filter($params, fn($item) => $item['name'] === $leadValue))[0]['value'] ?? 0;
 
 			$output['value'] = [
 				'amount' => \intval($value, 10),
-				'currency' => SettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
+				'currency' => UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
 			];
 		}
 
@@ -585,7 +585,7 @@ class PipedriveClient implements PipedriveClientInterface
 	{
 		$output = [];
 
-		$organization = SettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY, $formId);
+		$organization = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY, $formId);
 		if (!$organization) {
 			return $output;
 		}
@@ -671,6 +671,6 @@ class PipedriveClient implements PipedriveClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
 	}
 }

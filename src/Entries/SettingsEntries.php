@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -98,7 +98,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 			return false;
 		}
 
-		$isUsed = SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
+		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 
 		if (!$isUsed) {
 			return false;
@@ -114,7 +114,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
 			return false;
 		}
 
@@ -132,13 +132,13 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return SettingsOutputHelper::getNoActiveFeature();
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$isUsed = SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
+		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsFull' => true,
@@ -150,7 +150,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -176,12 +176,12 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [

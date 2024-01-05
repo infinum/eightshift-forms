@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
@@ -282,7 +282,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Get content from DB.
-		$content = Helper::getFormDetailsById($formId);
+		$content = UtilsGeneralHelper::getFormDetailsById($formId);
 
 		// Bailout if content is empty.
 		if (!$content) {
@@ -296,8 +296,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Prepare content variables.
 		$contentType = $content['type'] ?? '';
-		$contentItemId = $content['itemId'] ? Helper::unserializeAttributes($content['itemId']) : '';
-		$contentInnerId = $content['innerId'] ? Helper::unserializeAttributes($content['innerId']) : '';
+		$contentItemId = $content['itemId'] ? UtilsGeneralHelper::unserializeAttributes($content['itemId']) : '';
+		$contentInnerId = $content['innerId'] ? UtilsGeneralHelper::unserializeAttributes($content['innerId']) : '';
 		$contentFields = $content['fields'] ?? [];
 
 		// Bailout if content type is missing.
@@ -1070,7 +1070,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	private function getBlockAttributePrefixByFullBlockName(string $name): array
 	{
-		$blockName = Helper::getBlockNameDetails($name);
+		$blockName = UtilsGeneralHelper::getBlockNameDetails($name);
 
 		$component = $blockName['nameAttr'];
 
@@ -1188,7 +1188,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$topLevelOrder = $orders['order'] ?? [];
 
 		// Provide a custom order from external filter.
-		$filterName = Helper::getFilterName(['integrations', $integrationType, 'order']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', $integrationType, 'order']);
 		if (\has_filter($filterName)) {
 			$filterOrder = \apply_filters($filterName, []);
 

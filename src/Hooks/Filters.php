@@ -12,7 +12,7 @@ namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
@@ -712,7 +712,7 @@ class Filters implements ServiceInterface
 		}
 
 		// Populate additional items from filters, used for add-ons.
-		$filterName = Helper::getFilterName(['admin', 'settings', 'data']);
+		$filterName = UtilsGeneralHelper::getFilterName(['admin', 'settings', 'data']);
 
 		if (\has_filter($filterName)) {
 			foreach (\apply_filters($filterName, []) as $keyItem => $valueItem) {

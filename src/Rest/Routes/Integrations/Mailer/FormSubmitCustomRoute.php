@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
@@ -84,7 +84,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If form action is not set or empty.
 		if (!$action) {
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					$this->labels->getLabel('customNoAction', $formId),
 					[],
 					$debug
@@ -94,7 +94,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 
 		if ($actionExternal) {
 			return \rest_ensure_response(
-				ApiHelper::getApiSuccessOutput(
+				UtilsApiHelper::getApiSuccessOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					[
 						'processExternaly' => true,
@@ -105,7 +105,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		}
 
 		// Prepare params for output.
-		$params = Helper::prepareGenericParamsOutput($params);
+		$params = UtilsGeneralHelper::prepareGenericParamsOutput($params);
 
 		// Create a custom form action request.
 		$customResponse = \wp_remote_post(
@@ -123,7 +123,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If custom action request fails we'll return the generic error message.
 		if (!$customResponseCode || $customResponseCode > 399) {
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					$this->labels->getLabel('customError', $formId),
 					[],
 					$debug
@@ -133,7 +133,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			ApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessOutput(
 				$this->labels->getLabel('customSuccess', $formId),
 				[],
 				$debug

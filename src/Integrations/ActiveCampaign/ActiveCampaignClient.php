@@ -12,11 +12,11 @@ namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
@@ -149,7 +149,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -157,17 +157,17 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			$files,
 			$itemId,
 			$formId,
-			SettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return ApiHelper::getIntegrationApiSuccessOutput(
+			return UtilsApiHelper::getIntegrationApiSuccessOutput(
 				$details,
 				[
 					'contactId' => $body['contact']['id'],
@@ -189,7 +189,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		return ApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg([
 				[
@@ -237,7 +237,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -247,15 +247,15 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return ApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return ApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -292,7 +292,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -301,15 +301,15 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return ApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return ApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -337,7 +337,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -346,7 +346,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -364,7 +364,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		ApiHelper::getIntegrationApiErrorOutput(
+		UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -401,7 +401,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -411,7 +411,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -419,7 +419,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		ApiHelper::getIntegrationApiErrorOutput(
+		UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -497,7 +497,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -505,7 +505,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// Bailout if fields are missing.
 		if (!isset($body['form']['cfields'])) {
@@ -566,7 +566,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelper::getIntegrationApiReponseDetails(
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -584,7 +584,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		if (!isset($body['forms'])) {
 			return [];
@@ -609,13 +609,13 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = Helper::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsActiveCampaign::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		$standardFields = \array_flip(ActiveCampaign::STANDARD_FIELDS);
 
@@ -680,7 +680,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY)['value'];
 	}
 
 	/**
@@ -690,6 +690,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getApiUrl(): string
 	{
-		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY)['value'];
 	}
 }

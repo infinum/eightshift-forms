@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -85,15 +85,15 @@ class LocationsRoute extends AbstractBaseRoute
 
 		$id = $params['id'] ?? '';
 
-		$type = Helper::getFormTypeById($id);
+		$type = UtilsGeneralHelper::getFormTypeById($id);
 
 		return \rest_ensure_response(
-			ApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					'output' => Components::renderPartial('component', 'admin-listing', 'item-details', [
-						'items' => Helper::getBlockLocations($id),
-						'type' => Helper::getFormTypeById($id),
+						'items' => UtilsGeneralHelper::getBlockLocations($id),
+						'type' => UtilsGeneralHelper::getFormTypeById($id),
 						'sectionClass' => Components::getComponent('admin-listing')['componentClass'],
 						'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms'),
 						'additionalAttributes' => [

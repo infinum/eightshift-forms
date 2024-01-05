@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Workable;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -98,9 +98,9 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
-		$apiKey = SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
-		$subdomain = SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
+		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
+		$subdomain = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey) || empty($subdomain)) {
 			return false;
@@ -117,15 +117,15 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -136,12 +136,12 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => SettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => SettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -152,7 +152,7 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -161,8 +161,8 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									SettingsHelper::getSettingsDisabledOutputWithDebugFilter(
+								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getApiKeyWorkable(),
 										self::SETTINGS_WORKABLE_API_KEY_KEY,
 										'ES_API_KEY_WORKABLE'
@@ -173,8 +173,8 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getInputFieldWithGlobalVariable(
-									SettingsHelper::getSettingsDisabledOutputWithDebugFilter(
+								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getSubdomainWorkable(),
 										self::SETTINGS_WORKABLE_SUBDOMAIN_KEY,
 										'ES_SUBDOMAIN_WORKABLE'
@@ -185,7 +185,7 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
+								UtilsSettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -195,7 +195,7 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -208,7 +208,7 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Up to 25MB.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -216,7 +216,7 @@ class SettingsWorkable implements SettingGlobalInterface, ServiceInterface
 								'inputFieldAfterContent' => 'MB',
 								'inputFieldInlineBeforeAfterContent' => true,
 								'inputPlaceholder' => self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT,
-								'inputValue' => SettingsHelper::getOptionValue(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
+								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
 								'inputMin' => 1,
 								'inputMax' => 25,
 								'inputStep' => 1,

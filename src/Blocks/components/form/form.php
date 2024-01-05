@@ -11,8 +11,8 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Form\Form;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -53,7 +53,7 @@ $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', 
 $formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 $formCustomName = Components::checkAttr('formCustomName', $attributes, $manifest);
 
-$formDataTypeSelectorFilterName = Helper::getFilterName(['block', 'form', 'dataTypeSelector']);
+$formDataTypeSelectorFilterName = UtilsGeneralHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
 	Components::checkAttr('formDataTypeSelector', $attributes, $manifest),
@@ -77,7 +77,7 @@ if ($formSuccessRedirect) {
 }
 
 if ($formSuccessRedirectVariation) {
-	$formAttrs[UtilsHelper::getStateAttribute('successRedirectVariation')] = Encryption::encryptor($formSuccessRedirectVariation);
+	$formAttrs[UtilsHelper::getStateAttribute('successRedirectVariation')] = UtilsEncryption::encryptor($formSuccessRedirectVariation);
 }
 
 if ($formTrackingEventName) {
@@ -141,7 +141,7 @@ if ($formDownloads || $formSuccessRedirectVariationUrl) {
 
 	if (!$downloadsOutput) {
 		if ($formSuccessRedirectVariationUrl) {
-			$downloadsOutput['all'] = Encryption::encryptor(wp_json_encode([
+			$downloadsOutput['all'] = UtilsEncryption::encryptor(wp_json_encode([
 				'main' => [
 					$formSuccessRedirectVariationUrl,
 					$formSuccessRedirectVariationUrlTitle,
@@ -157,7 +157,7 @@ if ($formDownloads || $formSuccessRedirectVariationUrl) {
 				];
 			}
 
-			$downloadsOutput[$key] = Encryption::encryptor(wp_json_encode($downloadsOutput[$key]));
+			$downloadsOutput[$key] = UtilsEncryption::encryptor(wp_json_encode($downloadsOutput[$key]));
 		}
 	}
 
@@ -203,19 +203,19 @@ if ($formAttrs) {
 	<?php if (is_user_logged_in() && !is_admin()) { ?>
 		<div class="<?php echo esc_attr('es-block-edit-options__edit-wrap') ?>">
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getFormEditPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
 					<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
 				<?php echo $manifestUtils['icons']['settings']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
 					<?php echo $manifestUtils['icons']['dashboard']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
@@ -237,7 +237,7 @@ if ($formAttrs) {
 	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 
-		<?php echo Helper::getBlockAdditionalContentViaFilter('form', $attributes); ?>
+		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); ?>
 	</div>
 
 	<?php

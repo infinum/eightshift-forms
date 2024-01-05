@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -61,7 +61,7 @@ $nextButtonComponent = '';
 			<div class="<?php echo esc_attr("{$componentFieldClass} {$componentClass}__navigation-inner"); ?>">
 				<?php
 
-				$filterNameComponentPrev = Helper::getFilterName(['block', 'step', 'component_prev']);
+				$filterNameComponentPrev = UtilsGeneralHelper::getFilterName(['block', 'step', 'component_prev']);
 
 				if (has_filter($filterNameComponentPrev)) {
 					$prevButtonComponent = apply_filters($filterNameComponentPrev, [
@@ -90,7 +90,7 @@ $nextButtonComponent = '';
 					)
 				);
 
-				$filterNameComponentNext = Helper::getFilterName(['block', 'step', 'component_next']);
+				$filterNameComponentNext = UtilsGeneralHelper::getFilterName(['block', 'step', 'component_next']);
 
 				if (has_filter($filterNameComponentNext)) {
 					$nextButtonComponent = apply_filters($filterNameComponentNext, [

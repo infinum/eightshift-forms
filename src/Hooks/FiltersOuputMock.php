@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
  * FiltersOuputMock class.
@@ -32,7 +32,7 @@ final class FiltersOuputMock
 		$filterUsed = false;
 		$settingsFields = [];
 
-		$filterName = Helper::getFilterName(['enrichment', 'manualMap']);
+		$filterName = UtilsGeneralHelper::getFilterName(['enrichment', 'manualMap']);
 
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, '');
@@ -84,7 +84,7 @@ final class FiltersOuputMock
 		$filterData = [];
 		$filterUsed = false;
 
-		$filterName = Helper::getFilterName(['block', 'form', 'successRedirectVariationOptions']);
+		$filterName = UtilsGeneralHelper::getFilterName(['block', 'form', 'successRedirectVariationOptions']);
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, []);
 
@@ -100,7 +100,7 @@ final class FiltersOuputMock
 		}
 
 		$data = [
-			...SettingsHelper::getOptionValueGroup(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
+			...UtilsSettingsHelper::getOptionValueGroup(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
 			...$filterData,
 		];
 
@@ -125,9 +125,9 @@ final class FiltersOuputMock
 		$data = '';
 		$filterUsed = false;
 
-		$data = SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		$data = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
 
-		$filterName = Helper::getFilterName(['block', 'form', 'successRedirectVariation']);
+		$filterName = UtilsGeneralHelper::getFilterName(['block', 'form', 'successRedirectVariation']);
 		if (\has_filter($filterName)) {
 			$dataFilter = \apply_filters($filterName, $type, $formId);
 
@@ -158,20 +158,20 @@ final class FiltersOuputMock
 		$filterUsed = false;
 
 		// Find global settings per integration.
-		$dataGlobal = SettingsHelper::getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
+		$dataGlobal = UtilsSettingsHelper::getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
 
 		// Populate final output.
 		$data = $dataGlobal;
 
 		// Find local settings for form.
-		$dataLocal = SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
+		$dataLocal = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
 
 		if ($dataLocal) {
 			$data = $dataLocal;
 		}
 
 		// Find local settings per integration or filter data.
-		$filterNameLocal = Helper::getFilterName(['block', 'form', 'successRedirectUrl']);
+		$filterNameLocal = UtilsGeneralHelper::getFilterName(['block', 'form', 'successRedirectUrl']);
 		if (\has_filter($filterNameLocal)) {
 			$dataFilter = \apply_filters($filterNameLocal, $type, $formId) ?? '';
 
@@ -206,9 +206,9 @@ final class FiltersOuputMock
 	{
 		$filterUsed = false;
 
-		$data = SettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+		$data = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
 
-		$filterName = Helper::getFilterName(['block', 'form', 'trackingEventName']);
+		$filterName = UtilsGeneralHelper::getFilterName(['block', 'form', 'trackingEventName']);
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, $type, $formId);
 
@@ -240,10 +240,10 @@ final class FiltersOuputMock
 		$settingsDetails = [];
 		$filterUsed = false;
 
-		$filterName = Helper::getFilterName(['block', 'form', 'trackingAdditionalData']);
-		$trackingAdditionalData = SettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
-		$trackingAdditionalDataSuccess = SettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
-		$trackingAdditionalDataError = SettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
+		$filterName = UtilsGeneralHelper::getFilterName(['block', 'form', 'trackingAdditionalData']);
+		$trackingAdditionalData = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
+		$trackingAdditionalDataSuccess = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
+		$trackingAdditionalDataError = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
 		$trackingAdditionalDataFilterValue = \has_filter($filterName) ? \apply_filters($filterName, $type, $formId) : [];
 
 		if ($trackingAdditionalData || $trackingAdditionalDataFilterValue || $trackingAdditionalDataSuccess || $trackingAdditionalDataError) {

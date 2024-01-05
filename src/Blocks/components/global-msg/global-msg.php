@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -29,7 +29,7 @@ $headings = [
 	'error' => '',
 ];
 
-$filterName = Helper::getFilterName(['block', 'form', 'globalMsgHeadings']);
+$filterName = UtilsGeneralHelper::getFilterName(['block', 'form', 'globalMsgHeadings']);
 
 if (has_filter($filterName) && !is_admin()) {
 	$headings = apply_filters($filterName, []);

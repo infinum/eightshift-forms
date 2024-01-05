@@ -8,7 +8,7 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');
@@ -38,7 +38,7 @@ $submitClass = Components::classnames([
 ]);
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('submit', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('submit', $attributes);
 
 $submitIconContent = '';
 if ($submitIcon) {

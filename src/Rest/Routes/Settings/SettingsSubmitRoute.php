@@ -12,7 +12,7 @@ namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
@@ -119,7 +119,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			ApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessOutput(
 				\esc_html__('Changes saved!', 'eightshift-forms'),
 				[],
 				$debug

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
@@ -179,7 +179,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 		return [
 			// translators: %s replaces form title name.
 			'adminSettingsPageTitle' => \esc_html__('Global settings', 'eightshift-forms'),
-			'adminSettingsBackLink' => Helper::getListingPageUrl(),
+			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar(),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, '0'),
 			'adminSettingsType' => $type,

@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -63,8 +63,8 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
-		$email = SettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
+		$email = UtilsSettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
 
 		if (!$isUsed || empty($email)) {
 			return false;
@@ -80,12 +80,12 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -103,11 +103,11 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 							],
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 								'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 								'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => SettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
+								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 							],
 						],
 					],
@@ -139,11 +139,11 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				],
 				[
 					'component' => 'input',
-					'inputName' => SettingsHelper::getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
+					'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 					'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 					'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 					'inputType' => 'text',
-					'inputValue' => SettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
+					'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 				],
 			],
 		] : [];

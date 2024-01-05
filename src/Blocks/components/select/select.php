@@ -8,7 +8,7 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 $manifest = Components::getManifest(__DIR__);
@@ -83,7 +83,7 @@ if ($selectAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('select', $attributes);
 
 $select = '
 	<select

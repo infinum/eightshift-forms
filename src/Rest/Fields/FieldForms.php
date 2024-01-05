@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Fields;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\IntegrationsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableFieldInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Fields\AbstractField;
 
@@ -72,6 +72,6 @@ class FieldForms extends AbstractField implements CallableFieldInterface
 	{
 		$id = $postObject['id'] ?? '';
 
-		return IntegrationsHelper::getIntegrationDetailsById((string) $id)['value'] ?? '';
+		return UtilsIntegrationsHelper::getIntegrationDetailsById((string) $id)['value'] ?? '';
 	}
 }

@@ -16,8 +16,8 @@ use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\IntegrationsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminMenu;
 
@@ -199,7 +199,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 		switch ($type) {
 			case 'locations':
-				$items = Helper::getBlockLocations($formId);
+				$items = UtilsGeneralHelper::getBlockLocations($formId);
 				$count = \count($items);
 				$formTitle = \get_the_title((int) $formId);
 
@@ -285,8 +285,8 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	private function getNoItemsMessage(string $type): array
 	{
-		$newUrl = Helper::getNewFormPageUrl();
-		$listingUrl = Helper::getListingPageUrl();
+		$newUrl = UtilsGeneralHelper::getNewFormPageUrl();
+		$listingUrl = UtilsGeneralHelper::getListingPageUrl();
 
 		switch ($type) {
 			case 'locations':
@@ -366,7 +366,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => Helper::getListingPageUrl(),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
 						'submitValue' => \__('Back', 'eightshift-forms'),
 						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
@@ -382,7 +382,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => Helper::getListingPageUrl(),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
 						'submitValue' => \__('Back', 'eightshift-forms'),
 						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
@@ -429,7 +429,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => Helper::getListingPageUrl(),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
 						'submitValue' => \__('Back', 'eightshift-forms'),
 						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
@@ -503,12 +503,12 @@ class FormAdminMenu extends AbstractAdminMenu
 					Components::render('submit', [
 						'submitVariant' => 'outline',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => Helper::getFormsTrashPageUrl(),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getFormsTrashPageUrl(),
 						'submitValue' => \__('Trashed', 'eightshift-forms'),
 					]),
 					Components::render('submit', [
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => Helper::getNewFormPageUrl(),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getNewFormPageUrl(),
 						'submitValue' => \__('Create', 'eightshift-forms'),
 						'submitIcon' => UtilsHelper::getUtilsIcons('addHighContrast')
 					]),
@@ -787,7 +787,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			]
 		);
 
-		$activeIntegration = \array_flip(IntegrationsHelper::getActiveIntegrations());
+		$activeIntegration = \array_flip(UtilsIntegrationsHelper::getActiveIntegrations());
 
 		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			$type = $value['type'] ?? '';

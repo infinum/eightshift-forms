@@ -12,8 +12,8 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Encryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Throwable;
 use WP_REST_Request;
@@ -87,7 +87,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 		// Bailout if troubleshooting "skip captcha" is on.
 		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return \rest_ensure_response(
-				ApiHelper::getApiSuccessOutput(
+				UtilsApiHelper::getApiSuccessOutput(
 					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
 					[],
 					$debug
@@ -101,7 +101,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 			$data = $params['data'] ?? '';
 			if (!\is_string($data)) {
 				return \rest_ensure_response(
-					ApiHelper::getApiErrorOutput(
+					UtilsApiHelper::getApiErrorOutput(
 						\esc_html__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
 						[],
 						$debug
@@ -109,11 +109,11 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 				);
 			}
 
-			$params = Encryption::decryptor($data);
+			$params = UtilsEncryption::decryptor($data);
 
 			if (!Components::isJson($params)) {
 				return \rest_ensure_response(
-					ApiHelper::getApiErrorOutput(
+					UtilsApiHelper::getApiErrorOutput(
 						\esc_html__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
 						[],
 						$debug
@@ -125,7 +125,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 
 			if (!\is_array($params) && !$params) {
 				return \rest_ensure_response(
-					ApiHelper::getApiErrorOutput(
+					UtilsApiHelper::getApiErrorOutput(
 						\esc_html__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
 						[],
 						$debug
@@ -140,7 +140,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 			$geolocation = $this->geolocation->isUserGeolocated($formId, $geo, $alt);
 
 			return \rest_ensure_response(
-				ApiHelper::getApiSuccessOutput(
+				UtilsApiHelper::getApiSuccessOutput(
 					\esc_html__('Success geolocation', 'eightshift-forms'),
 					[
 						'formId' => $geolocation,
@@ -150,7 +150,7 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					\esc_html__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
 					[],
 					\array_merge(

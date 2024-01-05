@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Workable;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -219,7 +219,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 					}
 					break;
 				case 'file':
-					$maxFileSize = SettingsHelper::getOptionValueWithFallback(SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT);
+					$maxFileSize = UtilsSettingsHelper::getOptionValueWithFallback(SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT);
 
 					$output[] = [
 						'component' => 'file',
@@ -320,7 +320,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		];
 
 		// Change the final output if necesery.
-		$filterName = Helper::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

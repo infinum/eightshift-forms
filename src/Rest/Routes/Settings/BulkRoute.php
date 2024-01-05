@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Entries\EntriesHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Transfer\TransferInterface;
 use WP_REST_Request;
@@ -116,7 +116,7 @@ class BulkRoute extends AbstractBaseRoute
 
 		if (!$ids) {
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					\__('There are no selected forms.', 'eightshift-forms'),
 					[],
 					$debug
@@ -127,7 +127,7 @@ class BulkRoute extends AbstractBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					\__('Action type is missing.', 'eightshift-forms'),
 					[],
 					$debug
@@ -164,7 +164,7 @@ class BulkRoute extends AbstractBaseRoute
 		switch ($output['status']) {
 			case 'success':
 				return \rest_ensure_response(
-					ApiHelper::getApiSuccessOutput(
+					UtilsApiHelper::getApiSuccessOutput(
 						$output['msg'] ?? \esc_html__('Success', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -172,7 +172,7 @@ class BulkRoute extends AbstractBaseRoute
 				);
 			case 'warning':
 				return \rest_ensure_response(
-					ApiHelper::getApiWarningOutput(
+					UtilsApiHelper::getApiWarningOutput(
 						$output['msg'] ?? \esc_html__('Warning', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -180,7 +180,7 @@ class BulkRoute extends AbstractBaseRoute
 				);
 			default:
 				return \rest_ensure_response(
-					ApiHelper::getApiErrorOutput(
+					UtilsApiHelper::getApiErrorOutput(
 						$output['msg'] ?? \esc_html__('Error', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -315,7 +315,7 @@ class BulkRoute extends AbstractBaseRoute
 			}
 
 			// Prevent non syncahble forms from syncing like mailer.
-			if (!Helper::canIntegrationUseSync(Helper::getFormTypeById((string) $id))) {
+			if (!UtilsGeneralHelper::canIntegrationUseSync(UtilsGeneralHelper::getFormTypeById((string) $id))) {
 				$output['skip'][] = $title;
 				continue;
 			}

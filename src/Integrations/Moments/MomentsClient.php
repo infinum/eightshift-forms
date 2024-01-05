@@ -12,11 +12,11 @@ namespace EightshiftForms\Integrations\Moments;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
@@ -126,7 +126,7 @@ class MomentsClient implements ClientInterface
 	{
 		$body = $this->prepareParams($params, $formId);
 
-		$filterName = Helper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
@@ -142,7 +142,7 @@ class MomentsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -150,21 +150,21 @@ class MomentsClient implements ClientInterface
 			$files,
 			$itemId,
 			$formId,
-			SettingsHelper::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return ApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return ApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -364,7 +364,7 @@ class MomentsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelper::getIntegrationApiReponseDetails(
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -388,7 +388,7 @@ class MomentsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -397,7 +397,7 @@ class MomentsClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -423,13 +423,13 @@ class MomentsClient implements ClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = Helper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';
@@ -486,7 +486,7 @@ class MomentsClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
 	}
 
 	/**
@@ -496,6 +496,6 @@ class MomentsClient implements ClientInterface
 	 */
 	private function getApiUrl(): string
 	{
-		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY)['value'];
 	}
 }

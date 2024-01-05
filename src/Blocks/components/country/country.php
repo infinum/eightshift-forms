@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
@@ -63,7 +63,7 @@ if ($countryAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('country', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('country', $attributes);
 
 $placeholder = $countryPlaceholder ? Components::render(
 	'select-option',

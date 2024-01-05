@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\General;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -92,11 +92,11 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 			static function ($item, $key) {
 				return "<li><code>{$key}</code> - {$item}</li>";
 			},
-			Helper::getSpecialConstants('tracking'),
-			\array_keys(Helper::getSpecialConstants('tracking'))
+			UtilsGeneralHelper::getSpecialConstants('tracking'),
+			\array_keys(UtilsGeneralHelper::getSpecialConstants('tracking'))
 		);
 
-		$formDetails = Helper::getFormDetailsById($formId);
+		$formDetails = UtilsGeneralHelper::getFormDetailsById($formId);
 		$formType = $formDetails['type'] ?? '';
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
@@ -106,7 +106,7 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($formType, $formId);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -116,7 +116,7 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getSettingName(self::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('Redirect to URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -131,7 +131,7 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 										<br />
 										Tag missing? Make sure its field has a <b>Name</b> set!
 									</details>
-									%2$s', 'eightshift-forms'), SettingsOutputHelper::getPartialFormFieldNames($formDetails['fieldNamesTags']), $successRedirectUrl['settingsLocal']),
+									%2$s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails['fieldNamesTags']), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
@@ -144,7 +144,7 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 							[
 								'component' => 'select',
 								'selectFieldLabel' => \__('Redirect variation', 'eightshift-forms'),
-								'selectName' => SettingsHelper::getSettingName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY),
+								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY),
 								'selectPlaceholder' => \__('Pick an option', 'eightshift-forms'),
 								'selectIsDisabled' => $successRedirectVariation['filterUsed'],
 								// translators: %s will be replaced with forms field name and filter output copy.
@@ -174,10 +174,10 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputFieldLabel' => \__('Event name', 'eightshift-forms'),
 								// translators: %s will be replaced with th filter output copy.
-								'inputFieldHelp' => Helper::minifyString(\sprintf(\__('
+								'inputFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__('
 									If blank, the event is not sent to the tracking platform.%s', 'eightshift-forms'), $trackingEventName['settings'])),
 								'inputType' => 'text',
 								'inputIsDisabled' => $trackingEventName['filterUsed'],
@@ -189,17 +189,17 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => SettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY),
+								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters', 'eightshift-forms'),
 								// translators: %s will be list example keys.
-								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
 									These parameters are always sent to the tracking platform.<br /><br />
 									Provide one key-value pair per line, following this format: %1\$s
 									<br />
 									%2\$s", 'eightshift-forms'), '<code>keyName : keyValue</code>', $trackingAdditionalData['settings']['general'] ?? '')),
-								'textareaValue' => SettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId, 2),
+								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId, 2),
 							],
 							[
 								'component' => 'divider',
@@ -207,18 +207,18 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => SettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY),
+								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters on successful submit', 'eightshift-forms'),
 								// translators: %s will be list example keys.
-								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
 									These parameters are sent to the tracking platform when a form is submitted successfully.<br /><br />
 									Provide one key-value pair per line, following this format: %1\$s
 									<br />
 									%2\$s
 									", 'eightshift-forms'), '<code>keyName : keyValue</code>', $trackingAdditionalData['settings']['success'] ?? '')),
-								'textareaValue' => SettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId, 2),
+								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId, 2),
 							],
 							[
 								'component' => 'divider',
@@ -226,12 +226,12 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => SettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY),
+								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters on error', 'eightshift-forms'),
 								// translators: %s will be list example keys.
-								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
 									These parameters are sent to the tracking platform when a form submission fails.<br /><br />
 									Provide one key-value pair per line, following this format: %1\$s
 									<br /><br />
@@ -241,7 +241,7 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 									</ul>
 									%3\$s
 									", 'eightshift-forms'), '<code>keyName : keyValue</code>', \implode('', $specialConstants), $trackingAdditionalData['settings']['error'] ?? '')),
-								'textareaValue' => SettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId, 2),
+								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId, 2),
 							],
 						],
 					],
@@ -251,12 +251,12 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getSettingName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
-								'inputId' => SettingsHelper::getSettingName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
+								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
 								'inputFieldLabel' => \__('Form custom name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Target a form (or a set of forms) and apply changes through filters, in code.', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => SettingsHelper::getSettingValue(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId),
+								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId),
 							]
 						],
 					],
@@ -275,7 +275,7 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 		$successRedirectVariationOptions = FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue();
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -285,17 +285,17 @@ class SettingsGeneral implements SettingGlobalInterface, SettingInterface, Servi
 						'tabContent' => [
 							[
 								'component' => 'textarea',
-								'textareaName' => SettingsHelper::getOptionName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
+								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
 								'textareaIsMonospace' => true,
 								'selectIsDisabled' => $successRedirectVariationOptions['filterUsed'],
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('After form submission redirect variants', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
-								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
 									These entries will populate the dropdown in the \"Thank you page\" options so different styles can be selected based on the use case.<br /><br />
 									Provide one key-value pair per line, in this format: %1\$s
 									%2\$s", 'eightshift-forms'), '<code>slug : label</code>', $successRedirectVariationOptions['settings'])),
-								'textareaValue' => SettingsHelper::getOptionValueAsJson(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY, 2),
+								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY, 2),
 							],
 						],
 					],

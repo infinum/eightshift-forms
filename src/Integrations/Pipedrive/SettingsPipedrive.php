@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Pipedrive;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -175,7 +175,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 			return false;
 		}
 
-		$personName = SettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
+		$personName = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
 
 		if (!$personName) {
 			return false;
@@ -195,28 +195,28 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return SettingsOutputHelper::getNoActiveFeature();
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$formDetails = Helper::getFormDetailsById($formId);
+		$formDetails = UtilsGeneralHelper::getFormDetailsById($formId);
 
 		$fields = $formDetails['fieldNamesTags'] ?? [];
-		$mapParams = SettingsHelper::getSettingValueGroup(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
+		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 
-		$personName = SettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
+		$personName = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
 		$personFields = $this->pipedriveClient->getPersonFields();
-		$personLabel = SettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
+		$personLabel = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY, $formId);
 
-		$useLead = SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_LEAD, self::SETTINGS_PIPEDRIVE_USE_LEAD, $formId);
+		$useLead = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_LEAD, self::SETTINGS_PIPEDRIVE_USE_LEAD, $formId);
 		$leadFields = $this->pipedriveClient->getLeadsFields();
-		$leadValue = SettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
-		$leadLabel = SettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
+		$leadValue = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
+		$leadLabel = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY, $formId);
 
-		$organization = SettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY, $formId);
-		$useOrganization = SettingsHelper::isSettingCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId);
+		$organization = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY, $formId);
+		$useOrganization = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			...($fields) ? [
 				[
 					'component' => 'tabs',
@@ -231,7 +231,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 								],
 								[
 									'component' => 'select',
-									'selectName' => SettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY),
+									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY),
 									'selectFieldLabel' => \__('Person name', 'eightshift-forms'),
 									'selectFieldHelp' => \__('When you add a new contact to your list, you can use their name to differentiate them from other contacts.', 'eightshift-forms'),
 									'selectSingleSubmit' => true,
@@ -268,7 +268,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 									],
 									[
 										'component' => 'group',
-										'groupName' => SettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY),
+										'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY),
 										'groupSaveOneField' => true,
 										'groupStyle' => 'default-listing',
 										'groupContent' => [
@@ -323,7 +323,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 									],
 									[
 										'component' => 'select',
-										'selectName' => SettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY),
+										'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LABEL_PERSON_KEY),
 										'selectFieldLabel' => \__('Person label', 'eightshift-forms'),
 										'selectFieldHelp' => \__('Person label is used to distinguish lead statuses in your list.', 'eightshift-forms'),
 										'selectPlaceholder' => \__('Select person label', 'eightshift-forms'),
@@ -356,7 +356,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 									[
 										'component' => 'checkboxes',
 										'checkboxesFieldLabel' => '',
-										'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_PIPEDRIVE_USE_LEAD),
+										'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_PIPEDRIVE_USE_LEAD),
 										'checkboxesContent' => [
 											[
 												'component' => 'checkbox',
@@ -380,12 +380,12 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 										],
 										[
 											'component' => 'input',
-											'inputName' => SettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY),
+											'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY),
 											'inputFieldLabel' => \__('Lead title', 'eightshift-forms'),
 											'inputFieldHelp' => \__('Lead title is used to distinguish lead sources in your list.', 'eightshift-forms'),
 											'inputType' => 'text',
 											'inputIsRequired' => true,
-											'inputValue' => SettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId),
+											'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_TITLE_KEY, $formId),
 										],
 										[
 											'component' => 'divider',
@@ -398,7 +398,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 										],
 										[
 											'component' => 'select',
-											'selectName' => SettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY),
+											'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY),
 											'selectFieldLabel' => \__('Lead value', 'eightshift-forms'),
 											'selectFieldHelp' => \__('Make sure that you assign lead value to a field that can only have number value.', 'eightshift-forms'),
 											'selectPlaceholder' => \__('Select lead value name field', 'eightshift-forms'),
@@ -416,11 +416,11 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 										],
 										[
 											'component' => 'input',
-											'inputName' => SettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY),
+											'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY),
 											'inputFieldHelp' => \__('Make sure that you only add currency added from the list in you Pipedrive admin. To find currency list go to your Pipedrive account > Settings > Company settings > Currencies.', 'eightshift-forms'),
 											'inputFieldLabel' => \__('Lead currency', 'eightshift-forms'),
 											'inputType' => 'text',
-											'inputValue' => SettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
+											'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_LEAD_CURRENCY_KEY, $formId),
 										],
 										[
 											'component' => 'divider',
@@ -432,7 +432,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 										],
 										[
 											'component' => 'select',
-											'selectName' => SettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY),
+											'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_LABEL_LEAD_KEY),
 											'selectFieldLabel' => \__('Lead label', 'eightshift-forms'),
 											'selectFieldHelp' => \__('Lead label is used to distinguish lead statuses in your list.', 'eightshift-forms'),
 											'selectPlaceholder' => \__('Select lead label', 'eightshift-forms'),
@@ -464,7 +464,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 									[
 										'component' => 'checkboxes',
 										'checkboxesFieldLabel' => '',
-										'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION),
+										'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_PIPEDRIVE_USE_ORGANIZATION),
 										'checkboxesContent' => [
 											[
 												'component' => 'checkbox',
@@ -488,7 +488,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 										],
 										[
 											'component' => 'select',
-											'selectName' => SettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY),
+											'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PIPEDRIVE_ORGANIZATION_KEY),
 											'selectFieldLabel' => \__('Organization', 'eightshift-forms'),
 											'selectIsRequired' => true,
 											'selectFieldHelp' => \__('Organization name is assignet to every new organization created.', 'eightshift-forms'),
@@ -511,7 +511,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 						] : []),
 					],
 				],
-			] : [SettingsOutputHelper::getDataMappedIntegrationMissingFields()],
+			] : [UtilsSettingsOutputHelper::getDataMappedIntegrationMissingFields()],
 		];
 	}
 
@@ -522,8 +522,8 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY);
-		$apiKey = SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), self::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY);
+		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), self::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -540,15 +540,15 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY)) {
-			return SettingsOutputHelper::getNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-		$deactivateIntegration = SettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY);
 
 		return [
-			SettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -559,12 +559,12 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelper::getOptionName(self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => SettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => SettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -575,7 +575,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -584,8 +584,8 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									SettingsHelper::getSettingsDisabledOutputWithDebugFilter(
+								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getApiKeyPipedrive(),
 										self::SETTINGS_PIPEDRIVE_API_KEY_KEY,
 										'ES_API_KEY_PIPEDRIVE'
@@ -596,7 +596,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								SettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
+								UtilsSettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -606,7 +606,7 @@ class SettingsPipedrive implements SettingGlobalInterface, SettingInterface, Ser
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => SettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('

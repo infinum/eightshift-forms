@@ -12,11 +12,11 @@ namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
@@ -171,7 +171,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
-		$email = Helper::getEmailParamsField($params);
+		$email = UtilsGeneralHelper::getEmailParamsField($params);
 		$emailHash = \md5(\strtolower($email));
 
 		$body = [
@@ -183,7 +183,7 @@ class MailchimpClient implements MailchimpClientInterface
 		];
 
 
-		$filterName = Helper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
@@ -200,7 +200,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -208,21 +208,21 @@ class MailchimpClient implements MailchimpClientInterface
 			$files,
 			$itemId,
 			$formId,
-			SettingsHelper::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return ApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
 		}
 
 		// Output error.
-		return ApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationApiErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -317,7 +317,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -326,7 +326,7 @@ class MailchimpClient implements MailchimpClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -370,7 +370,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -379,7 +379,7 @@ class MailchimpClient implements MailchimpClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -406,7 +406,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelper::getIntegrationApiReponseDetails(
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -430,7 +430,7 @@ class MailchimpClient implements MailchimpClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelper::getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsMailchimp::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -439,7 +439,7 @@ class MailchimpClient implements MailchimpClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		Helper::setQmLogsOutput($details);
+		UtilsGeneralHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -465,13 +465,13 @@ class MailchimpClient implements MailchimpClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = Helper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
@@ -557,6 +557,6 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailchimp(), SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailchimp(), SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY)['value'];
 	}
 }

@@ -11,11 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Theme;
 
 use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -54,7 +54,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function enqueueScriptsLocal()
 	{
-		if (SettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -70,7 +70,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function enqueueStylesLocal(string $hook)
 	{
-		if (SettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -88,7 +88,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			return [];
 		}
 
-		$scriptsDependency = Helper::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependency = UtilsGeneralHelper::getFilterName(['general', 'scriptsDependency']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -116,9 +116,9 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		$handle = "{$this->getAssetsPrefix()}-" . self::CAPTCHA_ENQUEUE_HANDLE;
 
-		$siteKey = SettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'];
+		$siteKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'];
 
-		$isEnterprise = SettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+		$isEnterprise = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
 
 		$url = "https://www.google.com/recaptcha/api.js?render={$siteKey}";
 

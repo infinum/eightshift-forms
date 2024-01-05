@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
  * Class ValidationPatterns
@@ -116,7 +116,7 @@ class ValidationPatterns implements ValidationPatternsInterface
 			...self::VALIDATION_PATTERNS_PRIVATE,
 		];
 
-		$userPatterns = \preg_split("/\\r\\n|\\r|\\n/", SettingsHelper::getOptionValueAsJson(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
+		$userPatterns = \preg_split("/\\r\\n|\\r|\\n/", UtilsSettingsHelper::getOptionValueAsJson(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
 
 		if ($userPatterns) {
 			foreach ($userPatterns as $pattern) {

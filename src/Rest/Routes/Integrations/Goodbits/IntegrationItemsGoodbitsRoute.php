@@ -12,7 +12,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Goodbits;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
@@ -103,7 +103,7 @@ class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
 
 		if (!$isGlobalSettingsValid) {
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					\esc_html__('Global not configured', 'eightshift-forms'),
 					[],
 					$debug
@@ -115,7 +115,7 @@ class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
 
 		if (!$items) {
 			return \rest_ensure_response(
-				ApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorOutput(
 					\esc_html__('Items missing', 'eightshift-forms'),
 					[],
 					$debug
@@ -139,7 +139,7 @@ class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			ApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					[
