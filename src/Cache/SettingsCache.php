@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Cache;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -59,7 +59,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$data = \apply_filters(Filters::FILTER_SETTINGS_DATA, []);
+		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
 
 		$output = \array_values(\array_filter(\array_map(
 			function ($key, $value) {

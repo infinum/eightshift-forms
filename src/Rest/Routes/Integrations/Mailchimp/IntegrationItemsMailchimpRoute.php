@@ -14,6 +14,7 @@ use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
@@ -40,7 +41,7 @@ class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

@@ -16,9 +16,9 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * AirtableClient integration class.
@@ -163,7 +163,7 @@ class AirtableClient implements ClientInterface
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
 
-		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
+		$itemIdExploded = \explode(UtilsConfig::DELIMITER, $itemId);
 
 		$itemIdReal = $itemIdExploded[0] ?? '';
 		$itemInnerIdReal = $itemIdExploded[1] ?? '';
@@ -376,7 +376,7 @@ class AirtableClient implements ClientInterface
 					$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
 					break;
 				case 'multiCheckbox':
-					$value = \explode(AbstractBaseRoute::DELIMITER, $value);
+					$value = \explode(UtilsConfig::DELIMITER, $value);
 					break;
 				default:
 					$value = $value;

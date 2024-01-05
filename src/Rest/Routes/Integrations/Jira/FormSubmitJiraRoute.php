@@ -11,16 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Jira;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Jira\JiraClientInterface;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class FormSubmitJiraRoute
@@ -75,7 +74,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 
@@ -126,7 +125,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 			return $output;
 		}
 
-		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, [])[SettingsJira::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsJira::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
 			$item = $body[$value] ?? '';
 
 			if ($key === 'jiraIssueUrl') {

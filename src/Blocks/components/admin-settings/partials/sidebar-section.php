@@ -6,7 +6,7 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $items = $attributes['items'] ?? [];
@@ -17,7 +17,7 @@ if (!$items) {
 	return $output;
 }
 
-$data = apply_filters(Filters::FILTER_SETTINGS_DATA, []);
+$data = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
 
 $sectionClass = $attributes['sectionClass'] ?? '';
 $adminSettingsType = $attributes['adminSettingsType'] ?? '';

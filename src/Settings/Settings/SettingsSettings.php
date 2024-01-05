@@ -12,6 +12,7 @@ namespace EightshiftForms\Settings\Settings;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**

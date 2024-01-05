@@ -20,10 +20,10 @@ use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -234,7 +234,7 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if (\count(\explode(AbstractBaseRoute::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
+						if (\count(\explode(UtilsConfig::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;

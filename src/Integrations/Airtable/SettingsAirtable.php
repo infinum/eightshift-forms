@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;

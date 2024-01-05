@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftForms\Settings\Listing\FormListingInterface;
+use EightshiftForms\Listing\FormListingInterface;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**

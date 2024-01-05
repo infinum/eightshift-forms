@@ -24,7 +24,7 @@ use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; /
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
@@ -221,7 +221,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							(bool) $captchaParams['isEnterprise'] ?: false // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 						);
 
-						if ($captcha['status'] === AbstractBaseRoute::STATUS_ERROR) {
+						if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
 							return \rest_ensure_response($captcha);
 						}
 					}
@@ -279,7 +279,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		}
 
 		// Skip fallback email if integration is disabled.
-		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
+		if (!$response['isDisabled'] && $response['status'] === UtilsConfig::STATUS_ERROR) {
 			// Prevent fallback email if we have validation errors parsed.
 			if (!$disableFallbackEmail) {
 				// Send fallback email.
@@ -296,7 +296,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		}
 
 		// Send email if it is configured in the backend.
-		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
+		if ($response['status'] === UtilsConfig::STATUS_SUCCESS) {
 			$this->getFormSubmitMailer()->sendEmails($formDataReference);
 		}
 

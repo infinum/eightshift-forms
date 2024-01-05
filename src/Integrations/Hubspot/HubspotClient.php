@@ -16,12 +16,12 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -111,7 +111,7 @@ class HubspotClient implements HubspotClientInterface
 					$fields = $item['formFieldGroups'] ?? [];
 
 					$portalId = $item['portalId'] ?? '';
-					$delimiter = AbstractBaseRoute::DELIMITER;
+					$delimiter = UtilsConfig::DELIMITER;
 					$value = "{$id}{$delimiter}{$portalId}";
 
 					$output[$value] = [
@@ -231,7 +231,7 @@ class HubspotClient implements HubspotClientInterface
 			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
 		}
 
-		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
+		$itemIdExploded = \explode(UtilsConfig::DELIMITER, $itemId);
 
 		$baseId = $itemIdExploded[1] ?? '';
 		$submitId = $itemIdExploded[0] ?? '';
@@ -728,7 +728,7 @@ class HubspotClient implements HubspotClientInterface
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
 			$value = $param['value'] ?? '';
-			$name = $param['name'] ? \explode(AbstractBaseRoute::DELIMITER, $param['name']) : [];
+			$name = $param['name'] ? \explode(UtilsConfig::DELIMITER, $param['name']) : [];
 
 			if ($data[self::HUBSPOT_CONSENT_LEGITIMATE]['isActive']) {
 				$output['legitimateInterest'] = [
@@ -820,7 +820,7 @@ class HubspotClient implements HubspotClientInterface
 					$value = 'true';
 				}
 
-				$value = \str_replace(AbstractBaseRoute::DELIMITER, ';', $value);
+				$value = \str_replace(UtilsConfig::DELIMITER, ';', $value);
 			}
 
 			// Must be in UTC timestamp with milliseconds.

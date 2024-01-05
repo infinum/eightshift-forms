@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Enrichment;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

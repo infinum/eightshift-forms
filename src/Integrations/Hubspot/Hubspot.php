@@ -14,7 +14,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -502,7 +502,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'checkboxes',
 						'checkboxesFieldBeforeContent' => $communicationIndex === 0 && !$communicationIsHidden ? $communicationText : '',
 						'checkboxesFieldHideLabel' => true,
-						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION . AbstractBaseRoute::DELIMITER . $communicationId,
+						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION . UtilsConfig::DELIMITER . $communicationId,
 						'checkboxesIsRequired' => $communicationIsRequired,
 						'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION,
 						'checkboxesContent' => [

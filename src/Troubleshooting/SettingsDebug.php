@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Troubleshooting;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

@@ -15,11 +15,11 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class FormSubmitMailerRoute
@@ -64,7 +64,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

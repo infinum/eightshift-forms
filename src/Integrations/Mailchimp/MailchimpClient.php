@@ -16,10 +16,10 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
@@ -534,7 +534,7 @@ class MailchimpClient implements MailchimpClientInterface
 			return $value;
 		}
 
-		return \explode(AbstractBaseRoute::DELIMITER, $params[$key]['value']);
+		return \explode(UtilsConfig::DELIMITER, $params[$key]['value']);
 	}
 
 	/**

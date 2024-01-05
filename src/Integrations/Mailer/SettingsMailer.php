@@ -12,8 +12,8 @@ namespace EightshiftForms\Integrations\Mailer;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
-use EightshiftForms\Settings\Settings\SettingInterface;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;

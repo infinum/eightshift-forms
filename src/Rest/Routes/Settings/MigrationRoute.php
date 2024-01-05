@@ -13,7 +13,6 @@ namespace EightshiftForms\Rest\Routes\Settings;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
@@ -34,6 +33,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_Query;
 use WP_REST_Request;
 
@@ -169,9 +169,9 @@ class MigrationRoute extends AbstractBaseRoute
 		}
 
 		// Migrate each integration fallback.
-		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $value) {
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			$type = $value['type'] ?? '';
-			if ($type !== Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
+			if ($type !== UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 				continue;
 			}
 
@@ -196,7 +196,7 @@ class MigrationRoute extends AbstractBaseRoute
 			$option = SettingsHelper::getOptionValue($key);
 			if ($option) {
 				$option = \explode(', ', $option);
-				$option = \implode(AbstractBaseRoute::DELIMITER, $option);
+				$option = \implode(UtilsConfig::DELIMITER, $option);
 				\update_option(SettingsHelper::getOptionName($key), \maybe_unserialize($option));
 			}
 		}
@@ -256,7 +256,7 @@ class MigrationRoute extends AbstractBaseRoute
 			}
 
 			// Bailout integrations that are disabled.
-			$use = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type]['use'] ?? '';
+			$use = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[$type]['use'] ?? '';
 
 			// Skip deactivated integrations.
 			if (SettingsHelper::isOptionCheckboxChecked($use, $use)) {

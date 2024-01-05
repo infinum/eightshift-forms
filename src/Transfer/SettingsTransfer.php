@@ -12,7 +12,7 @@ namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;

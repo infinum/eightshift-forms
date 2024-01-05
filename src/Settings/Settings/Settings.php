@@ -12,8 +12,8 @@ namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
@@ -54,7 +54,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 
 		$output = [];
 
-		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $value) {
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			// Determin if there is filter key name.
 			if (!isset($value[$internalType])) {
 				continue;
@@ -65,7 +65,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			// Skip integration forms if they are not used in the Block editor.
 			// Mailer should be available on all integrations because it can be used as a backup option.
 			if ($key !== SettingsMailer::SETTINGS_TYPE_KEY) {
-				if ($formId && $type === Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
+				if ($formId && $type === UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
 					continue;
 				}
 			}
@@ -111,7 +111,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		}
 
 		// Find settings page.
-		$filter = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$type][$internalType] ?? '';
+		$filter = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[$type][$internalType] ?? '';
 
 		// Determine if there is a filter for settings page.
 		if (!\has_filter($filter)) {

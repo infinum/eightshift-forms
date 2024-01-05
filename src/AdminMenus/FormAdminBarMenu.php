@@ -15,7 +15,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftForms\Settings\Listing\FormListingInterface;
+use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;

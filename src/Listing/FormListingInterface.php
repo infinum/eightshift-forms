@@ -3,12 +3,12 @@
 /**
  * Class that holds data for admin forms listing.
  *
- * @package EightshiftForms\Settings\Listing
+ * @package EightshiftForms\Listing
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Settings\Listing;
+namespace EightshiftForms\Listing;
 
 /**
  * Interface for admin content listing

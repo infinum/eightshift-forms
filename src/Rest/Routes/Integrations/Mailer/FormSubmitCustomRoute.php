@@ -15,10 +15,10 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class FormSubmitCustomRoute
@@ -60,7 +60,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**

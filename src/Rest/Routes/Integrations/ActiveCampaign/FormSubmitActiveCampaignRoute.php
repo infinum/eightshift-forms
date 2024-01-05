@@ -14,12 +14,12 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class FormSubmitActiveCampaignRoute
@@ -74,7 +74,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -100,12 +100,12 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 		$contactId = $response['contactId'] ?? '';
 
 		// Make an additional requests to the API.
-		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS && $contactId) {
+		if ($response['status'] === UtilsConfig::STATUS_SUCCESS && $contactId) {
 			// If form has action to save tags.
 			$actionTags = $params['actionTags']['value'] ?? '';
 
 			if ($actionTags) {
-				$actionTags = \explode(AbstractBaseRoute::DELIMITER, $actionTags);
+				$actionTags = \explode(UtilsConfig::DELIMITER, $actionTags);
 
 				// Create API req for each tag.
 				foreach ($actionTags as $tag) {
@@ -120,7 +120,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			$actionLists = $params['actionLists']['value'] ?? '';
 
 			if ($actionLists) {
-				$actionLists = \explode(AbstractBaseRoute::DELIMITER, $actionLists);
+				$actionLists = \explode(UtilsConfig::DELIMITER, $actionLists);
 
 				// Create API req for each list.
 				foreach ($actionLists as $list) {

@@ -14,7 +14,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**

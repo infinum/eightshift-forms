@@ -12,7 +12,7 @@ namespace EightshiftForms\Migration;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -111,7 +111,7 @@ trait MigrationHelper
 
 		$syncForm = $this->integrationSyncDiff->createFormEditor($id, $type, $itemId, $innerId);
 		$syncFormOutput = $syncForm['data']['output'] ?? [];
-		$syncFormStatus = $syncForm['status'] ?? AbstractBaseRoute::STATUS_ERROR;
+		$syncFormStatus = $syncForm['status'] ?? UtilsConfig::STATUS_ERROR;
 		$syncFormDebugType = $syncForm['debugType'] ?? '';
 
 		if (!$itemId) {
@@ -132,7 +132,7 @@ trait MigrationHelper
 			return $output;
 		}
 
-		if ($syncFormStatus === AbstractBaseRoute::STATUS_ERROR) {
+		if ($syncFormStatus === UtilsConfig::STATUS_ERROR) {
 			// translators: %s will be replaced with the debug type.
 			$output['msg'][] = \sprintf(\__("Sync form status is error - %s", 'eightshift-forms'), $syncFormDebugType);
 			$output['fatal'] = true;
@@ -232,7 +232,7 @@ trait MigrationHelper
 		}
 
 		foreach ($integrationFields as $key => $value) {
-			$key = \explode(AbstractBaseRoute::DELIMITER, $key);
+			$key = \explode(UtilsConfig::DELIMITER, $key);
 			$name = $key[0] ?? '';
 			$innerKey = $key[1] ?? '';
 

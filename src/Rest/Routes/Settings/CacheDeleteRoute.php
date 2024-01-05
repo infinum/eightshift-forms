@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
@@ -102,7 +102,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 			);
 		}
 
-		$data = \apply_filters(Filters::FILTER_SETTINGS_DATA, []);
+		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
 
 		if ($type === 'all') {
 			$allItems = Components::flattenArray(\array_map(

@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -100,7 +100,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return false;
 		}
 
-		$typeItems = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[self::SETTINGS_TYPE_KEY]['integration'];
+		$typeItems = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[self::SETTINGS_TYPE_KEY]['integration'];
 
 		if (!isset($typeItems[$type])) {
 			return false;

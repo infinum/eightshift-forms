@@ -16,10 +16,10 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * MomentsClient integration class.
@@ -446,7 +446,7 @@ class MomentsClient implements ClientInterface
 
 			switch ($type) {
 				case 'checkbox':
-					$value = \explode(AbstractBaseRoute::DELIMITER, $value);
+					$value = \explode(UtilsConfig::DELIMITER, $value);
 					break;
 				case 'phone':
 					$value = \filter_var($value, \FILTER_SANITIZE_NUMBER_INT);

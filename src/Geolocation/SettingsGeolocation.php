@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Geolocation;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
 use EightshiftForms\Misc\SettingsCloudflare;

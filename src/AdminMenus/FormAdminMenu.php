@@ -12,11 +12,10 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Misc\SettingsWpml;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\Listing\FormListingInterface;
+use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\IntegrationsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -570,7 +569,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$content = '<ul class="is-list">';
 					foreach ($entryValue as $entryKey => $entryValue) {
 						if (\gettype($entryValue) === 'array') {
-							$entryValue = \implode(AbstractBaseRoute::DELIMITER, $entryValue);
+							$entryValue = \implode(UtilsConfig::DELIMITER, $entryValue);
 						}
 
 						$content .= "<li><strong>{$entryKey}</strong>: {$entryValue}</li>";
@@ -790,10 +789,10 @@ class FormAdminMenu extends AbstractAdminMenu
 
 		$activeIntegration = \array_flip(IntegrationsHelper::getActiveIntegrations());
 
-		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $key => $value) {
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			$type = $value['type'] ?? '';
 
-			if ($type !== Filters::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
+			if ($type !== UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 				continue;
 			}
 

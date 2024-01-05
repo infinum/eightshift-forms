@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Main;
 
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Main\AbstractMain;
 
 /**
@@ -51,6 +51,6 @@ class Main extends AbstractMain
 		parent::registerServices();
 
 		// Filter triggered when main forms plugins is loaded to hook add-ons.
-		\do_action(Filters::FILTER_LOADED_NAME);
+		\do_action(UtilsConfig::FILTER_LOADED_NAME);
 	}
 }

@@ -62,16 +62,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "3aaa9fe5c61b7b42b1713403aa522a519356ae1c"
+                "reference": "7d6e3e48d375255495f324c8a8c38de36fcc42e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/3aaa9fe5c61b7b42b1713403aa522a519356ae1c",
-                "reference": "3aaa9fe5c61b7b42b1713403aa522a519356ae1c",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/7d6e3e48d375255495f324c8a8c38de36fcc42e2",
+                "reference": "7d6e3e48d375255495f324c8a8c38de36fcc42e2",
                 "shasum": ""
             },
             "require": {
-                "infinum/eightshift-libs": "^7.1.0",
                 "php": "^7.4 || >=8.0",
                 "typisttech/imposter-plugin": "^0.6.2"
             },
@@ -79,8 +78,7 @@
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
                 "infinum/eightshift-coding-standards": "^1.6",
                 "php-stubs/wordpress-stubs": "^6.3",
-                "szepeviktor/phpstan-wordpress": "^1.3",
-                "wp-cli/wp-cli": "^2.9"
+                "szepeviktor/phpstan-wordpress": "^1.3"
             },
             "suggest": {
                 "ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
@@ -141,7 +139,7 @@
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2024-01-05T08:27:15+00:00"
+            "time": "2024-01-05T09:29:36+00:00"
         },
         {
             "name": "infinum/eightshift-libs",

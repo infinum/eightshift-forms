@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms;
 
 use EightshiftForms\CronJobs\FileUploadJob;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Permissions\Permissions;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
 use WP_Role;
 
@@ -38,7 +38,7 @@ class Deactivate implements HasDeactivationInterface
 		}
 
 		// Delete transients.
-		foreach (\apply_filters(Filters::FILTER_SETTINGS_DATA, []) as $items) {
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []) as $items) {
 			$cache = $items['cache'] ?? [];
 
 			if (!$cache) {

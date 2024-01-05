@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes\Settings;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
@@ -128,7 +129,7 @@ class ExportRoute extends AbstractBaseRoute
 				$outputInner[$key] = $value;
 
 				if (\gettype($value) === 'array') {
-					$outputInner[$key] = \implode(AbstractBaseRoute::DELIMITER, $value);
+					$outputInner[$key] = \implode(UtilsConfig::DELIMITER, $value);
 				}
 			}
 

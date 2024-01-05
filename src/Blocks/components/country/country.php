@@ -8,9 +8,9 @@
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 $manifest = Components::getManifest(__DIR__);
@@ -74,7 +74,7 @@ $placeholder = $countryPlaceholder ? Components::render(
 ) : '';
 
 $options = [];
-$filterName = apply_filters(Filters::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
+$filterName = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $countryFormPostId);

@@ -14,12 +14,12 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class FormSubmitAirtableRoute
@@ -74,7 +74,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -89,7 +89,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 		$formId = $formDataReference['formId'];
 
 		// Send application to Airtable.
-		$delimiter = AbstractBaseRoute::DELIMITER;
+		$delimiter = UtilsConfig::DELIMITER;
 
 		$response = $this->airtableClient->postApplication(
 			"{$formDataReference['itemId']}{$delimiter}{$formDataReference['innerId']}",

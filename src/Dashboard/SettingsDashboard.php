@@ -12,8 +12,8 @@ namespace EightshiftForms\Dashboard;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -56,7 +56,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 	{
 		$filtered = [];
 
-		$data = \apply_filters(Filters::FILTER_SETTINGS_DATA, []);
+		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
 
 		foreach ($data as $key => $value) {
 			$use = $value['use'] ?? '';

@@ -14,9 +14,9 @@ use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UploadHelper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
 use EightshiftForms\Settings\Settings\Settings;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
@@ -27,62 +27,6 @@ use WP_REST_Request;
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
-	/**
-	 * Status error const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_ERROR = 'error';
-
-	/**
-	 * Status success const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_SUCCESS = 'success';
-
-	/**
-	 * Status warning const.
-	 *
-	 * @var string
-	 */
-	public const STATUS_WARNING = 'warning';
-
-	/**
-	 * Delimiter used in checkboxes and multiple items.
-	 *
-	 * @var string
-	 */
-	public const DELIMITER = '---';
-
-	/**
-	 * Dynamic name route prefix for integrations items inner.
-	 *
-	 * @var string
-	 */
-	public const ROUTE_PREFIX_INTEGRATION_ITEMS_INNER = 'integration-items-inner';
-
-	/**
-	 * Dynamic name route prefix for integrations items.
-	 *
-	 * @var string
-	 */
-	public const ROUTE_PREFIX_INTEGRATION_ITEMS = 'integration-items';
-
-	/**
-	 * Dynamic name route prefix for form submit.
-	 *
-	 * @var string
-	 */
-	public const ROUTE_PREFIX_FORM_SUBMIT = 'submit';
-
-	/**
-	 * Dynamic name route prefix for integration editor.
-	 *
-	 * @var string
-	 */
-	public const ROUTE_PREFIX_INTEGRATION_EDITOR = 'integration-editor';
-
 	/**
 	 * Method that returns project Route namespace.
 	 *
@@ -226,7 +170,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 						);
 
 						// Append values to the first value.
-						$innerNotEmpty[0]['value'] = \implode(AbstractBaseRoute::DELIMITER, $multiple);
+						$innerNotEmpty[0]['value'] = \implode(UtilsConfig::DELIMITER, $multiple);
 
 						return $innerNotEmpty[0];
 					}
@@ -310,7 +254,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 									function ($item) {
 										return UploadHelper::getFilePath($item);
 									},
-									\explode(self::DELIMITER, $fieldValue)
+									\explode(UtilsConfig::DELIMITER, $fieldValue)
 								),
 							]
 						) : $value;
@@ -442,7 +386,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				$type === 'fileUploadAdmin'
 			) {
 				// This provides filter name for setting.
-				$settingsName = \apply_filters(Filters::FILTER_SETTINGS_DATA, [])[$formSettingsType][$type] ?? '';
+				$settingsName = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[$formSettingsType][$type] ?? '';
 
 				$formDataReference = [
 					'formId' => $formId,

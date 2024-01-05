@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Entries;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsOutputHelper;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\Settings\SettingInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
