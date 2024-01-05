@@ -12,8 +12,8 @@ namespace EightshiftForms\Integrations\Mailer;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
@@ -22,7 +22,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsMailer class.
  */
-class SettingsMailer implements SettingGlobalInterface, SettingInterface, ServiceInterface
+class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.

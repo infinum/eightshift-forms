@@ -12,14 +12,14 @@ namespace EightshiftForms\Migration;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMigration class.
  */
-class SettingsMigration implements SettingGlobalInterface, ServiceInterface
+class SettingsMigration implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.

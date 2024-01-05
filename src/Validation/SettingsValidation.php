@@ -15,14 +15,14 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsValidation class.
  */
-class SettingsValidation implements SettingGlobalInterface, SettingInterface, ServiceInterface
+class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.

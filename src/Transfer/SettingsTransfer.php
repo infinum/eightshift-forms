@@ -12,7 +12,7 @@ namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -22,7 +22,7 @@ use WP_Query;
 /**
  * SettingsTransfer class.
  */
-class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
+class SettingsTransfer implements ServiceInterface, UtilsSettingGlobalInterface
 {
 	/**
 	 * Filter global settings key.

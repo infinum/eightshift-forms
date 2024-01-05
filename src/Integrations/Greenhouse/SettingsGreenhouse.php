@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
@@ -22,7 +22,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsGreenhouse class.
  */
-class SettingsGreenhouse implements SettingGlobalInterface, ServiceInterface
+class SettingsGreenhouse implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.

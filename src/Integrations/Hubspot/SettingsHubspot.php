@@ -13,8 +13,8 @@ namespace EightshiftForms\Integrations\Hubspot;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbitDataInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
@@ -24,7 +24,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsHubspot class.
  */
-class SettingsHubspot implements SettingGlobalInterface, SettingInterface, ServiceInterface
+class SettingsHubspot implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.

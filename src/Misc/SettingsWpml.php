@@ -12,14 +12,14 @@ namespace EightshiftForms\Misc;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsWpml class.
  */
-class SettingsWpml implements SettingGlobalInterface, ServiceInterface
+class SettingsWpml implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.

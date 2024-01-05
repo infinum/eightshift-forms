@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations\ActiveCampaign;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
@@ -22,7 +22,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsActiveCampaign class.
  */
-class SettingsActiveCampaign implements SettingGlobalInterface, ServiceInterface
+class SettingsActiveCampaign implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.

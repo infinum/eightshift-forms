@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "f597e9e88f8b440a949ca73efe1dd25fccf5d23f"
+                "reference": "3eedbe58ed300bcc23ddddcf3f892f7f0b4b5d23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/f597e9e88f8b440a949ca73efe1dd25fccf5d23f",
-                "reference": "f597e9e88f8b440a949ca73efe1dd25fccf5d23f",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/3eedbe58ed300bcc23ddddcf3f892f7f0b4b5d23",
+                "reference": "3eedbe58ed300bcc23ddddcf3f892f7f0b4b5d23",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +139,7 @@
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2024-01-05T16:16:02+00:00"
+            "time": "2024-01-05T16:54:06+00:00"
         },
         {
             "name": "infinum/eightshift-libs",
@@ -2350,16 +2350,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.51",
+            "version": "1.10.54",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "5082fa72dc13944578806ca1196a385818d8b077"
+                "reference": "3e25f279dada0adc14ffd7bad09af2e2fc3523bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/5082fa72dc13944578806ca1196a385818d8b077",
-                "reference": "5082fa72dc13944578806ca1196a385818d8b077",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3e25f279dada0adc14ffd7bad09af2e2fc3523bb",
+                "reference": "3e25f279dada0adc14ffd7bad09af2e2fc3523bb",
                 "shasum": ""
             },
             "require": {
@@ -2408,7 +2408,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-04T21:16:30+00:00"
+            "time": "2024-01-05T15:50:47+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

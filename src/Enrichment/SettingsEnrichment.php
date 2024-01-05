@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Enrichment;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -19,7 +19,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsEnrichment class.
  */
-class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
+class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.

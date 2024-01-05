@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Geolocation;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -21,7 +21,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsGeolocation class.
  */
-class SettingsGeolocation implements SettingGlobalInterface, ServiceInterface
+class SettingsGeolocation implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.

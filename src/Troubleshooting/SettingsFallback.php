@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Troubleshooting;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsFallback class.
  */
-class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterface, SettingGlobalInterface
+class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterface, UtilsSettingGlobalInterface
 {
 	/**
 	 * Filter global settings key.

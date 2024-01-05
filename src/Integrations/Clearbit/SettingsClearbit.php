@@ -14,13 +14,13 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsClearbit class.
  */
-class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterface, SettingGlobalInterface
+class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterface, UtilsSettingGlobalInterface
 {
 	/**
 	 * Filter global settings key.

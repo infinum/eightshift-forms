@@ -14,13 +14,13 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCaptcha class.
  */
-class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
+class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
