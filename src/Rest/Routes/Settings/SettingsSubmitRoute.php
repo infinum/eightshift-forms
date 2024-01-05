@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\ApiHelper;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;

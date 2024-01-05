@@ -6,7 +6,6 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\Helper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -57,7 +56,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo esc_attr("{$sectionClass}__menu-link {$sectionClass}__menu-link--fit"); ?>">
 				<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
 					<?php
-					echo UtilsHelper::getUtilsIcons('arrowLeft'),
+					echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 					esc_html__('Forms', 'eightshift-forms');
 					?>
 				</span>

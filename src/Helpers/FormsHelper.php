@@ -12,6 +12,9 @@ namespace EightshiftForms\Helpers;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
+/**
+ * FormsHelper class.
+ */
 final class FormsHelper
 {
 	/**
