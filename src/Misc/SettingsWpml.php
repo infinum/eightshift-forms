@@ -64,9 +64,11 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 			return [];
 		}
 
+		$current = \apply_filters('wpml_current_language', null);
+
 		return [
 			'default' => \apply_filters('wpml_default_language', null),
-			'current' => \apply_filters('wpml_current_language', null),
+			'current' => $current === 'all' ? '' : $current,
 		];
 	}
 
