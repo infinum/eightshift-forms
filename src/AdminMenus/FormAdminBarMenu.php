@@ -76,8 +76,8 @@ class FormAdminBarMenu implements ServiceInterface
 		}
 
 		$prefix = FormAdminMenu::ADMIN_MENU_SLUG;
-		$isDevelopMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
-		$isDevelopModeQmLog = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_QM_LOG);
+		$isDevelopMode = UtilsGeneralHelper::isDeveloperModeActive();
+		$isDevelopModeQmLog = UtilsGeneralHelper::isDeveloperQMLogActive();
 
 		$version = Config::getProjectVersion();
 

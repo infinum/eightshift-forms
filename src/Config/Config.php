@@ -31,16 +31,6 @@ class Config extends AbstractConfigData
 	}
 
 	/**
-	 * Method that returns projects setting name prefix.
-	 *
-	 * @return string
-	 */
-	public static function getSettingNamePrefix(): string
-	{
-		return "es-forms";
-	}
-
-	/**
 	 * Method that returns projects temp upload dir name.
 	 *
 	 * @return string

@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailchimp;
 
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsMailchimpRoute
  */
-class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
+class IntegrationItemsMailchimpRoute extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable for Mailchimp data.

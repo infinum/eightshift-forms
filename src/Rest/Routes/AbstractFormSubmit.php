@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Validation\Validator;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -25,12 +24,13 @@ use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingSt
 use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use WP_REST_Request;
 
 /**
  * Class AbstractFormSubmit
  */
-abstract class AbstractFormSubmit extends AbstractBaseRoute
+abstract class AbstractFormSubmit extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -135,7 +135,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
 					// Validate files.
-					if (!\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY)) {
+					if (!UtilsGeneralHelper::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateFiles($formDataReference);
 
 						if ($validate) {
@@ -175,7 +175,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					break;
 				case self::ROUTE_TYPE_STEP_VALIDATION:
 					// Validate params.
-					if (!\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY)) {
+					if (!UtilsGeneralHelper::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateParams($formDataReference, false);
 
 						if ($validate) {
@@ -193,7 +193,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					}
 
 					// Validate params.
-					if (!\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY)) {
+					if (!UtilsGeneralHelper::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateParams($formDataReference);
 
 						if ($validate) {

@@ -17,7 +17,7 @@ use WP_REST_Request;
 /**
  * Class AbstractTestApi
  */
-abstract class AbstractTestApi extends AbstractBaseRoute
+abstract class AbstractTestApi extends AbstractPluginRoute
 {
 	/**
 	 * Dynamic name route prefix for test api.

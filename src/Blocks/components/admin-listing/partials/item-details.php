@@ -6,14 +6,14 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getComponent('admin-listing');
 $selectorJsItem = UtilsHelper::getStateSelectorAdmin('listingItem');
 
-$isDevMode = apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
+$isDevMode = UtilsGeneralHelper::isDeveloperModeActive();
 
 $items = $attributes['items'] ?? [];
 $emptyContent = $attributes['emptyContent'] ?? '';

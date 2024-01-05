@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsActiveCampaignRoute
  */
-class IntegrationItemsActiveCampaignRoute extends AbstractBaseRoute
+class IntegrationItemsActiveCampaignRoute extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable for ActiveCampaign data.

@@ -14,7 +14,6 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Listing\FormListingInterface;
-use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
@@ -48,14 +47,14 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'eightshift_forms_adminu_menu';
+	public const ADMIN_MENU_CAPABILITY = UtilsConfig::CAP_LISTING;
 
 	/**
 	 * Menu slug for this admin sub menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'es-forms';
+	public const ADMIN_MENU_SLUG = UtilsConfig::SLUG_ADMIN;
 
 	/**
 	 * Menu icon for this admin menu.
@@ -533,9 +532,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	private function getListingItems(array $items, string $type): array
 	{
 		$output = [];
-		$isDevMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
-
-		$manifest = Components::getComponent('admin-listing');
+		$isDevMode = UtilsGeneralHelper::isDeveloperModeActive();
 
 		switch ($type) {
 			case 'locations':
@@ -721,8 +718,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	private function getRightContent(array $item, string $type): array
 	{
-		$manifest = Components::getComponent('admin-listing');
-
 		$formId = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		switch ($type) {

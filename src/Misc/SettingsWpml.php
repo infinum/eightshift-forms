@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -49,6 +50,24 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(UtilsGeneralHelper::getFilterName(['general', 'locale']), [$this, 'getWpmlLocale']);
+	}
+
+	/**
+	 * Set locale for WPML.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getWpmlLocale(): array
+	{
+		if (!$this->isSettingsGlobalValid()) {
+			return [];
+		}
+
+		return [
+			'default' => \apply_filters('wpml_default_language', null),
+			'current' => \apply_filters('wpml_current_language', null),
+		];
 	}
 
 	/**

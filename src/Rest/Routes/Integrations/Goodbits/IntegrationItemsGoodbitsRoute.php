@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Goodbits;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsGoodbitsRoute
  */
-class IntegrationItemsGoodbitsRoute extends AbstractBaseRoute
+class IntegrationItemsGoodbitsRoute extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable for Goodbits data.

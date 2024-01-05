@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
  * Class FormFieldsRoute
  */
-class FormFieldsRoute extends AbstractBaseRoute
+class FormFieldsRoute extends AbstractPluginRoute
 {
 	/**
 	 * Route slug.

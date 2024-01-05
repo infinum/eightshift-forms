@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
@@ -20,7 +20,7 @@ use WP_REST_Request;
 /**
  * Class LocationsRoute
  */
-class LocationsRoute extends AbstractBaseRoute
+class LocationsRoute extends AbstractPluginRoute
 {
 	/**
 	 * Route slug.

@@ -17,7 +17,6 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
  * ActiveCampaignClient integration class.
@@ -58,7 +57,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$output = \get_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
+		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 

@@ -35,7 +35,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Settings key.
 	 */
-	public const SETTINGS_TYPE_KEY = 'dashboard';
+	public const SETTINGS_TYPE_KEY = UtilsConfig::SLUG_ADMIN_DASHBOARD;
 
 	/**
 	 * Register all the hooks.

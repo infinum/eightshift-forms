@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsAirtableRoute
  */
-class IntegrationItemsAirtableRoute extends AbstractBaseRoute
+class IntegrationItemsAirtableRoute extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable for Airtable data.

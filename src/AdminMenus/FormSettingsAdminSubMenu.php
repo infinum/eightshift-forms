@@ -15,7 +15,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -72,14 +72,14 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'eightshift_forms_form_settings';
+	public const ADMIN_MENU_CAPABILITY = UtilsConfig::CAP_SETTINGS;
 
 	/**
 	 * Menu slug for this admin sub menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'es-settings';
+	public const ADMIN_MENU_SLUG = UtilsConfig::SLUG_ADMIN_SETTINGS;
 
 	/**
 	 * Parent menu slug for this admin sub menu
@@ -187,11 +187,9 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			return [];
 		}
 
-		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
-
 		$formTitle = \get_the_title((int) $formId);
 
-		if ($isDeveloperMode) {
+		if (UtilsGeneralHelper::isDeveloperModeActive()) {
 			$formTitle = "{$formId} - {$formTitle}";
 		}
 
@@ -226,8 +224,8 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	{
 		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
-		if ($plugin_page === 'es-settings') { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
-			$plugin_page = 'es-forms'; // phpcs:ignore
+		if ($plugin_page === UtilsConfig::SLUG_ADMIN_SETTINGS) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+			$plugin_page = UtilsConfig::SLUG_ADMIN; // phpcs:ignore
 		}
 
 		return $parentFile ?? '';

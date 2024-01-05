@@ -237,7 +237,7 @@ if ($formAttrs) {
 	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 
-		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); ?>
+		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 	</div>
 
 	<?php

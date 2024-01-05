@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailerlite;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsMailerliteRoute
  */
-class IntegrationItemsMailerliteRoute extends AbstractBaseRoute
+class IntegrationItemsMailerliteRoute extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable for Mailerlite data.

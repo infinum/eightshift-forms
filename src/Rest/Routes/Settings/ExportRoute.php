@@ -11,15 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Entries\EntriesHelper;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
  * Class ExportRoute
  */
-class ExportRoute extends AbstractBaseRoute
+class ExportRoute extends AbstractPluginRoute
 {
 	/**
 	 * Route slug.

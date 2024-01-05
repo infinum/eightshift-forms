@@ -21,7 +21,7 @@ use WP_REST_Request;
 /**
  * Class SubmitGeolocationRoute
  */
-class SubmitGeolocationRoute extends AbstractBaseRoute
+class SubmitGeolocationRoute extends AbstractPluginRoute
 {
 	/**
 	 * Route slug.

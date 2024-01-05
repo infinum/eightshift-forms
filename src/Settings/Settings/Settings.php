@@ -23,20 +23,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 {
 	/**
-	 * Setting local type name.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_TYPE_NAME = 'settings';
-
-	/**
-	 * Setting global type name.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_GLOBAL_TYPE_NAME = 'settingsGlobal';
-
-	/**
 	 * Get sidebar settings array for building settings page.
 	 *
 	 * @param string $formId Form ID.
@@ -46,10 +32,10 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 	 */
 	public function getSettingsSidebar(string $formId = '', string $integrationTypeUsed = ''): array
 	{
-		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
+		$internalType = UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
-			$internalType = self::SETTINGS_TYPE_NAME;
+			$internalType = UtilsConfig::SETTINGS_TYPE_NAME;
 		}
 
 		$output = [];
@@ -104,10 +90,10 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 	 */
 	public function getSettingsForm(string $type, string $formId): string
 	{
-		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
+		$internalType = UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
-			$internalType = self::SETTINGS_TYPE_NAME;
+			$internalType = UtilsConfig::SETTINGS_TYPE_NAME;
 		}
 
 		// Find settings page.

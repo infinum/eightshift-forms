@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Transfer\Transfer;
 use EightshiftForms\Transfer\TransferInterface;
@@ -21,7 +21,7 @@ use WP_REST_Request;
 /**
  * Class TransferRoute
  */
-class TransferRoute extends AbstractBaseRoute
+class TransferRoute extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.

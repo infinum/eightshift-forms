@@ -12,14 +12,14 @@ namespace EightshiftForms\Rest\Routes\Editor\Options;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class GeolocationCountriesRoute
  */
-class GeolocationCountriesRoute extends AbstractBaseRoute
+class GeolocationCountriesRoute extends AbstractPluginRoute
 {
 	/**
 	 * Route slug

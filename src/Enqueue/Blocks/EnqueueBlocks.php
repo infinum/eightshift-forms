@@ -16,7 +16,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\Settings\SettingsSettings;
-use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Theme\EnqueueTheme;
@@ -227,7 +226,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 		);
-		$output['formResetOnSuccess'] = !\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_RESET_KEY);
+		$output['formResetOnSuccess'] = !UtilsGeneralHelper::isDeveloperSkipFormResetActive();
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
 		$output['formCaptchaErrorMsg'] = \esc_html__('A ReCaptcha error has occured. Please try again.', 'eightshift-forms');
 		$output['formMisconfigured'] = \is_user_logged_in() ? \esc_html__('You form is missing forms block or it is missconfigured.', 'eightshift-forms') : '';
@@ -322,7 +321,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');
-		$output['isDeveloperMode'] = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
+		$output['isDeveloperMode'] = UtilsGeneralHelper::isDeveloperModeActive();
 		$output['isAdmin'] = true;
 
 		$output = \wp_json_encode($output);

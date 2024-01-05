@@ -31,7 +31,7 @@ class Deactivate implements HasDeactivationInterface
 			$role = \get_role($roleName);
 
 			if ($role instanceof WP_Role) {
-				foreach (Permissions::getPermissions() as $item) {
+				foreach (UtilsConfig::CAPS as $item) {
 					$role->remove_cap($item);
 				}
 			}

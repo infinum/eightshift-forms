@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsHubspotRoute
  */
-class IntegrationItemsHubspotRoute extends AbstractBaseRoute
+class IntegrationItemsHubspotRoute extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable for Hubspot data.

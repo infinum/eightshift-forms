@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Workable;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsWorkableRoute
  */
-class IntegrationItemsWorkableRoute extends AbstractBaseRoute
+class IntegrationItemsWorkableRoute extends AbstractPluginRoute
 {
 	/**
 	 * Instance variable for Workable data.

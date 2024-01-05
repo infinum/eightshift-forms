@@ -14,6 +14,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -66,14 +67,14 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'eightshift_forms_global_settings';
+	public const ADMIN_MENU_CAPABILITY = UtilsConfig::CAP_SETTINGS_GLOBAL;
 
 	/**
 	 * Menu slug for this admin sub menu.
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'es-settings-global';
+	public const ADMIN_MENU_SLUG = UtilsConfig::SLUG_ADMIN_SETTINGS_GLOBAL;
 
 	/**
 	 * Parent menu slug for this admin sub menu.

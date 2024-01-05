@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms;
 
 use EightshiftForms\Permissions\Permissions;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasActivationInterface;
 use WP_Role;
 
@@ -29,7 +30,7 @@ class Activate implements HasActivationInterface
 			$role = \get_role($roleName);
 
 			if ($role instanceof WP_Role) {
-				foreach (Permissions::getPermissions() as $item) {
+				foreach (UtilsConfig::CAPS as $item) {
 					$role->add_cap($item);
 				}
 			}

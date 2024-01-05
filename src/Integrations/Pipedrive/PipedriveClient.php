@@ -18,7 +18,6 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
 
 /**
  * PipedriveClient integration class.
@@ -77,7 +76,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = \get_transient(self::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
+		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -148,7 +147,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$output = \get_transient(self::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
+		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 

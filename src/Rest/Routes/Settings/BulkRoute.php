@@ -13,15 +13,15 @@ namespace EightshiftForms\Rest\Routes\Settings;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
+use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Transfer\TransferInterface;
 use WP_REST_Request;
 
 /**
  * Class BulkRoute
  */
-class BulkRoute extends AbstractBaseRoute
+class BulkRoute extends AbstractPluginRoute
 {
 	/**
 	 * Route slug.

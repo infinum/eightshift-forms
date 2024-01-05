@@ -20,9 +20,7 @@ use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Settings\Settings\Settings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -89,7 +87,7 @@ class Validator extends AbstractValidation
 	 *
 	 * @var string
 	 */
-	public const VALIDATOR_OUTPUT_KEY = 'validation';
+	public const VALIDATOR_OUTPUT_KEY = UtilsConfig::VALIDATOR_OUTPUT_KEY;
 
 	/**
 	 * Transient cache name for validatior labels. No need to flush it because it is short live.
@@ -131,7 +129,7 @@ class Validator extends AbstractValidation
 		);
 
 		// Manualy build fields from settings components.
-		if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+		if ($formType === UtilsConfig::SETTINGS_TYPE_NAME || $formType === UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME) {
 			$fieldsOnly = $this->getValidationReferenceManual($fieldsOnly);
 		}
 
@@ -424,10 +422,10 @@ class Validator extends AbstractValidation
 		}
 
 		switch ($type) {
-			case Settings::SETTINGS_GLOBAL_TYPE_NAME:
+			case UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME:
 			case 'fileUploadAdmin':
 				return true;
-			case Settings::SETTINGS_TYPE_NAME:
+			case UtilsConfig::SETTINGS_TYPE_NAME:
 				if (!$formId) {
 					return false;
 				}
@@ -483,7 +481,7 @@ class Validator extends AbstractValidation
 		$output = \get_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
+		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
