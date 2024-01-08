@@ -24,6 +24,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 
@@ -176,7 +177,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			return [];
 		}
 
-		$scriptsDependency = UtilsGeneralHelper::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependency = UtilsHooksHelper::getFilterName(['general', 'scriptsDependency']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -203,9 +204,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output = $this->getEnqueueSharedInlineCommonItems();
 
 		// Frontend part.
-		$hideGlobalMessageTimeout = UtilsGeneralHelper::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
-		$redirectionTimeout = UtilsGeneralHelper::getFilterName(['block', 'form', 'redirectionTimeout']);
-		$fileRemoveLabel = UtilsGeneralHelper::getFilterName(['block', 'file', 'previewRemoveLabel']);
+		$hideGlobalMessageTimeout = UtilsHooksHelper::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
+		$redirectionTimeout = UtilsHooksHelper::getFilterName(['block', 'form', 'redirectionTimeout']);
+		$fileRemoveLabel = UtilsHooksHelper::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
@@ -296,11 +297,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output = $this->getEnqueueSharedInlineCommonItems(false);
 
-		$additionalBlocksFilterName = UtilsGeneralHelper::getFilterName(['blocks', 'additionalBlocks']);
-		$formsStyleOptionsFilterName = UtilsGeneralHelper::getFilterName(['block', 'forms', 'styleOptions']);
-		$fieldStyleOptionsFilterName = UtilsGeneralHelper::getFilterName(['block', 'field', 'styleOptions']);
-		$breakpointsFilterName = UtilsGeneralHelper::getFilterName(['blocks', 'breakpoints']);
-		$formSelectorTemplatesFilterName = UtilsGeneralHelper::getFilterName(['block', 'formSelector', 'formTemplates']);
+		$additionalBlocksFilterName = UtilsHooksHelper::getFilterName(['blocks', 'additionalBlocks']);
+		$formsStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'styleOptions']);
+		$fieldStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleOptions']);
+		$breakpointsFilterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
+		$formSelectorTemplatesFilterName = UtilsHooksHelper::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);

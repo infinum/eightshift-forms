@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Misc;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -50,7 +51,7 @@ class SettingsWpml implements UtilsSettingGlobalInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
-		\add_filter(UtilsGeneralHelper::getFilterName(['general', 'locale']), [$this, 'getWpmlLocale']);
+		\add_filter(UtilsHooksHelper::getFilterName(['general', 'locale']), [$this, 'getWpmlLocale']);
 	}
 
 	/**

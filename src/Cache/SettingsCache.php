@@ -61,13 +61,44 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 	{
 		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
 
-		$output = \array_values(\array_filter(\array_map(
+		$outputIntegrations = \array_values(\array_filter(\array_map(
 			function ($key, $value) {
 				$cache = $value['cache'] ?? [];
 
 				$isUsedKey = $value['use'] ?? '';
+				$type = $value['type'] ?? '';
 
-				if ($cache && $isUsedKey && UtilsSettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+				if ($cache && $type === UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION && $isUsedKey && UtilsSettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+					return [
+						'component' => 'card-inline',
+						'cardInlineTitle' => $value['labels']['title'] ?? '',
+						'cardInlineIcon' => $value['labels']['icon'] ?? '',
+						'cardInlineRightContent' => [
+							[
+								'component' => 'submit',
+								'submitValue' => \__('Clear', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
+								'submitAttrs' => [
+									UtilsHelper::getStateAttribute('cacheType') => $key,
+									UtilsHelper::getStateAttribute('reload') => 'false',
+								],
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
+							],
+						],
+					];
+				}
+			},
+			\array_keys($data),
+			$data
+		)));
+
+		$outputOther = \array_values(\array_filter(\array_map(
+			function ($key, $value) {
+				$cache = $value['cache'] ?? [];
+
+				$type = $value['type'] ?? '';
+
+				if ($cache && $type !== UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 					return [
 						'component' => 'card-inline',
 						'cardInlineTitle' => $value['labels']['title'] ?? '',
@@ -97,7 +128,12 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
-					...$output,
+					...$outputIntegrations,
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					...$outputOther,
 					[
 						'component' => 'divider',
 						'dividerExtraVSpacing' => true,

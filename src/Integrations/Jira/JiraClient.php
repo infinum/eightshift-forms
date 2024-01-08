@@ -18,6 +18,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * JiraClient integration class.
@@ -489,7 +490,7 @@ class JiraClient implements JiraClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsJira::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsJira::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}

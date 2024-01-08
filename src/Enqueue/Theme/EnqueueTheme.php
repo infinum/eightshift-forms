@@ -16,6 +16,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -88,7 +89,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			return [];
 		}
 
-		$scriptsDependency = UtilsGeneralHelper::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependency = UtilsHooksHelper::getFilterName(['general', 'scriptsDependency']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {

@@ -22,6 +22,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -225,7 +226,7 @@ class HubspotClient implements HubspotClientInterface
 			],
 		];
 
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
 		}
@@ -378,7 +379,7 @@ class HubspotClient implements HubspotClientInterface
 			]),
 		];
 
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions']);
 		if (\has_filter($filterName)) {
 			$options = \apply_filters($filterName, []);
 		}
@@ -782,7 +783,7 @@ class HubspotClient implements HubspotClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}

@@ -13,6 +13,7 @@ namespace EightshiftForms\Blocks;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
@@ -351,8 +352,9 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 			$output = [];
 		}
 
-		if (!$output) {
+		// if (!$output) {
 			$countries = UtilsGeneralHelper::getCountrySelectList();
+
 			$output = [
 				'default' => [
 					'label' => \__('Default', 'eightshift-forms'),
@@ -371,7 +373,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 			];
 
 			$alternative = [];
-			$filterName = UtilsGeneralHelper::getFilterName(['block', 'country', 'alternativeDataSet']);
+			$filterName = UtilsHooksHelper::getFilterName(['block', 'country', 'alternativeDataSet']);
 			if (\has_filter($filterName)) {
 				$alternative = \apply_filters($filterName, []);
 			}
@@ -434,7 +436,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 			);
 
 			\set_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['quick']);
-		}
+		// }
 
 		if ($useFullOutput) {
 			return $output;

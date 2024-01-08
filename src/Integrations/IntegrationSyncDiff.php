@@ -15,6 +15,7 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -1187,7 +1188,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$topLevelOrder = $orders['order'] ?? [];
 
 		// Provide a custom order from external filter.
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', $integrationType, 'order']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', $integrationType, 'order']);
 		if (\has_filter($filterName)) {
 			$filterOrder = \apply_filters($filterName, []);
 

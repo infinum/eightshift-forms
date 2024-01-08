@@ -15,6 +15,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -273,7 +274,7 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-ultimate-parent-domain' => $company['ultimateParent']['domain'] ?? '',
 		];
 
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $output) ?? [];
 		}

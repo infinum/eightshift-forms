@@ -13,6 +13,8 @@ namespace EightshiftForms\Geolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDataHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
 use Exception;
@@ -107,9 +109,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$path = UtilsGeneralHelper::getDataManifestPath('geolocation', 'geoip.phar');
+		$path = UtilsDataHelper::getDataManifestPath('geolocation', 'geoip.phar');
 
-		$filterName = UtilsGeneralHelper::getFilterName(['geolocation', 'pharLocation']);
+		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -131,9 +133,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$path = UtilsGeneralHelper::getDataManifestPath('geolocation', 'geoip.mmdb');
+		$path = UtilsDataHelper::getDataManifestPath('geolocation', 'geoip.mmdb');
 
-		$filterName = UtilsGeneralHelper::getFilterName(['geolocation', 'dbLocation']);
+		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -153,7 +155,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getCountriesList(): array
 	{
-		$filterName = UtilsGeneralHelper::getFilterName(['geolocation', 'countriesList']);
+		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'countriesList']);
 
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $this->getCountries());

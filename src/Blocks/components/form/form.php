@@ -14,6 +14,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -53,7 +54,7 @@ $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', 
 $formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 $formCustomName = Components::checkAttr('formCustomName', $attributes, $manifest);
 
-$formDataTypeSelectorFilterName = UtilsGeneralHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
+$formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
 	Components::checkAttr('formDataTypeSelector', $attributes, $manifest),

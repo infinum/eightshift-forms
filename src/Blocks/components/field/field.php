@@ -8,6 +8,7 @@
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -32,7 +33,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockName = $attributes['blockName'] ?? '';
 
 // Update media breakpoints from the filter.
-$filterName = UtilsGeneralHelper::getFilterName(['blocks', 'mediaBreakpoints']);
+$filterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
 
 if (has_filter($filterName)) {
 	$customMediaBreakpoints = apply_filters($filterName, []);
@@ -75,7 +76,7 @@ $fieldTypeInternal = Components::checkAttr('fieldTypeInternal', $attributes, $ma
 $fieldIsNoneFormBlock = Components::checkAttr('fieldIsNoneFormBlock', $attributes, $manifest);
 
 $fieldStyleOutput = [];
-$filterName = UtilsGeneralHelper::getFilterName(['block', 'field', 'styleClasses']);
+$filterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleClasses']);
 
 if (has_filter($filterName)) {
 	$fieldStyleOutputFilter = apply_filters($filterName, $attributes) ?? [];

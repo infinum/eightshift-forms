@@ -17,6 +17,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -103,7 +104,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Phone sync with country block.
 		$attributes["{$prefix}PhoneSync"] = '';
-		$filterName = UtilsGeneralHelper::getFilterName(['block', 'form', 'phoneSync']);
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'phoneSync']);
 		if (\has_filter($filterName)) {
 			$attributes["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
 		} else {

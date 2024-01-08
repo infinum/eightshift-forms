@@ -34,6 +34,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use WP_Query;
 use WP_REST_Request;
 
@@ -201,7 +202,7 @@ class MigrationRoute extends AbstractPluginRoute
 			}
 		}
 
-		$actionName = UtilsGeneralHelper::getFilterName(['migration', 'twoToThreeGeneral']);
+		$actionName = UtilsHooksHelper::getActionName(['migration', 'twoToThreeGeneral']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_GENERAL);
 		}
@@ -381,7 +382,7 @@ class MigrationRoute extends AbstractPluginRoute
 
 		$outputFinal['fatal'] = $outputFatal;
 
-		$actionName = UtilsGeneralHelper::getFilterName(['migration', 'twoToThreeForms']);
+		$actionName = UtilsHooksHelper::getActionName(['migration', 'twoToThreeForms']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_FORMS);
 		}
@@ -497,7 +498,7 @@ class MigrationRoute extends AbstractPluginRoute
 			}
 		}
 
-		$actionName = UtilsGeneralHelper::getFilterName(['migration', 'twoToThreeLocale']);
+		$actionName = UtilsHooksHelper::getActionName(['migration', 'twoToThreeLocale']);
 		if (\has_action($actionName)) {
 			\do_action($actionName, SettingsMigration::VERSION_2_3_LOCALE);
 		}

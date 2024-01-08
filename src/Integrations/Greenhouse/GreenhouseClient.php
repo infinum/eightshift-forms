@@ -20,6 +20,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * GreenhouseClient integration class.
@@ -155,12 +156,12 @@ class GreenhouseClient implements ClientInterface
 			$paramsFiles
 		);
 
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
 		}
 
-		$filterName = UtilsGeneralHelper::getFilterName(['general', 'httpRequestTimeout']);
+		$filterName = UtilsHooksHelper::getFilterName(['general', 'httpRequestTimeout']);
 
 		$url = self::BASE_URL . "boards/{$this->getBoardToken()}/jobs/{$itemId}";
 
@@ -401,7 +402,7 @@ class GreenhouseClient implements ClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}

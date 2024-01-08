@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Entries;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * EntriesHelper class.
@@ -39,7 +40,7 @@ class EntriesHelper
 		$output = [];
 
 		// Filter params.
-		$filterName = UtilsGeneralHelper::getFilterName(['entries', 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['entries', 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}

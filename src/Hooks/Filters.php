@@ -64,6 +64,7 @@ use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -80,6 +81,7 @@ class Filters implements ServiceInterface
 	{
 		\add_filter(UtilsConfig::FILTER_SETTINGS_DATA, [$this, 'getSettingsFiltersData']);
 		\add_filter(UtilsConfig::FILTER_PUBLIC_FILTERS_DATA, [$this, 'getPublicFilters']);
+		\add_filter(UtilsConfig::FILTER_PUBLIC_ACTIONS_DATA, [$this, 'getPublicActions']);
 		\add_filter(UtilsConfig::FILTER_SETTINGS_NONE_TRANSLATABLE_NAMES, [$this, 'getSettingsNoneTranslatableNames']);
 	}
 
@@ -172,70 +174,82 @@ class Filters implements ServiceInterface
 			'integrations' => [
 				SettingsMailer::SETTINGS_TYPE_KEY => [
 					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsMailchimp::SETTINGS_TYPE_KEY => [
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsHubspot::SETTINGS_TYPE_KEY => [
+					'filesOptions',
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
-					'filesOptions',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsMailerlite::SETTINGS_TYPE_KEY => [
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsGoodbits::SETTINGS_TYPE_KEY => [
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsClearbit::SETTINGS_TYPE_KEY => [
 					'map',
 				],
 				SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsAirtable::SETTINGS_TYPE_KEY => [
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsMoments::SETTINGS_TYPE_KEY => [
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsWorkable::SETTINGS_TYPE_KEY => [
 					'data',
-					'prePostParams',
 					'order',
 					'prePostId',
+					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsJira::SETTINGS_TYPE_KEY => [
 					'prePostParams',
+					'prePostResponse',
 				],
 				SettingsPipedrive::SETTINGS_TYPE_KEY => [
 					'prePostParams',
+					'prePostResponse',
 				],
 			],
 			'entries' => [
@@ -247,15 +261,26 @@ class Filters implements ServiceInterface
 			'validation' => [
 				'forceMimetypeFromFs',
 			],
-			'migration' => [
-				'twoToThreeGeneral',
-				'twoToThreeForms',
-				'twoToThreeLocale',
-			],
 			'admin' => [
 				'settings' => [
 					'data',
 				],
+			],
+		];
+	}
+
+		/**
+	 * Get list of all public actions.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getPublicActions(): array
+	{
+		return [
+			'migration' => [
+				'twoToThreeGeneral',
+				'twoToThreeForms',
+				'twoToThreeLocale',
 			],
 		];
 	}
@@ -712,7 +737,7 @@ class Filters implements ServiceInterface
 		}
 
 		// Populate additional items from filters, used for add-ons.
-		$filterName = UtilsGeneralHelper::getFilterName(['admin', 'settings', 'data']);
+		$filterName = UtilsHooksHelper::getFilterName(['admin', 'settings', 'data']);
 
 		if (\has_filter($filterName)) {
 			foreach (\apply_filters($filterName, []) as $keyItem => $valueItem) {

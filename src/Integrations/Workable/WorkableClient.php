@@ -19,6 +19,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * WorkableClient integration class.
@@ -151,7 +152,7 @@ class WorkableClient implements ClientInterface
 			),
 		];
 
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
 		}
@@ -397,7 +398,7 @@ class WorkableClient implements ClientInterface
 		$answers = [];
 
 		// Filter params.
-		$filterName = UtilsGeneralHelper::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}

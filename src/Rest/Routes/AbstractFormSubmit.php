@@ -25,6 +25,7 @@ use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore Slev
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use WP_REST_Request;
 
 /**
@@ -267,6 +268,9 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
 		$disableFallbackEmail = false;
 
+		$type = $formDataReference['type'];
+		$postId = $formDataReference['postId'];
+
 		// Output integrations validation issues.
 		if ($validation) {
 			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($validation, $formId);
@@ -288,7 +292,7 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 						$response,
 						[
 							// Attach postID to the response because it is not available in the client's response.
-							'postId' => $formDataReference['postId'] ?? '',
+							'postId' => $postId,
 						]
 					)
 				);
@@ -310,7 +314,7 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 					$response,
 					[
 						// Attach postID to the response because it is not available in the client's response.
-						'postId' => $formDataReference['postId'] ?? '',
+						'postId' => $postId,
 					]
 				)
 			);
@@ -325,6 +329,14 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
+
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', $type, 'prePostResponse']);
+		if (\has_filter($filterName)) {
+			$alternative = \apply_filters($filterName, $formDataReference);
+		}
+
+		error_log( print_r( ( $responseOutput ), true ) );
+		
 
 		return UtilsApiHelper::getIntegrationApiOutput(
 			$responseOutput,

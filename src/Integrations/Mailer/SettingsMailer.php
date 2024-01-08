@@ -210,7 +210,7 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 
 		$fieldNames = $formDetails['fieldNamesTags'];
 		$fieldNameTags = UtilsSettingsOutputHelper::getPartialFormFieldNames($fieldNames);
-		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails['typeFilter']);
+		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails['type']);
 
 		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
 		$isSenderUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
