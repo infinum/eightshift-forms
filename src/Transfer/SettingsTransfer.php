@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Query;
@@ -308,7 +308,7 @@ class SettingsTransfer implements ServiceInterface, UtilsSettingGlobalInterface
 
 		$output = [];
 
-		$isDeveloperMode = UtilsGeneralHelper::isDeveloperModeActive();
+		$isDeveloperMode = UtilsDeveloperHelper::isDeveloperModeActive();
 
 		while ($theQuery->have_posts()) {
 			$theQuery->the_post();

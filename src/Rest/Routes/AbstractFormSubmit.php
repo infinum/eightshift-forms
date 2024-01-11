@@ -24,7 +24,7 @@ use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingSt
 use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use WP_REST_Request;
 
 /**
@@ -135,7 +135,7 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
 					// Validate files.
-					if (!UtilsGeneralHelper::isDeveloperSkipFormValidationActive()) {
+					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateFiles($formDataReference);
 
 						if ($validate) {
@@ -175,7 +175,7 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 					break;
 				case self::ROUTE_TYPE_STEP_VALIDATION:
 					// Validate params.
-					if (!UtilsGeneralHelper::isDeveloperSkipFormValidationActive()) {
+					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateParams($formDataReference, false);
 
 						if ($validate) {
@@ -193,7 +193,7 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 					}
 
 					// Validate params.
-					if (!UtilsGeneralHelper::isDeveloperSkipFormValidationActive()) {
+					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateParams($formDataReference);
 
 						if ($validate) {

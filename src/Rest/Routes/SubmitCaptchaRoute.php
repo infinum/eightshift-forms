@@ -13,7 +13,7 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use Throwable;
 use WP_REST_Request;
 
@@ -95,7 +95,7 @@ class SubmitCaptchaRoute extends AbstractPluginRoute
 		];
 
 		// Bailout if troubleshooting skip captcha is on.
-		if (UtilsGeneralHelper::isDeveloperSkipCaptchaActive()) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCaptchaActive()) {
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessOutput(
 					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),

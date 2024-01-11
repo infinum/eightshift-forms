@@ -12,6 +12,7 @@ namespace EightshiftForms\Blocks;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\GeolocationInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
@@ -348,7 +349,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 		$output = \get_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 

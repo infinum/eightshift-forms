@@ -16,6 +16,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -189,7 +190,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		$formTitle = \get_the_title((int) $formId);
 
-		if (UtilsGeneralHelper::isDeveloperModeActive()) {
+		if (UtilsDeveloperHelper::isDeveloperModeActive()) {
 			$formTitle = "{$formId} - {$formTitle}";
 		}
 

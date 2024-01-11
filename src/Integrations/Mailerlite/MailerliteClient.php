@@ -18,6 +18,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
@@ -66,7 +67,7 @@ class MailerliteClient implements ClientInterface
 		$output = \get_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -180,7 +181,7 @@ class MailerliteClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -284,7 +285,7 @@ class MailerliteClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -330,7 +331,7 @@ class MailerliteClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {

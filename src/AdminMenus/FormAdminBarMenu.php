@@ -16,6 +16,7 @@ use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Admin_Bar;
@@ -75,8 +76,8 @@ class FormAdminBarMenu implements ServiceInterface
 		}
 
 		$prefix = FormAdminMenu::ADMIN_MENU_SLUG;
-		$isDevelopMode = UtilsGeneralHelper::isDeveloperModeActive();
-		$isDevelopModeQmLog = UtilsGeneralHelper::isDeveloperQMLogActive();
+		$isDevelopMode = UtilsDeveloperHelper::isDeveloperModeActive();
+		$isDevelopModeQmLog = UtilsDeveloperHelper::isDeveloperQMLogActive();
 
 		$version = UtilsGeneralHelper::getProjectVersion();
 

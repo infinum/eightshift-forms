@@ -19,6 +19,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
@@ -60,7 +61,7 @@ class WorkableClient implements ClientInterface
 		$output = \get_transient(self::CACHE_WORKABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -182,7 +183,7 @@ class WorkableClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -319,7 +320,7 @@ class WorkableClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -357,7 +358,7 @@ class WorkableClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {

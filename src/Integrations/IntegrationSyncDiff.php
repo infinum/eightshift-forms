@@ -15,6 +15,7 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -42,7 +43,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	public function updateFormOnBlockEditorLoad(): void
 	{
 		// Prevent forms sync.
-		if (UtilsGeneralHelper::isDeveloperSkipFormsSyncActive()) {
+		if (UtilsDeveloperHelper::isDeveloperSkipFormsSyncActive()) {
 			return;
 		}
 

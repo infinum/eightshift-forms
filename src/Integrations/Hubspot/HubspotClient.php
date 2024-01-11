@@ -21,6 +21,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -92,7 +93,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -161,7 +162,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = \get_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -271,7 +272,7 @@ class HubspotClient implements HubspotClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -341,7 +342,7 @@ class HubspotClient implements HubspotClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -551,7 +552,7 @@ class HubspotClient implements HubspotClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -597,7 +598,7 @@ class HubspotClient implements HubspotClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {

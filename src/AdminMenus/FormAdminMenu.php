@@ -15,6 +15,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -532,7 +533,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	private function getListingItems(array $items, string $type): array
 	{
 		$output = [];
-		$isDevMode = UtilsGeneralHelper::isDeveloperModeActive();
+		$isDevMode = UtilsDeveloperHelper::isDeveloperModeActive();
 
 		switch ($type) {
 			case 'locations':

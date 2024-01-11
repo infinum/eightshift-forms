@@ -16,6 +16,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
@@ -58,7 +59,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$output = \get_transient(self::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsGeneralHelper::isDeveloperSkipCacheActive()) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -163,7 +164,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -247,7 +248,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -301,7 +302,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -346,7 +347,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -411,7 +412,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
@@ -505,7 +506,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// Bailout if fields are missing.
 		if (!isset($body['form']['cfields'])) {
@@ -584,7 +585,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		if (!isset($body['forms'])) {
 			return [];

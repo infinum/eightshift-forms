@@ -17,19 +17,15 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * GoodbitsClient integration class.
  */
 class GoodbitsClient implements ClientInterface
 {
-	/**
-	 * Helper trait.
-	 */
-	use ObjectHelperTrait;
-
 	/**
 	 * Return Goodbits base url.
 	 *
@@ -65,7 +61,7 @@ class GoodbitsClient implements ClientInterface
 	{
 		$key = $this->getApiKey();
 
-		if (\is_string($key) && $this->isJson($key)) {
+		if (\is_string($key) && Components::isJson($key)) {
 			$key = \json_decode($key);
 
 			$output = [];
@@ -146,7 +142,7 @@ class GoodbitsClient implements ClientInterface
 		$code = $details['code'];
 		$body = $details['body'];
 
-		UtilsGeneralHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
