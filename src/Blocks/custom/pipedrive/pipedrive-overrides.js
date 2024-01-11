@@ -9,7 +9,7 @@ export const overrides = {
 		...manifest.attributes,
 		pipedriveAllowedBlocks: {
 			...manifest.attributes.pipedriveAllowedBlocks,
-			default: globalManifest.fields
+			default: globalManifest.allowedBlocksBuilderBlocksList
 		},
 	},
 };

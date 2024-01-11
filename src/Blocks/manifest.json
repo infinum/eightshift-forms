@@ -15,10 +15,13 @@
 		"outputCssGloballyAdditionalStyles": [],
 		"useWrapper": false
 	},
-	"fieldsAlways": [
+	"allowedBlocksNoneBuilderBlocksList": [
+		"eightshift-forms/forms"
+	],
+	"allowedBlocksBuilderIntegrationAdditionalBlocksList": [
 		"eightshift-forms/step"
 	],
-	"fields": [
+	"allowedBlocksBuilderBlocksList": [
 		"eightshift-forms/file",
 		"eightshift-forms/input",
 		"eightshift-forms/radios",

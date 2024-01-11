@@ -9,7 +9,7 @@ export const overrides = {
 		...manifest.attributes,
 		mailerAllowedBlocks: {
 			...manifest.attributes.mailerAllowedBlocks,
-			default: globalManifest.fields
+			default: globalManifest.allowedBlocksBuilderBlocksList
 		},
 	},
 };

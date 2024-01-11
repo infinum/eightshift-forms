@@ -9,7 +9,7 @@ export const overrides = {
 		...manifest.attributes,
 		jiraAllowedBlocks: {
 			...manifest.attributes.jiraAllowedBlocks,
-			default: globalManifest.fields
+			default: globalManifest.allowedBlocksBuilderBlocksList
 		},
 	},
 };

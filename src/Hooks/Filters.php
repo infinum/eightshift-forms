@@ -158,6 +158,7 @@ class Filters implements ServiceInterface
 				],
 			],
 			'blocks' => [
+				'allowedBlocks',
 				'additionalBlocks',
 				'mediaBreakpoints',
 			],
