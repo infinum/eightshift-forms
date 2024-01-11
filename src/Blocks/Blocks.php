@@ -54,6 +54,11 @@ class Blocks extends UtilsBlocks
 					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
 					'icon' => 'admin-settings',
 				],
+				[
+					'slug' => 'eightshift-forms-addons',
+					'title' => \esc_html__('Eightshift Forms Addons', 'eightshift-forms'),
+					'icon' => 'admin-settings',
+				],
 			]
 		);
 	}
