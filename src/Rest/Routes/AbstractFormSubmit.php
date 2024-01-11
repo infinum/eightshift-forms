@@ -267,7 +267,6 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
 		$disableFallbackEmail = false;
 
-		$type = $formDataReference['type'];
 		$postId = $formDataReference['postId'];
 
 		// Output integrations validation issues.
@@ -328,6 +327,10 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
+
+		error_log( print_r( ( $responseOutput ), true ) );
+		error_log( print_r( ( $labelsOutput ), true ) );
+		
 
 		return UtilsApiHelper::getIntegrationApiOutput(
 			$responseOutput,

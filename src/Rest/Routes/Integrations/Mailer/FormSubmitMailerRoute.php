@@ -20,6 +20,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Class FormSubmitMailerRoute
@@ -82,6 +83,13 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
+
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
+		if (\has_filter($filterName)) {
+			$formDataReference['addonData'] = \apply_filters($filterName, $formDataReference['addonData'], $formDataReference);
+		}
+
+		error_log( print_r( ( $formDataReference['addonData'] ), true ) );
 
 		return \rest_ensure_response(
 			$this->getFormSubmitMailer()->sendEmails($formDataReference)

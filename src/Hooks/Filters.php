@@ -109,6 +109,7 @@ class Filters implements ServiceInterface
 					'phoneSync',
 					'globalMsgHeadings',
 					'additionalContent',
+					'preResponseAddonData',
 				],
 				'formSelector' => [
 					'formTemplates',
@@ -155,6 +156,9 @@ class Filters implements ServiceInterface
 				'step' => [
 					'componentPrev',
 					'componentNext',
+				],
+				'rating' => [
+					'additionalContent',
 				],
 			],
 			'blocks' => [
