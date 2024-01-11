@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use Throwable;
 

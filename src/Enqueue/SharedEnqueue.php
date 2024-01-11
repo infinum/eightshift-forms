@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue;
 
-use EightshiftForms\Config\Config;
 use EightshiftForms\Rest\Routes\AbstractTestApi;
 use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
@@ -43,7 +42,7 @@ trait SharedEnqueue
 	 */
 	public function getEnqueueSharedInlineCommonItems(bool $isPublic = true): array
 	{
-		$restPrefixProject = Config::getProjectRoutesNamespace() . '/' . Config::getProjectRoutesVersion();
+		$restPrefixProject = UtilsConfig::ROUTE_NAMESPACE . '/' . UtilsConfig::ROUTE_VERSION;
 
 		$outputPublic = [
 			// Common.

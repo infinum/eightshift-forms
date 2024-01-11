@@ -46,7 +46,6 @@
 	"require": {
 		"php": "^7.4 || >=8.0",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-libs": "^7.1.0",
 		"typisttech/imposter-plugin": "^0.6.2",
 		"infinum/eightshift-forms-utils": "dev-develop"
 	},

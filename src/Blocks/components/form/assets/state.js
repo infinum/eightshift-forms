@@ -147,8 +147,11 @@ export class State {
 	getStateFormConfigSuccessRedirectVariation = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formId);
 	};
-	getStateFormConfigDownloads = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_DOWNLOADS], formId);
+	getStateFormConfigSuccessRedirectDownloads = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], formId);
+	};
+	getStateFormConfigSuccessRedirectData = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DATA], formId);
 	};
 
 	////////////////////////////////////////////////////////////////

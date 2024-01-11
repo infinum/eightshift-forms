@@ -352,7 +352,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 			$output = [];
 		}
 
-		// if (!$output) {
+		if (!$output) {
 			$countries = UtilsGeneralHelper::getCountrySelectList();
 
 			$output = [
@@ -436,7 +436,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 			);
 
 			\set_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['quick']);
-		// }
+		}
 
 		if ($useFullOutput) {
 			return $output;

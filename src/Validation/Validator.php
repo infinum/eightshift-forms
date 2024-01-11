@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Config\Config;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
@@ -199,7 +198,7 @@ class Validator extends AbstractValidation
 						$fileName = \array_flip($fileName);
 
 						// Bailout if file is ok.
-						if (isset($fileName[Config::getTempUploadDir()])) {
+						if (isset($fileName[UtilsConfig::TEMP_UPLOAD_DIR])) {
 							continue;
 						}
 

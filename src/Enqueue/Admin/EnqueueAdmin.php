@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Admin;
 
-use EightshiftForms\Config\Config;
 use EightshiftForms\Enqueue\SharedEnqueue;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
@@ -57,7 +57,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**
@@ -67,7 +67,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsVersion(): string
 	{
-		return Config::getProjectVersion();
+		return UtilsGeneralHelper::getProjectVersion();
 	}
 
 	/**

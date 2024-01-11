@@ -20,8 +20,6 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Class FormSubmitMailerRoute
@@ -79,16 +77,10 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected function submitAction(array $formDataReference)
 	{
 		$formId = $formDataReference['formId'];
-		$type = $formDataReference['type'];
 
 		// Save entries to DB.
 		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
-		}
-
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', $type, 'prePostResponse']);
-		if (\has_filter($filterName)) {
-			$formDataReference = \apply_filters($filterName, $formDataReference);
 		}
 
 		return \rest_ensure_response(

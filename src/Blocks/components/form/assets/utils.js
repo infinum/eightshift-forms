@@ -576,7 +576,7 @@ export class Utils {
 
 		const url = new URL(redirectUrl);
 
-		const downloads = this.state.getStateFormConfigDownloads(formId);
+		const downloads = this.state.getStateFormConfigSuccessRedirectDownloads(formId);
 		if (downloads) {
 			let downloadsName = 'all';
 
@@ -602,6 +602,11 @@ export class Utils {
 			if (downloads?.[downloadsName]) {
 				url.searchParams.append('es-downloads', downloads[downloadsName]);
 			}
+		}
+
+		const data = this.state.getStateFormConfigSuccessRedirectData(formId);
+		if (data) {
+			url.searchParams.append('es-data', data);
 		}
 
 		const variation = this.state.getStateFormConfigSuccessRedirectVariation(formId);

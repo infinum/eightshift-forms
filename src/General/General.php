@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\General;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 

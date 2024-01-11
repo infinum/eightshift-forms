@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Theme;
 
-use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
@@ -145,7 +145,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**
@@ -155,7 +155,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function getAssetsVersion(): string
 	{
-		return Config::getProjectVersion();
+		return UtilsGeneralHelper::getProjectVersion();
 	}
 
 	/**

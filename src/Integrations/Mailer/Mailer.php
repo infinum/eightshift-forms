@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
-use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -81,7 +80,7 @@ class Mailer implements MailerInterface
 		$isDisabled = $data['isDisabled'] ?? false;
 
 		$data['formsDebug'] = [
-			'forms' => Config::getProjectVersion(),
+			'forms' => UtilsGeneralHelper::getProjectVersion(),
 			'php' => \phpversion(),
 			'wp' => \get_bloginfo('version'),
 			'url' => \get_bloginfo('url'),

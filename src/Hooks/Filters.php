@@ -12,7 +12,6 @@ namespace EightshiftForms\Hooks;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
 use EightshiftForms\Integrations\Goodbits\Goodbits;
@@ -103,6 +102,7 @@ class Filters implements ServiceInterface
 					'successRedirectUrl',
 					'successRedirectVariation',
 					'successRedirectVariationOptions',
+					'successRedirectData',
 					'trackingEventName',
 					'trackingAdditionalData',
 					'dataTypeSelector',
@@ -174,21 +174,18 @@ class Filters implements ServiceInterface
 			'integrations' => [
 				SettingsMailer::SETTINGS_TYPE_KEY => [
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsMailchimp::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsHubspot::SETTINGS_TYPE_KEY => [
 					'filesOptions',
@@ -196,21 +193,18 @@ class Filters implements ServiceInterface
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsMailerlite::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsGoodbits::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsClearbit::SETTINGS_TYPE_KEY => [
 					'map',
@@ -220,36 +214,30 @@ class Filters implements ServiceInterface
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsAirtable::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsMoments::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsWorkable::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsJira::SETTINGS_TYPE_KEY => [
 					'prePostParams',
-					'prePostResponse',
 				],
 				SettingsPipedrive::SETTINGS_TYPE_KEY => [
 					'prePostParams',
-					'prePostResponse',
 				],
 			],
 			'entries' => [
@@ -269,7 +257,7 @@ class Filters implements ServiceInterface
 		];
 	}
 
-		/**
+	/**
 	 * Get list of all public actions.
 	 *
 	 * @return array<mixed>

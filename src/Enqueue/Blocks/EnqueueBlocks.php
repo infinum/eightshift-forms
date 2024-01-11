@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Blocks;
 
-use EightshiftForms\Config\Config;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
@@ -24,6 +23,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
@@ -153,7 +153,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**
@@ -163,7 +163,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function getAssetsVersion(): string
 	{
-		return Config::getProjectVersion();
+		return UtilsGeneralHelper::getProjectVersion();
 	}
 
 	/**

@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Class AbstractBaseRoute
+ * Class AbstractUtilsBaseRoute
  */
-abstract class AbstractPluginRoute extends AbstractBaseRoute implements ServiceInterface {} // phpcs:ignore
+abstract class AbstractPluginRoute extends AbstractUtilsBaseRoute implements ServiceInterface {} // phpcs:ignore

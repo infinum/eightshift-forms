@@ -162,7 +162,14 @@ if ($formDownloads || $formSuccessRedirectVariationUrl) {
 		}
 	}
 
-	$formAttrs[UtilsHelper::getStateAttribute('downloads')] = wp_json_encode($downloadsOutput);
+	$formAttrs[UtilsHelper::getStateAttribute('successRedirectDownloads')] = wp_json_encode($downloadsOutput);
+}
+
+$successRedirectDataFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'successRedirectData']);
+
+
+if (has_filter($successRedirectDataFilterName)) {
+	$formAttrs[UtilsHelper::getStateAttribute('successRedirectData')] = UtilsEncryption::encryptor(wp_json_encode(apply_filters($successRedirectDataFilterName, [])));
 }
 
 if ($formId) {

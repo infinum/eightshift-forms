@@ -78,7 +78,8 @@ export const StateEnum = {
 	CONFIG_PHONE_USE_PHONE_SYNC: 'usePhoneSync',
 	CONFIG_SUCCESS_REDIRECT: 'successRedirect',
 	CONFIG_SUCCESS_REDIRECT_VARIATION: 'successRedirectVariation',
-	CONFIG_DOWNLOADS: 'downloads',
+	CONFIG_SUCCESS_REDIRECT_DOWNLOADS: 'successRedirectDownloads',
+	CONFIG_SUCCESS_REDIRECT_DATA: 'successRedirectData',
 
 	SETTINGS: 'settings',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
@@ -302,7 +303,8 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement?.getAttribute(getStateAttribute('phoneSync'))), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT], formElement?.getAttribute(getStateAttribute('successRedirect')), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement?.getAttribute(getStateAttribute('successRedirectVariation')), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_DOWNLOADS], JSON.parse(formElement?.getAttribute(getStateAttribute('downloads')) ?? '{}'), formId);
+	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], JSON.parse(formElement?.getAttribute(getStateAttribute('successRedirectDownloads')) ?? '{}'), formId);
+	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DATA], formElement?.getAttribute(getStateAttribute('successRedirectData')), formId);
 
 	const globalMsg = formElement?.querySelector(getStateSelector('globalMsg', true));
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.ELEMENT], globalMsg, formId);

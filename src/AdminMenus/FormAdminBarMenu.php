@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Config\Config;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
@@ -79,7 +78,7 @@ class FormAdminBarMenu implements ServiceInterface
 		$isDevelopMode = UtilsGeneralHelper::isDeveloperModeActive();
 		$isDevelopModeQmLog = UtilsGeneralHelper::isDeveloperQMLogActive();
 
-		$version = Config::getProjectVersion();
+		$version = UtilsGeneralHelper::getProjectVersion();
 
 		$mainLabel = \esc_html__('Eightshift Forms', 'eightshift-forms');
 
