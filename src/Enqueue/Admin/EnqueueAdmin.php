@@ -45,7 +45,6 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function register(): void
 	{
-		\add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
 		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
 		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
