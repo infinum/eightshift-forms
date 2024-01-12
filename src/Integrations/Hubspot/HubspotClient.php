@@ -19,7 +19,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -284,7 +283,7 @@ class HubspotClient implements HubspotClientInterface
 			$details,
 			$this->getErrorMsg($body),
 			[
-				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+				UtilsConfig::ROUTE_OUTPUT_VALIDATION_KEY => $this->getFieldsErrors($body),
 			]
 		);
 	}

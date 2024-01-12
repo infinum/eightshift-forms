@@ -19,7 +19,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
@@ -222,7 +222,7 @@ class GreenhouseClient implements ClientInterface
 			$details,
 			$this->getErrorMsg($body),
 			[
-				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
+				UtilsConfig::ROUTE_OUTPUT_VALIDATION_KEY => $this->getFieldsErrors($body),
 			]
 		);
 	}

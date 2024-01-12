@@ -57,8 +57,10 @@ export class Steps {
 		if (status === 'success') {
 			this.goToNextStep(formId, data?.nextStep, parseInt(data?.progressBarItems, 10), Boolean(data?.disableNextButton));
 		} else {
-			if (data?.validation !== undefined) {
-				this.utils.outputErrors(formId, data?.validation);
+			const validationOutputKey = this.state.getStateResponseOutputKey('validation');
+
+			if (data?.[validationOutputKey] !== undefined) {
+				this.utils.outputErrors(formId, data?.[validationOutputKey]);
 				this.utils.setGlobalMsg(formId, message, status);
 			}
 		}

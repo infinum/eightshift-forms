@@ -14,6 +14,8 @@ import {
 	getStateRoute,
 	getRestUrl,
 	getRestUrlByType,
+	getStateResponseOutputKey,
+	getStateSuccessRedirectUrlKey,
 } from './state-init';
 
 export class State {
@@ -151,9 +153,6 @@ export class State {
 	};
 	getStateFormConfigSuccessRedirectDownloads = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], formId);
-	};
-	getStateFormConfigSuccessRedirectData = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DATA], formId);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -481,6 +480,10 @@ export class State {
 		return getStateRoute(name);
 	};
 
+	getStateResponseOutputKey = (name) => {
+		return getStateResponseOutputKey(name);
+	};
+
 	////////////////////////////////////////////////////////////////
 	// Selector getters.
 	////////////////////////////////////////////////////////////////
@@ -499,6 +502,14 @@ export class State {
 
 	getStateAttribute = (name) => {
 		return getStateAttribute(name);
+	};
+
+	////////////////////////////////////////////////////////////////
+	// Success redirect getters.
+	////////////////////////////////////////////////////////////////
+
+	getStateSuccessRedirectUrlKey = (name) => {
+		return getStateSuccessRedirectUrlKey(name);
 	};
 
 	////////////////////////////////////////////////////////////////

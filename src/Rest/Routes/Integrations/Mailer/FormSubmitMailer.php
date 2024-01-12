@@ -53,10 +53,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * Send emails method.
 	 *
 	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $additionalData Additonal data to pass.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDataReference): array
+	public function sendEmails(array $formDataReference, $additionalData = []): array
 	{
 		$formId = $formDataReference['formId'];
 		$params = $formDataReference['params'];
@@ -74,7 +75,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		if (!$isSettingsValid) {
 			return UtilsApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
-				[],
+				$additionalData,
 				$debug
 			);
 		}
@@ -94,7 +95,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		if (!$response) {
 			return UtilsApiHelper::getApiErrorOutput(
 				$this->labels->getLabel('mailerErrorEmailSend', $formId),
-				[],
+				$additionalData,
 				$debug
 			);
 		}
@@ -104,7 +105,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		// Finish.
 		return UtilsApiHelper::getApiSuccessOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
-			[],
+			$additionalData,
 			$debug
 		);
 	}

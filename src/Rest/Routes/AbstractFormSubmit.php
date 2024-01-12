@@ -13,7 +13,6 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Validation\Validator;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
@@ -25,6 +24,8 @@ use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore Slev
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
@@ -223,7 +224,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				UtilsApiHelper::getApiErrorOutput(
 					$e->getMessage(),
 					[
-						Validator::VALIDATOR_OUTPUT_KEY => $e->getData(),
+						UtilsConfig::ROUTE_OUTPUT_VALIDATION_KEY => $e->getData(),
 					],
 					[
 						'exception' => $e,
@@ -251,14 +252,27 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		string $formId,
 		$callbackAdditional = null
 	): array {
-		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
+		$validation = $response[UtilsConfig::ROUTE_OUTPUT_VALIDATION_KEY] ?? [];
 		$disableFallbackEmail = false;
 
 		$postId = $formDataReference['postId'];
+		$additionaDataOutput = [];
+
+		// Pre response filter for addon data.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
+		if (\has_filter($filterName)) {
+			$additionaDataOutput[UtilsConfig::ROUTE_OUTPUT_ADDON_DATA_KEY] = \apply_filters($filterName, $formDataReference['addonData'], $formDataReference);
+		}
+
+		// Pre response filter for success redirect data.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
+		if (\has_filter($filterName)) {
+			$additionaDataOutput[UtilsConfig::ROUTE_OUTPUT_SUCCESS_REDIRECT_DATA_KEY] = UtilsEncryption::encryptor(\wp_json_encode(\apply_filters($filterName, [], $formDataReference)));
+		}
 
 		// Output integrations validation issues.
 		if ($validation) {
-			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($validation, $formId);
+			$response[UtilsConfig::ROUTE_OUTPUT_VALIDATION_KEY] = $this->validator->getValidationLabelItems($validation, $formId);
 			$disableFallbackEmail = true;
 		}
 
@@ -286,7 +300,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		// Send email if it is configured in the backend.
 		if ($response['status'] === UtilsConfig::STATUS_SUCCESS) {
-			$this->getFormSubmitMailer()->sendEmails($formDataReference);
+			$this->getFormSubmitMailer()->sendEmails($formDataReference, $additionaDataOutput);
 		}
 
 		$labelsOutput = $this->labels->getLabel($response['message'], $formId);
@@ -316,8 +330,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		return UtilsApiHelper::getIntegrationApiOutput(
-			$responseOutput,
-			$labelsOutput,
+			\array_merge($responseOutput, $additionaDataOutput),
+			$labelsOutput
 		);
 	}
 

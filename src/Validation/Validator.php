@@ -83,13 +83,6 @@ class Validator extends AbstractValidation
 	];
 
 	/**
-	 * API validator output key.
-	 *
-	 * @var string
-	 */
-	public const VALIDATOR_OUTPUT_KEY = UtilsConfig::VALIDATOR_OUTPUT_KEY;
-
-	/**
 	 * Transient cache name for validatior labels. No need to flush it because it is short live.
 	 */
 	public const CACHE_VALIDATOR_LABELS_TRANSIENT_NAME = 'es_validator_labels_cache';

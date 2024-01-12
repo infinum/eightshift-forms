@@ -79,7 +79,6 @@ export const StateEnum = {
 	CONFIG_SUCCESS_REDIRECT: 'successRedirect',
 	CONFIG_SUCCESS_REDIRECT_VARIATION: 'successRedirectVariation',
 	CONFIG_SUCCESS_REDIRECT_DOWNLOADS: 'successRedirectDownloads',
-	CONFIG_SUCCESS_REDIRECT_DATA: 'successRedirectData',
 
 	SETTINGS: 'settings',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
@@ -133,6 +132,8 @@ export const StateEnum = {
 	EVENTS: 'events',
 	SELECTORS: 'selectors',
 	SELECTORS_ADMIN: 'selectorsAdmin',
+	RESPONSE_OUTPUT_KEYS: 'responseOutputKeys',
+	SUCCESS_REDIRECT_URL_KEYS: 'successRedirectUrlKey',
 };
 
 /**
@@ -180,6 +181,8 @@ export function setStateInitial() {
 		[StateEnum.SELECTORS]: {},
 		[StateEnum.SELECTORS_ADMIN]: {},
 		[StateEnum.ATTRIBUTES]: {},
+		[StateEnum.RESPONSE_OUTPUT_KEYS]: {},
+		[StateEnum.SUCCESS_REDIRECT_URL_KEYS]: {},
 		[StateEnum.PARAMS]: {},
 		[StateEnum.FIELD_TYPE]: {},
 		[StateEnum.CONFIG]: {},
@@ -194,6 +197,16 @@ export function setStateInitial() {
 	// Selectors Admin.
 	for (const [key, item] of Object.entries(utilsManifest.enums.selectorsAdmin ?? {})) {
 		setState([key], item, StateEnum.SELECTORS_ADMIN);
+	}
+
+	// Response output keys.
+	for (const [key, item] of Object.entries(utilsManifest.enums.responseOutputKeys ?? {})) {
+		setState([key], item, StateEnum.RESPONSE_OUTPUT_KEYS);
+	}
+
+	// Success Redirect Url keys.
+	for (const [key, item] of Object.entries(utilsManifest.enums.successRedirectUrlKeys ?? {})) {
+		setState([key], item, StateEnum.SUCCESS_REDIRECT_URL_KEYS);
 	}
 
 	// Attributes.
@@ -317,7 +330,6 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT], formElement?.getAttribute(getStateAttribute('successRedirect')), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement?.getAttribute(getStateAttribute('successRedirectVariation')), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], JSON.parse(formElement?.getAttribute(getStateAttribute('successRedirectDownloads')) ?? '{}'), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DATA], formElement?.getAttribute(getStateAttribute('successRedirectData')), formId);
 
 	const globalMsg = formElement?.querySelector(getStateSelector('globalMsg', true));
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.ELEMENT], globalMsg, formId);
@@ -1020,6 +1032,17 @@ export function getStateRoute(name) {
  * Get state selector.
  * 
  * @param {string} name Name key to get.
+ *
+ * @returns {string}
+ */
+export function getStateResponseOutputKey(name) {
+	return getStateTop(StateEnum.RESPONSE_OUTPUT_KEYS)[name];
+}
+
+/**
+ * Get state selector.
+ * 
+ * @param {string} name Name key to get.
  * @param {boolean} usePrefix Use prefix.
  *
  * @returns {string}
@@ -1065,6 +1088,15 @@ export function getStateFieldType(name) {
  */
 export function getStateParam(name) {
 	return getStateTop(StateEnum.PARAMS)[name];
+}
+
+/**
+ * Get state Success Redirect Url Key.
+ *
+ * @returns {string}
+ */
+export function getStateSuccessRedirectUrlKey(name) {
+	return getStateTop(StateEnum.SUCCESS_REDIRECT_URL_KEYS)[name];
 }
 
 /**

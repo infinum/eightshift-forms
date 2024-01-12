@@ -548,10 +548,11 @@ export class Utils {
 	 * Redirect to url and update url params from from data.
 	 *
 	 * @param {string} formId Form Id.
+	 * @param {object} additionalData Additional data to add to url.
 	 *
 	 * @returns {void}
 	 */
-	redirectToUrl(formId) {
+	redirectToUrl(formId, additionalData = {}) {
 		let redirectUrl = this.state.getStateFormConfigSuccessRedirect(formId);
 
 		if (!redirectUrl) {
@@ -600,18 +601,18 @@ export class Utils {
 			}
 
 			if (downloads?.[downloadsName]) {
-				url.searchParams.append('es-downloads', downloads[downloadsName]);
+				url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('downloads'), downloads[downloadsName]);
 			}
 		}
 
-		const data = this.state.getStateFormConfigSuccessRedirectData(formId);
-		if (data) {
-			url.searchParams.append('es-data', data);
+		const successRedirectData = additionalData?.[this.state.getStateResponseOutputKey('successRedirectData')];
+		if (successRedirectData) {
+				url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('data'), successRedirectData);
 		}
 
 		const variation = this.state.getStateFormConfigSuccessRedirectVariation(formId);
 		if (variation) {
-			url.searchParams.append('es-variation', variation);
+			url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('variation'), variation);
 		}
 
 		this.redirectToUrlByReference(formId, url.href);
@@ -1273,8 +1274,8 @@ export class Utils {
 			resetForm: (formId) => {
 				this.resetForm(formId);
 			},
-			redirectToUrl: (formId) => {
-				this.redirectToUrl(formId);
+			redirectToUrl: (formId, additionalData = {}) => {
+				this.redirectToUrl(formId, additionalData);
 			},
 			redirectToUrlByReference: (formId, redirectUrl, reload = false) => {
 				this.redirectToUrlByReference(formId, redirectUrl, reload);

@@ -102,7 +102,6 @@ class Filters implements ServiceInterface
 					'successRedirectUrl',
 					'successRedirectVariation',
 					'successRedirectVariationOptions',
-					'successRedirectData',
 					'trackingEventName',
 					'trackingAdditionalData',
 					'dataTypeSelector',
@@ -110,6 +109,7 @@ class Filters implements ServiceInterface
 					'globalMsgHeadings',
 					'additionalContent',
 					'preResponseAddonData',
+					'preResponseSuccessRedirectData',
 				],
 				'formSelector' => [
 					'formTemplates',
@@ -176,6 +176,10 @@ class Filters implements ServiceInterface
 					'theme',
 					'blocksEditor',
 					'blocksFrontend',
+				],
+				'routes' => [
+					'public',
+					'private',
 				],
 			],
 			'geolocation' => [

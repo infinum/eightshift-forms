@@ -20,6 +20,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
@@ -78,6 +79,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	protected function submitAction(array $formDataReference)
 	{
 		$formId = $formDataReference['formId'];
+		$additionaDataOutput = [];
 
 		// Save entries to DB.
 		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
@@ -85,13 +87,19 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		}
 
 		// Pre response filter for addon data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterName)) {
-			$formDataReference['addonData'] = \apply_filters($filterName, $formDataReference['addonData'], $formDataReference);
+		$filterNameAddon = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
+		if (\has_filter($filterNameAddon)) {
+			$additionaDataOutput[UtilsConfig::ROUTE_OUTPUT_ADDON_DATA_KEY] = \apply_filters($filterNameAddon, $formDataReference['addonData'], $formDataReference);
+		}
+
+		// Pre response filter for success redirect data.
+		$filterNameRedirect = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
+		if (\has_filter($filterNameRedirect)) {
+			$additionaDataOutput[UtilsConfig::ROUTE_OUTPUT_SUCCESS_REDIRECT_DATA_KEY] = UtilsEncryption::encryptor(\wp_json_encode(\apply_filters($filterNameRedirect, [], $formDataReference)));
 		}
 
 		return \rest_ensure_response(
-			$this->getFormSubmitMailer()->sendEmails($formDataReference)
+			$this->getFormSubmitMailer()->sendEmails($formDataReference, $additionaDataOutput)
 		);
 	}
 }

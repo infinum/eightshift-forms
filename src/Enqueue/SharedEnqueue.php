@@ -27,6 +27,7 @@ use EightshiftForms\Rest\Routes\SubmitFilesRoute;
 use EightshiftForms\Rest\Routes\SubmitGeolocationRoute;
 use EightshiftForms\Rest\Routes\SubmitValidateStepRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Trait SharedEnqueue
@@ -44,6 +45,9 @@ trait SharedEnqueue
 	{
 		$restPrefixProject = UtilsConfig::ROUTE_NAMESPACE . '/' . UtilsConfig::ROUTE_VERSION;
 
+		$outputPublicFilter = [];
+		$outputPrivateFilter = [];
+
 		$outputPublic = [
 			// Common.
 			'prefix' => \get_rest_url(\get_current_blog_id()) . $restPrefixProject,
@@ -57,6 +61,12 @@ trait SharedEnqueue
 			'geolocation' => SubmitGeolocationRoute::ROUTE_SLUG,
 			'validationStep' => SubmitValidateStepRoute::ROUTE_SLUG,
 		];
+
+		// Public routes filter.
+		$filterName = UtilsHooksHelper::getFilterName(['scripts', 'routes', 'public']);
+		if (\has_filter($filterName)) {
+			$outputPublicFilter = \apply_filters($filterName, []);
+		}
 
 		$outputPrivate = [];
 
@@ -80,10 +90,21 @@ trait SharedEnqueue
 				'formFields' => FormFieldsRoute::ROUTE_SLUG,
 				'countriesGeolocation' => GeolocationCountriesRoute::ROUTE_SLUG,
 			];
+
+			// Private routes filter.
+			$filterName = UtilsHooksHelper::getFilterName(['scripts', 'routes', 'private']);
+			if (\has_filter($filterName)) {
+				$outputPrivateFilter = \apply_filters($filterName, []);
+			}
 		}
 
 		return [
-			'restRoutes' => \array_merge($outputPublic, $outputPrivate),
+			'restRoutes' => \array_merge(
+				$outputPublic,
+				$outputPrivate,
+				$outputPublicFilter,
+				$outputPrivateFilter
+			),
 		];
 	}
 }
