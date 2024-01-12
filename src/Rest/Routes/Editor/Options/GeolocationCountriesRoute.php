@@ -12,14 +12,14 @@ namespace EightshiftForms\Rest\Routes\Editor\Options;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class GeolocationCountriesRoute
  */
-class GeolocationCountriesRoute extends AbstractPluginRoute
+class GeolocationCountriesRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Route slug
@@ -63,20 +63,6 @@ class GeolocationCountriesRoute extends AbstractPluginRoute
 	protected function getMethods(): string
 	{
 		return static::READABLE;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

@@ -25,12 +25,13 @@ use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore Slev
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class AbstractFormSubmit
  */
-abstract class AbstractFormSubmit extends AbstractPluginRoute
+abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -81,20 +82,6 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 	protected const ROUTE_TYPE_FILE = 'file';
 	protected const ROUTE_TYPE_SETTINGS = 'settings';
 	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
 
 	/**
 	 * Method that returns rest response
@@ -328,8 +315,8 @@ abstract class AbstractFormSubmit extends AbstractPluginRoute
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
 
-		error_log( print_r( ( $responseOutput ), true ) );
-		error_log( print_r( ( $labelsOutput ), true ) );
+		// error_log( print_r( ( $responseOutput ), true ) );
+		// error_log( print_r( ( $labelsOutput ), true ) );
 		
 
 		return UtilsApiHelper::getIntegrationApiOutput(

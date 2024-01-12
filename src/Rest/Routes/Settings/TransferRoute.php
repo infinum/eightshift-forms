@@ -10,18 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Transfer\Transfer;
 use EightshiftForms\Transfer\TransferInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class TransferRoute
  */
-class TransferRoute extends AbstractPluginRoute
+class TransferRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -64,20 +64,6 @@ class TransferRoute extends AbstractPluginRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

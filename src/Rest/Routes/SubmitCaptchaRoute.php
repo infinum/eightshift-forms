@@ -14,13 +14,14 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use Throwable;
 use WP_REST_Request;
 
 /**
  * Class SubmitCaptchaRoute
  */
-class SubmitCaptchaRoute extends AbstractPluginRoute
+class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Route slug.
@@ -63,20 +64,6 @@ class SubmitCaptchaRoute extends AbstractPluginRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
  * Class CacheDeleteRoute
  */
-class CacheDeleteRoute extends AbstractPluginRoute
+class CacheDeleteRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -53,20 +53,6 @@ class CacheDeleteRoute extends AbstractPluginRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

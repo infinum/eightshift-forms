@@ -11,15 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class ExportRoute
  */
-class ExportRoute extends AbstractPluginRoute
+class ExportRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Route slug.
@@ -34,30 +34,6 @@ class ExportRoute extends AbstractPluginRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
-	 * Returns allowed methods for this route.
-	 *
-	 * @return string
-	 */
-	protected function getMethods(): string
-	{
-		return static::CREATABLE;
 	}
 
 	/**

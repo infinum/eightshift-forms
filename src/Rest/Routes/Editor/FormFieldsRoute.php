@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
  * Class FormFieldsRoute
  */
-class FormFieldsRoute extends AbstractPluginRoute
+class FormFieldsRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Route slug.
@@ -52,20 +52,6 @@ class FormFieldsRoute extends AbstractPluginRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

@@ -14,6 +14,7 @@ use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Throwable;
 use WP_REST_Request;
@@ -21,7 +22,7 @@ use WP_REST_Request;
 /**
  * Class SubmitGeolocationRoute
  */
-class SubmitGeolocationRoute extends AbstractPluginRoute
+class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Route slug.
@@ -53,20 +54,6 @@ class SubmitGeolocationRoute extends AbstractPluginRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

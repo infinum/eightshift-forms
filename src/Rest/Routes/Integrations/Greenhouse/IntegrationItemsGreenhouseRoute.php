@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Greenhouse;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsGreenhouseRoute
  */
-class IntegrationItemsGreenhouseRoute extends AbstractPluginRoute
+class IntegrationItemsGreenhouseRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable for Greenhouse data.
@@ -52,20 +52,6 @@ class IntegrationItemsGreenhouseRoute extends AbstractPluginRoute
 	public function __construct(ClientInterface $greenhouseClient)
 	{
 		$this->greenhouseClient = $greenhouseClient;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

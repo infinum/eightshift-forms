@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailerlite;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsMailerliteRoute
  */
-class IntegrationItemsMailerliteRoute extends AbstractPluginRoute
+class IntegrationItemsMailerliteRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable for Mailerlite data.
@@ -52,20 +52,6 @@ class IntegrationItemsMailerliteRoute extends AbstractPluginRoute
 	public function __construct(ClientInterface $mailerliteClient)
 	{
 		$this->mailerliteClient = $mailerliteClient;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

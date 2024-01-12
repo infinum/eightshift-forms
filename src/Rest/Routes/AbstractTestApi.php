@@ -12,12 +12,13 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class AbstractTestApi
  */
-abstract class AbstractTestApi extends AbstractPluginRoute
+abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Dynamic name route prefix for test api.
@@ -25,20 +26,6 @@ abstract class AbstractTestApi extends AbstractPluginRoute
 	 * @var string
 	 */
 	public const ROUTE_PREFIX_TEST_API = 'test-api';
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
 
 	/**
 	 * Method that returns rest response

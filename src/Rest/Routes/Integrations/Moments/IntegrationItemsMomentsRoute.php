@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsMomentsRoute
  */
-class IntegrationItemsMomentsRoute extends AbstractPluginRoute
+class IntegrationItemsMomentsRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable for Moments data.
@@ -52,20 +52,6 @@ class IntegrationItemsMomentsRoute extends AbstractPluginRoute
 	public function __construct(ClientInterface $momentsClient)
 	{
 		$this->momentsClient = $momentsClient;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**

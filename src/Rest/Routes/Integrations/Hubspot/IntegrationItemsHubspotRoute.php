@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Rest\Routes\AbstractPluginRoute;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsHubspotRoute
  */
-class IntegrationItemsHubspotRoute extends AbstractPluginRoute
+class IntegrationItemsHubspotRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable for Hubspot data.
@@ -52,20 +52,6 @@ class IntegrationItemsHubspotRoute extends AbstractPluginRoute
 	public function __construct(HubspotClientInterface $hubspotClient)
 	{
 		$this->hubspotClient = $hubspotClient;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**
