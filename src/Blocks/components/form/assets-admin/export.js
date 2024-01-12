@@ -1,5 +1,3 @@
-import { ROUTES } from "../assets/state";
-
 export class Export {
 	constructor(options = {}) {
 		/** @type {import('../assets/utils').Utils} */
@@ -51,7 +49,7 @@ export class Export {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl(ROUTES.EXPORT), body)
+		fetch(this.state.getRestUrl('export'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'bulk', null);
 				return response.json();

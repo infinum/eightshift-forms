@@ -1,7 +1,6 @@
 /* global grecaptcha */
 
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import { ROUTES } from './state';
 import selectManifest from './../../select/manifest.json';
 import {
 	StateEnum,
@@ -10,7 +9,7 @@ import {
 	setStateWindow,
 	removeStateForm,
 	setStateConditionalTagsItems,
-} from './state/init';
+} from './state-init';
 
 /**
  * Main Forms class.
@@ -119,7 +118,7 @@ export class Form {
 		};
 
 		// Get geolocation data from ajax to detect what we will remove from DOM.
-		fetch(this.state.getRestUrl(ROUTES.GEOLOCATION), body)
+		fetch(this.state.getRestUrl('geolocation'), body)
 		.then((response) => {
 			this.utils.formSubmitErrorContentType(response, 'geolocation', null);
 			return response.json();
@@ -275,11 +274,11 @@ export class Form {
 		};
 
 		// Url for frontend forms.
-		let url = this.state.getRestUrlByType(ROUTES.PREFIX_SUBMIT, formType);
+		let url = this.state.getRestUrlByType('prefixSubmit', formType);
 
 		// For admin settings use different url and add nonce.
 		if (this.state.getStateConfigIsAdmin()) {
-			url = this.state.getRestUrl(ROUTES.SETTINGS);
+			url = this.state.getRestUrl('settings');
 			body.headers['X-WP-Nonce'] = this.state.getStateConfigNonce();
 		}
 
@@ -329,7 +328,7 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		const url = this.state.getRestUrl(ROUTES.VALIDATION_STEP);
+		const url = this.state.getRestUrl('validationStep');
 
 		fetch(url, body)
 			.then((response) => {
@@ -1236,7 +1235,7 @@ export class Form {
 			const dropzone = new Dropzone.default(
 				field,
 				{
-					url: this.state.getRestUrl(ROUTES.FILES),
+					url: this.state.getRestUrl('files'),
 					addRemoveLinks: true,
 					autoDiscover: false,
 					parallelUploads: 1,

@@ -20,7 +20,7 @@ import {
 	getUnique,
 } from '@eightshift/frontend-libs/scripts';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
-import { ROUTES, getRestUrl, getRestUrlByType } from '../form/assets/state';
+import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -59,7 +59,7 @@ export const isOptionDisabled = (key, options) => {
  */
 export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId = '') => {
 	apiFetch({
-		path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATION_EDITOR, ROUTES.INTEGRATIONS_EDITOR_CREATE, true)}?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}`,
+		path: `${getRestUrlByType('prefixIntegrationEditor', 'integrationsEditorCreate', true, true)}?id=${postId}&type=${type}&itemId=${itemId}&innerId=${innerId}`,
 	}).then((response) => {
 		resetInnerBlocks(clientId);
 
@@ -83,7 +83,7 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
  */
 export const syncIntegrationBlocks = (clientId, postId) => {
 	return apiFetch({
-		path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATION_EDITOR, ROUTES.INTEGRATIONS_EDITOR_SYNC, true)}?id=${postId}`,
+		path: `${getRestUrlByType('prefixIntegrationEditor', 'integrationsEditorSync', true, true)}?id=${postId}`,
 	}).then((response) => {
 		if (isDeveloperMode()) {
 			console.log(response);
@@ -136,7 +136,7 @@ export const syncIntegrationBlocks = (clientId, postId) => {
  */
 export const clearTransientCache = (type) => {
 	return apiFetch({
-		path: getRestUrl(ROUTES.CACHE_CLEAR, true),
+		path: getRestUrl('cacheClear', true),
 		method: 'POST',
 		data: { type },
 	}).then((response) => {

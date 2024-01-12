@@ -90,6 +90,30 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
+	 * Method that returns assets name used to prefix asset handlers.
+	 *
+	 * @return string
+	 */
+	public function getAssetsPrefix(): string
+	{
+		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
+	}
+
+	/**
+	 * Method that returns assets version for versioning asset handlers.
+	 *
+	 * @return string
+	 */
+	public function getAssetsVersion(): string
+	{
+		return UtilsGeneralHelper::getProjectVersion();
+	}
+
+	// -----------------------------------------------------
+	// Block Editor only
+	// -----------------------------------------------------
+
+	/**
 	 * Enqueue blocks style for editor only.
 	 *
 	 * @param string $hook Hook name.
@@ -112,6 +136,84 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
+	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Editor.
+	 *
+	 * @param string $hook Hook name.
+	 *
+	 * @return void
+	 */
+	public function enqueueBlockEditorScript(string $hook): void
+	{
+		// If not admin exit.
+		if (!\is_admin()) {
+			return;
+		}
+
+		parent::enqueueBlockEditorScript($hook);
+
+		$output = $this->getEnqueueSharedInlineCommonItems(false);
+
+		$additionalBlocksFilterName = UtilsHooksHelper::getFilterName(['blocks', 'additionalBlocks']);
+		$formsStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'styleOptions']);
+		$fieldStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleOptions']);
+		$breakpointsFilterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
+		$formSelectorTemplatesFilterName = UtilsHooksHelper::getFilterName(['block', 'formSelector', 'formTemplates']);
+
+		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
+		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
+		$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
+		$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
+		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
+		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
+		$output['postType'] = \get_post_type() ? \get_post_type() : '';
+
+		$output['settings'] = [
+			'successRedirectVariations' => FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue()['data'],
+		];
+
+		$output['use'] = [
+			'activeIntegrations' => UtilsIntegrationsHelper::getActiveIntegrations(),
+			'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
+		];
+
+		$output['wpAdminUrl'] = \get_admin_url();
+		$output['nonce'] = \wp_create_nonce('wp_rest');
+		$output['isDeveloperMode'] = UtilsDeveloperHelper::isDeveloperModeActive();
+		$output['isAdmin'] = true;
+
+		$output = \wp_json_encode($output);
+
+		\wp_add_inline_script($this->getBlockEditorScriptsHandle(), "const esFormsLocalization = {$output}", 'before');
+	}
+
+	/**
+	 * List of admin script dependencies
+	 *
+	 * @return string[] List of all the admin dependencies.
+	 */
+	protected function getAdminScriptDependencies(): array
+	{
+		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'blocksEditor']);
+		$scriptsDependencyOutput = [];
+
+		if (\has_filter($scriptsDependency)) {
+			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+		}
+
+		return \array_merge(
+			parent::getAdminScriptDependencies(),
+			[
+				'lodash',
+			],
+			$scriptsDependencyOutput
+		);
+	}
+
+	// -----------------------------------------------------
+	// Block Frontend Mandatory only
+	// -----------------------------------------------------
+
+	/**
 	 * Method that returns editor and frontend style with check.
 	 *
 	 * @return void
@@ -131,6 +233,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\wp_enqueue_style($handle);
 	}
 
+	// -----------------------------------------------------
+	// Block Frontend only
+	// -----------------------------------------------------
+
 	/**
 	 * Method that returns editor and frontend style with check.
 	 *
@@ -145,50 +251,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		}
 
 		$this->enqueueBlockFrontendStyle($hook);
-	}
-
-	/**
-	 * Method that returns assets name used to prefix asset handlers.
-	 *
-	 * @return string
-	 */
-	public function getAssetsPrefix(): string
-	{
-		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
-	}
-
-	/**
-	 * Method that returns assets version for versioning asset handlers.
-	 *
-	 * @return string
-	 */
-	public function getAssetsVersion(): string
-	{
-		return UtilsGeneralHelper::getProjectVersion();
-	}
-
-	/**
-	 * Get frontend script dependencies.
-	 *
-	 * @return array<int, string> List of all the script dependencies.
-	 */
-	protected function getFrontendScriptDependencies(): array
-	{
-		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return [];
-		}
-
-		$scriptsDependency = UtilsHooksHelper::getFilterName(['general', 'scriptsDependency']);
-		$scriptsDependencyOutput = [];
-
-		if (\has_filter($scriptsDependency)) {
-			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
-		}
-
-		return [
-			"{$this->getAssetsPrefix()}-" . EnqueueTheme::CAPTCHA_ENQUEUE_HANDLE,
-			...$scriptsDependencyOutput,
-		];
 	}
 
 	/**
@@ -281,68 +343,26 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
-	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Editor.
+	 * Get frontend script dependencies.
 	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return void
+	 * @return array<int, string> List of all the script dependencies.
 	 */
-	public function enqueueBlockEditorScript(string $hook): void
+	protected function getFrontendScriptDependencies(): array
 	{
-		// If not admin exit.
-		if (!\is_admin()) {
-			return;
+		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return [];
 		}
 
-		parent::enqueueBlockEditorScript($hook);
+		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'blocksFrontend']);
+		$scriptsDependencyOutput = [];
 
-		$output = $this->getEnqueueSharedInlineCommonItems(false);
+		if (\has_filter($scriptsDependency)) {
+			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+		}
 
-		$additionalBlocksFilterName = UtilsHooksHelper::getFilterName(['blocks', 'additionalBlocks']);
-		$formsStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'styleOptions']);
-		$fieldStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleOptions']);
-		$breakpointsFilterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
-		$formSelectorTemplatesFilterName = UtilsHooksHelper::getFilterName(['block', 'formSelector', 'formTemplates']);
-
-		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
-		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
-		$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
-		$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
-		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
-		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
-		$output['postType'] = \get_post_type() ? \get_post_type() : '';
-
-		$output['settings'] = [
-			'successRedirectVariations' => FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue()['data'],
+		return [
+			"{$this->getAssetsPrefix()}-" . EnqueueTheme::CAPTCHA_ENQUEUE_HANDLE,
+			...$scriptsDependencyOutput,
 		];
-
-		$output['use'] = [
-			'activeIntegrations' => UtilsIntegrationsHelper::getActiveIntegrations(),
-			'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
-		];
-
-		$output['wpAdminUrl'] = \get_admin_url();
-		$output['nonce'] = \wp_create_nonce('wp_rest');
-		$output['isDeveloperMode'] = UtilsDeveloperHelper::isDeveloperModeActive();
-		$output['isAdmin'] = true;
-
-		$output = \wp_json_encode($output);
-
-		\wp_add_inline_script($this->getBlockEditorScriptsHandle(), "const esFormsLocalization = {$output}", 'before');
-	}
-
-	/**
-	 * List of admin script dependencies
-	 *
-	 * @return string[] List of all the admin dependencies.
-	 */
-	protected function getAdminScriptDependencies(): array
-	{
-		return \array_merge(
-			parent::getAdminScriptDependencies(),
-			[
-				'lodash',
-			]
-		);
 	}
 }

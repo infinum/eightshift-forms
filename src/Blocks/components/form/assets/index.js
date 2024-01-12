@@ -1,7 +1,7 @@
 /* global esFormsLocalization */
 
 import domReady from '@wordpress/dom-ready';
-import { setStateInitial } from './state/init';
+import { setStateInitial } from './state-init';
 import { Utils } from './utils';
 
 // Global variable must be set for everything to work.

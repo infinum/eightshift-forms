@@ -84,12 +84,11 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
 
+		// Pre response filter for addon data.
 		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
 		if (\has_filter($filterName)) {
 			$formDataReference['addonData'] = \apply_filters($filterName, $formDataReference['addonData'], $formDataReference);
 		}
-
-		error_log( print_r( ( $formDataReference['addonData'] ), true ) );
 
 		return \rest_ensure_response(
 			$this->getFormSubmitMailer()->sendEmails($formDataReference)

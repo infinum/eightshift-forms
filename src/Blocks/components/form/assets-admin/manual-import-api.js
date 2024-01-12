@@ -1,5 +1,3 @@
-import { ROUTES } from "../assets/state";
-
 export class ManualImportApi {
 	constructor(options = {}) {
 		/** @type {import('./../assets/utils').Utils} */
@@ -131,7 +129,7 @@ export class ManualImportApi {
 					referrer: 'no-referrer',
 				};
 
-				fetch(this.state.getRestUrlByType(ROUTES.PREFIX_SUBMIT, item.type), body)
+				fetch(this.state.getRestUrlByType('prefixSubmit', item.type), body)
 					.then((response) => {
 						this.utils.formSubmitErrorContentType(response, 'manualImport', formId);
 						return response.json();

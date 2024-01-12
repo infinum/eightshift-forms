@@ -1,4 +1,4 @@
-import { prefix, setStateWindow } from './state/init';
+import { prefix, setStateWindow } from './state-init';
 
 /**
  * Main step class.

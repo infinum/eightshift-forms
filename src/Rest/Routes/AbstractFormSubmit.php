@@ -315,10 +315,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
 		}
 
-		// error_log( print_r( ( $responseOutput ), true ) );
-		// error_log( print_r( ( $labelsOutput ), true ) );
-		
-
 		return UtilsApiHelper::getIntegrationApiOutput(
 			$responseOutput,
 			$labelsOutput,

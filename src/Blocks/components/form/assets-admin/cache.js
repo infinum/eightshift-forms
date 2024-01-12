@@ -1,5 +1,3 @@
-import { ROUTES } from "../assets/state";
-
 export class Cache {
 	constructor(options = {}) {
 		/** @type {import('./../assets/utils').Utils} */
@@ -42,7 +40,7 @@ export class Cache {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl(ROUTES.CACHE_CLEAR), body)
+		fetch(this.state.getRestUrl('cacheClear'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'cache', formId);
 				return response.json();

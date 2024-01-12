@@ -1,8 +1,8 @@
 /* global esFormsLocalization */
 
-import globalManifest from './../../../../manifest.json';
-import utilsManifest from './../../../../../../vendor/infinum/eightshift-forms-utils/src/manifest.json';
-import { CONDITIONAL_TAGS_ACTIONS } from '../../../conditional-tags/assets/utils';
+import globalManifest from '../../../manifest.json';
+import utilsManifest from '../../../../../vendor/infinum/eightshift-forms-utils/src/manifest.json';
+import { CONDITIONAL_TAGS_ACTIONS } from '../../conditional-tags/assets/utils';
 
 ////////////////////////////////////////////////////////////////
 // Constants
@@ -126,6 +126,7 @@ export const StateEnum = {
 	STEPS_PROGRESS_BAR: 'progressBar',
 	STEPS_ELEMENTS_PROGRESS_BAR: 'elementsProgressBar',
 
+	ROUTES: 'routes',
 	ATTRIBUTES: 'attributes',
 	PARAMS: 'params',
 	FIELD_TYPE: 'fieldType',
@@ -133,6 +134,12 @@ export const StateEnum = {
 	SELECTORS: 'selectors',
 	SELECTORS_ADMIN: 'selectorsAdmin',
 };
+
+/**
+ * Routes enum connected to enqueu object.
+ * Used as a constant to be able to be reused on block editor because we don't have this state there.
+ */
+export const ROUTES = esFormsLocalization?.restRoutes ?? {};
 
 ////////////////////////////////////////////////////////////////
 // Initial states.
@@ -176,6 +183,7 @@ export function setStateInitial() {
 		[StateEnum.PARAMS]: {},
 		[StateEnum.FIELD_TYPE]: {},
 		[StateEnum.CONFIG]: {},
+		[StateEnum.ROUTES]: {},
 	};
 
 	// Selectors.
@@ -206,6 +214,11 @@ export function setStateInitial() {
 	// Type Int.
 	for (const [key, item] of Object.entries(globalManifest.enums.typeInternal ?? {})) {
 		setState([key], item, StateEnum.FIELD_TYPE);
+	}
+
+	// Routes.
+	for (const [key, item] of Object.entries(ROUTES)) {
+		setState([key], item, StateEnum.ROUTES);
 	}
 
 	// Config.
@@ -993,6 +1006,17 @@ export function getStateEvent(name) {
 }
 
 /**
+ * Get state route name.
+ *
+ * @param {string} name Name key to get.
+ *
+ * @returns {string}
+ */
+export function getStateRoute(name) {
+	return getStateTop(StateEnum.ROUTES)[name];
+}
+
+/**
  * Get state selector.
  * 
  * @param {string} name Name key to get.
@@ -1041,4 +1065,43 @@ export function getStateFieldType(name) {
  */
 export function getStateParam(name) {
 	return getStateTop(StateEnum.PARAMS)[name];
+}
+
+/**
+ * Get rest api url link.
+ *
+ * @param {string} value Value to get
+ * @param {bool} isPartial Is relative or absolute url.
+ *
+ * @returns {string}
+ */
+export function getRestUrl(value, isPartial = false) {
+	const prefix = isPartial ? ROUTES?.prefixProject : ROUTES?.prefix;
+
+	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
+	const sufix = ROUTES?.[value].replace(/^\/+/, ''); // Remove leading slash.
+
+	return `${url}/${sufix}`;
+}
+
+/**
+ * Get rest api url link with integration prefix.
+ *
+ * @param {string} type Integration type.
+ * @param {string} value Value to get
+ * @param {bool} isPartial Is relative or absolute url.
+ * @param {bool} checkRef Check if value is reference.
+ *
+ * @returns {string}
+ */
+export function getRestUrlByType(type, value, isPartial = false, checkRef = false) {
+	const prefix = isPartial ? ROUTES?.prefixProject : ROUTES?.prefix;
+
+	const newVal = checkRef ? ROUTES?.[value] : value;
+
+	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
+	const sufix = newVal.replace(/^\/+/, ''); // Remove leading slash.
+	const typePrefix = ROUTES?.[type].replace(/^\/|\/$/g, ''); // Remove leading and trailing slash.
+
+	return `${url}/${typePrefix}/${sufix}`;
 }

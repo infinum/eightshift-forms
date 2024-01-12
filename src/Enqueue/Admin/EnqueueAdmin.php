@@ -13,6 +13,7 @@ namespace EightshiftForms\Enqueue\Admin;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
@@ -97,5 +98,22 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 		$output = \wp_json_encode($output);
 		\wp_add_inline_script($this->getAdminScriptHandle(), "const esFormsLocalization = {$output}", 'before');
+	}
+
+	/**
+	 * Get admin script dependencies.
+	 *
+	 * @return array<int, string> List of all the script dependencies.
+	 */
+	protected function getAdminScriptDependencies(): array
+	{
+		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'admin']);
+		$scriptsDependencyOutput = [];
+
+		if (\has_filter($scriptsDependency)) {
+			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+		}
+
+		return $scriptsDependencyOutput;
 	}
 }

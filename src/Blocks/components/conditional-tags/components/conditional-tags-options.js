@@ -22,7 +22,7 @@ import {
 	CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS,
 	CONDITIONAL_TAGS_OPERATORS_LABELS,
 } from './conditional-tags-labels';
-import { ROUTES, getRestUrl } from '../../form/assets/state';
+import { getRestUrl } from '../../form/assets/state-init';
 
 export const ConditionalTagsOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('conditional-tags');
@@ -38,7 +38,7 @@ export const ConditionalTagsOptions = (attributes) => {
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
-		apiFetch({ path: `${getRestUrl(ROUTES.FORM_FIELDS, true)}?id=${postId}` }).then((response) => {
+		apiFetch({ path: `${getRestUrl('formFields', true)}?id=${postId}` }).then((response) => {
 			if (response.code === 200 && response.data) {
 				setFormFields(response.data.fields);
 			}

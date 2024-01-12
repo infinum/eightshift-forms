@@ -14,7 +14,7 @@ import {
 	SettingsButton,
 	LocationsButton,
 } from '../../utils';
-import { getRestUrlByType, ROUTES } from '../../form/assets/state';
+import { getRestUrlByType } from '../../form/assets/state-init';
 import { FORMS_STORE_NAME } from './../../../assets/scripts/store';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
 
@@ -47,7 +47,7 @@ export const IntegrationsOptions = ({
 
 	useEffect(() => {
 		apiFetch({
-			path: getRestUrlByType(ROUTES.PREFIX_INTEGRATIONS_ITEMS, block, true),
+			path: getRestUrlByType('prefixIntegrationItems', block, true),
 		}).then((response) => {
 			if (response.code === 200) {
 				setFormItems(response.data);
@@ -56,7 +56,7 @@ export const IntegrationsOptions = ({
 
 		if (innerIdKey && itemId) {
 			apiFetch({
-				path: `${getRestUrlByType(ROUTES.PREFIX_INTEGRATIONS_ITEMS_INNER, block, true)}?id=${itemId}`,
+				path: `${getRestUrlByType('prefixIntegrationItemsInner', block, true)}?id=${itemId}`,
 			}).then((response) => {
 				if (response.code === 200) {
 					setFormInnerItems(response.data);

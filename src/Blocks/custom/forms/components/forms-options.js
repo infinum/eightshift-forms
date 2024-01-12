@@ -31,7 +31,7 @@ import { FormEditButton,
 	getSettingsJsonOptions,
 	outputFormSelectItemWithIcon,
 } from '../../../components/utils';
-import { ROUTES, getRestUrl } from '../../../components/form/assets/state';
+import { getRestUrl } from '../../../components/form/assets/state-init';
 
 export const FormsOptions = ({
 	attributes,
@@ -68,7 +68,7 @@ export const FormsOptions = ({
 
 	useEffect(() => {
 		apiFetch({
-			path: getRestUrl(ROUTES.COUNTRIES_GEOLOCATION, true),
+			path: getRestUrl('countriesGeolocation', true),
 		}).then((response) => {
 			if (response.code === 200) {
 				setGeoFormFields(response.data);
@@ -89,7 +89,7 @@ export const FormsOptions = ({
 	if (typeof esFormsLocalization !== 'undefined' && esFormsLocalization?.use?.geolocation) {
 		formsUseGeolocation = true;
 
-		geolocationApi = getRestUrl(ROUTES.COUNTRIES_GEOLOCATION);
+		geolocationApi = getRestUrl('countriesGeolocation');
 	}
 
 	return (

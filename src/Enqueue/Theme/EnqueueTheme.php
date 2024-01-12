@@ -89,7 +89,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			return [];
 		}
 
-		$scriptsDependency = UtilsHooksHelper::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'theme']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -98,7 +98,6 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		return $scriptsDependencyOutput;
 	}
-
 
 	/**
 	 * Method that returns frontend script for captcha if settings are correct.

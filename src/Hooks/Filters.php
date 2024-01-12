@@ -169,7 +169,14 @@ class Filters implements ServiceInterface
 			'general' => [
 				'httpRequestTimeout',
 				'locale',
-				'scriptsDependency',
+			],
+			'scripts' => [
+				'dependency' => [
+					'admin',
+					'theme',
+					'blocksEditor',
+					'blocksFrontend',
+				],
 			],
 			'geolocation' => [
 				'countriesList',

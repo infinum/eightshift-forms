@@ -12,7 +12,7 @@ import { StateEnum,
 	setStateValuesCheckbox,
 	setStateValuesPhoneSelect,
 	setStateValuesCountry,
-} from './state/init';
+} from './state-init';
 import { Steps } from './step';
 
 /**
