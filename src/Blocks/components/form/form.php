@@ -111,6 +111,11 @@ if ($formType) {
 	$formAttrs[UtilsHelper::getStateAttribute('formType')] = esc_html($formType);
 }
 
+$filterNameAdditionalParam = UtilsHooksHelper::getFilterName(['block', 'form', 'additionalParam']);
+if (has_filter($filterNameAdditionalParam)) {
+	$formAttrs[UtilsHelper::getStateAttribute('formAdditionalParam')] = wp_json_encode(apply_filters($filterNameAdditionalParam, [], $formPostId));
+}
+
 if ($formConditionalTags) {
 	// Extract just the field name from the given data, if needed.
 	$rawConditionalTagData = $formConditionalTags;

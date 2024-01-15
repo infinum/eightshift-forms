@@ -110,6 +110,7 @@ class Filters implements ServiceInterface
 					'additionalContent',
 					'preResponseAddonData',
 					'preResponseSuccessRedirectData',
+					'additionalParam',
 				],
 				'formSelector' => [
 					'formTemplates',

@@ -56,6 +56,7 @@ export const StateEnum = {
 	IS_USED_PREFILL: 'isUsedPrefill',
 	IS_USED_PREFILL_URL: 'isUsedPrefillUrl',
 	NONCE: 'nonce',
+	ADDITIONAL_PARAM: 'additionalParam',
 
 	// Conditional tags
 	CONDITIONAL_TAGS: 'conditionalTags',
@@ -323,6 +324,7 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.LOADER], formElement?.querySelector(getStateSelector('loader', true)), formId);
 	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_NAME], formElement?.getAttribute(getStateAttribute('trackingEventName')), formId);
 	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_ADDITIONAL_DATA], JSON.parse(formElement?.getAttribute(getStateAttribute('trackingAdditionalData')) ?? '{}'), formId);
+	setState([StateEnum.FORM, StateEnum.ADDITIONAL_PARAM], JSON.parse(formElement?.getAttribute(getStateAttribute('formAdditionalParam')) ?? '{}'), formId);
 
 	// Form settings
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement?.getAttribute(getStateAttribute('phoneDisablePicker'))), formId);
