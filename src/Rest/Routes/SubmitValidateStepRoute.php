@@ -17,6 +17,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
  * Class SubmitValidateStepRoute
@@ -87,7 +88,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		$currentStep = $formDetails[UtilsConfig::FD_API_STEPS]['current'] ?? '';
 		if (!$currentStep) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -98,7 +99,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		$submittedNames = $formDetails[UtilsConfig::FD_API_STEPS]['fields'] ?? [];
 		if (!$submittedNames) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -109,7 +110,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		$steps = $formDetails[UtilsConfig::FD_STEPS_SETUP]['steps'] ?? [];
 		if (!$steps) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -130,7 +131,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 
 			if (!$params) {
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorOutput(
+					UtilsApiHelper::getApiErrorPublicOutput(
 						\esc_html__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
 						[],
 						$debug
@@ -170,13 +171,13 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		}
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
 				[
-					'type' => $type,
-					'nextStep' => $nextStep,
-					'progressBarItems' => $progressBarItems,
-					'disableNextButton' => $disableNextButton,
+					UtilsHelper::getStateResponseOutputKey('stepType') => $type,
+					UtilsHelper::getStateResponseOutputKey('stepNextStep') => $nextStep,
+					UtilsHelper::getStateResponseOutputKey('stepProgressBarItems') => $progressBarItems,
+					UtilsHelper::getStateResponseOutputKey('stepIsDisableNextButton') => $disableNextButton,
 				],
 				$debug
 			)

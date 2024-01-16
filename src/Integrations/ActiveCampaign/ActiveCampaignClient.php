@@ -15,6 +15,7 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -161,14 +162,14 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationApiSuccessOutput(
+			return UtilsApiHelper::getIntegrationSuccessOutput(
 				$details,
 				[
 					'contactId' => $body['contact']['id'],
@@ -190,7 +191,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg([
 				[
@@ -245,18 +246,18 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			$requestBody
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationSuccessOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -299,18 +300,18 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			$url
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationSuccessOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -325,8 +326,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getExistingTagId(string $tag): string
 	{
-		$requestBody = [];
-
 		$url = "{$this->getBaseUrl()}tags";
 
 		// Make api request to check if tag exists.
@@ -344,8 +343,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			$url
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
@@ -365,7 +364,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		UtilsApiHelper::getIntegrationApiErrorOutput(
+		UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -409,8 +408,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			$requestBody
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
@@ -420,7 +419,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		UtilsApiHelper::getIntegrationApiErrorOutput(
+		UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 		);
@@ -504,7 +503,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			$url
 		);
 
-		$body = $details['body'];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
@@ -583,7 +582,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		$details = $this->getTestApi();
 
-		$body = $details['body'];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 

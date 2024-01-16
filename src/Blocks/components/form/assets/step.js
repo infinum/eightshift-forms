@@ -55,7 +55,7 @@ export class Steps {
 		} = response;
 
 		if (status === 'success') {
-			this.goToNextStep(formId, data?.nextStep, parseInt(data?.progressBarItems, 10), Boolean(data?.disableNextButton));
+			this.goToNextStep(formId, data?.[this.state.getStateResponseOutputKey('stepNextStep')], parseInt(data?.[this.state.getStateResponseOutputKey('stepProgressBarItems')], 10), Boolean(data?.[this.state.getStateResponseOutputKey('stepIsDisableNextButton')]));
 		} else {
 			const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 

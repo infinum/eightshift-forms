@@ -82,7 +82,7 @@ class GeolocationCountriesRoute extends AbstractUtilsBaseRoute
 
 		try {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessOutput(
+				UtilsApiHelper::getApiSuccessPublicOutput(
 					\esc_html__('Success.', 'eightshift-forms'),
 					$this->geolocation->getCountriesList(),
 					$debug
@@ -91,7 +91,7 @@ class GeolocationCountriesRoute extends AbstractUtilsBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$e->getMessage(),
 					\array_merge(
 						$debug,

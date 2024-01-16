@@ -84,7 +84,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If form action is not set or empty.
 		if (!$action) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$this->labels->getLabel('customNoAction', $formId),
 					[],
 					$debug
@@ -94,7 +94,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 
 		if ($actionExternal) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessOutput(
+				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					[
 						'processExternaly' => true,
@@ -123,7 +123,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If custom action request fails we'll return the generic error message.
 		if (!$customResponseCode || $customResponseCode > 399) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$this->labels->getLabel('customError', $formId),
 					[],
 					$debug
@@ -133,7 +133,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				$this->labels->getLabel('customSuccess', $formId),
 				[],
 				$debug

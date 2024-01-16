@@ -208,18 +208,18 @@ class GreenhouseClient implements ClientInterface
 			true
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationSuccessOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -318,8 +318,8 @@ class GreenhouseClient implements ClientInterface
 	{
 		$details = $this->getTestApi();
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
@@ -356,8 +356,8 @@ class GreenhouseClient implements ClientInterface
 			$url,
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 

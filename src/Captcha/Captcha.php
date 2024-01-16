@@ -57,7 +57,7 @@ class Captcha implements CaptchaInterface
 		];
 
 		if (!$token) {
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaBadRequest'),
 				[],
 				$debug
@@ -72,7 +72,7 @@ class Captcha implements CaptchaInterface
 
 		// Generic error msg from WP.
 		if (\is_wp_error($response)) {
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('submitWpError'),
 				[],
 				$debug
@@ -83,7 +83,7 @@ class Captcha implements CaptchaInterface
 		try {
 			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		} catch (Throwable $t) {
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaBadRequest'),
 				[],
 				$debug
@@ -172,7 +172,7 @@ class Captcha implements CaptchaInterface
 		// If error status returns error.
 		if ($error) {
 			// Bailout on error.
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$error['message'] ?? '',
 				[
 					'response' => $responseBody,
@@ -208,7 +208,7 @@ class Captcha implements CaptchaInterface
 			$errorCode = $responseBody['error-codes'][0] ?? '';
 
 			// Bailout on error.
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel("captcha" . \ucfirst(Components::kebabToCamelCase($errorCode))),
 				[
 					'response' => $responseBody,
@@ -241,7 +241,7 @@ class Captcha implements CaptchaInterface
 
 		// Bailout if action is not correct.
 		if ($actionResponse !== $action) {
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaWrongAction'),
 				[
 					'response' => $responseBody,
@@ -254,7 +254,7 @@ class Captcha implements CaptchaInterface
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
 					'response' => $responseBody,
@@ -263,7 +263,7 @@ class Captcha implements CaptchaInterface
 			);
 		}
 
-		return UtilsApiHelper::getApiSuccessOutput(
+		return UtilsApiHelper::getApiSuccessPublicOutput(
 			'',
 			[
 				'response' => $responseBody,

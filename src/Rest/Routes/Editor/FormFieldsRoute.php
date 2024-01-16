@@ -90,7 +90,7 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 
 		if (!$formId) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Form Id was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -110,7 +110,7 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 
 		if (!$fieldsOnly) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
 					[],
 					$debug
@@ -123,7 +123,7 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 		$steps = $data['stepsSetup'] ?? [];
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success.', 'eightshift-forms'),
 				[
 					'fields' => \array_values($fieldsOutput),

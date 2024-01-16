@@ -66,7 +66,7 @@ abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 
 			if ($code >= 200 && $code <= 299) {
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiSuccessOutput(
+					UtilsApiHelper::getApiSuccessPublicOutput(
 						\esc_html__('The API test was successful.', 'eightshift-forms'),
 						$additionalOutput,
 						$debug
@@ -75,7 +75,7 @@ abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 			}
 
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
 					$additionalOutput,
 					$debug
@@ -84,7 +84,7 @@ abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$e->getMessage(),
 					[],
 					\array_merge(

@@ -18,8 +18,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
 /**
  * Class SettingsSubmitRoute
@@ -89,15 +88,8 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 		$params = $formDetails[UtilsConfig::FD_PARAMS];
 
-		// Remove unnecessary internal params before continue.
-		$customFields = \array_flip(Components::flattenArray(UtilsHelper::getStateParams()));
-
-		// Remove unnecessary params.
-		foreach ($params as $key => $value) {
-			if (isset($customFields[$key])) {
-				unset($params[$key]);
-			}
-		}
+		// Remove unecesery params.
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		// If form ID is not set this is considered an global setting.
 		// Save all fields in the settings.
@@ -120,7 +112,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Changes saved!', 'eightshift-forms'),
 				[],
 				$debug

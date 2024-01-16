@@ -54,11 +54,10 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * Send emails method.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param array<string, mixed> $additionalData Additonal data to pass.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDetails, $additionalData = []): array
+	public function sendEmails(array $formDetails): array
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 		$params = $formDetails[UtilsConfig::FD_PARAMS];
@@ -74,9 +73,9 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
-				$additionalData,
+				[],
 				$debug
 			);
 		}
@@ -94,9 +93,9 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// If email fails.
 		if (!$response) {
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('mailerErrorEmailSend', $formId),
-				$additionalData,
+				[],
 				$debug
 			);
 		}
@@ -104,9 +103,9 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$this->sendConfirmationEmail($formId, $params, $files);
 
 		// Finish.
-		return UtilsApiHelper::getApiSuccessOutput(
+		return UtilsApiHelper::getApiSuccessPublicOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
-			$additionalData,
+			[],
 			$debug
 		);
 	}
@@ -114,13 +113,13 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	/**
 	 * Send fallback email.
 	 *
-	 * @param array<mixed> $response Response data to extract data from.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function sendFallbackEmail(array $response): bool
+	public function sendfallbackIntegrationEmail(array $formDetails): bool
 	{
-		return $this->mailer->fallbackEmail($response);
+		return $this->mailer->fallbackIntegrationEmail($formDetails);
 	}
 
 	/**

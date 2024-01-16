@@ -97,7 +97,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			$formId
 		);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $params;
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		$contactId = $response['contactId'] ?? '';
 
@@ -136,11 +136,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction(
-				$response,
-				$formDetails,
-				$formId,
-			)
+			$this->getIntegrationCommonSubmitAction($formDetails)
 		);
 	}
 }

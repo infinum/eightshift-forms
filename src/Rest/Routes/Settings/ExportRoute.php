@@ -62,7 +62,7 @@ class ExportRoute extends AbstractUtilsBaseRoute
 
 		if (!$ids) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('There are no selected entries.', 'eightshift-forms'),
 					[],
 					$debug
@@ -73,7 +73,7 @@ class ExportRoute extends AbstractUtilsBaseRoute
 		$formId = $params['formId'] ?? '';
 		if (!$formId) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('Form Id type is missing.', 'eightshift-forms'),
 					[],
 					$debug
@@ -115,7 +115,7 @@ class ExportRoute extends AbstractUtilsBaseRoute
 
 		if (!$output) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('Data for export is empty.', 'eightshift-forms'),
 					[],
 					$debug
@@ -124,7 +124,7 @@ class ExportRoute extends AbstractUtilsBaseRoute
 		}
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\__('Data export finished with success.', 'eightshift-forms'),
 				[
 					'output' => \wp_json_encode($output),

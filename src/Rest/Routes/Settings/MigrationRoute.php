@@ -123,7 +123,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			case SettingsMigration::VERSION_2_3_LOCALE:
 				return $this->getMigration2To3Locale();
 			default:
-				return UtilsApiHelper::getApiErrorOutput(
+				return UtilsApiHelper::getApiErrorPublicOutput(
 					\__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
 					[],
 					$debug
@@ -193,7 +193,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			\do_action($actionName, SettingsMigration::VERSION_2_3_GENERAL);
 		}
 
-		return UtilsApiHelper::getApiSuccessOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
+		return UtilsApiHelper::getApiSuccessPublicOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
 	}
 
 	/**
@@ -217,7 +217,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 
 		if (!$theQuery->have_posts()) {
 			\wp_reset_postdata();
-			return UtilsApiHelper::getApiErrorOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
+			return UtilsApiHelper::getApiErrorPublicOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
 		}
 
 		while ($theQuery->have_posts()) {
@@ -374,13 +374,13 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 		}
 
 		if (!$outputFinal['items']) {
-			return UtilsApiHelper::getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				\__('All forms returned and error. It looks like you allready migrated everything.', 'eightshift-forms'),
 				$outputFinal,
 			);
 		}
 
-		return UtilsApiHelper::getApiSuccessOutput(
+		return UtilsApiHelper::getApiSuccessPublicOutput(
 			\__('Migration version 2 to 3 forms finished with success.', 'eightshift-forms'),
 			$outputFinal
 		);
@@ -489,7 +489,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			\do_action($actionName, SettingsMigration::VERSION_2_3_LOCALE);
 		}
 
-		return UtilsApiHelper::getApiSuccessOutput(
+		return UtilsApiHelper::getApiSuccessPublicOutput(
 			\__('Migration version 2 to 3 locale finished with success.', 'eightshift-forms'),
 			$output
 		);

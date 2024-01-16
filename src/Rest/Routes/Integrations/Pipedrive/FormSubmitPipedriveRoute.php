@@ -95,28 +95,25 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 			$formId
 		);
 
-		$formDetails[UtilsConfig::FD_EMAIL_RESPONSE_TAGS] = $this->getEmailResponseTags($response);
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[UtilsConfig::FD_EMAIL_RESPONSE_TAGS] = $this->getEmailResponseTags($formDetails);
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction(
-				$response,
-				$formDetails,
-				$formId,
-			)
+			$this->getIntegrationCommonSubmitAction($formDetails)
 		);
 	}
 
 	/**
 	 * Prepare email response tags from the API response.
 	 *
-	 * @param array<mixed> $response Response data to extract data from.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return array<string, string>
 	 */
-	private function getEmailResponseTags(array $response): array
+	private function getEmailResponseTags(array $formDetails): array
 	{
-		$body = $response['body']['data'] ?? [];
+		$body = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];
 		$output = [];
 
 		if (!$body) {

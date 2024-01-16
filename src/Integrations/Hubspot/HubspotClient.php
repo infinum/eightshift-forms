@@ -268,18 +268,18 @@ class HubspotClient implements HubspotClientInterface
 			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationSuccessOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[
@@ -338,18 +338,18 @@ class HubspotClient implements HubspotClientInterface
 			$body
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationApiSuccessOutput($details);
+			return UtilsApiHelper::getIntegrationSuccessOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg($body)
 		);
@@ -548,8 +548,8 @@ class HubspotClient implements HubspotClientInterface
 			$url,
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
@@ -594,8 +594,8 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$details = $this->getTestApi();
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftForms\Hooks\Variables;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -65,8 +66,8 @@ class ClearbitClient implements ClearbitClientInterface
 			$formId
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
@@ -80,7 +81,7 @@ class ClearbitClient implements ClearbitClientInterface
 				}
 			}
 
-			return UtilsApiHelper::getIntegrationApiSuccessOutput(
+			return UtilsApiHelper::getIntegrationSuccessOutput(
 				$details,
 				[
 					'email' => $email,
@@ -90,7 +91,7 @@ class ClearbitClient implements ClearbitClientInterface
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorOutput(
 			$details,
 			$this->getErrorMsg($body),
 			[

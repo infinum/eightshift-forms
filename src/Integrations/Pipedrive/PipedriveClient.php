@@ -16,6 +16,7 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -211,18 +212,18 @@ class PipedriveClient implements PipedriveClientInterface
 				$formId
 			);
 
-			$code = $organization['code'];
-			$body = $organization['body'];
+			$code = $organization[UtilsConfig::IARD_CODE];
+			$body = $organization[UtilsConfig::IARD_BODY];
 
 			if ($code < 200 || $code > 299) {
-				return UtilsApiHelper::getIntegrationApiErrorOutput(
+				return UtilsApiHelper::getIntegrationErrorOutput(
 					$organization,
 					$this->getErrorMsg($body)
 				);
 			}
 		}
 
-		$organizationId = $organization['body']['data']['id'] ?? '';
+		$organizationId = $organization[UtilsConfig::IARD_BODY]['data']['id'] ?? '';
 
 		$person = $this->postApplicationSingle(
 			'persons',
@@ -236,17 +237,17 @@ class PipedriveClient implements PipedriveClientInterface
 			$formId
 		);
 
-		$code = $person['code'];
-		$body = $person['body'];
+		$code = $person[UtilsConfig::IARD_CODE];
+		$body = $person[UtilsConfig::IARD_BODY];
 
 		if ($code < 200 || $code > 299) {
-			return UtilsApiHelper::getIntegrationApiErrorOutput(
+			return UtilsApiHelper::getIntegrationErrorOutput(
 				$person,
 				$this->getErrorMsg($body)
 			);
 		}
 
-		$personId = $person['body']['data']['id'] ?? '';
+		$personId = $person[UtilsConfig::IARD_BODY]['data']['id'] ?? '';
 
 		if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_LEAD, $formId)) {
 			$lead = $this->postApplicationSingle(
@@ -262,18 +263,18 @@ class PipedriveClient implements PipedriveClientInterface
 				$formId
 			);
 
-			$code = $lead['code'];
-			$body = $lead['body'];
+			$code = $lead[UtilsConfig::IARD_CODE];
+			$body = $lead[UtilsConfig::IARD_BODY];
 
 			if ($code < 200 || $code > 299) {
-				return UtilsApiHelper::getIntegrationApiErrorOutput(
+				return UtilsApiHelper::getIntegrationErrorOutput(
 					$lead,
 					$this->getErrorMsg($body)
 				);
 			}
 		}
 
-		$leadId = $lead['body']['data']['id'] ?? '';
+		$leadId = $lead[UtilsConfig::IARD_BODY]['data']['id'] ?? '';
 
 		if ($files) {
 			$this->postFileMedia(
@@ -287,7 +288,7 @@ class PipedriveClient implements PipedriveClientInterface
 		}
 
 		// On success return output.
-		return UtilsApiHelper::getIntegrationApiSuccessOutput($person);
+		return UtilsApiHelper::getIntegrationSuccessOutput($person);
 	}
 
 	/**
@@ -414,8 +415,8 @@ class PipedriveClient implements PipedriveClientInterface
 			$url,
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
@@ -449,8 +450,8 @@ class PipedriveClient implements PipedriveClientInterface
 			$url,
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 

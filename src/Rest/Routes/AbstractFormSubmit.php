@@ -222,7 +222,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$e->getMessage(),
 					[
 						UtilsHelper::getStateResponseOutputKey('validation') => $e->getData(),
@@ -240,23 +240,19 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	/**
 	 * Get integration common submit action
 	 *
-	 * @param array<string, mixed> $response Response data.
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param string $formId Form ID.
 	 * @param mixed $callbackAdditional Additional callback.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getIntegrationCommonSubmitAction(
-		array $response,
-		array $formDetails,
-		string $formId,
-		$callbackAdditional = null
-	): array {
+	protected function getIntegrationCommonSubmitAction(array $formDetails, $callbackAdditional = null): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
 		$validation = $response[UtilsHelper::getStateResponseOutputKey('validation')] ?? [];
+
 		$disableFallbackEmail = false;
 
-		$postId = $formDetails[UtilsConfig::FD_POST_ID];
 		$additionaDataOutput = [];
 
 		// Pre response filter for addon data.
@@ -283,45 +279,29 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		// Skip fallback email if integration is disabled.
-		if (!$response['isDisabled'] && $response['status'] === UtilsConfig::STATUS_ERROR) {
+		if (!$response[UtilsConfig::IARD_IS_DISABLED] && $response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_ERROR) {
 			// Prevent fallback email if we have validation errors parsed.
 			if (!$disableFallbackEmail) {
 				// Send fallback email.
-				$this->getFormSubmitMailer()->sendFallbackEmail(
-					\array_merge(
-						$response,
-						[
-							// Attach postID to the response because it is not available in the client's response.
-							'postId' => $postId,
-						]
-					)
-				);
+				$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
 			}
 		}
 
 		// Send email if it is configured in the backend.
-		if ($response['status'] === UtilsConfig::STATUS_SUCCESS) {
-			$this->getFormSubmitMailer()->sendEmails($formDetails, $additionaDataOutput);
+		if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
+			$this->getFormSubmitMailer()->sendEmails($formDetails);
 		}
 
-		$labelsOutput = $this->labels->getLabel($response['message'], $formId);
+		$labelsOutput = $this->labels->getLabel($response[UtilsConfig::IARD_MSG], $formId);
 		$responseOutput = $response;
 
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !$validation) {
-			$this->getFormSubmitMailer()->sendFallbackEmail(
-				\array_merge(
-					$response,
-					[
-						// Attach postID to the response because it is not available in the client's response.
-						'postId' => $postId,
-					]
-				)
-			);
+		if ($response[UtilsConfig::IARD_IS_DISABLED] && !$validation) {
+			$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
 
-			$fakeResponse = UtilsApiHelper::getIntegrationApiSuccessOutput($response);
+			$fakeResponse = UtilsApiHelper::getIntegrationSuccessOutput($response);
 
-			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
+			$labelsOutput = $this->labels->getLabel($fakeResponse[UtilsConfig::IARD_MSG], $formId);
 			$responseOutput = $fakeResponse;
 		}
 
@@ -330,8 +310,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			EntriesHelper::setEntryByFormDataRef($formDetails, $formId);
 		}
 
-		return UtilsApiHelper::getIntegrationApiOutput(
-			\array_merge($responseOutput, $additionaDataOutput),
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
+
+		return UtilsApiHelper::getIntegrationApiPublicOutput(
+			$formDetails,
 			$labelsOutput
 		);
 	}

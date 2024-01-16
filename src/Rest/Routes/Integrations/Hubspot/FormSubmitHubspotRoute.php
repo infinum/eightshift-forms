@@ -110,13 +110,13 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 			$formId
 		);
 
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+
 		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationCommonSubmitAction(
-				$response,
 				$formDetails,
-				$formId,
-				$this->runClearbit($response, $formDetails) // @phpstan-ignore-line
+				$this->runClearbit($formDetails) // @phpstan-ignore-line
 			)
 		);
 	}
@@ -124,21 +124,21 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	/**
 	 * Run Clearbit integration.
 	 *
-	 * @param array<string, mixed> $response Response from Hubspot.
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return void
 	 */
-	private function runClearbit(array $response, array $formDetails): void
+	private function runClearbit(array $formDetails): void
 	{
-		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID] ?? '';
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
+		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
 
 		// Check if Hubspot is using Clearbit.
 		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
 
-		if (!$response['isDisabled'] && $useClearbit) {
+		if (!$response[UtilsConfig::IARD_IS_DISABLED] && $useClearbit) {
 			$email = UtilsGeneralHelper::getEmailParamsField($params);
 
 			if ($email) {
@@ -152,15 +152,17 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 				);
 
 				// If Clearbit data is ok send data to Hubspot.
-				if ($clearbitResponse['code'] >= 200 && $clearbitResponse['code'] <= 299) {
+				if ($clearbitResponse[UtilsConfig::IARD_CODE] >= 200 && $clearbitResponse[UtilsConfig::IARD_CODE] <= 299) {
 					$this->hubspotClient->postContactProperty(
 						$clearbitResponse['email'] ?? '',
 						$clearbitResponse['data'] ?? []
 					);
 				} else {
 					// Send fallback email if error but ignore for unknown entry.
-					if ($clearbitResponse['code'] !== 404) {
-						$this->getFormSubmitMailer()->sendFallbackEmail($clearbitResponse);
+					if ($clearbitResponse[UtilsConfig::IARD_CODE] !== 404) {
+						$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
+
+						$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
 					}
 				}
 			}

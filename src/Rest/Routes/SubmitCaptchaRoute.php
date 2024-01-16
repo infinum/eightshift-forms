@@ -84,7 +84,7 @@ class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 		// Bailout if troubleshooting skip captcha is on.
 		if (UtilsDeveloperHelper::isDeveloperSkipCaptchaActive()) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessOutput(
+				UtilsApiHelper::getApiSuccessPublicOutput(
 					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
 					[],
 					$debug
@@ -104,7 +104,7 @@ class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$this->labels->getLabel('captchaBadRequest'),
 					[],
 					\array_merge(

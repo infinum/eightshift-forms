@@ -328,8 +328,6 @@ class Transfer implements TransferInterface
 		return true;
 	}
 
-
-
 	/**
 	 * Check if form exists
 	 *

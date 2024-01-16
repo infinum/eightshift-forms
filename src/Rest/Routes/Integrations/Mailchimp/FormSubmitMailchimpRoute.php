@@ -96,13 +96,11 @@ class FormSubmitMailchimpRoute extends AbstractFormSubmit
 			$formId
 		);
 
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+
 		// Finish.
 		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction(
-				$response,
-				$formDetails,
-				$formId,
-			)
+			$this->getIntegrationCommonSubmitAction($formDetails)
 		);
 	}
 }

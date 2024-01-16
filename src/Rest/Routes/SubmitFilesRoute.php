@@ -17,6 +17,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
  * Class SubmitFilesRoute
@@ -82,10 +83,10 @@ class SubmitFilesRoute extends AbstractFormSubmit
 	{
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('File upload success', 'eightshift-forms'),
 				[
-					'file' => $formDetails[UtilsConfig::FD_FILES_UPLOAD]['id'] ?? '',
+					UtilsHelper::getStateResponseOutputKey('file') => $formDetails[UtilsConfig::FD_FILES_UPLOAD]['id'] ?? '',
 				],
 				[
 					'formDetails' => $formDetails,

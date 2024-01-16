@@ -89,7 +89,7 @@ class IntegrationItemsMomentsRoute extends AbstractUtilsBaseRoute
 
 		if (!$isGlobalSettingsValid) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Global not configured', 'eightshift-forms'),
 					[],
 					$debug
@@ -101,7 +101,7 @@ class IntegrationItemsMomentsRoute extends AbstractUtilsBaseRoute
 
 		if (!$items) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Items missing', 'eightshift-forms'),
 					[],
 					$debug
@@ -125,7 +125,7 @@ class IntegrationItemsMomentsRoute extends AbstractUtilsBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					[

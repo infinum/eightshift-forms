@@ -19,18 +19,17 @@ interface FormSubmitMailerInterface
 	 * Send emails method.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param array<string, mixed> $additionalData Additonal data to pass.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDetails, $additionalData = []): array;
+	public function sendEmails(array $formDetails): array;
 
 	/**
 	 * Send fallback email.
 	 *
-	 * @param array<mixed> $response API response data.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function sendFallbackEmail(array $response): bool;
+	public function sendfallbackIntegrationEmail(array $formDetails): bool;
 }

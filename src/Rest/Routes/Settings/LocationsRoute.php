@@ -64,7 +64,7 @@ class LocationsRoute extends AbstractUtilsBaseRoute
 		$type = UtilsGeneralHelper::getFormTypeById($id);
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					'output' => Components::renderPartial('component', 'admin-listing', 'item-details', [

@@ -103,7 +103,7 @@ class IntegrationEditorCreateRoute extends AbstractUtilsBaseRoute
 
 		if ($status === UtilsConfig::STATUS_ERROR) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$message,
 					$syncForm,
 					$debug
@@ -112,7 +112,7 @@ class IntegrationEditorCreateRoute extends AbstractUtilsBaseRoute
 		}
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				$message,
 				$syncForm,
 				$debug

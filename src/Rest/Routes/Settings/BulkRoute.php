@@ -92,7 +92,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 
 		if (!$ids) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('There are no selected forms.', 'eightshift-forms'),
 					[],
 					$debug
@@ -103,7 +103,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('Action type is missing.', 'eightshift-forms'),
 					[],
 					$debug
@@ -140,7 +140,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		switch ($output['status']) {
 			case 'success':
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiSuccessOutput(
+					UtilsApiHelper::getApiSuccessPublicOutput(
 						$output['msg'] ?? \esc_html__('Success', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -148,7 +148,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 				);
 			case 'warning':
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiWarningOutput(
+					UtilsApiHelper::getApiWarningPublicOutput(
 						$output['msg'] ?? \esc_html__('Warning', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -156,7 +156,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 				);
 			default:
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorOutput(
+					UtilsApiHelper::getApiErrorPublicOutput(
 						$output['msg'] ?? \esc_html__('Error', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug

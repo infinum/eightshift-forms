@@ -105,7 +105,7 @@ class TransferRoute extends AbstractUtilsBaseRoute
 
 				if (!$items) {
 					return \rest_ensure_response(
-						UtilsApiHelper::getApiErrorOutput(
+						UtilsApiHelper::getApiErrorPublicOutput(
 							\esc_html__('Please click on the forms you want to export.', 'eightshift-forms'),
 							[],
 							$debug
@@ -128,7 +128,7 @@ class TransferRoute extends AbstractUtilsBaseRoute
 
 				if (!$upload) {
 					return \rest_ensure_response(
-						UtilsApiHelper::getApiErrorOutput(
+						UtilsApiHelper::getApiErrorPublicOutput(
 							\esc_html__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
 							[],
 							$debug
@@ -143,7 +143,7 @@ class TransferRoute extends AbstractUtilsBaseRoute
 
 				if (!$uploadStatus) {
 					return \rest_ensure_response(
-						UtilsApiHelper::getApiErrorOutput(
+						UtilsApiHelper::getApiErrorPublicOutput(
 							\esc_html__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
 							[],
 							$debug
@@ -155,7 +155,7 @@ class TransferRoute extends AbstractUtilsBaseRoute
 				break;
 			default:
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorOutput(
+					UtilsApiHelper::getApiErrorPublicOutput(
 						\esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
 						[],
 						$debug
@@ -167,7 +167,7 @@ class TransferRoute extends AbstractUtilsBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				// translators: %s will be replaced with the transfer internal type.
 				\sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
 				[
