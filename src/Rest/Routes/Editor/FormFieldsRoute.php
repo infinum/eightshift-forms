@@ -98,7 +98,7 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 			);
 		}
 
-		$data = UtilsGeneralHelper::getFormDetailsById($formId);
+		$data = UtilsGeneralHelper::getFormDetails($formId);
 		$fieldsOnly = $data['fieldsOnly'] ?? [];
 
 		$debug = \array_merge(

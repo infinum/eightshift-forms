@@ -17,6 +17,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterf
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -206,11 +207,11 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$formDetails = UtilsGeneralHelper::getFormDetailsById($formId);
+		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
 
-		$fieldNames = $formDetails['fieldNamesTags'];
+		$fieldNames = $formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS];
 		$fieldNameTags = UtilsSettingsOutputHelper::getPartialFormFieldNames($fieldNames);
-		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails['type']);
+		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails[UtilsConfig::FD_TYPE]);
 
 		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
 		$isSenderUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);

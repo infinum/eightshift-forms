@@ -94,19 +94,19 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDataReference['formId'];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
 		// Send application to Hubspot.
 		$response = $this->hubspotClient->postApplication(
-			$formDataReference['itemId'],
-			$formDataReference['params'],
-			$formDataReference['files'],
+			$formDetails[UtilsConfig::FD_ITEM_ID],
+			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[UtilsConfig::FD_FILES],
 			$formId
 		);
 
@@ -114,9 +114,9 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			$this->getIntegrationCommonSubmitAction(
 				$response,
-				$formDataReference,
+				$formDetails,
 				$formId,
-				$this->runClearbit($response, $formDataReference) // @phpstan-ignore-line
+				$this->runClearbit($response, $formDetails) // @phpstan-ignore-line
 			)
 		);
 	}
@@ -125,15 +125,15 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 * Run Clearbit integration.
 	 *
 	 * @param array<string, mixed> $response Response from Hubspot.
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return void
 	 */
-	private function runClearbit(array $response, array $formDataReference): void
+	private function runClearbit(array $response, array $formDetails): void
 	{
-		$itemId = $formDataReference['itemId'];
-		$formId = $formDataReference['formId'];
-		$params = $formDataReference['params'];
+		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
 
 		// Check if Hubspot is using Clearbit.
 		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);

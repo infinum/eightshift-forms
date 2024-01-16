@@ -80,22 +80,24 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDataReference['formId'];
-		$params = $formDataReference['params'];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
 
 		// Send application to ActiveCampaign.
 		$response = $this->activeCampaignClient->postApplication(
-			$formDataReference['itemId'],
+			$formDetails[UtilsConfig::FD_ITEM_ID],
 			$params,
-			$formDataReference['files'],
+			$formDetails[UtilsConfig::FD_FILES],
 			$formId
 		);
+
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $params;
 
 		$contactId = $response['contactId'] ?? '';
 
@@ -136,7 +138,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			$this->getIntegrationCommonSubmitAction(
 				$response,
-				$formDataReference,
+				$formDetails,
 				$formId,
 			)
 		);

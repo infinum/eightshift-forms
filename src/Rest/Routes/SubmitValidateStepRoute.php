@@ -16,6 +16,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class SubmitValidateStepRoute
@@ -73,17 +74,17 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
 		$debug = [
-			'formDataReference' => $formDataReference,
+			'formDetails' => $formDetails,
 		];
 
-		$currentStep = $formDataReference['apiSteps']['current'] ?? '';
+		$currentStep = $formDetails[UtilsConfig::FD_API_STEPS]['current'] ?? '';
 		if (!$currentStep) {
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorOutput(
@@ -94,7 +95,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$submittedNames = $formDataReference['apiSteps']['fields'] ?? [];
+		$submittedNames = $formDetails[UtilsConfig::FD_API_STEPS]['fields'] ?? [];
 		if (!$submittedNames) {
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorOutput(
@@ -105,7 +106,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$steps = $formDataReference['stepsSetup']['steps'] ?? [];
+		$steps = $formDetails[UtilsConfig::FD_STEPS_SETUP]['steps'] ?? [];
 		if (!$steps) {
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorOutput(
@@ -116,7 +117,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$multiflow = $formDataReference['stepsSetup']['multiflow'] ?? [];
+		$multiflow = $formDetails[UtilsConfig::FD_STEPS_SETUP]['multiflow'] ?? [];
 
 		$nextStep = '';
 		$progressBarItems = 0;
@@ -125,7 +126,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		if ($multiflow) {
 			$type = 'multiflow';
 
-			$params = $formDataReference['params'] ?? [];
+			$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
 
 			if (!$params) {
 				return \rest_ensure_response(

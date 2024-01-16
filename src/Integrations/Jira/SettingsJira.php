@@ -19,6 +19,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -200,7 +201,7 @@ class SettingsJira implements UtilsSettingGlobalInterface, UtilsSettingInterface
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$formDetails = UtilsGeneralHelper::getFormDetailsById($formId);
+		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
 
 		$selectedProject = UtilsSettingsHelper::getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
 		$selectedIssueType = UtilsSettingsHelper::getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
@@ -281,7 +282,7 @@ class SettingsJira implements UtilsSettingGlobalInterface, UtilsSettingInterface
 							[
 								'component' => 'intro',
 								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
-								'introHelp' => UtilsSettingsOutputHelper::getPartialFieldTags(UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails['fieldNamesTags'])),
+								'introHelp' => UtilsSettingsOutputHelper::getPartialFieldTags(UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS])),
 							],
 							[
 								'component' => 'divider',

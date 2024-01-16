@@ -16,6 +16,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterf
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -96,8 +97,8 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 			\array_keys(UtilsGeneralHelper::getSpecialConstants('tracking'))
 		);
 
-		$formDetails = UtilsGeneralHelper::getFormDetailsById($formId);
-		$formType = $formDetails['type'] ?? '';
+		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
+		$formType = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
 		$successRedirectVariation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($formType, $formId);
@@ -131,7 +132,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										<br />
 										Tag missing? Make sure its field has a <b>Name</b> set!
 									</details>
-									%2$s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails['fieldNamesTags']), $successRedirectUrl['settingsLocal']),
+									%2$s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS]), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsed'],

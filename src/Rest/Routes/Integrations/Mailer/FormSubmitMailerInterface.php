@@ -18,12 +18,12 @@ interface FormSubmitMailerInterface
 	/**
 	 * Send emails method.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $additionalData Additonal data to pass.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDataReference, $additionalData = []): array;
+	public function sendEmails(array $formDetails, $additionalData = []): array;
 
 	/**
 	 * Send fallback email.

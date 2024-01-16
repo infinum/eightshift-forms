@@ -283,7 +283,7 @@ class HubspotClient implements HubspotClientInterface
 			$details,
 			$this->getErrorMsg($body),
 			[
-				UtilsConfig::ROUTE_OUTPUT_VALIDATION_KEY => $this->getFieldsErrors($body),
+				UtilsHelper::getStateResponseOutputKey('validation') => $this->getFieldsErrors($body),
 			]
 		);
 	}

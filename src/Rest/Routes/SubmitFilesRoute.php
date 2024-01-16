@@ -16,6 +16,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class SubmitFilesRoute
@@ -73,21 +74,21 @@ class SubmitFilesRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
 		// Finish.
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessOutput(
 				\esc_html__('File upload success', 'eightshift-forms'),
 				[
-					'file' => $formDataReference['filesUpload']['id'] ?? '',
+					'file' => $formDetails[UtilsConfig::FD_FILES_UPLOAD]['id'] ?? '',
 				],
 				[
-					'formDataReference' => $formDataReference,
+					'formDetails' => $formDetails,
 				]
 			)
 		);

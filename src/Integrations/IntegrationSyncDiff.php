@@ -283,7 +283,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Get content from DB.
-		$content = UtilsGeneralHelper::getFormDetailsById($formId);
+		$content = UtilsGeneralHelper::getFormDetails($formId);
 
 		// Bailout if content is empty.
 		if (!$content) {

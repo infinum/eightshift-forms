@@ -23,6 +23,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use Hamcrest\Util;
 
 /**
  * Class Validator
@@ -104,21 +105,21 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate params.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param bool $strictValidation Is validation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validateParams(array $data, bool $strictValidation = true): array
+	public function validateParams(array $formDetails, bool $strictValidation = true): array
 	{
 		$output = [];
-		$formType = $data['type'];
-		$formId = $data['formId'];
-		$fieldsOnly = $data['fieldsOnly'];
-		$stepFields = isset($data['apiSteps']['fields']) ? \array_flip($data['apiSteps']['fields']) : [];
+		$formType = $formDetails[UtilsConfig::FD_TYPE];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY];
+		$stepFields = isset($formDetails[UtilsConfig::FD_API_STEPS]['fields']) ? \array_flip($formDetails[UtilsConfig::FD_API_STEPS]['fields']) : [];
 		$params = \array_merge(
-			$data['params'],
-			$data['files']
+			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[UtilsConfig::FD_FILES]
 		);
 
 		// Manualy build fields from settings components.
@@ -342,16 +343,16 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate files from the validation reference.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return array<int|string, string>
 	 */
-	public function validateFiles(array $data): array
+	public function validateFiles(array $formDetails): array
 	{
 		$output = [];
-		$file = $data['filesUpload'];
-		$formId = $data['formId'];
-		$fieldsOnly = $data['fieldsOnly'];
+		$file = $formDetails[UtilsConfig::FD_FILES_UPLOAD];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY];
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
 		$fieldName = $file['fieldName'];
@@ -395,20 +396,20 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Validate all manadatory fields that are passed from the `getFormDataReference` function.
+	 * Validate all manadatory fields that are passed from the `getFormDetailsApi` function.
 	 * If these fields are missing it can be that the forme is not configured correctly or it could be a unauthorized request.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function validateFormManadatoryProperies(array $data): bool
+	public function validateFormManadatoryProperies(array $formDetails): bool
 	{
-		$type = $data['type'] ?? '';
-		$formId = $data['formId'] ?? '';
-		$postId = $data['postId'] ?? '';
-		$itemId = $data['itemId'] ?? '';
-		$innerId = $data['innerId'] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$postId = $formDetails[UtilsConfig::FD_POST_ID] ?? '';
+		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID] ?? '';
+		$innerId = $formDetails[UtilsConfig::FD_INNER_ID] ?? '';
 
 		if (!$type) {
 			return false;
@@ -416,7 +417,7 @@ class Validator extends AbstractValidation
 
 		switch ($type) {
 			case UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME:
-			case 'fileUploadAdmin':
+			case UtilsConfig::FILE_UPLOAD_ADMIN_TYPE_NAME:
 				return true;
 			case UtilsConfig::SETTINGS_TYPE_NAME:
 				if (!$formId) {

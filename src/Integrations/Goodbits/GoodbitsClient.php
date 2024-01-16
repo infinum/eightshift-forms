@@ -18,6 +18,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -154,7 +155,7 @@ class GoodbitsClient implements ClientInterface
 			$details,
 			$this->getErrorMsg($body),
 			[
-				UtilsConfig::ROUTE_OUTPUT_VALIDATION_KEY => $this->getFieldsErrors($body),
+				UtilsHelper::getStateResponseOutputKey('validation') => $this->getFieldsErrors($body),
 			]
 		);
 	}

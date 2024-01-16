@@ -21,6 +21,7 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
@@ -222,7 +223,7 @@ class GreenhouseClient implements ClientInterface
 			$details,
 			$this->getErrorMsg($body),
 			[
-				UtilsConfig::ROUTE_OUTPUT_VALIDATION_KEY => $this->getFieldsErrors($body),
+				UtilsHelper::getStateResponseOutputKey('validation') => $this->getFieldsErrors($body),
 			]
 		);
 	}

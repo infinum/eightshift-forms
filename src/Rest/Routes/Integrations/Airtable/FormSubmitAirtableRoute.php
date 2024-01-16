@@ -80,21 +80,21 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDataReference['formId'];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
 		// Send application to Airtable.
 		$delimiter = UtilsConfig::DELIMITER;
 
 		$response = $this->airtableClient->postApplication(
-			"{$formDataReference['itemId']}{$delimiter}{$formDataReference['innerId']}",
-			$formDataReference['params'],
-			$formDataReference['files'],
+			$formDetails[UtilsConfig::FD_ITEM_ID] . $delimiter . $formDetails[UtilsConfig::FD_INNER_ID],
+			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[UtilsConfig::FD_FILES],
 			$formId
 		);
 
@@ -102,7 +102,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			$this->getIntegrationCommonSubmitAction(
 				$response,
-				$formDataReference,
+				$formDetails,
 				$formId,
 			)
 		);

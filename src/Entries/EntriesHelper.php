@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
@@ -28,14 +29,14 @@ class EntriesHelper
 	/**
 	 * Get entry by form data reference.
 	 *
-	 * @param array<string, mixed> $formDataReference Form data reference.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param string $formId Form Id.
 	 *
 	 * @return boolean
 	 */
-	public static function setEntryByFormDataRef(array $formDataReference, string $formId): bool
+	public static function setEntryByFormDataRef(array $formDetails, string $formId): bool
 	{
-		$params = $formDataReference['params'] ?? [];
+		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
 
 		$output = [];
 

@@ -21,6 +21,7 @@ use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
@@ -72,34 +73,34 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDataReference['formId'];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 		$additionaDataOutput = [];
 
 		// Save entries to DB.
 		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
+			EntriesHelper::setEntryByFormDataRef($formDetails, $formId);
 		}
 
 		// Pre response filter for addon data.
 		$filterNameAddon = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
 		if (\has_filter($filterNameAddon)) {
-			$additionaDataOutput[UtilsConfig::ROUTE_OUTPUT_ADDON_DATA_KEY] = \apply_filters($filterNameAddon, $formDataReference['addonData'], $formDataReference);
+			$additionaDataOutput[UtilsHelper::getStateResponseOutputKey('addon')] = \apply_filters($filterNameAddon, $formDetails[UtilsConfig::FD_ADDON_DATA], $formDetails);
 		}
 
 		// Pre response filter for success redirect data.
 		$filterNameRedirect = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
 		if (\has_filter($filterNameRedirect)) {
-			$additionaDataOutput[UtilsConfig::ROUTE_OUTPUT_SUCCESS_REDIRECT_DATA_KEY] = UtilsEncryption::encryptor(\wp_json_encode(\apply_filters($filterNameRedirect, [], $formDataReference)));
+			$additionaDataOutput[UtilsHelper::getStateResponseOutputKey('successRedirectData')] = UtilsEncryption::encryptor(\wp_json_encode(\apply_filters($filterNameRedirect, [], $formDetails)));
 		}
 
 		return \rest_ensure_response(
-			$this->getFormSubmitMailer()->sendEmails($formDataReference, $additionaDataOutput)
+			$this->getFormSubmitMailer()->sendEmails($formDetails, $additionaDataOutput)
 		);
 	}
 }

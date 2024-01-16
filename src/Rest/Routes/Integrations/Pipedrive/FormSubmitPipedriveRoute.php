@@ -80,28 +80,28 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDataReference['formId'];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
 		// Send application to Hubspot.
 		$response = $this->pipedriveClient->postApplication(
-			$formDataReference['params'],
-			$formDataReference['files'],
+			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[UtilsConfig::FD_FILES],
 			$formId
 		);
 
-		$formDataReference['emailResponseTags'] = $this->getEmailResponseTags($response);
+		$formDetails[UtilsConfig::FD_EMAIL_RESPONSE_TAGS] = $this->getEmailResponseTags($response);
 
 		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationCommonSubmitAction(
 				$response,
-				$formDataReference,
+				$formDetails,
 				$formId,
 			)
 		);

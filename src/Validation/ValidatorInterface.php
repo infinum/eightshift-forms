@@ -18,31 +18,31 @@ interface ValidatorInterface
 	/**
 	 * Validate params.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param bool $strictValidation Is validation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validateParams(array $data, bool $strictValidation = true): array;
+	public function validateParams(array $formDetails, bool $strictValidation = true): array;
 
 	/**
 	 * Validate files from the validation reference.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return array<int|string, string>
 	 */
-	public function validateFiles(array $data): array;
+	public function validateFiles(array $formDetails): array;
 
 	/**
-	 * Validate all manadatory fields that are passed from the `getFormDataReference` function.
+	 * Validate all manadatory fields that are passed from the `getFormDetailsApi` function.
 	 * If these fields are missing it can be that the form is not configured correctly or it could be a unauthorized request.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function validateFormManadatoryProperies(array $data): bool;
+	public function validateFormManadatoryProperies(array $formDetails): bool;
 
 	/**
 	 * Get validation label from cache or db on multiple items.

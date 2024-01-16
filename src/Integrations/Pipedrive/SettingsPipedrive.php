@@ -19,6 +19,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -198,9 +199,9 @@ class SettingsPipedrive implements UtilsSettingGlobalInterface, UtilsSettingInte
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$formDetails = UtilsGeneralHelper::getFormDetailsById($formId);
+		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
 
-		$fields = $formDetails['fieldNamesTags'] ?? [];
+		$fields = $formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS] ?? [];
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 
 		$personName = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);
