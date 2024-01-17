@@ -102,10 +102,21 @@ class ExportRoute extends AbstractUtilsBaseRoute
 			$outputInner['formEntryCreatedAt'] = $entry['createdAt'] ?? '';
 
 			foreach ($entryValues as $key => $value) {
-				$outputInner[$key] = $value;
-
 				if (\gettype($value) === 'array') {
-					$outputInner[$key] = \implode(UtilsConfig::DELIMITER, $value);
+					if (\array_key_first($value) === 0) {
+						$outputInner[$key] = \implode(UtilsConfig::DELIMITER, $value);
+					} else {
+						$outputItems = \array_map(
+							function ($value, $key) {
+								return "{$key}={$value}";
+							},
+							$value,
+							\array_keys($value)
+						);
+						$outputInner[$key] = \implode(UtilsConfig::DELIMITER, $outputItems);
+					}
+				} else {
+					$outputInner[$key] = $value;
 				}
 			}
 

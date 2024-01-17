@@ -835,10 +835,6 @@ export class Form {
 				name: this.state.getStateParam('actionExternal'),
 				value: this.state.getStateFormActionExternal(formId),
 			},
-			{
-				name: this.state.getStateParam('additionalParam'),
-				value: JSON.stringify(this.state.getStateFormAdditionalParam(formId)),
-			},
 		]);
 	}
 

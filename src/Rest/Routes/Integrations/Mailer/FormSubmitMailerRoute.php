@@ -76,7 +76,8 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	{
 		return \rest_ensure_response(
 			$this->getFormSubmitMailer()->sendEmails(
-				$this->processCommonSubmitActionFormData($formDetails)
+				$this->processCommonSubmitActionFormData($formDetails),
+				true
 			)
 		);
 	}

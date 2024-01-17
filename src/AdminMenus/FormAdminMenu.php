@@ -567,7 +567,18 @@ class FormAdminMenu extends AbstractAdminMenu
 					$content = '<ul class="is-list">';
 					foreach ($entryValue as $entryKey => $entryValue) {
 						if (\gettype($entryValue) === 'array') {
-							$entryValue = \implode(UtilsConfig::DELIMITER, $entryValue);
+							if (\array_key_first($entryValue) === 0) {
+								$entryValue = \implode(UtilsConfig::DELIMITER, $entryValue);
+							} else {
+								$entryValue = \array_map(
+									function ($value, $key) {
+										return "{$key}={$value}";
+									},
+									$entryValue,
+									\array_keys($entryValue)
+								);
+								$entryValue = \implode(UtilsConfig::DELIMITER, $entryValue);
+							}
 						}
 
 						$content .= "<li><strong>{$entryKey}</strong>: {$entryValue}</li>";

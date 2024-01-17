@@ -82,9 +82,6 @@ export class State {
 	getStateFormLoader = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.LOADER], formId);
 	};
-	getStateFormAdditionalParam = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.ADDITIONAL_PARAM], formId);
-	};
 
 	setStateFormIsLoaded = (value, formId) => {
 		setState([StateEnum.FORM, StateEnum.ISLOADED], value, formId);

@@ -30,20 +30,20 @@ class EntriesHelper
 	 * Get entry by form data reference.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param string $formId Form Id.
 	 *
 	 * @return boolean
 	 */
-	public static function setEntryByFormDataRef(array $formDetails, string $formId): bool
+	public static function setEntryByFormDataRef(array $formDetails): bool
 	{
 		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
+		$formId = $formDetails[UtilsConfig::IARD_FORM_ID] ?? '';
 
 		$output = [];
 
 		// Filter params.
 		$filterName = UtilsHooksHelper::getFilterName(['entries', 'prePostParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
+			$params = \apply_filters($filterName, $params, $formId, $formDetails) ?? [];
 		}
 
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);

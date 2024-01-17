@@ -110,7 +110,7 @@ class Filters implements ServiceInterface
 					'additionalContent',
 					'preResponseAddonData',
 					'preResponseSuccessRedirectData',
-					'additionalParam',
+					'additionalHiddenFields',
 				],
 				'formSelector' => [
 					'formTemplates',
@@ -286,6 +286,9 @@ class Filters implements ServiceInterface
 				'twoToThreeGeneral',
 				'twoToThreeForms',
 				'twoToThreeLocale',
+			],
+			'entries' => [
+				'saveEntry',
 			],
 		];
 	}

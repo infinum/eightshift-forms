@@ -15,6 +15,7 @@ use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
@@ -54,10 +55,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * Send emails method.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param boolean $useSuccessAction If success action should be used.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDetails): array
+	public function sendEmails(array $formDetails, bool $useSuccessAction = false): array
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 		$params = $formDetails[UtilsConfig::FD_PARAMS];
@@ -102,10 +104,17 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		$this->sendConfirmationEmail($formId, $params, $files);
 
+		if ($useSuccessAction) {
+			$actionName = UtilsHooksHelper::getActionName(['entries', 'saveEntry']);
+			if (\has_action($actionName)) {
+				\do_action($actionName, $formDetails);
+			}
+		}
+
 		// Finish.
 		return UtilsApiHelper::getApiSuccessPublicOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
-			[],
+			UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails),
 			$debug
 		);
 	}

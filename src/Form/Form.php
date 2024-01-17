@@ -333,6 +333,16 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					$inBlockOutput[0]['attrs']["stepStepIsActive"] = true;
 				}
 
+				// Populate custom hidden fields from filter.
+				$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'additionalHiddenFields']);
+				if (\has_filter($filterName)) {
+					$customHiddenFields = \apply_filters($filterName, [], $formsFormPostId);
+
+					if ($customHiddenFields) {
+						$inBlockOutput = \array_merge($inBlockOutput, $this->getHiddenFields($customHiddenFields));
+					}
+				}
+
 				$innerBlockOutput[] = [
 					'blockName' => $innerBlock['blockName'],
 					'attrs' => $innerBlock['attrs'],
@@ -488,6 +498,43 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$outputInner[$innerBlockKey]['innerContent'] = $innerBlock['innerBlocks'] ?? [];
 
 			$output['innerBlocks'] = $outputInner;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get hidden fields from array.
+	 *
+	 * @param array<int, array<string, string>> $items Items to filter.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getHiddenFields(array $items): array
+	{
+		$output = [];
+
+		$namespace = Components::getSettingsNamespace();
+
+		foreach ($items as $item) {
+			$name = $item['name'] ?? '';
+			$value = $item['value'] ?? '';
+
+			if (!$name) {
+				continue;
+			}
+
+			$output[] = [
+				'blockName' => "{$namespace}/input",
+				'attrs' => [
+					'inputInputFieldHidden' => true,
+					'inputInputName' => $name,
+					'inputInputValue' => $value,
+				],
+				'innerBlocks' => [],
+				'innerHTML' => '',
+				'innerContent' => [],
+			];
 		}
 
 		return $output;

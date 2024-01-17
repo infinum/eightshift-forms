@@ -14,8 +14,6 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -24,9 +22,7 @@ use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore Slev
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
@@ -299,38 +295,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$formDetails,
 			$labelsOutput
 		);
-	}
-
-	/**
-	 * This function will take form details and apply additional data to it before it is processed.
-	 * It is used in both integrations and non integrations like mailer so it can share the same functionality.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @return array<string, mixed>
-	 */
-	public function processCommonSubmitActionFormData(array $formDetails): array
-	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
-
-		// Pre response filter for addon data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterName)) {
-			$formDetails[UtilsConfig::FD_ADDON] = \apply_filters($filterName, [], $formDetails);
-		}
-
-		// Pre response filter for success redirect data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-		if (\has_filter($filterName)) {
-			$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode(\apply_filters($filterName, [], $formDetails)));
-		}
-
-		// Save entries to DB.
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			EntriesHelper::setEntryByFormDataRef($formDetails, $formId);
-		}
-
-		return $formDetails;
 	}
 
 	/**

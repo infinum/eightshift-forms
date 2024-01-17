@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -161,6 +162,19 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										'checkboxAsToggle' => true,
 									]
 								]
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'intro',
+								// translators: %s is the link to the entries page.
+								'introSubtitle' => \sprintf(\__("
+									<p>
+										You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.
+									</p>
+								", 'eightshift-forms'), UtilsGeneralHelper::getFormsEntriesPageUrl($formId)),
 							],
 						],
 					],
