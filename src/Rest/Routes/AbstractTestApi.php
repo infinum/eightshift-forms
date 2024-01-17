@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
@@ -62,9 +63,9 @@ abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 				]
 			);
 
-			$code = $response['code'] ?? 400;
+			$code = $response['code'] ?? UtilsConfig::API_RESPONSE_CODE_ERROR;
 
-			if ($code >= 200 && $code <= 299) {
+			if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 				return \rest_ensure_response(
 					UtilsApiHelper::getApiSuccessPublicOutput(
 						\esc_html__('The API test was successful.', 'eightshift-forms'),

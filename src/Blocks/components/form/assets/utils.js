@@ -605,7 +605,7 @@ export class Utils {
 			}
 		}
 
-		const successRedirectData = additionalData?.[this.state.getStateResponseOutputKey('successRedirectData')];
+		const successRedirectData = additionalData?.[this.state.getStateResponseOutputKey('successRedirect')];
 		if (successRedirectData) {
 				url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('data'), successRedirectData);
 		}

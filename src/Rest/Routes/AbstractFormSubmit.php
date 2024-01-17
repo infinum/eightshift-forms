@@ -247,29 +247,17 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	protected function getIntegrationCommonSubmitAction(array $formDetails, $callbackAdditional = null): array
 	{
+		$formDetails = $this->processCommonSubmitActionFormData($formDetails);
+
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
-		$validation = $response[UtilsHelper::getStateResponseOutputKey('validation')] ?? [];
+		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
 
 		$disableFallbackEmail = false;
 
-		$additionaDataOutput = [];
-
-		// Pre response filter for addon data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterName)) {
-			$additionaDataOutput[UtilsHelper::getStateResponseOutputKey('addon')] = \apply_filters($filterName, $formDetails[UtilsConfig::FD_ADDON_DATA], $formDetails);
-		}
-
-		// Pre response filter for success redirect data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-		if (\has_filter($filterName)) {
-			$additionaDataOutput[UtilsHelper::getStateResponseOutputKey('successRedirectData')] = UtilsEncryption::encryptor(\wp_json_encode(\apply_filters($filterName, [], $formDetails)));
-		}
-
 		// Output integrations validation issues.
 		if ($validation) {
-			$response[UtilsHelper::getStateResponseOutputKey('validation')] = $this->validator->getValidationLabelItems($validation, $formId);
+			$response[UtilsConfig::IARD_VALIDATION] = $this->validator->getValidationLabelItems($validation, $formId);
 			$disableFallbackEmail = true;
 		}
 
@@ -299,15 +287,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if ($response[UtilsConfig::IARD_IS_DISABLED] && !$validation) {
 			$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
 
-			$fakeResponse = UtilsApiHelper::getIntegrationSuccessOutput($response);
+			$fakeResponse = UtilsApiHelper::getIntegrationSuccessInternalOutput($response);
 
 			$labelsOutput = $this->labels->getLabel($fakeResponse[UtilsConfig::IARD_MSG], $formId);
 			$responseOutput = $fakeResponse;
-		}
-
-		// Save entries to DB.
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			EntriesHelper::setEntryByFormDataRef($formDetails, $formId);
 		}
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
@@ -316,6 +299,38 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$formDetails,
 			$labelsOutput
 		);
+	}
+
+	/**
+	 * This function will take form details and apply additional data to it before it is processed.
+	 * It is used in both integrations and non integrations like mailer so it can share the same functionality.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @return array<string, mixed>
+	 */
+	public function processCommonSubmitActionFormData(array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
+
+		// Pre response filter for addon data.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
+		if (\has_filter($filterName)) {
+			$formDetails[UtilsConfig::FD_ADDON] = \apply_filters($filterName, [], $formDetails);
+		}
+
+		// Pre response filter for success redirect data.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
+		if (\has_filter($filterName)) {
+			$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode(\apply_filters($filterName, [], $formDetails)));
+		}
+
+		// Save entries to DB.
+		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+			EntriesHelper::setEntryByFormDataRef($formDetails, $formId);
+		}
+
+		return $formDetails;
 	}
 
 	/**

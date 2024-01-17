@@ -18,7 +18,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
@@ -146,18 +145,15 @@ class GoodbitsClient implements ClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationSuccessOutput($details);
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
+		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorOutput(
-			$details,
-			$this->getErrorMsg($body),
-			[
-				UtilsHelper::getStateResponseOutputKey('validation') => $this->getFieldsErrors($body),
-			]
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**

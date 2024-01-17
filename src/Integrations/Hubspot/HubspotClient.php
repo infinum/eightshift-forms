@@ -274,18 +274,15 @@ class HubspotClient implements HubspotClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationSuccessOutput($details);
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
+		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorOutput(
-			$details,
-			$this->getErrorMsg($body),
-			[
-				UtilsHelper::getStateResponseOutputKey('validation') => $this->getFieldsErrors($body),
-			]
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -344,15 +341,14 @@ class HubspotClient implements HubspotClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationSuccessOutput($details);
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorOutput(
-			$details,
-			$this->getErrorMsg($body)
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -408,7 +404,7 @@ class HubspotClient implements HubspotClientInterface
 		$code = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			$response = \json_decode((string) $response, true);
 
 			return $response['objects'][0]['url'] ?? '';
@@ -554,7 +550,7 @@ class HubspotClient implements HubspotClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body ?? [];
 		}
 
@@ -600,7 +596,7 @@ class HubspotClient implements HubspotClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body ?? [];
 		}
 

@@ -168,8 +168,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationSuccessOutput(
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput(
 				$details,
 				[
 					'contactId' => $body['contact']['id'],
@@ -179,10 +179,10 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		// Filter different error outputs.
 		switch ($details['code']) {
-			case 403:
+			case UtilsConfig::API_RESPONSE_CODE_ERROR_FORBIDDEN:
 				$error = 'activeCampaignForbidden';
 				break;
-			case 500:
+			case UtilsConfig::API_RESPONSE_CODE_ERROR_SERVER:
 				$error = 'activeCampaign500';
 				break;
 			default:
@@ -191,14 +191,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorOutput(
-			$details,
-			$this->getErrorMsg([
-				[
-					'code' => $error,
-				]
-			]),
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -252,15 +245,12 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationSuccessOutput($details);
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorOutput(
-			$details,
-			$this->getErrorMsg($body),
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -306,15 +296,12 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return UtilsApiHelper::getIntegrationSuccessOutput($details);
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorOutput(
-			$details,
-			$this->getErrorMsg($body),
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -349,7 +336,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			// Find tag id from array.
 			$tagId = \array_filter(
 				$body['tags'],
@@ -364,10 +351,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		}
 
 		// Output error.
-		UtilsApiHelper::getIntegrationErrorOutput(
-			$details,
-			$this->getErrorMsg($body),
-		);
+		UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 
 		return '';
 	}
@@ -414,15 +398,12 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body['id'] ?? '';
 		}
 
 		// Output error.
-		UtilsApiHelper::getIntegrationErrorOutput(
-			$details,
-			$this->getErrorMsg($body),
-		);
+		UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 
 		return '';
 	}
@@ -434,7 +415,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 *
 	 * @return string
 	 */
-	private function getErrorMsg(array $body): string
+	private function getErrorMsg(array $body): string // @phpstan-ignore-line
 	{
 		$msg = '';
 		$code = '';

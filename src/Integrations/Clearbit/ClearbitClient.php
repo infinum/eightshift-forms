@@ -72,7 +72,7 @@ class ClearbitClient implements ClearbitClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			$dataOutput = [];
 
 			foreach ($this->prepareParams($body) as $key => $value) {
@@ -81,7 +81,7 @@ class ClearbitClient implements ClearbitClientInterface
 				}
 			}
 
-			return UtilsApiHelper::getIntegrationSuccessOutput(
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput(
 				$details,
 				[
 					'email' => $email,
@@ -90,10 +90,11 @@ class ClearbitClient implements ClearbitClientInterface
 			);
 		}
 
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorInternalOutput(
 			$details,
-			$this->getErrorMsg($body),
 			[
 				'email' => $email,
 			]

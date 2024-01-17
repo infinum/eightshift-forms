@@ -159,7 +159,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 					);
 				} else {
 					// Send fallback email if error but ignore for unknown entry.
-					if ($clearbitResponse[UtilsConfig::IARD_CODE] !== 404) {
+					if ($clearbitResponse[UtilsConfig::IARD_CODE] !== UtilsConfig::API_RESPONSE_CODE_ERROR_MISSING) {
 						$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
 
 						$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);

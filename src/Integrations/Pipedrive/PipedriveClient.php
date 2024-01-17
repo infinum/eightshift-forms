@@ -202,7 +202,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$organization = [];
 		$lead = [];
 		$person = [];
-		$code = 400;
+		$code = UtilsConfig::API_RESPONSE_CODE_ERROR_MISSING;
 		$body = [];
 
 		if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId)) {
@@ -215,11 +215,10 @@ class PipedriveClient implements PipedriveClientInterface
 			$code = $organization[UtilsConfig::IARD_CODE];
 			$body = $organization[UtilsConfig::IARD_BODY];
 
-			if ($code < 200 || $code > 299) {
-				return UtilsApiHelper::getIntegrationErrorOutput(
-					$organization,
-					$this->getErrorMsg($body)
-				);
+			if ($code < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+				$organization[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
+				return UtilsApiHelper::getIntegrationErrorInternalOutput($organization);
 			}
 		}
 
@@ -240,11 +239,10 @@ class PipedriveClient implements PipedriveClientInterface
 		$code = $person[UtilsConfig::IARD_CODE];
 		$body = $person[UtilsConfig::IARD_BODY];
 
-		if ($code < 200 || $code > 299) {
-			return UtilsApiHelper::getIntegrationErrorOutput(
-				$person,
-				$this->getErrorMsg($body)
-			);
+		if ($code < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			$person[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
+			return UtilsApiHelper::getIntegrationErrorInternalOutput($person);
 		}
 
 		$personId = $person[UtilsConfig::IARD_BODY]['data']['id'] ?? '';
@@ -266,11 +264,10 @@ class PipedriveClient implements PipedriveClientInterface
 			$code = $lead[UtilsConfig::IARD_CODE];
 			$body = $lead[UtilsConfig::IARD_BODY];
 
-			if ($code < 200 || $code > 299) {
-				return UtilsApiHelper::getIntegrationErrorOutput(
-					$lead,
-					$this->getErrorMsg($body)
-				);
+			if ($code < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+				$lead[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
+				return UtilsApiHelper::getIntegrationErrorInternalOutput($lead);
 			}
 		}
 
@@ -288,7 +285,7 @@ class PipedriveClient implements PipedriveClientInterface
 		}
 
 		// On success return output.
-		return UtilsApiHelper::getIntegrationSuccessOutput($person);
+		return UtilsApiHelper::getIntegrationSuccessInternalOutput($person);
 	}
 
 	/**
@@ -421,7 +418,7 @@ class PipedriveClient implements PipedriveClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body['data'] ?? [];
 		}
 
@@ -456,7 +453,7 @@ class PipedriveClient implements PipedriveClientInterface
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body['data'] ?? [];
 		}
 

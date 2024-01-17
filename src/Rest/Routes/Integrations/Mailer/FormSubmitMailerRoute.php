@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -20,9 +18,6 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Class FormSubmitMailerRoute
@@ -79,28 +74,10 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$additionaDataOutput = [];
-
-		// Save entries to DB.
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			EntriesHelper::setEntryByFormDataRef($formDetails, $formId);
-		}
-
-		// Pre response filter for addon data.
-		$filterNameAddon = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterNameAddon)) {
-			$additionaDataOutput[UtilsHelper::getStateResponseOutputKey('addon')] = \apply_filters($filterNameAddon, $formDetails[UtilsConfig::FD_ADDON_DATA], $formDetails);
-		}
-
-		// Pre response filter for success redirect data.
-		$filterNameRedirect = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-		if (\has_filter($filterNameRedirect)) {
-			$additionaDataOutput[UtilsHelper::getStateResponseOutputKey('successRedirectData')] = UtilsEncryption::encryptor(\wp_json_encode(\apply_filters($filterNameRedirect, [], $formDetails)));
-		}
-
 		return \rest_ensure_response(
-			$this->getFormSubmitMailer()->sendEmails($formDetails)
+			$this->getFormSubmitMailer()->sendEmails(
+				$this->processCommonSubmitActionFormData($formDetails)
+			)
 		);
 	}
 }
