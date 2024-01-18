@@ -783,13 +783,14 @@ export class Utils {
 	 *
 	 * @param {string} msg Error msg text.
 	 * @param {string} type Function used.
+	 * @param {string} error Error object.
 	 * @param {string} formId Form Id.
 	 *
 	 * @throws Error.
 	 *
 	 * @returns {void}
 	 */
-	formSubmitErrorFatal(msg, type, formId) {
+	formSubmitErrorFatal(msg, type, error, formId) {
 		// Clear all errors.
 		this.resetErrors(formId);
 
@@ -813,7 +814,7 @@ export class Utils {
 			this.unsetGlobalMsg(formId);
 		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
 
-		throw new Error(`API response returned fatal error. Function used: "${type}"`);
+		throw new Error(`API response returned fatal error. Function used: "${type}. ${error}"`);
 	}
 
 	/**
@@ -1292,8 +1293,8 @@ export class Utils {
 			formSubmitErrorContentType: (response, type, formId) => {
 				this.formSubmitErrorContentType(response, type, formId);
 			},
-			formSubmitErrorFatal: (msg, type, formId) => {
-				this.formSubmitErrorFatal(msg, type, formId);
+			formSubmitErrorFatal: (msg, type, error, formId) => {
+				this.formSubmitErrorFatal(msg, type, error, formId);
 			},
 			getSelectSelectedValueByCustomData: (type, value, choices) => {
 				return this.getSelectSelectedValueByCustomData(type, value, choices);

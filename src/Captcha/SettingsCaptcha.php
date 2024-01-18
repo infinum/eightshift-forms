@@ -205,8 +205,8 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 							UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
 								UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 									Variables::getGoogleReCaptchaSiteKey(),
-									'ES_GOOGLE_RECAPTCHA_SITE_KEY',
-									self::SETTINGS_CAPTCHA_SITE_KEY
+									self::SETTINGS_CAPTCHA_SITE_KEY,
+									'ES_GOOGLE_RECAPTCHA_SITE_KEY'
 								),
 								\__('Site key', 'eightshift-forms'),
 							),
@@ -215,8 +215,8 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
 									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getGoogleReCaptchaSecretKey(),
-										'ES_GOOGLE_RECAPTCHA_SECRET_KEY',
-										self::SETTINGS_CAPTCHA_SECRET_KEY
+										self::SETTINGS_CAPTCHA_SECRET_KEY,
+										'ES_GOOGLE_RECAPTCHA_SECRET_KEY'
 									),
 									\__('Secret key', 'eightshift-forms'),
 								),
@@ -224,16 +224,16 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
 									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getGoogleReCaptchaProjectIdKey(),
-										'ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY',
-										self::SETTINGS_CAPTCHA_PROJECT_ID_KEY
+										self::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
+										'ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY'
 									),
 									\__('Project ID', 'eightshift-forms'),
 								),
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
 									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 										Variables::getGoogleReCaptchaApiKey(),
-										'ES_GOOGLE_RECAPTCHA_API_KEY',
-										self::SETTINGS_CAPTCHA_API_KEY
+										self::SETTINGS_CAPTCHA_API_KEY,
+										'ES_GOOGLE_RECAPTCHA_API_KEY'
 									),
 									\__('API key', 'eightshift-forms'),
 								),

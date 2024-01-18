@@ -519,6 +519,7 @@ export class Form {
 					this.utils.formSubmitErrorFatal(
 						this.state.getStateSettingsFormCaptchaErrorMsg(),
 						'runFormCaptcha',
+						error,
 						formId
 					);
 				}
@@ -539,6 +540,7 @@ export class Form {
 					this.utils.formSubmitErrorFatal(
 						this.state.getStateSettingsFormCaptchaErrorMsg(),
 						'runFormCaptcha',
+						error,
 						formId
 					);
 				}

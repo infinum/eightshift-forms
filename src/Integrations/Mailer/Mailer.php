@@ -93,6 +93,7 @@ class Mailer implements MailerInterface
 			UtilsConfig::IARD_URL => $response[UtilsConfig::IARD_URL] ?? '',
 			UtilsConfig::IARD_ITEM_ID => $response[UtilsConfig::IARD_ITEM_ID] ?? '',
 			UtilsConfig::IARD_FORM_ID => $formId,
+			UtilsConfig::FD_POST_ID => $formDetails[UtilsConfig::FD_POST_ID] ?? '',
 			'debug' => [
 				'forms' => UtilsGeneralHelper::getProjectVersion(),
 				'php' => \phpversion(),

@@ -187,7 +187,7 @@ export class ManualImportApi {
 			output.push({
 				postId: item.postId,
 				formId: item.formId,
-				type: item.integration,
+				type: item.type,
 				params: item.params,
 				itemId: item.itemId,
 				innerId: item.innerId,

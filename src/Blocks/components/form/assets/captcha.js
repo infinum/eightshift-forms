@@ -57,7 +57,7 @@ export class Captcha {
 
 					this.formSubmitCaptchaInvisible(token, true, actionName);
 				} catch (error) {
-					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad"`);
+					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad". ${error}`);
 				}
 			});
 		} else {
@@ -67,7 +67,7 @@ export class Captcha {
 
 					this.formSubmitCaptchaInvisible(token, false, actionName);
 				} catch (error) {
-					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad"`);
+					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad". ${error}`);
 				}
 			});
 		}
