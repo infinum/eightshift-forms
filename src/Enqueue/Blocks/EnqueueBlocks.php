@@ -30,7 +30,7 @@ use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 
 /**
- * Enqueue_Blocks class.
+ * EnqueueBlocks class.
  */
 class EnqueueBlocks extends AbstractEnqueueBlocks
 {

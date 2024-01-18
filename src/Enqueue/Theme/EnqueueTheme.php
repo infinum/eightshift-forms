@@ -28,7 +28,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	public const CAPTCHA_ENQUEUE_HANDLE = 'captcha';
 
 	/**
-	 * Create a new admin instance.
+	 * Create a new instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 */
