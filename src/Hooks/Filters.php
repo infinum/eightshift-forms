@@ -325,6 +325,7 @@ class Filters implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('General', 'eightshift-forms'),
+					'desc' => \__('General form settings.', 'eightshift-forms'),
 				],
 			],
 			SettingsSettings::SETTINGS_TYPE_KEY => [
@@ -344,6 +345,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('Validation', 'eightshift-forms'),
+					'desc' => \__('Settings for all forms validation options.', 'eightshift-forms'),
 				],
 			],
 			// ------------------------------
@@ -361,6 +363,7 @@ class Filters implements ServiceInterface
 				'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 				'labels' => [
 					'title' => \__('Spam prevention', 'eightshift-forms'),
+					'desc' => \__('Prevent misuse of your forms by adding Google ReCaptcha.', 'eightshift-forms'),
 					'externalLink' => 'https://www.google.com/recaptcha/about/',
 				],
 			],
@@ -392,6 +395,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('Blocks', 'eightshift-forms'),
+					'desc' => \__('Settings specific to forms blocks.', 'eightshift-forms'),
 				],
 			],
 			SettingsSecurity::SETTINGS_TYPE_KEY => [
@@ -431,6 +435,7 @@ class Filters implements ServiceInterface
 				'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
 				'labels' => [
 					'title' => \__('Mailer', 'eightshift-forms'),
+					'desc' => \__('Basic mailer system settings.', 'eightshift-forms'),
 					'detail' => \__('A basic e-mail sender.', 'eightshift-forms'),
 				],
 			],
@@ -445,6 +450,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('Mailchimp', 'eightshift-forms'),
+					'desc' => \__('Mailchimp integration settings.', 'eightshift-forms'),
 					'detail' => \__('Comprehensive email marketing platform that fulfills all your requirements of email correspondence with customers, affiliates, and more.', 'eightshift-forms'),
 					'externalLink' => 'https://mailchimp.com/',
 				],
@@ -460,6 +466,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('Greenhouse', 'eightshift-forms'),
+					'desc' => \__('Greenhouse integration settings.', 'eightshift-forms'),
 					'detail' => \__('Sourcing automation tool to help hiring teams find, reach and engage top talent quickly and effectively.', 'eightshift-forms'),
 					'externalLink' => 'https://www.greenhouse.io/',
 				],
@@ -477,6 +484,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('HubSpot', 'eightshift-forms'),
+					'desc' => \__('HubSpot integration settings.', 'eightshift-forms'),
 					'detail' => \__('CRM platform that connects everything scaling companies need to deliver a best-in-class customer experience into one place.', 'eightshift-forms'),
 					'externalLink' => 'https://www.hubspot.com/',
 				],
@@ -492,6 +500,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('MailerLite', 'eightshift-forms'),
+					'desc' => \__('MailerLite integration settings.', 'eightshift-forms'),
 					'detail' => \__('Email service provider that makes it easier to plan email marketing campaigns for any growing business.', 'eightshift-forms'),
 					'externalLink' => 'https://www.mailerlite.com/',
 				],
@@ -504,6 +513,7 @@ class Filters implements ServiceInterface
 				'use' => SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY,
 				'labels' => [
 					'title' => \__('Goodbits', 'eightshift-forms'),
+					'desc' => \__('Goodbits integration settings.', 'eightshift-forms'),
 					'detail' => \__('Helps you and your business create stellar newsletters from the best links your team and customers are reading.', 'eightshift-forms'),
 					'externalLink' => 'https://goodbits.io/',
 				],
@@ -521,6 +531,7 @@ class Filters implements ServiceInterface
 				'use' => SettingsClearbit::SETTINGS_CLEARBIT_USE_KEY,
 				'labels' => [
 					'title' => \__('Clearbit', 'eightshift-forms'),
+					'desc' => \__('Clearbit integration settings.', 'eightshift-forms'),
 					'detail' => \__('Marketing intelligence tool that you can use to effectively get quality B2B data for understanding customers, identifying prospects, and creating personalised marketing and sales exchanges.', 'eightshift-forms'),
 					'externalLink' => 'https://clearbit.com/',
 				],
@@ -536,6 +547,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('ActiveCampaign', 'eightshift-forms'),
+					'desc' => \__('ActiveCampaign integration settings.', 'eightshift-forms'),
 					'detail' => \__('Integrated email marketing, automation, sales software, and CRM platform.', 'eightshift-forms'),
 					'externalLink' => 'https://www.activecampaign.com/',
 				],
@@ -551,6 +563,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('Airtable', 'eightshift-forms'),
+					'desc' => \__('Airtable integration settings.', 'eightshift-forms'),
 					'detail' => \__('Platform that makes it easy to build powerful, custom applications.', 'eightshift-forms'),
 					'externalLink' => 'https://airtable.com/',
 				],
@@ -567,6 +580,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('Moments', 'eightshift-forms'),
+					'desc' => \__('Moments integration settings.', 'eightshift-forms'),
 					'detail' => \__('Allows you to easily send relevant content derived from important customer information, their interests, and activities.', 'eightshift-forms'),
 					'externalLink' => 'https://www.infobip.com/moments/',
 				],
@@ -582,6 +596,7 @@ class Filters implements ServiceInterface
 				],
 				'labels' => [
 					'title' => \__('Workable', 'eightshift-forms'),
+					'desc' => \__('Workable integration settings.', 'eightshift-forms'),
 					'detail' => \__('Sourcing automation tool to help hiring teams find, reach and engage top talent quickly and effectively.', 'eightshift-forms'),
 					'externalLink' => 'https://www.workable.com/',
 				],

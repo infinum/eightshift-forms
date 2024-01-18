@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds class for admin bar menu.
+ * Admin menu top bar functionality.
  *
  * @package EightshiftForms\AdminMenus
  */
@@ -22,9 +22,9 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Admin_Bar;
 
 /**
- * FormAdminBarMenu class.
+ * FormAdminTopBarMenu class.
  */
-class FormAdminBarMenu implements ServiceInterface
+class FormAdminTopBarMenu implements ServiceInterface
 {
 	/**
 	 * Instance variable for listing data.
@@ -62,15 +62,17 @@ class FormAdminBarMenu implements ServiceInterface
 	 */
 	public function getTopBarMenu(WP_Admin_Bar $adminBar): void
 	{
-		// Dont use in multisite.
+		// Don't use in multisite.
 		if (\is_network_admin()) {
 			return;
 		}
 
+		// Bail early if it is used in block editor.
 		if (UtilsGeneralHelper::isBlockEditor()) {
 			return;
 		}
 
+		// Bail early if user has no permission to see the menu.
 		if (!\current_user_can(Forms::POST_CAPABILITY_TYPE)) {
 			return;
 		}
@@ -83,6 +85,7 @@ class FormAdminBarMenu implements ServiceInterface
 
 		$mainLabel = \esc_html__('Eightshift Forms', 'eightshift-forms');
 
+		// Add main menu item.
 		$adminBar->add_menu(
 			[
 				'id' => $prefix,

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds class for admin sub menu - Form Listing.
+ * * Admin menu functionality.
  *
  * @package EightshiftForms\AdminMenus
  */
@@ -56,13 +56,6 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * @var string
 	 */
 	public const ADMIN_MENU_SLUG = UtilsConfig::SLUG_ADMIN;
-
-	/**
-	 * Menu icon for this admin menu.
-	 *
-	 * @var string
-	 */
-	public const ADMIN_MENU_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 0A1.5 1.5 0 0 0 0 1.5v17A1.5 1.5 0 0 0 1.5 20h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 18.5 0h-17ZM3 2a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3ZM2 7.5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1Zm9 7.5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1h-6Z" fill="#000"/><rect x="12" y="16.25" width="4" height="0.5" rx="0.25" fill="#000"/></svg>';
 
 	/**
 	 * Menu position for this admin menu.
@@ -132,7 +125,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	protected function getIcon(): string
 	{
-		return 'data:image/svg+xml;base64,' . \base64_encode(self::ADMIN_MENU_ICON); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return 'data:image/svg+xml;base64,' . \base64_encode(UtilsHelper::getUtilsIcons('menuIcon')); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 
 	/**
