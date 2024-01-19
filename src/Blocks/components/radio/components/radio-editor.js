@@ -2,7 +2,8 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import classnames from 'classnames';
-import { selector,
+import {
+	selector,
 	checkAttr,
 	props,
 	STORE_NAME,
