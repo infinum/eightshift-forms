@@ -80,7 +80,7 @@ class SettingsCloudflare implements UtilsSettingGlobalInterface, ServiceInterfac
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			UtilsSettingsOutputHelper::getMiscDisclamer(),
+			UtilsSettingsOutputHelper::getMiscDisclaimer(),
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Features affected by Cloudflare are:', 'eightshift-forms'),
