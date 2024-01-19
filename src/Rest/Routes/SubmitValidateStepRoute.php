@@ -172,7 +172,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
-				\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
+				\esc_html__('Step validation is successful, you may continue.', 'eightshift-forms'),
 				[
 					UtilsHelper::getStateResponseOutputKey('stepType') => $type,
 					UtilsHelper::getStateResponseOutputKey('stepNextStep') => $nextStep,
