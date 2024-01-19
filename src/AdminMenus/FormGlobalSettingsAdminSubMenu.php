@@ -178,7 +178,6 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : SettingsDashboard::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return [
-			// translators: %s replaces form title name.
 			'adminSettingsPageTitle' => \esc_html__('Global settings', 'eightshift-forms'),
 			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar(),
