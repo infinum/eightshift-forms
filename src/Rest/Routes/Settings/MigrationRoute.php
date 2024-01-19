@@ -217,7 +217,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 
 		if (!$theQuery->have_posts()) {
 			\wp_reset_postdata();
-			return UtilsApiHelper::getApiErrorPublicOutput(\__('We could not find any forms on your project so no migration necesery.', 'eightshift-forms'));
+			return UtilsApiHelper::getApiErrorPublicOutput(\__('We could not find any forms in your project so there is nothing to migrate.', 'eightshift-forms'));
 		}
 
 		while ($theQuery->have_posts()) {
