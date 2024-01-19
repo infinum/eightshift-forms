@@ -382,7 +382,7 @@ class Filters implements ServiceInterface
 				'use' => SettingsEnrichment::SETTINGS_ENRICHMENT_USE_KEY,
 				'labels' => [
 					'title' => \__('Enrichment', 'eightshift-forms'),
-					'desc' => \__('Using saved URL parameters and cookies track users even when they leave the site.', 'eightshift-forms'),
+					'desc' => \__('Track users when they leave the site by using saved URL parameters and cookies.', 'eightshift-forms'),
 				],
 			],
 			SettingsBlocks::SETTINGS_TYPE_KEY => [
