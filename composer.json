@@ -41,7 +41,7 @@
 		"php": "^7.4 || >=8.0",
 		"erusev/parsedown": "^1.7.4",
 		"typisttech/imposter-plugin": "^0.6.2",
-		"infinum/eightshift-forms-utils": "^1.0.0"
+		"infinum/eightshift-forms-utils": "^1.1.0"
 	},
 	"suggest": {
 		"ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",

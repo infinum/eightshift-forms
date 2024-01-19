@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Main;
 
+use EightshiftForms\Hooks\Filters;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Main\AbstractMain;
 
@@ -48,6 +49,12 @@ class Main extends AbstractMain
 	 */
 	public function registerServices(): void
 	{
+		// Define global variable for all public filters/actions.
+		if (!\defined('EIGHTSHIFT_FORMS')) {
+			\define('EIGHTSHIFT_FORMS', Filters::getHooksData());
+		}
+
+		// Normal service registration.
 		parent::registerServices();
 
 		// Filter triggered when main form's plugins is loaded to hook add-ons.
