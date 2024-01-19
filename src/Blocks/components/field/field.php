@@ -6,8 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -32,7 +33,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockName = $attributes['blockName'] ?? '';
 
 // Update media breakpoints from the filter.
-$filterName = Filters::getFilterName(['blocks', 'mediaBreakpoints']);
+$filterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
 
 if (has_filter($filterName)) {
 	$customMediaBreakpoints = apply_filters($filterName, []);
@@ -75,7 +76,7 @@ $fieldTypeInternal = Components::checkAttr('fieldTypeInternal', $attributes, $ma
 $fieldIsNoneFormBlock = Components::checkAttr('fieldIsNoneFormBlock', $attributes, $manifest);
 
 $fieldStyleOutput = [];
-$filterName = Filters::getFilterName(['block', 'field', 'styleClasses']);
+$filterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleClasses']);
 
 if (has_filter($filterName)) {
 	$fieldStyleOutputFilter = apply_filters($filterName, $attributes) ?? [];
@@ -98,10 +99,10 @@ $fieldClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($componentClass, $componentClass, '', $selectorClass),
 	Components::selector($additionalFieldClass, $additionalFieldClass),
-	Components::selector($fieldDisabled, Helper::getStateSelector('isDisabled')),
-	Components::selector($fieldHidden, Helper::getStateSelector('isHidden')),
-	Helper::getStateSelector('field'),
-	Components::selector($fieldIsNoneFormBlock, Helper::getStateSelector('fieldNoFormsBlock')),
+	Components::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
+	Components::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
+	UtilsHelper::getStateSelector('field'),
+	Components::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
 	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
 	Components::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
 	...$fieldStyleOutput,
@@ -121,23 +122,23 @@ if ($fieldType === 'fieldset') {
 }
 
 if ($fieldConditionalTags) {
-	$fieldAttrs[Helper::getStateAttribute('conditionalTags')] = $fieldConditionalTags;
+	$fieldAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = $fieldConditionalTags;
 }
 
 if ($fieldName) {
-	$fieldAttrs[Helper::getStateAttribute('fieldName')] = $fieldName;
+	$fieldAttrs[UtilsHelper::getStateAttribute('fieldName')] = $fieldName;
 }
 
 if ($fieldTypeInternal) {
-	$fieldAttrs[Helper::getStateAttribute('fieldType')] = $fieldTypeInternal;
+	$fieldAttrs[UtilsHelper::getStateAttribute('fieldType')] = $fieldTypeInternal;
 }
 
 if ($fieldTypeCustom) {
-	$fieldAttrs[Helper::getStateAttribute('fieldTypeCustom')] = $fieldTypeCustom;
+	$fieldAttrs[UtilsHelper::getStateAttribute('fieldTypeCustom')] = $fieldTypeCustom;
 }
 
 if ($fieldTracking) {
-	$fieldAttrs[Helper::getStateAttribute('tracking')] = $fieldTracking;
+	$fieldAttrs[UtilsHelper::getStateAttribute('tracking')] = $fieldTracking;
 }
 
 $fieldAttrsOutput = '';
@@ -148,7 +149,7 @@ if ($fieldAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('field', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('field', $attributes);
 ?>
 
 <<?php echo esc_attr($fieldTag); ?>

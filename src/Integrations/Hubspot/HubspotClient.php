@@ -12,17 +12,17 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftForms\Validation\Validator;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -30,16 +30,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 class HubspotClient implements HubspotClientInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Transient cache name for items.
 	 */
@@ -102,7 +92,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -121,7 +111,7 @@ class HubspotClient implements HubspotClientInterface
 					$fields = $item['formFieldGroups'] ?? [];
 
 					$portalId = $item['portalId'] ?? '';
-					$delimiter = AbstractBaseRoute::DELIMITER;
+					$delimiter = UtilsConfig::DELIMITER;
 					$value = "{$id}{$delimiter}{$portalId}";
 
 					$output[$value] = [
@@ -171,7 +161,7 @@ class HubspotClient implements HubspotClientInterface
 		$output = \get_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -230,18 +220,18 @@ class HubspotClient implements HubspotClientInterface
 		$body = [
 			'context' => [
 				'ipAddress' => $this->security->getIpAddress(),
-				'hutk' => $params[Helper::getStateParam('hubspotCookie')]['value'],
-				'pageUri' => Helper::cleanPageUrl($params[Helper::getStateParam('hubspotPageUrl')]['value']),
-				'pageName' => $params[Helper::getStateParam('hubspotPageName')]['value'],
+				'hutk' => $params[UtilsHelper::getStateParam('hubspotCookie')]['value'],
+				'pageUri' => UtilsGeneralHelper::cleanPageUrl($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value']),
+				'pageName' => $params[UtilsHelper::getStateParam('hubspotPageName')]['value'],
 			],
 		];
 
-		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
 		}
 
-		$itemIdExploded = \explode(AbstractBaseRoute::DELIMITER, $itemId);
+		$itemIdExploded = \explode(UtilsConfig::DELIMITER, $itemId);
 
 		$baseId = $itemIdExploded[1] ?? '';
 		$submitId = $itemIdExploded[0] ?? '';
@@ -267,7 +257,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -275,27 +265,24 @@ class HubspotClient implements HubspotClientInterface
 			$paramsFiles,
 			$itemId,
 			$formId,
-			$this->isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY, SettingsHubspot::SETTINGS_HUBSPOT_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
-		Helper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
+		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
-			$details,
-			$this->getErrorMsg($body),
-			[
-				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
-			]
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -310,7 +297,7 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$properties = [];
 
-		$customFields = \array_flip(Components::flattenArray(Helper::getStateParams()));
+		$customFields = \array_flip(Components::flattenArray(UtilsHelper::getStateParams()));
 
 		if ($params) {
 			foreach ($params as $key => $value) {
@@ -341,28 +328,27 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 			$body
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
-		Helper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
-			$details,
-			$this->getErrorMsg($body)
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -375,7 +361,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function postFileMedia(string $file, string $formId): string
 	{
-		$folder = $this->getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
+		$folder = UtilsSettingsHelper::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_FILEMANAGER_FOLDER_KEY, $formId);
 
 		if (!$folder) {
 			$folder = self::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY;
@@ -389,7 +375,7 @@ class HubspotClient implements HubspotClientInterface
 			]),
 		];
 
-		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'filesOptions']);
 		if (\has_filter($filterName)) {
 			$options = \apply_filters($filterName, []);
 		}
@@ -418,7 +404,7 @@ class HubspotClient implements HubspotClientInterface
 		$code = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			$response = \json_decode((string) $response, true);
 
 			return $response['objects'][0]['url'] ?? '';
@@ -552,19 +538,19 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
-		Helper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body ?? [];
 		}
 
@@ -588,7 +574,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		return $this->getIntegrationApiReponseDetails(
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -604,13 +590,13 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$details = $this->getTestApi();
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
-		Helper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body ?? [];
 		}
 
@@ -738,7 +724,7 @@ class HubspotClient implements HubspotClientInterface
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
 			$value = $param['value'] ?? '';
-			$name = $param['name'] ? \explode(AbstractBaseRoute::DELIMITER, $param['name']) : [];
+			$name = $param['name'] ? \explode(UtilsConfig::DELIMITER, $param['name']) : [];
 
 			if ($data[self::HUBSPOT_CONSENT_LEGITIMATE]['isActive']) {
 				$output['legitimateInterest'] = [
@@ -793,13 +779,13 @@ class HubspotClient implements HubspotClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
@@ -830,7 +816,7 @@ class HubspotClient implements HubspotClientInterface
 					$value = 'true';
 				}
 
-				$value = \str_replace(AbstractBaseRoute::DELIMITER, ';', $value);
+				$value = \str_replace(UtilsConfig::DELIMITER, ';', $value);
 			}
 
 			// Must be in UTC timestamp with milliseconds.
@@ -897,7 +883,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
 	}
 
 	/**

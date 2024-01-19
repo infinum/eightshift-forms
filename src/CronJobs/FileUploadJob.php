@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CronJobs;
 
-use EightshiftForms\Helpers\UploadHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -18,11 +18,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class FileUploadJob implements ServiceInterface
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
 	/**
 	 * Job name.
 	 *
@@ -82,6 +77,6 @@ class FileUploadJob implements ServiceInterface
 	 */
 	public function getJobCallback()
 	{
-		$this->deleteUploadFolderContent();
+		UtilsUploadHelper::deleteUploadFolderContent();
 	}
 }

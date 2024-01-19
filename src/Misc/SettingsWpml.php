@@ -10,20 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsWpml class.
  */
-class SettingsWpml implements SettingGlobalInterface, ServiceInterface
+class SettingsWpml implements UtilsSettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -53,6 +50,26 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(UtilsHooksHelper::getFilterName(['general', 'locale']), [$this, 'getWpmlLocale']);
+	}
+
+	/**
+	 * Set locale for WPML.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getWpmlLocale(): array
+	{
+		if (!$this->isSettingsGlobalValid()) {
+			return [];
+		}
+
+		$current = \apply_filters('wpml_current_language', null);
+
+		return [
+			'default' => \apply_filters('wpml_default_language', null),
+			'current' => $current === 'all' ? '' : $current,
+		];
 	}
 
 	/**
@@ -62,7 +79,7 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -78,16 +95,16 @@ class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY)) {
-			return $this->getSettingOutputNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			$this->settingMiscDisclamer(),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getMiscDisclaimer(),
 			[
 				'component' => 'intro',
-				'introSubtitle' => \__('In order for Eightshift forms to work correctly with WPML, you must enable translations in the WPML settings.', 'eightshift-forms'),
+				'introSubtitle' => \__('In order for Eightshift Forms to work correctly with WPML, you must enable translations in the WPML settings.', 'eightshift-forms'),
 				'introIsHighlighted' => true,
 				'introIsHighlightedImportant' => true,
 			],

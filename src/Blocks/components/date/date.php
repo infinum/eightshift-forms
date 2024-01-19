@@ -6,7 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -51,11 +53,11 @@ if ($datePlaceholder) {
 }
 
 if ($datePreviewFormat) {
-	$dateAttrs[Helper::getStateAttribute('datePreviewFormat')] = esc_attr($datePreviewFormat);
+	$dateAttrs[UtilsHelper::getStateAttribute('datePreviewFormat')] = esc_attr($datePreviewFormat);
 }
 
 if ($dateOutputFormat) {
-	$dateAttrs[Helper::getStateAttribute('dateOutputFormat')] = esc_attr($dateOutputFormat);
+	$dateAttrs[UtilsHelper::getStateAttribute('dateOutputFormat')] = esc_attr($dateOutputFormat);
 }
 
 if ($dateUseLabelAsPlaceholder) {
@@ -71,7 +73,7 @@ if ($dateAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('date', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('date', $attributes);
 
 $date = '
 	<input
@@ -92,7 +94,7 @@ echo Components::render(
 		Components::props('field', $attributes, [
 			'fieldContent' => $date,
 			'fieldId' => $dateName,
-			'fieldTypeInternal' => Helper::getStateFieldType($dateType === 'date' ? 'date' : 'dateTime'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType($dateType === 'date' ? 'date' : 'dateTime'),
 			'fieldName' => $dateName,
 			'fieldIsRequired' => $dateIsRequired,
 			'fieldDisabled' => !empty($dateIsDisabled),

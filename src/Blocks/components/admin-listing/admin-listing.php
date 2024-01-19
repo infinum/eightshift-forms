@@ -6,7 +6,7 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -76,9 +76,9 @@ $help = Components::render('container', [
 			]),
 			$help,
 		]),
-		'additionalClass' => Helper::getStateSelectorAdmin('listingBulkItems'),
+		'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingBulkItems'),
 		'additionalAttributes' => [
-			Helper::getStateAttribute('bulkItems') => wp_json_encode([]),
+			UtilsHelper::getStateAttribute('bulkItems') => wp_json_encode([]),
 		],
 	]);
 	?>
@@ -89,11 +89,11 @@ $help = Components::render('container', [
 // This is fake form to be able to init state for global msg.
 
 $formClasses = Components::classnames([
-	Helper::getStateSelector('form'),
+	UtilsHelper::getStateSelector('form'),
 	Components::selector($componentClass, $componentClass, 'form'),
 ]);
 ?>
-<form class="<?php echo esc_attr($formClasses); ?>" <?php echo Helper::getStateAttribute('formId'); ?>="0">
+<form class="<?php echo esc_attr($formClasses); ?>" <?php echo esc_attr(UtilsHelper::getStateAttribute('formId')); ?>="0">
 	<?php echo Components::render('global-msg', Components::props('globalMsg', $attributes)); ?>
 	<?php echo Components::render('loader', Components::props('loader', $attributes)); ?>
 </form>

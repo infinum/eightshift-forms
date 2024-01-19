@@ -10,16 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
  * Class CacheDeleteRoute
  */
-class CacheDeleteRoute extends AbstractBaseRoute
+class CacheDeleteRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -55,20 +56,6 @@ class CacheDeleteRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
@@ -93,13 +80,15 @@ class CacheDeleteRoute extends AbstractBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Type key was not provided.', 'eightshift-forms'),
 					[],
 					$debug
 				)
 			);
 		}
+
+		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
 
 		if ($type === 'all') {
 			$allItems = Components::flattenArray(\array_map(
@@ -108,7 +97,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 						return $item['cache'];
 					}
 				},
-				Filters::ALL
+				$data
 			));
 
 			if ($allItems) {
@@ -117,9 +106,10 @@ class CacheDeleteRoute extends AbstractBaseRoute
 				}
 			}
 		} else {
-			if (!isset(Filters::ALL[$type]['cache'])) {
+			$cacheTypes = $data[$type]['cache'] ?? [];
+			if (!$cacheTypes) {
 				return \rest_ensure_response(
-					$this->getApiErrorOutput(
+					UtilsApiHelper::getApiErrorPublicOutput(
 						\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
 						[],
 						$debug
@@ -127,7 +117,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 				);
 			}
 
-			foreach (Filters::ALL[$type]['cache'] as $item) {
+			foreach ($cacheTypes as $item) {
 				\delete_transient($item);
 			}
 		}
@@ -139,7 +129,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				// translators: %s will be replaced with the form type.
 				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), \ucfirst($type)),
 				[],

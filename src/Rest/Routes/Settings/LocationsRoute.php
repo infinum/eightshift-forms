@@ -10,22 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
  * Class LocationsRoute
  */
-class LocationsRoute extends AbstractBaseRoute
+class LocationsRoute extends AbstractUtilsBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */
@@ -39,30 +35,6 @@ class LocationsRoute extends AbstractBaseRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
-	 * Returns allowed methods for this route.
-	 *
-	 * @return string
-	 */
-	protected function getMethods(): string
-	{
-		return static::CREATABLE;
 	}
 
 	/**
@@ -89,19 +61,19 @@ class LocationsRoute extends AbstractBaseRoute
 
 		$id = $params['id'] ?? '';
 
-		$type = Helper::getFormTypeById($id);
+		$type = UtilsGeneralHelper::getFormTypeById($id);
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					'output' => Components::renderPartial('component', 'admin-listing', 'item-details', [
-						'items' => Helper::getBlockLocations($id),
-						'type' => Helper::getFormTypeById($id),
+						'items' => UtilsGeneralHelper::getBlockLocations($id),
+						'type' => UtilsGeneralHelper::getFormTypeById($id),
 						'sectionClass' => Components::getComponent('admin-listing')['componentClass'],
 						'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms'),
 						'additionalAttributes' => [
-							Helper::getStateAttribute('adminIntegrationType') => $type,
+							UtilsHelper::getStateAttribute('adminIntegrationType') => $type,
 						],
 					]),
 				],

@@ -11,19 +11,17 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Config\Config;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Helpers\UploadHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\Settings\Settings;
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -31,16 +29,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 class Validator extends AbstractValidation
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Instance variable for labels data.
 	 *
@@ -95,13 +83,6 @@ class Validator extends AbstractValidation
 	];
 
 	/**
-	 * API validator output key.
-	 *
-	 * @var string
-	 */
-	public const VALIDATOR_OUTPUT_KEY = 'validation';
-
-	/**
 	 * Transient cache name for validatior labels. No need to flush it because it is short live.
 	 */
 	public const CACHE_VALIDATOR_LABELS_TRANSIENT_NAME = 'es_validator_labels_cache';
@@ -123,25 +104,25 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate params.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param bool $strictValidation Is validation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validateParams(array $data, bool $strictValidation = true): array
+	public function validateParams(array $formDetails, bool $strictValidation = true): array
 	{
 		$output = [];
-		$formType = $data['type'];
-		$formId = $data['formId'];
-		$fieldsOnly = $data['fieldsOnly'];
-		$stepFields = isset($data['apiSteps']['fields']) ? \array_flip($data['apiSteps']['fields']) : [];
+		$formType = $formDetails[UtilsConfig::FD_TYPE];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY];
+		$stepFields = isset($formDetails[UtilsConfig::FD_API_STEPS]['fields']) ? \array_flip($formDetails[UtilsConfig::FD_API_STEPS]['fields']) : [];
 		$params = \array_merge(
-			$data['params'],
-			$data['files']
+			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[UtilsConfig::FD_FILES]
 		);
 
 		// Manualy build fields from settings components.
-		if ($formType === Settings::SETTINGS_TYPE_NAME || $formType === Settings::SETTINGS_GLOBAL_TYPE_NAME) {
+		if ($formType === UtilsConfig::SETTINGS_TYPE_NAME || $formType === UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME) {
 			$fieldsOnly = $this->getValidationReferenceManual($fieldsOnly);
 		}
 
@@ -196,7 +177,7 @@ class Validator extends AbstractValidation
 
 					// Check if wrong upload path.
 					foreach ($inputValue as $value) {
-						if ($this->isUploadError($value)) {
+						if (UtilsUploadHelper::isUploadError($value)) {
 							$output[$paramKey] = $this->getValidationLabel('validationFileNotLocated', $formId);
 							$isFilesError = true;
 							break;
@@ -211,7 +192,7 @@ class Validator extends AbstractValidation
 						$fileName = \array_flip($fileName);
 
 						// Bailout if file is ok.
-						if (isset($fileName[Config::getTempUploadDir()])) {
+						if (isset($fileName[UtilsConfig::TEMP_UPLOAD_DIR])) {
 							continue;
 						}
 
@@ -244,7 +225,7 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if (\count(\explode(AbstractBaseRoute::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
+						if (\count(\explode(UtilsConfig::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
@@ -253,7 +234,7 @@ class Validator extends AbstractValidation
 						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 						} else {
-							if ($this->isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
+							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
 								$path = \dirname(__FILE__) . '/manifest.json';
 
 								if (\file_exists($path)) {
@@ -361,16 +342,16 @@ class Validator extends AbstractValidation
 	/**
 	 * Validate files from the validation reference.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return array<int|string, string>
 	 */
-	public function validateFiles(array $data): array
+	public function validateFiles(array $formDetails): array
 	{
 		$output = [];
-		$file = $data['filesUpload'];
-		$formId = $data['formId'];
-		$fieldsOnly = $data['fieldsOnly'];
+		$file = $formDetails[UtilsConfig::FD_FILES_UPLOAD];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY];
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
 		$fieldName = $file['fieldName'];
@@ -414,30 +395,30 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Validate all manadatory fields that are passed from the `getFormDataReference` function.
+	 * Validate all manadatory fields that are passed from the `getFormDetailsApi` function.
 	 * If these fields are missing it can be that the forme is not configured correctly or it could be a unauthorized request.
 	 *
-	 * @param array<string, mixed> $data Date to check from reference helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function validateFormManadatoryProperies(array $data): bool
+	public function validateFormManadatoryProperies(array $formDetails): bool
 	{
-		$type = $data['type'] ?? '';
-		$formId = $data['formId'] ?? '';
-		$postId = $data['postId'] ?? '';
-		$itemId = $data['itemId'] ?? '';
-		$innerId = $data['innerId'] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$postId = $formDetails[UtilsConfig::FD_POST_ID] ?? '';
+		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID] ?? '';
+		$innerId = $formDetails[UtilsConfig::FD_INNER_ID] ?? '';
 
 		if (!$type) {
 			return false;
 		}
 
 		switch ($type) {
-			case Settings::SETTINGS_GLOBAL_TYPE_NAME:
-			case 'fileUploadAdmin':
+			case UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME:
+			case UtilsConfig::FILE_UPLOAD_ADMIN_TYPE_NAME:
 				return true;
-			case Settings::SETTINGS_TYPE_NAME:
+			case UtilsConfig::SETTINGS_TYPE_NAME:
 				if (!$formId) {
 					return false;
 				}
@@ -493,7 +474,7 @@ class Validator extends AbstractValidation
 		$output = \get_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CACHE_KEY)) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -540,7 +521,7 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
-		$blockDetails = Helper::getBlockNameDetails($block['blockName']);
+		$blockDetails = UtilsGeneralHelper::getBlockNameDetails($block['blockName']);
 
 		$name = $blockDetails['name'];
 		$namespace = $blockDetails['namespace'];

@@ -21,7 +21,7 @@ export const hooks = () => {
 				});
 			}
 
-			select(STORE_NAME).getSettings().fieldsAlways.forEach((element) => {
+			select(STORE_NAME).getSettings().allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
 				if (!settings.attributes.goodbitsAllowedBlocks.default.includes(element)) {
 					settings.attributes.goodbitsAllowedBlocks.default.push(element);
 				}

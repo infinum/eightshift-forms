@@ -10,20 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsDebug class.
  */
-class SettingsDebug implements ServiceInterface, SettingGlobalInterface
+class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -37,7 +34,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	/**
 	 * Filter settings is debug active key.
 	 */
-	public const FILTER_SETTINGS_IS_DEBUG_ACTIVE = 'es_forms_settings_is_debug_active';
+	public const FILTER_SETTINGS_IS_DEBUG_ACTIVE = UtilsConfig::FILTER_SETTINGS_IS_DEBUG_ACTIVE;
 
 	/**
 	 * Settings key.
@@ -53,15 +50,15 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	/**
 	 * Troubleshooting debugging key.
 	 */
-	public const SETTINGS_DEBUG_DEBUGGING_KEY = 'troubleshooting-debugging';
-	public const SETTINGS_DEBUG_SKIP_VALIDATION_KEY = 'skip-validation';
-	public const SETTINGS_DEBUG_SKIP_RESET_KEY = 'skip-reset';
-	public const SETTINGS_DEBUG_SKIP_CAPTCHA_KEY = 'skip-captcha';
-	public const SETTINGS_DEBUG_DEVELOPER_MODE_KEY = 'developer-mode';
-	public const SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY = 'skip-forms-sync';
-	public const SETTINGS_DEBUG_SKIP_CACHE_KEY = 'skip-cache';
-	public const SETTINGS_DEBUG_QM_LOG = 'skip-qm-log';
-	public const SETTINGS_DEBUG_FORCE_DISABLED_FIELDS = 'skip-force-disabled-fields';
+	public const SETTINGS_DEBUG_DEBUGGING_KEY = UtilsConfig::SETTINGS_DEBUG_DEBUGGING_KEY;
+	public const SETTINGS_DEBUG_SKIP_VALIDATION_KEY = UtilsConfig::SETTINGS_DEBUG_SKIP_VALIDATION_KEY;
+	public const SETTINGS_DEBUG_SKIP_RESET_KEY = UtilsConfig::SETTINGS_DEBUG_SKIP_RESET_KEY;
+	public const SETTINGS_DEBUG_SKIP_CAPTCHA_KEY = UtilsConfig::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY;
+	public const SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY = UtilsConfig::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY;
+	public const SETTINGS_DEBUG_SKIP_CACHE_KEY = UtilsConfig::SETTINGS_DEBUG_SKIP_CACHE_KEY;
+	public const SETTINGS_DEBUG_DEVELOPER_MODE_KEY = UtilsConfig::SETTINGS_DEBUG_DEVELOPER_MODE_KEY;
+	public const SETTINGS_DEBUG_QM_LOG = UtilsConfig::SETTINGS_DEBUG_QM_LOG;
+	public const SETTINGS_DEBUG_FORCE_DISABLED_FIELDS = UtilsConfig::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS;
 
 	/**
 	 * Register all the hooks
@@ -82,7 +79,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -92,30 +89,18 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 	}
 
 	/**
-	 * Get Form settings data array.
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		return [];
-	}
-
-	/**
 	 * Get global settings array for building settings page.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY)) {
-			return $this->getSettingOutputNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_USE_KEY, self::SETTINGS_DEBUG_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				'introSubtitle' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
@@ -129,12 +114,12 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 					[
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => '',
-						'checkboxesName' => $this->getOptionName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
+						'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Bypass validation', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -147,7 +132,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Bypass captcha', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -160,7 +145,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__("Don't clear form after submission", 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -173,7 +158,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Developer mode', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -191,7 +176,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Stop form syncing', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -204,7 +189,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Skip internal cache', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CACHE_KEY,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -217,7 +202,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Output Query Monitor log', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_QM_LOG, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_QM_LOG, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_QM_LOG,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -230,7 +215,7 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 							[
 								'component' => 'checkbox',
 								'checkboxLabel' => \__('Enable disabled fields admin overrides', 'eightshift-forms'),
-								'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS, self::SETTINGS_DEBUG_DEBUGGING_KEY),
 								'checkboxValue' => self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS,
 								'checkboxAsToggle' => true,
 								'checkboxSingleSubmit' => true,
@@ -256,6 +241,6 @@ class SettingsDebug implements ServiceInterface, SettingGlobalInterface
 			return false;
 		}
 
-		return $this->isOptionCheckboxChecked($settingKey, self::SETTINGS_DEBUG_DEBUGGING_KEY);
+		return UtilsSettingsHelper::isOptionCheckboxChecked($settingKey, self::SETTINGS_DEBUG_DEBUGGING_KEY);
 	}
 }

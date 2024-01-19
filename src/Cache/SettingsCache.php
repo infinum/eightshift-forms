@@ -10,22 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCache class.
  */
-class SettingsCache implements SettingGlobalInterface, ServiceInterface
+class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -63,43 +59,81 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$output = \array_values(\array_filter(\array_map(
+		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
+
+		$outputIntegrations = \array_values(\array_filter(\array_map(
 			function ($key, $value) {
 				$cache = $value['cache'] ?? [];
 
 				$isUsedKey = $value['use'] ?? '';
+				$type = $value['type'] ?? '';
 
-				if ($cache && $isUsedKey && $this->isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+				if ($cache && $type === UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION && $isUsedKey && UtilsSettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 					return [
 						'component' => 'card-inline',
-						'cardInlineTitle' => Filters::getSettingsLabels($key),
-						'cardInlineIcon' => Helper::getProjectIcons($key),
+						'cardInlineTitle' => $value['labels']['title'] ?? '',
+						'cardInlineIcon' => $value['labels']['icon'] ?? '',
 						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('cacheType') => $key,
-									Helper::getStateAttribute('reload') => 'false',
+									UtilsHelper::getStateAttribute('cacheType') => $key,
+									UtilsHelper::getStateAttribute('reload') => 'false',
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('cacheDelete'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
 							],
 						],
 					];
 				}
 			},
-			\array_keys(Filters::ALL),
-			Filters::ALL
+			\array_keys($data),
+			$data
+		)));
+
+		$outputOther = \array_values(\array_filter(\array_map(
+			function ($key, $value) {
+				$cache = $value['cache'] ?? [];
+
+				$type = $value['type'] ?? '';
+
+				if ($cache && $type !== UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
+					return [
+						'component' => 'card-inline',
+						'cardInlineTitle' => $value['labels']['title'] ?? '',
+						'cardInlineIcon' => $value['labels']['icon'] ?? '',
+						'cardInlineRightContent' => [
+							[
+								'component' => 'submit',
+								'submitValue' => \__('Clear', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
+								'submitAttrs' => [
+									UtilsHelper::getStateAttribute('cacheType') => $key,
+									UtilsHelper::getStateAttribute('reload') => 'false',
+								],
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
+							],
+						],
+					];
+				}
+			},
+			\array_keys($data),
+			$data
 		)));
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
-					...$output,
+					...$outputIntegrations,
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					...$outputOther,
 					[
 						'component' => 'divider',
 						'dividerExtraVSpacing' => true,
@@ -108,17 +142,17 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 						'component' => 'card-inline',
 						'cardInlineTitle' => 'All caches',
 						'cardInlineSubTitle' => 'Use with caution!',
-						'cardInlineIcon' => Helper::getProjectIcons('allChecked'),
+						'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
 						'cardInlineRightContent' => [
 							[
 								'component' => 'submit',
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('cacheType') => 'all',
-									Helper::getStateAttribute('reload') => 'false',
+									UtilsHelper::getStateAttribute('cacheType') => 'all',
+									UtilsHelper::getStateAttribute('reload') => 'false',
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('cacheDelete'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
 							],
 						],
 					],

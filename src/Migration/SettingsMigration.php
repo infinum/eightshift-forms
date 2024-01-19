@@ -10,21 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMigration class.
  */
-class SettingsMigration implements SettingGlobalInterface, ServiceInterface
+class SettingsMigration implements UtilsSettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -78,7 +74,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -94,12 +90,12 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY)) {
-			return $this->getSettingOutputNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				'introIsHighlighted' => true,
@@ -120,9 +116,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_LOCALE,
+									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_LOCALE,
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -140,9 +136,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_GENERAL,
+									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_GENERAL,
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -160,9 +156,9 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Migrate', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									Helper::getStateAttribute('migrationType') => self::VERSION_2_3_FORMS,
+									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_2_3_FORMS,
 								],
-								'additionalClass' => Helper::getStateSelectorAdmin('migration'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
 							],
 						],
 					],
@@ -178,7 +174,7 @@ class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 						'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
 						'textareaIsPreventSubmit' => true,
 						'textareaIsReadOnly' => true,
-						'additionalClass' => Helper::getStateSelectorAdmin('migrationOutput'),
+						'additionalClass' => UtilsHelper::getStateSelectorAdmin('migrationOutput'),
 					],
 				],
 			],

@@ -11,64 +11,17 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
  * Settings class.
  */
-class Settings extends AbstractFormBuilder implements SettingsInterface
+class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 {
-	/**
-	 * Settings sidebar type - general.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_GENERAL = 'sidebar-general';
-
-	/**
-	 * Settings sidebar type - integration.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_INTEGRATION = 'sidebar-integration';
-
-	/**
-	 * Settings sidebar type - troubleshooting.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_TROUBLESHOOTING = 'sidebar-troubleshooting';
-
-	/**
-	 * Settings sidebar type - miscellaneous.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_MISCELLANEOUS = 'sidebar-miscellaneous';
-
-	/**
-	 * Settings sidebar type - advanced.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_SIEDBAR_TYPE_ADVANCED = 'sidebar-advanced';
-
-	/**
-	 * Setting local type name.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_TYPE_NAME = 'settings';
-
-	/**
-	 * Setting global type name.
-	 *
-	 * @var string
-	 */
-	public const SETTINGS_GLOBAL_TYPE_NAME = 'settingsGlobal';
-
 	/**
 	 * Get sidebar settings array for building settings page.
 	 *
@@ -79,15 +32,15 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public function getSettingsSidebar(string $formId = '', string $integrationTypeUsed = ''): array
 	{
-		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
+		$internalType = UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
-			$internalType = self::SETTINGS_TYPE_NAME;
+			$internalType = UtilsConfig::SETTINGS_TYPE_NAME;
 		}
 
 		$output = [];
 
-		foreach (Filters::ALL as $key => $value) {
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []) as $key => $value) {
 			// Determin if there is filter key name.
 			if (!isset($value[$internalType])) {
 				continue;
@@ -98,7 +51,7 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 			// Skip integration forms if they are not used in the Block editor.
 			// Mailer should be available on all integrations because it can be used as a backup option.
 			if ($key !== SettingsMailer::SETTINGS_TYPE_KEY) {
-				if ($formId && $type === Settings::SETTINGS_SIEDBAR_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
+				if ($formId && $type === UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
 					continue;
 				}
 			}
@@ -106,23 +59,25 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 			$isUsedKey = $value['use'] ?? '';
 
 			// Bailout if used key is missing.
-			if ($isUsedKey && !$this->isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+			if ($isUsedKey && !UtilsSettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 				continue;
 			}
 
+			$labels = $value['labels'] ?? [];
+
 			// Populate sidebar data.
 			$output[$type][] = [
-				'label' => Filters::getSettingsLabels($key),
-				'desc' => Filters::getSettingsLabels($key, 'desc'),
-				'url' => $formId ? Helper::getSettingsPageUrl($formId, $key) : Helper::getSettingsGlobalPageUrl($key),
-				'icon' => Helper::getProjectIcons($key),
+				'label' => $labels['title'] ?? '',
+				'desc' => $labels['desc'] ?? '',
+				'url' => $formId ? UtilsGeneralHelper::getSettingsPageUrl($formId, $key) : UtilsGeneralHelper::getSettingsGlobalPageUrl($key),
+				'icon' => $labels['icon'] ?? '',
 				'type' => $type,
 				'key' => $key,
 			];
 		}
 
-		// Return all settings data.
-		return $output;
+		// Return all settings data with the correct order.
+		return UtilsSettingsHelper::sortSettingsByOrder($output);
 	}
 
 	/**
@@ -135,14 +90,14 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 	 */
 	public function getSettingsForm(string $type, string $formId): string
 	{
-		$internalType = self::SETTINGS_GLOBAL_TYPE_NAME;
+		$internalType = UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME;
 
 		if ($formId) {
-			$internalType = self::SETTINGS_TYPE_NAME;
+			$internalType = UtilsConfig::SETTINGS_TYPE_NAME;
 		}
 
 		// Find settings page.
-		$filter = Filters::ALL[$type][$internalType] ?? '';
+		$filter = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[$type][$internalType] ?? '';
 
 		// Determine if there is a filter for settings page.
 		if (!\has_filter($filter)) {
@@ -153,10 +108,10 @@ class Settings extends AbstractFormBuilder implements SettingsInterface
 		$data = \apply_filters($filter, $formId);
 
 		$formAdditionalProps['formAttrs'] = [
-			Helper::getStateAttribute('formId') => $formId,
-			Helper::getStateAttribute('formType') => $internalType,
-			Helper::getStateAttribute('settingsType') => $type,
-			Helper::getStateAttribute('successRedirect') => Helper::getCurrentUrl(),
+			UtilsHelper::getStateAttribute('formId') => $formId,
+			UtilsHelper::getStateAttribute('formType') => $internalType,
+			UtilsHelper::getStateAttribute('settingsType') => $type,
+			UtilsHelper::getStateAttribute('successRedirect') => UtilsGeneralHelper::getCurrentUrl(),
 		];
 
 		// Populate and build form.

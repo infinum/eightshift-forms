@@ -5,9 +5,6 @@
  * Usage: `WordPress admin`.
  */
 
-// Images.
-import './images/admin';
-
 // Styles.
 import './styles/admin.scss';
 

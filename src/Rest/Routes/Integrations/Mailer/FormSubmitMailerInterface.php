@@ -18,18 +18,19 @@ interface FormSubmitMailerInterface
 	/**
 	 * Send emails method.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param boolean $useSuccessAction If success action should be used.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDataReference): array;
+	public function sendEmails(array $formDetails, bool $useSuccessAction = false): array;
 
 	/**
 	 * Send fallback email.
 	 *
-	 * @param array<mixed> $response API response data.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function sendFallbackEmail(array $response): bool;
+	public function sendfallbackIntegrationEmail(array $formDetails): bool;
 }

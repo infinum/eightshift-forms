@@ -6,7 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -48,12 +50,12 @@ $textareaClass = Components::classnames([
 ]);
 
 if ($textareaSaveAsJson) {
-	$textareaAttrs[Helper::getStateAttribute('saveAsJson')] = esc_attr($textareaSaveAsJson);
+	$textareaAttrs[UtilsHelper::getStateAttribute('saveAsJson')] = esc_attr($textareaSaveAsJson);
 }
 
 // Set to use in settings for preventing field submit.
 if ($textareaIsPreventSubmit) {
-	$textareaFieldAttrs[Helper::getStateAttribute('fieldPreventSubmit')] = esc_attr($textareaIsPreventSubmit);
+	$textareaFieldAttrs[UtilsHelper::getStateAttribute('fieldPreventSubmit')] = esc_attr($textareaIsPreventSubmit);
 }
 
 if ($textareaPlaceholder) {
@@ -73,7 +75,7 @@ if ($textareaAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('textarea', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('textarea', $attributes);
 
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
@@ -93,7 +95,7 @@ echo Components::render(
 			'fieldContent' => $textarea,
 			'fieldId' => $textareaName,
 			'fieldName' => $textareaName,
-			'fieldTypeInternal' => Helper::getStateFieldType('textarea'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),
 			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

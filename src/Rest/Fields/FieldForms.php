@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Fields;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableFieldInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Fields\AbstractField;
 
@@ -20,11 +20,6 @@ use EightshiftFormsVendor\EightshiftLibs\Rest\Fields\AbstractField;
  */
 class FieldForms extends AbstractField implements CallableFieldInterface
 {
-	/**
-	 * Use dashboard helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Method that returns field object type
 	 *
@@ -77,6 +72,6 @@ class FieldForms extends AbstractField implements CallableFieldInterface
 	{
 		$id = $postObject['id'] ?? '';
 
-		return $this->getIntegrationDetailsById((string) $id)['value'] ?? '';
+		return UtilsIntegrationsHelper::getIntegrationDetailsById((string) $id)['value'] ?? '';
 	}
 }

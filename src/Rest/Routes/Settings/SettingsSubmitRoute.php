@@ -11,25 +11,20 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Helpers\Helper;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
 /**
  * Class SettingsSubmitRoute
  */
 class SettingsSubmitRoute extends AbstractFormSubmit
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Create a new instance that injects classes
 	 *
@@ -81,27 +76,20 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
 		$debug = [
-			'formDataReference' => $formDataReference,
+			'formDetails' => $formDetails,
 		];
-		$formId = $formDataReference['formId'];
-		$params = $formDataReference['params'];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
 
-		// Remove unnecessary internal params before continue.
-		$customFields = \array_flip(Components::flattenArray(Helper::getStateParams()));
-
-		// Remove unnecessary params.
-		foreach ($params as $key => $value) {
-			if (isset($customFields[$key])) {
-				unset($params[$key]);
-			}
-		}
+		// Remove unecesery params.
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		// If form ID is not set this is considered an global setting.
 		// Save all fields in the settings.
@@ -124,7 +112,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Changes saved!', 'eightshift-forms'),
 				[],
 				$debug

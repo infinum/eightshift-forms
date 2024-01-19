@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -27,7 +27,7 @@ $groupClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalGroupClass, $additionalGroupClass),
 	Components::selector($groupStyle, $componentClass, '', $groupStyle),
-	Helper::getStateSelector('group'),
+	UtilsHelper::getStateSelector('group'),
 ]);
 
 ?>

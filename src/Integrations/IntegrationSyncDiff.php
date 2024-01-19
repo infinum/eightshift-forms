@@ -12,12 +12,11 @@ namespace EightshiftForms\Integrations;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -26,11 +25,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Register all the hooks
 	 *
@@ -49,7 +43,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	public function updateFormOnBlockEditorLoad(): void
 	{
 		// Prevent forms sync.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY)) {
+		if (UtilsDeveloperHelper::isDeveloperSkipFormsSyncActive()) {
 			return;
 		}
 
@@ -70,7 +64,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$status = $syncForm['status'] ?? '';
 
 		// If error output log.
-		if ($status === AbstractBaseRoute::STATUS_ERROR) {
+		if ($status === UtilsConfig::STATUS_ERROR) {
 			return;
 		}
 	}
@@ -91,7 +85,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$status = $syncForm['status'] ?? '';
 
 		// If error output log.
-		if ($status === AbstractBaseRoute::STATUS_ERROR) {
+		if ($status === UtilsConfig::STATUS_ERROR) {
 			return $syncForm;
 		}
 
@@ -118,7 +112,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$blocksGrammar) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_itemId',
 				'message' => \esc_html__('Block grammer build failed.', 'eightshift-forms'),
 			];
@@ -131,7 +125,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$update) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_itemId',
 				'message' => \esc_html__('DB update failed.', 'eightshift-forms'),
 			];
@@ -139,7 +133,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		return [
 			'formId' => $formId,
-			'status' => AbstractBaseRoute::STATUS_SUCCESS,
+			'status' => UtilsConfig::STATUS_SUCCESS,
 			'debugType' => 'after_success',
 			'message' => \esc_html__('Form updated.', 'eightshift-forms'),
 		];
@@ -162,18 +156,18 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$formId) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'before_missing_formId',
 				'message' => \esc_html__('Missing form ID.', 'eightshift-forms'),
 			];
 		}
 
 		// Check if integration filter exists.
-		$integrationFilterName = Filters::ALL[$type]['fields'] ?? '';
+		$integrationFilterName = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[$type]['fields'] ?? '';
 		if (!\has_filter($integrationFilterName)) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_integration_filter',
 				'message' => \esc_html__('Provided integration name is not in our list of available integrations.', 'eightshift-forms'),
 			];
@@ -192,7 +186,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$integrationType) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_type',
 				'message' => \esc_html__('Missing form integration type.', 'eightshift-forms'),
 			];
@@ -202,7 +196,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$integrationItemId) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_itemId',
 				'message' => \esc_html__('Missing form integration item Id.', 'eightshift-forms'),
 			];
@@ -212,7 +206,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$integrationInnerId && $integrationType === SettingsAirtable::SETTINGS_TYPE_KEY) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_innerId',
 				'message' => \esc_html__('Missing form integration inner Id.', 'eightshift-forms'),
 			];
@@ -222,7 +216,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$integrationFields) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_fields',
 				'message' => \esc_html__('Missing form integration fields.', 'eightshift-forms'),
 			];
@@ -249,7 +243,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$fields) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_fields_build_empty',
 				'message' => \esc_html__('Integration fields build has failed.', 'eightshift-forms'),
 			];
@@ -261,7 +255,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Bailout if db content update with success.
 		return [
 			'formId' => $formId,
-			'status' => AbstractBaseRoute::STATUS_SUCCESS,
+			'status' => UtilsConfig::STATUS_SUCCESS,
 			'debugType' => 'after_success',
 			'message' => \esc_html__('Form updated.', 'eightshift-forms'),
 			'data' => $output,
@@ -282,20 +276,20 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$formId) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'before_missing_formId',
 				'message' => \esc_html__('Missing form ID.', 'eightshift-forms'),
 			];
 		}
 
 		// Get content from DB.
-		$content = Helper::getFormDetailsById($formId);
+		$content = UtilsGeneralHelper::getFormDetails($formId);
 
 		// Bailout if content is empty.
 		if (!$content) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'content_missing_content',
 				'message' => \esc_html__('Missing form content.', 'eightshift-forms'),
 			];
@@ -303,15 +297,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Prepare content variables.
 		$contentType = $content['type'] ?? '';
-		$contentItemId = $content['itemId'] ? Helper::unserializeAttributes($content['itemId']) : '';
-		$contentInnerId = $content['innerId'] ? Helper::unserializeAttributes($content['innerId']) : '';
+		$contentItemId = $content['itemId'] ? UtilsGeneralHelper::unserializeAttributes($content['itemId']) : '';
+		$contentInnerId = $content['innerId'] ? UtilsGeneralHelper::unserializeAttributes($content['innerId']) : '';
 		$contentFields = $content['fields'] ?? [];
 
 		// Bailout if content type is missing.
 		if (!$contentType) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'content_missing_type',
 				'message' => \esc_html__('Missing form content integration type block.', 'eightshift-forms'),
 			];
@@ -321,7 +315,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$contentItemId) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'content_missing_itemId',
 				'message' => \esc_html__('Missing form content integration item Id.', 'eightshift-forms'),
 			];
@@ -331,18 +325,18 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$contentInnerId && $contentType === SettingsAirtable::SETTINGS_TYPE_KEY) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'content_missing_innerId',
 				'message' => \esc_html__('Missing form content integration inner Id.', 'eightshift-forms'),
 			];
 		}
 
 		// Check if integration filter exists.
-		$integrationFilterName = Filters::ALL[$contentType]['fields'] ?? '';
+		$integrationFilterName = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[$contentType]['fields'] ?? '';
 		if (!\has_filter($integrationFilterName)) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_integration_filter',
 				'message' => \esc_html__('Provided integration name is not in our list of available integrations.', 'eightshift-forms'),
 			];
@@ -361,7 +355,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$integrationType) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_type',
 				'message' => \esc_html__('Missing form integration type.', 'eightshift-forms'),
 			];
@@ -371,7 +365,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$integrationItemId) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_itemId',
 				'message' => \esc_html__('Missing form integration item Id.', 'eightshift-forms'),
 			];
@@ -381,7 +375,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$integrationInnerId && $integrationType === SettingsAirtable::SETTINGS_TYPE_KEY) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_innerId',
 				'message' => \esc_html__('Missing form integration inner Id.', 'eightshift-forms'),
 			];
@@ -391,7 +385,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$integrationFields) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'integration_missing_fields_existing_content',
 				'message' => \esc_html__('Missing integration fields. This could indicate an API connection issue. Please check if your integration is connected properly.', 'eightshift-forms'),
 			];
@@ -401,7 +395,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$contentFields) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'content_missing_fields',
 				'message' => \esc_html__('Missing form content integration fields.', 'eightshift-forms'),
 			];
@@ -411,7 +405,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if ($integrationType !== $contentType) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'after_different_type',
 				'message' => \esc_html__('Integration type is different than content type.', 'eightshift-forms'),
 			];
@@ -421,7 +415,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if ($integrationItemId !== $contentItemId) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'after_different_itemId',
 				'message' => \esc_html__('Integration item ID is different than content item ID.', 'eightshift-forms'),
 			];
@@ -431,7 +425,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if ($integrationInnerId !== $contentInnerId && $integrationType === SettingsAirtable::SETTINGS_TYPE_KEY) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'after_different_innerId',
 				'message' => \esc_html__('Integration inner ID is different than content inner ID.', 'eightshift-forms'),
 			];
@@ -444,7 +438,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if ($output['isOutputMissing']) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_ERROR,
+				'status' => UtilsConfig::STATUS_ERROR,
 				'debugType' => 'after_empty_output',
 				'message' => \esc_html__('It appears that there is an error with the API connection when retrieving form data as the output is currently empty.', 'eightshift-forms'),
 				'data' => $output,
@@ -455,7 +449,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		if (!$output['update']) {
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_SUCCESS,
+				'status' => UtilsConfig::STATUS_SUCCESS,
 				'debugType' => 'after_no_update',
 				'message' => \esc_html__('Integration and local form are the same, no update required.', 'eightshift-forms'),
 				'data' => $output,
@@ -467,7 +461,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			// Bailout if db content update with success.
 			return [
 				'formId' => $formId,
-				'status' => AbstractBaseRoute::STATUS_SUCCESS,
+				'status' => UtilsConfig::STATUS_SUCCESS,
 				'debugType' => 'after_success',
 				'message' =>  \esc_html__('Form updated.', 'eightshift-forms'),
 				'data' => $output,
@@ -477,7 +471,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Bailout if some undefined error occurred.
 		return [
 			'formId' => $formId,
-			'status' => AbstractBaseRoute::STATUS_ERROR,
+			'status' => UtilsConfig::STATUS_ERROR,
 			'debugType' => 'after_undefined',
 			'message' => \esc_html__('Something went wrong.', 'eightshift-forms'),
 			'data' => $output,
@@ -1077,7 +1071,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	private function getBlockAttributePrefixByFullBlockName(string $name): array
 	{
-		$blockName = Helper::getBlockNameDetails($name);
+		$blockName = UtilsGeneralHelper::getBlockNameDetails($name);
 
 		$component = $blockName['nameAttr'];
 
@@ -1107,7 +1101,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$value = $label;
 		}
 
-		$delimiter = AbstractBaseRoute::DELIMITER;
+		$delimiter = UtilsConfig::DELIMITER;
 
 		if (!$value) {
 			return "{$parentName}{$delimiter}{$index}";
@@ -1170,7 +1164,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$output = [];
 
 		foreach (\array_keys($blocks) as $block) {
-			$delimiter = AbstractBaseRoute::DELIMITER;
+			$delimiter = UtilsConfig::DELIMITER;
 			$blockName = \explode($delimiter, $block);
 
 			$key = \count($blockName) === 1 ? 'order' : 'orderInner';
@@ -1195,7 +1189,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$topLevelOrder = $orders['order'] ?? [];
 
 		// Provide a custom order from external filter.
-		$filterName = Filters::getFilterName(['integrations', $integrationType, 'order']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', $integrationType, 'order']);
 		if (\has_filter($filterName)) {
 			$filterOrder = \apply_filters($filterName, []);
 

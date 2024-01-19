@@ -41,9 +41,9 @@ interface MailerInterface
 	/**
 	 * Send fallback email.
 	 *
-	 * @param array<mixed> $data Data to extract data from.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function fallbackEmail(array $data): bool;
+	public function fallbackIntegrationEmail(array $formDetails): bool;
 }

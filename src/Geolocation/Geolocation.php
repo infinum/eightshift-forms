@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Misc\SettingsCloudflare;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDataHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
 use Exception;
 
@@ -23,11 +23,6 @@ use Exception;
  */
 class Geolocation extends AbstractGeolocation implements GeolocationInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Geolocation check if user is geolocated constant.
 	 *
@@ -113,9 +108,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$path = Helper::getDataManifestPath('geolocation', 'geoip.phar');
+		$path = UtilsDataHelper::getDataManifestPath('geolocation', 'geoip.phar');
 
-		$filterName = Filters::getFilterName(['geolocation', 'pharLocation']);
+		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -137,9 +132,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$path = Helper::getDataManifestPath('geolocation', 'geoip.mmdb');
+		$path = UtilsDataHelper::getDataManifestPath('geolocation', 'geoip.mmdb');
 
-		$filterName = Filters::getFilterName(['geolocation', 'dbLocation']);
+		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -159,7 +154,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getCountriesList(): array
 	{
-		$filterName = Filters::getFilterName(['geolocation', 'countriesList']);
+		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'countriesList']);
 
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $this->getCountries());
@@ -279,7 +274,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Use Cloudflare header if that feature is used.
-		if ($this->isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$outputCloudflare = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CF_IPCOUNTRY']) : ''; // phpcs:ignore
 
 			if ($outputCloudflare) {

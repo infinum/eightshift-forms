@@ -6,8 +6,9 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');
@@ -37,7 +38,7 @@ $submitClass = Components::classnames([
 ]);
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('submit', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('submit', $attributes);
 
 $submitIconContent = '';
 if ($submitIcon) {
@@ -74,7 +75,7 @@ echo Components::render(
 			'fieldContent' => $button,
 			'fieldId' => $submitName,
 			'fieldUseError' => false,
-			'fieldTypeInternal' => Helper::getStateFieldType('submit'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('submit'),
 			'fieldDisabled' => !empty($submitIsDisabled),
 			'fieldTracking' => $submitTracking,
 			'fieldUniqueId' => $submitUniqueId,

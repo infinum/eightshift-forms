@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -35,13 +35,13 @@ $radioIsHidden = Components::checkAttr('radioIsHidden', $attributes, $manifest);
 $radioClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($radioIsDisabled, Helper::getStateSelector('isDisabled')),
-	Components::selector($radioIsHidden, Helper::getStateSelector('isHidden')),
+	Components::selector($radioIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
+	Components::selector($radioIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);
 
 $radioInputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'input'),
-	Components::selector($radioSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
+	Components::selector($radioSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 $radioAttrs['value'] = esc_attr($radioValue);
@@ -59,13 +59,13 @@ $conditionalTags = Components::render(
 );
 
 if ($conditionalTags) {
-	$radioFieldAttrs[Helper::getStateAttribute('conditionalTags')] = $conditionalTags;
+	$radioFieldAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 
-$radioFieldAttrs[Helper::getStateAttribute('fieldName')] = $radioValue;
+$radioFieldAttrs[UtilsHelper::getStateAttribute('fieldName')] = $radioValue;
 
 if ($componentName) {
-	$radioFieldAttrs[Helper::getStateAttribute('fieldType')] = 'radio';
+	$radioFieldAttrs[UtilsHelper::getStateAttribute('fieldType')] = 'radio';
 }
 
 $radioFieldAttrsOutput = '';

@@ -6,7 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -34,7 +36,7 @@ $ratingHideLabel = false;
 $ratingClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Helper::getStateSelector('rating'),
+	UtilsHelper::getStateSelector('rating'),
 ]);
 
 if (!$ratingValue || !is_numeric($ratingValue)) {
@@ -45,7 +47,7 @@ if ($ratingAmount < $ratingValue) {
 	$ratingValue = $ratingAmount;
 }
 
-$ratingAttrs[Helper::getStateAttribute('ratingValue')] = $ratingValue;
+$ratingAttrs[UtilsHelper::getStateAttribute('ratingValue')] = $ratingValue;
 
 $ratingAttrsOutput = '';
 if ($ratingAttrs) {
@@ -55,7 +57,7 @@ if ($ratingAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('rating', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('rating', $attributes);
 
 $stars = '';
 
@@ -63,7 +65,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
 		<div
 			class="' . esc_attr("{$componentClass}__star") . '"
-			' . Helper::getStateAttribute('ratingValue') . '="' . $i . '"
+			' . UtilsHelper::getStateAttribute('ratingValue') . '="' . $i . '"
 		>
 		' . $icons['rating'] .
 		'</div>';
@@ -95,7 +97,7 @@ echo Components::render(
 			'fieldContent' => $rating,
 			'fieldId' => $ratingName,
 			'fieldName' => $ratingName,
-			'fieldTypeInternal' => Helper::getStateFieldType('rating'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('rating'),
 			'fieldIsRequired' => $ratingIsRequired,
 			'fieldDisabled' => !empty($ratingIsDisabled),
 			'fieldTypeCustom' => $ratingTypeCustom ?: 'rating', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

@@ -12,21 +12,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Manifest;
 
-use EightshiftForms\Config\Config;
-use EightshiftFormsVendor\EightshiftLibs\Manifest\AbstractManifest;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Manifest\UtilsManifest;
 
 /**
  * Class Manifest
  */
-class Manifest extends AbstractManifest
+class Manifest extends UtilsManifest
 {
-	/**
-	 * Manifest item filter name constant.
-	 *
-	 * @var string
-	 */
-	public const MANIFEST_ITEM = 'es-forms-manifest-item';
-
 	/**
 	 * Register all hooks. Changed filter name to manifest.
 	 *
@@ -34,17 +27,7 @@ class Manifest extends AbstractManifest
 	 */
 	public function register(): void
 	{
-		\add_action('init', [$this, 'setAssetsManifestRaw']);
-		\add_filter(static::MANIFEST_ITEM, [$this, 'getAssetsManifestItem']);
-	}
-
-	/**
-	 * Manifest file path getter.
-	 *
-	 * @return string
-	 */
-	public function getManifestFilePath(): string
-	{
-		return Config::getProjectPath() . '/public/manifest.json';
+		parent::register();
+		\add_filter(UtilsConfig::MAIN_PLUGIN_MANIFEST_ITEM_HOOK_NAME, [$this, 'getAssetsManifestItem']);
 	}
 }

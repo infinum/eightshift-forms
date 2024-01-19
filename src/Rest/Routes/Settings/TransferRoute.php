@@ -10,24 +10,19 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Transfer\Transfer;
 use EightshiftForms\Transfer\TransferInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class TransferRoute
  */
-class TransferRoute extends AbstractBaseRoute
+class TransferRoute extends AbstractUtilsBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -72,20 +67,6 @@ class TransferRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
@@ -124,7 +105,7 @@ class TransferRoute extends AbstractBaseRoute
 
 				if (!$items) {
 					return \rest_ensure_response(
-						$this->getApiErrorOutput(
+						UtilsApiHelper::getApiErrorPublicOutput(
 							\esc_html__('Please click on the forms you want to export.', 'eightshift-forms'),
 							[],
 							$debug
@@ -147,7 +128,7 @@ class TransferRoute extends AbstractBaseRoute
 
 				if (!$upload) {
 					return \rest_ensure_response(
-						$this->getApiErrorOutput(
+						UtilsApiHelper::getApiErrorPublicOutput(
 							\esc_html__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
 							[],
 							$debug
@@ -162,7 +143,7 @@ class TransferRoute extends AbstractBaseRoute
 
 				if (!$uploadStatus) {
 					return \rest_ensure_response(
-						$this->getApiErrorOutput(
+						UtilsApiHelper::getApiErrorPublicOutput(
 							\esc_html__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
 							[],
 							$debug
@@ -174,7 +155,7 @@ class TransferRoute extends AbstractBaseRoute
 				break;
 			default:
 				return \rest_ensure_response(
-					$this->getApiErrorOutput(
+					UtilsApiHelper::getApiErrorPublicOutput(
 						\esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
 						[],
 						$debug
@@ -186,7 +167,7 @@ class TransferRoute extends AbstractBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				// translators: %s will be replaced with the transfer internal type.
 				\sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
 				[

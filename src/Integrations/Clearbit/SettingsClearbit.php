@@ -10,22 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsClearbit class.
  */
-class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterface, SettingGlobalInterface
+class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterface, UtilsSettingGlobalInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -104,19 +100,19 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return false;
 		}
 
-		$typeItems = Filters::ALL[self::SETTINGS_TYPE_KEY]['integration'];
+		$typeItems = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[self::SETTINGS_TYPE_KEY]['integration'];
 
 		if (!isset($typeItems[$type])) {
 			return false;
 		}
 
-		$useClearbit = $this->getSettingValue($typeItems[$type]['use'], $formId);
+		$useClearbit = UtilsSettingsHelper::getSettingValue($typeItems[$type]['use'], $formId);
 
 		if (empty($useClearbit)) {
 			return false;
 		}
 
-		$mapSet = $this->getOptionValueGroup($typeItems[$type]['map']);
+		$mapSet = UtilsSettingsHelper::getOptionValueGroup($typeItems[$type]['map']);
 
 		if (empty($mapSet)) {
 			return false;
@@ -132,8 +128,8 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
-		$apiKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
+		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
 
 		if (!$isUsed || empty($apiKey)) {
 			return false;
@@ -150,12 +146,12 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY)) {
-			return $this->getSettingOutputNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -163,8 +159,8 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 						'component' => 'tab',
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
-							$this->getSettingsPasswordFieldWithGlobalVariable(
-								$this->getSettingsDisabledOutputWithDebugFilter(
+							UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
 									Variables::getApiKeyClearbit(),
 									self::SETTINGS_CLEARBIT_API_KEY_KEY,
 									'ES_API_KEY_CLEARBIT'
@@ -180,14 +176,14 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldHideLabel' => true,
-								'checkboxesName' => $this->getOptionName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
 								'checkboxesIsRequired' => true,
 								'checkboxesContent' => \array_map(
 									function ($item) {
 										return [
 											'component' => 'checkbox',
 											'checkboxLabel' => $item,
-											'checkboxIsChecked' => $this->isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+											'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
 											'checkboxValue' => $item,
 										];
 									},
@@ -233,13 +229,13 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return [];
 		}
 
-		$isUsed = $this->isSettingCheckboxChecked($key, $key, $formId);
+		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked($key, $key, $formId);
 
 		$output = [
 			[
 				'component' => 'checkboxes',
 				'checkboxesFieldLabel' => '',
-				'checkboxesName' => $this->getSettingName($key),
+				'checkboxesName' => UtilsSettingsHelper::getSettingName($key),
 				'checkboxesIsRequired' => false,
 				'checkboxesContent' => [
 					[
@@ -282,9 +278,9 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 			return [];
 		}
 
-		$clearbitAvailableKeys = $this->getOptionCheckboxValues(SettingsClearbit::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY);
+		$clearbitAvailableKeys = UtilsSettingsHelper::getOptionCheckboxValues(SettingsClearbit::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY);
 
-		$clearbitMapValue = $this->getOptionValueGroup($mapKey);
+		$clearbitMapValue = UtilsSettingsHelper::getOptionValueGroup($mapKey);
 
 		return [
 			'component' => 'tab',
@@ -300,7 +296,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 					],
 					$clearbitAvailableKeys ? [
 						'component' => 'group',
-						'groupName' => $this->getOptionName($mapKey),
+						'groupName' => UtilsSettingsHelper::getOptionName($mapKey),
 						'groupSaveOneField' => true,
 						'groupStyle' => 'default-listing',
 						'groupContent' => [

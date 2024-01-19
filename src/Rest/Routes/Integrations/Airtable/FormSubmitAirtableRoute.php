@@ -14,12 +14,12 @@ use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class FormSubmitAirtableRoute
@@ -74,37 +74,33 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDataReference['formId'];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
 		// Send application to Airtable.
-		$delimiter = AbstractBaseRoute::DELIMITER;
-
 		$response = $this->airtableClient->postApplication(
-			"{$formDataReference['itemId']}{$delimiter}{$formDataReference['innerId']}",
-			$formDataReference['params'],
-			$formDataReference['files'],
+			$formDetails[UtilsConfig::FD_ITEM_ID] . UtilsConfig::DELIMITER . $formDetails[UtilsConfig::FD_INNER_ID],
+			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[UtilsConfig::FD_FILES],
 			$formId
 		);
 
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+
 		// Finish.
 		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction(
-				$response,
-				$formDataReference,
-				$formId,
-			)
+			$this->getIntegrationCommonSubmitAction($formDetails)
 		);
 	}
 }

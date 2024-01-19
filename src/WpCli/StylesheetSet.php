@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\WpCli;
 
-use EightshiftForms\Config\Config;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use WP_CLI;
 
@@ -37,7 +37,7 @@ class StylesheetSet implements ServiceCliInterface
 	public function registerCommand(): void
 	{
 		WP_CLI::add_command(
-			Config::getProjectName() . ' ' . $this->getCommandName(),
+			UtilsConfig::MAIN_PLUGIN_WP_CLI_COMMAND_PREFIX . ' ' . $this->getCommandName(),
 			\get_class($this),
 			$this->getDocs()
 		);
@@ -80,9 +80,9 @@ class StylesheetSet implements ServiceCliInterface
 
 		$sep = \DIRECTORY_SEPARATOR;
 
-		$targetPath = __DIR__ . $sep . Config::getProjectName();
+		$targetPath = __DIR__ . $sep . UtilsConfig::MAIN_PLUGIN_PROJECT_SLUG;
 		$destinationPath = \get_template_directory() . $sep . $path;
-		$destinationPathWithFolder = $destinationPath . $sep . Config::getProjectName();
+		$destinationPathWithFolder = $destinationPath . $sep . UtilsConfig::MAIN_PLUGIN_PROJECT_SLUG;
 
 		if (\file_exists($destinationPathWithFolder)) {
 			WP_CLI::error(

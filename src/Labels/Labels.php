@@ -3,7 +3,7 @@
 /**
  * Class that holds all labels.
  *
- * @package EightshiftLibs\Labels
+ * @package EightshiftForms\Labels
  */
 
 declare(strict_types=1);
@@ -20,7 +20,7 @@ use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
@@ -29,11 +29,6 @@ use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
  */
 class Labels implements LabelsInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * List all label keys that are stored in local form everything else is global settings.
 	 */
@@ -68,62 +63,62 @@ class Labels implements LabelsInterface
 		);
 
 		// Google reCaptcha.
-		if ($this->isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
 			$output = \array_merge($output, $this->getCaptchaLabels());
 		}
 
 		// Greenhouse.
-		if ($this->isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
 			$output = \array_merge($output, $this->getGreenhouseLabels());
 		}
 
 		// Mailchimp.
-		if ($this->isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
 			$output = \array_merge($output, $this->getMailchimpLabels());
 		}
 
 		// Hubspot.
-		if ($this->isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
 			$output = \array_merge($output, $this->getHubspotLabels());
 		}
 
 		// Mailerlite.
-		if ($this->isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
 			$output = \array_merge($output, $this->getMailerliteLabels());
 		}
 
 		// Goodbits.
-		if ($this->isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
 			$output = \array_merge($output, $this->getGoodbitsLabels());
 		}
 
 		// ActiveCampaign.
-		if ($this->isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
 			$output = \array_merge($output, $this->getActiveCampaignLabels());
 		}
 
 		// Airtable.
-		if ($this->isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getAirtableLabels());
 		}
 
 		// Moments.
-		if ($this->isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
 			$output = \array_merge($output, $this->getMomentsLabels());
 		}
 
 		// Workable.
-		if ($this->isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getWorkableLabels());
 		}
 
 		// Jira.
-		if ($this->isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
 			$output = \array_merge($output, $this->getJiraLabels());
 		}
 
 		// Pipedrive.
-		if ($this->isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
 			$output = \array_merge($output, $this->getPipedriveLabels());
 		}
 
@@ -145,9 +140,9 @@ class Labels implements LabelsInterface
 			$local = \array_flip(self::ALL_LOCAL_LABELS);
 
 			if (isset($local[$key])) {
-				$dbLabel = $this->getSettingValue($key, $formId);
+				$dbLabel = UtilsSettingsHelper::getSettingValue($key, $formId);
 			} else {
-				$dbLabel = $this->getOptionValue($key);
+				$dbLabel = UtilsSettingsHelper::getOptionValue($key);
 			}
 
 			// If there is an override in the DB use that.

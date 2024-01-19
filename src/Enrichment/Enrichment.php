@@ -10,25 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enrichment;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\FiltersOuputMock;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
  * Enrichment class.
  */
 class Enrichment implements EnrichmentInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Enrichment expiration time in days const.
 	 *
@@ -74,7 +64,7 @@ class Enrichment implements EnrichmentInterface
 		}
 
 		$tags = [];
-		$tagsAdditional = $this->getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1);
+		$tagsAdditional = UtilsSettingsHelper::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1);
 
 		if ($tagsAdditional) {
 			$tagsAdditional = \str_replace(' ', \PHP_EOL, $tagsAdditional);
@@ -90,8 +80,8 @@ class Enrichment implements EnrichmentInterface
 			$tags = $tagsAdditional;
 		}
 
-		$expiration = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY);
-		$expirationPrefill = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY);
+		$expiration = UtilsSettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY);
+		$expirationPrefill = UtilsSettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY);
 
 		$fullAllowed = [
 			...$tags,
@@ -100,7 +90,7 @@ class Enrichment implements EnrichmentInterface
 
 		$map = [];
 		foreach ($fullAllowed as $value) {
-			$itemValue = $this->getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $value);
+			$itemValue = UtilsSettingsHelper::getOptionValue(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $value);
 
 			if ($itemValue) {
 				$itemValue = \str_replace(' ', '', $itemValue);
@@ -128,7 +118,7 @@ class Enrichment implements EnrichmentInterface
 	public function mapEnrichmentFields(array $params): array
 	{
 		// Get enrichment map.
-		$enrichment = $this->getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
+		$enrichment = FiltersOuputMock::getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
 
 		if (!$enrichment) {
 			return $params;
@@ -137,7 +127,7 @@ class Enrichment implements EnrichmentInterface
 		$enrichment = $enrichment['map'];
 
 		// Get storage param values.
-		$storage = $params[Helper::getStateParam('storage')]['value'] ?? [];
+		$storage = $params[UtilsHelper::getStateParam('storage')]['value'] ?? [];
 
 		// Map param values.
 		return \array_map(

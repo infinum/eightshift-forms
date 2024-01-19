@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -39,7 +40,7 @@ $checkboxesContent = (string) preg_replace_callback('/for=""/', function () use 
 }, $checkboxesContent);
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('checkboxes', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('checkboxes', $attributes);
 
 $checkboxes = '
 	' . $checkboxesContent . '
@@ -52,7 +53,7 @@ echo Components::render(
 		Components::props('field', $attributes, [
 			'fieldContent' => $checkboxes,
 			'fieldId' => $checkboxesName,
-			'fieldTypeInternal' => Helper::getStateFieldType('checkboxes'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 			'fieldName' => $checkboxesName,
 			'fieldIsRequired' => $checkboxesIsRequired,
 			'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

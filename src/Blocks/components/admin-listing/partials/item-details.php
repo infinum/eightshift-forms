@@ -6,14 +6,14 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getComponent('admin-listing');
-$selectorJsItem = Helper::getStateSelectorAdmin('listingItem');
+$selectorJsItem = UtilsHelper::getStateSelectorAdmin('listingItem');
 
-$isDevMode = apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
+$isDevMode = UtilsDeveloperHelper::isDeveloperModeActive();
 
 $items = $attributes['items'] ?? [];
 $emptyContent = $attributes['emptyContent'] ?? '';
@@ -45,7 +45,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 				'cardInlineTitle' => sprintf(__('%1$s - %2$s', 'eightshift-forms'), ucfirst($postType), $itemTitle) . ($isDevMode ? " ({$id})" : ''),
 				'cardInlineTitleLink' => $item['editLink'] ?? '',
 				'cardInlineIndented' => true,
-				'cardInlineIcon' => Helper::getProjectIcons('post'),
+				'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
 				'cardInlineRightContent' => Components::ensureString([
 					Components::render('submit', [
 						'submitVariant' => 'ghost',

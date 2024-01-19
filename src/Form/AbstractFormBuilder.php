@@ -11,19 +11,12 @@ declare(strict_types=1);
 namespace EightshiftForms\Form;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components as HelpersComponents;
 
 /**
  * FormBuilder class.
  */
 abstract class AbstractFormBuilder
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Nested keys for inner blocks
 	 *
@@ -116,7 +109,7 @@ abstract class AbstractFormBuilder
 		}
 
 		// Determin component name.
-		$component = $attributes['component'] ? HelpersComponents::kebabToCamelCase($attributes['component']) : '';
+		$component = $attributes['component'] ? Components::kebabToCamelCase($attributes['component']) : '';
 
 		// Check children components for specific components.
 		if (
@@ -136,7 +129,7 @@ abstract class AbstractFormBuilder
 					// Loop children and do the same on top level.
 					foreach ($attributes[$nestedKey] as $item) {
 						// Determine the component's name.
-						$innerComponent = isset($item['component']) ? HelpersComponents::kebabToCamelCase($item['component']) : '';
+						$innerComponent = isset($item['component']) ? Components::kebabToCamelCase($item['component']) : '';
 
 						// Build child component.
 						if ($item) {

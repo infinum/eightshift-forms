@@ -11,27 +11,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Blocks;
 
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
+use EightshiftFormsVendor\EightshiftFormsUtils\Blocks\UtilsBlocks;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_Block_Editor_Context;
+use WP_Post;
 
 /**
  * Class Blocks
  */
-class Blocks extends AbstractBlocks
+class Blocks extends UtilsBlocks
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
-	 * Blocks unique string filter name constant.
-	 *
-	 * @var string
-	 */
-	public const BLOCKS_UNIQUE_STRING_FILTER_NAME = 'es_blocks_unique_string';
-
 	/**
 	 * Register all the hooks
 	 *
@@ -39,15 +30,51 @@ class Blocks extends AbstractBlocks
 	 */
 	public function register(): void
 	{
-		// Register all custom blocks.
-		\add_action('init', [$this, 'getBlocksDataFullRaw'], 10);
-		\add_action('init', [$this, 'registerBlocks'], 11);
-
-		// Remove P tags from content.
-		\remove_filter('the_content', 'wpautop');
+		parent::register();
 
 		// Create new custom category for custom blocks.
 		\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
+
+		// Limits the usage of only custom project blocks.
+		\add_filter('allowed_block_types_all', [$this, 'getAllBlocksList'], 99999, 2);
+	}
+
+	/**
+	 * Add forms blocks to the list of all blocks.
+	 * This hook allows us to override any theme/plugin configurations to allow our blocks to be displayed.
+	 *
+	 * @param bool|string[] $allowedBlockTypes Doesn't have any influence on what function returns.
+	 * @param WP_Block_Editor_Context $blockEditorContext The current block editor context.
+	 *
+	 * @return bool|string[] The default list of blocks defined in the project.
+	 */
+	public function getAllBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
+	{
+		// Allow forms to be used correctly.
+		if (
+			$blockEditorContext->post instanceof WP_Post &&
+			!empty($blockEditorContext->post->post_type) &&
+			$blockEditorContext->post->post_type === UtilsConfig::SLUG_POST_TYPE
+		) {
+			return true;
+		}
+
+		if (\is_bool($allowedBlockTypes)) {
+			return $allowedBlockTypes;
+		}
+
+		// Allow forms blocks.
+		foreach (Components::getSettings()['allowedBlocksNoneBuilderBlocksList'] as $value) {
+			$allowedBlockTypes[] = $value;
+		}
+
+		// Merge addon blocks to the list.
+		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'allowedBlocks']);
+		if (\has_filter($filterName)) {
+			$allowedBlockTypes = \array_merge($allowedBlockTypes, \apply_filters($filterName, []));
+		}
+
+		return $allowedBlockTypes;
 	}
 
 	/**
@@ -68,8 +95,13 @@ class Blocks extends AbstractBlocks
 			$categories,
 			[
 				[
-					'slug' => 'eightshift-forms',
+					'slug' => UtilsConfig::BLOCKS_MAIN_CATEGORY_SLUG,
 					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
+					'icon' => 'admin-settings',
+				],
+				[
+					'slug' => UtilsConfig::BLOCKS_ADDONS_CATEGORY_SLUG,
+					'title' => \esc_html__('Eightshift Forms Addons', 'eightshift-forms'),
 					'icon' => 'admin-settings',
 				],
 			]

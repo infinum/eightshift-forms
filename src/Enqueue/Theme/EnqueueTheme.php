@@ -10,12 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Theme;
 
-use EightshiftForms\Config\Config;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
 
@@ -24,15 +25,10 @@ use EightshiftFormsVendor\EightshiftLibs\Enqueue\Theme\AbstractEnqueueTheme;
  */
 class EnqueueTheme extends AbstractEnqueueTheme
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	public const CAPTCHA_ENQUEUE_HANDLE = 'captcha';
 
 	/**
-	 * Create a new admin instance.
+	 * Create a new instance.
 	 *
 	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
 	 */
@@ -59,7 +55,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function enqueueScriptsLocal()
 	{
-		if ($this->isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -75,7 +71,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function enqueueStylesLocal(string $hook)
 	{
-		if ($this->isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_SCRIPT_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return null;
 		}
 
@@ -93,7 +89,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 			return [];
 		}
 
-		$scriptsDependency = Filters::getFilterName(['general', 'scriptsDependency']);
+		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'theme']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -102,7 +98,6 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		return $scriptsDependencyOutput;
 	}
-
 
 	/**
 	 * Method that returns frontend script for captcha if settings are correct.
@@ -121,9 +116,9 @@ class EnqueueTheme extends AbstractEnqueueTheme
 
 		$handle = "{$this->getAssetsPrefix()}-" . self::CAPTCHA_ENQUEUE_HANDLE;
 
-		$siteKey = $this->getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'];
+		$siteKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'];
 
-		$isEnterprise = $this->isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+		$isEnterprise = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
 
 		$url = "https://www.google.com/recaptcha/api.js?render={$siteKey}";
 
@@ -149,7 +144,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**
@@ -159,7 +154,7 @@ class EnqueueTheme extends AbstractEnqueueTheme
 	 */
 	public function getAssetsVersion(): string
 	{
-		return Config::getProjectVersion();
+		return UtilsGeneralHelper::getProjectVersion();
 	}
 
 	/**

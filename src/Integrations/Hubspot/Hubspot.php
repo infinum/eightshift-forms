@@ -10,12 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -23,11 +24,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter form fields.
 	 *
@@ -119,7 +115,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		}
 
 		// Find local but fallback to global settings.
-		$allowedFileTypes = $this->getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: $this->getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$allowedFileTypes = UtilsSettingsHelper::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: UtilsSettingsHelper::getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		if ($allowedFileTypes) {
 			$allowedFileTypes = \str_replace('.', '', $allowedFileTypes);
@@ -174,7 +170,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputIsRequired' => $isRequired,
 							'inputValue' => $value,
 							'inputFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$isRequired ? 'inputIsRequired' : '',
@@ -213,9 +209,9 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'datePlaceholder' => $placeholder,
 							'dateIsRequired' => $isRequired,
 							'dateValue' => $value,
-							'datePreviewFormat' => Helper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
+							'datePreviewFormat' => UtilsGeneralHelper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
 							'dateFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 								$isRequired ? 'dateIsRequired' : '',
@@ -242,7 +238,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'inputIsRequired' => $isRequired,
 							'inputValue' => $value,
 							'inputFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 								$isRequired ? 'inputIsRequired' : '',
@@ -275,7 +271,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'phoneIsNumber' => true,
 							'phoneValue' => $value,
 							'phoneFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 								$isRequired ? 'phoneIsRequired' : '',
@@ -298,7 +294,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'textareaIsRequired' => $isRequired,
 							'textareaValue' => $value,
 							'textareaFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$isRequired ? 'textareaIsRequired' : '',
@@ -328,7 +324,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'fileValue' => $value,
 							'fileIsMultiple' => !empty($isMultiple),
 							'fileFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 								$isRequired ? 'fileIsRequired' : '',
@@ -357,7 +353,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'selectIsRequired' => $isRequired,
 							'selectValue' => $value,
 							'selectFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'selectContent' => \array_filter(\array_values(\array_map(
 								function ($selectOption) use ($selectedOption) {
@@ -393,7 +389,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesName' => $name,
 							'checkboxesIsRequired' => $isRequired,
 							'checkboxesFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'checkboxesContent' => [
 								[
@@ -424,7 +420,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'checkboxesFieldLabel' => $label,
 							'checkboxesIsRequired' => $isRequired,
 							'checkboxesFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'checkboxesContent' => \array_map(
 								function ($checkbox) use ($name, $selectedOption) {
@@ -459,7 +455,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'radiosIsRequired' => $isRequired,
 							'radiosTracking' => $name,
 							'radiosFieldAttrs' => [
-								Helper::getStateAttribute('hubspotTypeId') => $objectTypeId,
+								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
 							'radiosContent' => \array_map(
 								function ($radio) use ($selectedOption) {
@@ -507,7 +503,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'checkboxes',
 						'checkboxesFieldBeforeContent' => $communicationIndex === 0 && !$communicationIsHidden ? $communicationText : '',
 						'checkboxesFieldHideLabel' => true,
-						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION . AbstractBaseRoute::DELIMITER . $communicationId,
+						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION . UtilsConfig::DELIMITER . $communicationId,
 						'checkboxesIsRequired' => $communicationIsRequired,
 						'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION,
 						'checkboxesContent' => [
@@ -618,7 +614,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		];
 
 		// Change the final output if necesery.
-		$filterName = Filters::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

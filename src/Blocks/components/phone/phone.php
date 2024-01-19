@@ -6,10 +6,12 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Blocks\SettingsBlocks;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSelect = Components::getComponent('select');
@@ -70,11 +72,11 @@ if ($phoneAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('phone', $attributes);
-$phoneSelectUseSearchAttr = Helper::getStateAttribute('selectAllowSearch');
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('phone', $attributes);
+$phoneSelectUseSearchAttr = UtilsHelper::getStateAttribute('selectAllowSearch');
 
 $options = [];
-$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'];
+$filterName = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $phoneFormPostId);
@@ -90,15 +92,15 @@ if (has_filter($filterName)) {
 		$value = $option[2] ?? '';
 
 		$customProperties = [
-			Helper::getStateAttribute('selectCountryCode') => $code,
-			Helper::getStateAttribute('selectCountryLabel') => $label,
-			Helper::getStateAttribute('selectCountryNumber') => $value,
+			UtilsHelper::getStateAttribute('selectCountryCode') => $code,
+			UtilsHelper::getStateAttribute('selectCountryLabel') => $label,
+			UtilsHelper::getStateAttribute('selectCountryNumber') => $value,
 		];
 
 		$options[] = '
 			<option
 				value="' . $value . '"
-				' . Helper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
+				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $settings['phone']['preselectedValue'], false) . '
 			>+' . $value . '</option>';
 	}
@@ -130,7 +132,7 @@ echo Components::render(
 			'fieldContent' => $phone,
 			'fieldId' => $phoneName,
 			'fieldName' => $phoneName,
-			'fieldTypeInternal' => Helper::getStateFieldType('phone'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),
 			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

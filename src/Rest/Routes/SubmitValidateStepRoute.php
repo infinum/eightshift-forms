@@ -11,22 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
  * Class SubmitValidateStepRoute
  */
 class SubmitValidateStepRoute extends AbstractFormSubmit
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */
@@ -78,20 +75,20 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
 		$debug = [
-			'formDataReference' => $formDataReference,
+			'formDetails' => $formDetails,
 		];
 
-		$currentStep = $formDataReference['apiSteps']['current'] ?? '';
+		$currentStep = $formDetails[UtilsConfig::FD_API_STEPS]['current'] ?? '';
 		if (!$currentStep) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -99,10 +96,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$submittedNames = $formDataReference['apiSteps']['fields'] ?? [];
+		$submittedNames = $formDetails[UtilsConfig::FD_API_STEPS]['fields'] ?? [];
 		if (!$submittedNames) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -110,10 +107,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$steps = $formDataReference['stepsSetup']['steps'] ?? [];
+		$steps = $formDetails[UtilsConfig::FD_STEPS_SETUP]['steps'] ?? [];
 		if (!$steps) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -121,7 +118,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$multiflow = $formDataReference['stepsSetup']['multiflow'] ?? [];
+		$multiflow = $formDetails[UtilsConfig::FD_STEPS_SETUP]['multiflow'] ?? [];
 
 		$nextStep = '';
 		$progressBarItems = 0;
@@ -130,11 +127,11 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		if ($multiflow) {
 			$type = 'multiflow';
 
-			$params = $formDataReference['params'] ?? [];
+			$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
 
 			if (!$params) {
 				return \rest_ensure_response(
-					$this->getApiErrorOutput(
+					UtilsApiHelper::getApiErrorPublicOutput(
 						\esc_html__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
 						[],
 						$debug
@@ -174,13 +171,13 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		}
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
-				\esc_html__('Step validation is success, you may continue.', 'eightshift-forms'),
+			UtilsApiHelper::getApiSuccessPublicOutput(
+				\esc_html__('Step validation is successful, you may continue.', 'eightshift-forms'),
 				[
-					'type' => $type,
-					'nextStep' => $nextStep,
-					'progressBarItems' => $progressBarItems,
-					'disableNextButton' => $disableNextButton,
+					UtilsHelper::getStateResponseOutputKey('stepType') => $type,
+					UtilsHelper::getStateResponseOutputKey('stepNextStep') => $nextStep,
+					UtilsHelper::getStateResponseOutputKey('stepProgressBarItems') => $progressBarItems,
+					UtilsHelper::getStateResponseOutputKey('stepIsDisableNextButton') => $disableNextButton,
 				],
 				$debug
 			)

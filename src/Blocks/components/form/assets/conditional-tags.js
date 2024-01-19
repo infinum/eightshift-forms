@@ -7,7 +7,7 @@ import {
 	prefix,
 	setStateWindow,
 	StateEnum,
-} from './state/init';
+} from './state-init';
 
 /**
  * Main conditon tags class.

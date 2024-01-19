@@ -76,7 +76,7 @@ jobs:
 
       - name: Check coding standards using PHPCS
         continue-on-error: true
-        run: composer standards:check -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
+        run: composer test:standards -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
 
       - name: Show PHPCS results in PR
         run: cs2pr ./phpcs-report.xml
@@ -114,4 +114,4 @@ jobs:
           ignore-cache: "yes"
 
       - name: Check code consistency using PHPStan
-        run: composer analyze
+        run: composer test:types

@@ -1,5 +1,3 @@
-import { ROUTES } from "../assets/state";
-
 export class TestApi {
 	constructor(options = {}) {
 		/** @type {import('./../assets/utils').Utils} */
@@ -44,7 +42,7 @@ export class TestApi {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrlByType(ROUTES.PREFIX_TEST_API, integrationType), body)
+		fetch(this.state.getRestUrlByType('prefixTestApi', integrationType), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'testApi', formId);
 				return response.json();

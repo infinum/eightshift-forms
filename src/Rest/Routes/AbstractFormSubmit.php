@@ -11,43 +11,26 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Helpers\UploadHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Settings\FiltersOuputMock;
-use EightshiftForms\Validation\Validator;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class AbstractFormSubmit
  */
-abstract class AbstractFormSubmit extends AbstractBaseRoute
+abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 {
-	/**
-	 * Use trait Upload_Helper inside class.
-	 */
-	use UploadHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
-	 * Use general helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Instance variable of ValidatorInterface data.
 	 *
@@ -99,20 +82,6 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
 
 	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
@@ -128,10 +97,10 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		// Try catch request.
 		try {
 			// Prepare all data.
-			$formDataReference = $this->getFormDataReference($request);
+			$formDetails = $this->getFormDetailsApi($request);
 
 			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
-			if (!$this->getValidator()->validateFormManadatoryProperies($formDataReference)) {
+			if (!$this->getValidator()->validateFormManadatoryProperies($formDetails)) {
 				throw new UnverifiedRequestException(
 					$this->getValidatorLabels()->getLabel('validationMissingMandatoryParams'),
 					[]
@@ -151,8 +120,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
 					// Validate files.
-					if (!\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY)) {
-						$validate = $this->getValidator()->validateFiles($formDataReference);
+					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
+						$validate = $this->getValidator()->validateFiles($formDetails);
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
@@ -162,14 +131,14 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 						}
 					}
 
-					$uploadFile = $this->uploadFile($formDataReference['filesUpload']);
+					$uploadFile = UtilsUploadHelper::uploadFile($formDetails[UtilsConfig::FD_FILES_UPLOAD]);
 					$uploadError = $uploadFile['errorOutput'] ?? '';
-					$uploadFileId = $formDataReference['filesUpload']['id'] ?? '';
+					$uploadFileId = $formDetails[UtilsConfig::FD_FILES_UPLOAD]['id'] ?? '';
 
 					// Upload files to temp folder.
-					$formDataReference['filesUpload'] = $uploadFile;
+					$formDetails[UtilsConfig::FD_FILES_UPLOAD] = $uploadFile;
 
-					if ($this->isUploadError($uploadError)) {
+					if (UtilsUploadHelper::isUploadError($uploadError)) {
 						throw new UnverifiedRequestException(
 							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
 							[
@@ -180,7 +149,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					break;
 				case self::ROUTE_TYPE_SETTINGS:
 					// Validate params.
-					$validate = $this->getValidator()->validateParams($formDataReference, false);
+					$validate = $this->getValidator()->validateParams($formDetails, false);
 
 					if ($validate) {
 						throw new UnverifiedRequestException(
@@ -191,8 +160,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					break;
 				case self::ROUTE_TYPE_STEP_VALIDATION:
 					// Validate params.
-					if (!\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY)) {
-						$validate = $this->getValidator()->validateParams($formDataReference, false);
+					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
+						$validate = $this->getValidator()->validateParams($formDetails, false);
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
@@ -204,13 +173,13 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					break;
 				default:
 					// Skip any validation if direct import.
-					if (isset($formDataReference['directImport'])) {
+					if (isset($formDetails[UtilsConfig::FD_DIRECT_IMPORT])) {
 						break;
 					}
 
 					// Validate params.
-					if (!\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_VALIDATION_KEY)) {
-						$validate = $this->getValidator()->validateParams($formDataReference);
+					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
+						$validate = $this->getValidator()->validateParams($formDetails);
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
@@ -222,7 +191,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 					// Validate captcha.
 					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-						$captchaParams = $formDataReference['captcha'] ?? [];
+						$captchaParams = $formDetails[UtilsConfig::FD_CAPTCHA] ?? [];
 
 						if (!$captchaParams) {
 							throw new UnverifiedRequestException(
@@ -237,7 +206,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 							(bool) $captchaParams['isEnterprise'] ?: false // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 						);
 
-						if ($captcha['status'] === AbstractBaseRoute::STATUS_ERROR) {
+						if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
 							return \rest_ensure_response($captcha);
 						}
 					}
@@ -245,19 +214,19 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			}
 
 			// Do Action.
-			return $this->submitAction($formDataReference);
+			return $this->submitAction($formDetails);
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$e->getMessage(),
 					[
-						Validator::VALIDATOR_OUTPUT_KEY => $e->getData(),
+						UtilsHelper::getStateResponseOutputKey('validation') => $e->getData(),
 					],
 					[
 						'exception' => $e,
 						'request' => $request,
-						'formDataReference' => $formDataReference,
+						'formDetails' => $formDetails,
 					]
 				)
 			);
@@ -267,25 +236,24 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	/**
 	 * Get integration common submit action
 	 *
-	 * @param array<string, mixed> $response Response data.
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
-	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param mixed $callbackAdditional Additional callback.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getIntegrationCommonSubmitAction(
-		array $response,
-		array $formDataReference,
-		string $formId,
-		$callbackAdditional = null
-	): array {
-		$validation = $response[Validator::VALIDATOR_OUTPUT_KEY] ?? [];
+	protected function getIntegrationCommonSubmitAction(array $formDetails, $callbackAdditional = null): array
+	{
+		$formDetails = $this->processCommonSubmitActionFormData($formDetails);
+
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
+		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
+
 		$disableFallbackEmail = false;
 
 		// Output integrations validation issues.
 		if ($validation) {
-			$response[Validator::VALIDATOR_OUTPUT_KEY] = $this->validator->getValidationLabelItems($validation, $formId);
+			$response[UtilsConfig::IARD_VALIDATION] = $this->validator->getValidationLabelItems($validation, $formId);
 			$disableFallbackEmail = true;
 		}
 
@@ -295,56 +263,37 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		}
 
 		// Skip fallback email if integration is disabled.
-		if (!$response['isDisabled'] && $response['status'] === AbstractBaseRoute::STATUS_ERROR) {
+		if (!$response[UtilsConfig::IARD_IS_DISABLED] && $response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_ERROR) {
 			// Prevent fallback email if we have validation errors parsed.
 			if (!$disableFallbackEmail) {
 				// Send fallback email.
-				$this->getFormSubmitMailer()->sendFallbackEmail(
-					\array_merge(
-						$response,
-						[
-							// Attach postID to the response because it is not available in the client's response.
-							'postId' => $formDataReference['postId'] ?? '',
-						]
-					)
-				);
+				$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
 			}
 		}
 
 		// Send email if it is configured in the backend.
-		if ($response['status'] === AbstractBaseRoute::STATUS_SUCCESS) {
-			$this->getFormSubmitMailer()->sendEmails($formDataReference);
+		if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
+			$this->getFormSubmitMailer()->sendEmails($formDetails);
 		}
 
-		$labelsOutput = $this->labels->getLabel($response['message'], $formId);
+		$labelsOutput = $this->labels->getLabel($response[UtilsConfig::IARD_MSG], $formId);
 		$responseOutput = $response;
 
 		// Output fake success and send fallback email.
-		if ($response['isDisabled'] && !$validation) {
-			$this->getFormSubmitMailer()->sendFallbackEmail(
-				\array_merge(
-					$response,
-					[
-						// Attach postID to the response because it is not available in the client's response.
-						'postId' => $formDataReference['postId'] ?? '',
-					]
-				)
-			);
+		if ($response[UtilsConfig::IARD_IS_DISABLED] && !$validation) {
+			$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
 
-			$fakeResponse = $this->getIntegrationApiSuccessOutput($response);
+			$fakeResponse = UtilsApiHelper::getIntegrationSuccessInternalOutput($response);
 
-			$labelsOutput = $this->labels->getLabel($fakeResponse['message'], $formId);
+			$labelsOutput = $this->labels->getLabel($fakeResponse[UtilsConfig::IARD_MSG], $formId);
 			$responseOutput = $fakeResponse;
 		}
 
-		// Save entries to DB.
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			EntriesHelper::setEntryByFormDataRef($formDataReference, $formId);
-		}
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
 
-		return $this->getIntegrationApiOutput(
-			$responseOutput,
-			$labelsOutput,
+		return UtilsApiHelper::getIntegrationApiPublicOutput(
+			$formDetails,
+			$labelsOutput
 		);
 	}
 
@@ -421,9 +370,9 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	abstract protected function submitAction(array $formDataReference);
+	abstract protected function submitAction(array $formDetails);
 }

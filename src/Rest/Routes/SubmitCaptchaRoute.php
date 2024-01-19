@@ -11,22 +11,18 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use Throwable;
 use WP_REST_Request;
 
 /**
  * Class SubmitCaptchaRoute
  */
-class SubmitCaptchaRoute extends AbstractBaseRoute
+class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */
@@ -71,20 +67,6 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
@@ -100,9 +82,9 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 		];
 
 		// Bailout if troubleshooting skip captcha is on.
-		if (\apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY)) {
+		if (UtilsDeveloperHelper::isDeveloperSkipCaptchaActive()) {
 			return \rest_ensure_response(
-				$this->getApiSuccessOutput(
+				UtilsApiHelper::getApiSuccessPublicOutput(
 					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
 					[],
 					$debug
@@ -122,7 +104,7 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$this->labels->getLabel('captchaBadRequest'),
 					[],
 					\array_merge(

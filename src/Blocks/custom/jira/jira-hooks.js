@@ -21,7 +21,7 @@ export const hooks = () => {
 				});
 			}
 
-			select(STORE_NAME).getSettings().fieldsAlways.forEach((element) => {
+			select(STORE_NAME).getSettings().allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
 				if (!settings.attributes.jiraAllowedBlocks.default.includes(element)) {
 					settings.attributes.jiraAllowedBlocks.default.push(element);
 				}

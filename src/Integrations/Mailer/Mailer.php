@@ -11,12 +11,12 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
-use EightshiftForms\Config\Config;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use Parsedown;
 
 /**
@@ -24,11 +24,6 @@ use Parsedown;
  */
 class Mailer implements MailerInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Send email function for form ID.
 	 *
@@ -58,8 +53,8 @@ class Mailer implements MailerInterface
 			$this->getTemplate('subject', $fields, $formId, $subject),
 			$this->getTemplate('message', $fields, $formId, $template, $responseFields),
 			$this->getHeader(
-				$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
-				$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
+				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
 			),
 			$this->prepareFiles($files)
 		);
@@ -68,11 +63,11 @@ class Mailer implements MailerInterface
 	/**
 	 * Send fallback email
 	 *
-	 * @param array<mixed> $data Data to extract data from.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function fallbackEmail(array $data): bool
+	public function fallbackIntegrationEmail(array $formDetails): bool
 	{
 		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
 
@@ -80,48 +75,53 @@ class Mailer implements MailerInterface
 			return false;
 		}
 
-		$integration = $data['integration'] ?? '';
-		$files = $data['files'] ?? [];
-		$formId = $data['formId'] ?? '';
-		$isDisabled = $data['isDisabled'] ?? false;
+		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
 
-		$data['formsDebug'] = [
-			'forms' => Config::getProjectVersion(),
-			'php' => \phpversion(),
-			'wp' => \get_bloginfo('version'),
-			'url' => \get_bloginfo('url'),
-			'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
-			'time' => \wp_date('Y-m-d H:i:s'),
+		$type = $response[UtilsConfig::IARD_TYPE] ?? '';
+		$files = $response[UtilsConfig::IARD_FILES] ?? [];
+		$formId = $response[UtilsConfig::IARD_FORM_ID] ?? '';
+		$isDisabled = $response[UtilsConfig::IARD_IS_DISABLED] ?? false;
+
+		$output = [
+			UtilsConfig::IARD_STATUS => $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR,
+			UtilsConfig::IARD_MSG => $response[UtilsConfig::IARD_MSG] ?? '',
+			UtilsConfig::IARD_TYPE => $type,
+			UtilsConfig::IARD_PARAMS => $response[UtilsConfig::IARD_PARAMS] ?? [],
+			UtilsConfig::IARD_RESPONSE => $response[UtilsConfig::IARD_RESPONSE] ?? [],
+			UtilsConfig::IARD_CODE => $response[UtilsConfig::IARD_CODE] ?? 0,
+			UtilsConfig::IARD_BODY => $response[UtilsConfig::IARD_BODY] ?? [],
+			UtilsConfig::IARD_URL => $response[UtilsConfig::IARD_URL] ?? '',
+			UtilsConfig::IARD_ITEM_ID => $response[UtilsConfig::IARD_ITEM_ID] ?? '',
+			UtilsConfig::IARD_FORM_ID => $formId,
+			UtilsConfig::FD_POST_ID => $formDetails[UtilsConfig::FD_POST_ID] ?? '',
+			'debug' => [
+				'forms' => UtilsGeneralHelper::getProjectVersion(),
+				'php' => \phpversion(),
+				'wp' => \get_bloginfo('version'),
+				'url' => \get_bloginfo('url'),
+				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
+				'time' => \wp_date('Y-m-d H:i:s'),
+			],
 		];
 
 		// translators: %1$s replaces the integration name and %2$s formId.
-		$subject = \sprintf(\__('Failed %1$s integration: %2$s', 'eightshift-forms'), $integration, $formId);
+		$subject = \sprintf(\__('Failed %1$s form: %2$s', 'eightshift-forms'), $type, $formId);
 		$body = '<p>' . \esc_html__('It seems like there was an issue with the user\'s form submission. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
 
 		if ($isDisabled) {
-			$body = '<p>' . \esc_html__('It appears that your integration is currently inactive, and as a result, all the data from your form is included in this email for you to manually input.', 'eightshift-forms') . '</p>';
+			$body = '<p>' . \esc_html__('It appears that your form is currently inactive, and as a result, all the data from your form is included in this email for you to manually input.', 'eightshift-forms') . '</p>';
 			// translators: %1$s replaces the integration name and %2$s formId.
-			$subject = \sprintf(\__('Disabled %1$s integration: %2$s', 'eightshift-forms'), $integration, $formId);
+			$subject = \sprintf(\__('Disabled %1$s form: %2$s', 'eightshift-forms'), $type, $formId);
 		}
 
 		// translators: %s replaces the form name.
 		$body .= '<p>' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
 
-		if (isset($data['files'])) {
-			unset($data['files']);
-		}
-		if (isset($data['subject'])) {
-			unset($data['subject']);
-		}
-		if (isset($data['isDisabled'])) {
-			unset($data['isDisabled']);
-		}
-
-		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
+		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($output, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
 
 		$filesOutput = [];
 		if ($files) {
-			switch ($integration) {
+			switch ($type) {
 				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
 					foreach ($files as $file) {
 						if ($file instanceof CURLFile) {
@@ -130,13 +130,13 @@ class Mailer implements MailerInterface
 					}
 					break;
 				default:
-					$filesOutput = Helper::recursiveFind($files, 'path');
+					$filesOutput = UtilsGeneralHelper::recursiveFind($files, 'path');
 					break;
 			}
 		}
 
-		$to = $this->getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
-		$cc = $this->getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration);
+		$to = UtilsSettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$cc = UtilsSettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
 		$headers = [
 			$this->getType()
 		];
@@ -245,13 +245,13 @@ class Mailer implements MailerInterface
 		$output = [];
 
 		// Filter params.
-		$filterName = Filters::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';

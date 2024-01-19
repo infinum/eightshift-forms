@@ -1,5 +1,3 @@
-import { ROUTES } from "../assets/state";
-
 export class Bulk {
 	constructor(options = {}) {
 		/** @type {import('./../assets/utils').Utils} */
@@ -85,7 +83,7 @@ export class Bulk {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl(ROUTES.BULK), body)
+		fetch(this.state.getRestUrl('bulk'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'bulk', null);
 				return response.json();

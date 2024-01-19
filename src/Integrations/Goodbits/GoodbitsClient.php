@@ -11,35 +11,21 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Goodbits;
 
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Validation\Validator;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * GoodbitsClient integration class.
  */
 class GoodbitsClient implements ClientInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
-	 * Helper trait.
-	 */
-	use ObjectHelperTrait;
-
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Return Goodbits base url.
 	 *
@@ -75,7 +61,7 @@ class GoodbitsClient implements ClientInterface
 	{
 		$key = $this->getApiKey();
 
-		if (\is_string($key) && $this->isJson($key)) {
+		if (\is_string($key) && Components::isJson($key)) {
 			$key = \json_decode($key);
 
 			$output = [];
@@ -126,7 +112,7 @@ class GoodbitsClient implements ClientInterface
 			'subscriber' => $this->prepareParams($params, $formId),
 		];
 
-		$filterName = Filters::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
@@ -142,7 +128,7 @@ class GoodbitsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsGoodbits::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -150,27 +136,24 @@ class GoodbitsClient implements ClientInterface
 			$files,
 			$itemId,
 			$formId,
-			$this->isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY, SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY, SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
-		Helper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
-			return $this->getIntegrationApiSuccessOutput($details);
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
+		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
-			$details,
-			$this->getErrorMsg($body),
-			[
-				Validator::VALIDATOR_OUTPUT_KEY => $this->getFieldsErrors($body),
-			]
-		);
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -190,7 +173,7 @@ class GoodbitsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return $this->getIntegrationApiReponseDetails(
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsGoodbits::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -281,15 +264,15 @@ class GoodbitsClient implements ClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		// Filter params.
-		$filterName = Filters::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
-		return Helper::prepareGenericParamsOutput($params);
+		return UtilsGeneralHelper::prepareGenericParamsOutput($params);
 	}
 
 	/**
@@ -299,6 +282,6 @@ class GoodbitsClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGoodbits(), SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGoodbits(), SettingsGoodbits::SETTINGS_GOODBITS_API_KEY_KEY)['value'];
 	}
 }

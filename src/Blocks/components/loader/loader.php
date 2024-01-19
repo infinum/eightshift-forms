@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -20,7 +20,7 @@ $loaderIsGeolocation = Components::checkAttr('loaderIsGeolocation', $attributes,
 $loaderClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Helper::getStateSelector('loader'),
+	UtilsHelper::getStateSelector('loader'),
 	Components::selector($loaderIsGeolocation && $componentClass, $componentClass, 'geolocation'),
 	Components::selector(!$loaderIsGeolocation && $componentClass, $componentClass, 'form'),
 ]);

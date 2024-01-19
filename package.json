@@ -22,7 +22,7 @@
 	"scripts": {
 		"lintStyle": "stylelint **/*.scss",
 		"lintJs": "eslint src/",
-		"lint": "npm run lintJs && npm run lintStyle && composer standards:check",
+		"lint": "npm run lintJs && npm run lintStyle && composer test:standards",
 		"start": "webpack --progress --watch --mode development",
 		"build": "webpack --progress --mode production",
 		"test": "wp boilerplate"

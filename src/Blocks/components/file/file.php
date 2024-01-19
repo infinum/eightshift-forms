@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -68,7 +69,7 @@ if ($fileAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('file', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('file', $attributes);
 
 $file = '
 	<input
@@ -91,7 +92,7 @@ echo Components::render(
 			'fieldContent' => $file,
 			'fieldId' => $fileName,
 			'fieldName' => $fileName,
-			'fieldTypeInternal' => Helper::getStateFieldType('file'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('file'),
 			'fieldDisabled' => !empty($fileIsDisabled),
 			'fieldIsRequired' => $fileIsRequired,
 			'fieldTypeCustom' => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

@@ -11,22 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Settings\SettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 /**
  * Class SubmitFilesRoute
  */
 class SubmitFilesRoute extends AbstractFormSubmit
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */
@@ -78,21 +75,21 @@ class SubmitFilesRoute extends AbstractFormSubmit
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('File upload success', 'eightshift-forms'),
 				[
-					'file' => $formDataReference['filesUpload']['id'] ?? '',
+					UtilsHelper::getStateResponseOutputKey('file') => $formDetails[UtilsConfig::FD_FILES_UPLOAD]['id'] ?? '',
 				],
 				[
-					'formDataReference' => $formDataReference,
+					'formDetails' => $formDetails,
 				]
 			)
 		);

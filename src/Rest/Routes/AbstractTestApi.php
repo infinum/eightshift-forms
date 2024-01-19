@@ -11,12 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class AbstractTestApi
  */
-abstract class AbstractTestApi extends AbstractBaseRoute
+abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Dynamic name route prefix for test api.
@@ -24,20 +27,6 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 	 * @var string
 	 */
 	public const ROUTE_PREFIX_TEST_API = 'test-api';
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
 
 	/**
 	 * Method that returns rest response
@@ -74,11 +63,11 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 				]
 			);
 
-			$code = $response['code'] ?? 400;
+			$code = $response['code'] ?? UtilsConfig::API_RESPONSE_CODE_ERROR;
 
-			if ($code >= 200 && $code <= 299) {
+			if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 				return \rest_ensure_response(
-					$this->getApiSuccessOutput(
+					UtilsApiHelper::getApiSuccessPublicOutput(
 						\esc_html__('The API test was successful.', 'eightshift-forms'),
 						$additionalOutput,
 						$debug
@@ -87,7 +76,7 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 			}
 
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
 					$additionalOutput,
 					$debug
@@ -96,7 +85,7 @@ abstract class AbstractTestApi extends AbstractBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$e->getMessage(),
 					[],
 					\array_merge(

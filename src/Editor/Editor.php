@@ -12,7 +12,7 @@ namespace EightshiftForms\Editor;
 
 use EightshiftForms\AdminMenus\FormAdminMenu;
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -37,7 +37,7 @@ class Editor implements ServiceInterface
 	 */
 	public function getEditorBackLink(): void
 	{
-		$actialUrl = Helper::getCurrentUrl();
+		$actialUrl = UtilsGeneralHelper::getCurrentUrl();
 		$postType = Forms::POST_TYPE_SLUG;
 		$page = FormAdminMenu::ADMIN_MENU_SLUG;
 

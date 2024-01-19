@@ -1,7 +1,6 @@
 /* global grecaptcha */
 
-import { ROUTES } from './state';
-import { prefix, setStateWindow } from './state/init';
+import { prefix, setStateWindow } from './state-init';
 
 /**
  * Captcha class.
@@ -58,7 +57,7 @@ export class Captcha {
 
 					this.formSubmitCaptchaInvisible(token, true, actionName);
 				} catch (error) {
-					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad"`);
+					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad". ${error}`);
 				}
 			});
 		} else {
@@ -68,7 +67,7 @@ export class Captcha {
 
 					this.formSubmitCaptchaInvisible(token, false, actionName);
 				} catch (error) {
-					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad"`);
+					throw new Error(`API response returned fatal error. Function used: "initCaptchaOnLoad". ${error}`);
 				}
 			});
 		}
@@ -103,7 +102,7 @@ export class Captcha {
 			referrer: 'no-referrer',
 		};
 
-		fetch(this.state.getRestUrl(ROUTES.CAPTCHA), body)
+		fetch(this.state.getRestUrl('captcha'), body)
 		.then((response) => {
 			this.utils.formSubmitErrorContentType(response, 'invisibleCaptcha', null);
 			return response.json();

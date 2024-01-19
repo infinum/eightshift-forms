@@ -1,7 +1,6 @@
 /* global grecaptcha */
 
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
-import { ROUTES } from './state';
 import selectManifest from './../../select/manifest.json';
 import {
 	StateEnum,
@@ -10,7 +9,7 @@ import {
 	setStateWindow,
 	removeStateForm,
 	setStateConditionalTagsItems,
-} from './state/init';
+} from './state-init';
 
 /**
  * Main Forms class.
@@ -119,7 +118,7 @@ export class Form {
 		};
 
 		// Get geolocation data from ajax to detect what we will remove from DOM.
-		fetch(this.state.getRestUrl(ROUTES.GEOLOCATION), body)
+		fetch(this.state.getRestUrl('geolocation'), body)
 		.then((response) => {
 			this.utils.formSubmitErrorContentType(response, 'geolocation', null);
 			return response.json();
@@ -275,11 +274,11 @@ export class Form {
 		};
 
 		// Url for frontend forms.
-		let url = this.state.getRestUrlByType(ROUTES.PREFIX_SUBMIT, formType);
+		let url = this.state.getRestUrlByType('prefixSubmit', formType);
 
 		// For admin settings use different url and add nonce.
 		if (this.state.getStateConfigIsAdmin()) {
-			url = this.state.getRestUrl(ROUTES.SETTINGS);
+			url = this.state.getRestUrl('settings');
 			body.headers['X-WP-Nonce'] = this.state.getStateConfigNonce();
 		}
 
@@ -329,7 +328,7 @@ export class Form {
 			referrer: 'no-referrer',
 		};
 
-		const url = this.state.getRestUrl(ROUTES.VALIDATION_STEP);
+		const url = this.state.getRestUrl('validationStep');
 
 		fetch(url, body)
 			.then((response) => {
@@ -400,7 +399,7 @@ export class Form {
 				}
 
 				// Redirect to url and update url params from from data.
-				this.utils.redirectToUrl(formId);
+				this.utils.redirectToUrl(formId, data);
 			} else {
 				// Clear form values.
 				this.utils.resetForm(formId);
@@ -445,18 +444,20 @@ export class Form {
 			data,
 		} = response;
 
+		const validationOutputKey = this.state.getStateResponseOutputKey('validation');
+
 		this.utils.setGlobalMsg(formId, message, status);
 
-		this.utils.gtmSubmit(formId, status, data?.validation);
+		this.utils.gtmSubmit(formId, status, data?.[validationOutputKey]);
 
 		// Dispatch event.
-		if (data?.validation !== undefined) {
+		if (data?.[validationOutputKey] !== undefined) {
 			this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitErrorValidation'), response);
 
-			this.utils.outputErrors(formId, data?.validation);
+			this.utils.outputErrors(formId, data?.[validationOutputKey]);
 
 			if (isFinalStep) {
-				this.steps.goToStepWithError(formId, data?.validation);
+				this.steps.goToStepWithError(formId, data?.[validationOutputKey]);
 			}
 		} else {
 			this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitError'), response);
@@ -518,6 +519,7 @@ export class Form {
 					this.utils.formSubmitErrorFatal(
 						this.state.getStateSettingsFormCaptchaErrorMsg(),
 						'runFormCaptcha',
+						error,
 						formId
 					);
 				}
@@ -538,6 +540,7 @@ export class Form {
 					this.utils.formSubmitErrorFatal(
 						this.state.getStateSettingsFormCaptchaErrorMsg(),
 						'runFormCaptcha',
+						error,
 						formId
 					);
 				}
@@ -1236,7 +1239,7 @@ export class Form {
 			const dropzone = new Dropzone.default(
 				field,
 				{
-					url: this.state.getRestUrl(ROUTES.FILES),
+					url: this.state.getRestUrl('files'),
 					addRemoveLinks: true,
 					autoDiscover: false,
 					parallelUploads: 1,
@@ -1315,9 +1318,11 @@ export class Form {
 			dropzone.on("success", (file) => {
 				const response = JSON.parse(file.xhr.response);
 
+				const validationOutputKey = this.state.getStateResponseOutputKey('validation');
+
 				// Output errors if ther is any.
-				if (typeof response?.data?.validation !== 'undefined' && Object.keys(response?.data?.validation)?.length > 0) {
-					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.validation?.[file?.upload?.uuid];
+				if (typeof response?.data?.[validationOutputKey] !== 'undefined' && Object.keys(response?.data?.[validationOutputKey])?.length > 0) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
 				}
 
 				field?.classList?.add(this.state.getStateSelector('isFilled'));

@@ -2,7 +2,7 @@
 
 import domReady from '@wordpress/dom-ready';
 import { Form } from './../assets/form';
-import { getStateSelectorAdmin, setStateInitial } from '../assets/state/init';
+import { setStateInitial } from '../assets/state-init';
 import { Utils } from '../assets/utils';
 
 domReady(() => {
@@ -22,6 +22,9 @@ domReady(() => {
 	// Load state helpers.
 	const utils = new Utils();
 
+	// Load state.
+	const state = utils.getState();
+
 	// Init form.
 	new Form(utils).init();
 
@@ -29,7 +32,7 @@ domReady(() => {
 	// Cache
 	////////////////////////////////////////////////////////////////
 
-	const selectorCache = getStateSelectorAdmin('cacheDelete', true);
+	const selectorCache = state.getStateSelectorAdmin('cacheDelete', true);
 
 	if (document.querySelectorAll(selectorCache).length) {
 		import('./cache').then(({ Cache }) => {
@@ -44,14 +47,14 @@ domReady(() => {
 	// Migration
 	////////////////////////////////////////////////////////////////
 
-	const selectorMigration = getStateSelectorAdmin('migration', true);
+	const selectorMigration = state.getStateSelectorAdmin('migration', true);
 
 	if (document.querySelectorAll(selectorMigration).length) {
 		import('./migration').then(({ Migration }) => {
 			new Migration({
 				utils: utils,
 				selector: selectorMigration,
-				outputSelector: getStateSelectorAdmin('migrationOutput', true),
+				outputSelector: state.getStateSelectorAdmin('migrationOutput', true),
 			}).init();
 		});
 	}
@@ -60,16 +63,16 @@ domReady(() => {
 	// Transfer
 	////////////////////////////////////////////////////////////////
 
-	const selectorTransfer = getStateSelectorAdmin('transfer', true);
+	const selectorTransfer = state.getStateSelectorAdmin('transfer', true);
 
 	if (document.querySelectorAll(selectorTransfer).length) {
 		import('./transfer').then(({ Transfer }) => {
 			new Transfer({
 				utils: utils,
 				selector: selectorTransfer,
-				itemSelector: getStateSelectorAdmin('transferItem', true),
-				uploadSelector: getStateSelectorAdmin('transferUpload', true),
-				overrideExistingSelector: getStateSelectorAdmin('transferExisting', true),
+				itemSelector: state.getStateSelectorAdmin('transferItem', true),
+				uploadSelector: state.getStateSelectorAdmin('transferUpload', true),
+				overrideExistingSelector: state.getStateSelectorAdmin('transferExisting', true),
 				uploadConfirmMsg: esFormsLocalization.uploadConfirmMsg,
 			}).init();
 		});
@@ -79,7 +82,7 @@ domReady(() => {
 	// Test api
 	////////////////////////////////////////////////////////////////
 
-	const selectorTestApi = getStateSelectorAdmin('testApi', true);
+	const selectorTestApi = state.getStateSelectorAdmin('testApi', true);
 
 	if (document.querySelectorAll(selectorTestApi).length) {
 		import('./test-api').then(({ TestApi }) => {
@@ -94,14 +97,14 @@ domReady(() => {
 	// Filter
 	////////////////////////////////////////////////////////////////
 
-	const selectorFilter = getStateSelectorAdmin('listingFilter', true);
+	const selectorFilter = state.getStateSelectorAdmin('listingFilter', true);
 
 	if (document.querySelector(selectorFilter)) {
 		import('./filter').then(({ Filter }) => {
 			new Filter({
 				utils: utils,
 				filterSelector: selectorFilter,
-				itemSelector: getStateSelectorAdmin('listingItem', true),
+				itemSelector: state.getStateSelectorAdmin('listingItem', true),
 			}).init();
 		});
 	}
@@ -110,16 +113,16 @@ domReady(() => {
 	// Bulk
 	////////////////////////////////////////////////////////////////
 
-	const selectorBulk = getStateSelectorAdmin('listingBulk', true);
+	const selectorBulk = state.getStateSelectorAdmin('listingBulk', true);
 
 	if (document.querySelector(selectorBulk)) {
 		import('./bulk').then(({ Bulk }) => {
 			new Bulk({
 				utils: utils,
 				selector: selectorBulk,
-				itemsSelector: getStateSelectorAdmin('listingBulkItems', true),
-				itemSelector: getStateSelectorAdmin('listingItem', true),
-				selectAllSelector: getStateSelectorAdmin('listingSelectAll', true),
+				itemsSelector: state.getStateSelectorAdmin('listingBulkItems', true),
+				itemSelector: state.getStateSelectorAdmin('listingItem', true),
+				selectAllSelector: state.getStateSelectorAdmin('listingSelectAll', true),
 			}).init();
 		});
 	}
@@ -128,14 +131,14 @@ domReady(() => {
 	// Export
 	////////////////////////////////////////////////////////////////
 
-	const selectorExport = getStateSelectorAdmin('listingExport', true);
+	const selectorExport = state.getStateSelectorAdmin('listingExport', true);
 
 	if (document.querySelector(selectorExport)) {
 		import('./export').then(({ Export }) => {
 			new Export({
 				utils: utils,
 				selector: selectorExport,
-				itemsSelector: getStateSelectorAdmin('listingBulkItems', true),
+				itemsSelector: state.getStateSelectorAdmin('listingBulkItems', true),
 			}).init();
 		});
 	}
@@ -144,14 +147,14 @@ domReady(() => {
 	// Locations
 	////////////////////////////////////////////////////////////////
 
-	const selectorLocations = getStateSelectorAdmin('listingLocations', true);
+	const selectorLocations = state.getStateSelectorAdmin('listingLocations', true);
 
 	if (document.querySelector(selectorLocations)) {
 		import('./locations').then(({ Locations }) => {
 			new Locations({
 				utils: utils,
 				selector: selectorLocations,
-				itemSelector: getStateSelectorAdmin('listingItem', true),
+				itemSelector: state.getStateSelectorAdmin('listingItem', true),
 			}).init();
 		});
 	}
@@ -160,15 +163,16 @@ domReady(() => {
 	// Manual import api
 	////////////////////////////////////////////////////////////////
 
-	const selectorManualImportApi = getStateSelectorAdmin('manualImportApi', true);
+	const selectorManualImportApi = state.getStateSelectorAdmin('manualImportApi', true);
 
 	if (document.querySelector(selectorManualImportApi)) {
 		import('./manual-import-api').then(({ ManualImportApi }) => {
 			new ManualImportApi({
 				utils: utils,
 				selector: selectorManualImportApi,
-				outputSelector: getStateSelectorAdmin('manualImportApiOutput', true),
-				dataSelector: getStateSelectorAdmin('manualImportApiData', true),
+				outputSelector: state.getStateSelectorAdmin('manualImportApiOutput', true),
+				dataSelector: state.getStateSelectorAdmin('manualImportApiData', true),
+				importErrorMsg: esFormsLocalization.importErrorMsg,
 			}).init();
 		});
 	}
@@ -178,13 +182,13 @@ domReady(() => {
 	// Tabs
 	////////////////////////////////////////////////////////////////
 
-	const selectorTabs = getStateSelectorAdmin('tabs', true);
+	const selectorTabs = state.getStateSelectorAdmin('tabs', true);
 
 	if (document.querySelectorAll(selectorTabs).length) {
 		import('./tabs').then(({ Tabs }) => {
 			new Tabs({
 				tabsSelector: selectorTabs,
-				tabSelector: getStateSelectorAdmin('tabsItem', true),
+				tabSelector: state.getStateSelectorAdmin('tabsItem', true),
 			}).init();
 		});
 	}

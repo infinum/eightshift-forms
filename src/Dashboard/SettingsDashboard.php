@@ -10,22 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Dashboard;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsDashboard class.
  */
-class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
+class SettingsDashboard implements UtilsSettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use dashboard helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter settings key.
 	 */
@@ -39,7 +35,7 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 	/**
 	 * Settings key.
 	 */
-	public const SETTINGS_TYPE_KEY = 'dashboard';
+	public const SETTINGS_TYPE_KEY = UtilsConfig::SLUG_ADMIN_DASHBOARD;
 
 	/**
 	 * Register all the hooks.
@@ -60,30 +56,34 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 	{
 		$filtered = [];
 
-		foreach (Filters::ALL as $key => $value) {
+		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
+
+		foreach ($data as $key => $value) {
 			$use = $value['use'] ?? '';
 
 			if (!$use) {
 				continue;
 			}
 
-			$checked = $this->isOptionCheckboxChecked($use, $use);
+			$checked = UtilsSettingsHelper::isOptionCheckboxChecked($use, $use);
+
+			$labels = $value['labels'] ?? [];
 
 			$item = [
 				'component' => 'card-inline',
-				'cardInlineTitle' => Filters::getSettingsLabels($key),
-				'cardInlineIcon' => Helper::getProjectIcons($key),
+				'cardInlineTitle' => $labels['title'] ?? '',
+				'cardInlineIcon' => $labels['icon'] ?? '',
 				'cardInlineRightContent' => [
 					$checked ? [
 						'component' => 'submit',
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => Helper::getSettingsGlobalPageUrl($key),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getSettingsGlobalPageUrl($key),
 						'submitValue' => \__('Edit', 'eightshift-forms'),
 					] : [],
 					[
 						'component' => 'checkboxes',
-						'checkboxesName' => $this->getOptionName($use),
+						'checkboxesName' => UtilsSettingsHelper::getOptionName($use),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
@@ -103,16 +103,17 @@ class SettingsDashboard implements SettingGlobalInterface, ServiceInterface
 		}
 
 		$output = [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 		];
 
-		foreach ($filtered as $key => $value) {
+		// Order output in the correct order.
+		foreach (UtilsSettingsHelper::sortSettingsByOrder($filtered) as $key => $value) {
 			$output[] = [
 				'component' => 'layout',
 				'layoutContent' => [
 					[
 						'component' => 'intro',
-						'introTitle' => Filters::getSettingsLabels($key),
+						'introTitle' => $data[$key]['labels']['title'] ?? '',
 						'introIsHeading' => false,
 						'introTitleSize' => 'small',
 					],

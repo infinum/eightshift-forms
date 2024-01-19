@@ -10,20 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsEntries class.
  */
-class SettingsEntries implements SettingGlobalInterface, ServiceInterface
+class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter settings key.
 	 */
@@ -101,7 +99,7 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 			return false;
 		}
 
-		$isUsed = $this->isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
+		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 
 		if (!$isUsed) {
 			return false;
@@ -117,7 +115,7 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
 			return false;
 		}
 
@@ -135,13 +133,13 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return $this->getSettingOutputNoActiveFeature();
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$isUsed = $this->isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
+		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsFull' => true,
@@ -153,7 +151,7 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -164,6 +162,19 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 										'checkboxAsToggle' => true,
 									]
 								]
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'intro',
+								// translators: %s is the link to the entries page.
+								'introSubtitle' => \sprintf(\__("
+									<p>
+										You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.
+									</p>
+								", 'eightshift-forms'), UtilsGeneralHelper::getFormsEntriesPageUrl($formId)),
 							],
 						],
 					],
@@ -179,12 +190,12 @@ class SettingsEntries implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
-			return $this->getSettingOutputNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [

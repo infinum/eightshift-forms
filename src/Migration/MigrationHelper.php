@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -21,11 +21,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
  */
 trait MigrationHelper
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Update mailer forms.
 	 *
@@ -95,8 +90,8 @@ trait MigrationHelper
 			'data' => [],
 		];
 
-		$itemId = $this->getSettingValue("{$type}-{$itemIdKey}", $id);
-		$innerId = $this->getSettingValue("{$type}-{$innerIdKey}", $id);
+		$itemId = UtilsSettingsHelper::getSettingValue("{$type}-{$itemIdKey}", $id);
+		$innerId = UtilsSettingsHelper::getSettingValue("{$type}-{$innerIdKey}", $id);
 		$blocks = \parse_blocks($content);
 		$integrationFields = $this->prepareIntegrationFields2To3Forms($type, $id);
 
@@ -116,7 +111,7 @@ trait MigrationHelper
 
 		$syncForm = $this->integrationSyncDiff->createFormEditor($id, $type, $itemId, $innerId);
 		$syncFormOutput = $syncForm['data']['output'] ?? [];
-		$syncFormStatus = $syncForm['status'] ?? AbstractBaseRoute::STATUS_ERROR;
+		$syncFormStatus = $syncForm['status'] ?? UtilsConfig::STATUS_ERROR;
 		$syncFormDebugType = $syncForm['debugType'] ?? '';
 
 		if (!$itemId) {
@@ -137,7 +132,7 @@ trait MigrationHelper
 			return $output;
 		}
 
-		if ($syncFormStatus === AbstractBaseRoute::STATUS_ERROR) {
+		if ($syncFormStatus === UtilsConfig::STATUS_ERROR) {
 			// translators: %s will be replaced with the debug type.
 			$output['msg'][] = \sprintf(\__("Sync form status is error - %s", 'eightshift-forms'), $syncFormDebugType);
 			$output['fatal'] = true;
@@ -156,7 +151,7 @@ trait MigrationHelper
 		}
 
 		foreach ($syncFormOutput as $key => $block) {
-			$blockName = Helper::getBlockNameDetails($block['blockName'])['name'];
+			$blockName = UtilsGeneralHelper::getBlockNameDetails($block['blockName'])['name'];
 			$prefix = Components::kebabToCamelCase("{$blockName}-{$blockName}");
 			$name = $block['attrs']["{$prefix}Name"] ?? '';
 			$label = $block['attrs']["{$prefix}FieldLabel"] ?? '';
@@ -230,14 +225,14 @@ trait MigrationHelper
 	{
 		$output = [];
 
-		$integrationFields = $this->getSettingValueGroup("{$type}-integration-fields", $id);
+		$integrationFields = UtilsSettingsHelper::getSettingValueGroup("{$type}-integration-fields", $id);
 
 		if (!$integrationFields) {
 			return [];
 		}
 
 		foreach ($integrationFields as $key => $value) {
-			$key = \explode(AbstractBaseRoute::DELIMITER, $key);
+			$key = \explode(UtilsConfig::DELIMITER, $key);
 			$name = $key[0] ?? '';
 			$innerKey = $key[1] ?? '';
 

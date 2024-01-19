@@ -11,16 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Pipedrive;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClientInterface;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
  * Class FormSubmitPipedriveRoute
@@ -75,56 +74,53 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
 	 * Implement submit action.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return mixed
 	 */
-	protected function submitAction(array $formDataReference)
+	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDataReference['formId'];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
 		// Send application to Hubspot.
 		$response = $this->pipedriveClient->postApplication(
-			$formDataReference['params'],
-			$formDataReference['files'],
+			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[UtilsConfig::FD_FILES],
 			$formId
 		);
 
-		$formDataReference['emailResponseTags'] = $this->getEmailResponseTags($response);
+		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[UtilsConfig::FD_EMAIL_RESPONSE_TAGS] = $this->getEmailResponseTags($formDetails);
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction(
-				$response,
-				$formDataReference,
-				$formId,
-			)
+			$this->getIntegrationCommonSubmitAction($formDetails)
 		);
 	}
 
 	/**
 	 * Prepare email response tags from the API response.
 	 *
-	 * @param array<mixed> $response Response data to extract data from.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return array<string, string>
 	 */
-	private function getEmailResponseTags(array $response): array
+	private function getEmailResponseTags(array $formDetails): array
 	{
-		$body = $response['body']['data'] ?? [];
+		$body = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];
 		$output = [];
 
 		if (!$body) {
 			return $output;
 		}
 
-		foreach (Filters::ALL[SettingsPipedrive::SETTINGS_TYPE_KEY]['emailTemplateTags'] as $key => $value) {
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsPipedrive::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
 			$output[$key] = $body[$value] ?? '';
 		}
 

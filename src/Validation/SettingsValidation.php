@@ -11,23 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Labels\Labels;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingInterface;
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsValidation class.
  */
-class SettingsValidation implements SettingInterface, SettingGlobalInterface, ServiceInterface
+class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter settings key.
 	 */
@@ -94,11 +90,11 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 			[
 				'component' => 'intro',
 				// translators: %s will be replaced with the settings link.
-				'introSubtitle' => \sprintf(\__('In these settings, you can change all validation success messages. Global validation options can be configured in the <a href="%s" target="_blank" rel="noopener noreferrer">global settings.</a>', 'eightshift-forms'), Helper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
+				'introSubtitle' => \sprintf(\__('In these settings, you can change all validation success messages. Global validation options can be configured in the <a href="%s" target="_blank" rel="noopener noreferrer">global settings.</a>', 'eightshift-forms'), UtilsGeneralHelper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
 			],
 		];
 
-		$formType = Helper::getFormTypeById($formId);
+		$formType = UtilsGeneralHelper::getFormTypeById($formId);
 
 		if (!$formType) {
 			return [];
@@ -107,7 +103,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 		$key = "{$formType}Success";
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -117,10 +113,10 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => $this->getSettingName($key),
+								'inputName' => UtilsSettingsHelper::getSettingName($key),
 								'inputFieldLabel' => \ucfirst($key),
 								'inputPlaceholder' => $this->labels->getLabels()[$key],
-								'inputValue' => $this->getSettingValue($key, $formId),
+								'inputValue' => UtilsSettingsHelper::getSettingValue($key, $formId),
 							],
 						],
 					],
@@ -157,15 +153,15 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 
 			$messagesOutput[] = [
 				'component' => 'input',
-				'inputName' => $this->getOptionName($key),
+				'inputName' => UtilsSettingsHelper::getOptionName($key),
 				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
-				'inputValue' => $this->getOptionValue($key),
+				'inputValue' => UtilsSettingsHelper::getOptionValue($key),
 			];
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -176,12 +172,12 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => $this->getOptionName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use top level domain validation on all email fields', 'eightshift-forms'),
-										'checkboxIsChecked' => $this->isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
 										'checkboxValue' => self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -194,12 +190,12 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => $this->getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Custom validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
-								'textareaFieldHelp' => Helper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
 									Patterns defined in this field can be selected in the Form editor.<br />
 									If you need help with writing regular expressions (regex), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at regex101.com</a>.<br /><br />
 									Enter one pattern per line, in the following format:<br />
@@ -208,7 +204,7 @@ class SettingsValidation implements SettingInterface, SettingGlobalInterface, Se
 									<ul>
 									%2\$s
 									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
-								'textareaValue' => $this->getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
+								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
 							],
 						],
 					],

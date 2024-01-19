@@ -13,24 +13,16 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
  * Class FormSubmitMailer
  */
 class FormSubmitMailer implements FormSubmitMailerInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Instance variable of LabelsInterface data.
 	 *
@@ -62,19 +54,20 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	/**
 	 * Send emails method.
 	 *
-	 * @param array<string, mixed> $formDataReference Form reference got from abstract helper.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param boolean $useSuccessAction If success action should be used.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDataReference): array
+	public function sendEmails(array $formDetails, bool $useSuccessAction = false): array
 	{
-		$formId = $formDataReference['formId'];
-		$params = $formDataReference['params'];
-		$files = $formDataReference['files'];
-		$responseTags = $formDataReference['emailResponseTags'] ?? [];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$files = $formDetails[UtilsConfig::FD_FILES];
+		$responseTags = $formDetails[UtilsConfig::FD_EMAIL_RESPONSE_TAGS] ?? [];
 
 		$debug = [
-			'formDataReference' => $formDataReference,
+			'formDetails' => $formDetails,
 		];
 
 		// Check if Mailer data is set and valid.
@@ -82,7 +75,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
-			return $this->getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
 				[],
 				$debug
@@ -92,9 +85,9 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		// Send email.
 		$response = $this->mailer->sendFormEmail(
 			$formId,
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
 			$params,
 			$responseTags
@@ -102,7 +95,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// If email fails.
 		if (!$response) {
-			return $this->getApiErrorOutput(
+			return UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel('mailerErrorEmailSend', $formId),
 				[],
 				$debug
@@ -111,10 +104,17 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		$this->sendConfirmationEmail($formId, $params, $files);
 
+		if ($useSuccessAction) {
+			$actionName = UtilsHooksHelper::getActionName(['entries', 'saveEntry']);
+			if (\has_action($actionName)) {
+				\do_action($actionName, $formDetails);
+			}
+		}
+
 		// Finish.
-		return $this->getApiSuccessOutput(
+		return UtilsApiHelper::getApiSuccessPublicOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
-			[],
+			UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails),
 			$debug
 		);
 	}
@@ -122,13 +122,13 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	/**
 	 * Send fallback email.
 	 *
-	 * @param array<mixed> $response Response data to extract data from.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function sendFallbackEmail(array $response): bool
+	public function sendfallbackIntegrationEmail(array $formDetails): bool
 	{
-		return $this->mailer->fallbackEmail($response);
+		return $this->mailer->fallbackIntegrationEmail($formDetails);
 	}
 
 	/**
@@ -149,7 +149,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			return false;
 		}
 
-		$senderEmail = $params[$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId)]['value'] ?? '';
+		$senderEmail = $params[UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId)]['value'] ?? '';
 
 		if (!$senderEmail) {
 			return false;
@@ -159,8 +159,8 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		return $this->mailer->sendFormEmail(
 			$formId,
 			$senderEmail,
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
-			$this->getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 			$files,
 			$params
 		);

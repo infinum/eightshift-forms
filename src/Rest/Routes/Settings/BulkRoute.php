@@ -11,23 +11,18 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Transfer\TransferInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class BulkRoute
  */
-class BulkRoute extends AbstractBaseRoute
+class BulkRoute extends AbstractUtilsBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */
@@ -72,30 +67,6 @@ class BulkRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
-	 * Returns allowed methods for this route.
-	 *
-	 * @return string
-	 */
-	protected function getMethods(): string
-	{
-		return static::CREATABLE;
-	}
-
-	/**
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
@@ -121,7 +92,7 @@ class BulkRoute extends AbstractBaseRoute
 
 		if (!$ids) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('There are no selected forms.', 'eightshift-forms'),
 					[],
 					$debug
@@ -132,7 +103,7 @@ class BulkRoute extends AbstractBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('Action type is missing.', 'eightshift-forms'),
 					[],
 					$debug
@@ -169,7 +140,7 @@ class BulkRoute extends AbstractBaseRoute
 		switch ($output['status']) {
 			case 'success':
 				return \rest_ensure_response(
-					$this->getApiSuccessOutput(
+					UtilsApiHelper::getApiSuccessPublicOutput(
 						$output['msg'] ?? \esc_html__('Success', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -177,7 +148,7 @@ class BulkRoute extends AbstractBaseRoute
 				);
 			case 'warning':
 				return \rest_ensure_response(
-					$this->getApiWarningOutput(
+					UtilsApiHelper::getApiWarningPublicOutput(
 						$output['msg'] ?? \esc_html__('Warning', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -185,7 +156,7 @@ class BulkRoute extends AbstractBaseRoute
 				);
 			default:
 				return \rest_ensure_response(
-					$this->getApiErrorOutput(
+					UtilsApiHelper::getApiErrorPublicOutput(
 						$output['msg'] ?? \esc_html__('Error', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -320,7 +291,7 @@ class BulkRoute extends AbstractBaseRoute
 			}
 
 			// Prevent non syncahble forms from syncing like mailer.
-			if (!Helper::canIntegrationUseSync(Helper::getFormTypeById((string) $id))) {
+			if (!UtilsGeneralHelper::canIntegrationUseSync(UtilsGeneralHelper::getFormTypeById((string) $id))) {
 				$output['skip'][] = $title;
 				continue;
 			}

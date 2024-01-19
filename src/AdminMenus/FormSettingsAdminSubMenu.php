@@ -12,11 +12,11 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Settings\Settings\SettingsInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Settings\SettingsHelper;
-use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -25,23 +25,18 @@ use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 {
 	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
 	 * Instance variable for all settings.
 	 *
-	 * @var SettingsInterface
+	 * @var SettingsBuilderInterface
 	 */
 	protected $settings;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsInterface $settings Settings data for injecting the form.
+	 * @param SettingsBuilderInterface $settings Settings builder data for injecting the form.
 	 */
-	public function __construct(SettingsInterface $settings)
+	public function __construct(SettingsBuilderInterface $settings)
 	{
 		$this->settings = $settings;
 	}
@@ -78,14 +73,14 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'eightshift_forms_form_settings';
+	public const ADMIN_MENU_CAPABILITY = UtilsConfig::CAP_SETTINGS;
 
 	/**
 	 * Menu slug for this admin sub menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'es-settings';
+	public const ADMIN_MENU_SLUG = UtilsConfig::SLUG_ADMIN_SETTINGS;
 
 	/**
 	 * Parent menu slug for this admin sub menu
@@ -193,11 +188,9 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			return [];
 		}
 
-		$isDeveloperMode = \apply_filters(SettingsDebug::FILTER_SETTINGS_IS_DEBUG_ACTIVE, SettingsDebug::SETTINGS_DEBUG_DEVELOPER_MODE_KEY);
-
 		$formTitle = \get_the_title((int) $formId);
 
-		if ($isDeveloperMode) {
+		if (UtilsDeveloperHelper::isDeveloperModeActive()) {
 			$formTitle = "{$formId} - {$formTitle}";
 		}
 
@@ -205,13 +198,13 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			$formTitle = \esc_html__('No form title', 'eightshift-forms');
 		}
 
-		$integrationTypeUsed = Helper::getFormTypeById($formId);
-		$formEditLink = Helper::getFormEditPageUrl($formId);
+		$integrationTypeUsed = UtilsGeneralHelper::getFormTypeById($formId);
+		$formEditLink = UtilsGeneralHelper::getFormEditPageUrl($formId);
 
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
-			'adminSettingsBackLink' => Helper::getListingPageUrl(),
+			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
 			'adminSettingsFormEditLink' => $formEditLink,
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
@@ -232,8 +225,8 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	{
 		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
-		if ($plugin_page === 'es-settings') { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
-			$plugin_page = 'es-forms'; // phpcs:ignore
+		if ($plugin_page === UtilsConfig::SLUG_ADMIN_SETTINGS) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+			$plugin_page = UtilsConfig::SLUG_ADMIN; // phpcs:ignore
 		}
 
 		return $parentFile ?? '';

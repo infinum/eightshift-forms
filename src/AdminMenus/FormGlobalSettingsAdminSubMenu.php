@@ -11,9 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Dashboard\SettingsDashboard;
-use EightshiftForms\Settings\Settings\SettingsInterface;
+use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -24,16 +25,16 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Instance variable for global settings.
 	 *
-	 * @var SettingsInterface
+	 * @var SettingsBuilderInterface
 	 */
 	protected $settings;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param SettingsInterface $settings Inject form global settings data.
+	 * @param SettingsBuilderInterface $settings Inject form global settings data.
 	 */
-	public function __construct(SettingsInterface $settings)
+	public function __construct(SettingsBuilderInterface $settings)
 	{
 		$this->settings = $settings;
 	}
@@ -66,14 +67,14 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = 'eightshift_forms_global_settings';
+	public const ADMIN_MENU_CAPABILITY = UtilsConfig::CAP_SETTINGS_GLOBAL;
 
 	/**
 	 * Menu slug for this admin sub menu.
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = 'es-settings-global';
+	public const ADMIN_MENU_SLUG = UtilsConfig::SLUG_ADMIN_SETTINGS_GLOBAL;
 
 	/**
 	 * Parent menu slug for this admin sub menu.
@@ -177,9 +178,8 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : SettingsDashboard::SETTINGS_TYPE_KEY; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		return [
-			// translators: %s replaces form title name.
 			'adminSettingsPageTitle' => \esc_html__('Global settings', 'eightshift-forms'),
-			'adminSettingsBackLink' => Helper::getListingPageUrl(),
+			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar(),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, '0'),
 			'adminSettingsType' => $type,

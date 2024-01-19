@@ -6,8 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -27,8 +27,8 @@ $stepIsActive = Components::checkAttr('stepIsActive', $attributes, $manifest);
 
 $stepClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
-	Helper::getStateSelector('step'),
-	Components::selector($stepIsActive, Helper::getStateSelector('isActive')),
+	UtilsHelper::getStateSelector('step'),
+	Components::selector($stepIsActive, UtilsHelper::getStateSelector('isActive')),
 ]);
 
 if (!$stepContent) {
@@ -38,7 +38,7 @@ if (!$stepContent) {
 $stepAttrs = [];
 
 if ($stepName) {
-	$stepAttrs[Helper::getStateAttribute('stepId')] = esc_attr($stepName);
+	$stepAttrs[UtilsHelper::getStateAttribute('stepId')] = esc_attr($stepName);
 }
 
 $stepAttrsOutput = '';
@@ -61,12 +61,12 @@ $nextButtonComponent = '';
 			<div class="<?php echo esc_attr("{$componentFieldClass} {$componentClass}__navigation-inner"); ?>">
 				<?php
 
-				$filterNameComponentPrev = Filters::getFilterName(['block', 'step', 'component_prev']);
+				$filterNameComponentPrev = UtilsHooksHelper::getFilterName(['block', 'step', 'component_prev']);
 
 				if (has_filter($filterNameComponentPrev)) {
 					$prevButtonComponent = apply_filters($filterNameComponentPrev, [
 						'value' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'jsSelector' => Helper::getStateSelector('stepSubmit'),
+						'jsSelector' => UtilsHelper::getStateSelector('stepSubmit'),
 						'attributes' => $attributes,
 					]);
 				}
@@ -78,24 +78,24 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $prevButtonComponent,
 							'submitAttrs' => [
-								Helper::getStateAttribute('submitStepDirection') => 'prev',
+								UtilsHelper::getStateAttribute('submitStepDirection') => 'prev',
 							],
 						]),
 						[
 							'additionalFieldClass' => Components::classnames([
 								Components::selector($componentFieldClass, $componentFieldClass, '', 'submit-prev'),
 							]),
-							'additionalClass' => Helper::getStateSelector('stepSubmit'),
+							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
 						]
 					)
 				);
 
-				$filterNameComponentNext = Filters::getFilterName(['block', 'step', 'component_next']);
+				$filterNameComponentNext = UtilsHooksHelper::getFilterName(['block', 'step', 'component_next']);
 
 				if (has_filter($filterNameComponentNext)) {
 					$nextButtonComponent = apply_filters($filterNameComponentNext, [
 						'value' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-						'jsSelector' => Helper::getStateSelector('stepSubmit'),
+						'jsSelector' => UtilsHelper::getStateSelector('stepSubmit'),
 						'attributes' => $attributes,
 					]);
 				}
@@ -107,14 +107,14 @@ $nextButtonComponent = '';
 							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $nextButtonComponent,
 							'submitAttrs' => [
-								Helper::getStateAttribute('submitStepDirection') => 'next',
+								UtilsHelper::getStateAttribute('submitStepDirection') => 'next',
 							],
 						]),
 						[
 							'additionalFieldClass' => Components::classnames([
 								Components::selector($componentFieldClass, $componentFieldClass, '', 'submit-next'),
 							]),
-							'additionalClass' => Helper::getStateSelector('stepSubmit'),
+							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
 						]
 					)
 				);

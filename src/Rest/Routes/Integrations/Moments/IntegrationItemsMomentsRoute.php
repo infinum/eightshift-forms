@@ -12,13 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsMomentsRoute
  */
-class IntegrationItemsMomentsRoute extends AbstractBaseRoute
+class IntegrationItemsMomentsRoute extends AbstractUtilsBaseRoute
 {
 	/**
 	 * Instance variable for Moments data.
@@ -39,7 +41,7 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
+		return '/' . UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -50,20 +52,6 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 	public function __construct(ClientInterface $momentsClient)
 	{
 		$this->momentsClient = $momentsClient;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**
@@ -101,7 +89,7 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 
 		if (!$isGlobalSettingsValid) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Global not configured', 'eightshift-forms'),
 					[],
 					$debug
@@ -113,7 +101,7 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 
 		if (!$items) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Items missing', 'eightshift-forms'),
 					[],
 					$debug
@@ -137,7 +125,7 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					[

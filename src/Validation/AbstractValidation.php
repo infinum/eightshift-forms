@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use Throwable;
 
 /**
@@ -120,7 +120,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 */
 	public function isMimeTypeValid(array $file): bool
 	{
-		$denyIfFileIsNotUploaded = \apply_filters(Filters::getFilterName(['validation', 'forceMimetypeFromFs']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
+		$denyIfFileIsNotUploaded = \apply_filters(UtilsHooksHelper::getFilterName(['validation', 'forceMimetypeFromFs']), false); // phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase
 
 		if (\getenv('TEST')) {
 			$denyIfFileIsNotUploaded = \getenv('test_force_option_eightshift_forms_force_mimetype_from_fs');

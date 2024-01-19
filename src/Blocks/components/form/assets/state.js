@@ -1,5 +1,3 @@
-/* global esFormsLocalization */
-
 import {
 	StateEnum,
 	getState,
@@ -12,7 +10,13 @@ import {
 	getStateFieldType,
 	getStateParam,
 	getStateEvent,
-} from './state/init';
+	getStateSelectorAdmin,
+	getStateRoute,
+	getRestUrl,
+	getRestUrlByType,
+	getStateResponseOutputKey,
+	getStateSuccessRedirectUrlKey,
+} from './state-init';
 
 export class State {
 	constructor() {
@@ -147,8 +151,8 @@ export class State {
 	getStateFormConfigSuccessRedirectVariation = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formId);
 	};
-	getStateFormConfigDownloads = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_DOWNLOADS], formId);
+	getStateFormConfigSuccessRedirectDownloads = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], formId);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -469,11 +473,27 @@ export class State {
 	};
 
 	////////////////////////////////////////////////////////////////
+	// Route getters.
+	////////////////////////////////////////////////////////////////
+
+	getStateRoute = (name) => {
+		return getStateRoute(name);
+	};
+
+	getStateResponseOutputKey = (name) => {
+		return getStateResponseOutputKey(name);
+	};
+
+	////////////////////////////////////////////////////////////////
 	// Selector getters.
 	////////////////////////////////////////////////////////////////
 
 	getStateSelector = (name, usePrefix = false) => {
 		return getStateSelector(name, usePrefix);
+	};
+
+	getStateSelectorAdmin = (name, usePrefix = false) => {
+		return getStateSelectorAdmin(name, usePrefix);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -482,6 +502,14 @@ export class State {
 
 	getStateAttribute = (name) => {
 		return getStateAttribute(name);
+	};
+
+	////////////////////////////////////////////////////////////////
+	// Success redirect getters.
+	////////////////////////////////////////////////////////////////
+
+	getStateSuccessRedirectUrlKey = (name) => {
+		return getStateSuccessRedirectUrlKey(name);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -522,11 +550,11 @@ export class State {
 	getFieldNameByElement = (element) => {
 		return this.getFormFieldElementByChild(element).getAttribute(this.getStateAttribute('fieldName'));
 	};
-	getRestUrl = (value) => {
-		return getRestUrl(value);
+	getRestUrl = (value, isPartial = false) => {
+		return getRestUrl(value, isPartial);
 	};
-	getRestUrlByType = (type, value) => {
-		return getRestUrlByType(type, value);
+	getRestUrlByType = (type, value, isPartial = false, checkRef = false) => {
+		return getRestUrlByType(type, value, isPartial, checkRef);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -547,75 +575,4 @@ export class State {
 
 		window[prefix].store = this;
 	}
-}
-
-/**
- * Routes enum connected to enqueu object.
- */
-export const ROUTES = {
-	// Common.
-	PREFIX: esFormsLocalization?.restRoutes?.prefix,
-	PREFIX_PROJECT: esFormsLocalization?.restRoutes?.prefixProject,
-	PREFIX_SUBMIT: esFormsLocalization?.restRoutes?.prefixSubmit,
-	PREFIX_TEST_API: esFormsLocalization?.restRoutes?.prefixTestApi,
-	FILES: esFormsLocalization?.restRoutes?.files,
-
-	// Admin.
-	SETTINGS: esFormsLocalization?.restRoutes?.settings,
-	CACHE_CLEAR: esFormsLocalization?.restRoutes?.cacheClear,
-	MIGRATION: esFormsLocalization?.restRoutes?.migration,
-	TRANSFER: esFormsLocalization?.restRoutes?.transfer,
-	BULK: esFormsLocalization?.restRoutes?.bulk,
-	LOCATIONS: esFormsLocalization?.restRoutes?.locations,
-	EXPORT: esFormsLocalization?.restRoutes?.export,
-
-	// Editor.
-	PREFIX_INTEGRATIONS_ITEMS_INNER: esFormsLocalization?.restRoutes?.prefixIntegrationItemsInner,
-	PREFIX_INTEGRATIONS_ITEMS: esFormsLocalization?.restRoutes?.prefixIntegrationItems,
-	PREFIX_INTEGRATION_EDITOR: esFormsLocalization?.restRoutes?.prefixIntegrationEditor,
-	INTEGRATIONS_EDITOR_SYNC: esFormsLocalization?.restRoutes?.integrationsEditorSync,
-	INTEGRATIONS_EDITOR_CREATE: esFormsLocalization?.restRoutes?.integrationsEditorCreate,
-	FORM_FIELDS: esFormsLocalization?.restRoutes?.formFields,
-	COUNTRIES_GEOLOCATION: esFormsLocalization?.restRoutes?.countriesGeolocation,
-
-	// Public.
-	CAPTCHA: esFormsLocalization?.restRoutes?.captcha,
-	GEOLOCATION: esFormsLocalization?.restRoutes?.geolocation,
-	VALIDATION_STEP: esFormsLocalization?.restRoutes?.validationStep,
-};
-
-/**
- * Get rest api url link.
- *
- * @param {string} value Value to get
- * @param {bool} isPartial Is relative or absolute url.
- *
- * @returns {string}
- */
-export function getRestUrl(value, isPartial = false) {
-	const prefix = isPartial ? ROUTES.PREFIX_PROJECT : ROUTES.PREFIX;
-
-	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
-	const sufix = value.replace(/^\/+/, ''); // Remove leading slash.
-
-	return `${url}/${sufix}`;
-}
-
-/**
- * Get rest api url link with integration prefix.
- *
- * @param {string} type Integration type.
- * @param {string} value Value to get
- * @param {bool} isPartial Is relative or absolute url.
- *
- * @returns {string}
- */
-export function getRestUrlByType(type, value, isPartial = false) {
-	const prefix = isPartial ? ROUTES.PREFIX_PROJECT : ROUTES.PREFIX;
-
-	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
-	const sufix = value.replace(/^\/+/, ''); // Remove leading slash.
-	const typePrefix = type.replace(/^\/|\/$/g, ''); // Remove leading and trailing slash.
-
-	return `${url}/${typePrefix}/${sufix}`;
 }

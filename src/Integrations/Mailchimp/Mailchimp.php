@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -22,11 +22,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter form fields.
 	 *
@@ -257,7 +252,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'dateType' => 'date',
 						'dateIsRequired' => (bool) $isRequired,
 						'datePreviewFormat' => 'F j, Y',
-						'dateOutputFormat' => Helper::getCorrectLibDateFormats($dateFormat, '/'),
+						'dateOutputFormat' => UtilsGeneralHelper::getCorrectLibDateFormats($dateFormat, '/'),
 						'dateValue' => $value,
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							$isRequired ? 'dateIsRequired' : '',
@@ -338,7 +333,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		];
 
 		// Change the final output if necesery.
-		$filterName = Filters::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
@@ -363,8 +358,8 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		return [
 			'component' => 'select',
 			'selectFieldLabel' => \__('Tags', 'eightshift-forms'),
-			'selectName' => Helper::getStateParam('mailchimpTags'),
-			'selectTracking' => Helper::getStateParam('mailchimpTags'),
+			'selectName' => UtilsHelper::getStateParam('mailchimpTags'),
+			'selectTracking' => UtilsHelper::getStateParam('mailchimpTags'),
 			'selectContent' => \array_values(
 				\array_map(
 					function ($option) {

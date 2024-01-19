@@ -3,7 +3,7 @@
 /**
  * Interface that holds all labels.
  *
- * @package EightshiftLibs\Labels
+ * @package EightshiftForms\Labels
  */
 
 declare(strict_types=1);

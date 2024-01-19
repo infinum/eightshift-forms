@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -20,7 +20,7 @@ $tabsContent = Components::checkAttr('tabsContent', $attributes, $manifest);
 $tabsClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Helper::getStateSelectorAdmin('tabs'),
+	UtilsHelper::getStateSelectorAdmin('tabs'),
 ]);
 
 if (!$tabsContent) {

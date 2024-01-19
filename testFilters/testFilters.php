@@ -608,14 +608,15 @@ class Testfilters implements ServiceInterface
 	 *
 	 * This filter can be used to change the value of current locale. By default WordPress sets the locale in the admin to `en_US` and with this filter it can be changed to whichever locale is needed (e.g. when using multilanguage plugin).
 	 *
-	 * @param string $locale Default locale from WordPress.
-	 *
-	 * @return string
+	 * @return array<string, mixed>
 	 */
-	public function getFormsLocale(string $locale): string
+	public function getFormsLocale(): mixed
 	{
-		// Get the custom locale (e.g. from WPML plugin).
-		return $locale;
+		// Get the default and current locale (e.g. from WPML plugin).
+		return [
+			'default' => '',
+			'current' => '',
+		];
 	}
 
 	/**

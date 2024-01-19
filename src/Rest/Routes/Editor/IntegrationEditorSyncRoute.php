@@ -11,20 +11,16 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationEditorSyncRoute
  */
-class IntegrationEditorSyncRoute extends AbstractBaseRoute
+class IntegrationEditorSyncRoute extends AbstractUtilsBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */
@@ -54,21 +50,7 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . AbstractBaseRoute::ROUTE_PREFIX_INTEGRATION_EDITOR . '/' . self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
+		return '/' . UtilsConfig::ROUTE_PREFIX_INTEGRATION_EDITOR . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -114,9 +96,9 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 			'syncForm' => $syncForm,
 		];
 
-		if ($status === AbstractBaseRoute::STATUS_ERROR) {
+		if ($status === UtilsConfig::STATUS_ERROR) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					$message,
 					$syncForm,
 					$debug
@@ -125,7 +107,7 @@ class IntegrationEditorSyncRoute extends AbstractBaseRoute
 		}
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				$message,
 				$syncForm,
 				$debug

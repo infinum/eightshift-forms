@@ -8,11 +8,14 @@
 
 use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Form\Form;
-use EightshiftForms\Helpers\Encryption;
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\General\SettingsGeneral;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestUtils = Components::getComponent('utils');
@@ -51,7 +54,7 @@ $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', 
 $formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 $formCustomName = Components::checkAttr('formCustomName', $attributes, $manifest);
 
-$formDataTypeSelectorFilterName = Filters::getFilterName(['block', 'form', 'dataTypeSelector']);
+$formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
 	Components::checkAttr('formDataTypeSelector', $attributes, $manifest),
@@ -63,49 +66,49 @@ $formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Helper::getStateSelector('form'),
+	UtilsHelper::getStateSelector('form'),
 ]);
 
 if ($formDataTypeSelector) {
-	$formAttrs[Helper::getStateAttribute('typeSelector')] = esc_attr($formDataTypeSelector);
+	$formAttrs[UtilsHelper::getStateAttribute('typeSelector')] = esc_attr($formDataTypeSelector);
 }
 
 if ($formSuccessRedirect) {
-	$formAttrs[Helper::getStateAttribute('successRedirect')] = esc_attr($formSuccessRedirect);
+	$formAttrs[UtilsHelper::getStateAttribute('successRedirect')] = esc_attr($formSuccessRedirect);
 }
 
 if ($formSuccessRedirectVariation) {
-	$formAttrs[Helper::getStateAttribute('successRedirectVariation')] = Encryption::encryptor($formSuccessRedirectVariation);
+	$formAttrs[UtilsHelper::getStateAttribute('successRedirectVariation')] = UtilsEncryption::encryptor($formSuccessRedirectVariation);
 }
 
 if ($formTrackingEventName) {
-	$formAttrs[Helper::getStateAttribute('trackingEventName')] = esc_attr($formTrackingEventName);
+	$formAttrs[UtilsHelper::getStateAttribute('trackingEventName')] = esc_attr($formTrackingEventName);
 }
 
 if ($formTrackingAdditionalData) {
-	$formAttrs[Helper::getStateAttribute('trackingAdditionalData')] = esc_attr($formTrackingAdditionalData);
+	$formAttrs[UtilsHelper::getStateAttribute('trackingAdditionalData')] = esc_attr($formTrackingAdditionalData);
 }
 
 if ($formPhoneSync) {
-	$formAttrs[Helper::getStateAttribute('phoneSync')] = esc_attr($formPhoneSync);
+	$formAttrs[UtilsHelper::getStateAttribute('phoneSync')] = esc_attr($formPhoneSync);
 }
 
 if ($formPhoneDisablePicker) {
-	$formAttrs[Helper::getStateAttribute('phoneDisablePicker')] = esc_attr($formPhoneDisablePicker);
+	$formAttrs[UtilsHelper::getStateAttribute('phoneDisablePicker')] = esc_attr($formPhoneDisablePicker);
 }
 
 if ($formCustomName) {
-	$formAttrs[Helper::getStateAttribute('formCustomName')] = esc_attr($formCustomName);
+	$formAttrs[UtilsHelper::getStateAttribute('formCustomName')] = esc_attr($formCustomName);
 }
 
 if ($formPostId) {
-	$formAttrs[Helper::getStateAttribute('formId')] = esc_attr($formPostId);
+	$formAttrs[UtilsHelper::getStateAttribute('formId')] = esc_attr($formPostId);
 }
 
-$formAttrs[Helper::getStateAttribute('postId')] = esc_attr((string) get_the_ID());
+$formAttrs[UtilsHelper::getStateAttribute('postId')] = esc_attr((string) get_the_ID());
 
 if ($formType) {
-	$formAttrs[Helper::getStateAttribute('formType')] = esc_html($formType);
+	$formAttrs[UtilsHelper::getStateAttribute('formType')] = esc_html($formType);
 }
 
 if ($formConditionalTags) {
@@ -116,7 +119,7 @@ if ($formConditionalTags) {
 		$rawConditionalTagData = wp_json_encode(array_map(fn ($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
 	}
 
-	$formAttrs[Helper::getStateAttribute('conditionalTags')] = esc_html($rawConditionalTagData);
+	$formAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = esc_html($rawConditionalTagData);
 }
 
 if ($formDownloads || $formSuccessRedirectVariationUrl) {
@@ -139,7 +142,7 @@ if ($formDownloads || $formSuccessRedirectVariationUrl) {
 
 	if (!$downloadsOutput) {
 		if ($formSuccessRedirectVariationUrl) {
-			$downloadsOutput['all'] = Encryption::encryptor(wp_json_encode([
+			$downloadsOutput['all'] = UtilsEncryption::encryptor(wp_json_encode([
 				'main' => [
 					$formSuccessRedirectVariationUrl,
 					$formSuccessRedirectVariationUrlTitle,
@@ -155,11 +158,11 @@ if ($formDownloads || $formSuccessRedirectVariationUrl) {
 				];
 			}
 
-			$downloadsOutput[$key] = Encryption::encryptor(wp_json_encode($downloadsOutput[$key]));
+			$downloadsOutput[$key] = UtilsEncryption::encryptor(wp_json_encode($downloadsOutput[$key]));
 		}
 	}
 
-	$formAttrs[Helper::getStateAttribute('downloads')] = wp_json_encode($downloadsOutput);
+	$formAttrs[UtilsHelper::getStateAttribute('successRedirectDownloads')] = wp_json_encode($downloadsOutput);
 }
 
 if ($formId) {
@@ -175,15 +178,15 @@ if ($formAction) {
 }
 
 if ($formActionExternal) {
-	$formAttrs[Helper::getStateAttribute('actionExternal')] = esc_attr($formActionExternal);
+	$formAttrs[UtilsHelper::getStateAttribute('actionExternal')] = esc_attr($formActionExternal);
 }
 
 if ($formMethod) {
 	$formAttrs['method'] = esc_attr($formMethod);
 }
 
-$formAttrs[Helper::getStateAttribute('blockSsr')] = wp_json_encode($blockSsr);
-$formAttrs[Helper::getStateAttribute('disabledDefaultStyles')] = wp_json_encode($formDisabledDefaultStyles);
+$formAttrs[UtilsHelper::getStateAttribute('blockSsr')] = wp_json_encode($blockSsr);
+$formAttrs[UtilsHelper::getStateAttribute('disabledDefaultStyles')] = wp_json_encode($formDisabledDefaultStyles);
 
 $formAttrsOutput = '';
 if ($formAttrs) {
@@ -201,19 +204,19 @@ if ($formAttrs) {
 	<?php if (is_user_logged_in() && !is_admin()) { ?>
 		<div class="<?php echo esc_attr('es-block-edit-options__edit-wrap') ?>">
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getFormEditPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
 					<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
 				<?php echo $manifestUtils['icons']['settings']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(Helper::getSettingsGlobalPageUrl()) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
+				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
 					<?php echo $manifestUtils['icons']['dashboard']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
@@ -235,7 +238,7 @@ if ($formAttrs) {
 	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 
-		<?php echo Helper::getBlockAdditionalContentViaFilter('form', $attributes); ?>
+		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 	</div>
 
 	<?php

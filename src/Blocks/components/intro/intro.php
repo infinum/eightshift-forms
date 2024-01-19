@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -44,12 +44,12 @@ $titleClass = Components::classnames([
 	<?php
 	if ($introIsHighlightedImportant) {
 		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		echo Helper::getProjectIcons('warning');
+		echo UtilsHelper::getUtilsIcons('warning');
 	}
 
 	if ($introIcon) {
 		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		echo Helper::getProjectIcons($introIcon);
+		echo UtilsHelper::getUtilsIcons($introIcon);
 	}
 	?>
 

@@ -10,23 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Editor;
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use WP_REST_Request;
 
 /**
  * Class FormFieldsRoute
  */
-class FormFieldsRoute extends AbstractBaseRoute
+class FormFieldsRoute extends AbstractUtilsBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */
@@ -57,20 +52,6 @@ class FormFieldsRoute extends AbstractBaseRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
 	}
 
 	/**
@@ -109,7 +90,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 		if (!$formId) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Form Id was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -117,7 +98,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 			);
 		}
 
-		$data = Helper::getFormDetailsById($formId);
+		$data = UtilsGeneralHelper::getFormDetails($formId);
 		$fieldsOnly = $data['fieldsOnly'] ?? [];
 
 		$debug = \array_merge(
@@ -129,7 +110,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 		if (!$fieldsOnly) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\esc_html__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
 					[],
 					$debug
@@ -142,7 +123,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 		$steps = $data['stepsSetup'] ?? [];
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success.', 'eightshift-forms'),
 				[
 					'fields' => \array_values($fieldsOutput),
@@ -216,7 +197,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 		]);
 
 		foreach ($items as $value) {
-			$blockName = Helper::getBlockNameDetails($value['blockName']);
+			$blockName = UtilsGeneralHelper::getBlockNameDetails($value['blockName']);
 			$prefix = Components::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
 
 			$name = $value['attrs']["{$prefix}Name"] ?? '';
@@ -270,7 +251,7 @@ class FormFieldsRoute extends AbstractBaseRoute
 		];
 
 		foreach ($items as $item) {
-			$blockName = Helper::getBlockNameDetails($item['blockName']);
+			$blockName = UtilsGeneralHelper::getBlockNameDetails($item['blockName']);
 			$prefix = Components::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
 
 			$innerKeyValue =  $item['attrs']["{$prefix}Value"] ?? '';

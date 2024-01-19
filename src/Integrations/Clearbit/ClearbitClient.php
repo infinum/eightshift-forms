@@ -10,34 +10,20 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Clearbit;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Hooks\Variables;
-use EightshiftForms\Rest\ApiHelper;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\ObjectHelperTrait;
 
 /**
  * ClearbitClient integration class.
  */
 class ClearbitClient implements ClearbitClientInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
-	 * Helper trait.
-	 */
-	use ObjectHelperTrait;
-
-	/**
-	 * Use API helper trait.
-	 */
-	use ApiHelper;
-
 	/**
 	 * Return Clearbit base url.
 	 *
@@ -70,7 +56,7 @@ class ClearbitClient implements ClearbitClientInterface
 		);
 
 		// Structure response details.
-		$details = $this->getIntegrationApiReponseDetails(
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
 			SettingsClearbit::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -80,13 +66,13 @@ class ClearbitClient implements ClearbitClientInterface
 			$formId
 		);
 
-		$code = $details['code'];
-		$body = $details['body'];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
-		Helper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
-		if ($code >= 200 && $code <= 299) {
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			$dataOutput = [];
 
 			foreach ($this->prepareParams($body) as $key => $value) {
@@ -95,7 +81,7 @@ class ClearbitClient implements ClearbitClientInterface
 				}
 			}
 
-			return $this->getIntegrationApiSuccessOutput(
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput(
 				$details,
 				[
 					'email' => $email,
@@ -104,10 +90,11 @@ class ClearbitClient implements ClearbitClientInterface
 			);
 		}
 
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
 		// Output error.
-		return $this->getIntegrationApiErrorOutput(
+		return UtilsApiHelper::getIntegrationErrorInternalOutput(
 			$details,
-			$this->getErrorMsg($body),
 			[
 				'email' => $email,
 			]
@@ -141,7 +128,7 @@ class ClearbitClient implements ClearbitClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(Helper::getStateParams()));
+		$customFields = \array_flip(Components::flattenArray(UtilsHelper::getStateParams()));
 
 		foreach ($params as $key => $param) {
 			// Remove unecesery fields.
@@ -289,7 +276,7 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-ultimate-parent-domain' => $company['ultimateParent']['domain'] ?? '',
 		];
 
-		$filterName = Filters::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $output) ?? [];
 		}
@@ -338,6 +325,6 @@ class ClearbitClient implements ClearbitClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return $this->getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
 	}
 }

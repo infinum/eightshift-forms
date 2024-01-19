@@ -6,8 +6,10 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 $manifest = Components::getManifest(__DIR__);
 
@@ -39,15 +41,15 @@ $selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attr
 $selectClass = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'select'),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($selectSingleSubmit, Helper::getStateSelectorAdmin('singleSubmit')),
+	Components::selector($selectSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 if ($selectUseSearch) {
-	$selectAttrs[Helper::getStateAttribute('selectAllowSearch')] = esc_attr($selectUseSearch);
+	$selectAttrs[UtilsHelper::getStateAttribute('selectAllowSearch')] = esc_attr($selectUseSearch);
 }
 
 if ($selectIsMultiple) {
-	$selectAttrs[Helper::getStateAttribute('selectIsMultiple')] = esc_attr($selectIsMultiple);
+	$selectAttrs[UtilsHelper::getStateAttribute('selectIsMultiple')] = esc_attr($selectIsMultiple);
 	$selectAttrs['multiple'] = 'true';
 }
 
@@ -81,7 +83,7 @@ if ($selectAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('select', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('select', $attributes);
 
 $select = '
 	<select
@@ -101,7 +103,7 @@ $fieldOutput = [
 	'fieldContent' => $select,
 	'fieldId' => $selectName,
 	'fieldName' => $selectName,
-	'fieldTypeInternal' => Helper::getStateFieldType('select'),
+	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),
 	'fieldIsRequired' => $selectIsRequired,
 	'fieldDisabled' => !empty($selectIsDisabled),
 	'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

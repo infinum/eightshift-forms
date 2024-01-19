@@ -10,9 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue\Admin;
 
-use EightshiftForms\Config\Config;
 use EightshiftForms\Enqueue\SharedEnqueue;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 
@@ -45,7 +46,6 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function register(): void
 	{
-		\add_action('login_enqueue_scripts', [$this, 'enqueueStyles']);
 		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
 		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
@@ -57,7 +57,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return Config::getProjectName();
+		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**
@@ -67,7 +67,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsVersion(): string
 	{
-		return Config::getProjectVersion();
+		return UtilsGeneralHelper::getProjectVersion();
 	}
 
 	/**
@@ -83,12 +83,13 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 		$output = [];
 
-		if (Helper::isEightshiftFormsAdminPages()) {
+		if (UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
 			$output = \array_merge(
 				$this->getEnqueueSharedInlineCommonItems(false),
 				[
 					'nonce' => \wp_create_nonce('wp_rest'),
 					'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
+					'importErrorMsg' => \__('There is an error with your data, please try again.', 'eighshift-forms'),
 					'isAdmin' => true,
 					'redirectionTimeout' => 100,
 				],
@@ -97,5 +98,22 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 		$output = \wp_json_encode($output);
 		\wp_add_inline_script($this->getAdminScriptHandle(), "const esFormsLocalization = {$output}", 'before');
+	}
+
+	/**
+	 * Get admin script dependencies.
+	 *
+	 * @return array<int, string> List of all the script dependencies.
+	 */
+	protected function getAdminScriptDependencies(): array
+	{
+		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'admin']);
+		$scriptsDependencyOutput = [];
+
+		if (\has_filter($scriptsDependency)) {
+			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);
+		}
+
+		return $scriptsDependencyOutput;
 	}
 }

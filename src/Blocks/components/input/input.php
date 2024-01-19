@@ -6,7 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -69,7 +70,7 @@ if ($inputAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('input', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('input', $attributes);
 
 $input = '
 	<input
@@ -91,7 +92,7 @@ echo Components::render(
 			'fieldContent' => $input,
 			'fieldId' => $inputName,
 			'fieldName' => $inputName,
-			'fieldTypeInternal' => Helper::getStateFieldType('input'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('input'),
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldUseError' => $inputType !== 'hidden',

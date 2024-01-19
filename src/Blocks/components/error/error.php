@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -22,7 +22,7 @@ $errorClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($selectorClass, $selectorClass, $componentClass),
 	Components::selector($additionalErrorClass, $additionalErrorClass),
-	Helper::getStateSelector('error'),
+	UtilsHelper::getStateSelector('error'),
 ]);
 
 // The content of the div is one-lined to prevent generation of spaces, which breaks the :empty pseudoselector.

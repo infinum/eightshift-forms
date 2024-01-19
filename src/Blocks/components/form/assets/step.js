@@ -1,4 +1,4 @@
-import { prefix, setStateWindow } from './state/init';
+import { prefix, setStateWindow } from './state-init';
 
 /**
  * Main step class.
@@ -55,10 +55,12 @@ export class Steps {
 		} = response;
 
 		if (status === 'success') {
-			this.goToNextStep(formId, data?.nextStep, parseInt(data?.progressBarItems, 10), Boolean(data?.disableNextButton));
+			this.goToNextStep(formId, data?.[this.state.getStateResponseOutputKey('stepNextStep')], parseInt(data?.[this.state.getStateResponseOutputKey('stepProgressBarItems')], 10), Boolean(data?.[this.state.getStateResponseOutputKey('stepIsDisableNextButton')]));
 		} else {
-			if (data?.validation !== undefined) {
-				this.utils.outputErrors(formId, data?.validation);
+			const validationOutputKey = this.state.getStateResponseOutputKey('validation');
+
+			if (data?.[validationOutputKey] !== undefined) {
+				this.utils.outputErrors(formId, data?.[validationOutputKey]);
 				this.utils.setGlobalMsg(formId, message, status);
 			}
 		}

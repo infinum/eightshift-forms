@@ -12,7 +12,7 @@ import { StateEnum,
 	setStateValuesCheckbox,
 	setStateValuesPhoneSelect,
 	setStateValuesCountry,
-} from './state/init';
+} from './state-init';
 import { Steps } from './step';
 
 /**
@@ -548,10 +548,11 @@ export class Utils {
 	 * Redirect to url and update url params from from data.
 	 *
 	 * @param {string} formId Form Id.
+	 * @param {object} additionalData Additional data to add to url.
 	 *
 	 * @returns {void}
 	 */
-	redirectToUrl(formId) {
+	redirectToUrl(formId, additionalData = {}) {
 		let redirectUrl = this.state.getStateFormConfigSuccessRedirect(formId);
 
 		if (!redirectUrl) {
@@ -576,7 +577,7 @@ export class Utils {
 
 		const url = new URL(redirectUrl);
 
-		const downloads = this.state.getStateFormConfigDownloads(formId);
+		const downloads = this.state.getStateFormConfigSuccessRedirectDownloads(formId);
 		if (downloads) {
 			let downloadsName = 'all';
 
@@ -600,13 +601,18 @@ export class Utils {
 			}
 
 			if (downloads?.[downloadsName]) {
-				url.searchParams.append('es-downloads', downloads[downloadsName]);
+				url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('downloads'), downloads[downloadsName]);
 			}
+		}
+
+		const successRedirectData = additionalData?.[this.state.getStateResponseOutputKey('successRedirect')];
+		if (successRedirectData) {
+				url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('data'), successRedirectData);
 		}
 
 		const variation = this.state.getStateFormConfigSuccessRedirectVariation(formId);
 		if (variation) {
-			url.searchParams.append('es-variation', variation);
+			url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('variation'), variation);
 		}
 
 		this.redirectToUrlByReference(formId, url.href);
@@ -777,13 +783,14 @@ export class Utils {
 	 *
 	 * @param {string} msg Error msg text.
 	 * @param {string} type Function used.
+	 * @param {string} error Error object.
 	 * @param {string} formId Form Id.
 	 *
 	 * @throws Error.
 	 *
 	 * @returns {void}
 	 */
-	formSubmitErrorFatal(msg, type, formId) {
+	formSubmitErrorFatal(msg, type, error, formId) {
 		// Clear all errors.
 		this.resetErrors(formId);
 
@@ -807,7 +814,7 @@ export class Utils {
 			this.unsetGlobalMsg(formId);
 		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
 
-		throw new Error(`API response returned fatal error. Function used: "${type}"`);
+		throw new Error(`API response returned fatal error. Function used: "${type}. ${error}"`);
 	}
 
 	/**
@@ -1268,8 +1275,8 @@ export class Utils {
 			resetForm: (formId) => {
 				this.resetForm(formId);
 			},
-			redirectToUrl: (formId) => {
-				this.redirectToUrl(formId);
+			redirectToUrl: (formId, additionalData = {}) => {
+				this.redirectToUrl(formId, additionalData);
 			},
 			redirectToUrlByReference: (formId, redirectUrl, reload = false) => {
 				this.redirectToUrlByReference(formId, redirectUrl, reload);
@@ -1286,8 +1293,8 @@ export class Utils {
 			formSubmitErrorContentType: (response, type, formId) => {
 				this.formSubmitErrorContentType(response, type, formId);
 			},
-			formSubmitErrorFatal: (msg, type, formId) => {
-				this.formSubmitErrorFatal(msg, type, formId);
+			formSubmitErrorFatal: (msg, type, error, formId) => {
+				this.formSubmitErrorFatal(msg, type, error, formId);
 			},
 			getSelectSelectedValueByCustomData: (type, value, choices) => {
 				return this.getSelectSelectedValueByCustomData(type, value, choices);

@@ -6,10 +6,12 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
-use EightshiftForms\Hooks\Filters;
 use EightshiftForms\Blocks\SettingsBlocks;
+use EightshiftForms\Helpers\FormsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSelect = Components::getComponent('select');
@@ -45,7 +47,7 @@ $countryClass = Components::classnames([
 ]);
 
 if ($countryUseSearch) {
-	$countryAttrs[Helper::getStateAttribute('selectAllowSearch')] = esc_attr($countryUseSearch);
+	$countryAttrs[UtilsHelper::getStateAttribute('selectAllowSearch')] = esc_attr($countryUseSearch);
 }
 
 if ($countryUseLabelAsPlaceholder) {
@@ -61,7 +63,7 @@ if ($countryAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = Helper::getBlockAdditionalContentViaFilter('country', $attributes);
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('country', $attributes);
 
 $placeholder = $countryPlaceholder ? Components::render(
 	'select-option',
@@ -72,7 +74,7 @@ $placeholder = $countryPlaceholder ? Components::render(
 ) : '';
 
 $options = [];
-$filterName = Filters::ALL[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'];
+$filterName = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $countryFormPostId);
@@ -88,15 +90,15 @@ if (has_filter($filterName)) {
 		$value = $option[2] ?? '';
 
 		$customProperties = [
-			Helper::getStateAttribute('selectCountryCode') => $code,
-			Helper::getStateAttribute('selectCountryLabel') => $label,
-			Helper::getStateAttribute('selectCountryNumber') => $value,
+			UtilsHelper::getStateAttribute('selectCountryCode') => $code,
+			UtilsHelper::getStateAttribute('selectCountryLabel') => $label,
+			UtilsHelper::getStateAttribute('selectCountryNumber') => $value,
 		];
 
 		$options[] = '
 			<option
 				value="' . $label . '"
-				' . Helper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
+				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $settings['country']['preselectedValue'], false) . '
 			>' . $label . '</option>';
 	}
@@ -122,7 +124,7 @@ echo Components::render(
 		Components::props('field', $attributes, [
 			'fieldContent' => $country,
 			'fieldId' => $countryName,
-			'fieldTypeInternal' => Helper::getStateFieldType('country'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
 			'fieldName' => $countryName,
 			'fieldIsRequired' => $countryIsRequired,
 			'fieldDisabled' => !empty($countryIsDisabled),

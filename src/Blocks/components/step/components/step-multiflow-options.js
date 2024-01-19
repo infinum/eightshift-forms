@@ -8,7 +8,7 @@ import { icons, getAttrKey, checkAttr, IconToggle, props, Select, Control, Secti
 import { CONDITIONAL_TAGS_OPERATORS } from '../../conditional-tags/assets/utils';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
-import { ROUTES, getRestUrl } from '../../form/assets/state';
+import { getRestUrl } from '../../form/assets/state-init';
 import { ProgressBarOptions } from '../../progress-bar/components/progress-bar-options';
 import { MultiflowFormsReactFlow } from '../../react-flow';
 
@@ -31,7 +31,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 	useEffect(() => {
 		apiFetch({
-			path: `${getRestUrl(ROUTES.FORM_FIELDS, true)}?id=${stepMultiflowPostId}&useMultiflow=true`,
+			path: `${getRestUrl('formFields', true)}?id=${stepMultiflowPostId}&useMultiflow=true`,
 		}).then((response) => {
 			if (response.code === 200 && response.data) {
 				setFormFields(response.data.steps);

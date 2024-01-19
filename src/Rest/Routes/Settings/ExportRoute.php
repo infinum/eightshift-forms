@@ -11,20 +11,16 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class ExportRoute
  */
-class ExportRoute extends AbstractBaseRoute
+class ExportRoute extends AbstractUtilsBaseRoute
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Route slug.
 	 */
@@ -38,30 +34,6 @@ class ExportRoute extends AbstractBaseRoute
 	protected function getRouteName(): string
 	{
 		return self::ROUTE_SLUG;
-	}
-
-	/**
-	 * Get callback arguments array
-	 *
-	 * @return array<string, mixed> Either an array of options for the endpoint, or an array of arrays for multiple methods.
-	 */
-	protected function getCallbackArguments(): array
-	{
-		return [
-			'methods' => $this->getMethods(),
-			'callback' => [$this, 'routeCallback'],
-			'permission_callback' => [$this, 'permissionCallback'],
-		];
-	}
-
-	/**
-	 * Returns allowed methods for this route.
-	 *
-	 * @return string
-	 */
-	protected function getMethods(): string
-	{
-		return static::CREATABLE;
 	}
 
 	/**
@@ -90,7 +62,7 @@ class ExportRoute extends AbstractBaseRoute
 
 		if (!$ids) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('There are no selected entries.', 'eightshift-forms'),
 					[],
 					$debug
@@ -101,7 +73,7 @@ class ExportRoute extends AbstractBaseRoute
 		$formId = $params['formId'] ?? '';
 		if (!$formId) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('Form Id type is missing.', 'eightshift-forms'),
 					[],
 					$debug
@@ -130,10 +102,21 @@ class ExportRoute extends AbstractBaseRoute
 			$outputInner['formEntryCreatedAt'] = $entry['createdAt'] ?? '';
 
 			foreach ($entryValues as $key => $value) {
-				$outputInner[$key] = $value;
-
 				if (\gettype($value) === 'array') {
-					$outputInner[$key] = \implode(AbstractBaseRoute::DELIMITER, $value);
+					if (\array_key_first($value) === 0) {
+						$outputInner[$key] = \implode(UtilsConfig::DELIMITER, $value);
+					} else {
+						$outputItems = \array_map(
+							function ($value, $key) {
+								return "{$key}={$value}";
+							},
+							$value,
+							\array_keys($value)
+						);
+						$outputInner[$key] = \implode(UtilsConfig::DELIMITER, $outputItems);
+					}
+				} else {
+					$outputInner[$key] = $value;
 				}
 			}
 
@@ -143,7 +126,7 @@ class ExportRoute extends AbstractBaseRoute
 
 		if (!$output) {
 			return \rest_ensure_response(
-				$this->getApiErrorOutput(
+				UtilsApiHelper::getApiErrorPublicOutput(
 					\__('Data for export is empty.', 'eightshift-forms'),
 					[],
 					$debug
@@ -152,7 +135,7 @@ class ExportRoute extends AbstractBaseRoute
 		}
 
 		return \rest_ensure_response(
-			$this->getApiSuccessOutput(
+			UtilsApiHelper::getApiSuccessPublicOutput(
 				\__('Data export finished with success.', 'eightshift-forms'),
 				[
 					'output' => \wp_json_encode($output),

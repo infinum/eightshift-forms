@@ -10,20 +10,16 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
-use EightshiftForms\Settings\Settings\SettingGlobalInterface;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCloudflare class.
  */
-class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
+class SettingsCloudflare implements UtilsSettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -62,7 +58,7 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = $this->isOptionCheckboxChecked(self::SETTINGS_CLOUDFLARE_USE_KEY, self::SETTINGS_CLOUDFLARE_USE_KEY);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLOUDFLARE_USE_KEY, self::SETTINGS_CLOUDFLARE_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -78,13 +74,13 @@ class SettingsCloudflare implements SettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!$this->isOptionCheckboxChecked(self::SETTINGS_CLOUDFLARE_USE_KEY, self::SETTINGS_CLOUDFLARE_USE_KEY)) {
-			return $this->getSettingOutputNoActiveFeature();
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLOUDFLARE_USE_KEY, self::SETTINGS_CLOUDFLARE_USE_KEY)) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
 		return [
-			$this->getIntroOutput(self::SETTINGS_TYPE_KEY),
-			$this->settingMiscDisclamer(),
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			UtilsSettingsOutputHelper::getMiscDisclaimer(),
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Features affected by Cloudflare are:', 'eightshift-forms'),

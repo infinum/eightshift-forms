@@ -19,7 +19,7 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
-import { ROUTES, getRestUrl } from '../../form/assets/state';
+import { getRestUrl } from '../../form/assets/state-init';
 
 export const ConditionalTagsFormsOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('conditional-tags');
@@ -36,7 +36,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 	const [formFields, setFormFields] = useState([]);
 
 	useEffect(() => {
-		apiFetch({ path: `${getRestUrl(ROUTES.FORM_FIELDS, true)}?id=${conditionalTagsPostId}` }).then((response) => {
+		apiFetch({ path: `${getRestUrl('formFields', true)}?id=${conditionalTagsPostId}` }).then((response) => {
 			if (response.code === 200 && response.data) {
 				setFormFields(response.data.fields);
 			}

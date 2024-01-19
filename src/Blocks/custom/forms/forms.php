@@ -7,8 +7,8 @@
  */
 
 use EightshiftForms\Form\Form;
-use EightshiftForms\Helpers\Encryption;
-use EightshiftForms\Helpers\Helper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -84,7 +84,7 @@ $hasGeolocation = false;
 
 if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 	$hasGeolocation = true;
-	$formAttrs[Helper::getStateAttribute('formGeolocation')] = Encryption::encryptor(wp_json_encode([
+	$formAttrs[UtilsHelper::getStateAttribute('formGeolocation')] = UtilsEncryption::encryptor(wp_json_encode([
 		'id' => $formsFormPostId,
 		'geo' => $formsFormGeolocation,
 		'alt' => $formsFormGeolocationAlternatives,
@@ -100,8 +100,8 @@ if ($formAttrs) {
 
 $formsClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	Helper::getStateSelector('forms'),
-	Components::selector($hasGeolocation, Helper::getStateSelector('isGeoLoading')),
+	UtilsHelper::getStateSelector('forms'),
+	Components::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
 	$attributes['className'] ?? '',
 	...$formsStyleOutput,
 ]);

@@ -3,21 +3,21 @@
 /**
  * Class that holds all filter used in the component and blocks regarding form.
  *
- * @package EightshiftLibs\Form
+ * @package EightshiftForms\Form
  */
 
 declare(strict_types=1);
 
 namespace EightshiftForms\Form;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Settings\FiltersOuputMock;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
-use EightshiftForms\Settings\SettingsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -26,16 +26,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class Form extends AbstractFormBuilder implements ServiceInterface
 {
-	/**
-	 * Use general helper trait.
-	 */
-	use SettingsHelper;
-
-	/**
-	 * Use filters mock helper trait.
-	 */
-	use FiltersOuputMock;
-
 	/**
 	 * Filter form component atributes modifications key.
 	 */
@@ -80,26 +70,26 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Tracking event name.
-		$trackingEventName = $this->getTrackingEventNameFilterValue($type, $formId)['data'];
+		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($type, $formId)['data'];
 		if ($trackingEventName) {
 			$attributes["{$prefix}TrackingEventName"] = $trackingEventName;
 		}
 
 		// Provide additional data to tracking attr.
-		$trackingAdditionalData = $this->getTrackingAditionalDataFilterValue($type, $formId)['data'];
+		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($type, $formId)['data'];
 		if ($trackingAdditionalData) {
 			$attributes["{$prefix}TrackingAdditionalData"] = \wp_json_encode($trackingAdditionalData);
 		}
 
 		// Success redirect url.
-		$successRedirectUrl = $this->getSuccessRedirectUrlFilterValue($type, $formId)['data'];
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
 		if ($successRedirectUrl) {
 			$attributes["{$prefix}SuccessRedirect"] = $successRedirectUrl;
 		}
 
 		// Success redirect variation.
 		if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
-			$successRedirectUrl = $this->getSuccessRedirectVariationFilterValue($type, $formId)['data'];
+			$successRedirectUrl = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
 
 			if ($successRedirectUrl) {
 				$attributes["{$prefix}SuccessRedirectVariation"] = $successRedirectUrl;
@@ -107,21 +97,21 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Custom form name.
-		$customFormName = $this->getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+		$customFormName = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
 		if ($customFormName) {
 			$attributes["{$prefix}CustomName"] = $customFormName;
 		}
 
 		// Phone sync with country block.
 		$attributes["{$prefix}PhoneSync"] = '';
-		$filterName = Filters::getFilterName(['block', 'form', 'phoneSync']);
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'phoneSync']);
 		if (\has_filter($filterName)) {
 			$attributes["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
 		} else {
-			$attributes["{$prefix}PhoneSync"] = !$this->isSettingCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
+			$attributes["{$prefix}PhoneSync"] = !UtilsSettingsHelper::isSettingCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
 		}
 
-		$attributes["{$prefix}PhoneDisablePicker"] = $this->isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
+		$attributes["{$prefix}PhoneDisablePicker"] = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
 
 		return $attributes;
 	}
@@ -151,7 +141,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
 		$formsCustomName = Components::checkAttr('formsCustomName', $attributes, $manifest);
 
-		$checkStyleEnqueue = $this->isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
+		$checkStyleEnqueue = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
 		// Iterate blocks an children by passing them form ID.
 		foreach ($blocks as $block) {
@@ -177,7 +167,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$hasSteps = $hasSteps !== false;
 
 				// Get block name details.
-				$blockName = Helper::getBlockNameDetails($innerBlock['blockName'])['name'];
+				$blockName = UtilsGeneralHelper::getBlockNameDetails($innerBlock['blockName'])['name'];
 
 				// Populate forms blocks attributes to the form component later in the chain.
 				$innerBlock['attrs']["{$blockName}FormSuccessRedirectVariation"] = $formsSuccessRedirectVariation;
@@ -221,7 +211,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 				foreach ($innerBlock['innerBlocks'] as $inKey => $inBlock) {
 					// Get fields components details.
-					$nameDetails = Helper::getBlockNameDetails($inBlock['blockName']);
+					$nameDetails = UtilsGeneralHelper::getBlockNameDetails($inBlock['blockName']);
 					$name = $nameDetails['name'];
 					$namespace = $nameDetails['namespace'];
 
@@ -343,6 +333,16 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					$inBlockOutput[0]['attrs']["stepStepIsActive"] = true;
 				}
 
+				// Populate custom hidden fields from filter.
+				$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'additionalHiddenFields']);
+				if (\has_filter($filterName)) {
+					$customHiddenFields = \apply_filters($filterName, [], $formsFormPostId);
+
+					if ($customHiddenFields) {
+						$inBlockOutput = \array_merge($inBlockOutput, $this->getHiddenFields($customHiddenFields));
+					}
+				}
+
 				$innerBlockOutput[] = [
 					'blockName' => $innerBlock['blockName'],
 					'attrs' => $innerBlock['attrs'],
@@ -373,7 +373,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 */
 	private function getShowAsOutput(array $block): array
 	{
-		$nameDetails = Helper::getBlockNameDetails($block['blockName']);
+		$nameDetails = UtilsGeneralHelper::getBlockNameDetails($block['blockName']);
 		$name = $nameDetails['name'];
 		$namespace = $nameDetails['namespace'];
 		$attrs = $block['attrs'] ?? [];
@@ -498,6 +498,43 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$outputInner[$innerBlockKey]['innerContent'] = $innerBlock['innerBlocks'] ?? [];
 
 			$output['innerBlocks'] = $outputInner;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get hidden fields from array.
+	 *
+	 * @param array<int, array<string, string>> $items Items to filter.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function getHiddenFields(array $items): array
+	{
+		$output = [];
+
+		$namespace = Components::getSettingsNamespace();
+
+		foreach ($items as $item) {
+			$name = $item['name'] ?? '';
+			$value = $item['value'] ?? '';
+
+			if (!$name) {
+				continue;
+			}
+
+			$output[] = [
+				'blockName' => "{$namespace}/input",
+				'attrs' => [
+					'inputInputFieldHidden' => true,
+					'inputInputName' => $name,
+					'inputInputValue' => $value,
+				],
+				'innerBlocks' => [],
+				'innerHTML' => '',
+				'innerContent' => [],
+			];
 		}
 
 		return $output;

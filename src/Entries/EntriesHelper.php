@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
-use EightshiftForms\Helpers\Helper;
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * EntriesHelper class.
@@ -28,24 +29,24 @@ class EntriesHelper
 	/**
 	 * Get entry by form data reference.
 	 *
-	 * @param array<string, mixed> $formDataReference Form data reference.
-	 * @param string $formId Form Id.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public static function setEntryByFormDataRef(array $formDataReference, string $formId): bool
+	public static function setEntryByFormDataRef(array $formDetails): bool
 	{
-		$params = $formDataReference['params'] ?? [];
+		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
+		$formId = $formDetails[UtilsConfig::IARD_FORM_ID] ?? '';
 
 		$output = [];
 
 		// Filter params.
-		$filterName = Filters::getFilterName(['entries', 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['entries', 'prePostParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
+			$params = \apply_filters($filterName, $params, $formId, $formDetails) ?? [];
 		}
 
-		$params = Helper::removeUneceseryParamFields($params);
+		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -170,7 +171,6 @@ class EntriesHelper
 
 			\wp_cache_add($formId, $output, self::TABLE_NAME . 'entries_count');
 		}
-
 
 		return $output;
 	}

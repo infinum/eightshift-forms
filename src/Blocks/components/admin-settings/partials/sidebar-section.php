@@ -6,7 +6,7 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftForms\Hooks\Filters;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $items = $attributes['items'] ?? [];
@@ -17,6 +17,8 @@ if (!$items) {
 	return $output;
 }
 
+$data = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
+
 $sectionClass = $attributes['sectionClass'] ?? '';
 $adminSettingsType = $attributes['adminSettingsType'] ?? '';
 
@@ -26,7 +28,7 @@ foreach ($items as $key => $innerItems) {
 	<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
 		<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
 			<div class="<?php echo esc_attr("{$sectionClass}__sidebar-label"); ?>">
-				<?php echo esc_html(Filters::getSettingsLabels($key)); ?>
+				<?php echo esc_html($data[$key]['labels']['title'] ?? ''); ?>
 			</div>
 			<ul class="<?php echo esc_attr("{$sectionClass}__menu"); ?>">
 				<?php foreach ($innerItems as $item) { ?>
