@@ -50,7 +50,7 @@ class Main extends AbstractMain
 	{
 		parent::registerServices();
 
-		// Filter triggered when main forms plugins is loaded to hook add-ons.
+		// Filter triggered when main form's plugins is loaded to hook add-ons.
 		\do_action(UtilsConfig::FILTER_LOADED_NAME);
 	}
 }
