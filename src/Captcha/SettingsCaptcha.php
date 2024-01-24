@@ -271,9 +271,10 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 								'inputFieldHelp' => \__('The level above which a submission is <strong>not</strong> considered spam. Should be between 0.1 and 1.0.<br />In most cases, a user will receive as core between 0.8 and 0.9.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
-								'inputMin' => 0,
+								'inputMin' => 0.1,
 								'inputMax' => 1,
 								'inputStep' => 0.1,
+								'inputIsNumber' => true,
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY,
 							],
 							[
