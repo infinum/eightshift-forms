@@ -1,7 +1,6 @@
 name: Continuous integration checks
 
 on:
-  # Run on PRs and pushes, only on significant changes.
   push:
     branches:
       - develop
@@ -11,28 +10,29 @@ on:
   pull_request:
     paths-ignore:
       - '**.md'
+  # Allow manually triggering the workflow.
+  workflow_dispatch:
 
 # Prevent multiple unnecessary CI runs on the same branch.
-# Link: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  # Lint JS and CSS files.
   lint:
-    name: File linting on Node v${{ matrix.node }}
+    name: File linting using Node version - ${{ matrix.node }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        node: [ 16.x ]
-
+        node: [ 'latest' ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Set Node.js version
-        uses: actions/setup-node@v2
+      - name: Set Node.js version - ${{ matrix.node }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
@@ -43,36 +43,27 @@ jobs:
       - name: Run linters
         run: npm run lintJs && npm run lintStyle
 
+  # PHP check coding standards.
   phpcs:
-    name: PHPCS check on PHP ${{ matrix.php }}
+    name: PHPCS check on PHP version - ${{ matrix.php }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php: [ '7.4' ]
-
     steps:
-      # Checkout repository
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      # Setup PHP versions, run checks
       - name: PHP setup
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
           tools: cs2pr
-        env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Install dependencies and handle caching in one go.
-      # @link https://github.com/marketplace/actions/install-composer-dependencies
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
-        with:
-          dependency-versions: highest
-          ignore-cache: "yes"
 
       - name: Check coding standards using PHPCS
         continue-on-error: true
@@ -81,37 +72,25 @@ jobs:
       - name: Show PHPCS results in PR
         run: cs2pr ./phpcs-report.xml
 
+  # PHP Static code analaysis.
   phpstan:
-    name: PHPStan check
+    name: PHPStan check on PHP version - ${{ matrix.php }}
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.allowed_failure }}
     strategy:
       fail-fast: false
       matrix:
         php: [ '7.4' ]
-        allowed_failure: [ true ]
-
     steps:
-      # Checkout repository
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      # Setup PHP versions, run checks
       - name: PHP setup
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: none
-        env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Install dependencies and handle caching in one go.
-      # @link https://github.com/marketplace/actions/install-composer-dependencies
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
-        with:
-          dependency-versions: highest
-          ignore-cache: "yes"
 
-      - name: Check code consistency using PHPStan
+      - name: Run PHP Static code analaysis
         run: composer test:types

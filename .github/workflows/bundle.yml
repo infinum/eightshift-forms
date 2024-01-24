@@ -6,9 +6,8 @@ on:
   # Allow manually triggering the workflow.
   workflow_dispatch:
 
-# Cancels all previous workflow runs for the same branch that have not yet completed.
+# Prevent multiple unnecessary CI runs on the same branch.
 concurrency:
-  # The concurrency group contains the workflow name and the branch name.
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
@@ -16,39 +15,39 @@ jobs:
   bundle:
     name: Add zip to release
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4' ]
+        node: [ 'latest' ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.release.tag_name }}
 
-      - uses: "shivammathur/setup-php@v2"
+      - name: PHP setup
+        uses: "shivammathur/setup-php@v2"
         with:
-          php-version: "7.4"
+          php-version: ${{ matrix.php }}
 
+      # Composer.
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
         with:
-          composer-options: '-oa --no-dev'
+          composer-options: '--no-dev'
 
-      - name: Set Node.js version
-        uses: actions/setup-node@v3
+      # Npm.
+      - name: Set Node.js version - ${{ matrix.node }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 14
-
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
 
       - name: Install node packages
         run: npm install
 
+      # Zip.
       - name: Bundle assets
         run: npm run build --no-dev --no-progress
 
@@ -61,6 +60,7 @@ jobs:
       - name: Zip Folder
         run: zip -r release.zip eightshift-forms
 
+      # Upload
       - name: Upload zip to release
         uses: svenstaro/upload-release-action@v2
         with:
