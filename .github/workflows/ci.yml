@@ -66,7 +66,6 @@ jobs:
         uses: ramsey/composer-install@v2
 
       - name: Check coding standards using PHPCS
-        continue-on-error: true
         run: composer test:standards -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
 
       - name: Show PHPCS results in PR
