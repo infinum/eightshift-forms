@@ -18,7 +18,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestUtils = Components::getComponent('utils');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -204,21 +203,43 @@ if ($formAttrs) {
 	<?php if (is_user_logged_in() && !is_admin()) { ?>
 		<div class="<?php echo esc_attr('es-block-edit-options__edit-wrap') ?>">
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formPostId)) ?>" title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
-					<?php echo $manifestUtils['icons']['edit']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				<a
+					class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
+					href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formPostId)) ?>"
+					title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>"
+				>
+					<?php echo UtilsHelper::getUtilsIcons('edit'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
-				<?php echo $manifestUtils['icons']['settings']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				<a
+					class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
+					href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
+					title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>"
+				>
+				<?php echo UtilsHelper::getUtilsIcons('settings'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>" href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>" title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
-					<?php echo $manifestUtils['icons']['dashboard']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				<a
+				class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
+				href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
+				title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>"
+			>
+					<?php echo UtilsHelper::getUtilsIcons('dashboard'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 				</a>
+
+				<?php if ($formHasSteps) { ?>
+					<a
+						class="<?php echo esc_attr('es-block-edit-options__edit-link ' .  UtilsHelper::getStateSelector('stepDebugPreview')); ?>"
+						href="#" class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
+						title="<?php esc_html_e('Debug form', 'eightshift-forms'); ?>"
+					>
+						<?php echo UtilsHelper::getUtilsIcons('debug'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+					</a>
+				<?php } ?>
 			<?php } ?>
 		</div>
 	<?php } ?>

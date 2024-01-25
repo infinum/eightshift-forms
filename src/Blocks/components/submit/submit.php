@@ -11,7 +11,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestUtils = Components::getComponent('utils');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';

@@ -54,6 +54,14 @@ $nextButtonComponent = '';
 ?>
 
 <div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+
+	<div class="<?php echo esc_attr("{$componentClass}__debug-details"); ?>">
+		<?php
+		// translators: %s is replaced with the step name.
+		echo sprintf(esc_html__('Step name: %s', 'eightshift-forms'), esc_html($stepName));
+		?>
+	</div>
+
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 

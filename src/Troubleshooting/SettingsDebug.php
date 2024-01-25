@@ -167,6 +167,7 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 									<ul>
 										<li>Every listing will have ID prepended to the label.</li>
 										<li>Integration api response will have a `debug` key with all the details. You can check it out using inspector network tab.</li>
+										<li>On frontend form when hovering over the field you will see debug tooltip with some helpful information.</li>
 									</ul>', 'eightshift-forms'),
 							],
 							[

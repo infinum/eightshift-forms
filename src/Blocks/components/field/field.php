@@ -165,6 +165,10 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		echo Components::outputCssVariables($attributes, $manifest, $unique);
 	}
 
+	echo Components::renderPartial('component', 'utils', 'debug-field-details', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		'name' => Components::checkAttr('fieldName', $attributes, $manifest),
+	]);
+
 	?>
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>

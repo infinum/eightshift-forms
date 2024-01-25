@@ -2,3 +2,27 @@
 	display: none;
 	user-select: none;
 }
+
+.es-field {
+	$this: &;
+
+	&__debug {
+		pointer-events: none;
+		position: absolute;
+		right: -200vw;
+		background-color: var(--global-colors-esf-white);
+		border: 1px solid var(--global-colors-esf-gray-300);
+		padding: 0.3125rem;
+		border-radius: var(--global-esf-spacing-s);
+		font-size: 0.75rem;
+		z-index: 2;
+		display: none;
+	}
+
+	&:hover {
+		#{$this}__debug {
+			display: block;
+			right: 0;
+		}
+	}
+}

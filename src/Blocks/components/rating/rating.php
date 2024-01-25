@@ -12,7 +12,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$icons = Components::getComponent('utils')['icons'];
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -67,7 +66,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 			class="' . esc_attr("{$componentClass}__star") . '"
 			' . UtilsHelper::getStateAttribute('ratingValue') . '="' . $i . '"
 		>
-		' . $icons['rating'] .
+		' . UtilsHelper::getUtilsIcons('rating') .
 		'</div>';
 }
 
