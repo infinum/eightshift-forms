@@ -1,15 +1,13 @@
 import React from 'react';
-import { select } from '@wordpress/data';
-import { STORE_NAME, icons } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/frontend-libs/scripts';
+import { getUtilsIcons } from '../../form/assets/state-init';
 
 export const InvalidEditor = ({ icon, heading, text }) => {
-	const manifest = select(STORE_NAME).getComponent('utils');
-
 	return (
 		<div className='es-v-center es-gap-1! es-w-96 es-mx-auto es-px-5 es-py-10 es-rounded-3 es-border-red-500 es-text-align-center'>
 			<div className='es-nested-w-8 es-nested-h-8 es-nested-color-red-500 es-mb-2'>
-				{icon && manifest?.[icon] && <div className='es-nested-w-8 es-nested-h-8' dangerouslySetInnerHTML={{ __html: manifest.icons[icon] }} />}
-				{(!icon || (icon && !manifest?.[icon])) && icons.warningFillTransparent}
+				{icon && getUtilsIcons(icon) && <div className='es-nested-w-8 es-nested-h-8' dangerouslySetInnerHTML={{ __html: getUtilsIcons(icon) }} />}
+				{(!icon || (icon && !getUtilsIcons(icon))) && icons.warningFillTransparent}
 			</div>
 
 			{heading &&

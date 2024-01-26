@@ -6,10 +6,10 @@
  * @package EightshiftForms
  */
 
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
-$manifestUtils = Components::getComponent('utils');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalTooltipClass = $attributes['additionalTooltipClass'] ?? '';
@@ -28,7 +28,7 @@ $tooltipClass = Components::classnames([
 ?>
 
 <span class="<?php echo esc_attr($tooltipClass); ?>">
-	<?php echo $manifestUtils['icons']['tooltip']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo UtilsHelper::getUtilsIcons('tooltip'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 	<span class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php echo esc_html($tooltipContent); ?>
 	</span>

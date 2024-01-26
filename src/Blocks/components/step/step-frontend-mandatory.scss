@@ -4,6 +4,19 @@
 	width: 100%;
 	display: none;
 
+	&__debug-details {
+		display: none;
+		pointer-events: none;
+		position: absolute;
+		right: -200vw;
+		background-color: var(--global-colors-esf-white);
+		border: 1px solid var(--global-colors-esf-gray-300);
+		padding: 0.3125rem;
+		border-radius: var(--global-esf-spacing-s);
+		font-size: 0.75rem;
+		z-index: 2;
+	}
+
 	&.es-form-is-active {
 		display: block;
 	}
@@ -20,6 +33,19 @@
 			button {
 				pointer-events: none;
 			}
+		}
+	}
+}
+
+.es-form-is-step-preview-active {
+	.es-step {
+		display: block !important; // stylelint-disable-line declaration-no-important
+		padding: 1.875rem;
+		border: 1px solid var(--global-colors-esf-gray-400);
+
+		&__debug-details {
+			display: block;
+			right: 0;
 		}
 	}
 }

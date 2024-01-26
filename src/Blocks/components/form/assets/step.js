@@ -327,6 +327,12 @@ export class Steps {
 		);
 	}
 
+	toggleDebugPreview() {
+		const debug = document.querySelectorAll(this.state.getStateSelector('stepDebugPreview', true));
+
+		debug.forEach((item) => item?.addEventListener('click', this.onToggleDebugPreview));
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -343,6 +349,28 @@ export class Steps {
 
 		// Set fields logic.
 		this.resetSteps(formId);
+
+		// Toggle Debug Preview.
+		this.toggleDebugPreview();
+	};
+
+	/**
+	 * On toggle debug preview.
+	 *
+	 * @param {CustomEvent} event Event object.
+	 *
+	 * @returns {void}
+	 */
+	onToggleDebugPreview = (event) => {
+		event.preventDefault();
+		const formId = this.state.getFormIdByElement(event.target);
+		const form = this.state.getStateFormElement(formId);
+
+		if (!form) {
+			return;
+		}
+
+		form.classList.toggle(this.state.getStateSelector('isStepPreviewActive'));
 	};
 
 		////////////////////////////////////////////////////////////////

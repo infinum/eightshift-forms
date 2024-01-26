@@ -1137,3 +1137,16 @@ export function getRestUrlByType(type, value, isPartial = false, checkRef = fals
 
 	return `${url}/${typePrefix}/${sufix}`;
 }
+
+////////////////////////////////////////////////////////////////
+// Block editor only.
+////////////////////////////////////////////////////////////////
+
+/**
+ * Get utils icons, used in the block editor only.
+ *
+ * @returns {string}
+ */
+export function getUtilsIcons(name) {
+	return utilsManifest?.icons?.[name];
+}

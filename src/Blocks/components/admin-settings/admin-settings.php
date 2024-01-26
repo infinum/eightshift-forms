@@ -11,7 +11,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
 $manifestSection = Components::getComponent('admin-settings-section');
-$manifestUtils = Components::getComponent('utils');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
@@ -85,7 +84,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
 								<?php
 									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-									echo $manifestUtils['icons']['edit'],
+									echo UtilsHelper::getUtilsIcons('edit'),
 									esc_html__('Edit form', 'eightshift-forms');
 								?>
 							</a>

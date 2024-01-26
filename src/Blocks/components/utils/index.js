@@ -20,7 +20,7 @@ import {
 	getUnique,
 } from '@eightshift/frontend-libs/scripts';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
-import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
+import { getRestUrl, getRestUrlByType, getUtilsIcons } from '../form/assets/state-init';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -652,8 +652,6 @@ export const DashboardButton = () => {
  * @returns object
  */
 export const outputFormSelectItemWithIcon = (props) => {
-	const utilsIcons = select(STORE_NAME).getComponent('utils').icons;
-
 	const {
 		label,
 		id,
@@ -665,14 +663,14 @@ export const outputFormSelectItemWithIcon = (props) => {
 	}
 
 	let outputLabel = unescapeHTML(label);
-	let icon = utilsIcons.post;
+	let icon = getUtilsIcons('post');
 
 	if (!outputLabel) {
 		outputLabel = __(`Form ${id}`, 'eightshift-forms');
 	}
 
-	if (utilsIcons?.[metadata]) {
-		icon = utilsIcons[metadata];
+	if (getUtilsIcons(metadata)) {
+		icon = getUtilsIcons(metadata);
 	}
 
 	if (isDeveloperMode()) {

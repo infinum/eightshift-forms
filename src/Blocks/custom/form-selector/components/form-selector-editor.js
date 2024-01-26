@@ -6,6 +6,7 @@ import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { STORE_NAME, checkAttr, icons } from '@eightshift/frontend-libs/scripts';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
+import { getUtilsIcons } from '../../../components/form/assets/state-init';
 
 export const FormSelectorEditor = ({
 	attributes,
@@ -13,7 +14,6 @@ export const FormSelectorEditor = ({
 	hasInnerBlocks,
 }) => {
 	const manifest = select(STORE_NAME).getBlock('form-selector');
-	const utilsManifest = select(STORE_NAME).getComponent('utils');
 
 	const {
 		forms,
@@ -38,7 +38,7 @@ export const FormSelectorEditor = ({
 									let iconComponent = icon;
 
 									if (!icon) {
-										iconComponent = utilsManifest.icons[camelCase(slug)];
+										iconComponent = getUtilsIcons(camelCase(slug));
 									}
 
 									return (

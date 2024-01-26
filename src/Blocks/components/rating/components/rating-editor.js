@@ -11,10 +11,10 @@ import {
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
+import { getUtilsIcons } from '../../form/assets/state-init';
 
 export const RatingEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('rating');
-	const utilsIcons = select(STORE_NAME).getComponent('utils').icons;
 
 	const {
 		componentName,
@@ -43,7 +43,7 @@ export const RatingEditor = (attributes) => {
 			{ratingAmount && 
 				<>
 					{[...Array(parseInt(ratingAmount, 10))].map((x, i) => {
-						return <div className={`${componentClass}__star`} key={i} dangerouslySetInnerHTML={{ __html: utilsIcons.rating}} data-rating={i + 1} />;
+						return <div className={`${componentClass}__star`} key={i} dangerouslySetInnerHTML={{ __html: getUtilsIcons('rating')}} data-rating={i + 1} />;
 					})}
 				</>
 			}
