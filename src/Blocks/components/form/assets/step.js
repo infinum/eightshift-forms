@@ -330,11 +330,7 @@ export class Steps {
 	toggleDebugPreview() {
 		const debug = document.querySelectorAll(this.state.getStateSelector('stepDebugPreview', true));
 
-		if (debug.length) {
-			[...debug].forEach((item) => {
-				item.addEventListener('click', this.onToggleDebugPreview);
-			});
-		}
+		debug.forEach((item) => item?.addEventListener('click', this.onToggleDebugPreview));
 	}
 
 	////////////////////////////////////////////////////////////////
