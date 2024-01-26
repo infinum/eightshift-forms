@@ -32,7 +32,7 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_form_success_redirect_variation' => ['getBlockFormSuccessRedirectVariation', 2],
 			'es_forms_block_form_success_redirect_variation_options' => ['getBlockFormSuccessRedirectVariationOptions'],
 			'es_forms_block_form_tracking_event_name' => ['getBlockFormTrackingEventName', 2],
-			'es_forms_block_form_tracking_additional_data' => ['getBlockFormTrackingAdditinalData', 2],
+			'es_forms_block_form_tracking_additional_data' => ['getBlockFormTrackingAdditionalData', 2],
 			'es_forms_block_form_data_type_selector' => ['getFormDataTypeSelector', 2],
 			'es_forms_block_form_phone_sync' => ['getFormPhoneSync', 2],
 			'es_forms_block_form_global_msg_headings' => ['getGlobalMsgHeadings'],
@@ -62,8 +62,8 @@ class Testfilters implements ServiceInterface
 
 			'es_forms_block_submit_component' => ['getBlockSubmitComponent'],
 
-			'es_forms_block_submit_component_prev' => ['getBlockSubmitComponentPrev'],
-			'es_forms_block_submit_component_next' => ['getBlockSubmitComponentNext'],
+			'es_forms_block_step_component_prev' => ['getBlockStepComponentPrev'],
+			'es_forms_block_step_component_next' => ['getBlockStepComponentNext'],
 
 			// ---------------------------------------------------------------------------------------------------------
 			// Blocks filters.
@@ -94,7 +94,7 @@ class Testfilters implements ServiceInterface
 			'es_forms_integrations_workable_pre_post_id' => ['getWorkableIntegrationPrePostId', 3], // Dynamic name based on the integration type.
 			'es_forms_integrations_workable_order' => ['getWorkableIntegrationOrder'], // Dynamic name based on the integration type.
 			'es_forms_integrations_hubspot_files_options' => ['getFileUploadCustomOptions'],
-			'es_forms_integrations_clearbit_map' => ['getClearbitFieldsMap'],
+			'es_forms_integrations_clearbit_map' => ['getClearbitMap'],
 
 			// ---------------------------------------------------------------------------------------------------------
 			// Enrichment filters.
@@ -220,7 +220,7 @@ class Testfilters implements ServiceInterface
 	 */
 	public function getBlockFormSuccessRedirectVariation(string $formType, string $formId): string
 	{
-		return 'aaa';
+		return '<variation>';
 	}
 
 	/**
@@ -235,11 +235,11 @@ class Testfilters implements ServiceInterface
 		return [
 			[
 				'test1',
-				'label1',
+				\esc_html__('label1', '<text_domain>'),
 			],
 			[
 				'test2',
-				'label2',
+				\esc_html__('label2', '<text_domain>'),
 			],
 		];
 	}
@@ -262,14 +262,14 @@ class Testfilters implements ServiceInterface
 	/**
 	 * Set tracking additional data and that data will be send to the GTM along with all field values and event name.
 	 *
-	 * This filter will override settings for tracking additiona data.
+	 * This filter will override settings for tracking additional data.
 	 *
 	 * @param string $formType Type of form used like greenhouse, hubspot, etc.
 	 * @param string $formId Form ID.
 	 *
 	 * @return array<int, array<int, string>>
 	 */
-	public function getBlockFormTrackingAdditinalData(string $formType, string $formId): array
+	public function getBlockFormTrackingAdditionalData(string $formType, string $formId): array
 	{
 		return [
 			'general' => [
@@ -526,7 +526,7 @@ class Testfilters implements ServiceInterface
 	 */
 	public function getBlockSubmitComponent(array $data): string
 	{
-		return '';
+		return 'Submit';
 	}
 
 	/**
@@ -817,7 +817,7 @@ class Testfilters implements ServiceInterface
 	 *
 	 * @return array<mixed>
 	 */
-	public function getClearbitFieldsMap(array $params): array
+	public function getClearbitMap(array $params): array
 	{
 		$street = $params['company-street-number'] ?? '';
 		$city = $params['company-city'] ?? '';
@@ -834,33 +834,15 @@ class Testfilters implements ServiceInterface
 	/**
 	 * Manual map enrichment array.
 	 *
-	 * This filter provides you with the ability to manualy map enrichment array combined with settings data.
+	 * This filter provides you with the ability to manually map enrichment array combined with settings data.
 	 *
 	 * @return array<string, array<int, string>>
 	 */
 	public function getEnrichmentManualMap(): array
 	{
 		return [
-			'workable' => [
-				'utm_source' => [
-					'utm_source',
-				],
-				'utm_medium' => [
-					'utm_medium',
-				],
-			],
-			'moments' => [
-				'__IB_LT_ga_client_id' => [
-					'ga_client_id',
-					'miro',
-					'pero',
-				],
-				'aaaa' => [
-					'ffff',
-					'vvv',
-					'rrr',
-				],
-			],
+			'__IB_LT_utm_medium' => ['utm_medium_lt'],
+			'__IB_LT_utm_source' => ['utm_source_lt'],
 		];
 	}
 
