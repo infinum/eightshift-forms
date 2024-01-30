@@ -37,14 +37,14 @@
 		gap: var(--global-esf-spacing-l);
 
 		position: sticky;
-		top: 0;
+		inset-block-start: 0;
 
 		align-self: flex-start;
 
 		padding-block: var(--global-esf-spacing-l);
 
 		@include media(desktop up) {
-			top: 2rem; // Admin bar height (desktop).
+			inset-block-start: 2rem; // Admin bar height (desktop).
 		}
 	}
 

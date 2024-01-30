@@ -1,7 +1,7 @@
 .es-global-msg {
 	position: fixed;
 	right: 2rem;
-	bottom: 2rem;
+	inset-block-end: 2rem;
 	z-index: 1;
 	max-inline-size: 18rem;
 	max-block-size: 80vh;

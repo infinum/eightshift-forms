@@ -17,7 +17,7 @@
 			flex-direction: column;
 
 			position: absolute;
-			right: var(--global-esf-spacing-m);
+			inset-inline-end: var(--global-esf-spacing-m);
 			z-index: 1;
 		}
 

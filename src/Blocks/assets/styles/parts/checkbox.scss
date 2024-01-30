@@ -27,8 +27,8 @@
 		&::before {
 			content: '';
 			position: absolute;
-			left: 0;
-			top: 0;
+			inset-inline-start: 0;
+			inset-block-start: 0;
 			border-radius: 50%;
 			opacity: var(--es-checkbox-scoped-opacity, 1);
 			background-color: var(--es-checkbox-scoped-background-color, var(--es-input-background-color));
@@ -45,8 +45,8 @@
 		&::after {
 			content: '';
 			position: absolute;
-			left: 0;
-			top: 0;
+			inset-inline-start: 0;
+			inset-block-start: 0;
 			inline-size: var(--es-checkbox-scoped-icon-size);
 			block-size: var(--es-checkbox-scoped-icon-size);
 
@@ -92,7 +92,7 @@
 	&__input {
 		// Important because if hidden focus/blur is not working.
 		position: absolute;
-		left: -99999px;
+		inset-inline-start: -99999px;
 	}
 
 	@include field-styles('false');

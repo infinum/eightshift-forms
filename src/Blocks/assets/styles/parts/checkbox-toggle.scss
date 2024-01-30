@@ -32,7 +32,7 @@
 		&::before {
 			content: '';
 			position: absolute;
-			right: 0;
+			inset-inline-end: 0;
 			inline-size: var(--es-checkbox-toggle-scoped-width);
 			block-size: var(--es-checkbox-toggle-scoped-height);
 			border-radius: 100vh;
@@ -49,7 +49,7 @@
 		&::after {
 			content: '';
 			position: absolute;
-			right: var(--es-checkbox-toggle-scoped-dot-spacing);
+			inset-inline-end: var(--es-checkbox-toggle-scoped-dot-spacing);
 			inline-size: var(--es-checkbox-toggle-scoped-dot-size);
 			block-size: var(--es-checkbox-toggle-scoped-dot-size);
 			background-color: var(--global-colors-esf-gray-400);
@@ -102,7 +102,7 @@
 	&__input {
 		// Important because if hidden focus/blur is not working.
 		position: absolute;
-		left: -99999px;
+		inset-inline-start: -99999px;
 	}
 
 	@include field-styles('false');

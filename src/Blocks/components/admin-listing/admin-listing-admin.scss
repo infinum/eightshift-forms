@@ -28,10 +28,8 @@
 		z-index: 10;
 
 		svg {
-			left: auto;
-			top: auto;
-			right: 1.25rem;
-			bottom: 1.25rem;
+			inset-block: auto 1.25rem;
+			inset-inline: auto 1.25rem;
 			position: fixed;
 			transform: none;
 		}

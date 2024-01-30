@@ -38,9 +38,9 @@
 		&::after {
 			content: '';
 			position: absolute;
-			left: 0.7rem;
+			inset-inline-start: 0.7rem;
 			block-size: 100%;
-			top: 0;
+			inset-block-start: 0;
 			border-inline-start: 1px dotted var(--global-colors-esf-gray-300);
 		}
 	}
