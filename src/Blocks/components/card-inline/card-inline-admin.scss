@@ -39,7 +39,7 @@
 			content: '';
 			position: absolute;
 			left: 0.7rem;
-			height: 100%;
+			block-size: 100%;
 			top: 0;
 			border-left: 1px dotted var(--global-colors-esf-gray-300);
 		}
@@ -82,14 +82,14 @@
 		}
 
 		svg {
-			width: 1.5rem;
-			height: 1.5rem;
+			inline-size: 1.5rem;
+			block-size: 1.5rem;
 		}
 	}
 
 	&__title {
 		font-size: 0.85rem;
-		min-height: 1.5rem;
+		min-block-size: 1.5rem;
 		display: inline-flex;
 		align-items: center;
 	}
@@ -138,7 +138,7 @@
 
 	&__right-wrap {
 		z-index: 2;
-		min-height: 2.75rem;
+		min-block-size: 2.75rem;
 		display: inline-flex;
 		align-items: center;
 		transition: {

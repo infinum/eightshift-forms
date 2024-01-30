@@ -7,8 +7,8 @@
 
 		&::before {
 			content: '';
-			width: 100%;
-			height: 1px;
+			inline-size: 100%;
+			block-size: 1px;
 			display: block;
 			background-color: var(--global-colors-esf-gray-300);
 		}

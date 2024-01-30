@@ -23,8 +23,8 @@
 
 		svg {
 			padding: 0 var(--es-rating-icon-spacing);
-			width: calc(var(--es-rating-icon-size) + calc(var(--es-rating-icon-spacing) * 2));
-			height: calc(var(--es-rating-icon-size) + calc(var(--es-rating-icon-spacing) * 2));
+			inline-size: calc(var(--es-rating-icon-size) + calc(var(--es-rating-icon-spacing) * 2));
+			block-size: calc(var(--es-rating-icon-size) + calc(var(--es-rating-icon-spacing) * 2));
 		}
 
 		path {

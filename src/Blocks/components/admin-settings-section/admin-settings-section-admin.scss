@@ -69,7 +69,7 @@
 			overflow-x: hidden;
 			padding: var(--global-esf-spacing-xl);
 
-			height: 100%;
+			block-size: 100%;
 
 			#{$this}__content {
 				padding: 0;
@@ -78,7 +78,7 @@
 	}
 
 	&__section {
-		height: 100%;
+		block-size: 100%;
 	}
 
 	&__heading {
@@ -89,7 +89,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		min-height: 36px;
+		min-block-size: 36px;
 	}
 
 	&__heading-inner-wrap {
@@ -100,7 +100,7 @@
 	&__heading-title {
 		font-size: 1.5rem;
 		font-weight: 500;
-		min-height: 1.25rem;
+		min-block-size: 1.25rem;
 		line-height: 1.2;
 		letter-spacing: -0.02em;
 	}
@@ -160,7 +160,7 @@
 		}
 
 		&--fit {
-			width: fit-content;
+			inline-size: fit-content;
 		}
 
 		&:focus {
@@ -169,8 +169,8 @@
 		}
 
 		svg {
-			width: 1.5rem;
-			height: 1.5rem;
+			inline-size: 1.5rem;
+			block-size: 1.5rem;
 
 			transition: {
 				property: transform, color;
@@ -224,7 +224,7 @@
 			@extend .es-submit--ghost;
 
 			padding: 0.5rem 0.75rem !important;
-			height: auto !important;
+			block-size: auto !important;
 			// stylelint-enable declaration-no-important, scss/at-extend-no-missing-placeholder
 		}
 	}

@@ -88,7 +88,7 @@
 			box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
 			padding: 1.5rem;
 
-			max-width: var(--global-esf-max-width);
+			max-inline-size: var(--global-esf-max-width);
 
 			// > *:first-child:not(:last-child):is(.es-intro):not(:has(+ .es-divider)) {
 			// 	margin-block-end: 1rem;

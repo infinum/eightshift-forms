@@ -26,7 +26,7 @@
 	@include field-styles;
 
 	&__before-content {
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 
 		> * {
 			padding-block-end: var(--global-esf-spacing-l);
@@ -58,14 +58,14 @@
 	$this: &;
 
 	&__inner {
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 	}
 
 	&--submit {
 		display: flex;
 		justify-content: flex-end;
 
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 	}
 
 	// Remove spacing if regular checkboxes are inside.
@@ -109,7 +109,7 @@
 			background-color: var(--global-colors-esf-gray-50);
 			color: var(--global-colors-esf-gray-500);
 
-			height: var(--esf-input-height);
+			block-size: var(--esf-input-height);
 
 			transition: {
 				property: border-color, box-shadow;

@@ -270,8 +270,8 @@
 			content: '';
 			background-image: url('../public/flags.png');
 			background-repeat: no-repeat;
-			width: $width;
-			height: $height;
+			inline-size: $width;
+			block-size: $height;
 			vertical-align: middle;
 			margin-inline-end: 10px;
 			display: inline-block;

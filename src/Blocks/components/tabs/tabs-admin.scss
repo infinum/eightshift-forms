@@ -4,7 +4,7 @@
 	@include media(desktop up) {
 		display: flex;
 		flex-wrap: wrap;
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 
 		gap: var(--global-esf-spacing-m);
 	}

@@ -13,7 +13,7 @@
 
 	> #{$this}__label,
 	> #{$this}__content {
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 	}
 
 	// Default listing for fields.

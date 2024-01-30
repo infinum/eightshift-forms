@@ -34,7 +34,7 @@
 			@include submit-styles($size: 'medium');
 			margin-block-start: 15px;
 			display: inline-flex;
-			width: initial;
+			inline-size: initial;
 		}
 	}
 
@@ -59,8 +59,8 @@
 
 		.dz-image {
 			img {
-				max-width: 100%;
-				height: auto;
+				max-inline-size: 100%;
+				block-size: auto;
 				display: block;
 			}
 		}
@@ -91,10 +91,10 @@
 			span {
 				--dz-progress-scoped-height: 4px; // px because there can be multiple items at one point.
 				display: block;
-				width: 0;
+				inline-size: 0;
 				background-color: var(--global-colors-es-matisse);
 				border-radius: var(--dz-progress-scoped-height);
-				height: var(--dz-progress-scoped-height);
+				block-size: var(--dz-progress-scoped-height);
 				transition: {
 					property: background-color, width;
 					timing-function: cubic-bezier(0.55, 0, 0.45, 1);

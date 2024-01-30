@@ -21,7 +21,7 @@
 			color: var(--global-colors-esf-sky-950);
 			border-radius: var(--global-esf-spacing-s);
 			padding: var(--global-esf-spacing-xs) var(--global-esf-spacing-s);
-			width: fit-content;
+			inline-size: fit-content;
 
 			code {
 				background: var(--global-colors-esf-white);
@@ -46,7 +46,7 @@
 
 	&__help {
 		color: var(--global-colors-esf-gray-400);
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 		font-size: 0.725rem;
 		line-height: 1.6;
 

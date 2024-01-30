@@ -4,7 +4,7 @@
 }
 
 @mixin form-width-limit-styles() {
-	max-width: var(--es-max-width);
+	max-inline-size: var(--es-max-width);
 	padding: 0 var(--es-grid-spacing);
 }
 
@@ -20,7 +20,7 @@
 
 @mixin form-fields-children-mandatory-styles() {
 	flex: 0 0 var(--es-field-width, 100%);
-	max-width: var(--es-field-width, 100%);
+	max-inline-size: var(--es-field-width, 100%);
 }
 
 @mixin form-fields-children-styles() {

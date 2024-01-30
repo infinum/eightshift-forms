@@ -7,17 +7,17 @@ button {
 		align-items: center;
 		gap: var(--global-esf-spacing-s);
 
-		width: fit-content;
+		inline-size: fit-content;
 
 		box-sizing: border-box;
 
-		height: 2.5rem;
+		block-size: 2.5rem;
 		font-weight: 500;
 		padding: 0.75rem 1rem;
 		border-radius: 0.5rem;
 
 		&--global {
-			width: auto;
+			inline-size: auto;
 		}
 
 		&--with-icon {
@@ -66,7 +66,7 @@ button {
 
 		&--mini {
 			padding: 0.5rem;
-			height: 1.875rem;
+			block-size: 1.875rem;
 		}
 	}
 }

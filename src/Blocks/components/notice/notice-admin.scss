@@ -15,13 +15,13 @@
 		justify-content: center;
 
 		svg {
-			width: 30px;
-			height: 30px;
+			inline-size: 30px;
+			block-size: 30px;
 		}
 	}
 
 	&__text {
-		max-width: calc(var(--global-esf-max-width) + 15rem);
+		max-inline-size: calc(var(--global-esf-max-width) + 15rem);
 
 		a {
 			color: var(--global-colors-esf-white);

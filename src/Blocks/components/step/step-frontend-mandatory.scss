@@ -1,7 +1,7 @@
 @import './../form/form-style.scss';
 
 .es-step {
-	width: 100%;
+	inline-size: 100%;
 	display: none;
 
 	&__debug-details {
@@ -23,7 +23,7 @@
 
 	&__inner {
 		@include form-fields-mandatory-styles;
-		width: 100%;
+		inline-size: 100%;
 
 		> .es-field {
 			@include form-fields-children-mandatory-styles;
