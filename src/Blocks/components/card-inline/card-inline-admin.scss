@@ -41,7 +41,7 @@
 			left: 0.7rem;
 			block-size: 100%;
 			top: 0;
-			border-left: 1px dotted var(--global-colors-esf-gray-300);
+			border-inline-start: 1px dotted var(--global-colors-esf-gray-300);
 		}
 	}
 
@@ -65,11 +65,11 @@
 	}
 
 	&--use-divider {
-		border-bottom: 1px solid var(--global-colors-esf-gray-200);
+		border-block-end: 1px solid var(--global-colors-esf-gray-200);
 	}
 
 	&--last {
-		border-bottom: none;
+		border-block-end: none;
 	}
 
 	&__icon {

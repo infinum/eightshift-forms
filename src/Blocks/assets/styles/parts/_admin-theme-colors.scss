@@ -1,7 +1,7 @@
 // stylelint-disable-next-line selector-max-specificity
 #adminmenu a.wp-has-current-submenu::after,
 #adminmenu > li.current > a.current::after {
-	border-right-color: var(--esf-main-bg-color, var(--global-colors-esf-gray-100));
+	border-inline-end-color: var(--esf-main-bg-color, var(--global-colors-esf-gray-100));
 }
 
 .admin-color {

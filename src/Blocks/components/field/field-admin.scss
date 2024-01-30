@@ -119,31 +119,31 @@
 		}
 
 		#{$this}__before-content {
-			border-top-left-radius: var(--global-es-radius-8);
-			border-bottom-left-radius: var(--global-es-radius-8);
+			border-start-start-radius: var(--global-es-radius-8);
+			border-end-start-radius: var(--global-es-radius-8);
 
 			margin-inline-end: -2px; // To align it with the input field.
 		}
 
 		#{$this}__after-content {
-			border-top-right-radius: var(--global-es-radius-8);
-			border-bottom-right-radius: var(--global-es-radius-8);
+			border-start-end-radius: var(--global-es-radius-8);
+			border-end-end-radius: var(--global-es-radius-8);
 		}
 
 		@supports selector(:has(*)) {
 			&:has(.es-field__before-content):not(:has(.es-field__after-content)) {
 				// stylelint-disable-next-line max-nesting-depth
 				.es-input {
-					border-top-left-radius: 0;
-					border-bottom-left-radius: 0;
+					border-start-start-radius: 0;
+					border-end-start-radius: 0;
 				}
 			}
 
 			&:has(.es-field__after-content):not(:has(.es-field__before-content)) {
 				// stylelint-disable-next-line max-nesting-depth
 				.es-input {
-					border-top-right-radius: 0;
-					border-bottom-right-radius: 0;
+					border-start-end-radius: 0;
+					border-end-end-radius: 0;
 				}
 			}
 

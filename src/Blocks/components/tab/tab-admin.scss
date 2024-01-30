@@ -25,7 +25,7 @@
 			background: var(--global-colors-esf-white);
 
 			border: 1px solid var(--global-colors-esf-border);
-			border-bottom-width: 0;
+			border-block-end-width: 0;
 
 			border-radius: var(--global-esf-spacing-s);
 
@@ -127,8 +127,8 @@
 	&__content {
 		display: none;
 		padding: var(--global-esf-spacing-l);
-		border-top: 1px solid var(--global-colors-esf-gray-300);
-		border-bottom: 1px solid var(--global-colors-esf-gray-300);
+		border-block-start: 1px solid var(--global-colors-esf-gray-300);
+		border-block-end: 1px solid var(--global-colors-esf-gray-300);
 		margin-block-end: -1px;
 		row-gap: var(--global-esf-spacing-l);
 
@@ -147,7 +147,7 @@
 			order: 99;
 			flex-grow: 1;
 			inline-size: 100%;
-			border-top: none;
+			border-block-start: none;
 			margin: 0;
 
 			row-gap: 1rem;
