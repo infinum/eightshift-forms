@@ -17,7 +17,7 @@
 
 		&__button {
 			@include submit-styles($size: 'medium');
-			margin-top: 15px;
+			margin-block-start: 15px;
 			display: inline-flex;
 			width: initial;
 		}

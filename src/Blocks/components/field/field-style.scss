@@ -1,12 +1,12 @@
 .es-field {
 	$this: &;
 	border: none; // Because of fieldset.
-	margin-left: 0;
-	margin-right: 0;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
 	padding: 0;
 
 	&__label {
-		margin-bottom: 5px;
+		margin-block-end: 5px;
 		display: block;
 		transition: {
 			property: color;

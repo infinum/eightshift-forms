@@ -7,7 +7,7 @@
 
 	--es-checkbox-scoped-icon-size: 1.25rem;
 
-	margin-bottom: var(--es-checkbox-scoped-spacing, var(--es-checkbox-spacing));
+	margin-block-end: var(--es-checkbox-scoped-spacing, var(--es-checkbox-spacing));
 
 	&:last-child {
 		--es-checkbox-scoped-spacing: 0;
@@ -20,7 +20,7 @@
 
 	&__label {
 		position: relative;
-		padding-left: calc(var(--es-checkbox-scoped-icon-size) + 10px);
+		padding-inline-start: calc(var(--es-checkbox-scoped-icon-size) + 10px);
 		min-height: var(--es-checkbox-scoped-icon-size);
 		cursor: pointer;
 
@@ -98,6 +98,6 @@
 	@include field-styles('false');
 
 	&__help {
-		padding-left: calc(var(--es-checkbox-scoped-icon-size) + 10px);
+		padding-inline-start: calc(var(--es-checkbox-scoped-icon-size) + 10px);
 	}
 }

@@ -11,7 +11,7 @@
 	border: 2px solid var(--global-colors-esf-red-500);
 
 	&__icon {
-		margin-bottom: 15px;
+		margin-block-end: 15px;
 
 		svg {
 			width: 36px;
@@ -21,7 +21,7 @@
 	}
 
 	&__heading {
-		margin-bottom: 5px;
+		margin-block-end: 5px;
 		font-weight: bold;
 	}
 }

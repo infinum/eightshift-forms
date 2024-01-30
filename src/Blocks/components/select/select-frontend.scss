@@ -8,7 +8,8 @@ div.es-select {
 	}
 
 	&.choices[data-type*='select-multiple'] .choices__inner { // stylelint-disable-line selector-max-specificity
-		padding: var(--es-input-spacing) var(--es-input-spacing) calc(var(--es-input-spacing) - 0.2344rem) var(--es-input-spacing);
+		padding-block: var(--es-input-spacing) calc(var(--es-input-spacing) - 0.2344rem);
+		padding-inline: var(--es-input-spacing);
 
 		.choices__input { // stylelint-disable-line selector-max-specificity
 			padding: 0;
@@ -58,7 +59,8 @@ div.es-select {
 
 		&--single {
 			min-height: var(--esf-input-height);
-			padding: var(--es-input-spacing) 1.875rem var(--es-input-spacing) var(--es-input-spacing);
+			padding-block: var(--es-input-spacing);
+			padding-inline: var(--es-input-spacing) 1.875rem;
 			display: flex;
 			align-items: center;
 			flex-wrap: wrap;

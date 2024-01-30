@@ -70,7 +70,7 @@
 	&__label-inner {
 		display: block;
 
-		margin-right: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
+		margin-inline-end: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
 	}
 
 	&__input:checked {
@@ -108,7 +108,7 @@
 	@include field-styles('false');
 
 	&__help {
-		margin-right: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
+		margin-inline-end: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
 		line-height: 1.25;
 	}
 }

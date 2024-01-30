@@ -33,7 +33,7 @@
 
 	&--indented {
 		position: relative;
-		padding-left: 2rem;
+		padding-inline-start: 2rem;
 
 		&::after {
 			content: '';
@@ -106,7 +106,7 @@
 	&__content {
 		color: var(--global-colors-esf-gray-400);
 		font-size: 0.75rem;
-		padding-top: 0.5rem;
+		padding-block-start: 0.5rem;
 
 		ul.is-list {
 			display: grid;

@@ -15,7 +15,7 @@
 	&__after-content {
 		.is-filter-applied,
 		.is-debug-applied {
-			margin-top: var(--global-esf-spacing-xs);
+			margin-block-start: var(--global-esf-spacing-xs);
 			background-color: var(--global-colors-esf-sky-50);
 			border: 1px solid var(--global-colors-esf-sky-100);
 			color: var(--global-colors-esf-sky-950);
@@ -51,7 +51,7 @@
 		line-height: 1.6;
 
 		@if $useSpacing == 'true' {
-			margin-top: 0.5rem;
+			margin-block-start: 0.5rem;
 		}
 
 		a {
@@ -71,7 +71,7 @@
 
 		li {
 			list-style: initial;
-			margin-left: 23px;
+			margin-inline-start: 23px;
 		}
 	}
 }

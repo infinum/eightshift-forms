@@ -4,7 +4,7 @@
 .toplevel_page_es-forms,
 .admin_page_es-settings {
 	#wpbody-content {
-		padding-bottom: 0;
+		padding-block-end: 0;
 
 		> .notice {
 			display: none;
@@ -108,7 +108,7 @@
 	&__description {
 		font-size: 0.8rem;
 		color: var(--global-colors-esf-gray-500);
-		margin-top: 0.5rem;
+		margin-block-start: 0.5rem;
 	}
 
 	&__actions {

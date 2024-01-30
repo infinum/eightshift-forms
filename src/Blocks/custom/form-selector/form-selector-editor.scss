@@ -7,7 +7,7 @@
 		display: flex;
 		flex-flow: row wrap;
 		gap: 0.5rem;
-		margin-top: 0.5rem;
+		margin-block-start: 0.5rem;
 	}
 
 	.components-button.esf-form-type-picker-button {
@@ -26,7 +26,7 @@
 			flex-shrink: 0;
 			width: 1.75rem;
 			height: 1.75rem;
-			margin-right: 10px;
+			margin-inline-end: 10px;
 		}
 	}
 
@@ -49,7 +49,7 @@
 		display: block;
 		width: 208px;
 		height: 36px;
-		margin-left: 10px;
+		margin-inline-start: 10px;
 		background-size: 80%;
 		background-position: center left;
 	}

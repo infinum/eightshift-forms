@@ -30,7 +30,7 @@
 		column-gap: 0.75rem;
 
 		#{$this}__title {
-			margin-top: 0.3em;
+			margin-block-start: 0.3em;
 		}
 
 		> svg {
@@ -130,7 +130,7 @@
 
 	li {
 		list-style: initial;
-		margin-left: 23px;
+		margin-inline-start: 23px;
 	}
 
 	svg {

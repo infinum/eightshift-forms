@@ -18,11 +18,11 @@
 					@include form-fields-children-mandatory-styles;
 					@include form-fields-children-styles;
 
-					margin-left: 0;
-					margin-right: 0;
-					margin-top: 0;
-					padding-top: 0;
-					padding-bottom: 0;
+					margin-inline-start: 0;
+					margin-inline-end: 0;
+					margin-block-start: 0;
+					padding-block-start: 0;
+					padding-block-end: 0;
 				}
 			}
 		}
