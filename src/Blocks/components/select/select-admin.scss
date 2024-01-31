@@ -16,7 +16,7 @@ div.es-select {
 			border-start-start-radius: 0;
 			border-start-end-radius: 0;
 			border-end-end-radius: var(--global-es-radius-8);
-			border-start-end-radius: var(--global-es-radius-8);
+			border-end-start-radius: var(--global-es-radius-8);
 			box-shadow: var(--global-esf-box-shadow-l);
 
 			.choices__item {
