@@ -30,7 +30,7 @@
 		column-gap: 0.75rem;
 
 		#{$this}__title {
-			margin-top: 0.3em;
+			margin-block-start: 0.3em;
 		}
 
 		> svg {
@@ -43,7 +43,7 @@
 	&__highlighted {
 		border: 1px solid var(--global-colors-esf-admin-accent-30);
 		background-color: var(--global-colors-esf-admin-accent-05);
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 
 		padding: 0.8rem 1rem;
 
@@ -79,7 +79,7 @@
 
 	&__title {
 		font-size: 1rem;
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 		letter-spacing: -0.01em;
 		font-weight: 500;
 
@@ -100,7 +100,7 @@
 		font-size: 0.75rem;
 		line-height: 1.25;
 		color: var(--global-colors-esf-gray-500);
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 
 		grid-area: subtitle;
 
@@ -130,18 +130,18 @@
 
 	li {
 		list-style: initial;
-		margin-left: 23px;
+		margin-inline-start: 23px;
 	}
 
 	svg {
 		flex-shrink: 0;
 
-		height: 1.75rem;
-		width: 1.7rem;
+		block-size: 1.75rem;
+		inline-size: 1.7rem;
 	}
 
 	.docs-logo svg {
-		width: 12.5rem;
+		inline-size: 12.5rem;
 	}
 
 	.is-filter-applied {
@@ -151,7 +151,7 @@
 		border-radius: var(--global-esf-spacing-s);
 		padding: var(--global-esf-spacing-xs) var(--global-esf-spacing-s);
 
-		width: fit-content;
+		inline-size: fit-content;
 
 		code {
 			background: var(--global-colors-esf-white);

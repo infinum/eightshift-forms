@@ -9,7 +9,7 @@
 	&__debug {
 		pointer-events: none;
 		position: absolute;
-		right: -200vw;
+		inset-inline-end: -200vw;
 		background-color: var(--global-colors-esf-white);
 		border: 1px solid var(--global-colors-esf-gray-300);
 		padding: 0.3125rem;
@@ -22,7 +22,7 @@
 	&:hover {
 		#{$this}__debug {
 			display: block;
-			right: 0;
+			inset-inline-end: 0;
 		}
 	}
 }

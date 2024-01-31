@@ -12,14 +12,14 @@
 			justify-content: center;
 			flex-direction: column;
 			color: var(--global-colors-esf-gray-500);
-			width: 100%;
+			inline-size: 100%;
 		}
 
 		&__button {
 			@include submit-styles($size: 'medium');
-			margin-top: 15px;
+			margin-block-start: 15px;
 			display: inline-flex;
-			width: initial;
+			inline-size: initial;
 		}
 	}
 }

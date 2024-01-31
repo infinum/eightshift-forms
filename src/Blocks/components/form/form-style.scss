@@ -4,7 +4,7 @@
 }
 
 @mixin form-width-limit-styles() {
-	max-width: var(--es-max-width);
+	max-inline-size: var(--es-max-width);
 	padding: 0 var(--es-grid-spacing);
 }
 
@@ -14,19 +14,19 @@
 }
 
 @mixin form-fields-styles() {
-	margin-left: calc(var(--es-grid-spacing) * -1);
-	margin-right: calc(var(--es-grid-spacing) * -1);
+	margin-inline-start: calc(var(--es-grid-spacing) * -1);
+	margin-inline-end: calc(var(--es-grid-spacing) * -1);
 }
 
 @mixin form-fields-children-mandatory-styles() {
 	flex: 0 0 var(--es-field-width, 100%);
-	max-width: var(--es-field-width, 100%);
+	max-inline-size: var(--es-field-width, 100%);
 }
 
 @mixin form-fields-children-styles() {
-	padding-left: var(--es-grid-spacing);
-	padding-right: var(--es-grid-spacing);
-	margin-bottom: var(--es-field-spacing);
+	padding-inline-start: var(--es-grid-spacing);
+	padding-inline-end: var(--es-grid-spacing);
+	margin-block-end: var(--es-field-spacing);
 }
 
 @mixin form-reset() {

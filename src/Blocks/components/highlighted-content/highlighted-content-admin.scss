@@ -4,7 +4,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-height: 14rem;
+	min-block-size: 14rem;
 	flex-direction: column;
 	text-align: center;
 
@@ -21,7 +21,7 @@
 		font-size: 0.8rem;
 		line-height: 1.35;
 		color: var(--global-colors-esf-gray-500);
-		max-width: 30rem;
+		max-inline-size: 30rem;
 		display: flex;
 		align-items: center;
 		flex-direction: column;
@@ -37,10 +37,10 @@
 	}
 
 	svg {
-		width: 8rem;
-		height: 8rem;
+		inline-size: 8rem;
+		block-size: 8rem;
 		color: var(--global-colors-esf-admin-accent);
 
-		margin-bottom: var(--global-esf-spacing-s);
+		margin-block-end: var(--global-esf-spacing-s);
 	}
 }

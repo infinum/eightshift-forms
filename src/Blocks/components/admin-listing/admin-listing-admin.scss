@@ -6,7 +6,7 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
-		border-bottom: 1px solid var(--global-colors-esf-gray-300);
+		border-block-end: 1px solid var(--global-colors-esf-gray-300);
 		margin: 0 -1.5rem;
 		padding: 0 1.5rem 1.5rem;
 	}
@@ -28,10 +28,8 @@
 		z-index: 10;
 
 		svg {
-			left: auto;
-			top: auto;
-			right: 1.25rem;
-			bottom: 1.25rem;
+			inset-block: auto 1.25rem;
+			inset-inline: auto 1.25rem;
 			position: fixed;
 			transform: none;
 		}

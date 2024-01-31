@@ -1,7 +1,7 @@
 .es-steps {
 	&__title {
 		display: inline-block;
-		margin-bottom: 1rem;
+		margin-block-end: 1rem;
 		font-size: 0.95rem;
 		letter-spacing: 0;
 		font-weight: 500;
@@ -44,8 +44,8 @@
 			color: var(--global-colors-esf-admin-accent);
 			border: 1px solid var(--global-colors-esf-admin-accent-30);
 
-			width: 1.6rem;
-			height: 1.6rem;
+			inline-size: 1.6rem;
+			block-size: 1.6rem;
 
 			display: flex;
 			align-items: center;

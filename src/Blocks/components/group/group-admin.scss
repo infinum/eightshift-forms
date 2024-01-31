@@ -4,7 +4,7 @@
 	$this: &;
 
 	> #{$this}__before-content {
-		margin-bottom: var(--global-esf-spacing-xl);
+		margin-block-end: var(--global-esf-spacing-xl);
 
 		> * {
 			margin: 0;
@@ -13,7 +13,7 @@
 
 	> #{$this}__label,
 	> #{$this}__content {
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 	}
 
 	// Default listing for fields.

@@ -15,13 +15,13 @@
 	&__after-content {
 		.is-filter-applied,
 		.is-debug-applied {
-			margin-top: var(--global-esf-spacing-xs);
+			margin-block-start: var(--global-esf-spacing-xs);
 			background-color: var(--global-colors-esf-sky-50);
 			border: 1px solid var(--global-colors-esf-sky-100);
 			color: var(--global-colors-esf-sky-950);
 			border-radius: var(--global-esf-spacing-s);
 			padding: var(--global-esf-spacing-xs) var(--global-esf-spacing-s);
-			width: fit-content;
+			inline-size: fit-content;
 
 			code {
 				background: var(--global-colors-esf-white);
@@ -46,12 +46,12 @@
 
 	&__help {
 		color: var(--global-colors-esf-gray-400);
-		max-width: var(--global-esf-max-width);
+		max-inline-size: var(--global-esf-max-width);
 		font-size: 0.725rem;
 		line-height: 1.6;
 
 		@if $useSpacing == 'true' {
-			margin-top: 0.5rem;
+			margin-block-start: 0.5rem;
 		}
 
 		a {
@@ -71,7 +71,7 @@
 
 		li {
 			list-style: initial;
-			margin-left: 23px;
+			margin-inline-start: 23px;
 		}
 	}
 }

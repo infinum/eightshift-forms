@@ -6,9 +6,9 @@ textarea.es-textarea {
 	--textarea-size: 3;
 	--textarea-size-max: initial;
 
-	max-height: calc(var(--esf-input-height) * var(--textarea-size-max)) !important; // stylelint-disable-line declaration-no-important
-	min-height: calc(var(--esf-input-height) * var(--textarea-size));
-	height: calc(var(--esf-input-height) * var(--textarea-size));
+	max-block-size: calc(var(--esf-input-height) * var(--textarea-size-max)) !important; // stylelint-disable-line declaration-no-important
+	min-block-size: calc(var(--esf-input-height) * var(--textarea-size));
+	block-size: calc(var(--esf-input-height) * var(--textarea-size));
 	border-radius: var(--global-es-radius-8);
 
 	&--monospace {

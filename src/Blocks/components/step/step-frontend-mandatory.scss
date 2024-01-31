@@ -1,14 +1,14 @@
 @import './../form/form-style.scss';
 
 .es-step {
-	width: 100%;
+	inline-size: 100%;
 	display: none;
 
 	&__debug-details {
 		display: none;
 		pointer-events: none;
 		position: absolute;
-		right: -200vw;
+		inset-inline-end: -200vw;
 		background-color: var(--global-colors-esf-white);
 		border: 1px solid var(--global-colors-esf-gray-300);
 		padding: 0.3125rem;
@@ -23,7 +23,7 @@
 
 	&__inner {
 		@include form-fields-mandatory-styles;
-		width: 100%;
+		inline-size: 100%;
 
 		> .es-field {
 			@include form-fields-children-mandatory-styles;
@@ -45,7 +45,7 @@
 
 		&__debug-details {
 			display: block;
-			right: 0;
+			inset-inline-end: 0;
 		}
 	}
 }

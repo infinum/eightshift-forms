@@ -1,11 +1,11 @@
 .es-global-msg {
 	position: fixed;
 	right: 2rem;
-	bottom: 2rem;
+	inset-block-end: 2rem;
 	z-index: 1;
-	max-width: 18rem;
-	max-height: 80vh;
-	overflow-x: hidden;
+	max-inline-size: 18rem;
+	max-block-size: 80vh;
+	overflow-inline: hidden;
 	border-radius: 0.5rem;
 	padding: 0.75rem 1rem;
 	opacity: 0;

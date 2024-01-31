@@ -24,17 +24,17 @@
 	&__label {
 		cursor: pointer;
 		position: relative;
-		min-height: var(--es-checkbox-toggle-scoped-height);
+		min-block-size: var(--es-checkbox-toggle-scoped-height);
 		display: flex;
 		align-items: center;
-		min-width: var(--es-checkbox-toggle-scoped-width);
+		min-inline-size: var(--es-checkbox-toggle-scoped-width);
 
 		&::before {
 			content: '';
 			position: absolute;
-			right: 0;
-			width: var(--es-checkbox-toggle-scoped-width);
-			height: var(--es-checkbox-toggle-scoped-height);
+			inset-inline-end: 0;
+			inline-size: var(--es-checkbox-toggle-scoped-width);
+			block-size: var(--es-checkbox-toggle-scoped-height);
 			border-radius: 100vh;
 
 			border: 1px solid var(--global-colors-esf-gray-400);
@@ -49,9 +49,9 @@
 		&::after {
 			content: '';
 			position: absolute;
-			right: var(--es-checkbox-toggle-scoped-dot-spacing);
-			width: var(--es-checkbox-toggle-scoped-dot-size);
-			height: var(--es-checkbox-toggle-scoped-dot-size);
+			inset-inline-end: var(--es-checkbox-toggle-scoped-dot-spacing);
+			inline-size: var(--es-checkbox-toggle-scoped-dot-size);
+			block-size: var(--es-checkbox-toggle-scoped-dot-size);
 			background-color: var(--global-colors-esf-gray-400);
 			border-radius: 100rem;
 
@@ -70,7 +70,7 @@
 	&__label-inner {
 		display: block;
 
-		margin-right: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
+		margin-inline-end: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
 	}
 
 	&__input:checked {
@@ -102,13 +102,13 @@
 	&__input {
 		// Important because if hidden focus/blur is not working.
 		position: absolute;
-		left: -99999px;
+		inset-inline-start: -99999px;
 	}
 
 	@include field-styles('false');
 
 	&__help {
-		margin-right: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
+		margin-inline-end: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
 		line-height: 1.25;
 	}
 }

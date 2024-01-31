@@ -17,14 +17,14 @@
 			flex-direction: column;
 
 			position: absolute;
-			right: var(--global-esf-spacing-m);
+			inset-inline-end: var(--global-esf-spacing-m);
 			z-index: 1;
 		}
 
 		&__edit-link {
 			text-decoration: none;
 			border: 1px solid var(--global-colors-esf-gray-300);
-			margin-top: -1px;
+			margin-block-start: -1px;
 
 			padding: var(--global-esf-spacing-s);
 			background-color: var(--global-colors-esf-white);
@@ -41,13 +41,13 @@
 			}
 
 			&:first-child {
-				border-top-left-radius: var(--global-esf-spacing-s);
-				border-top-right-radius: var(--global-esf-spacing-s);
+				border-start-start-radius: var(--global-esf-spacing-s);
+				border-start-end-radius: var(--global-esf-spacing-s);
 			}
 
 			&:last-child {
-				border-bottom-left-radius: var(--global-esf-spacing-s);
-				border-bottom-right-radius: var(--global-esf-spacing-s);
+				border-end-start-radius: var(--global-esf-spacing-s);
+				border-end-end-radius: var(--global-esf-spacing-s);
 			}
 		}
 

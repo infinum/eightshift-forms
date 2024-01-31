@@ -32,9 +32,9 @@
 
 		&__button {
 			@include submit-styles($size: 'medium');
-			margin-top: 15px;
+			margin-block-start: 15px;
 			display: inline-flex;
-			width: initial;
+			inline-size: initial;
 		}
 	}
 
@@ -59,8 +59,8 @@
 
 		.dz-image {
 			img {
-				max-width: 100%;
-				height: auto;
+				max-inline-size: 100%;
+				block-size: auto;
 				display: block;
 			}
 		}
@@ -68,12 +68,12 @@
 		.dz-details {
 			display: flex;
 			flex-direction: column;
-			margin-left: 15px;
+			margin-inline-start: 15px;
 		}
 
 		.dz-size {
 			order: 2;
-			margin-top: 5px;
+			margin-block-start: 5px;
 		}
 
 		.dz-filename {
@@ -86,15 +86,15 @@
 		}
 
 		.dz-progress {
-			margin-top: calc(var(--base-font-size) * 0.5rem);
+			margin-block-start: calc(var(--base-font-size) * 0.5rem);
 
 			span {
 				--dz-progress-scoped-height: 4px; // px because there can be multiple items at one point.
 				display: block;
-				width: 0;
+				inline-size: 0;
 				background-color: var(--global-colors-es-matisse);
 				border-radius: var(--dz-progress-scoped-height);
-				height: var(--dz-progress-scoped-height);
+				block-size: var(--dz-progress-scoped-height);
 				transition: {
 					property: background-color, width;
 					timing-function: cubic-bezier(0.55, 0, 0.45, 1);
@@ -108,19 +108,19 @@
 		}
 
 		&.dz-error {
-			padding-bottom: 20px;
+			padding-block-end: 20px;
 
 			.dz-error-message {
 				@include error-styles;
 				display: block;
 				position: absolute;
-				left: 0;
-				bottom: 0;
+				inset-inline-start: 0;
+				inset-block-end: 0;
 			}
 		}
 
 		.dz-remove {
-			margin-left: auto;
+			margin-inline-start: auto;
 		}
 	}
 }

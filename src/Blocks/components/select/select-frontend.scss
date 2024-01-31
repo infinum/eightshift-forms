@@ -8,7 +8,8 @@ div.es-select {
 	}
 
 	&.choices[data-type*='select-multiple'] .choices__inner { // stylelint-disable-line selector-max-specificity
-		padding: var(--es-input-spacing) var(--es-input-spacing) calc(var(--es-input-spacing) - 0.2344rem) var(--es-input-spacing);
+		padding-block: var(--es-input-spacing) calc(var(--es-input-spacing) - 0.2344rem);
+		padding-inline: var(--es-input-spacing);
 
 		.choices__input { // stylelint-disable-line selector-max-specificity
 			padding: 0;
@@ -24,10 +25,10 @@ div.es-select {
 		font-size: initial;
 		border-radius: var(--es-input-radius);
 		background-color: transparent;
-		height: auto;
+		block-size: auto;
 		border: 1px solid var(--es-input-border-color);
 		padding: 0;
-		min-height: var(--esf-input-height);
+		min-block-size: var(--esf-input-height);
 		transition: {
 			property: border-color;
 			timing-function: var(--es-input-transition-timing);
@@ -52,13 +53,14 @@ div.es-select {
 			}
 
 			.choices__input {
-				border-bottom: 1px solid var(--es-input-border-color);
+				border-block-end: 1px solid var(--es-input-border-color);
 			}
 		}
 
 		&--single {
-			min-height: var(--esf-input-height);
-			padding: var(--es-input-spacing) 1.875rem var(--es-input-spacing) var(--es-input-spacing);
+			min-block-size: var(--esf-input-height);
+			padding-block: var(--es-input-spacing);
+			padding-inline: var(--es-input-spacing) 1.875rem;
 			display: flex;
 			align-items: center;
 			flex-wrap: wrap;

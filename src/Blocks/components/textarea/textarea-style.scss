@@ -1,10 +1,10 @@
 textarea.es-textarea {
-	width: 100%;
+	inline-size: 100%;
 	border: 1px solid var(--es-input-border-color);
 	cursor: text;
 	background-color: transparent;
-	min-height: calc(var(--esf-input-height) * 3);
-	height: calc(var(--esf-input-height) * 3);
+	min-block-size: calc(var(--esf-input-height) * 3);
+	block-size: calc(var(--esf-input-height) * 3);
 	padding: var(--es-input-spacing);
 	border-radius: var(--es-input-radius);
 	transition: {

@@ -10,9 +10,9 @@
 		display: none;
 		padding: 5px 10px;
 		position: absolute;
-		text-align: left;
+		text-align: start;
 		z-index: 999;
-		width: 150px;
+		inline-size: 150px;
 		font-size: 11px;
 		line-height: 1.4;
 
@@ -21,8 +21,8 @@
 			content: '';
 			display: none;
 			position: absolute;
-			width: 15px;
-			height: 15px;
+			inline-size: 15px;
+			block-size: 15px;
 			z-index: 999;
 		}
 	}
