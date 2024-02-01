@@ -15,7 +15,7 @@ if (UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
 	return;
 }
 
-if(!UtilsDeveloperHelper::isDeveloperModeActive()) {
+if (!UtilsDeveloperHelper::isDeveloperModeActive()) {
 	return;
 }
 
