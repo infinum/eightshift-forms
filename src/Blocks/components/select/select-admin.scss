@@ -13,7 +13,10 @@ div.es-select {
 
 	.choices__list {
 		&--dropdown {
-			border-radius: 0 0 var(--global-es-radius-8) var(--global-es-radius-8);
+			border-start-start-radius: 0;
+			border-start-end-radius: 0;
+			border-end-end-radius: var(--global-es-radius-8);
+			border-end-start-radius: var(--global-es-radius-8);
 			box-shadow: var(--global-esf-box-shadow-l);
 
 			.choices__item {
