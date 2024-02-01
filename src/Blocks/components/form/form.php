@@ -199,6 +199,7 @@ if ($formAttrs) {
 <<?php echo $formServerSideRender ? 'div' : 'form'; ?>
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	novalidate
 >
 	<?php if (is_user_logged_in() && !is_admin()) { ?>
 		<div class="<?php echo esc_attr('es-block-edit-options__edit-wrap') ?>">

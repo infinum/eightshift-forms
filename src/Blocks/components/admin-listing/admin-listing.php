@@ -93,7 +93,7 @@ $formClasses = Components::classnames([
 	Components::selector($componentClass, $componentClass, 'form'),
 ]);
 ?>
-<form class="<?php echo esc_attr($formClasses); ?>" <?php echo esc_attr(UtilsHelper::getStateAttribute('formId')); ?>="0">
+<form class="<?php echo esc_attr($formClasses); ?>" <?php echo esc_attr(UtilsHelper::getStateAttribute('formId')); ?>="0" novalidate>
 	<?php echo Components::render('global-msg', Components::props('globalMsg', $attributes)); ?>
 	<?php echo Components::render('loader', Components::props('loader', $attributes)); ?>
 </form>
