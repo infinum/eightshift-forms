@@ -1,10 +1,9 @@
 # Project Specific
 /public
 /vendor
+/vendor-prefixed
 /node_modules
-/storybook
 /.vscode
-/release.zip
 /eightshift-forms
 
 # Tests

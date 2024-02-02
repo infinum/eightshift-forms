@@ -160,9 +160,8 @@ class Validator extends AbstractValidation
 			}
 
 			// Sort order or validation by the keys.
-			// @phpstan-ignore-next-line.
 			\uksort($reference, function ($key1, $key2) use ($order) {
-				return (\array_search($key1, $order, true) > \array_search($key2, $order, true));
+				return \array_search($key1, $order, true) <=> \array_search($key2, $order, true);
 			});
 
 			// Validate all files are uploaded to the server and not a external link.

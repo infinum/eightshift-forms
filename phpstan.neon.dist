@@ -8,6 +8,7 @@ parameters:
 		- vendor/wp-cli/wp-cli/php/class-wp-cli.php
 	bootstrapFiles:
 		- %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
+		- vendor-prefixed/autoload.php
 	paths:
 		- src/
 	excludePaths:

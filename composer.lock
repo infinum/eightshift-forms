@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7fda964c6dcf29ac54da3e326a95988",
+    "content-hash": "6a52b3c5e4b100c451a04c96ba71b75a",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -58,16 +58,16 @@
         },
         {
             "name": "infinum/eightshift-forms-utils",
-            "version": "1.1.2",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "7c1f0970773b827242f8a3d8fdeed896022f4f60"
+                "reference": "96aaa4f32151ea132092de1f5171968fd411d5d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/7c1f0970773b827242f8a3d8fdeed896022f4f60",
-                "reference": "7c1f0970773b827242f8a3d8fdeed896022f4f60",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/96aaa4f32151ea132092de1f5171968fd411d5d3",
+                "reference": "96aaa4f32151ea132092de1f5171968fd411d5d3",
                 "shasum": ""
             },
             "require": {
@@ -119,7 +119,7 @@
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2024-01-25T14:24:08+00:00"
+            "time": "2024-02-02T12:49:08+00:00"
         },
         {
             "name": "infinum/eightshift-libs",
@@ -476,180 +476,6 @@
                 "source": "https://github.com/php-fig/container/tree/1.1.2"
             },
             "time": "2021-11-05T16:50:12+00:00"
-        },
-        {
-            "name": "typisttech/imposter",
-            "version": "0.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/TypistTech/imposter.git",
-                "reference": "f52b1a2289d2ea9c660cf9595085d0b11469af83"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/TypistTech/imposter/zipball/f52b1a2289d2ea9c660cf9595085d0b11469af83",
-                "reference": "f52b1a2289d2ea9c660cf9595085d0b11469af83",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.3 || ^8.0"
-            },
-            "require-dev": {
-                "codeception/codeception": "^4.1",
-                "codeception/mockery-module": "^0.4.0",
-                "codeception/module-asserts": "^1.3",
-                "codeception/module-filesystem": "^1.0",
-                "squizlabs/php_codesniffer": "^3.5"
-            },
-            "suggest": {
-                "typisttech/imposter-plugin": "Composer plugin to integrate composer and imposter"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.6.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "TypistTech\\Imposter\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Typist Tech",
-                    "email": "imposter@typist.tech",
-                    "homepage": "https://typist.tech"
-                },
-                {
-                    "name": "Tang Rufus",
-                    "email": "tangrufus@gmail.com",
-                    "homepage": "https://typist.tech",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Wrapping all composer vendor packages inside your own namespace. Intended for WordPress plugins.",
-            "homepage": "https://github.com/TypistTech/imposter",
-            "keywords": [
-                "composer",
-                "dependency",
-                "monkey-patching",
-                "namespace",
-                "wordpress"
-            ],
-            "support": {
-                "email": "imposter@typist.tech",
-                "issues": "https://github.com/TypistTech/imposter/issues",
-                "source": "https://github.com/TypistTech/imposter"
-            },
-            "funding": [
-                {
-                    "url": "https://typist.tech/donation/",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.paypal.me/iAmTangRufus/30usd",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/tangrufus",
-                    "type": "github"
-                }
-            ],
-            "time": "2020-12-06T22:57:09+00:00"
-        },
-        {
-            "name": "typisttech/imposter-plugin",
-            "version": "0.6.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/TypistTech/imposter-plugin.git",
-                "reference": "15fa3c90aca3b79497f438b9e02a6176498de53c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/TypistTech/imposter-plugin/zipball/15fa3c90aca3b79497f438b9e02a6176498de53c",
-                "reference": "15fa3c90aca3b79497f438b9e02a6176498de53c",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.1 || ^2.0",
-                "php": "^7.3 || ^8.0",
-                "typisttech/imposter": "^0.6.1"
-            },
-            "require-dev": {
-                "codeception/codeception": "^4.1",
-                "codeception/module-asserts": "^1.3",
-                "codeception/module-cli": "^1.1",
-                "codeception/module-filesystem": "^1.0",
-                "composer/composer": "^1.10.19 || ^2.0",
-                "squizlabs/php_codesniffer": "^3.5",
-                "typisttech/codeception-composer-project-module": "^0.1.1"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.6.x-dev"
-                },
-                "class": "TypistTech\\Imposter\\Plugin\\ImposterPlugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "TypistTech\\Imposter\\Plugin\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Typist Tech",
-                    "email": "imposter-plugin@typist.tech",
-                    "homepage": "https://www.typist.tech"
-                },
-                {
-                    "name": "Tang Rufus",
-                    "email": "tangrufus@gmail.com",
-                    "homepage": "https://www.typist.tech",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Composer plugin that wraps all composer vendor packages inside your own namespace. Intended for WordPress plugins.",
-            "homepage": "https://github.com/TypistTech/imposter-plugin",
-            "keywords": [
-                "composer",
-                "composer-plugin",
-                "dependency",
-                "monkey-patching",
-                "namespace",
-                "wordpress"
-            ],
-            "support": {
-                "email": "imposter-plugin@typist.tech",
-                "issues": "https://github.com/TypistTech/imposter-plugin/issues",
-                "source": "https://github.com/TypistTech/imposter-plugin"
-            },
-            "funding": [
-                {
-                    "url": "https://typist.tech/donation/",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.paypal.me/iAmTangRufus/30usd",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/tangrufus",
-                    "type": "github"
-                }
-            ],
-            "time": "2020-12-06T23:41:30+00:00"
         }
     ],
     "packages-dev": [
@@ -2332,16 +2158,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.56",
+            "version": "1.10.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "27816a01aea996191ee14d010f325434c0ee76fa"
+                "reference": "1627b1d03446904aaa77593f370c5201d2ecc34e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/27816a01aea996191ee14d010f325434c0ee76fa",
-                "reference": "27816a01aea996191ee14d010f325434c0ee76fa",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1627b1d03446904aaa77593f370c5201d2ecc34e",
+                "reference": "1627b1d03446904aaa77593f370c5201d2ecc34e",
                 "shasum": ""
             },
             "require": {
@@ -2390,7 +2216,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-15T10:43:00+00:00"
+            "time": "2024-01-24T11:51:34+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2713,16 +2539,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.15",
+            "version": "9.6.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "05017b80304e0eb3f31d90194a563fd53a6021f1"
+                "reference": "3767b2c56ce02d01e3491046f33466a1ae60a37f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/05017b80304e0eb3f31d90194a563fd53a6021f1",
-                "reference": "05017b80304e0eb3f31d90194a563fd53a6021f1",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3767b2c56ce02d01e3491046f33466a1ae60a37f",
+                "reference": "3767b2c56ce02d01e3491046f33466a1ae60a37f",
                 "shasum": ""
             },
             "require": {
@@ -2796,7 +2622,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.15"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.16"
             },
             "funding": [
                 {
@@ -2812,7 +2638,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-01T16:55:19+00:00"
+            "time": "2024-01-19T07:03:14+00:00"
         },
         {
             "name": "psr/log",
@@ -3971,16 +3797,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v5.4.34",
+            "version": "v5.4.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "4b4d8cd118484aa604ec519062113dd87abde18c"
+                "reference": "dbdf6adcb88d5f83790e1efb57ef4074309d3931"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/4b4d8cd118484aa604ec519062113dd87abde18c",
-                "reference": "4b4d8cd118484aa604ec519062113dd87abde18c",
+                "url": "https://api.github.com/repos/symfony/console/zipball/dbdf6adcb88d5f83790e1efb57ef4074309d3931",
+                "reference": "dbdf6adcb88d5f83790e1efb57ef4074309d3931",
                 "shasum": ""
             },
             "require": {
@@ -4050,7 +3876,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v5.4.34"
+                "source": "https://github.com/symfony/console/tree/v5.4.35"
             },
             "funding": [
                 {
@@ -4066,7 +3892,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-08T13:33:03+00:00"
+            "time": "2024-01-23T14:28:09+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -4137,16 +3963,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v5.4.27",
+            "version": "v5.4.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "ff4bce3c33451e7ec778070e45bd23f74214cd5d"
+                "reference": "abe6d6f77d9465fed3cd2d029b29d03b56b56435"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/ff4bce3c33451e7ec778070e45bd23f74214cd5d",
-                "reference": "ff4bce3c33451e7ec778070e45bd23f74214cd5d",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/abe6d6f77d9465fed3cd2d029b29d03b56b56435",
+                "reference": "abe6d6f77d9465fed3cd2d029b29d03b56b56435",
                 "shasum": ""
             },
             "require": {
@@ -4180,7 +4006,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v5.4.27"
+                "source": "https://github.com/symfony/finder/tree/v5.4.35"
             },
             "funding": [
                 {
@@ -4196,7 +4022,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-07-31T08:02:31+00:00"
+            "time": "2024-01-23T13:51:25+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4775,16 +4601,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v5.4.34",
+            "version": "v5.4.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "e3f98bfc7885c957488f443df82d97814a3ce061"
+                "reference": "c209c4d0559acce1c9a2067612cfb5d35756edc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/e3f98bfc7885c957488f443df82d97814a3ce061",
-                "reference": "e3f98bfc7885c957488f443df82d97814a3ce061",
+                "url": "https://api.github.com/repos/symfony/string/zipball/c209c4d0559acce1c9a2067612cfb5d35756edc2",
+                "reference": "c209c4d0559acce1c9a2067612cfb5d35756edc2",
                 "shasum": ""
             },
             "require": {
@@ -4841,7 +4667,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v5.4.34"
+                "source": "https://github.com/symfony/string/tree/v5.4.35"
             },
             "funding": [
                 {
@@ -4857,7 +4683,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-09T13:20:28+00:00"
+            "time": "2024-01-23T13:51:25+00:00"
         },
         {
             "name": "szepeviktor/phpstan-wordpress",

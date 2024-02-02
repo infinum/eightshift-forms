@@ -100,4 +100,6 @@ div.es-select {
 
 select.es-select__select {
 	@include input-styles($loadReadonly: 'false');
+
+	padding-inline-end: calc(var(--es-input-spacing) * 2.5);
 }
