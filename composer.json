@@ -40,8 +40,7 @@
 	"require": {
 		"php": "^7.4 || >=8.0",
 		"erusev/parsedown": "^1.7.4",
-		"typisttech/imposter-plugin": "^0.6.2",
-		"infinum/eightshift-forms-utils": "^1.1.2"
+		"infinum/eightshift-forms-utils": "^1.1.4"
 	},
 	"suggest": {
 		"ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
@@ -65,7 +64,6 @@
 		"process-timeout": 2000,
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"typisttech/imposter-plugin": true,
 			"pestphp/pest-plugin": true
 		}
 	},
@@ -80,11 +78,20 @@
 			"@test:standards",
 			"@test:types",
 			"@test:unit"
+		],
+		"prefix-namespaces": [
+			"@php strauss.phar"
+		],
+		"post-install-cmd": [
+			"@php strauss.phar"
+		],
+		"post-update-cmd": [
+			"@php strauss.phar"
 		]
 	},
 	"extra": {
-		"imposter": {
-			"namespace": "EightshiftFormsVendor"
+		"strauss": {
+			"namespace_prefix": "EightshiftFormsVendor"
 		}
 	}
 }

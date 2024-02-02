@@ -69,7 +69,7 @@ class Enrichment implements EnrichmentInterface
 		if ($tagsAdditional) {
 			$tagsAdditional = \str_replace(' ', \PHP_EOL, $tagsAdditional);
 			$tagsAdditional = \str_replace(',', \PHP_EOL, $tagsAdditional);
-			$tagsAdditional = \array_values(\array_filter(\explode(\PHP_EOL, $tagsAdditional), 'strlen'));
+			$tagsAdditional = \array_values(\array_filter(\explode(\PHP_EOL, $tagsAdditional)));
 			$tagsAdditional = \array_unique(\array_map(
 				static function ($item) {
 					return \preg_replace('/[^a-zA-Z0-9_ -]/s', '', $item);

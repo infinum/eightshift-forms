@@ -30,6 +30,7 @@ if (! \defined('WPINC')) {
  * Include the autoloader so we can dynamically include the rest of the classes.
  */
 $loader = require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/vendor-prefixed/autoload.php';
 
 /**
  * The code that runs during plugin activation.
