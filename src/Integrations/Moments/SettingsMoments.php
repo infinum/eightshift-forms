@@ -198,7 +198,6 @@ class SettingsMoments implements UtilsSettingGlobalInterface, ServiceInterface
 									'component' => 'input',
 									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY),
 									'inputFieldLabel' => \__('Event name', 'eightshift-forms'),
-									// translators: %s will be replaced with forms field name and filter output copy.
 									'inputFieldHelp' => \__('Set event name used in the Moments integrations.', 'eightshift-forms'),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
