@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Moments;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -24,7 +23,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 /**
  * MomentsClient integration class.
  */
-class MomentsClient implements ClientInterface
+class MomentsClient extends AbstractMoments implements ClientInterface
 {
 	/**
 	 * Transient cache name for items.
@@ -331,20 +330,6 @@ class MomentsClient implements ClientInterface
 	}
 
 	/**
-	 * Set headers used for fetching data.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getHeaders(): array
-	{
-		return [
-			'Content-Type' => 'application/json',
-			'Accept' => 'application/json',
-			'Authorization' => "App {$this->getApiKey()}",
-		];
-	}
-
-	/**
 	 * Get test api.
 	 *
 	 * @return array<mixed>
@@ -462,37 +447,5 @@ class MomentsClient implements ClientInterface
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Return Moments base url.
-	 *
-	 * @return string
-	 */
-	private function getBaseUrl(): string
-	{
-		$url = \rtrim($this->getApiUrl(), '/');
-
-		return "{$url}/";
-	}
-
-	/**
-	 * Return Api Key from settings or global vairaible.
-	 *
-	 * @return string
-	 */
-	private function getApiKey(): string
-	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
-	}
-
-	/**
-	 * Return Api Url from settings or global vairaible.
-	 *
-	 * @return string
-	 */
-	private function getApiUrl(): string
-	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY)['value'];
 	}
 }

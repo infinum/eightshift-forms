@@ -64,11 +64,19 @@ class Mailer implements MailerInterface
 	 * Send fallback email
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param string $customSubject Custom subject for the email.
+	 * @param string $customMsg Custom message for the email.
+	 * @param array<string, mixed> $customData Custom data for the email.
 	 *
 	 * @return boolean
 	 */
-	public function fallbackIntegrationEmail(array $formDetails): bool
-	{
+	public function fallbackIntegrationEmail(
+		array $formDetails,
+		$customSubject = '',
+		$customMsg = '',
+		$customData = []
+	): bool {
+
 		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
 
 		if (!$isSettingsValid) {
@@ -104,6 +112,10 @@ class Mailer implements MailerInterface
 			],
 		];
 
+		if ($customData) {
+			$output = \array_merge($output, $customData);
+		}
+
 		// translators: %1$s replaces the integration name and %2$s formId.
 		$subject = \sprintf(\__('Failed %1$s form: %2$s', 'eightshift-forms'), $type, $formId);
 		$body = '<p>' . \esc_html__('It seems like there was an issue with the user\'s form submission. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
@@ -112,6 +124,10 @@ class Mailer implements MailerInterface
 			$body = '<p>' . \esc_html__('It appears that your form is currently inactive, and as a result, all the data from your form is included in this email for you to manually input.', 'eightshift-forms') . '</p>';
 			// translators: %1$s replaces the integration name and %2$s formId.
 			$subject = \sprintf(\__('Disabled %1$s form: %2$s', 'eightshift-forms'), $type, $formId);
+		}
+
+		if ($customMsg) {
+			$body = '<p>' . $customMsg . '</p>';
 		}
 
 		// translators: %s replaces the form name.
@@ -143,6 +159,10 @@ class Mailer implements MailerInterface
 
 		if ($cc) {
 			$headers[] = "Cc: {$cc}";
+		}
+
+		if ($customSubject) {
+			$subject = $customSubject;
 		}
 
 		// Send email.

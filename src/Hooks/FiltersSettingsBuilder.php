@@ -358,6 +358,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsMoments::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsMoments::FILTER_SETTINGS_NAME,
 				'fields' => Moments::FILTER_FORM_FIELDS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
