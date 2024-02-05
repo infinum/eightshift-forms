@@ -139,7 +139,7 @@ class SettingsMoments implements UtilsSettingGlobalInterface, ServiceInterface
 
 		$formFields = UtilsGeneralHelper::getFormDetails($formId)[UtilsConfig::FD_FIELD_NAMES] ?? [];
 
-		$eventsMap = \array_fill(1, \count($formFields), 'question');
+		$eventsMap = \array_fill(1, \count($formFields) - 1, 'question');
 
 		$eventsMapValue = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
 		$eventsEmailFieldValue = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
