@@ -160,6 +160,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 
 		$this->getFormSubmitMailer()->sendfallbackIntegrationEmail(
 			$formDetails,
+			// translators: %1$s is the type of the event, %2$s is the form id.
 			\sprintf(\__('Failed %1$s event submit on form: %2$s', 'eightshift-forms'), $type, $formId),
 			\__('The Moments integration data was sent but there was an error with the custom event. Here is all the data for debugging purposes.', 'eightshift-forms'),
 			[

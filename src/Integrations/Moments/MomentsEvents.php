@@ -38,7 +38,7 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		array $map,
 		string $formId
 	): array {
-		$email = \urlencode($this->getFieldDetailsByName($params, $emailKey)['value']);
+		$email = \rawurlencode($this->getFieldDetailsByName($params, $emailKey)['value']);
 
 		$url = "{$this->getBaseUrl()}peopleevents/1/persons/{$email}/definitions/{$eventName}/events";
 
@@ -133,13 +133,14 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 	/**
 	 * Get field details by name.
 	 *
-	 * @param string $key Field key.
 	 * @param array<string, mixed> $params Form fields params.
+	 * @param string $key Field key.
+	 *
 	 * @return array<string, mixed>
 	 */
 	private function getFieldDetailsByName(array $params, string $key): array
 	{
-		return \array_values(\array_filter($params, function($item) use ($key) {
+		return \array_values(\array_filter($params, function ($item) use ($key) {
 			return isset($item['name']) && $item['name'] === $key;
 		}))[0] ?? [];
 	}

@@ -226,7 +226,7 @@ class SettingsMoments implements UtilsSettingGlobalInterface, ServiceInterface
 												static function ($item, $index) use ($eventsMapValue, $formFields) {
 													$indexName = \str_pad((string) $index, 2, '0', \STR_PAD_LEFT);
 													$name = "{$item}{$indexName}";
-	
+
 													$selectedValue = $eventsMapValue[$name] ?? '';
 													return [
 														'component' => 'select',
