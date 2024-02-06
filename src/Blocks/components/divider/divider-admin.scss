@@ -5,4 +5,13 @@
 	&--extra-v-spacing {
 		margin: var(--global-esf-spacing-s) calc(var(--global-esf-spacing-l) * -1);
 	}
+
+	&--no-spacing {
+		margin: 0;
+	}
+
+	&--no-divider {
+		margin: 0;
+		border-block-end: none;
+	}
 }
