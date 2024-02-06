@@ -39,11 +39,19 @@ interface MailerInterface
 	): bool;
 
 	/**
-	 * Send fallback email.
+	 * Send fallback email
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param string $customSubject Custom subject for the email.
+	 * @param string $customMsg Custom message for the email.
+	 * @param array<string, mixed> $customData Custom data for the email.
 	 *
 	 * @return boolean
 	 */
-	public function fallbackIntegrationEmail(array $formDetails): bool;
+	public function fallbackIntegrationEmail(
+		array $formDetails,
+		$customSubject = '',
+		$customMsg = '',
+		$customData = []
+	): bool;
 }

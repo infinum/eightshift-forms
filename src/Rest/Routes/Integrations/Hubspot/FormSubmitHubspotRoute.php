@@ -152,7 +152,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 				);
 
 				// If Clearbit data is ok send data to Hubspot.
-				if ($clearbitResponse[UtilsConfig::IARD_CODE] >= 200 && $clearbitResponse[UtilsConfig::IARD_CODE] <= 299) {
+				if ($clearbitResponse[UtilsConfig::IARD_CODE] >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $clearbitResponse[UtilsConfig::IARD_CODE] <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 					$this->hubspotClient->postContactProperty(
 						$clearbitResponse['email'] ?? '',
 						$clearbitResponse['data'] ?? []

@@ -120,15 +120,27 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	}
 
 	/**
-	 * Send fallback email.
+	 * Send fallback email
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param string $customSubject Custom subject for the email.
+	 * @param string $customMsg Custom message for the email.
+	 * @param array<string, mixed> $customData Custom data for the email.
 	 *
 	 * @return boolean
 	 */
-	public function sendfallbackIntegrationEmail(array $formDetails): bool
-	{
-		return $this->mailer->fallbackIntegrationEmail($formDetails);
+	public function sendfallbackIntegrationEmail(
+		array $formDetails,
+		string $customSubject = '',
+		string $customMsg = '',
+		array $customData = []
+	): bool {
+		return $this->mailer->fallbackIntegrationEmail(
+			$formDetails,
+			$customSubject,
+			$customMsg,
+			$customData
+		);
 	}
 
 	/**

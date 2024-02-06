@@ -17,6 +17,8 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -24,6 +26,11 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsMoments implements UtilsSettingGlobalInterface, ServiceInterface
 {
+	/**
+	 * Filter settings key.
+	 */
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_moments';
+
 	/**
 	 * Filter global settings key.
 	 */
@@ -55,6 +62,26 @@ class SettingsMoments implements UtilsSettingGlobalInterface, ServiceInterface
 	public const SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY = 'moments-skip-integration';
 
 	/**
+	 * Moments Use Events key.
+	 */
+	public const SETTINGS_MOMENTS_USE_EVENTS_KEY = 'moments-use-events';
+
+	/**
+	 * Moments Events event name key.
+	 */
+	public const SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY = 'moments-events-event-name';
+
+	/**
+	 * Moments Events map key.
+	 */
+	public const SETTINGS_MOMENTS_EVENTS_MAP_KEY = 'moments-events-map';
+
+	/**
+	 * Moments Events email field key.
+	 */
+	public const SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY = 'moments-events-email-field';
+
+	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -77,6 +104,7 @@ class SettingsMoments implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
@@ -96,6 +124,142 @@ class SettingsMoments implements UtilsSettingGlobalInterface, ServiceInterface
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get Form settings data array
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getSettingsData(string $formId): array
+	{
+		$useEvents = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MOMENTS_USE_EVENTS_KEY, self::SETTINGS_MOMENTS_USE_EVENTS_KEY, $formId);
+
+		$formFields = UtilsGeneralHelper::getFormDetails($formId)[UtilsConfig::FD_FIELD_NAMES] ?? [];
+
+		$eventsMap = \array_fill(1, \count($formFields) - 1, 'question');
+
+		$eventsMapValue = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
+		$eventsEmailFieldValue = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
+		$eventsEventNameValue = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY, $formId);
+
+		return [
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('General', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_USE_EVENTS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use Events', 'eightshift-forms'),
+										'checkboxHelp' => \__('Send events to Moments', 'eightshift-forms'),
+										'checkboxIsChecked' => $useEvents,
+										'checkboxValue' => self::SETTINGS_MOMENTS_USE_EVENTS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+							...($useEvents ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'select',
+									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY),
+									'selectFieldHelp' => \__('You must select what field is used as an e-mail.', 'eightshift-forms'),
+									'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
+									'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
+									'selectIsRequired' => true,
+									'selectContent' => \array_map(
+										static function ($option) use ($eventsEmailFieldValue) {
+											return [
+												'component' => 'select-option',
+												'selectOptionLabel' => $option,
+												'selectOptionValue' => $option,
+												'selectOptionIsSelected' => $eventsEmailFieldValue === $option,
+											];
+										},
+										$formFields
+									),
+								],
+								[
+									'component' => 'input',
+									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY),
+									'inputFieldLabel' => \__('Event name', 'eightshift-forms'),
+									'inputFieldHelp' => \__('Set event name used in the Moments integrations.', 'eightshift-forms'),
+									'inputType' => 'text',
+									'inputIsRequired' => true,
+									'inputValue' => $eventsEventNameValue,
+								],
+								...(($eventsEmailFieldValue && $eventsEventNameValue) ? [
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => true,
+									],
+									[
+										'component' => 'group',
+										'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY),
+										'groupSaveOneField' => true,
+										'groupStyle' => 'default-listing',
+										'groupContent' => [
+											[
+												'component' => 'field',
+												'fieldLabel' => '<b>' . \__('Moments event key', 'eightshift-forms') . '</b>',
+												'fieldContent' => '<b>' . \__('Form fields', 'eightshift-forms') . '</b>',
+												'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
+												'fieldIsFiftyFiftyHorizontal' => true,
+											],
+											...\array_map(
+												static function ($item, $index) use ($eventsMapValue, $formFields) {
+													$indexName = \str_pad((string) $index, 2, '0', \STR_PAD_LEFT);
+													$name = "{$item}{$indexName}";
+
+													$selectedValue = $eventsMapValue[$name] ?? '';
+													return [
+														'component' => 'select',
+														'selectName' => "{$item}{$indexName}",
+														'selectFieldLabel' => '<code>' . $name . '</code>',
+														'selectFieldBeforeContent' => '&rarr;',
+														'selectIsRequired' => true,
+														'selectFieldIsFiftyFiftyHorizontal' => true,
+														'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+														'selectContent' => \array_map(
+															static function ($option) use ($selectedValue) {
+																return [
+																	'component' => 'select-option',
+																	'selectOptionLabel' => $option,
+																	'selectOptionValue' => $option,
+																	'selectOptionIsSelected' => $selectedValue === $option,
+																];
+															},
+															$formFields
+														),
+													];
+												},
+												$eventsMap,
+												\array_keys($eventsMap)
+											),
+										],
+									],
+								] : []),
+							] : []),
+						],
+					],
+				],
+			],
+		];
 	}
 
 	/**
