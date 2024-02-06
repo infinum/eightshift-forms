@@ -1205,7 +1205,7 @@ export class Form {
 
 			this.state.setStateElementCustom(name, autosize?.default, formId);
 
-			autosize.default(input);
+			// autosize.default(input);
 		});
 
 		this.state.setStateElementLoaded(name, true, formId);
