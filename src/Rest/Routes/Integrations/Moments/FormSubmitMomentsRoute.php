@@ -141,7 +141,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 		$eventName = UtilsSettingsHelper::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY, $formId);
 		$map = UtilsSettingsHelper::getSettingValueGroup(SettingsMoments::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
 
-		if (!$emailKey || !$eventName || !$map) {
+		if (!$emailKey || !$eventName) {
 			return;
 		}
 

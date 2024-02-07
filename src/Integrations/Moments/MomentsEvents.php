@@ -14,6 +14,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * MomentsEvents integration class.
@@ -38,11 +39,11 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		array $map,
 		string $formId
 	): array {
-		$email = \rawurlencode($this->getFieldDetailsByName($params, $emailKey)['value']);
+		$email = \rawurlencode(UtilsGeneralHelper::getFieldDetailsByName($params, $emailKey)['value']);
 
 		$url = "{$this->getBaseUrl()}peopleevents/1/persons/{$email}/definitions/{$eventName}/events";
 
-		$body = $this->prepareParams($params, $eventName, $map);
+		$body = $this->prepareParams($params, $eventName, $map, $formId);
 
 		$response = \wp_remote_post(
 			$url,
@@ -83,10 +84,11 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 	 * @param array<string, mixed> $params Form fields params.
 	 * @param string $eventName Event name value.
 	 * @param array<string, mixed> $map Map value.
+	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params, string $eventName, array $map): array
+	private function prepareParams(array $params, string $eventName, array $map, string $formId): array
 	{
 		// Prepare output.
 		$output = [
@@ -97,51 +99,37 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 
 		$properties = [];
 
+		// Filter params.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params, $eventName, $map, $formId) ?? [];
+		}
+
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
-		// Prepare params.
-		$paramsPrepared = [];
-		foreach ($params as $param) {
-			$name = $param['name'] ?? '';
-			$value = $param['value'] ?? '';
-
-			if (!$name || !$value) {
-				continue;
-			}
-
-			$paramsPrepared[$name] = $value;
-		}
-
 		// Map params.
-		foreach ($map as $mapKey => $mapItem) {
-			$foundItem = $this->getFieldDetailsByName($params, $mapItem);
+		if ($map) {
+			foreach ($map as $mapKey => $mapItem) {
+				$foundItem = UtilsGeneralHelper::getFieldDetailsByName($params, $mapItem);
 
-			if (!$foundItem) {
-				continue;
+				if (!$foundItem) {
+					continue;
+				}
+
+				$properties[$mapKey] = $foundItem['value'];
 			}
-
-			$properties[$mapKey] = $foundItem['value'];
 		}
 
 		// Add custom properties.
 		$output['properties'] = $properties;
 
-		return $output;
-	}
+		// Filter params.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParamsAfter']);
+		if (\has_filter($filterName)) {
+			$output = \apply_filters($filterName, $output, $params, $eventName, $formId) ?? [];
+		}
 
-	/**
-	 * Get field details by name.
-	 *
-	 * @param array<string, mixed> $params Form fields params.
-	 * @param string $key Field key.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getFieldDetailsByName(array $params, string $key): array
-	{
-		return \array_values(\array_filter($params, function ($item) use ($key) {
-			return isset($item['name']) && $item['name'] === $key;
-		}))[0] ?? [];
+		return $output;
 	}
 }
