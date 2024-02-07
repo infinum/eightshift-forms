@@ -66,7 +66,7 @@
 		grid-area: main;
 
 		#{$this}__content {
-			overflow-inline: hidden;
+			overflow-x: hidden;
 			padding: var(--global-esf-spacing-xl);
 
 			block-size: 100%;
