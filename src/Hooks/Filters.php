@@ -214,6 +214,8 @@ final class Filters
 					'order',
 					'prePostId',
 					'prePostParams',
+					'prePostEventParams',
+					'prePostEventParamsAfter',
 				],
 				SettingsWorkable::SETTINGS_TYPE_KEY => [
 					'data',

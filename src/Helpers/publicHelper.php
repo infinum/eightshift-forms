@@ -28,6 +28,21 @@ function esFormsGetFormIdByName(string $formId): string
 }
 
 /**
+ * Get field details by name.
+ *
+ * @example echo getFieldDetailsByName([], 'email');
+ *
+ * @param array<string, mixed> $params Form fields params.
+ * @param string $key Field key.
+ *
+ * @return array<string, mixed>
+ */
+function getFieldDetailsByName(array $params, string $key): array
+{
+	return UtilsGeneralHelper::getFieldDetailsByName($params, $key);
+}
+
+/**
  * Decrypt method.
  *
  * @param string $value Value used.
