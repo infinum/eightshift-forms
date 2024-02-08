@@ -852,6 +852,10 @@ class Helper
 
 		$currentScreen = \get_current_screen();
 
+		if ($currentScreen === null) {
+			return false;
+		}
+
 		if (!\method_exists($currentScreen, 'is_block_editor')) {
 			return false;
 		}
