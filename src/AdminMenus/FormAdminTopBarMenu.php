@@ -18,6 +18,7 @@ use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Admin_Bar;
 
@@ -212,6 +213,29 @@ class FormAdminTopBarMenu implements ServiceInterface
 					'href' => null,
 				],
 			);
+
+			// Merge addon blocks to the list.
+			$filterName = UtilsHooksHelper::getFilterName(['admin', 'topBarMenu', 'items']);
+			if (\has_filter($filterName)) {
+				$addonsPrefix = "{$prefix}-addons";
+
+				$filterItems = \apply_filters($filterName, [], $addonsPrefix);
+
+				if ($filterItems) {
+					$adminBar->add_menu(
+						[
+							'id' => $addonsPrefix,
+							'parent' => $prefix,
+							'title' => \esc_html__('Add-ons', 'eightshift-forms'),
+							'href' => null,
+						]
+					);
+
+					foreach ($filterItems as $filterItem) {
+						$adminBar->add_menu($filterItem);
+					}
+				}
+			}
 		}
 	}
 }
