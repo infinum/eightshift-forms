@@ -240,6 +240,9 @@ final class Filters
 				'forceMimetypeFromFs',
 			],
 			'admin' => [
+				'topBarMenu' => [
+					'items',
+				],
 				'settings' => [
 					'data',
 				],
