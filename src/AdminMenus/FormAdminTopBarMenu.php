@@ -214,7 +214,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 				],
 			);
 
-					// Merge addon blocks to the list.
+			// Merge addon blocks to the list.
 			$filterName = UtilsHooksHelper::getFilterName(['admin', 'topBarMenu', 'items']);
 			if (\has_filter($filterName)) {
 				$addonsPrefix = "{$prefix}-addons";
