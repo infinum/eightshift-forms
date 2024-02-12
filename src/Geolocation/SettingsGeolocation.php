@@ -109,11 +109,11 @@ class SettingsGeolocation implements UtilsSettingGlobalInterface, ServiceInterfa
 						'component' => 'checkboxes',
 						'checkboxesFieldLabel' => '',
 						'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY),
-						'checkboxesFieldHelp' => \__("By default we store cookie for faster geodetection. Enabling this feature forms will never store geolocation cookie but keep in mind that this may increase detection time.", 'eightshift-forms'),
+						'checkboxesFieldHelp' => \__("By default we store a cookie for faster geo-location detection. By enabling this feature, forms will not store the geo-location cookie but keep in mind that this may increase geo-location detection time.", 'eightshift-forms'),
 						'checkboxesContent' => [
 							[
 								'component' => 'checkbox',
-								'checkboxLabel' => \__('Use cookieless geodetection', 'eightshift-forms'),
+								'checkboxLabel' => \__('Use cookieless geo-location detection', 'eightshift-forms'),
 								'checkboxIsChecked' => $useCookieless,
 								'checkboxValue' => self::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY,
 								'checkboxSingleSubmit' => true,
