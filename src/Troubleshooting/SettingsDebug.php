@@ -273,7 +273,6 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 								'textareaIsPreventSubmit' => true,
 								'textareaLimitHeight' => true,
 								'textareaIsReadOnly' => true,
-								'textareaIsDisabled' => true,
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionOutput'),
 							],
 							[
