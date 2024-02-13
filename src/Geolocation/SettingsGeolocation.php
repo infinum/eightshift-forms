@@ -44,6 +44,11 @@ class SettingsGeolocation implements UtilsSettingGlobalInterface, ServiceInterfa
 	public const SETTINGS_GEOLOCATION_USE_KEY = 'geolocation-use';
 
 	/**
+	 * Geolocation Cookieless Use key.
+	 */
+	public const SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY = 'geolocation-cookieless-use';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -80,6 +85,8 @@ class SettingsGeolocation implements UtilsSettingGlobalInterface, ServiceInterfa
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
+		$useCookieless = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, self::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY);
+
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
@@ -93,6 +100,26 @@ class SettingsGeolocation implements UtilsSettingGlobalInterface, ServiceInterfa
 							<p>By default geolocation uses <a href='%1\$s' target='_blank' rel='noopener noreferrer'>GeoLite2</a> MaxMind ID database</a> to get users location.</p>
 							<p>With every release we update that database but you can also provide your own database by using our filters. You can find more details <a href='%2\$s' rel='noopener noreferrer' target='_blank'>here</a>.</p>
 						", 'eightshift-forms'), 'https://www.maxmind.com', 'https://eightshift.com/forms/features/geolocation'),
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					[
+						'component' => 'checkboxes',
+						'checkboxesFieldLabel' => '',
+						'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY),
+						'checkboxesFieldHelp' => \__("By default we store a cookie for faster geo-location detection. By enabling this feature, forms will not store the geo-location cookie but keep in mind that this may increase geo-location detection time.", 'eightshift-forms'),
+						'checkboxesContent' => [
+							[
+								'component' => 'checkbox',
+								'checkboxLabel' => \__('Use cookieless geo-location detection', 'eightshift-forms'),
+								'checkboxIsChecked' => $useCookieless,
+								'checkboxValue' => self::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY,
+								'checkboxSingleSubmit' => true,
+								'checkboxAsToggle' => true,
+							]
+						]
 					],
 				],
 			],

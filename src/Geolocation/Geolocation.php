@@ -53,6 +53,11 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return;
 		}
 
+		// Bailout if we use cookieless setup.
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY)) {
+			return;
+		}
+
 		try {
 			$cookieValue = $this->getUsersGeolocation();
 
@@ -283,7 +288,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Check if cookie is set and return that value.
-		if (isset($_COOKIE[$this->getGeolocationCookieName()])) {
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY) && isset($_COOKIE[$this->getGeolocationCookieName()])) {
 			$outputCookie = $this->cleanCookieValue($_COOKIE[$this->getGeolocationCookieName()]); // phpcs:ignore
 
 			if ($outputCookie) {
