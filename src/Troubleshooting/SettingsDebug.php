@@ -261,14 +261,14 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 							],
 							[
 								'component' => 'textarea',
-								'textareaFieldLabel' => \__('String to encrypt or decrypt', 'eightshift-forms-addon-computed-fields'),
+								'textareaFieldLabel' => \__('String to encrypt or decrypt', 'eightshift-forms'),
 								'textareaName' => 'debug-encrypt-data',
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryption'),
 							],
 							[
 								'component' => 'textarea',
 								'textareaName' => 'debug-encrypt-output',
-								'textareaFieldLabel' => \__('Output log', 'eightshift-forms-addon-computed-fields'),
+								'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
 								'textareaSize' => 'big',
 								'textareaIsPreventSubmit' => true,
 								'textareaLimitHeight' => true,

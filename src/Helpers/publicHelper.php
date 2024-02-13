@@ -6,6 +6,7 @@
  * @package EightshiftForms\Helpers
  */
 
+use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -111,4 +112,16 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 		Components::getProjectPaths('blocksDestinationCustom'),
 		true
 	);
+}
+
+/**
+ * Get entry by ID.
+ *
+ * @param string $id Entry Id.
+ *
+ * @return array<string, mixed>
+ */
+function esFormGetEntry(string $id): array
+{
+	return EntriesHelper::getEntry($id);
 }

@@ -31,9 +31,9 @@ class EntriesHelper
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
-	 * @return boolean
+	 * @return int|false
 	 */
-	public static function setEntryByFormDataRef(array $formDetails): bool
+	public static function setEntryByFormDataRef(array $formDetails)
 	{
 		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
 		$formId = $formDetails[UtilsConfig::IARD_FORM_ID] ?? '';
@@ -181,9 +181,9 @@ class EntriesHelper
 	 * @param array<string, mixed> $data Data to save.
 	 * @param string $formId Form Id.
 	 *
-	 * @return boolean
+	 * @return int|false
 	 */
-	public static function setEntry(array $data, string $formId): bool
+	public static function setEntry(array $data, string $formId)
 	{
 		global $wpdb;
 
@@ -209,7 +209,7 @@ class EntriesHelper
 			return false;
 		}
 
-		return true;
+		return $wpdb->insert_id; //phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 	}
 
 	/**
@@ -225,7 +225,7 @@ class EntriesHelper
 
 		$tableName = self::getFullTableName();
 
-		$output = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$result = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$tableName,
 			[
 				'id' => (int) $id,
@@ -235,7 +235,7 @@ class EntriesHelper
 			]
 		);
 
-		if (\is_wp_error($output)) {
+		if (\is_wp_error($result)) {
 			return false;
 		}
 

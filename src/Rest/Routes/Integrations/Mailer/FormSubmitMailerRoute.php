@@ -18,6 +18,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Class FormSubmitMailerRoute
@@ -74,9 +75,19 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		// Pre response filter for addon data.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
+		if (\has_filter($filterName)) {
+			$filterDetails = \apply_filters($filterName, [], $formDetails);
+
+			if ($filterDetails) {
+				$formDetails[UtilsConfig::FD_ADDON] = $filterDetails;
+			}
+		}
+
 		return \rest_ensure_response(
 			$this->getFormSubmitMailer()->sendEmails(
-				$this->processCommonSubmitActionFormData($formDetails),
+				$formDetails,
 				true
 			)
 		);

@@ -121,14 +121,14 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 			}
 		}
 
-		// Add custom properties.
-		$output['properties'] = $properties;
-
 		// Filter params.
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParamsAfter']);
 		if (\has_filter($filterName)) {
-			$output = \apply_filters($filterName, $output, $params, $eventName, $formId) ?? [];
+			$properties = \apply_filters($filterName, $properties, $params, $eventName, $formId) ?? [];
 		}
+
+		// Add custom properties.
+		$output['properties'] = $properties;
 
 		return $output;
 	}

@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
+use EightshiftForms\Entries\EntriesHelper;
+use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
@@ -105,9 +108,20 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$this->sendConfirmationEmail($formId, $params, $files);
 
 		if ($useSuccessAction) {
-			$actionName = UtilsHooksHelper::getActionName(['entries', 'saveEntry']);
-			if (\has_action($actionName)) {
-				\do_action($actionName, $formDetails);
+			// Save entries.
+			if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+				$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
+				$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
+			}
+
+			// Pre response filter for success redirect data.
+			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
+			if (\has_filter($filterName)) {
+				$filterDetails = \apply_filters($filterName, [], $formDetails);
+
+				if ($filterDetails) {
+					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
+				}
 			}
 		}
 
