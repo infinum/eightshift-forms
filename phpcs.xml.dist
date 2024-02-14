@@ -23,7 +23,7 @@
 	<config name="testVersion" value="7.4-"/>
 	<rule ref="PHPCompatibilityWP"/>
 
-	<config name="minimum_supported_wp_version" value="5.3"/>
+	<config name="minimum_supported_wp_version" value="6.1"/>
 
 	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 
@@ -31,4 +31,23 @@
 		<exclude name="Generic.Files.LineLength.TooLong"/>
 	</rule>
 
+	<rule ref="Eightshift.Security.ComponentsEscape">
+		<properties>
+			<property name="overriddenClass" value="EightshiftFormsVendor\\EightshiftLibs\\Helpers\\Components"/>
+			<property name="allowedMethods" type="array">
+				<element key="render" value="render"/>
+				<element key="outputCssVariables" value="outputCssVariables"/>
+				<element key="checkAttr" value="checkAttr"/>
+				<element key="renderPartial" value="renderPartial"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.DB.DirectDatabaseQuery">
+		<exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery"/>
+	</rule>
+
+	<rule ref="Universal.Operators.DisallowShortTernary">
+		<exclude name="Universal.Operators.DisallowShortTernary"/>
+	</rule>
 </ruleset>
