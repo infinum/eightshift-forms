@@ -423,7 +423,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 					continue;
 				}
 
-				$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 					$wpdb->prepare(
 						"SELECT meta_key name, meta_value as value
 						FROM $wpdb->postmeta
@@ -456,7 +456,7 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 			}
 		}
 
-		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 			"SELECT option_name as name, option_value as value
 				FROM $wpdb->options
 				WHERE option_name LIKE '%es-forms-%'"

@@ -68,7 +68,7 @@ class JiraClient implements JiraClientInterface
 	public function getProjects(bool $hideUpdateTime = true): array
 	{
 
-		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: [];
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
@@ -119,7 +119,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	public function getIssueType(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: [];
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {

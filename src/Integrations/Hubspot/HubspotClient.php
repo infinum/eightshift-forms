@@ -89,7 +89,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getItems(bool $hideUpdateTime = true): array
 	{
-		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME) ?: [];
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
@@ -158,7 +158,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getContactProperties(): array
 	{
-		$output = \get_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME) ?: [];
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
@@ -180,7 +180,7 @@ class HubspotClient implements HubspotClientInterface
 				$hidden = $item['hidden'] ?? false;
 				$readOnlyValue = $item['readOnlyValue'] ?? false;
 				$formField = $item['formField'] ?? false;
-				$deleted = $item['deleted'] ?: false; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				$deleted = $item['deleted'] ?: false;
 				$fieldType = $item['fieldType'] ?? '';
 
 				if (!$name || $hidden || $readOnlyValue || !$formField || $deleted) {

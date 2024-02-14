@@ -63,7 +63,6 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 		</div>
 
 		<?php
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 		echo Components::renderPartial('component', $componentName, 'sidebar-section', [
 			'items' => $adminSettingsSidebar,
 			'sectionClass' => $sectionClass,

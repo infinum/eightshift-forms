@@ -346,7 +346,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 	 */
 	private function getCountriesDataSet(bool $useFullOutput = true): array
 	{
-		$output = \get_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME) ?: [];
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {

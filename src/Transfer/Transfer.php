@@ -38,7 +38,7 @@ class Transfer implements TransferInterface
 	{
 		global $wpdb;
 
-		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 			"SELECT option_name as name, option_value as value
 				FROM $wpdb->options
 				WHERE option_name LIKE '%es-forms-%'"
@@ -82,7 +82,7 @@ class Transfer implements TransferInterface
 
 		$output = [];
 		foreach ($forms as $key => $form) {
-			$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
 					"SELECT meta_key name, meta_value as value
 					FROM $wpdb->postmeta
@@ -133,7 +133,7 @@ class Transfer implements TransferInterface
 		global $wpdb;
 
 		$output = (array) $form[0];
-		$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
 				"SELECT meta_key name, meta_value as value
 				FROM $wpdb->postmeta
@@ -183,7 +183,7 @@ class Transfer implements TransferInterface
 		// Import global settings.
 		if ($globalSettings) {
 			// Find all global existing setting.
-			$existingGlobalSettings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$existingGlobalSettings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 				"SELECT option_name name, option_value as value
 				FROM $wpdb->options
 				AND option_name LIKE '%es-forms-%'"
@@ -266,7 +266,7 @@ class Transfer implements TransferInterface
 			]);
 
 			// Find all forms existing setting.
-			$existingSettings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$existingSettings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
 					"SELECT meta_key name, meta_value as value
 					FROM $wpdb->postmeta

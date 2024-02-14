@@ -224,7 +224,7 @@ class SettingsGreenhouse implements UtilsSettingGlobalInterface, ServiceInterfac
 								'inputIsNumber' => true,
 								'inputIsRequired' => true,
 								'inputPlaceholder' => '5',
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_KEY) ?: self::SETTINGS_GREENHOUSE_FILE_UPLOAD_LIMIT_DEFAULT,
 								'inputMin' => 1,
 								'inputMax' => 25,
 								'inputStep' => 1,

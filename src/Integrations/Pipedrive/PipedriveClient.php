@@ -76,7 +76,7 @@ class PipedriveClient implements PipedriveClientInterface
 	public function getPersonFields(bool $hideUpdateTime = true): array
 	{
 
-		$output = \get_transient(self::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME) ?: [];
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
@@ -147,7 +147,7 @@ class PipedriveClient implements PipedriveClientInterface
 	public function getLeadsFields(bool $hideUpdateTime = true): array
 	{
 
-		$output = \get_transient(self::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME) ?: [];
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {

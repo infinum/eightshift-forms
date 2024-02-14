@@ -207,7 +207,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						$captcha = $this->getCaptcha()->check(
 							$captchaParams['token'] ?? '',
 							$captchaParams['action'] ?? '',
-							(bool) $captchaParams['isEnterprise'] ?: false // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+							(bool) $captchaParams['isEnterprise'] ?: false
 						);
 
 						if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {

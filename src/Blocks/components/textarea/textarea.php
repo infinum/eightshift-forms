@@ -98,7 +98,7 @@ echo Components::render(
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),
-			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea',
 			'fieldTracking' => $textareaTracking,
 			'fieldHideLabel' => $textareaHideLabel,
 			'fieldConditionalTags' => Components::render(

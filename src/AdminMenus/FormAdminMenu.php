@@ -605,7 +605,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$editLink = $item['editLink'] ?? '#';
 					$postType = $item['postType'] ?? '';
 					$activeIntegration = $item['activeIntegration'] ?? [];
-					$cardIcon = isset($activeIntegration['icon']) ? $activeIntegration['icon'] : UtilsHelper::getUtilsIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+					$cardIcon = isset($activeIntegration['icon']) ? $activeIntegration['icon'] : UtilsHelper::getUtilsIcons('listingGeneric');
 
 					if (!$title) {
 						// Translators: %s is the form ID.
