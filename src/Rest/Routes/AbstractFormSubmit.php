@@ -14,6 +14,8 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftForms\Entries\EntriesHelper;
+use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -22,7 +24,9 @@ use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore Slev
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
@@ -237,13 +241,21 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * Get integration common submit action
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param mixed $callbackAdditional Additional callback.
+	 * @param mixed $callbackStart Callback start of the function.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getIntegrationCommonSubmitAction(array $formDetails, $callbackAdditional = null): array
+	protected function getIntegrationCommonSubmitAction(array $formDetails, $callbackStart = null): array
 	{
-		$formDetails = $this->processCommonSubmitActionFormData($formDetails);
+		// Pre response filter for addon data.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
+		if (\has_filter($filterName)) {
+			$filterDetails = \apply_filters($filterName, [], $formDetails);
+
+			if ($filterDetails) {
+				$formDetails[UtilsConfig::FD_ADDON] = $filterDetails;
+			}
+		}
 
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
@@ -258,8 +270,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		// Run any function callback if it is set.
-		if (\is_callable($callbackAdditional)) {
-			\call_user_func($callbackAdditional);
+		if (\is_callable($callbackStart)) {
+			\call_user_func($callbackStart);
 		}
 
 		// Skip fallback email if integration is disabled.
@@ -291,9 +303,65 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
 
-		return UtilsApiHelper::getIntegrationApiPublicOutput(
+		return $this->getIntegrationCommonSubmitOutput(
 			$formDetails,
 			$labelsOutput
+		);
+	}
+
+	/**
+	 * Output for getIntegrationCommonSubmitOutput method.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param string $msg Message to output.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	protected function getIntegrationCommonSubmitOutput(array $formDetails, string $msg): array
+	{
+		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
+		$status = $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR;
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+
+		$additionalOutput = [];
+
+		if (isset($response[UtilsConfig::IARD_VALIDATION])) {
+			$additionalOutput[UtilsHelper::getStateResponseOutputKey('validation')] = $response[UtilsConfig::IARD_VALIDATION];
+		}
+
+		if ($status === UtilsConfig::STATUS_SUCCESS) {
+			// Order of this filter is important as you can use filters in the getApiPublicAdditionalDataOutput helper.
+			if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+				$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
+				$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
+			}
+
+			// Pre response filter for success redirect data.
+			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
+			if (\has_filter($filterName)) {
+				$filterDetails = \apply_filters($filterName, [], $formDetails);
+
+				if ($filterDetails) {
+					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
+				}
+			}
+
+			$additionalOutput = \array_merge(
+				$additionalOutput,
+				UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails)
+			);
+
+			return UtilsApiHelper::getApiSuccessPublicOutput(
+				$msg,
+				$additionalOutput,
+				$response
+			);
+		}
+
+		return UtilsApiHelper::getApiErrorPublicOutput(
+			$msg,
+			$additionalOutput,
+			$response
 		);
 	}
 

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Troubleshooting;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -61,6 +62,11 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 	public const SETTINGS_DEBUG_FORCE_DISABLED_FIELDS = UtilsConfig::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS;
 
 	/**
+	 * Troubleshooting debug encryption key.
+	 */
+	public const SETTINGS_DEBUG_ENCRYPTION = 'debug-encryption';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -102,127 +108,180 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'intro',
-				'introSubtitle' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
-				'introIsHighlighted' => true,
-				'introIsHighlightedImportant' => true,
-			],
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-card',
-				'tabContent' => [
+				'component' => 'tabs',
+				'tabsContent' => [
 					[
-						'component' => 'checkboxes',
-						'checkboxesFieldLabel' => '',
-						'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
-						'checkboxesContent' => [
+						'component' => 'tab',
+						'tabLabel' => \__('Debug', 'eightshift-forms'),
+						'tabContent' => [
 							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__('Bypass validation', 'eightshift-forms'),
-								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('Disable form validation and go directly to the integrations form submission. This way, you can debug the validation errors from the integration.', 'eightshift-forms'),
+								'component' => 'intro',
+								'introSubtitle' => \__('These options can break your forms.<br /> Use with caution!', 'eightshift-forms'),
+								'introIsHighlighted' => true,
+								'introIsHighlightedImportant' => true,
 							],
 							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_DEBUG_DEBUGGING_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Bypass validation', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_VALIDATION_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('Disable form validation and go directly to the integrations form submission. This way, you can debug the validation errors from the integration.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Bypass captcha', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('Allows sending the form without CAPTCHA validation, with the feature still enabled.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__("Don't clear form after submission", 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('Disable form reset after successful submission for easier debugging.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Developer mode', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('
+											Outputs multiple developers options in forms. Available outputs:<br/><br/>
+											<ul>
+												<li>Every listing will have ID prepended to the label.</li>
+												<li>Integration API response will have a `debug` key with all the details. You can check it out using inspector network tab.</li>
+												<li>On the frontend, when hovering over a form field a debug tooltip will be shown with some helpful information.</li>
+											</ul>', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Stop form syncing', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('Prevents syncing with integrations when a form is opened in edit mode.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Skip internal cache', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CACHE_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('Prevents storing integration data to the temporary internal cache to optimize load time and API calls. Turning on this option can cause many API calls in a short time, which may cause a temporary ban from the external integration service. Use with caution.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Output Query Monitor log', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_QM_LOG, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_QM_LOG,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('You can preview the output logs for internal API responses not handled by JavaScript. To use this feature, the Query Monitor plugin must be installed and active in your project.', 'eightshift-forms'),
+									],
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => 'true',
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Enable disabled fields admin overrides', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS, self::SETTINGS_DEBUG_DEBUGGING_KEY),
+										'checkboxValue' => self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+										'checkboxHelp' => \__('You can use this toggle to turn off all disabled fields in the global settings. This is used to debug API keys that are stored in the global variables.', 'eightshift-forms'),
+									],
+								]
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Encryption', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'select',
+								'selectFieldLabel' => \__('Type', 'eightshift-forms'),
+								'selectName' => 'debug-encrypt-type',
+								'selectFieldHelp' => \__('Choose if you want to encrypt or decrypt the string.', 'eightshift-forms'),
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionType'),
+								'selectContent' => [
+									[
+										'component' => 'select-option',
+										'selectOptionLabel' => \__('Encrypt', 'eightshift-forms'),
+										'selectOptionValue' => 'encrypt',
+										'selectOptionIsSelected' => true,
+									],
+									[
+										'component' => 'select-option',
+										'selectOptionLabel' => \__('Decrypt', 'eightshift-forms'),
+										'selectOptionValue' => 'decrypt',
+									],
+								],
 							],
 							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__('Bypass captcha', 'eightshift-forms'),
-								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CAPTCHA_KEY,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('Allows sending the form without CAPTCHA validation, with the feature still enabled.', 'eightshift-forms'),
+								'component' => 'textarea',
+								'textareaFieldLabel' => \__('String to encrypt or decrypt', 'eightshift-forms'),
+								'textareaName' => 'debug-encrypt-data',
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryption'),
 							],
 							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
+								'component' => 'textarea',
+								'textareaName' => 'debug-encrypt-output',
+								'textareaFieldLabel' => \__('Output log', 'eightshift-forms'),
+								'textareaSize' => 'big',
+								'textareaIsPreventSubmit' => true,
+								'textareaLimitHeight' => true,
+								'textareaIsReadOnly' => true,
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionOutput'),
 							],
 							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__("Don't clear form after submission", 'eightshift-forms'),
-								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_RESET_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_RESET_KEY,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('Disable form reset after successful submission for easier debugging.', 'eightshift-forms'),
+								'component' => 'submit',
+								'submitValue' => \__('Test Computed', 'eightshift-forms'),
+								'submitVariant' => 'outline',
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('debugEncryptionRun'),
 							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__('Developer mode', 'eightshift-forms'),
-								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_DEVELOPER_MODE_KEY,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('
-									Outputs multiple developers options in forms. Available outputs:<br/><br/>
-									<ul>
-										<li>Every listing will have ID prepended to the label.</li>
-										<li>Integration API response will have a `debug` key with all the details. You can check it out using inspector network tab.</li>
-										<li>On the frontend, when hovering over a form field a debug tooltip will be shown with some helpful information.</li>
-									</ul>', 'eightshift-forms'),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__('Stop form syncing', 'eightshift-forms'),
-								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('Prevents syncing with integrations when a form is opened in edit mode.', 'eightshift-forms'),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__('Skip internal cache', 'eightshift-forms'),
-								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_SKIP_CACHE_KEY, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_SKIP_CACHE_KEY,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('Prevents storing integration data to the temporary internal cache to optimize load time and API calls. Turning on this option can cause many API calls in a short time, which may cause a temporary ban from the external integration service. Use with caution.', 'eightshift-forms'),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__('Output Query Monitor log', 'eightshift-forms'),
-								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_QM_LOG, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_QM_LOG,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('You can preview the output logs for internal API responses not handled by JavaScript. To use this feature, the Query Monitor plugin must be installed and active in your project.', 'eightshift-forms'),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'checkbox',
-								'checkboxLabel' => \__('Enable disabled fields admin overrides', 'eightshift-forms'),
-								'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-								'checkboxValue' => self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS,
-								'checkboxAsToggle' => true,
-								'checkboxSingleSubmit' => true,
-								'checkboxHelp' => \__('You can use this toggle to turn off all disabled fields in the global settings. This is used to debug API keys that are stored in the global variables.', 'eightshift-forms'),
-							],
-						]
+						],
 					],
 				],
 			],

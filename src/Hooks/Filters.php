@@ -262,10 +262,7 @@ final class Filters
 				'twoToThreeGeneral',
 				'twoToThreeForms',
 				'twoToThreeLocale',
-			],
-			'entries' => [
-				'saveEntry',
-			],
+			]
 		];
 	}
 

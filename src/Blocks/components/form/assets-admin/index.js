@@ -177,7 +177,6 @@ domReady(() => {
 		});
 	}
 
-
 	////////////////////////////////////////////////////////////////
 	// Tabs
 	////////////////////////////////////////////////////////////////
@@ -189,6 +188,24 @@ domReady(() => {
 			new Tabs({
 				tabsSelector: selectorTabs,
 				tabSelector: state.getStateSelectorAdmin('tabsItem', true),
+			}).init();
+		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Debug Encrypt
+	////////////////////////////////////////////////////////////////
+
+	const selectorDebugEncrypt = state.getStateSelectorAdmin('debugEncryptionRun', true);
+
+	if (document.querySelectorAll(selectorDebugEncrypt).length) {
+		import('./debug-encrypt').then(({ DebugEncrypt }) => {
+			new DebugEncrypt({
+				utils: utils,
+				selector: selectorDebugEncrypt,
+				outputSelector: state.getStateSelectorAdmin('debugEncryptionOutput', true),
+				typeSelector: state.getStateSelectorAdmin('debugEncryptionType', true),
+				dataSelector: state.getStateSelectorAdmin('debugEncryption', true),
 			}).init();
 		});
 	}

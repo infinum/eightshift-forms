@@ -17,6 +17,7 @@ use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
 use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
 use EightshiftForms\Rest\Routes\Settings\BulkRoute;
 use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
+use EightshiftForms\Rest\Routes\Settings\DebugEncryptRoute;
 use EightshiftForms\Rest\Routes\Settings\ExportRoute;
 use EightshiftForms\Rest\Routes\Settings\LocationsRoute;
 use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
@@ -80,6 +81,7 @@ trait SharedEnqueue
 				'bulk' => BulkRoute::ROUTE_SLUG,
 				'locations' => LocationsRoute::ROUTE_SLUG,
 				'export' => ExportRoute::ROUTE_SLUG,
+				'debugEncrypt' => DebugEncryptRoute::ROUTE_SLUG,
 
 					// Editor.
 				'prefixIntegrationItemsInner' => UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,

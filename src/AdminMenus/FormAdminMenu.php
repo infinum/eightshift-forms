@@ -552,7 +552,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			case 'entries':
 				$i = 0;
 				$count = \count($items);
-				foreach ($items as $item) {
+				foreach (\array_reverse($items) as $item) {
 					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 					$entryValue = $item['entryValue'] ?? [];
 					$createdAt = $item['createdAt'] ?? '';
