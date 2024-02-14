@@ -550,20 +550,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 
 		// Populate additional items from filters, used for add-ons.
 		$filterName = UtilsHooksHelper::getFilterName(['admin', 'settings', 'data']);
-
 		if (\has_filter($filterName)) {
-			foreach (\apply_filters($filterName, []) as $keyItem => $valueItem) {
-				if (
-					!isset($valueItem['labels']['title']) ||
-					!isset($valueItem['labels']['desc']) ||
-					!isset($valueItem['labels']['icon']) ||
-					!isset($valueItem['type'])
-				) {
-					continue;
-				}
-
-				$data[$keyItem] = $valueItem;
-			}
+			$data = \apply_filters($filterName, $data);
 		}
 
 		return $data;
