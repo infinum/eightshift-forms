@@ -29,8 +29,8 @@
 	"require-dev": {
 		"brain/faker": "dev-master",
 		"brain/monkey": "^2.6.1",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
-		"infinum/eightshift-coding-standards": "^1.6",
+		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
+		"infinum/eightshift-coding-standards": "2.0.0-beta",
 		"pestphp/pest": "^1.23.0",
 		"php-stubs/wordpress-stubs": "^6.3",
 		"phpunit/phpunit": "^9.6.8",
@@ -41,10 +41,6 @@
 		"php": "^7.4 || >=8.0",
 		"erusev/parsedown": "^1.7.4",
 		"infinum/eightshift-forms-utils": "^1.1.10"
-	},
-	"suggest": {
-		"ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",
-		"ext-xdebug": "^3.0.0 || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both."
 	},
 	"autoload": {
 		"psr-4": {
@@ -69,11 +65,11 @@
 	},
 	"scripts": {
 		"test:types": "@php ./vendor/bin/phpstan analyze",
-		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.4-",
+		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
 		"test:unit": "@php ./vendor/bin/pest --group=unit",
 		"test:unit-report": "@php ./vendor/bin/pest --group=unit --log-junit tests/coverage/report.xml",
-		"test:coverage": "@php ./vendor/bin/pest --group=unit --coverage",
-		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.4-",
+		"test:coverage": "@php -dxdebug.mode=coverage ./vendor/bin/pest --group=unit --coverage",
+		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf",
 		"test": [
 			"@test:standards",
 			"@test:types",
