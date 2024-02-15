@@ -297,8 +297,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 		// Prepare content variables.
 		$contentType = $content['type'] ?? '';
-		$contentItemId = $content['itemId'] ? UtilsGeneralHelper::unserializeAttributes($content['itemId']) : '';
-		$contentInnerId = $content['innerId'] ? UtilsGeneralHelper::unserializeAttributes($content['innerId']) : '';
+		$contentItemId = $content['itemId'] ?? '';
+		$contentInnerId = $content['innerId'] ?? '';
 		$contentFields = $content['fields'] ?? [];
 
 		// Bailout if content type is missing.
