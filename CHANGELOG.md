@@ -7,21 +7,45 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [3.0.0]
 
 ### Added
+- Extracting for helpers to new library for easier usage across add-ons.
+- Creating new addon options for new potential projects.
 - Forms listing filter will allow you to filter form by type.
 - Forms settings will now follow the used theme admin color scheme.
 - New Dashboard settings page where you can toggle options you want to use in the project.
 - New checkbox toggle state for the settings pages.
 - Conditional logic for all integration forms.
+- Conditional tags for all forms.
+- Multi-step multiflow forms can now be created.
+- Over 30 new filters for the forms and integrations.
+- Automatic diff between integration forms an internal forms.
 - Documentation page in the settings.
 - Migrations page where you can migrate the data for the options that were changed in the major versions.
+- Debug options with multiple options for debugging.
+- Forms can now store entires in the database.
+- New form fields for country, rating, date, time, multi-select, and phone number with country picker.
+- New security options for the forms.
+- Google reCaptcha now supports invisible reCaptcha and business version.
+- Top admin bar option for easier access to the settings and forms.
+- Ability to delete/sync/duplicate multiple forms at once from admin listing.
+- Forms now supports multiple languages using WPML plugin.
+- Forms now supports RTL languages.
+- Forms now supports Cloudflare setup.
+- Import/Export forms and settings for easier migration between projects.
+- New integrations for Pipedrive, Jira, Moments, Airtable.
+- Enrichment now supports remembering the last used field values from local storage or URL.
+- Email validation now supports top level domain validation.
+- Forms are now faster and more secure.
 
 ### Changed
 - Visual styling for all settings pages with tabs, better copy, and a lot of UX/UI improvements.
 - Fallback emails are no longer in the troubleshooting class but as a standalone class.
 - Your forms will now show only integrations in the settings set in the Block editor.
+- Geolocation will now load forms faster and event work with the cookieless setup with caching options.
+- Forms are now compatible with latest WordPress version and PHP 8+.
 
 ### Fixed
 - Optimized loading of all settings pages.
+- Issue with attributes escaping on the PHP8+.
 
 ### Removed
 - `ES_DEVELOP_MODE` constant because you can configure everything from the settings page.
