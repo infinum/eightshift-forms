@@ -250,7 +250,7 @@ class Captcha implements CaptchaInterface
 			);
 		}
 
-		$setScore = UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$setScore = UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY;
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {

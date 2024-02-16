@@ -165,7 +165,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		echo Components::outputCssVariables($attributes, $manifest, $unique);
 	}
 
-	echo Components::renderPartial('component', 'utils', 'debug-field-details', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	echo Components::renderPartial('component', 'utils', 'debug-field-details', [
 		'name' => Components::checkAttr('fieldName', $attributes, $manifest),
 	]);
 

@@ -99,7 +99,7 @@ echo Components::render(
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('rating'),
 			'fieldIsRequired' => $ratingIsRequired,
 			'fieldDisabled' => !empty($ratingIsDisabled),
-			'fieldTypeCustom' => $ratingTypeCustom ?: 'rating', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $ratingTypeCustom ?: 'rating',
 			'fieldTracking' => $ratingTracking,
 			'fieldHideLabel' => $ratingHideLabel,
 			'fieldConditionalTags' => Components::render(

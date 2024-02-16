@@ -96,7 +96,7 @@ echo Components::render(
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldUseError' => $inputType !== 'hidden',
-			'fieldTypeCustom' => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $inputTypeCustom ?: $inputType,
 			'fieldTracking' => $inputTracking,
 			'fieldHideLabel' => $inputHideLabel || $inputType === 'hidden',
 			'fieldConditionalTags' => Components::render(

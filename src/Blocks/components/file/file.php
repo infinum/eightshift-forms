@@ -95,7 +95,7 @@ echo Components::render(
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('file'),
 			'fieldDisabled' => !empty($fileIsDisabled),
 			'fieldIsRequired' => $fileIsRequired,
-			'fieldTypeCustom' => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $fileTypeCustom ?: 'file',
 			'fieldTracking' => $fileTracking,
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',

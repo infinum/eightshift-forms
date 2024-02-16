@@ -66,7 +66,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	public function getItems(bool $hideUpdateTime = true): array
 	{
-		$output = \get_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME) ?: [];
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {

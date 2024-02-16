@@ -101,8 +101,8 @@ class Enrichment implements EnrichmentInterface
 		}
 
 		return [
-			'expiration' => $expiration ?: self::ENRICHMENT_EXPIRATION, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'expirationPrefill' => $expirationPrefill ?: self::ENRICHMENT_PREFILL_EXPIRATION, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'expiration' => $expiration ?: self::ENRICHMENT_EXPIRATION,
+			'expirationPrefill' => $expirationPrefill ?: self::ENRICHMENT_PREFILL_EXPIRATION,
 			'allowed' => $fullAllowed,
 			'map' => $map,
 		];

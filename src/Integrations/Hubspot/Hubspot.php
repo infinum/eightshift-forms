@@ -115,7 +115,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		}
 
 		// Find local but fallback to global settings.
-		$allowedFileTypes = UtilsSettingsHelper::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: UtilsSettingsHelper::getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$allowedFileTypes = UtilsSettingsHelper::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: UtilsSettingsHelper::getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);
 
 		if ($allowedFileTypes) {
 			$allowedFileTypes = \str_replace('.', '', $allowedFileTypes);

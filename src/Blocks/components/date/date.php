@@ -98,7 +98,7 @@ echo Components::render(
 			'fieldName' => $dateName,
 			'fieldIsRequired' => $dateIsRequired,
 			'fieldDisabled' => !empty($dateIsDisabled),
-			'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $dateTypeCustom ?: $dateType,
 			'fieldTracking' => $dateTracking,
 			'fieldHideLabel' => $dateHideLabel,
 			'fieldConditionalTags' => Components::render(

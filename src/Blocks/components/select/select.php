@@ -63,7 +63,7 @@ if ($selectPlaceholder) {
 // Placeholder label for value.
 if ($selectUseLabelAsPlaceholder) {
 	$selectHideLabel = true;
-	$placeholderLabel = esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	$placeholderLabel = esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms');
 }
 
 $placeholder = Components::render(
@@ -106,7 +106,7 @@ $fieldOutput = [
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),
 	'fieldIsRequired' => $selectIsRequired,
 	'fieldDisabled' => !empty($selectIsDisabled),
-	'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldTypeCustom' => $selectTypeCustom ?: 'select',
 	'fieldTracking' => $selectTracking,
 	'fieldConditionalTags' => Components::render(
 		'conditional-tags',

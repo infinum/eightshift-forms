@@ -51,7 +51,7 @@ if ($countryUseSearch) {
 }
 
 if ($countryUseLabelAsPlaceholder) {
-	$countryPlaceholder = esc_attr($countryFieldLabel) ?: esc_html__('Select country', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	$countryPlaceholder = esc_attr($countryFieldLabel) ?: esc_html__('Select country', 'eightshift-forms');
 	$countryHideLabel = true;
 }
 
@@ -68,7 +68,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('cou
 $placeholder = $countryPlaceholder ? Components::render(
 	'select-option',
 	[
-		'selectOptionLabel' => $countryPlaceholder, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		'selectOptionLabel' => $countryPlaceholder,
 		'selectOptionAsPlaceholder' => true,
 	]
 ) : '';
@@ -128,7 +128,7 @@ echo Components::render(
 			'fieldName' => $countryName,
 			'fieldIsRequired' => $countryIsRequired,
 			'fieldDisabled' => !empty($countryIsDisabled),
-			'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $countryTypeCustom ?: 'country',
 			'fieldTracking' => $countryTracking,
 			'fieldHideLabel' => $countryHideLabel,
 			'fieldConditionalTags' => Components::render(

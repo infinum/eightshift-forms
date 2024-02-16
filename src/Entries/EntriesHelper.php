@@ -82,7 +82,7 @@ class EntriesHelper
 		$output = \wp_cache_get($id, self::TABLE_NAME . 'entry');
 
 		if (!$output) {
-			$output = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$output = $wpdb->get_row(
 				$wpdb->prepare(
 					"SELECT * FROM {$tableName} WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					[
@@ -118,7 +118,7 @@ class EntriesHelper
 		$output = \wp_cache_get($formId, self::TABLE_NAME . 'entries');
 
 		if (!$output) {
-			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$output = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT * FROM {$tableName} WHERE form_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					[
@@ -160,14 +160,14 @@ class EntriesHelper
 		$output = \wp_cache_get($formId, self::TABLE_NAME . 'entries_count');
 
 		if (!$output) {
-			$output = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$output = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM {$tableName} WHERE form_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					[
 						(int) $formId
 					]
 				)
-			) ?: '0'; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			) ?: '0';
 
 			\wp_cache_add($formId, $output, self::TABLE_NAME . 'entries_count');
 		}
@@ -191,7 +191,7 @@ class EntriesHelper
 
 		$time = \current_time('mysql', true);
 
-		$result = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$result = $wpdb->insert(
 			self::getFullTableName(),
 			[
 				'form_id' => (int) $formId,
@@ -225,7 +225,7 @@ class EntriesHelper
 
 		$tableName = self::getFullTableName();
 
-		$result = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$result = $wpdb->delete(
 			$tableName,
 			[
 				'id' => (int) $id,

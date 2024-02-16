@@ -135,7 +135,7 @@ echo Components::render(
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),
-			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone',
 			'fieldTracking' => $phoneTracking,
 			'fieldHideLabel' => $phoneHideLabel,
 			'fieldConditionalTags' => Components::render(

@@ -32,7 +32,7 @@ class EscapedView extends AbstractEscapedView implements ServiceInterface
 	 *
 	 * @return array<string, array<string, bool>|true> Modified allowed tags array.
 	 */
-	public function setCustomWpksesPostTags(array $tags, string $context)  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
+	public function setCustomWpksesPostTags(array $tags, string $context) // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
 	{
 		return \array_merge(
 			$this->setForm(),

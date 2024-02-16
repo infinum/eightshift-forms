@@ -58,7 +58,7 @@ echo Components::render(
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
 			'fieldId' => $radiosName,
 			'fieldTracking' => $radiosTracking,
-			'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $radiosTypeCustom ?: 'radio',
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

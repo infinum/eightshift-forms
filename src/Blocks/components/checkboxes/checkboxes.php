@@ -56,7 +56,7 @@ echo Components::render(
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 			'fieldName' => $checkboxesName,
 			'fieldIsRequired' => $checkboxesIsRequired,
-			'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+			'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox',
 			'fieldConditionalTags' => Components::render(
 				'conditional-tags',
 				Components::props('conditionalTags', $attributes)

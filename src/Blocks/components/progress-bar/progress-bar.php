@@ -41,14 +41,14 @@ $progressBarClass = Components::classnames([
 <div class="<?php echo esc_attr($progressBarClass); ?>">
 	<?php
 	if (!$progressBarMultiflowUse) {
-		echo Components::renderPartial('component', $manifest['componentName'], 'multistep', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		echo Components::renderPartial('component', $manifest['componentName'], 'multistep', [
 			'steps' => $progressBarSteps,
 			'componentClass' => $componentClass,
 			'jsClass' => UtilsHelper::getStateSelector('stepProgressBar'),
 			'hideLabels' => Components::checkAttr('progressBarHideLabels', $attributes, $manifest),
 		]);
 	} else {
-		echo Components::renderPartial('component', $manifest['componentName'], 'multiflow', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		echo Components::renderPartial('component', $manifest['componentName'], 'multiflow', [
 			'count' => Components::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest),
 		]);
 	}
