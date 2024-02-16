@@ -40,7 +40,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Visual styling for all settings pages with tabs, better copy, and a lot of UX/UI improvements.
 - Fallback emails are no longer in the troubleshooting class but as a standalone class.
 - Your forms will now show only integrations in the settings set in the Block editor.
-- Geolocation will now load forms faster and event work with the cookieless setup with caching options.
+- Geolocation will now load forms faster and even work with the cookieless setup with caching options.
 - Forms are now compatible with latest WordPress version and PHP 8+.
 
 ### Fixed
