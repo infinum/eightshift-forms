@@ -43,9 +43,11 @@ export class Cache {
 		fetch(this.state.getRestUrl('cacheClear'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'cache', formId);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'cache', formId);
+
 				const {
 					message,
 					status,

@@ -28,17 +28,17 @@
 		"test": "wp boilerplate"
 	},
 	"devDependencies": {
-		"husky": "^8.0.1",
-		"webpack": "^5.74.0",
-		"webpack-cli": "^4.10.0"
+		"husky": "^9.0.11",
+		"webpack": "^5.90.2",
+		"webpack-cli": "^5.1.4"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs": "^9.1.0",
+		"@eightshift/frontend-libs": "^9.4.0",
 		"autosize": "^6.0.1",
 		"choices.js": "^10.2.0",
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
-		"reactflow": "^11.8.3"
+		"reactflow": "^11.10.4"
 	},
 	"husky": {
 		"hooks": {

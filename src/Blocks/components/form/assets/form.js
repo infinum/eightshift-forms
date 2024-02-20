@@ -121,9 +121,11 @@ export class Form {
 		fetch(this.state.getRestUrl('geolocation'), body)
 		.then((response) => {
 			this.utils.formSubmitErrorContentType(response, 'geolocation', null);
-			return response.json();
+			return response.text();
 		})
-		.then((response) => {
+		.then((responseData) => {
+			const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null);
+
 			// Get formId from ajax response.
 			let formId = response?.data?.formId;
 
@@ -285,9 +287,11 @@ export class Form {
 		fetch(url, body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'formSubmit', formId);
+
 				this.formSubmitBefore(formId, response);
 
 				// On success state.
@@ -333,9 +337,11 @@ export class Form {
 		fetch(url, body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'formSubmitStep', formId);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'formSubmitStep', formId);
+
 				this.formSubmitBefore(formId, response);
 				this.steps.formStepSubmit(formId, response);
 				this.steps.formStepSubmitAfter(formId, response);

@@ -45,9 +45,11 @@ export class Locations {
 		fetch(this.state.getRestUrl('locations'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'location', this.FORM_ID);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'location', this.FORM_ID);
+
 				this.utils.hideLoader(this.FORM_ID);
 
 				if (response.status === 'success') {

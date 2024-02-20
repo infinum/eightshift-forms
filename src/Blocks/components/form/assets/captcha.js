@@ -105,9 +105,11 @@ export class Captcha {
 		fetch(this.state.getRestUrl('captcha'), body)
 		.then((response) => {
 			this.utils.formSubmitErrorContentType(response, 'invisibleCaptcha', null);
-			return response.json();
+			return response.text();
 		})
-		.then((response) => {
+		.then((responseData) => {
+			const response = this.utils.formSubmitIsJsonString(responseData, 'invisibleCaptcha', null);
+
 			this.utils.dispatchFormEvent(window, this.state.getStateEvent('afterCaptchaInit'), response);
 		});
 	}

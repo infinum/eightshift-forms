@@ -283,11 +283,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			}
 		}
 
-		// Send email if it is configured in the backend.
-		if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
-			$this->getFormSubmitMailer()->sendEmails($formDetails);
-		}
-
 		$labelsOutput = $this->labels->getLabel($response[UtilsConfig::IARD_MSG], $formId);
 		$responseOutput = $response;
 
@@ -344,6 +339,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				if ($filterDetails) {
 					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
 				}
+			}
+
+			// Send email if it is configured in the backend.
+			if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
+				$this->getFormSubmitMailer()->sendEmails($formDetails);
 			}
 
 			$additionalOutput = \array_merge(

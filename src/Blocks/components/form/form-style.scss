@@ -14,8 +14,7 @@
 }
 
 @mixin form-fields-styles() {
-	margin-inline-start: calc(var(--es-grid-spacing) * -1);
-	margin-inline-end: calc(var(--es-grid-spacing) * -1);
+	margin-inline: calc(var(--es-grid-spacing) * -1);
 }
 
 @mixin form-fields-children-mandatory-styles() {
@@ -24,8 +23,7 @@
 }
 
 @mixin form-fields-children-styles() {
-	padding-inline-start: var(--es-grid-spacing);
-	padding-inline-end: var(--es-grid-spacing);
+	padding-inline: var(--es-grid-spacing);
 	margin-block-end: var(--es-field-spacing);
 }
 

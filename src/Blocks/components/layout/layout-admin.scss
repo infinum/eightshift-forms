@@ -5,8 +5,7 @@
 
 	&__wrap {
 		display: grid;
-		column-gap: var(--es-layout-scoped-gutters-default);
-		row-gap: var(--es-layout-scoped-gutters-default);
+		gap: var(--es-layout-scoped-gutters-default);
 	}
 
 	&__col > * {
@@ -110,8 +109,7 @@
 	&[data-layout-type='layout-v-stack-card-fullwidth'] {
 		> #{$this}__wrap {
 			display: grid;
-			column-gap: var(--es-layout-scoped-gutters-default);
-			row-gap: var(--es-layout-scoped-gutters-default);
+			gap: var(--es-layout-scoped-gutters-default);
 			grid-template-columns: repeat(12, 1fr);
 			margin-inline-end: var(--global-esf-spacing-l);
 			margin-block-end: 1rem;
