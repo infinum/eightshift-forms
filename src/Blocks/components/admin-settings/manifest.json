@@ -16,6 +16,9 @@
 		"adminSettingsFormEditLink": {
 			"type": "string"
 		},
+		"adminSettingsFormLocationsLink": {
+			"type": "string"
+		},
 		"adminSettingsSidebar": {
 			"type": "array"
 		},

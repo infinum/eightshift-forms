@@ -154,6 +154,14 @@ class FormAdminTopBarMenu implements ServiceInterface
 						'href' => $item['settingsLink'] ?? null,
 					],
 				);
+				$adminBar->add_menu(
+					[
+						'id' => "{$listingPrefix}-{$id}-locations",
+						'parent' => $link,
+						'title' => \esc_html__('Locations', 'eightshift-forms'),
+						'href' => UtilsGeneralHelper::getFormsLocationsPageUrl((string) $id),
+					],
+				);
 			}
 		}
 

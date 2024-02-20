@@ -22,6 +22,7 @@ $adminSettingsPageTitle = Components::checkAttr('adminSettingsPageTitle', $attri
 $adminSettingsSubTitle = Components::checkAttr('adminSettingsSubTitle', $attributes, $manifest);
 $adminSettingsBackLink = Components::checkAttr('adminSettingsBackLink', $attributes, $manifest);
 $adminSettingsFormEditLink = Components::checkAttr('adminSettingsFormEditLink', $attributes, $manifest);
+$adminSettingsFormLocationsLink = Components::checkAttr('adminSettingsFormLocationsLink', $attributes, $manifest);
 $adminSettingsSidebar = Components::checkAttr('adminSettingsSidebar', $attributes, $manifest);
 $adminSettingsForm = Components::checkAttr('adminSettingsForm', $attributes, $manifest);
 $adminSettingsType = Components::checkAttr('adminSettingsType', $attributes, $manifest);
@@ -86,6 +87,14 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 									echo UtilsHelper::getUtilsIcons('edit'),
 									esc_html__('Edit form', 'eightshift-forms');
+								?>
+							</a>
+
+							<a href="<?php echo esc_url($adminSettingsFormLocationsLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
+								<?php
+									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+									echo UtilsHelper::getUtilsIcons('location'),
+									esc_html__('Locations used', 'eightshift-forms');
 								?>
 							</a>
 						</div>
