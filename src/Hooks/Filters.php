@@ -132,6 +132,10 @@ final class Filters
 				'rating' => [
 					'additionalContent',
 				],
+				'dynamic' => [
+					'additionalContent',
+					'dataOutput',
+				],
 			],
 			'blocks' => [
 				'allowedBlocks',

@@ -1,0 +1,19 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "dynamic",
+	"title": "Dynamic",
+	"description" : "A simple star dynamic field",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "es-highlighted-columns"
+	},
+	"keywords": [
+		"dynamic"
+	],
+	"components": {
+		"dynamic": "dynamic"
+	},
+	"parent": [
+		"eightshift-forms/form"
+	]
+}

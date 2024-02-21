@@ -13,8 +13,11 @@ namespace EightshiftForms\Integrations\Airtable;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
+use Hamcrest\Util;
 
 /**
  * Airtable integration class.
@@ -54,6 +57,9 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	{
 		// Blocks string to value filter name constant.
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
+
+		// Recreate dynamic block data for frontend.
+		\add_filter(UtilsHooksHelper::getFilterName(['block', 'dynamic', 'dataOutput']), [$this, 'getDynamicBlockOutput'], 10, 2);
 	}
 
 	/**
@@ -81,7 +87,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			return $output;
 		}
 
-		$fields = $this->getFields($item[$innerId] ?? [], $formId);
+		$fields = $this->getFields($item[$innerId] ?? [], $formId, $item);
 
 		if (!$fields) {
 			return $output;
@@ -97,10 +103,11 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 *
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $items Items.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId): array
+	private function getFields(array $data, string $formId, array $items): array
 	{
 		$output = [];
 
@@ -233,11 +240,13 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 					];
 					break;
 				case 'singleSelect':
+				case 'multipleSelects':
 					$output[] = [
 						'component' => 'select',
 						'selectName' => $name,
 						'selectTracking' => $name,
 						'selectFieldLabel' => $label,
+						'selectIsMultiple' => $type === 'multipleSelects',
 						'selectContent' => \array_map(
 							function ($selectOption) {
 								return [
@@ -251,31 +260,8 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 							},
 							$options['choices'] ?? []
 						),
-						'selectDisabledOptions' => $this->prepareDisabledOptions('select'),
-					];
-					break;
-				case 'multipleSelects':
-					$output[] = [
-						'component' => 'checkboxes',
-						'checkboxesName' => $name,
-						'checkboxesTracking' => $name,
-						'checkboxesFieldLabel' => $label,
-						'checkboxesTypeCustom' => 'multiCheckbox',
-						'checkboxesContent' => \array_map(
-							function ($checkbox) {
-								return [
-									'component' => 'checkbox',
-									'checkboxLabel' => $checkbox['name'],
-									'checkboxValue' => $checkbox['id'],
-									'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
-										'checkboxValue'
-									], false),
-								];
-							},
-							$options['choices'] ?? []
-						),
-						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
-							'checkboxesTypeCustom',
+						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
+							'selectIsMultiple',
 						]),
 					];
 					break;
@@ -301,6 +287,26 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						]),
 					];
 					break;
+				case 'multipleRecordLinks':
+					$linkedItemId = $field['options']['linkedTableId'] ?? '';
+					if (!$linkedItemId) {
+						break;
+					}
+
+					$linkedItem = $items[$linkedItemId] ?? [];
+					if (!$linkedItem) {
+						break;
+					}
+
+					$output[] = [
+						'component' => 'dynamic',
+						'dynamicName' => $name,
+						'dynamicFieldLabel' => $label,
+						'dynamicCustomLabel' => \sprintf(\__('We will display dinamic data on the frontend for %1$s field - %2$s.', 'eightshift-forms'), $label, $name),
+						'dynamicData' => wp_json_encode($field),
+						'dynamicDisabledOptions' => $this->prepareDisabledOptions('dynamic'),
+					];
+					break;
 			}
 		}
 
@@ -317,5 +323,37 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Recreate dynamic block data for frontend.
+	 *
+	 * @param array<string, mixed> $attributes Attributes.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getDynamicBlockOutput(array $attributes, string $formId): array
+	{
+		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
+		// dump($attributes, $formDetails);
+		$type = $formDetails['type'] ?? '';
+
+		if ($type !== SettingsAirtable::SETTINGS_TYPE_KEY) {
+			return [];
+		}
+
+		$data = Components::checkAttr('dynamicData', $attributes, Components::getComponent('dynamic'));
+
+		if (!$data) {
+			return [];
+		}
+
+		$data = json_decode($data, true);
+
+		dump($data);
+
+
+		return [];
 	}
 }

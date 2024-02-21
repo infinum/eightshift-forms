@@ -223,6 +223,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 							break;
 						case 'phone':
 						case 'country':
+						case 'dynamic':
 							$inBlock['attrs'][Components::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
 							break;
 						case 'select':

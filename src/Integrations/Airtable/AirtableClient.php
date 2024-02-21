@@ -111,12 +111,7 @@ class AirtableClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
-			$output = [];
-		}
+		$output = $this->getItems();
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['items'])) {
@@ -124,16 +119,35 @@ class AirtableClient implements ClientInterface
 
 			$tables = $fields['tables'] ?? [];
 
-			if ($itemId && $tables) {
+			if ($tables) {
 				foreach ($tables as $item) {
 					$id = $item['id'] ? (string) $item['id'] : '';
+					$fields = $item['fields'] ?? [];
 
 					$output[$itemId]['items'][$id] = [
 						'id' => $id,
 						'title' => $item['name'] ?? '',
 						'primaryFieldId' => $item['primaryFieldId'] ?? '',
-						'fields' => $item['fields'] ?? [],
+						'fields' => $fields,
 					];
+
+					if ($fields) {
+						foreach ($fields as $field) {
+							$fieldType = $field['type'] ?? '';
+
+							if ($fieldType !== 'multipleRecordLinks') {
+								continue;
+							}
+
+							$linkedItemId = $field['options']['linkedTableId'] ?? '';
+
+							if (!$linkedItemId) {
+								continue;
+							}
+
+							// dump($this->getAirtableListRecords($itemId, $linkedItemId));
+						}
+					}
 				}
 
 				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
@@ -259,6 +273,44 @@ class AirtableClient implements ClientInterface
 	private function getAirtableListFields(string $baseId)
 	{
 		$url = self::BASE_URL . "meta/bases/{$baseId}/tables";
+
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
+
+		// Structure response details.
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+			SettingsAirtable::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
+
+		UtilsDeveloperHelper::setQmLogsOutput($details);
+
+		// On success return output.
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return $body ?? [];
+		}
+
+		return [];
+	}
+
+	/**
+	 * API request to get one job by ID from Airtable.
+	 *
+	 * @param string $baseId Base id to search.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getAirtableListRecords(string $baseId, string $listId)
+	{
+		$url = self::BASE_URL . "{$baseId}/{$listId}";
 
 		$response = \wp_remote_get(
 			$url,
