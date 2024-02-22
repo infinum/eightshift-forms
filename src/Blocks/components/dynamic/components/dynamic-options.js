@@ -54,7 +54,7 @@ export const DynamicOptions = (attributes) => {
 							attribute={getAttrKey('dynamicName', attributes, manifest)}
 							disabledOptions={dynamicDisabledOptions}
 							setAttributes={setAttributes}
-							type={'dynamic'}
+							type='dynamic'
 							isChanged={isNameChanged}
 							setIsChanged={setIsNameChanged}
 						/>
