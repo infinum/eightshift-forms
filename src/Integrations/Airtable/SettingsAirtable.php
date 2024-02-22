@@ -50,11 +50,6 @@ class SettingsAirtable implements UtilsSettingGlobalInterface, ServiceInterface
 	public const SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY = 'airtable-skip-integration';
 
 	/**
-	 * List all connected tables you want to use.
-	 */
-	public const SETTINGS_AIRTABLE_CONNECTED_TABLES_LIST_KEY = 'airtable-connected-tables-list';
-
-	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
