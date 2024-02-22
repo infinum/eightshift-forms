@@ -307,7 +307,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'dynamicFieldLabel' => $label,
 						'dynamicTypeCustom' => 'dynamicSelect',
 						// translators: %1$s will be replaced with field label and %2$s with field name.
-						'dynamicCustomLabel' => \sprintf(\__('We will display dinamic data on the frontend for %1$s field - %2$s.', 'eightshift-forms'), $label, $name),
+						'dynamicCustomLabel' => \sprintf(\__('We will display dynamic data on the frontend for %1$s field - %2$s.', 'eightshift-forms'), $label, $name),
 						'dynamicData' => \wp_json_encode([
 							'baseId' => $itemId,
 							'listId' => $linkedItemId,
