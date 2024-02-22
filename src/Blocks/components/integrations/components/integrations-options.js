@@ -197,7 +197,7 @@ export const IntegrationsOptions = ({
 							}}
 							closeMenuAfterSelect
 							simpleValue
-							clearable={true}
+							clearable
 						/>
 					}
 
