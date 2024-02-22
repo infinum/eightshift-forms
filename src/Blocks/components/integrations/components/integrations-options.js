@@ -178,7 +178,7 @@ export const IntegrationsOptions = ({
 						reducedBottomSpacing={innerIdKey && itemId}
 						closeMenuAfterSelect
 						simpleValue
-						clearable={true}
+						clearable
 					/>
 
 					{(innerIdKey && itemId) &&
