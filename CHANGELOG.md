@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 - Mailer now supports custom response tag `mailerSuccessRedirectUrl`.
-- Locations used url to settings page and top admin bar.
+- Locations used URL to settings page and top admin bar.
 
 ### Fixed
 - Forms JS breaking on the frontend when API response returns JSON but the response is not an object.
