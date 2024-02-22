@@ -11,13 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
-use Hamcrest\Util;
 
 /**
  * Airtable integration class.
@@ -34,16 +32,16 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	/**
 	 * Instance variable for Airtable data.
 	 *
-	 * @var ClientInterface
+	 * @var AirtableClientInterface
 	 */
 	protected $airtableClient;
 
 	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
+	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
-	public function __construct(ClientInterface $airtableClient)
+	public function __construct(AirtableClientInterface $airtableClient)
 	{
 		$this->airtableClient = $airtableClient;
 	}
@@ -87,7 +85,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			return $output;
 		}
 
-		$fields = $this->getFields($item[$innerId] ?? [], $formId, $item);
+		$fields = $this->getFields($item[$innerId] ?? [], $formId, $item, $itemId);
 
 		if (!$fields) {
 			return $output;
@@ -104,10 +102,11 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 * @param array<string, mixed> $data Fields.
 	 * @param string $formId Form ID.
 	 * @param array<string, mixed> $items Items.
+	 * @param string $itemId Item ID.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function getFields(array $data, string $formId, array $items): array
+	private function getFields(array $data, string $formId, array $items, string $itemId): array
 	{
 		$output = [];
 
@@ -215,6 +214,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 					];
 					break;
 				case 'number':
+				case 'currency':
 					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
@@ -300,12 +300,21 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 
 					$output[] = [
 						'component' => 'dynamic',
+						'dynamicType' => 'select',
 						'dynamicName' => $name,
+						'dynamicTracking' => $name,
+						'dynamicIsDeactivated' => true,
 						'dynamicFieldLabel' => $label,
+						'dynamicTypeCustom' => 'dynamicSelect',
+						// translators: %1$s will be replaced with field label and %2$s with field name.
 						'dynamicCustomLabel' => \sprintf(\__('We will display dinamic data on the frontend for %1$s field - %2$s.', 'eightshift-forms'), $label, $name),
-						'dynamicData' => wp_json_encode($field),
+						'dynamicData' => \wp_json_encode([
+							'baseId' => $itemId,
+							'listId' => $linkedItemId,
+						]),
 						'dynamicDisabledOptions' => $this->prepareDisabledOptions('dynamic'),
 					];
+
 					break;
 			}
 		}
@@ -331,29 +340,73 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 * @param array<string, mixed> $attributes Attributes.
 	 * @param string $formId Form ID.
 	 *
-	 * @return array<string, mixed>
+	 * @return string
 	 */
-	public function getDynamicBlockOutput(array $attributes, string $formId): array
+	public function getDynamicBlockOutput(array $attributes, string $formId): string
 	{
 		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
-		// dump($attributes, $formDetails);
 		$type = $formDetails['type'] ?? '';
 
 		if ($type !== SettingsAirtable::SETTINGS_TYPE_KEY) {
-			return [];
+			return '';
 		}
 
-		$data = Components::checkAttr('dynamicData', $attributes, Components::getComponent('dynamic'));
+		$manifest = Components::getComponent('dynamic');
+		$data = Components::checkAttr('dynamicData', $attributes, $manifest);
 
 		if (!$data) {
-			return [];
+			return '';
 		}
 
-		$data = json_decode($data, true);
+		$data = \json_decode($data, true);
 
-		dump($data);
+		$baseId = $data['baseId'] ?? '';
+		$listId = $data['listId'] ?? '';
 
+		if (!$baseId || !$listId) {
+			return '';
+		}
 
-		return [];
+		$records = $this->airtableClient->getItemDetails($baseId, $listId);
+
+		if (!$records) {
+			return '';
+		}
+
+		$content = '';
+
+		foreach ($records as $record) {
+			$id = $record['id'] ?? '';
+			$title = $record['title'] ?? '';
+
+			if (!$id || !$title) {
+				continue;
+			}
+
+			if (\is_array($title)) {
+				continue;
+			}
+
+			$content .= Components::render(
+				'select-option',
+				[
+					'selectOptionLabel' => $title,
+					'selectOptionValue' => $id,
+				]
+			);
+		}
+
+		return Components::render(
+			'select',
+			Components::props('select', [
+				'selectName' => Components::checkAttr('dynamicName', $attributes, $manifest),
+				'selectTracking' => Components::checkAttr('dynamicTracking', $attributes, $manifest),
+				'selectFieldLabel' => Components::checkAttr('dynamicFieldLabel', $attributes, $manifest),
+				'selectIsMultiple' => Components::checkAttr('dynamicIsMultiple', $attributes, $manifest),
+				'selectIsRequired' => Components::checkAttr('dynamicIsRequired', $attributes, $manifest),
+				'selectTypeCustom' => Components::checkAttr('dynamicTypeCustom', $attributes, $manifest),
+				'selectContent' => $content,
+			])
+		);
 	}
 }

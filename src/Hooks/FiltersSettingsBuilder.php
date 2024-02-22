@@ -345,7 +345,6 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsAirtable::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME,
-				'settings' => SettingsAirtable::FILTER_SETTINGS_NAME,
 				'fields' => Airtable::FILTER_FORM_FIELDS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,

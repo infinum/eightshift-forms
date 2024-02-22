@@ -16,7 +16,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterf
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -25,11 +24,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsAirtable implements UtilsSettingGlobalInterface, ServiceInterface
 {
-	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_airtable';
-
 	/**
 	 * Filter global settings key.
 	 */
@@ -68,23 +62,12 @@ class SettingsAirtable implements UtilsSettingGlobalInterface, ServiceInterface
 	protected $settingsFallback;
 
 	/**
-	 * Instance variable for Airtable data.
-	 *
-	 * @var ClientInterface
-	 */
-	protected $airtableClient;
-
-	/**
 	 * Create a new instance.
 	 *
-	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback which holds Fallback settings data.
 	 */
-	public function __construct(
-		ClientInterface $airtableClient,
-		SettingsFallbackDataInterface $settingsFallback
-	) {
-		$this->airtableClient = $airtableClient;
+	public function __construct(SettingsFallbackDataInterface $settingsFallback)
+	{
 		$this->settingsFallback = $settingsFallback;
 	}
 	/**
@@ -94,7 +77,6 @@ class SettingsAirtable implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
@@ -113,51 +95,6 @@ class SettingsAirtable implements UtilsSettingGlobalInterface, ServiceInterface
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		// Bailout if global config is not valid.
-		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
-		}
-
-		$connectedTablesValue = UtilsSettingsHelper::getSettingValue(self::SETTINGS_AIRTABLE_CONNECTED_TABLES_LIST_KEY, $formId);
-
-		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			[
-				'component' => 'tabs',
-				'tabsContent' => [
-					// [
-					// 	'component' => 'select',
-					// 	'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_AIRTABLE_CONNECTED_TABLES_LIST_KEY),
-					// 	'selectFieldHelp' => \__('Please select what connected tables you want to use in your forms.', 'eightshift-forms'),
-					// 	'selectFieldLabel' => \__('Connected tables', 'eightshift-forms'),
-					// 	'selectPlaceholder' => \__('Select table', 'eightshift-forms'),
-					// 	'selectIsRequired' => true,
-					// 	'selectContent' => \array_map(
-					// 		static function ($option) use ($connectedTablesValue) {
-					// 			return [
-					// 				'component' => 'select-option',
-					// 				'selectOptionLabel' => $option,
-					// 				'selectOptionValue' => $option,
-					// 				'selectOptionIsSelected' => $connectedTablesValue === $option,
-					// 			];
-					// 		},
-					// 		$this->airtableClient->getConnectedTables()
-					// 	),
-					// ],
-				],
-			],
-		];
 	}
 
 	/**

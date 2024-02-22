@@ -24,7 +24,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 /**
  * AirtableClient integration class.
  */
-class AirtableClient implements ClientInterface
+class AirtableClient implements AirtableClientInterface
 {
 	/**
 	 * Return Airtable base url.
@@ -83,6 +83,7 @@ class AirtableClient implements ClientInterface
 						'id' => (string) $id,
 						'title' => $item['name'] ?? '',
 						'items' => [],
+						'records' => [],
 					];
 				}
 
@@ -130,24 +131,6 @@ class AirtableClient implements ClientInterface
 						'primaryFieldId' => $item['primaryFieldId'] ?? '',
 						'fields' => $fields,
 					];
-
-					if ($fields) {
-						foreach ($fields as $field) {
-							$fieldType = $field['type'] ?? '';
-
-							if ($fieldType !== 'multipleRecordLinks') {
-								continue;
-							}
-
-							$linkedItemId = $field['options']['linkedTableId'] ?? '';
-
-							if (!$linkedItemId) {
-								continue;
-							}
-
-							// dump($this->getAirtableListRecords($itemId, $linkedItemId));
-						}
-					}
 				}
 
 				\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
@@ -155,6 +138,39 @@ class AirtableClient implements ClientInterface
 		}
 
 		return $output[$itemId]['items'] ?? [];
+	}
+
+	/**
+	 * Return item details with cache option for faster loading.
+	 *
+	 * @param string $itemId Base ID to search by.
+	 * @param string $listId List ID to search by.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getItemDetails(string $itemId, string $listId): array
+	{
+		$output = $this->getItems();
+
+		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['records']) || empty($output[$itemId]['records'][$listId])) {
+			$fields = $this->getAirtableListRecords($itemId, $listId);
+
+			$output[$itemId]['records'][$listId] = \array_map(
+				static function ($item) {
+					$fields = $item['fields'] ?? [];
+
+					return [
+						'id' => $item['id'] ?? '',
+						'title' => \array_values($fields)[0] ?? '',
+					];
+				},
+				$fields
+			);
+
+			\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+		}
+
+		return $output[$itemId]['records'][$listId] ?? [];
 	}
 
 	/**
@@ -305,6 +321,7 @@ class AirtableClient implements ClientInterface
 	 * API request to get one job by ID from Airtable.
 	 *
 	 * @param string $baseId Base id to search.
+	 * @param string $listId List id to search.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -333,7 +350,7 @@ class AirtableClient implements ClientInterface
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return $body ?? [];
+			return $body['records'] ?? [];
 		}
 
 		return [];
@@ -429,6 +446,11 @@ class AirtableClient implements ClientInterface
 					break;
 				case 'multiCheckbox':
 					$value = \explode(UtilsConfig::DELIMITER, $value);
+					break;
+				case 'dynamicSelect':
+					if (!\is_array($value)) {
+						$value = [$value];
+					}
 					break;
 				default:
 					$value = $value;

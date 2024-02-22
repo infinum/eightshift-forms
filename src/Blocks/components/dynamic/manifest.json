@@ -16,6 +16,12 @@
 		"dynamicName": {
 			"type": "string"
 		},
+		"dynamicType": {
+			"type": "string"
+		},
+		"dynamicTypeCustom": {
+			"type": "string"
+		},
 		"dynamicData": {
 			"type": "string"
 		},
@@ -28,9 +34,6 @@
 		"dynamicFormPostId": {
 			"type": "string"
 		},
-		"dynamicValue": {
-			"type": "string"
-		},
 		"dynamicTracking": {
 			"type": "string"
 		},
@@ -38,11 +41,11 @@
 			"type": "boolean",
 			"default": false
 		},
-		"dynamicIsDisabled": {
+		"dynamicIsMultiple": {
 			"type": "boolean",
 			"default": false
 		},
-		"dynamicIsReadOnly": {
+		"dynamicIsDeactivated": {
 			"type": "boolean",
 			"default": false
 		},

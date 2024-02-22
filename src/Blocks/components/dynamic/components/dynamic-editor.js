@@ -11,7 +11,6 @@ import {
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import { getUtilsIcons } from '../../form/assets/state-init';
 
 export const DynamicEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('dynamic');
@@ -28,7 +27,6 @@ export const DynamicEditor = (attributes) => {
 	} = attributes;
 
 	const dynamicName = checkAttr('dynamicName', attributes, manifest);
-	const dynamicValue = checkAttr('dynamicValue', attributes, manifest);
 	const dynamicCustomLabel = checkAttr('dynamicCustomLabel', attributes, manifest);
 
 	const dynamicClass = classnames([
@@ -39,7 +37,7 @@ export const DynamicEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('dynamicName', attributes, manifest), dynamicName);
 
 	const dynamic = (
-		<div className={dynamicClass} data-dynamic={dynamicValue}>
+		<div className={dynamicClass}>
 			{dynamicCustomLabel}
 
 			<MissingName value={dynamicName} />
@@ -57,6 +55,7 @@ export const DynamicEditor = (attributes) => {
 			{...props('field', attributes, {
 				fieldContent: dynamic,
 				fieldIsRequired: checkAttr('dynamicIsRequired', attributes, manifest),
+				fieldHidden: checkAttr('dynamicIsDeactivated', attributes, manifest),
 			})}
 			additionalFieldClass={additionalFieldClass}
 			selectorClass={componentName}
