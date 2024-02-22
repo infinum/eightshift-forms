@@ -228,7 +228,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 				);
 			}
 
-			// Add variation data, this filter will not take in effect if the success redirect variation set in the block editor.
+			// Add variation data, this filter will not take in effect if the success redirect variation isn't set in the block editor.
 			$successRedirectVariation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($formType, $formId)['data'] ?? '';
 			if ($successRedirectVariation) {
 				$successRedirectUrl = \add_query_arg(
