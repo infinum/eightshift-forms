@@ -39,7 +39,7 @@ export const DynamicOptions = (attributes) => {
 		<PanelBody title={title}>
 			<IconToggle
 				icon={icons.cursorDisabled}
-				label={__('Is Deactivated', 'eightshift-forms')}
+				label={__('Deactivated', 'eightshift-forms')}
 				help={__('All dynamic fields are deactivated by default.', 'eightshift-forms')}
 				checked={dynamicIsDeactivated}
 				onChange={(value) => setAttributes({ [getAttrKey('dynamicIsDeactivated', attributes, manifest)]: value })}
