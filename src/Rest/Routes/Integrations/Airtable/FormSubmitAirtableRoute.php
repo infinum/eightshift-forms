@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Integrations\Airtable\AirtableClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
-use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -34,7 +34,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	/**
 	 * Instance variable for Airtable data.
 	 *
-	 * @var ClientInterface
+	 * @var AirtableClientInterface
 	 */
 	protected $airtableClient;
 
@@ -47,7 +47,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
-	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
+	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -56,7 +56,7 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
 		FormSubmitMailerInterface $formSubmitMailer,
-		ClientInterface $airtableClient
+		AirtableClientInterface $airtableClient
 	) {
 		$this->validator = $validator;
 		$this->validationPatterns = $validationPatterns;

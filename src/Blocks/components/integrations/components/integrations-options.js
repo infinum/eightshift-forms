@@ -159,18 +159,26 @@ export const IntegrationsOptions = ({
 						value={itemId}
 						options={formItems}
 						onChange={(value) => {
-							if (innerIdKey) {
+							// On clear action.
+							if (!value) {
 								resetInnerBlocks(clientId);
-								setAttributes({ [itemIdKey]: value.toString() });
+								setAttributes({ [itemIdKey]: undefined });
 								setAttributes({ [innerIdKey]: undefined });
 							} else {
-								updateIntegrationBlocks(clientId, postId, block, value.toString());
-								setAttributes({ [itemIdKey]: value.toString() });
+								if (innerIdKey) {
+									resetInnerBlocks(clientId);
+									setAttributes({ [itemIdKey]: value.toString() });
+									setAttributes({ [innerIdKey]: undefined });
+								} else {
+									updateIntegrationBlocks(clientId, postId, block, value.toString());
+									setAttributes({ [itemIdKey]: value.toString() });
+								}
 							}
 						}}
 						reducedBottomSpacing={innerIdKey && itemId}
 						closeMenuAfterSelect
 						simpleValue
+						clearable
 					/>
 
 					{(innerIdKey && itemId) &&
@@ -179,11 +187,17 @@ export const IntegrationsOptions = ({
 							value={innerId}
 							options={formInnerItems}
 							onChange={(value) => {
-								updateIntegrationBlocks(clientId, postId, block, itemId, value.toString());
-								setAttributes({ [innerIdKey]: value.toString() });
+								// On clear action.
+								if (!value) {
+									setAttributes({ [innerIdKey]: undefined });
+								} else {
+									updateIntegrationBlocks(clientId, postId, block, itemId, value.toString());
+									setAttributes({ [innerIdKey]: value.toString() });
+								}
 							}}
 							closeMenuAfterSelect
 							simpleValue
+							clearable
 						/>
 					}
 

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.2]
+
+### Added
+- New `dynamic` block and component to allow dynamic form fields.
+- Integration form picker now supports clear option.
+- Airtable integration now supports dynamic connected tables.
+- Airtable integration now supports multiple select fields.
+
+### Fixed
+- Integration sync fix when you unset attributes that are set in manifest as default.
+
 ## [3.0.1]
 
 ### Added

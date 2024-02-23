@@ -127,13 +127,7 @@ class IntegrationItemsMomentsRoute extends AbstractUtilsBaseRoute
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
-				[
-					[
-						'label' => '',
-						'value' => '',
-					],
-					...$items,
-				],
+				$items,
 				$debug
 			)
 		);

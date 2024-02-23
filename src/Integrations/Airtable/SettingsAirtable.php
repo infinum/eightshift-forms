@@ -191,7 +191,7 @@ class SettingsAirtable implements UtilsSettingGlobalInterface, ServiceInterface
 									\__('Log in to your Airtable Account.', 'eightshift-forms'),
 									// translators: %s will be replaced with the link.
 									\sprintf(\__('Go to the <a target="_blank" rel="noopener noreferrer" href="%s">Developers Hub</a>.', 'eightshift-forms'), 'https://airtable.com/create/tokens/new'),
-									\__('Create a new Personal access token with the scopes <strong>"data.records:write"</strong> and <strong>"schema.bases:read"</strong>.', 'eightshift-forms'),
+									\__('Create a new Personal access token with the scopes <strong>"data.records:write"</strong>, <strong>"data.records:read"</strong> and <strong>"schema.bases:read"</strong>.', 'eightshift-forms'),
 								],
 							],
 						],
