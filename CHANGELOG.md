@@ -15,6 +15,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Fixed
 - Integration sync fix when you unset attributes that are set in manifest as default.
 
+### Updated
+
+- `@infinum/eightshift-frontend-libs` to the latest version - 9.4.2.
+
 ## [3.0.1]
 
 ### Added
@@ -230,6 +234,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.0.2]: https://github.com/infinum/eightshift-forms/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/infinum/eightshift-forms/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/infinum/eightshift-forms/compare/2.2.0...3.0.0
 [2.2.0]: https://github.com/infinum/eightshift-forms/compare/2.1.0...2.2.0
