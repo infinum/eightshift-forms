@@ -45,9 +45,11 @@ export class TestApi {
 		fetch(this.state.getRestUrlByType('prefixTestApi', integrationType), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'testApi', formId);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'testApi', formId);
+
 				const {
 					message,
 					status,

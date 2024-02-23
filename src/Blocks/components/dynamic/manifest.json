@@ -1,0 +1,56 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "dynamic",
+	"title": "Dynamic",
+	"componentClass": "es-dynamic",
+	"example": {
+		"attributes": {
+			"dynamicName": "Name"
+		}
+	},
+	"components": {
+		"field": "field",
+		"conditionalTags": "conditionalTags"
+	},
+	"attributes": {
+		"dynamicName": {
+			"type": "string"
+		},
+		"dynamicType": {
+			"type": "string"
+		},
+		"dynamicTypeCustom": {
+			"type": "string"
+		},
+		"dynamicData": {
+			"type": "string"
+		},
+		"dynamicFormId": {
+			"type": "string"
+		},
+		"dynamicCustomLabel": {
+			"type": "string"
+		},
+		"dynamicFormPostId": {
+			"type": "string"
+		},
+		"dynamicTracking": {
+			"type": "string"
+		},
+		"dynamicIsRequired": {
+			"type": "boolean",
+			"default": false
+		},
+		"dynamicIsMultiple": {
+			"type": "boolean",
+			"default": false
+		},
+		"dynamicIsDeactivated": {
+			"type": "boolean",
+			"default": false
+		},
+		"dynamicDisabledOptions": {
+			"type": "array"
+		}
+	}
+}

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
-use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\Airtable\AirtableClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Rest\Routes\AbstractTestApi;
 
@@ -27,16 +27,16 @@ class TestApiAirtableRoute extends AbstractTestApi
 	/**
 	 * Instance variable for Airtable data.
 	 *
-	 * @var ClientInterface
+	 * @var AirtableClientInterface
 	 */
 	protected $airtableClient;
 
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
+	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
-	public function __construct(ClientInterface $airtableClient)
+	public function __construct(AirtableClientInterface $airtableClient)
 	{
 		$this->airtableClient = $airtableClient;
 	}

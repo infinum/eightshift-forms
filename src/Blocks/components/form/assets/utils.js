@@ -779,6 +779,52 @@ export class Utils {
 	}
 
 	/**
+	 * Actions to run if api response returns JSON but not formated correct.
+	 *
+	 * This can happen if the API returns JSON but it was malformed for this request like containing debug log or PHP warnings.
+	 *
+	 * @param {mixed} response Api response.
+	 * @param {string} type Function used.
+	 * @param {string} formId Form Id.
+	 *
+	 * @throws Error.
+	 *
+	 * @returns {void}
+	 */
+	formSubmitIsJsonString(response, type, formId) {
+		try {
+			return JSON.parse(response);
+		} catch (e) {
+			if (formId !== null) {
+				// Clear all errors.
+				this.resetErrors(formId);
+
+				// Remove loader.
+				this.hideLoader(formId);
+
+				// Set global msg.
+				this.setGlobalMsg(
+					formId,
+					this.state.getStateSettingsFormServerErrorMsg(),
+					'error'
+				);
+
+				// Reset timeout after each submit.
+				if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+					clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
+				}
+
+				// Hide global msg in any case after some time.
+				this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
+					this.unsetGlobalMsg(formId);
+				}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+			}
+
+			throw new Error(`API response returned JSON but it was malformed for this request. Function used: "${type}"`);
+		}
+	}
+
+	/**
 	 * Actions to run under try/catch block for any fatal issues.
 	 *
 	 * @param {string} msg Error msg text.
@@ -1292,6 +1338,9 @@ export class Utils {
 			},
 			formSubmitErrorContentType: (response, type, formId) => {
 				this.formSubmitErrorContentType(response, type, formId);
+			},
+			formSubmitIsJsonString: (response, type, formId) => {
+				this.formSubmitIsJsonString(response, type, formId);
 			},
 			formSubmitErrorFatal: (msg, type, error, formId) => {
 				this.formSubmitErrorFatal(msg, type, error, formId);

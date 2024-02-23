@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
-use EightshiftForms\Integrations\ClientInterface;
+use EightshiftForms\Integrations\Airtable\AirtableClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
@@ -25,7 +25,7 @@ class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
 	/**
 	 * Instance variable for Airtable data.
 	 *
-	 * @var ClientInterface
+	 * @var AirtableClientInterface
 	 */
 	protected $airtableClient;
 
@@ -47,9 +47,9 @@ class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ClientInterface $airtableClient Inject HubSpot which holds HubSpot connect data.
+	 * @param AirtableClientInterface $airtableClient Inject HubSpot which holds HubSpot connect data.
 	 */
-	public function __construct(ClientInterface $airtableClient)
+	public function __construct(AirtableClientInterface $airtableClient)
 	{
 		$this->airtableClient = $airtableClient;
 	}
@@ -127,13 +127,7 @@ class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
-				[
-					[
-						'label' => '',
-						'value' => '',
-					],
-					...$items,
-				],
+				$items,
 				$debug
 			)
 		);

@@ -23,7 +23,7 @@
 	<config name="testVersion" value="7.4-"/>
 	<rule ref="PHPCompatibilityWP"/>
 
-	<config name="minimum_supported_wp_version" value="5.3"/>
+	<config name="minimum_supported_wp_version" value="6.0"/>
 
 	<exclude-pattern>/src/CompiledContainer\.php</exclude-pattern>
 

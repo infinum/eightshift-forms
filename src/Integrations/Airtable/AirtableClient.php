@@ -24,7 +24,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 /**
  * AirtableClient integration class.
  */
-class AirtableClient implements ClientInterface
+class AirtableClient implements AirtableClientInterface
 {
 	/**
 	 * Return Airtable base url.
@@ -83,6 +83,7 @@ class AirtableClient implements ClientInterface
 						'id' => (string) $id,
 						'title' => $item['name'] ?? '',
 						'items' => [],
+						'records' => [],
 					];
 				}
 
@@ -111,12 +112,7 @@ class AirtableClient implements ClientInterface
 	 */
 	public function getItem(string $itemId): array
 	{
-		$output = \get_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
-			$output = [];
-		}
+		$output = $this->getItems();
 
 		// Check if form exists in cache.
 		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['items'])) {
@@ -124,15 +120,16 @@ class AirtableClient implements ClientInterface
 
 			$tables = $fields['tables'] ?? [];
 
-			if ($itemId && $tables) {
+			if ($tables) {
 				foreach ($tables as $item) {
 					$id = $item['id'] ? (string) $item['id'] : '';
+					$fields = $item['fields'] ?? [];
 
 					$output[$itemId]['items'][$id] = [
 						'id' => $id,
 						'title' => $item['name'] ?? '',
 						'primaryFieldId' => $item['primaryFieldId'] ?? '',
-						'fields' => $item['fields'] ?? [],
+						'fields' => $fields,
 					];
 				}
 
@@ -141,6 +138,39 @@ class AirtableClient implements ClientInterface
 		}
 
 		return $output[$itemId]['items'] ?? [];
+	}
+
+	/**
+	 * Return item details with cache option for faster loading.
+	 *
+	 * @param string $itemId Base ID to search by.
+	 * @param string $listId List ID to search by.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getItemDetails(string $itemId, string $listId): array
+	{
+		$output = $this->getItems();
+
+		if (empty($output) || !isset($output[$itemId]) || empty($output[$itemId]) || empty($output[$itemId]['records']) || empty($output[$itemId]['records'][$listId])) {
+			$fields = $this->getAirtableListRecords($itemId, $listId);
+
+			$output[$itemId]['records'][$listId] = \array_map(
+				static function ($item) {
+					$fields = $item['fields'] ?? [];
+
+					return [
+						'id' => $item['id'] ?? '',
+						'title' => \array_values($fields)[0] ?? '',
+					];
+				},
+				$fields
+			);
+
+			\set_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+		}
+
+		return $output[$itemId]['records'][$listId] ?? [];
 	}
 
 	/**
@@ -288,6 +318,45 @@ class AirtableClient implements ClientInterface
 	}
 
 	/**
+	 * API request to get one job by ID from Airtable.
+	 *
+	 * @param string $baseId Base id to search.
+	 * @param string $listId List id to search.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getAirtableListRecords(string $baseId, string $listId)
+	{
+		$url = self::BASE_URL . "{$baseId}/{$listId}";
+
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
+
+		// Structure response details.
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+			SettingsAirtable::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
+
+		UtilsDeveloperHelper::setQmLogsOutput($details);
+
+		// On success return output.
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return $body['records'] ?? [];
+		}
+
+		return [];
+	}
+
+	/**
 	 * Get test api.
 	 *
 	 * @return array<mixed>
@@ -377,6 +446,11 @@ class AirtableClient implements ClientInterface
 					break;
 				case 'multiCheckbox':
 					$value = \explode(UtilsConfig::DELIMITER, $value);
+					break;
+				case 'dynamicSelect':
+					if (!\is_array($value)) {
+						$value = [$value];
+					}
 					break;
 				default:
 					$value = $value;

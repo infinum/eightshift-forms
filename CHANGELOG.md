@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.2]
+
+### Added
+- New `dynamic` block and component to allow dynamic form fields.
+- Integration form picker now supports clear option.
+- Airtable integration now supports dynamic connected tables.
+- Airtable integration now supports multiple select fields.
+
+### Fixed
+- Integration sync fix when you unset attributes that are set in manifest as default.
+
+## [3.0.1]
+
+### Added
+- Mailer now supports custom response tag `mailerSuccessRedirectUrl`.
+- Locations used URL to settings page and top admin bar.
+
+### Fixed
+- Forms JS breaking on the frontend when API response returns JSON but the response is not an object.
+- SCSS linter errors.
+
+### Updated
+- `@infinum/eightshift-frontend-libs` to the latest version.
+- `@infinum/eightshift-forms-utils` to the latest version.
+- `husky` to the latest version.
+- `webpack` to the latest version.
+- `webpack-cli` to the latest version.
+- `reactflow` to the latest version.
+
 ## [3.0.0]
 
 ### Added
@@ -201,6 +230,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.0.1]: https://github.com/infinum/eightshift-forms/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/infinum/eightshift-forms/compare/2.2.0...3.0.0
 [2.2.0]: https://github.com/infinum/eightshift-forms/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/infinum/eightshift-forms/compare/2.0.1...2.1.0

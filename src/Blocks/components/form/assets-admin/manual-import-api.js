@@ -132,9 +132,11 @@ export class ManualImportApi {
 				fetch(this.state.getRestUrlByType('prefixSubmit', item.type), body)
 					.then((response) => {
 						this.utils.formSubmitErrorContentType(response, 'manualImport', formId);
-						return response.json();
+						return response.text();
 					})
-					.then((response) => {
+					.then((responseData) => {
+						const response = this.utils.formSubmitIsJsonString(responseData, 'manualImport', formId);
+
 						const {
 							message,
 							status,

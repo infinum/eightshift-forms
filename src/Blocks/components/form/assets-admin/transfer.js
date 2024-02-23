@@ -66,9 +66,11 @@ export class Transfer {
 		fetch(this.state.getRestUrl('transfer'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'transfer', formId);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'transfer', formId);
+
 				const {
 					message,
 					status,

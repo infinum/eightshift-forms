@@ -603,6 +603,15 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			'update' => false,
 		];
 
+		// We need to add default attributes to the content data as attributes that have default values will not not ba added in this list and they will fall on sync.
+		// We don't need to remove default attributes at the end as Block Editor will do this for us.
+		if (isset($content['component'])) {
+			$content['attrs'] = \array_merge(
+				$this->getAttrsDefault($content['component']),
+				$content['attrs'],
+			);
+		}
+
 		// Remove item if block is not present on integration, output nothing.
 		if (!$integration) {
 			// Skip removing step block because it doesn't exist on the integration.
@@ -822,7 +831,6 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			if (!$blockTypeOriginal) {
 				continue;
 			}
-
 
 			$blockType = $this->getBlockAttributePrefixByFullBlockName($blockTypeOriginal);
 			$blockNamespace = $blockType['namespace'];
@@ -1218,5 +1226,28 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			),
 			static fn($item) => \is_array($item)
 		);
+	}
+
+	/**
+	 * Get all components default attributes for comparison.
+	 *
+	 * @param string $name Component name.
+	 * @return array<string, mixed>
+	 */
+	private function getAttrsDefault(string $name): array
+	{
+		$output = [];
+
+		$attributes = Components::getComponent($name)['attributes'];
+
+		foreach ($attributes as $key => $value) {
+			if (!isset($value['default'])) {
+				continue;
+			}
+
+			$output[$name . \ucfirst($key)] = $value['default'];
+		}
+
+		return $output;
 	}
 }

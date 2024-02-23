@@ -86,9 +86,11 @@ export class Bulk {
 		fetch(this.state.getRestUrl('bulk'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'bulk', null);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'bulk', null);
+
 				const {
 					message,
 					status,

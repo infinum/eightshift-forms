@@ -46,9 +46,11 @@ export class Migration {
 		fetch(this.state.getRestUrl('migration'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'migration', formId);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'migration', formId);
+
 				const {
 					message,
 					status,

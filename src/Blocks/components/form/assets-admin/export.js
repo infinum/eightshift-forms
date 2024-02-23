@@ -52,9 +52,11 @@ export class Export {
 		fetch(this.state.getRestUrl('export'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'bulk', null);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'bulk', null);
+
 				const {
 					message,
 					status,

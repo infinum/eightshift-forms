@@ -18,11 +18,9 @@
 					@include form-fields-children-mandatory-styles;
 					@include form-fields-children-styles;
 
-					margin-inline-start: 0;
-					margin-inline-end: 0;
+					margin-inline: 0;
 					margin-block-start: 0;
-					padding-block-start: 0;
-					padding-block-end: 0;
+					padding-block: 0;
 				}
 			}
 		}

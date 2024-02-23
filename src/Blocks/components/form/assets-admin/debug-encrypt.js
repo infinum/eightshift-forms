@@ -45,9 +45,11 @@ export class DebugEncrypt {
 		fetch(this.state.getRestUrl('debugEncrypt'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'debugEncrypt', formId);
-				return response.json();
+				return response.text();
 			})
-			.then((response) => {
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'debugEncrypt', formId);
+
 				const {
 					message,
 					data,

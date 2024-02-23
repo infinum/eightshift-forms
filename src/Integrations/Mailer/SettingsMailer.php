@@ -212,6 +212,7 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 		$fieldNames = $formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS];
 		$fieldNameTags = UtilsSettingsOutputHelper::getPartialFormFieldNames($fieldNames);
 		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails[UtilsConfig::FD_TYPE]);
+		$formResponseTagsGeneral = UtilsSettingsOutputHelper::getPartialFormResponseTags(SettingsMailer::SETTINGS_TYPE_KEY);
 
 		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
 		$isSenderUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
@@ -287,7 +288,7 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 									// translators: %s will be replaced with forms field name.
 									'textareaFieldHelp' => \sprintf(\__('
 										Specify e-mail body template with this field. You can use plain text or markdown.<br /><br />
-										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags), UtilsSettingsOutputHelper::getPartialResponseTags($formResponseTags)),
+										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags), UtilsSettingsOutputHelper::getPartialResponseTags("{$formResponseTagsGeneral}{$formResponseTags}")),
 									'textareaIsRequired' => true,
 									'textareaValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 								],
