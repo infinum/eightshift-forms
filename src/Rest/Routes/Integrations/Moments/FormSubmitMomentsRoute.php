@@ -158,7 +158,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 			return;
 		}
 
-		$this->getFormSubmitMailer()->sendfallbackIntegrationEmail(
+		$this->getFormSubmitMailer()->sendFallbackIntegrationEmail(
 			$formDetails,
 			// translators: %1$s is the type of the event, %2$s is the form id.
 			\sprintf(\__('Failed %1$s event submit on form: %2$s', 'eightshift-forms'), $type, $formId),

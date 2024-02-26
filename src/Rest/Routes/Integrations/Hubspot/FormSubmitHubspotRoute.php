@@ -162,7 +162,7 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 					if ($clearbitResponse[UtilsConfig::IARD_CODE] !== UtilsConfig::API_RESPONSE_CODE_ERROR_MISSING) {
 						$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
 
-						$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
+						$this->getFormSubmitMailer()->sendFallbackIntegrationEmail($formDetails);
 					}
 				}
 			}

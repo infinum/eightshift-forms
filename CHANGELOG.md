@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.0.3]
+
+### Added
+- Ability to send fallback email if there has been validation error for `validationMissingMandatoryParams`, `validationFileUploadProcessError` and `validationSecurity`.
+- New fallback processing validation fallback function.
+
+### Changed
+- The security validation feature will no longer trigger count files and step requests.
+
+### Fixed
+- Typo for fallback function.
+
 ## [3.0.2]
 
 ### Added
@@ -224,6 +236,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.0.3]: https://github.com/infinum/eightshift-forms/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/infinum/eightshift-forms/compare/3.0.0...3.0.2
 [3.0.0]: https://github.com/infinum/eightshift-forms/compare/2.2.0...3.0.0
 [2.2.0]: https://github.com/infinum/eightshift-forms/compare/2.1.0...2.2.0

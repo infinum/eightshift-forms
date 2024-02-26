@@ -86,6 +86,18 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected const ROUTE_TYPE_STEP_VALIDATION = 'step-validation';
 
 	/**
+	 * Validation errors constants.
+	 *
+	 * @var string
+	 */
+	protected const VALIDATION_ERROR_SEND_FAlLBACK = 'validationErrorSendFallback';
+	protected const VALIDATION_ERROR_CODE = 'validationErrorCode';
+	protected const VALIDATION_ERROR_DATA = 'validationErrorData';
+	protected const VALIDATION_ERROR_MSG = 'validationErrorMsg';
+	protected const VALIDATION_ERROR_OUTPUT = 'validationOutput';
+
+
+	/**
 	 * Method that returns rest response
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
@@ -107,18 +119,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			if (!$this->getValidator()->validateFormManadatoryProperies($formDetails)) {
 				throw new UnverifiedRequestException(
 					$this->getValidatorLabels()->getLabel('validationMissingMandatoryParams'),
-					[]
+					[
+						self::VALIDATION_ERROR_SEND_FAlLBACK => true,
+						self::VALIDATION_ERROR_CODE => 'validationMissingMandatoryParams',
+					]
 				);
-			}
-
-			// Validate allowed number of requests.
-			if ($this->routeGetType() !== self::ROUTE_TYPE_SETTINGS) {
-				if (!$this->getSecurity()->isRequestValid()) {
-					throw new UnverifiedRequestException(
-						$this->getValidatorLabels()->getLabel('validationSecurity'),
-						[]
-					);
-				}
 			}
 
 			switch ($this->routeGetType()) {
@@ -130,7 +135,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						if ($validate) {
 							throw new UnverifiedRequestException(
 								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-								$validate
+								[
+									self::VALIDATION_ERROR_OUTPUT => $validate,
+									self::VALIDATION_ERROR_CODE => 'validationFileUploadMissingRequiredParams',
+								]
 							);
 						}
 					}
@@ -142,11 +150,17 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					// Upload files to temp folder.
 					$formDetails[UtilsConfig::FD_FILES_UPLOAD] = $uploadFile;
 
-					if (UtilsUploadHelper::isUploadError($uploadError)) {
+					$isUploadError = UtilsUploadHelper::isUploadError($uploadError);
+
+					if ($isUploadError) {
 						throw new UnverifiedRequestException(
 							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
 							[
-								$uploadFileId => $this->getValidatorLabels()->getLabel('validationFileUpload'),
+								self::VALIDATION_ERROR_OUTPUT => [
+									$uploadFileId => $this->getValidatorLabels()->getLabel('validationFileUpload'),
+								],
+								self::VALIDATION_ERROR_SEND_FAlLBACK => true,
+								self::VALIDATION_ERROR_CODE => 'validationFileUploadProcessError',
 							]
 						);
 					}
@@ -158,7 +172,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					if ($validate) {
 						throw new UnverifiedRequestException(
 							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-							$validate
+							[
+								self::VALIDATION_ERROR_OUTPUT => $validate,
+								self::VALIDATION_ERROR_CODE => 'validationSettingsMissingRequiredParams',
+							]
 						);
 					}
 					break;
@@ -170,7 +187,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						if ($validate) {
 							throw new UnverifiedRequestException(
 								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-								$validate
+								[
+									self::VALIDATION_ERROR_OUTPUT => $validate,
+									self::VALIDATION_ERROR_CODE => 'validationStepMissingRequiredParams',
+								]
 							);
 						}
 					}
@@ -181,6 +201,18 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						break;
 					}
 
+					// Validate allowed number of requests.
+					// We don't want to limit any custom requests like files, settings, steps, etc.
+					if (!$this->getSecurity()->isRequestValid()) {
+						throw new UnverifiedRequestException(
+							$this->getValidatorLabels()->getLabel('validationSecurity'),
+							[
+								self::VALIDATION_ERROR_SEND_FAlLBACK => true,
+								self::VALIDATION_ERROR_CODE => 'validationSecurity',
+							]
+						);
+					}
+
 					// Validate params.
 					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateParams($formDetails);
@@ -188,7 +220,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						if ($validate) {
 							throw new UnverifiedRequestException(
 								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-								$validate
+								[
+									self::VALIDATION_ERROR_OUTPUT => $validate,
+									self::VALIDATION_ERROR_CODE => 'validationDefaultMissingRequiredParams',
+								]
 							);
 						}
 					}
@@ -200,7 +235,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						if (!$captchaParams) {
 							throw new UnverifiedRequestException(
 								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-								$captchaParams
+								[
+									self::VALIDATION_ERROR_OUTPUT => $captchaParams,
+									self::VALIDATION_ERROR_CODE => 'validationDefaultCaptcha',
+								]
 							);
 						}
 
@@ -220,17 +258,36 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			// Do Action.
 			return $this->submitAction($formDetails);
 		} catch (UnverifiedRequestException $e) {
+			if (isset($e->getData()[self::VALIDATION_ERROR_SEND_FAlLBACK]) && $e->getData()[self::VALIDATION_ERROR_SEND_FAlLBACK]) {
+				// Send fallback email.
+				$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
+					$formDetails,
+					'',
+					'',
+					[
+						self::VALIDATION_ERROR_CODE => \esc_html($e->getData()[self::VALIDATION_ERROR_CODE] ?? ''),
+						self::VALIDATION_ERROR_MSG => \esc_html($e->getMessage()),
+						self::VALIDATION_ERROR_OUTPUT => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? '',
+						self::VALIDATION_ERROR_DATA => $e->getData()[self::VALIDATION_ERROR_DATA] ?? '',
+					]
+				);
+			}
+
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorPublicOutput(
 					$e->getMessage(),
 					[
-						UtilsHelper::getStateResponseOutputKey('validation') => $e->getData(),
+						UtilsHelper::getStateResponseOutputKey('validation') => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? [],
 					],
 					[
 						'exception' => $e,
 						'request' => $request,
 						'formDetails' => $formDetails,
+						self::VALIDATION_ERROR_CODE => \esc_html($e->getData()[self::VALIDATION_ERROR_CODE] ?? ''),
+						self::VALIDATION_ERROR_MSG => \esc_html($e->getMessage()),
+						self::VALIDATION_ERROR_OUTPUT => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? '',
+						self::VALIDATION_ERROR_DATA => $e->getData()[self::VALIDATION_ERROR_DATA] ?? '',
 					]
 				)
 			);
@@ -279,7 +336,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			// Prevent fallback email if we have validation errors parsed.
 			if (!$disableFallbackEmail) {
 				// Send fallback email.
-				$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
+				$this->getFormSubmitMailer()->sendFallbackIntegrationEmail($formDetails);
 			}
 		}
 
@@ -288,7 +345,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		// Output fake success and send fallback email.
 		if ($response[UtilsConfig::IARD_IS_DISABLED] && !$validation) {
-			$this->getFormSubmitMailer()->sendfallbackIntegrationEmail($formDetails);
+			$this->getFormSubmitMailer()->sendFallbackIntegrationEmail($formDetails);
 
 			$fakeResponse = UtilsApiHelper::getIntegrationSuccessInternalOutput($response);
 

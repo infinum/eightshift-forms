@@ -102,14 +102,7 @@ class Mailer implements MailerInterface
 			UtilsConfig::IARD_ITEM_ID => $response[UtilsConfig::IARD_ITEM_ID] ?? '',
 			UtilsConfig::IARD_FORM_ID => $formId,
 			UtilsConfig::FD_POST_ID => $formDetails[UtilsConfig::FD_POST_ID] ?? '',
-			'debug' => [
-				'forms' => UtilsGeneralHelper::getProjectVersion(),
-				'php' => \phpversion(),
-				'wp' => \get_bloginfo('version'),
-				'url' => \get_bloginfo('url'),
-				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
-				'time' => \wp_date('Y-m-d H:i:s'),
-			],
+			'debug' => $this->getDebugOptions(),
 		];
 
 		if ($customData) {
@@ -167,6 +160,100 @@ class Mailer implements MailerInterface
 
 		// Send email.
 		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
+	}
+
+	/**
+	 * Send fallback email - Processing.
+	 * This function is used in AbstractFormSubmit for processing validation issues.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param string $customSubject Custom subject for the email.
+	 * @param string $customMsg Custom message for the email.
+	 * @param array<string, mixed> $customData Custom data for the email.
+	 *
+	 * @return boolean
+	 */
+	public function fallbackProcessingEmail(
+		array $formDetails,
+		$customSubject = '',
+		$customMsg = '',
+		$customData = []
+	): bool {
+
+		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
+
+		if (!$isSettingsValid) {
+			return false;
+		}
+
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$files = $formDetails[UtilsConfig::FD_FILES] ?? [];
+
+		$output = [
+			'formDetails' => $formDetails,
+			'debug' => $this->getDebugOptions(),
+			'customData' => $customData,
+		];
+
+		// translators: %s replaces the formId.
+		$subject = \sprintf(\__('Processing error form: %s', 'eightshift-forms'), $formId);
+		$body = '<p>' . \esc_html__('It seems like there was an issue with the user\'s form validation. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
+
+		if ($customMsg) {
+			$body = '<p>' . $customMsg . '</p>';
+		}
+
+		// translators: %s replaces the form name.
+		$body .= '<p>' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
+
+		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($output, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
+
+		$filesOutput = [];
+		if ($files) {
+			switch ($type) {
+				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
+					foreach ($files as $file) {
+						if ($file instanceof CURLFile) {
+							$filesOutput[] = $file->name;
+						}
+					}
+					break;
+				default:
+					$filesOutput = UtilsGeneralHelper::recursiveFind($files, 'path');
+					break;
+			}
+		}
+
+		$to = UtilsSettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+
+		$headers = [
+			$this->getType()
+		];
+
+		if ($customSubject) {
+			$subject = $customSubject;
+		}
+
+		// Send email.
+		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
+	}
+
+	/**
+	 * Get debug options.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getDebugOptions(): array
+	{
+		return [
+			'forms' => UtilsGeneralHelper::getProjectVersion(),
+			'php' => \phpversion(),
+			'wp' => \get_bloginfo('version'),
+			'url' => \get_bloginfo('url'),
+			'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
+			'time' => \wp_date('Y-m-d H:i:s'),
+		];
 	}
 
 	/**
