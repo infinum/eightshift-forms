@@ -90,7 +90,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 *
 	 * @var string
 	 */
-	protected const VALIDATION_ERROR_SEND_FAlLBACK = 'validationErrorSendFallback';
+	protected const VALIDATION_ERROR_SEND_FALLBACK = 'validationErrorSendFallback';
 	protected const VALIDATION_ERROR_CODE = 'validationErrorCode';
 	protected const VALIDATION_ERROR_DATA = 'validationErrorData';
 	protected const VALIDATION_ERROR_MSG = 'validationErrorMsg';
@@ -120,7 +120,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				throw new UnverifiedRequestException(
 					$this->getValidatorLabels()->getLabel('validationMissingMandatoryParams'),
 					[
-						self::VALIDATION_ERROR_SEND_FAlLBACK => true,
+						self::VALIDATION_ERROR_SEND_FALLBACK => true,
 						self::VALIDATION_ERROR_CODE => 'validationMissingMandatoryParams',
 					]
 				);
@@ -159,7 +159,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 								self::VALIDATION_ERROR_OUTPUT => [
 									$uploadFileId => $this->getValidatorLabels()->getLabel('validationFileUpload'),
 								],
-								self::VALIDATION_ERROR_SEND_FAlLBACK => true,
+								self::VALIDATION_ERROR_SEND_FALLBACK => true,
 								self::VALIDATION_ERROR_CODE => 'validationFileUploadProcessError',
 							]
 						);
@@ -207,7 +207,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						throw new UnverifiedRequestException(
 							$this->getValidatorLabels()->getLabel('validationSecurity'),
 							[
-								self::VALIDATION_ERROR_SEND_FAlLBACK => true,
+								self::VALIDATION_ERROR_SEND_FALLBACK => true,
 								self::VALIDATION_ERROR_CODE => 'validationSecurity',
 							]
 						);
@@ -258,7 +258,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			// Do Action.
 			return $this->submitAction($formDetails);
 		} catch (UnverifiedRequestException $e) {
-			if (isset($e->getData()[self::VALIDATION_ERROR_SEND_FAlLBACK]) && $e->getData()[self::VALIDATION_ERROR_SEND_FAlLBACK]) {
+			if (isset($e->getData()[self::VALIDATION_ERROR_SEND_FALLBACK]) && $e->getData()[self::VALIDATION_ERROR_SEND_FALLBACK]) {
 				// Send fallback email.
 				$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
 					$formDetails,

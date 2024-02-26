@@ -13,6 +13,7 @@ namespace EightshiftForms\Entries;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
  * EntriesHelper class.
@@ -48,11 +49,17 @@ class EntriesHelper
 
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
+		$saveEmptyFields = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId);
+
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 
-			if (!$name || !$value) {
+			if (!$name) {
+				continue;
+			}
+
+			if (!$value && !$saveEmptyFields) {
 				continue;
 			}
 
