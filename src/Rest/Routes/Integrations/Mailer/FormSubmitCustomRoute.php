@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Entries\EntriesHelper;
+use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -78,6 +80,12 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		$params = $formDetails[UtilsConfig::FD_PARAMS];
 		$action = $formDetails[UtilsConfig::FD_ACTION];
 		$actionExternal = $formDetails[UtilsConfig::FD_ACTION_EXTERNAL];
+
+		// Save entries.
+		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
+			$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
+		}
 
 		$debug = [
 			'formDetails' => $formDetails,

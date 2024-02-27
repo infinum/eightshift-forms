@@ -57,6 +57,10 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 */
 	public const SETTINGS_ENTRIES_SETTINGS_USE_KEY = 'entries-settings-use';
 
+	/**
+	 * Entries settings save empty fields key.
+	 */
+	public const SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS = 'entries-save-empty-fields';
 
 	/**
 	 * Data data key.
@@ -156,6 +160,8 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Store entries in database', 'eightshift-forms'),
+										// translators: %s is replaced with the form entries page URL.
+										'checkboxHelp' => $isUsed ? \sprintf(\__("You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.", 'eightshift-forms'), UtilsGeneralHelper::getFormsEntriesPageUrl($formId)) : '',
 										'checkboxIsChecked' => $isUsed,
 										'checkboxValue' => self::SETTINGS_ENTRIES_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
@@ -163,19 +169,28 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 									]
 								]
 							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'intro',
-								// translators: %s is the link to the entries page.
-								'introSubtitle' => \sprintf(\__("
-									<p>
-										You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.
-									</p>
-								", 'eightshift-forms'), UtilsGeneralHelper::getFormsEntriesPageUrl($formId)),
-							],
+							...($isUsed ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Save empty fields to database', 'eightshift-forms'),
+											'checkboxHelp' => \__('All empty field values will not be saved to database by default.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										]
+									]
+								],
+							] : []),
 						],
 					],
 				],

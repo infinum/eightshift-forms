@@ -12,9 +12,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Changed
 - The security validation feature will no longer trigger count files and step requests.
+- Entries now have ability to save empty fields based on the settings.
 
 ### Fixed
 - Typo for fallback function.
+- Custom mailer now supports saving entires.
 
 ## [3.0.2]
 
