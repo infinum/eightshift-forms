@@ -125,6 +125,7 @@ export const InputOptions = (attributes) => {
 						simpleValue
 						inlineLabel
 						noSearch
+						closeMenuAfterSelect
 					/>
 				}
 			</Section>

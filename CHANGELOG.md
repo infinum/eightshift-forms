@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+### Added
+- New support page in the settings for easier access to server configuration issues.
+
+### Changed
+- Block Editor select option will auto close on selection.
+
+### Fixed
+- File upload validation will no longer break the API returns invalid type.
+
 ## [3.0.3]
 
 ### Added

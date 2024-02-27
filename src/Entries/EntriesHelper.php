@@ -12,6 +12,7 @@ namespace EightshiftForms\Entries;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
@@ -47,6 +48,9 @@ class EntriesHelper
 			$params = \apply_filters($filterName, $params, $formId, $formDetails) ?? [];
 		}
 
+		// Get skipped params earlier as we are removing them from the main array using removeUneceseryParamFields method.
+		$paramsSkipped = $params[UtilsHelper::getStateParam('skippedParams')]['value'] ?? [];
+
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
 		$saveEmptyFields = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId);
@@ -64,6 +68,13 @@ class EntriesHelper
 			}
 
 			$output[$name] = $value;
+		}
+
+		// Output skipped params as empty strings.
+		if ($paramsSkipped && $saveEmptyFields) {
+			foreach ($paramsSkipped as $key => $value) {
+				$output[$key] = '';
+			}
 		}
 
 		if (!$output) {
