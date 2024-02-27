@@ -6,6 +6,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 - New support page in the settings for easier access to server configuration issues.
+- Options to send empty fields to entires.
 
 ### Changed
 - Block Editor select option will auto close on selection.
