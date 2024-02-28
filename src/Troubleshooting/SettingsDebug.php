@@ -290,7 +290,7 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 							[
 								'component' => 'intro',
 								'introTitle' => \__('Server config center', 'eightshift-forms'),
-								'introSubtitle' => '<p>' . \__("Check these settings to check if your forms will work correctly. For more details check <a href='/wp-admin/site-health.php' target='_blank' rel='noopener noreferrer'>Site Health</a>.", 'eightshift-forms') . '</p>',
+								'introSubtitle' => '<p>' . \__("Check these settings to make sure your forms will work correctly. For more details check <a href='/wp-admin/site-health.php' target='_blank' rel='noopener noreferrer'>Site Health</a>.", 'eightshift-forms') . '</p>',
 							],
 							[
 								'component' => 'card-inline',
