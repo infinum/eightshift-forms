@@ -1503,7 +1503,7 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 
 		if (this.state.getStateFormStepsIsUsed(formId)) {
-			const button = event.submitter;
+			const button = event?.submitter;
 			const field = this.state.getFormFieldElementByChild(button);
 
 			// Steps flow.
