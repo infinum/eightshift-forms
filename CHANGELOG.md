@@ -15,6 +15,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Fixed
 - File upload validation will no longer break the API returns invalid type.
+- Validation pattern will no longer break if value is array.
 
 ## [3.0.3]
 
