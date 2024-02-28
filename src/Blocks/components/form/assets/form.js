@@ -729,6 +729,21 @@ export class Form {
 					break;
 			}
 		}
+
+		// Used in case we have req fields with conditional tags and multiple steps.
+		if (skipFields) {
+			const skipFieldsOutput = {};
+			skipFields.forEach((skipField) => {
+				skipFieldsOutput[skipField] = this.state.getStateElementValue(skipField, formId);
+			});
+
+			this.FORM_DATA.append(this.state.getStateParam('skippedParams'), JSON.stringify({
+				name: this.state.getStateParam('skippedParams'),
+				value: skipFieldsOutput,
+				type: 'hidden',
+				typeCustom: 'hidden',
+			}));
+		}
 	}
 
 	/**
@@ -1322,16 +1337,22 @@ export class Form {
 
 			// Once data is outputed from uplaod.
 			dropzone.on("success", (file) => {
-				const response = JSON.parse(file.xhr.response);
+				try {
+					const response = JSON.parse(file.xhr.response);
 
-				const validationOutputKey = this.state.getStateResponseOutputKey('validation');
+					const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 
-				// Output errors if ther is any.
-				if (typeof response?.data?.[validationOutputKey] !== 'undefined' && Object.keys(response?.data?.[validationOutputKey])?.length > 0) {
-					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
+					// Output errors if there are any.
+					if (typeof response?.data?.[validationOutputKey] !== 'undefined' && Object.keys(response?.data?.[validationOutputKey])?.length > 0) {
+						file.previewTemplate.querySelector('.dz-error-message span').innerHTML = response?.data?.[validationOutputKey]?.[file?.upload?.uuid];
+					}
+
+					field?.classList?.add(this.state.getStateSelector('isFilled'));
+				} catch (e) {
+					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+
+					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUpload"`);
 				}
-
-				field?.classList?.add(this.state.getStateSelector('isFilled'));
 			});
 
 			// Trigger on wrap click.

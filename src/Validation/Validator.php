@@ -294,6 +294,10 @@ class Validator extends AbstractValidation
 						}
 						break;
 					case 'validationPattern':
+						if (\gettype($dataValue) !== 'string') {
+							break;
+						}
+
 						$pattern = $this->validationPatterns->getValidationPatternOutput($dataValue);
 
 						$patternValue = $pattern['value'] ?? '';

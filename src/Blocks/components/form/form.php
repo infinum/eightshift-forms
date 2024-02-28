@@ -200,6 +200,7 @@ if ($formAttrs) {
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 	novalidate
+	onsubmit="event.preventDefault();"
 >
 	<?php if (is_user_logged_in() && !is_admin()) { ?>
 		<div class="<?php echo esc_attr('es-block-edit-options__edit-wrap') ?>">

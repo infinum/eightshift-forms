@@ -76,7 +76,8 @@ export const FileOptions = (attributes) => {
 				<Control icon={icons.fileSize} label={__('File size limits', 'eightshift-forms')} additionalLabelClasses='es-mb-0!' noBottomSpacing>
 					<div className='es-fifty-fifty-h'>
 						<TextControl
-							label={__('Min (kB)', 'eightshift-forms')}
+							label={__('Min (KB)', 'eightshift-forms')}
+							help={__('1MB = 1000 KB', 'eightshift-forms')}
 							value={fileMinSize}
 							type='number'
 							onChange={(value) => setAttributes({ [getAttrKey('fileMinSize', attributes, manifest)]: value })}
@@ -85,7 +86,7 @@ export const FileOptions = (attributes) => {
 						/>
 
 						<TextControl
-							label={__('Max (kB)', 'eightshift-forms')}
+							label={__('Max (KB)', 'eightshift-forms')}
 							value={fileMaxSize}
 							type='number'
 							onChange={(value) => setAttributes({ [getAttrKey('fileMaxSize', attributes, manifest)]: value })}
