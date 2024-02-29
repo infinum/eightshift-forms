@@ -60,6 +60,10 @@
 		},
 		"ratingDisabledOptions": {
 			"type": "array"
+		},
+		"ratingSingleSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

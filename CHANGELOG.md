@@ -6,6 +6,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 - New `range` field for the forms.
+- New `singleSubmit` attribute on all fields to allow only one submit per form to be used as calculation form.
 
 ### Changed
 - `Input` field now output email and url as a correct type so it can be user on mobile devices.

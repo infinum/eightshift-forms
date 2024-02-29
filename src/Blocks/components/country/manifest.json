@@ -57,6 +57,10 @@
 		},
 		"countryTypeCustom": {
 			"type": "string"
+		},
+		"countrySingleSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

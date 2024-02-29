@@ -95,6 +95,10 @@
 		},
 		"inputDisabledOptions": {
 			"type": "array"
+		},
+		"inputSingleSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {

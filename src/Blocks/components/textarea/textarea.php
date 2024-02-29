@@ -36,6 +36,7 @@ $textareaSize = Components::checkAttr('textareaSize', $attributes, $manifest);
 $textareaLimitHeight = Components::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Components::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Components::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
+$textareaSingleSubmit = Components::checkAttr('textareaSingleSubmit', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaHideLabel = false;
@@ -47,6 +48,7 @@ $textareaClass = Components::classnames([
 	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
 	Components::selector($textareaSize, $componentClass, 'size', $textareaSize),
 	Components::selector($textareaLimitHeight, $componentClass, '', 'limit-height'),
+	Components::selector($textareaSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 if ($textareaSaveAsJson) {
