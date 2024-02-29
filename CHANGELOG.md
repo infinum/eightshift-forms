@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+### Added
+- New `range` field for the forms.
+
+### Changed
+- `Input` field now output email and url as a correct type so it can be user on mobile devices.
+
+### Fixed
+- Js errors when missing data.
+
+### Removed
+- Unnecessary options in the `rating` field.
+
 ## [3.0.4]
 
 ### Added
