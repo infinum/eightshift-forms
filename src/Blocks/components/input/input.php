@@ -44,11 +44,6 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 ]);
 
-// Override types.
-if ($inputType === 'email' || $inputType === 'url') {
-	$inputType = 'text';
-}
-
 if ($inputValue) {
 	$inputAttrs['value'] = esc_attr($inputValue);
 }
@@ -60,6 +55,16 @@ if ($inputPlaceholder) {
 if ($inputUseLabelAsPlaceholder) {
 	$inputAttrs['placeholder'] = esc_attr($inputFieldLabel);
 	$inputHideLabel = true;
+}
+
+if ($inputType === 'range') {
+	$inputAttrs['min'] = esc_attr($inputMin);
+	$inputAttrs['max'] = esc_attr($inputMax);
+	$inputAttrs['step'] = esc_attr($inputStep);
+
+	if (!$inputValue) {
+		$inputAttrs['value'] = esc_attr($inputMin);
+	}
 }
 
 $inputAttrsOutput = '';

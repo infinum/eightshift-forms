@@ -23,14 +23,12 @@ export const InputEditor = (attributes) => {
 	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
 	const inputPlaceholder = checkAttr('inputPlaceholder', attributes, manifest);
-	let inputType = checkAttr('inputType', attributes, manifest);
+	const inputType = checkAttr('inputType', attributes, manifest);
+	const inputMin = checkAttr('inputMin', attributes, manifest);
+	const inputMax = checkAttr('inputMax', attributes, manifest);
+	const inputStep = checkAttr('inputStep', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
-
-	// For some reason React won't allow input type email.
-	if (inputType === 'email' || inputType === 'url') {
-		inputType = 'text';
-	}
 
 	const inputClass = classnames([
 		selector(componentClass, componentClass),
@@ -39,13 +37,25 @@ export const InputEditor = (attributes) => {
 
 	const input = (
 		<>
-			<input
-				className={inputClass}
-				value={inputValue}
-				placeholder={inputPlaceholder}
-				type={inputType}
-				readOnly
-			/>
+			{inputType === 'range' ?
+				<input
+					className={inputClass}
+					placeholder={inputPlaceholder}
+					type={'range'}
+					readOnly
+					min={inputMin}
+					max={inputMax}
+					step={inputStep}
+					value={inputValue ?? inputMin}
+				/> :
+				<input
+					className={inputClass}
+					value={inputValue}
+					placeholder={inputPlaceholder}
+					type={inputType}
+					readOnly
+				/>
+			}
 
 			<MissingName value={inputName} />
 

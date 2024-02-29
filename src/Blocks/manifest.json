@@ -34,8 +34,7 @@
 		"eightshift-forms/date",
 		"eightshift-forms/country",
 		"eightshift-forms/step",
-		"eightshift-forms/rating",
-		"eightshift-forms/slider"
+		"eightshift-forms/rating"
 	],
 	"showAsMap": {
 		"options": [
