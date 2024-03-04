@@ -26,6 +26,12 @@
 		"issues": "https://github.com/infinum/eightshift-forms/issues",
 		"source": "https://github.com/infinum/eightshift-forms"
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/infinum/eightshift-libs.git"
+		}
+	],
 	"require-dev": {
 		"brain/faker": "dev-master",
 		"brain/monkey": "^2.6.1",
@@ -40,7 +46,7 @@
 	"require": {
 		"php": "^7.4 || >=8.0",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^1.2.4"
+		"infinum/eightshift-forms-utils": "dev-feature/calculator"
 	},
 	"suggest": {
 		"ext-pcov": "* || This extension is used for code coverage generation. Use either pcov, or xdebug, but not both.",

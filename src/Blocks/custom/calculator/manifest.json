@@ -2,37 +2,35 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "calculator",
 	"title": "Calculator form",
-	"description" : "Calculator form",
+	"description" : "A form with calculator",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-infobip"
+		"src": "esf-form"
 	},
 	"keywords": [
 		"calculator"
 	],
-	"example": {
-	},
+	"hasInnerBlocks": true,
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
-	"hasInnerBlocks": true,
+	"parent": [
+		"eightshift-forms/form-selector"
+	],
 	"attributes": {
-		"calculatorIntegrationId": {
-			"type": "string"
+		"calculatorAllowedBlocks": {
+			"type": "array",
+			"default": []
 		},
 		"calculatorFormPostId": {
 			"type": "string"
 		},
-		"calculatorFormDataTypeSelector": {
+		"calculatorDataTypeSelector": {
 			"type": "string"
 		},
-		"calculatorAllowedBlocks": {
-			"type": "array",
-			"default": []
+		"calculatorFormAction": {
+			"type": "string"
 		}
-	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	}
 }

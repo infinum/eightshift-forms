@@ -1,30 +1,25 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
-import { IntegrationsOptions } from '../../../components/integrations/components/integrations-options';
+import { IntegrationsInternalOptions } from '../../../components/integrations/components/integrations-internal-options';
+import { STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 export const CalculatorOptions = ({
 	attributes,
 	setAttributes,
 	clientId,
-	itemIdKey,
 }) => {
 	const manifest = select(STORE_NAME).getBlock('calculator');
 
 	const {
 		title,
-		blockName,
 	} = manifest;
 
 	return (
-		<IntegrationsOptions
+		<IntegrationsInternalOptions
 			title={title}
-			block={blockName}
+			clientId={clientId}
 			attributes={attributes}
 			setAttributes={setAttributes}
-			clientId={clientId}
-			itemId={checkAttr(itemIdKey, attributes, manifest)}
-			itemIdKey={itemIdKey}
 		/>
 	);
 };

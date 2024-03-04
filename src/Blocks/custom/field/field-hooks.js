@@ -16,7 +16,7 @@ const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit)
 		} = innerProps;
 
 		// Change only none forms blocks in forms post type.
-		if (postType === 'eightshift-forms' && !name.includes('eightshift-forms')) {
+		if (postType === esFormsLocalization?.postTypes?.forms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
 			return (
 				<Field {...innerProps}>
 					<BlockEdit {...innerProps} />
@@ -34,7 +34,7 @@ const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit)
 function setNoneEightshiftBlocksFieldAttributes( settings, name ) {
 
 	// Change only none forms blocks in forms post type.
-	if (esFormsLocalization?.postType === 'eightshift-forms' && !name.includes('eightshift-forms')) {
+	if (esFormsLocalization?.currentPostType === esFormsLocalization?.postTypes?.forms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
 		return {
 			...settings,
 			attributes: {

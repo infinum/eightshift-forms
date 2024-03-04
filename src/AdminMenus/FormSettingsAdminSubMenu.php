@@ -141,7 +141,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getParentMenu(): string
 	{
-		return '';
+		return 'null';
 	}
 
 	/**

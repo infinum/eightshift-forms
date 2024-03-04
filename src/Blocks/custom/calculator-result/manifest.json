@@ -1,0 +1,43 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "calculator-result",
+	"title": "Calculator result",
+	"description" : "Calculator result block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-checkbox"
+	},
+	"keywords": [
+		"calculator",
+		"results"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {
+		"calculatorResultName": {
+			"type": "string"
+		},
+		"calculatorResultValue": {
+			"type": "string"
+		},
+		"calculatorResultPostId": {
+			"type": "string"
+		},
+		"calculatorResultPostIdRaw": {
+			"type": "object"
+		},
+		"calculatorResultFormPostId": {
+			"type": "string"
+		},
+		"calculatorResultFormPostIdRaw": {
+			"type": "object"
+		},
+		"calculatorResultServerSideRender": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"attributesSsr": [
+		"calculatorResultPostId",
+		"calculatorResultFormPostId"
+	]
+}

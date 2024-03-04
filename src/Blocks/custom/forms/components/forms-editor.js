@@ -17,7 +17,7 @@ export const FormsEditor = ({
 	attributes,
 	setAttributes,
 	preview,
-	formSelectOptions
+	formSelectOptions,
 }) => {
 	const manifest = select(STORE_NAME).getBlock('forms');
 

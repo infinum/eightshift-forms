@@ -30,6 +30,7 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Misc\SettingsWpml;
@@ -232,6 +233,11 @@ final class Filters
 				],
 				SettingsPipedrive::SETTINGS_TYPE_KEY => [
 					'prePostParams',
+				],
+				SettingsCalculator::SETTINGS_TYPE_KEY => [
+					'prePostParams',
+					'output',
+					'outputItems',
 				],
 			],
 			'entries' => [
