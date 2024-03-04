@@ -2,7 +2,6 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { ServerSideRender,
 	checkAttr,
-	props,
 	icons,
 	AsyncSelect,
 	getAttrKey,
@@ -42,7 +41,6 @@ export const CalculatorResultEditor = ({
 				>
 					<AsyncSelect
 						label={__('Calculator Result', 'eightshift-forms')}
-						label={<span className='es-mb-0! es-mx-0! es-mt-1! es-text-3.5 es-font-weight-500'>To get started, select a form:</span>}
 						help={__('If you can\'t find you output item, start typing its name while the dropdown is open.', 'eightshift-forms')}
 						value={outputFormSelectItemWithIcon(Object.keys(calculatorResultPostIdRaw).length ? calculatorResultPostIdRaw : {id: calculatorResultPostId})}
 						loadOptions={calculatorSelectOptions}
@@ -62,7 +60,6 @@ export const CalculatorResultEditor = ({
 
 					<AsyncSelect
 						label={__('Form', 'eightshift-forms')}
-						label={<span className='es-mb-0! es-mx-0! es-mt-1! es-text-3.5 es-font-weight-500'>To get started, select a form:</span>}
 						help={__('If you can\'t find you output item, start typing its name while the dropdown is open.', 'eightshift-forms')}
 						value={outputFormSelectItemWithIcon(Object.keys(calculatorResultFormPostIdRaw).length ? calculatorResultFormPostIdRaw : {id: calculatorResultFormPostId})}
 						loadOptions={formSelectOptions}

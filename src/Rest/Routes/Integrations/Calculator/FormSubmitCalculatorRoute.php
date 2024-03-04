@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Calculator;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
-use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;

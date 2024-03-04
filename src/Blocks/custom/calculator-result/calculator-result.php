@@ -21,10 +21,8 @@ $calculatorAttrs = [
 ];
 
 $calculatorAttrsOutput = '';
-if ($calculatorAttrs) {
-	foreach ($calculatorAttrs as $key => $value) {
-		$calculatorAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
+foreach ($calculatorAttrs as $key => $value) {
+	$calculatorAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 }
 
 $calculatorClass = Components::classnames([
@@ -36,6 +34,6 @@ $calculatorClass = Components::classnames([
 
 <div class="<?php echo esc_attr($calculatorClass); ?>" <?php echo $calculatorAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
 <?php
-	echo do_blocks(get_the_content(null, false, $calculatorResultPostId));
+	echo do_blocks(get_the_content(null, false, $calculatorResultPostId)); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 ?>
 </div>

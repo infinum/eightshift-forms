@@ -1,8 +1,7 @@
 import React from 'react';
-import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { checkAttr,
 	getAttrKey,
 	AsyncSelect,

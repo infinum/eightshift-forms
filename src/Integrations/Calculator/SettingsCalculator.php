@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Calculator;
 
-use EightshiftForms\CustomPostType\Calculator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
@@ -79,7 +78,7 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 		return true;
 	}
 
-		/**
+	/**
 	 * Get Form settings data array
 	 *
 	 * @param string $formId Form Id.
@@ -98,8 +97,7 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 			[
 				'component' => 'tabs',
 				'tabsFull' => true,
-				'tabsContent' => [
-				],
+				'tabsContent' => [],
 			],
 		];
 	}
@@ -124,8 +122,7 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [
-						],
+						'tabContent' => [],
 					],
 				],
 			],
