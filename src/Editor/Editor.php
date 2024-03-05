@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Editor;
 
-use EightshiftForms\AdminMenus\FormAdminMenu;
 use EightshiftForms\CustomPostType\Calculator;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
@@ -61,7 +60,7 @@ class Editor implements ServiceInterface
 	 *
 	 * @param string $type Type of post.
 	 *
-	 * @return array
+	 * @return array<string> List of links.
 	 */
 	private function getListOfLinks(string $type): array
 	{

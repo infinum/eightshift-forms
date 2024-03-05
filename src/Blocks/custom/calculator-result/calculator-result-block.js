@@ -1,3 +1,5 @@
+/* global esFormsLocalization */
+
 import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { CalculatorResultEditor } from './components/calculator-result-editor';

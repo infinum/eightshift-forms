@@ -482,7 +482,7 @@ export class Form {
 				if (itemElement && value) {
 					itemElement.innerHTML = value;
 				}
-			};
+			}
 		}
 
 		if (isFinalStep) {

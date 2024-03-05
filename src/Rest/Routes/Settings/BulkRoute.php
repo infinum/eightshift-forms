@@ -444,6 +444,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			$title = \get_the_title($id);
 
 			if (!$title) {
+				// translators: %s replaces form id.
 				$title = \sprintf(\esc_html__('Item %s', 'eightshift-forms'), $id);
 			}
 
