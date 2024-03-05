@@ -110,7 +110,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 			],
 		);
 
-		$items = $this->formsListing->getFormsList('');
+		$items = $this->formsListing->getFormsList(false);
 
 		if ($items) {
 			foreach ($items as $item) {
@@ -159,7 +159,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 						'id' => "{$listingPrefix}-{$id}-locations",
 						'parent' => $link,
 						'title' => \esc_html__('Locations', 'eightshift-forms'),
-						'href' => UtilsGeneralHelper::getFormsLocationsPageUrl((string) $id),
+						'href' => UtilsGeneralHelper::getListingPageUrl('locations', (string) $id),
 					],
 				);
 			}
@@ -170,7 +170,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 				'id' => "{$prefix}-new-form",
 				'parent' => $prefix,
 				'title' => \esc_html__('Add new form', 'eightshift-forms'),
-				'href' => UtilsGeneralHelper::getNewFormPageUrl(),
+				'href' => UtilsGeneralHelper::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
 			],
 		);
 

@@ -161,7 +161,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Store entries in database', 'eightshift-forms'),
 										// translators: %s is replaced with the form entries page URL.
-										'checkboxHelp' => $isUsed ? \sprintf(\__("You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.", 'eightshift-forms'), UtilsGeneralHelper::getFormsEntriesPageUrl($formId)) : '',
+										'checkboxHelp' => $isUsed ? \sprintf(\__("You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.", 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl('entries', $formId)) : '',
 										'checkboxIsChecked' => $isUsed,
 										'checkboxValue' => self::SETTINGS_ENTRIES_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,

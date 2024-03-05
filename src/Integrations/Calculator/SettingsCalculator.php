@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Calculator;
 
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
@@ -46,9 +47,9 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 	public const SETTINGS_CALCULATOR_USE_KEY = 'calculator-use';
 
 	/**
-	 * Calculator output ID key.
+	 * Calculator settings use single submit key.
 	 */
-	public const SETTINGS_CALCULATOR_OUTPUT_ID_KEY = 'calculator-output_ID';
+	public const SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY = 'calculator-use-single-submit';
 
 	/**
 	 * Register all the hooks
@@ -97,7 +98,31 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 			[
 				'component' => 'tabs',
 				'tabsFull' => true,
-				'tabsContent' => [],
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use single submit', 'eightshift-forms'),
+										// translators: %s is replaced with the form entries page URL.
+										'checkboxHelp' => \sprintf(\__("You can find all calculator outputs <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.", 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl('calculator')),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY, self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+						],
+					]
+				],
 			],
 		];
 	}

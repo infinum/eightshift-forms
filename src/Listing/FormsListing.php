@@ -24,24 +24,23 @@ class FormsListing implements FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
-	 * @param string $status Status for listing to output.
+	 * @param bool $showTrash Show trashed items.
+	 * @param string $postType Post type for listing to output.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFormsList(string $status): array
+	public function getFormsList(bool $showTrash = false, string $postType = Forms::POST_TYPE_SLUG): array
 	{
 		// Prepare query args.
 		$args = [
-			'post_type' => Forms::POST_TYPE_SLUG,
+			'post_type' => $postType,
 			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
-			'post_status' => $status,
+			'post_status' => $showTrash ? 'trash' : '',
 		];
 
 		$theQuery = new WP_Query($args);
 
 		$output = [];
-
-		$permanent = $status === 'trash';
 
 		if (!$theQuery->have_posts()) {
 			\wp_reset_postdata();
@@ -56,10 +55,10 @@ class FormsListing implements FormListingInterface
 				'id' => $id,
 				'title' => \get_the_title($id),
 				'status' => \get_post_status($id),
-				'settingsLink' => !$permanent ? UtilsGeneralHelper::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY) : '',
-				'editLink' => !$permanent ? UtilsGeneralHelper::getFormEditPageUrl((string) $id) : '',
-				'trashLink' => UtilsGeneralHelper::getFormTrashActionUrl((string) $id, $permanent),
-				'entriesLink' => UtilsGeneralHelper::getFormsEntriesPageUrl((string) $id),
+				'settingsLink' => UtilsGeneralHelper::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY),
+				'editLink' => !$showTrash ? UtilsGeneralHelper::getFormEditPageUrl((string) $id) : '',
+				'trashLink' => UtilsGeneralHelper::getFormTrashActionUrl((string) $id, $showTrash),
+				'entriesLink' => UtilsGeneralHelper::getListingPageUrl('entries', (string) $id),
 				'trashRestoreLink' => UtilsGeneralHelper::getFormTrashRestoreActionUrl((string) $id),
 				'activeIntegration' => UtilsIntegrationsHelper::getIntegrationDetailsById((string) $id),
 				'useSync' => true,

@@ -424,7 +424,9 @@
 			"afterCaptchaInit": "esFormsAfterCaptchaInit",
 			"stepsGoToNextStep": "esFormsGoToNextStep",
 			"stepsGoToPrevStep": "esFormsGoToPrevStep",
-			"enrichmentPrefill": "esFormsEnrichmentPrefill"
+			"enrichmentPrefill": "esFormsEnrichmentPrefill",
+			"beforeCalculatorChange": "esFormsBeforeCalculatorChange",
+			"afterCalculatorChange": "esFormsAfterCalculatorChange"
 		},
 		"typeInternal": {
 			"input": "input",

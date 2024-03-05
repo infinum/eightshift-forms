@@ -27,7 +27,7 @@ foreach ($calculatorAttrs as $key => $value) {
 
 $calculatorClass = Components::classnames([
 	Components::selector($blockClass, $blockClass),
-	UtilsHelper::getStateSelector('calculator'),
+	UtilsHelper::getStateSelector('calculatorOutput'),
 ]);
 
 ?>
