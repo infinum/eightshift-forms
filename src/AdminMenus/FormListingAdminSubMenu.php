@@ -196,7 +196,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
 			\esc_html__('Result outputs', 'eightshift-forms'),
 			UtilsConfig::CAP_RESULTS,
-			UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS, '', Result::POST_TYPE_SLUG)
+			UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS)
 		];
 		// phpcs:enable
 	}

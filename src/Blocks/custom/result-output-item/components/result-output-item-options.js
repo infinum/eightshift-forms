@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, icons, IconLabel, Notification } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const ResultOutputItemOptions = ({
@@ -24,6 +24,12 @@ export const ResultOutputItemOptions = ({
 				value={resultOutputItemValue}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValue', attributes, manifest)]: value })}
 			/>
+
+		<Notification
+			text={__('This block requires some code implementation. When form is submitted you must provide a filter output based on the field settings or use our premium Computed fields addon.', 'eightshift-forms')}
+			type={'warning'}
+		/>
+
 		</PanelBody>
 	);
 };

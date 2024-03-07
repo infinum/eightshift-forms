@@ -20,9 +20,6 @@
 		"eightshift-forms/forms",
 		"eightshift-forms/result-output"
 	],
-	"allowedBlocksResultOutputBlocksList": [
-		"eightshift-forms/result-output-item"
-	],
 	"allowedBlocksBuilderIntegrationAdditionalBlocksList": [
 		"eightshift-forms/step"
 	],

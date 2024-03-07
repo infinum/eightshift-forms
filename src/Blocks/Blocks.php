@@ -68,10 +68,6 @@ class Blocks extends UtilsBlocks
 			$allowedBlockTypes[] = $value;
 		}
 
-		foreach (Components::getSettings()['allowedBlocksResultOutputBlocksList'] as $value) {
-			$allowedBlockTypes[] = $value;
-		}
-
 		// Merge addon blocks to the list.
 		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'allowedBlocks']);
 		if (\has_filter($filterName)) {

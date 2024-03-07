@@ -196,21 +196,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 									]
 								]
 							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_USE_SINGLE_SUBMIT_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Use single submit', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_USE_SINGLE_SUBMIT_KEY, self::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_USE_SINGLE_SUBMIT_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									]
-								]
-							],
 						],
 					],
 					[
@@ -303,6 +288,53 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								'inputType' => 'text',
 								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId),
 							]
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Single submit', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_USE_SINGLE_SUBMIT_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use single submit', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_USE_SINGLE_SUBMIT_KEY, self::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_USE_SINGLE_SUBMIT_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('This option may create a large number of request to your server.<br /> Use with caution!', 'eightshift-forms'),
+								'introIsHighlighted' => true,
+								'introIsHighlightedImportant' => true,
+							],
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('
+									By selecting single submit form your form will not wait for the click on the submit button.
+									The form will submit data to the server as soon as the user changes are made.
+									<br /><br />
+									Not all fields are supported with this option. Supported fields:
+									<ul>
+										<li>Input range</li>
+										<li>Checkbox</li>
+										<li>Radio</li>
+										<li>Rating</li>
+										<li>Select</li>
+									</ul>
+								', 'eightshift-forms'),
+							],
 						],
 					],
 				]
