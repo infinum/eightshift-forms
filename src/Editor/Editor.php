@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Editor;
 
-use EightshiftForms\CustomPostType\Calculator;
+use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -41,13 +42,13 @@ class Editor implements ServiceInterface
 
 		$types = [
 			Forms::POST_TYPE_SLUG,
-			Calculator::POST_TYPE_SLUG,
+			Result::POST_TYPE_SLUG,
 		];
 
 		foreach ($types as $type) {
 			$links = $this->getListOfLinks($type);
 
-			$typeKey = $type === Forms::POST_TYPE_SLUG ? '' : 'calculator';
+			$typeKey = $type === Forms::POST_TYPE_SLUG ? '' : UtilsConfig::SLUG_ADMIN_LISTING_RESULTS;
 
 			if (\in_array($actualUrl, $links, true)) {
 				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

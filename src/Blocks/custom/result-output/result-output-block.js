@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
-import { CalculatorResultEditor } from './components/calculator-result-editor';
-import { CalculatorResultOptions } from './components/calculator-result-options';
+import { ResultOutputEditor } from './components/result-output-editor';
+import { ResultOutputOptions } from './components/result-output-options';
 import { getFetchWpApi } from '@eightshift/frontend-libs/scripts';
 import { outputFormSelectItemWithIcon } from '../../components/utils';
 
-const formSelectOptions = function(postType) {
+const dynamicItemSelectOptions = function(postType) {
 	return getFetchWpApi(
 		postType,
 		{
@@ -30,25 +30,25 @@ const formSelectOptions = function(postType) {
 	);
 };
 
-export const CalculatorResult = (props) => {
+export const ResultOutput = (props) => {
 	const {
 		forms,
-		calculator,
+		results,
 	} = esFormsLocalization?.postTypes;
 
 	return (
 		<>
 			<InspectorControls>
-				<CalculatorResultOptions
+				<ResultOutputOptions
 					{...props}
-					formSelectOptions={formSelectOptions(forms)}
-					calculatorSelectOptions={formSelectOptions(calculator)}
+					formSelectOptions={dynamicItemSelectOptions(forms)}
+					resultSelectOptions={dynamicItemSelectOptions(results)}
 				/>
 			</InspectorControls>
-			<CalculatorResultEditor
+			<ResultOutputEditor
 				{...props}
-				formSelectOptions={formSelectOptions(forms)}
-				calculatorSelectOptions={formSelectOptions(calculator)}
+				formSelectOptions={dynamicItemSelectOptions(forms)}
+				resultSelectOptions={dynamicItemSelectOptions(results)}
 			/>
 		</>
 	);

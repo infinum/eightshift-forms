@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds class for Calculator custom post type registration.
+ * Class that holds class for Result custom post type registration.
  *
  * @package EightshiftForms\CustomPostType
  */
@@ -14,44 +14,44 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\CustomPostType\AbstractPostType;
 
 /**
- * Class FormsPostType.
+ * Class Result PostType.
  */
-class Calculator extends AbstractPostType
+class Result extends AbstractPostType
 {
 	/**
 	 * Post type slug constant.
 	 *
 	 * @var string
 	 */
-	public const POST_TYPE_SLUG = UtilsConfig::SLUG_CALCULATOR_POST_TYPE;
+	public const POST_TYPE_SLUG = UtilsConfig::SLUG_RESULT_POST_TYPE;
 
 	/**
 	 * URL slug for the custom post type.
 	 *
 	 * @var string
 	 */
-	public const POST_TYPE_URL_SLUG = UtilsConfig::SLUG_CALCULATOR_POST_TYPE;
+	public const POST_TYPE_URL_SLUG = UtilsConfig::SLUG_RESULT_POST_TYPE;
 
 	/**
 	 * Rest API Endpoint slug constant.
 	 *
 	 * @var string
 	 */
-	public const REST_API_ENDPOINT_SLUG = UtilsConfig::SLUG_CALCULATOR_POST_TYPE;
+	public const REST_API_ENDPOINT_SLUG = UtilsConfig::SLUG_RESULT_POST_TYPE;
 
 	/**
 	 * Post type slug constant.
 	 *
 	 * @var string
 	 */
-	public const POST_CAPABILITY_TYPE = UtilsConfig::CAP_FORM_CALCULATOR;
+	public const POST_CAPABILITY_TYPE = UtilsConfig::CAP_FORM_RESULT;
 
 	/**
 	 * Browser url slug constant.
 	 *
 	 * @var string
 	 */
-	public const URL_SLUG = UtilsConfig::SLUG_CALCULATOR_POST_TYPE;
+	public const URL_SLUG = UtilsConfig::SLUG_RESULT_POST_TYPE;
 
 	/**
 	 * Location of menu in sidebar.
@@ -85,7 +85,7 @@ class Calculator extends AbstractPostType
 	protected function getPostTypeArguments(): array
 	{
 		return [
-			'label' => \esc_html__('Calculator', 'eightshift-forms'),
+			'label' => \esc_html__('Result outputs', 'eightshift-forms'),
 			'public' => true,
 			'menu_position' => static::MENU_POSITION,
 			'menu_icon' => static::MENU_ICON,

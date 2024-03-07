@@ -35,7 +35,8 @@
 	}
 }
 
-.post-type-eightshift-forms {
+.post-type-eightshift-forms,
+.post-type-es-forms-res {
 	h1 {
 		span[data-rich-text-placeholder]::after {
 			content: 'Form name';
@@ -52,5 +53,13 @@
 		margin-inline-start: 10px;
 		background-size: 80%;
 		background-position: center left;
+	}
+}
+
+.post-type-es-forms-res {
+	h1 {
+		span[data-rich-text-placeholder]::after {
+			content: 'Result output name';
+		}
 	}
 }

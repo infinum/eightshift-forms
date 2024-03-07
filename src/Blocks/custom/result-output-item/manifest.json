@@ -1,0 +1,24 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "result-output-item",
+	"title": "Result output item",
+	"description" : "Result output item block.",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-checkbox"
+	},
+	"keywords": [
+		"result",
+		"output",
+		"item"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {
+		"resultOutputItemName": {
+			"type": "string"
+		},
+		"resultOutputItemValue": {
+			"type": "string"
+		}
+	}
+}

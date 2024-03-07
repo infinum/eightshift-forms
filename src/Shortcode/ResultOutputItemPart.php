@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Shortcode class - Calculator Item.
+ * Shortcode class - Result output Item part.
  *
  * @package EightshiftForms\Shortcode
  */
@@ -14,9 +14,9 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * CalculatorItem class.
+ * ResultOutputItemPart class.
  */
-class CalculatorItem implements ServiceInterface
+class ResultOutputItemPart implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
@@ -25,7 +25,7 @@ class CalculatorItem implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_shortcode('esFormsCalcItem', [$this, 'callback']);
+		\add_shortcode('esFormsROIP', [$this, 'callback']);
 	}
 
 	/**
@@ -51,10 +51,11 @@ class CalculatorItem implements ServiceInterface
 			return '';
 		}
 
-		$classSelector = UtilsHelper::getStateSelector('calculatorOutputItem');
+		$classSelector = UtilsHelper::getStateSelector('resultOutputPart');
 
-		$attrName = UtilsHelper::getStateAttribute('calculatorItem');
+		$attrPartName = UtilsHelper::getStateAttribute('resultOutputPart');
+		$attrPartDefaultName = UtilsHelper::getStateAttribute('resultOutputPartDefault');
 
-		return "<span class='{$classSelector}' {$attrName}='{$id}'>{$content}</span>";
+		return "<span class='{$classSelector}' {$attrPartName}='{$id}' {$attrPartDefaultName}='{$content}'>{$content}</span>";
 	}
 }

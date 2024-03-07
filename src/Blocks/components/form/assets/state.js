@@ -134,6 +134,9 @@ export class State {
 	getStateFormGlobalMsgHeadingError = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], formId);
 	};
+	getStateFormGlobalMsgHideOnSuccess = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HIDE_ON_SUCCESS], formId);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Config getters.

@@ -296,14 +296,7 @@ export class Form {
 
 				// On success state.
 				if (response.status === 'success') {
-					switch (formType) {
-						case 'calculator':
-							this.formSubmitCalculatorSuccess(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
-							break;
-						default:
-							this.formSubmitSuccess(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
-							break;
-					}
+					this.formSubmitSuccess(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
 				} else {
 					this.formSubmitError(formId, response, filter?.[this.FILTER_IS_STEPS_FINAL_SUBMIT]);
 				}
@@ -437,61 +430,12 @@ export class Form {
 				if (isFinalStep) {
 					this.steps.resetSteps(formId);
 				}
+
+				// Set output results.
+				this.utils.setResultsOutput(formId, data);
 			}
 		}
 	}
-
-	/**
-	 * Actions to run after form submit on success - calculator.
-	 *
-	 * @param {string} formId Form Id.
-	 * @param {object} response Api response.
-	 * @param {bool} isFinalStep Check in steps if we are on final step.
-	 *
-	 * @returns {void}
-	 */
-	formSubmitCalculatorSuccess(formId, response, isFinalStep = false) {
-		const {
-			data,
-		} = response;
-
-		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('beforeCalculatorChange'), response);
-
-		// Check if we have output element - block.
-		const outputElement = document.querySelector(`${this.state.getStateSelector('calculatorOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`);
-
-		if (!outputElement) {
-			return;
-		}
-
-		// Check if we have output full content change.
-		const output = data?.[this.state.getStateResponseOutputKey('calculatorOutput')] ?? '';
-
-		if (output && outputElement) {
-			outputElement.innerHTML = output;
-		}
-
-		// Check if we have output items change.
-		const outputItems = data?.[this.state.getStateResponseOutputKey('calculatorOutputItems')] ?? {};
-
-		if (Object.keys(outputItems).length) {
-			for(const [key, value] of Object.entries(outputItems)) {
-				const itemElement = document.querySelector(`${this.state.getStateSelector('calculatorOutputItem', true)}[${this.state.getStateAttribute('calculatorItem')}="${key}"]`);
-
-				if (itemElement && value) {
-					itemElement.innerHTML = value;
-				}
-			}
-		}
-
-		if (isFinalStep) {
-			this.steps.resetSteps(formId);
-		}
-
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterCalculatorChange'), response);
-	}
-	
 
 	/**
 	 * Actions to run after form submit on error.

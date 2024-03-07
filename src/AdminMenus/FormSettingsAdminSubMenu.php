@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
@@ -65,7 +64,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
 		\add_filter('admin_title', [$this, 'fixPageTitle'], 10, 2);
-		\add_action('admin_menu', [$this, 'addCustomLinkIntoAppearnaceMenu'], 32);
+		
 	}
 
 	/**
@@ -206,7 +205,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
 			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
 			'adminSettingsFormEditLink' => $formEditLink,
-			'adminSettingsFormLocationsLink' => UtilsGeneralHelper::getListingPageUrl('locations', $formId),
+			'adminSettingsFormLocationsLink' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS, $formId),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
@@ -248,23 +247,5 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		}
 
 		return $adminTitle;
-	}
-
-	/**
-	 * Add additional links to sidebar menu.
-	 *
-	 * @return void
-	 */
-	public function addCustomLinkIntoAppearnaceMenu(): void
-	{
-		global $submenu;
-
-		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
-		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
-			\esc_html__('Add new form', 'eightshift-forms'),
-			FormAdminMenu::ADMIN_MENU_CAPABILITY,
-			\get_admin_url(null, 'post-new.php?post_type=' . Forms::URL_SLUG)
-		];
-		// phpcs:enable
 	}
 }

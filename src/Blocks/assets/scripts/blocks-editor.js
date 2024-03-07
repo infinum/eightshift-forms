@@ -37,8 +37,17 @@ registerBlocks(
 outputCssVariablesGlobal();
 
 // Remove form-selector block from anywhere else other than form CPT.
-if (esFormsLocalization?.currentPostType !== esFormsLocalization?.postTypes?.forms) {
+if (
+	esFormsLocalization?.currentPostType !== esFormsLocalization?.postTypes?.forms ||
+	esFormsLocalization?.currentPostType === esFormsLocalization?.postTypes?.result
+) {
 	const namespace = select(STORE_NAME).getSettingsNamespace();
 
 	unregisterBlockType(`${namespace}/form-selector`);
+}
+
+if (esFormsLocalization?.currentPostType === esFormsLocalization?.postTypes?.result) {
+	[...select(STORE_NAME).getSettings().allowedBlocksNoneBuilderBlocksList].forEach((block) => {
+		unregisterBlockType(block);
+	});
 }

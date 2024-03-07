@@ -236,8 +236,8 @@ final class Filters
 				],
 				SettingsCalculator::SETTINGS_TYPE_KEY => [
 					'prePostParams',
-					'output',
-					'outputItems',
+					'resultOutputItems',
+					'resultOutputParts',
 				],
 			],
 			'entries' => [

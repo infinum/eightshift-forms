@@ -10,7 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
+use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\Listing\FormListingInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -56,6 +60,8 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 			},
 			20
 		);
+
+		\add_action('admin_menu', [$this, 'addCustomLinkIntoAppearnaceMenu'], 32);
 	}
 
 	/**
@@ -169,5 +175,29 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	protected function processAttributes($attr): array
 	{
 		return [];
+	}
+
+	/**
+	 * Add additional links to sidebar menu.
+	 *
+	 * @return void
+	 */
+	public function addCustomLinkIntoAppearnaceMenu(): void
+	{
+		global $submenu;
+
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
+			\esc_html__('Add new form', 'eightshift-forms'),
+			FormAdminMenu::ADMIN_MENU_CAPABILITY,
+			UtilsGeneralHelper::getNewFormPageUrl(Forms::URL_SLUG)
+		];
+
+		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
+			\esc_html__('Result outputs', 'eightshift-forms'),
+			UtilsConfig::CAP_RESULTS,
+			UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS, '', Result::POST_TYPE_SLUG)
+		];
+		// phpcs:enable
 	}
 }

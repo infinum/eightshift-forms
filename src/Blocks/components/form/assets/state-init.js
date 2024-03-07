@@ -49,6 +49,7 @@ export const StateEnum = {
 	ELEMENT: 'element',
 	HEADING_SUCCESS: 'headingSuccess',
 	HEADING_ERROR: 'headingError',
+	HIDE_ON_SUCCESS: 'hideOnSuccess',
 	IS_SINGLE_SUBMIT: 'isSingleSubmit',
 	SAVE_AS_JSON: 'saveAsJson',
 	IS_ADMIN: 'isAdmin',
@@ -332,6 +333,7 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], JSON.parse(formElement?.getAttribute(getStateAttribute('successRedirectDownloads')) ?? '{}'), formId);
 
 	const globalMsg = formElement?.querySelector(getStateSelector('globalMsg', true));
+	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HIDE_ON_SUCCESS], Boolean(formElement?.getAttribute(getStateAttribute('globalMsgHideOnSuccess'))), formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.ELEMENT], globalMsg, formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_SUCCESS], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingSuccess')), formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingError')), formId);

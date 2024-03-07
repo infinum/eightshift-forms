@@ -92,14 +92,14 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 
 		$additionalOutput = [];
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsCalculator::SETTINGS_TYPE_KEY, 'output']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsCalculator::SETTINGS_TYPE_KEY, 'resultOutputItems']);
 		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('calculatorOutput')] = \apply_filters($filterName, '', $formDetails, $formId) ?? '';
+			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
 		}
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsCalculator::SETTINGS_TYPE_KEY, 'outputItems']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsCalculator::SETTINGS_TYPE_KEY, 'resultOutputParts']);
 		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('calculatorOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
+			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
 		}
 
 		return \rest_ensure_response(

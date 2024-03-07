@@ -16,7 +16,7 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\CustomPostType\Calculator;
+use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Theme\EnqueueTheme;
@@ -169,7 +169,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
 		$output['currentPostType'] = \get_post_type() ? \get_post_type() : '';
 		$output['postTypes'] = [
-			'calculator' => Calculator::POST_TYPE_SLUG,
+			'results' => Result::POST_TYPE_SLUG,
 			'forms' => Forms::POST_TYPE_SLUG,
 		];
 

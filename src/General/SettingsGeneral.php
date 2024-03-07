@@ -70,6 +70,11 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
 
 	/**
+	 * Hide global message on success key.
+	 */
+	public const SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY = 'hide-global-msg-on-success';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -166,6 +171,25 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										$successRedirectVariationOptions['data']
 									)
 								),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
 							],
 						],
 					],

@@ -102,6 +102,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$attributes["{$prefix}CustomName"] = $customFormName;
 		}
 
+		// Custom form name.
+		$attributes["{$prefix}HideGlobalMsgOnSuccess"] = !!UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
+
 		// Phone sync with country block.
 		$attributes["{$prefix}PhoneSync"] = '';
 		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'phoneSync']);

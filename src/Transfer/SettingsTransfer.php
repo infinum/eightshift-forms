@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;

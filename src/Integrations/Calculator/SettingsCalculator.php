@@ -111,8 +111,6 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use single submit', 'eightshift-forms'),
-										// translators: %s is replaced with the form entries page URL.
-										'checkboxHelp' => \sprintf(\__("You can find all calculator outputs <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.", 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl('calculator')),
 										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY, self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY,
 										'checkboxSingleSubmit' => true,

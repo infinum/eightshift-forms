@@ -18,7 +18,10 @@
 	},
 	"allowedBlocksNoneBuilderBlocksList": [
 		"eightshift-forms/forms",
-		"eightshift-forms/calculator-result"
+		"eightshift-forms/result-output"
+	],
+	"allowedBlocksResultOutputBlocksList": [
+		"eightshift-forms/result-output-item"
 	],
 	"allowedBlocksBuilderIntegrationAdditionalBlocksList": [
 		"eightshift-forms/step"
@@ -424,9 +427,7 @@
 			"afterCaptchaInit": "esFormsAfterCaptchaInit",
 			"stepsGoToNextStep": "esFormsGoToNextStep",
 			"stepsGoToPrevStep": "esFormsGoToPrevStep",
-			"enrichmentPrefill": "esFormsEnrichmentPrefill",
-			"beforeCalculatorChange": "esFormsBeforeCalculatorChange",
-			"afterCalculatorChange": "esFormsAfterCalculatorChange"
+			"enrichmentPrefill": "esFormsEnrichmentPrefill"
 		},
 		"typeInternal": {
 			"input": "input",

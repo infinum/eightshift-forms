@@ -50,6 +50,10 @@
 		"formPostId": {
 			"type": "string"
 		},
+		"formHideGlobalMsgOnSuccess": {
+			"type": "boolean",
+			"default": false
+		},
 		"formSuccessRedirect": {
 			"type": "string"
 		},

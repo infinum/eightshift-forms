@@ -231,6 +231,9 @@
 						"inputInputName": "range",
 						"inputInputIsNumber": true
 					}
+				],
+				[
+					"eightshift-forms/submit"
 				]
 			]
 		}
