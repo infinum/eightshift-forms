@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Calculator;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
@@ -45,11 +44,6 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 	 * Calculator Use key.
 	 */
 	public const SETTINGS_CALCULATOR_USE_KEY = 'calculator-use';
-
-	/**
-	 * Calculator settings use single submit key.
-	 */
-	public const SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY = 'calculator-use-single-submit';
 
 	/**
 	 * Register all the hooks
@@ -103,21 +97,6 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 						'component' => 'tab',
 						'tabLabel' => \__('Options', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Use single submit', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY, self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_CALCULATOR_USE_SINGLE_SUBMIT_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									]
-								]
-							],
 						],
 					]
 				],

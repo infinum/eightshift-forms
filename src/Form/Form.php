@@ -17,6 +17,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -104,6 +105,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Custom form name.
 		$attributes["{$prefix}HideGlobalMsgOnSuccess"] = !!UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
+
+		// Use single submit.
+		$attributes["{$prefix}UseSingleSubmit"] = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId);
 
 		// Phone sync with country block.
 		$attributes["{$prefix}PhoneSync"] = '';

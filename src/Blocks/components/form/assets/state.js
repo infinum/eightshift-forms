@@ -157,6 +157,9 @@ export class State {
 	getStateFormConfigSuccessRedirectDownloads = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], formId);
 	};
+	getStateFormConfigUseSingleSubmit = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_USE_SINGLE_SUBMIT], formId);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Steps getters.

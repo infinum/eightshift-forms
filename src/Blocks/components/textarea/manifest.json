@@ -89,10 +89,6 @@
 		"textareaIsPreventSubmit": {
 			"type": "boolean",
 			"default": false
-		},
-		"textareaSingleSubmit": {
-			"type": "boolean",
-			"default": false
 		}
 	},
 	"options": {

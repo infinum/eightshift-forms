@@ -103,6 +103,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"formUseSingleSubmit": {
+			"type": "boolean",
+			"default": false
+		},
 		"formDownloads": {
 			"type": "array",
 			"items": {

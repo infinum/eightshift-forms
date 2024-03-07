@@ -44,7 +44,7 @@ $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attrib
 $inputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
-	Components::selector($inputSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+	Components::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 if ($inputValue) {

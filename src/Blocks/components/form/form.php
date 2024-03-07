@@ -53,6 +53,7 @@ $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', 
 $formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 $formCustomName = Components::checkAttr('formCustomName', $attributes, $manifest);
 $formHideGlobalMsgOnSuccess = Components::checkAttr('formHideGlobalMsgOnSuccess', $attributes, $manifest);
+$formUseSingleSubmit = Components::checkAttr('formUseSingleSubmit', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -113,6 +114,10 @@ if ($formType) {
 
 if ($formHideGlobalMsgOnSuccess) {
 	$formAttrs[UtilsHelper::getStateAttribute('globalMsgHideOnSuccess')] = 'true';
+}
+
+if ($formUseSingleSubmit) {
+	$formAttrs[UtilsHelper::getStateAttribute('singleSubmit')] = 'true';
 }
 
 if ($formConditionalTags) {
