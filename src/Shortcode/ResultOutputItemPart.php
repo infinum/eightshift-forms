@@ -40,14 +40,14 @@ class ResultOutputItemPart implements ServiceInterface
 	{
 		$params = \shortcode_atts(
 			[
-				'id' => '',
+				'name' => '',
 			],
 			$atts
 		);
 
-		$id = isset($params['id']) ? \esc_html($params['id']) : '';
+		$name = isset($params['name']) ? \esc_html($params['name']) : '';
 
-		if (!$id || !$content) {
+		if (!$name || !$content) {
 			return '';
 		}
 
@@ -56,6 +56,6 @@ class ResultOutputItemPart implements ServiceInterface
 		$attrPartName = UtilsHelper::getStateAttribute('resultOutputPart');
 		$attrPartDefaultName = UtilsHelper::getStateAttribute('resultOutputPartDefault');
 
-		return "<span class='{$classSelector}' {$attrPartName}='{$id}' {$attrPartDefaultName}='{$content}'>{$content}</span>";
+		return "<span class='{$classSelector}' {$attrPartName}='{$name}' {$attrPartDefaultName}='{$content}'>{$content}</span>";
 	}
 }
