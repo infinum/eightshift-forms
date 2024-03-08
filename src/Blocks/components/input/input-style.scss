@@ -10,8 +10,8 @@ input.es-input {
 		&::-webkit-slider-thumb,
 		&::-moz-range-thumb {
 			appearance: none;
-			height: 1.45rem;
-			width: 1.45rem;
+			block-size: 1.45rem;
+			inline-size: 1.45rem;
 			cursor: pointer;
 			background-color: var(--global-colors-esf-admin-accent);
 			border-radius: 50%;
