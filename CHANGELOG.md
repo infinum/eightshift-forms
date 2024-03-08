@@ -16,7 +16,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Setting for single form to hide global msg on submit success.
 
 ### Changed
-- `Input` field now output email and url as a correct type so it can be user on mobile devices.
+- `Input` fields now output email and URL as a correct type so it can be user on mobile devices.
 - Admin listing url can now support additional type.
 - All icons are now used from utils lib.
 
