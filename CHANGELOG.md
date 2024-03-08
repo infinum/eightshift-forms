@@ -22,6 +22,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Fixed
 - Js errors when missing data.
+- Broken url for admin listing when using custom post type.
 
 ### Removed
 - Unnecessary options in the `rating` field.
