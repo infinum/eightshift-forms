@@ -41,7 +41,7 @@ const namespace = select(STORE_NAME).getSettingsNamespace();
 
 switch (esFormsLocalization?.currentPostType) {
 	case esFormsLocalization?.postTypes?.forms:
-		unregisterBlockType(`${namespace}/result-output-input`);
+		unregisterBlockType(`${namespace}/result-output-item`);
 		break;
 	case esFormsLocalization?.postTypes?.results:
 		unregisterBlockType(`${namespace}/form-selector`);

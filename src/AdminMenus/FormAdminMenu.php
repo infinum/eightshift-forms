@@ -525,6 +525,15 @@ class FormAdminMenu extends AbstractAdminMenu
 							'submitValue' => \__('Back', 'eightshift-forms'),
 							'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 						]),
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitValue' => \__('Restore', 'eightshift-forms'),
+							'submitIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'submitAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'restore',
+							],
+						]),
 					];
 				} else {
 					$left = [
@@ -540,19 +549,19 @@ class FormAdminMenu extends AbstractAdminMenu
 							'submitValue' => \__('Back', 'eightshift-forms'),
 							'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 						]),
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitValue' => \__('Restore', 'eightshift-forms'),
+							'submitIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'submitAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'restore',
+							],
+						]),
 					];
 				}
 
 				$right = [
-					Components::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Restore', 'eightshift-forms'),
-						'submitIsDisabled' => true,
-						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
-							UtilsHelper::getStateAttribute('bulkType') => 'restore',
-						],
-					]),
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete permanently', 'eightshift-forms'),
