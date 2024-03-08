@@ -2,7 +2,7 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "result-output",
 	"title": "Result output",
-	"description" : "Result output block.",
+	"description" : "Display the result output of the form after success",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-checkbox"
