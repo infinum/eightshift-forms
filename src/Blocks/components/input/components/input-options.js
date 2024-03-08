@@ -81,7 +81,7 @@ export const InputOptions = (attributes) => {
 		inputValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
 
-	// Output number to 2 decimal places if it's a float if not output to fixed number.
+	// Output number to 2 decimal places if it's a float, otherwise output to fixed number.
 	const formatNumber = (number) => (Number.isInteger(number) ? number.toString() : number.toFixed(2));
 
 	return (
