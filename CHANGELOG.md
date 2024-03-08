@@ -21,7 +21,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - All icons are now used from utils lib.
 
 ### Fixed
-- Js errors when missing data.
+- JS errors when missing data.
 - Broken url for admin listing when using custom post type.
 
 ### Removed
