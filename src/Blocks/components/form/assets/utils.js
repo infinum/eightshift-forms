@@ -771,9 +771,9 @@ export class Utils {
 
 			// Throw error.
 			if (status >= 500 && status <= 599) {
-				throw new Error(`API response returned the server error for this request. Function used: "${type}"`);
+				throw new Error(`API response returned the server error for this request. Function used: "${type}" with status "${status}"`);
 			} else {
-				throw new Error(`API response returned the wrong content type for this request. Function used: "${type}"`);
+				throw new Error(`API response returned the wrong content type for this request. Function used: "${type} with status "${status}"`);
 			}
 		}
 	}

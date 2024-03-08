@@ -1351,8 +1351,28 @@ export class Form {
 				} catch (e) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 
-					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUpload"`);
+					throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadSuccess"`);
 				}
+			});
+
+			dropzone.on("error", (file) => {
+				const {
+					response,
+					status,
+				} = file.xhr;
+
+				let msg = 'serverError';
+				if (response.includes("wordfence") || response.includes("Wordfence")) {
+					msg = 'wordfenceFirewall';
+				}
+
+				if (response.includes("cloudflare") || response.includes("Cloudflare")) {
+					msg = 'cloudflareFirewall';
+				}
+
+				file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
+
+				throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError" with code: "${status}" and message: "${msg}"`);
 			});
 
 			// Trigger on wrap click.
@@ -1503,7 +1523,7 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 
 		if (this.state.getStateFormStepsIsUsed(formId)) {
-			const button = event.submitter;
+			const button = event?.submitter;
 			const field = this.state.getFormFieldElementByChild(button);
 
 			// Steps flow.

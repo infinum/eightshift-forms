@@ -536,19 +536,19 @@ export class State {
 		return Object?.values(Object?.fromEntries(Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem))); // eslint-disable-line no-unused-vars
 	};
 	getFormElementByChild = (element) => {
-		return element.closest(this.getStateSelector('form', true));
+		return element?.closest(this.getStateSelector('form', true));
 	};
 	getFormFieldElementByChild = (element) => {
-		return element.closest(this.getStateSelector('field', true));
+		return element?.closest(this.getStateSelector('field', true));
 	};
 	getFormId = (element) => {
-		return element.getAttribute(this.getStateAttribute('formId'));
+		return element?.getAttribute(this.getStateAttribute('formId'));
 	};
 	getFormIdByElement = (element) => {
-		return this.getFormElementByChild(element).getAttribute(this.getStateAttribute('formId'));
+		return this.getFormElementByChild(element)?.getAttribute(this.getStateAttribute('formId'));
 	};
 	getFieldNameByElement = (element) => {
-		return this.getFormFieldElementByChild(element).getAttribute(this.getStateAttribute('fieldName'));
+		return this.getFormFieldElementByChild(element)?.getAttribute(this.getStateAttribute('fieldName'));
 	};
 	getRestUrl = (value, isPartial = false) => {
 		return getRestUrl(value, isPartial);
