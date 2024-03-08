@@ -83,6 +83,8 @@ final class Filters
 					'preResponseAddonData',
 					'preResponseSuccessRedirectData',
 					'additionalHiddenFields',
+					'resultOutputItems',
+					'resultOutputParts',
 				],
 				'formSelector' => [
 					'formTemplates',
@@ -236,8 +238,6 @@ final class Filters
 				],
 				SettingsCalculator::SETTINGS_TYPE_KEY => [
 					'prePostParams',
-					'resultOutputItems',
-					'resultOutputParts',
 				],
 			],
 			'entries' => [

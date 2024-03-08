@@ -503,7 +503,7 @@ class Labels implements LabelsInterface
 		return [
 			'calculatorErrorSettingsMissing' => \__('Calculator integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'calculatorBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'calculatorSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
+			'calculatorSuccess' => \__('Calculator result success. Thank you!', 'eightshift-forms'),
 		];
 	}
 }

@@ -92,12 +92,14 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 
 		$additionalOutput = [];
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsCalculator::SETTINGS_TYPE_KEY, 'resultOutputItems']);
+		// Output result output items as a response key.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
 		if (\has_filter($filterName)) {
 			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
 		}
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsCalculator::SETTINGS_TYPE_KEY, 'resultOutputParts']);
+		// Output result output parts as a response key.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
 		if (\has_filter($filterName)) {
 			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
 		}
