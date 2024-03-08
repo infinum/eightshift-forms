@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;

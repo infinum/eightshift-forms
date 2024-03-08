@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\CustomPostType\Result;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
@@ -66,7 +65,6 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
 		\add_filter('admin_title', [$this, 'fixPageTitle'], 10, 2);
-		
 	}
 
 	/**
@@ -228,7 +226,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
 		if ($plugin_page === UtilsConfig::SLUG_ADMIN_SETTINGS) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
-			$plugin_page = Forms::POST_TYPE_SLUG;
+			$plugin_page = Forms::POST_TYPE_SLUG; // phpcs:ignore
 		}
 		return $parentFile ?? '';
 	}

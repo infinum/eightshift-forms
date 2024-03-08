@@ -21,11 +21,6 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
-	 * Filter settings key.
-	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_calculator';
-
-	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_calculator';
@@ -52,7 +47,6 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 	 */
 	public function register(): void
 	{
-		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
@@ -71,37 +65,6 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get Form settings data array
-	 *
-	 * @param string $formId Form Id.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsData(string $formId): array
-	{
-		// Bailout if feature is not active.
-		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
-		}
-
-		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			[
-				'component' => 'tabs',
-				'tabsFull' => true,
-				'tabsContent' => [
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Options', 'eightshift-forms'),
-						'tabContent' => [
-						],
-					]
-				],
-			],
-		];
 	}
 
 	/**
@@ -124,7 +87,12 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('General', 'eightshift-forms'),
-						'tabContent' => [],
+						'tabContent' => [
+							[
+								'component' => 'intro',
+								'introSubtitle' => \__('Calculator is uses to output dinamic data to the user, it doesn\'t send any emails or is not integrated with any integration.', 'eightshift-forms'),
+							],
+						],
 					],
 				],
 			],

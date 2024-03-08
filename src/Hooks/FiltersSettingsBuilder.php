@@ -438,7 +438,6 @@ class FiltersSettingsBuilder implements ServiceInterface
 				],
 			],
 			SettingsCalculator::SETTINGS_TYPE_KEY => [
-				'settings' => SettingsCalculator::FILTER_SETTINGS_NAME,
 				'settingsGlobal' => SettingsCalculator::FILTER_SETTINGS_GLOBAL_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
@@ -446,8 +445,6 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'labels' => [
 					'title' => \__('Calculator', 'eightshift-forms'),
 					'desc' => \__('Calculator form type settings.', 'eightshift-forms'),
-					'detail' => \__('Calculator', 'eightshift-forms'),
-					'externalLink' => '',
 				],
 			],
 			// ------------------------------

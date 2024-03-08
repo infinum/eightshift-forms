@@ -17,7 +17,6 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
-use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
