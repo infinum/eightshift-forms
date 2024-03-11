@@ -36,6 +36,9 @@ $inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
 $inputFieldAttrs = Components::checkAttr('inputFieldAttrs', $attributes, $manifest);
 $inputUseLabelAsPlaceholder = Components::checkAttr('inputUseLabelAsPlaceholder', $attributes, $manifest);
 $inputSingleSubmit = Components::checkAttr('inputSingleSubmit', $attributes, $manifest);
+$inputRangeShowMin = Components::checkAttr('inputRangeShowMin', $attributes, $manifest);
+$inputRangeShowMax = Components::checkAttr('inputRangeShowMax', $attributes, $manifest);
+$inputRangeShowCurrent = Components::checkAttr('inputRangeShowCurrent', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputHideLabel = false;
@@ -46,6 +49,9 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
+
+// Additional content filter.
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('input', $attributes);
 
 if ($inputValue) {
 	$inputAttrs['value'] = esc_attr($inputValue);
@@ -68,6 +74,33 @@ if ($inputType === 'range') {
 	if (!$inputValue) {
 		$inputAttrs['value'] = esc_attr($inputMin);
 	}
+
+	if ($inputRangeShowMin) {
+		$cssSelector = Components::classnames([
+			UtilsHelper::getStateSelector('inputRangeMin'),
+			Components::selector($componentClass, $componentClass, 'range', 'min'),
+		]);
+
+		$additionalContent .= '<span class="' . esc_attr($cssSelector) . '">' . esc_html($inputAttrs['min']) . '</span>';
+	}
+
+	if ($inputRangeShowCurrent) {
+		$cssSelector = Components::classnames([
+			UtilsHelper::getStateSelector('inputRangeCurrent'),
+			Components::selector($componentClass, $componentClass, 'range', 'current'),
+		]);
+
+		$additionalContent .= '<span class="' . esc_attr($cssSelector) . '">' . esc_html($inputAttrs['value']) . '</span>';
+	}
+
+	if ($inputRangeShowMax) {
+		$cssSelector = Components::classnames([
+			UtilsHelper::getStateSelector('inputRangeMax'),
+			Components::selector($componentClass, $componentClass, 'range', 'max'),
+		]);
+
+		$additionalContent .= '<span class="' . esc_attr($cssSelector) . '">' . esc_html($inputAttrs['max']) . '</span>';
+	}
 }
 
 $inputAttrsOutput = '';
@@ -76,9 +109,6 @@ if ($inputAttrs) {
 		$inputAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
-
-// Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('input', $attributes);
 
 $input = '
 	<input

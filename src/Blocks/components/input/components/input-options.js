@@ -74,6 +74,9 @@ export const InputOptions = (attributes) => {
 	const inputStep = checkAttr('inputStep', attributes, manifest);
 	const inputDisabledOptions = checkAttr('inputDisabledOptions', attributes, manifest);
 	const inputUseLabelAsPlaceholder = checkAttr('inputUseLabelAsPlaceholder', attributes, manifest);
+	const inputRangeShowMin = checkAttr('inputRangeShowMin', attributes, manifest);
+	const inputRangeShowMax = checkAttr('inputRangeShowMax', attributes, manifest);
+	const inputRangeShowCurrent = checkAttr('inputRangeShowCurrent', attributes, manifest);
 
 	let inputValidationPatternOptions = [];
 
@@ -285,6 +288,29 @@ export const InputOptions = (attributes) => {
 						label={__('Value range', 'eightshift-forms')}
 						additionalLabelClasses='es-mb-0!'
 					>
+						{inputType === 'range' &&
+							<>
+								<IconToggle
+									label={__('Show min value', 'eightshift-forms')}
+									checked={inputRangeShowMin}
+									onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMin', attributes, manifest)]: value })}
+									disabled={isOptionDisabled(getAttrKey('inputRangeShowMin', attributes, manifest), inputDisabledOptions)}
+								/>
+								<IconToggle
+									label={__('Show max value', 'eightshift-forms')}
+									checked={inputRangeShowMax}
+									onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMax', attributes, manifest)]: value })}
+									disabled={isOptionDisabled(getAttrKey('inputRangeShowMax', attributes, manifest), inputDisabledOptions)}
+								/>
+								<IconToggle
+									label={__('Show current value', 'eightshift-forms')}
+									checked={inputRangeShowCurrent}
+									onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowCurrent', attributes, manifest)]: value })}
+									disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrent', attributes, manifest), inputDisabledOptions)}
+								/>
+							</>
+						}
+
 						<div className='es-h-spaced es-gap-5!'>
 							{showInputMin &&
 								<div className='es-display-flex es-items-end es-gap-2'>

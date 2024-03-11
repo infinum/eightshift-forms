@@ -99,6 +99,18 @@
 		"inputSingleSubmit": {
 			"type": "boolean",
 			"default": false
+		},
+		"inputRangeShowMin": {
+			"type": "boolean",
+			"default": false
+		},
+		"inputRangeShowMax": {
+			"type": "boolean",
+			"default": false
+		},
+		"inputRangeShowCurrent": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {

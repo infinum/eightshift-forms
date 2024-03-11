@@ -940,6 +940,7 @@ export class Utils {
 		const formId = this.state.getFormIdByElement(target);
 		const field = this.state.getFormFieldElementByChild(target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		const customType = this.state.getStateElementTypeCustom(name, formId);
 
 		switch (this.state.getStateElementTypeField(name, formId)) {
 			case 'phone':
@@ -953,6 +954,10 @@ export class Utils {
 				break;
 			default:
 				setStateValuesInput(target, formId);
+
+				if (customType === 'range') {
+					this.setRangeCurrentValue(formId, name);
+				}
 				break;
 		}
 
@@ -1249,6 +1254,24 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillItem(formId, name);
 
 		this.conditionalTags.setField(formId, name);
+	}
+
+	/**
+	 * Set range current value.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * 
+	 * @returns {void}
+	 */
+	setRangeCurrentValue(formId, name) {
+		const current = this.state.getStateElementRangeCurrent(name, formId);
+
+		if (!current) {
+			return;
+		}
+
+		current.innerHTML = this.state.getStateElementValue(name, formId);
 	}
 
 	/**
