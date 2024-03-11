@@ -58,13 +58,7 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CALCULATOR_USE_KEY, self::SETTINGS_CALCULATOR_USE_KEY);
-
-		if (!$isUsed) {
-			return false;
-		}
-
-		return true;
+		return UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CALCULATOR_USE_KEY, self::SETTINGS_CALCULATOR_USE_KEY);
 	}
 
 	/**
@@ -75,7 +69,7 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CALCULATOR_USE_KEY, self::SETTINGS_CALCULATOR_USE_KEY)) {
+		if (!$this->isSettingsGlobalValid()) {
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
