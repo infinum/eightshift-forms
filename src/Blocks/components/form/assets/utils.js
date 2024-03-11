@@ -1277,11 +1277,9 @@ export class Utils {
 			for(const [key, value] of Object.entries(outputItems)) {
 				const itemElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"][${this.state.getStateAttribute('resultOutputItemValue')}="${value}"]`);
 
-				if (itemElement.length) {
-					itemElement.forEach((item) => {
-						item.classList.remove(this.state.getStateSelector('isHidden'));
-					});
-				}
+				itemElement.forEach((item) => {
+					item.classList.remove(this.state.getStateSelector('isHidden'));
+				});
 			}
 		}
 

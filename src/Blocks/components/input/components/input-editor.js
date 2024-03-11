@@ -35,27 +35,27 @@ export const InputEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 	]);
 
+	let additionalProps = {};
+
+	if (inputType === 'range') {
+		additionalProps = {
+			min: inputMin,
+			max: inputMax,
+			step: inputStep,
+			value: inputValue ?? inputMin,
+		};
+	}
+
 	const input = (
 		<>
-			{inputType === 'range' ?
-				<input
-					className={inputClass}
-					placeholder={inputPlaceholder}
-					type={'range'}
-					readOnly
-					min={inputMin}
-					max={inputMax}
-					step={inputStep}
-					value={inputValue ?? inputMin}
-				/> :
-				<input
-					className={inputClass}
-					value={inputValue}
-					placeholder={inputPlaceholder}
-					type={inputType}
-					readOnly
-				/>
-			}
+			<input
+				className={inputClass}
+				value={inputValue}
+				placeholder={inputPlaceholder}
+				type={inputType}
+				readOnly
+				{...additionalProps}
+			/>
 
 			<MissingName value={inputName} />
 

@@ -13,7 +13,7 @@ export const ResultOutputItemOptions = ({
 	const resultOutputItemValue = checkAttr('resultOutputItemValue', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Result Item', 'infobip')}>
+		<PanelBody title={__('Result Item', 'eightshift-forms')}>
 			<TextControl
 				label={<IconLabel icon={icons.id} label={__('Variable Name', 'eightshift-forms')} />}
 				value={resultOutputItemName}
