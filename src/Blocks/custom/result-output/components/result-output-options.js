@@ -26,7 +26,7 @@ export const ResultOutputOptions = ({
 	const resultOutputHide = checkAttr('resultOutputHide', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Result Output', 'infobip')}>
+		<PanelBody title={__('Result Output', 'eightshift-forms')}>
 			<AsyncSelect
 				label={__('Result Output', 'eightshift-forms')}
 				help={__('If you can\'t find your output item, try typing its name while the dropdown is open.', 'eightshift-forms')}
