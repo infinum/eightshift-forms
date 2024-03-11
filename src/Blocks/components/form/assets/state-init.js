@@ -49,6 +49,7 @@ export const StateEnum = {
 	ELEMENT: 'element',
 	HEADING_SUCCESS: 'headingSuccess',
 	HEADING_ERROR: 'headingError',
+	HIDE_ON_SUCCESS: 'hideOnSuccess',
 	IS_SINGLE_SUBMIT: 'isSingleSubmit',
 	SAVE_AS_JSON: 'saveAsJson',
 	IS_ADMIN: 'isAdmin',
@@ -79,6 +80,7 @@ export const StateEnum = {
 	CONFIG_SUCCESS_REDIRECT: 'successRedirect',
 	CONFIG_SUCCESS_REDIRECT_VARIATION: 'successRedirectVariation',
 	CONFIG_SUCCESS_REDIRECT_DOWNLOADS: 'successRedirectDownloads',
+	CONFIG_USE_SINGLE_SUBMIT: 'useSingleSubmit',
 
 	SETTINGS: 'settings',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
@@ -330,8 +332,10 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT], formElement?.getAttribute(getStateAttribute('successRedirect')), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement?.getAttribute(getStateAttribute('successRedirectVariation')), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], JSON.parse(formElement?.getAttribute(getStateAttribute('successRedirectDownloads')) ?? '{}'), formId);
+	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_USE_SINGLE_SUBMIT], Boolean(formElement?.getAttribute(getStateAttribute('singleSubmit'))), formId);
 
 	const globalMsg = formElement?.querySelector(getStateSelector('globalMsg', true));
+	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HIDE_ON_SUCCESS], Boolean(formElement?.getAttribute(getStateAttribute('globalMsgHideOnSuccess'))), formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.ELEMENT], globalMsg, formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_SUCCESS], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingSuccess')), formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingError')), formId);

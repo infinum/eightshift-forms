@@ -11,7 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Listing;
 
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use WP_Query;
@@ -24,24 +26,39 @@ class FormsListing implements FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
-	 * @param string $status Status for listing to output.
+	 * @param string $type Type of listing to output.
+	 * @param string $parent Parent type for listing to output.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFormsList(string $status): array
+	public function getFormsList(string $type = '', string $parent = ''): array
 	{
+		$postType = Forms::POST_TYPE_SLUG;
+		$showTrash = false;
+
+		switch ($type) {
+			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
+				$postType = ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) ? Result::POST_TYPE_SLUG : Forms::POST_TYPE_SLUG;
+				$showTrash = true;
+				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
+				$postType = Result::POST_TYPE_SLUG;
+				break;
+			default:
+				$postType = Forms::POST_TYPE_SLUG;
+				break;
+		}
+
 		// Prepare query args.
 		$args = [
-			'post_type' => Forms::POST_TYPE_SLUG,
+			'post_type' => $postType,
 			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
-			'post_status' => $status,
+			'post_status' => $showTrash ? 'trash' : '',
 		];
 
 		$theQuery = new WP_Query($args);
 
 		$output = [];
-
-		$permanent = $status === 'trash';
 
 		if (!$theQuery->have_posts()) {
 			\wp_reset_postdata();
@@ -56,10 +73,10 @@ class FormsListing implements FormListingInterface
 				'id' => $id,
 				'title' => \get_the_title($id),
 				'status' => \get_post_status($id),
-				'settingsLink' => !$permanent ? UtilsGeneralHelper::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY) : '',
-				'editLink' => !$permanent ? UtilsGeneralHelper::getFormEditPageUrl((string) $id) : '',
-				'trashLink' => UtilsGeneralHelper::getFormTrashActionUrl((string) $id, $permanent),
-				'entriesLink' => UtilsGeneralHelper::getFormsEntriesPageUrl((string) $id),
+				'settingsLink' => UtilsGeneralHelper::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY),
+				'editLink' => !$showTrash ? UtilsGeneralHelper::getFormEditPageUrl((string) $id) : '',
+				'trashLink' => UtilsGeneralHelper::getFormTrashActionUrl((string) $id, $showTrash),
+				'entriesLink' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, (string) $id),
 				'trashRestoreLink' => UtilsGeneralHelper::getFormTrashRestoreActionUrl((string) $id),
 				'activeIntegration' => UtilsIntegrationsHelper::getIntegrationDetailsById((string) $id),
 				'useSync' => true,

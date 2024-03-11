@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Editor;
 
-use EightshiftForms\AdminMenus\FormAdminMenu;
+use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -37,21 +38,40 @@ class Editor implements ServiceInterface
 	 */
 	public function getEditorBackLink(): void
 	{
-		$actialUrl = UtilsGeneralHelper::getCurrentUrl();
-		$postType = Forms::POST_TYPE_SLUG;
-		$page = FormAdminMenu::ADMIN_MENU_SLUG;
+		$actualUrl = UtilsGeneralHelper::getCurrentUrl();
 
-		$links = [
-			\get_admin_url(null, "edit.php?post_type={$postType}"),
-			\get_admin_url(null, "edit.php?post_status=publish&post_type={$postType}"),
-			\get_admin_url(null, "edit.php?post_status=draft&post_type={$postType}"),
-			\get_admin_url(null, "edit.php?post_status=trash&post_type={$postType}"),
-			\get_admin_url(null, "edit.php?post_status=publish&post_type={$postType}"),
-			\get_admin_url(null, "edit.php?post_status=future&post_type={$postType}"),
+		$types = [
+			Forms::POST_TYPE_SLUG,
+			Result::POST_TYPE_SLUG,
 		];
 
-		if (\in_array($actialUrl, $links, true)) {
-			echo '<script>window.location.replace("' . \get_admin_url(null, "admin.php?page={$page}") . '");</script>'; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		foreach ($types as $type) {
+			$links = $this->getListOfLinks($type);
+
+			$typeKey = ($type === Forms::POST_TYPE_SLUG) ? '' : UtilsConfig::SLUG_ADMIN_LISTING_RESULTS;
+
+			if (isset($links[$actualUrl])) {
+				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			}
 		}
+	}
+
+	/**
+	 * Get list of links.
+	 *
+	 * @param string $type Type of post.
+	 *
+	 * @return array<string> List of links.
+	 */
+	private function getListOfLinks(string $type): array
+	{
+		return [
+			\get_admin_url(null, "edit.php?post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=publish&post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=draft&post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=trash&post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=publish&post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=future&post_type={$type}") => '',
+		];
 	}
 }

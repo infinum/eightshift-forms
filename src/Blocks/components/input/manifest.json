@@ -95,6 +95,10 @@
 		},
 		"inputDisabledOptions": {
 			"type": "array"
+		},
+		"inputSingleSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"options": {
@@ -114,6 +118,10 @@
 			{
 				"label": "Number",
 				"value": "number"
+			},
+			{
+				"label": "Range",
+				"value": "range"
 			}
 		],
 		"inputMinLength": {
@@ -125,16 +133,16 @@
 			"step": 1
 		},
 		"inputMin": {
-			"min":  0,
-			"step": 1
+			"min":  0.01,
+			"step": 0.01
 		},
 		"inputMax": {
-			"min":  1,
-			"step": 1
+			"min":  0.01,
+			"step": 0.01
 		},
 		"inputStep": {
-			"min":  1,
-			"step": 1
+			"min":  0.01,
+			"step": 0.01
 		}
 	}
 }

@@ -18,9 +18,10 @@ interface FormListingInterface
 	/**
 	 * Get Forms List.
 	 *
-	 * @param string $status Status for listing to output.
+	 * @param string $type Type of listing to output.
+	 * @param string $parent Parent type for listing to output.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getFormsList(string $status): array;
+	public function getFormsList(string $type = '', string $parent = ''): array;
 }

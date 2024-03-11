@@ -52,6 +52,8 @@ $formSuccessRedirectVariationUrlTitle = Components::checkAttr('formSuccessRedire
 $formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
 $formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
 $formCustomName = Components::checkAttr('formCustomName', $attributes, $manifest);
+$formHideGlobalMsgOnSuccess = Components::checkAttr('formHideGlobalMsgOnSuccess', $attributes, $manifest);
+$formUseSingleSubmit = Components::checkAttr('formUseSingleSubmit', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -108,6 +110,14 @@ $formAttrs[UtilsHelper::getStateAttribute('postId')] = esc_attr((string) get_the
 
 if ($formType) {
 	$formAttrs[UtilsHelper::getStateAttribute('formType')] = esc_html($formType);
+}
+
+if ($formHideGlobalMsgOnSuccess) {
+	$formAttrs[UtilsHelper::getStateAttribute('globalMsgHideOnSuccess')] = 'true';
+}
+
+if ($formUseSingleSubmit) {
+	$formAttrs[UtilsHelper::getStateAttribute('singleSubmit')] = 'true';
 }
 
 if ($formConditionalTags) {

@@ -16,6 +16,7 @@ use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -110,7 +111,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 			],
 		);
 
-		$items = $this->formsListing->getFormsList('');
+		$items = $this->formsListing->getFormsList();
 
 		if ($items) {
 			foreach ($items as $item) {
@@ -159,7 +160,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 						'id' => "{$listingPrefix}-{$id}-locations",
 						'parent' => $link,
 						'title' => \esc_html__('Locations', 'eightshift-forms'),
-						'href' => UtilsGeneralHelper::getFormsLocationsPageUrl((string) $id),
+						'href' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS, (string) $id),
 					],
 				);
 			}
@@ -170,7 +171,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 				'id' => "{$prefix}-new-form",
 				'parent' => $prefix,
 				'title' => \esc_html__('Add new form', 'eightshift-forms'),
-				'href' => UtilsGeneralHelper::getNewFormPageUrl(),
+				'href' => UtilsGeneralHelper::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
 			],
 		);
 

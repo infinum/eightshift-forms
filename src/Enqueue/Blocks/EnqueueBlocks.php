@@ -16,6 +16,8 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\CustomPostType\Result;
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Theme\EnqueueTheme;
 use EightshiftForms\Geolocation\SettingsGeolocation;
@@ -165,7 +167,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
 		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
-		$output['postType'] = \get_post_type() ? \get_post_type() : '';
+		$output['currentPostType'] = \get_post_type() ? \get_post_type() : '';
+		$output['postTypes'] = [
+			'results' => Result::POST_TYPE_SLUG,
+			'forms' => Forms::POST_TYPE_SLUG,
+		];
 
 		$output['settings'] = [
 			'successRedirectVariations' => FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue()['data'],

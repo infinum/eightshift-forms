@@ -65,7 +65,6 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
 		\add_filter('admin_title', [$this, 'fixPageTitle'], 10, 2);
-		\add_action('admin_menu', [$this, 'addCustomLinkIntoAppearnaceMenu'], 32);
 	}
 
 	/**
@@ -141,7 +140,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getParentMenu(): string
 	{
-		return '';
+		return 'null';
 	}
 
 	/**
@@ -206,7 +205,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
 			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
 			'adminSettingsFormEditLink' => $formEditLink,
-			'adminSettingsFormLocationsLink' => UtilsGeneralHelper::getFormsLocationsPageUrl($formId),
+			'adminSettingsFormLocationsLink' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS, $formId),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
@@ -227,9 +226,8 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
 		if ($plugin_page === UtilsConfig::SLUG_ADMIN_SETTINGS) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
-			$plugin_page = UtilsConfig::SLUG_ADMIN; // phpcs:ignore
+			$plugin_page = Forms::POST_TYPE_SLUG; // phpcs:ignore
 		}
-
 		return $parentFile ?? '';
 	}
 
@@ -248,23 +246,5 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 		}
 
 		return $adminTitle;
-	}
-
-	/**
-	 * Add additional links to sidebar menu.
-	 *
-	 * @return void
-	 */
-	public function addCustomLinkIntoAppearnaceMenu(): void
-	{
-		global $submenu;
-
-		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
-		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
-			\esc_html__('Add new form', 'eightshift-forms'),
-			FormAdminMenu::ADMIN_MENU_CAPABILITY,
-			\get_admin_url(null, 'post-new.php?post_type=' . Forms::URL_SLUG)
-		];
-		// phpcs:enable
 	}
 }

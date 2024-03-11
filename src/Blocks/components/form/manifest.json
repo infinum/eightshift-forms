@@ -50,6 +50,10 @@
 		"formPostId": {
 			"type": "string"
 		},
+		"formHideGlobalMsgOnSuccess": {
+			"type": "boolean",
+			"default": false
+		},
 		"formSuccessRedirect": {
 			"type": "string"
 		},
@@ -96,6 +100,10 @@
 			"default": false
 		},
 		"formDisabledDefaultStyles": {
+			"type": "boolean",
+			"default": false
+		},
+		"formUseSingleSubmit": {
 			"type": "boolean",
 			"default": false
 		},

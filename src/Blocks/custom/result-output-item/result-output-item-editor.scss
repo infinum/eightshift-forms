@@ -1,0 +1,24 @@
+.es-block-result-output-item {
+	&__intro {
+		text-align: center;
+		transform: translateY(50%);
+
+		&::before {
+			content: '';
+			inline-size: 100%;
+			block-size: 1px;
+			display: block;
+			background-color: var(--global-colors-esf-gray-300);
+		}
+
+		&-inner {
+			border: 1px solid var(--global-colors-esf-gray-300);
+			padding: 0.3125rem 1.25rem;
+			display: inline-block;
+			border-radius: var(--es-input-radius);
+			font-weight: 500;
+			transform: translateY(-50%);
+			background-color: var(--global-colors-esf-white);
+		}
+	}
+}

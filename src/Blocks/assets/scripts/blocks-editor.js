@@ -37,8 +37,18 @@ registerBlocks(
 outputCssVariablesGlobal();
 
 // Remove form-selector block from anywhere else other than form CPT.
-if (esFormsLocalization?.postType !== 'eightshift-forms') {
-	const namespace = select(STORE_NAME).getSettingsNamespace();
+const namespace = select(STORE_NAME).getSettingsNamespace();
 
-	unregisterBlockType(`${namespace}/form-selector`);
+switch (esFormsLocalization?.currentPostType) {
+	case esFormsLocalization?.postTypes?.forms:
+		unregisterBlockType(`${namespace}/result-output-item`);
+		break;
+	case esFormsLocalization?.postTypes?.results:
+		unregisterBlockType(`${namespace}/form-selector`);
+		unregisterBlockType(`${namespace}/result-output`);
+		break;
+	default:
+		unregisterBlockType(`${namespace}/form-selector`);
+		unregisterBlockType(`${namespace}/result-output-item`);
+		break;
 }

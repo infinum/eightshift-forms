@@ -26,7 +26,8 @@
 				"eightshift-forms/moments",
 				"eightshift-forms/workable",
 				"eightshift-forms/jira",
-				"eightshift-forms/pipedrive"
+				"eightshift-forms/pipedrive",
+				"eightshift-forms/calculator"
 			]
 		}
 	},
@@ -210,6 +211,25 @@
 					{
 						"textareaTextareaFieldLabel": "Message",
 						"textareaTextareaName": "message"
+					}
+				],
+				[
+					"eightshift-forms/submit"
+				]
+			]
+		},
+		{
+			"label": "Calculator form",
+			"slug": "calculator",
+			"blockName": "eightshift-forms/calculator",
+			"innerBlocks": [
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "Range",
+						"inputInputType": "range",
+						"inputInputName": "range",
+						"inputInputIsNumber": true
 					}
 				],
 				[

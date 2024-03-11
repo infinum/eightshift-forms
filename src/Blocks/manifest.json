@@ -17,7 +17,10 @@
 		"useWrapper": false
 	},
 	"allowedBlocksNoneBuilderBlocksList": [
-		"eightshift-forms/forms"
+		"eightshift-forms/form-selector",
+		"eightshift-forms/forms",
+		"eightshift-forms/result-output",
+		"eightshift-forms/result-output-item"
 	],
 	"allowedBlocksBuilderIntegrationAdditionalBlocksList": [
 		"eightshift-forms/step"

@@ -17,7 +17,7 @@ export const FormsEditor = ({
 	attributes,
 	setAttributes,
 	preview,
-	formSelectOptions
+	formSelectOptions,
 }) => {
 	const manifest = select(STORE_NAME).getBlock('forms');
 
@@ -41,7 +41,7 @@ export const FormsEditor = ({
 		return (
 			<Placeholder
 				icon={icons.form}
-				label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'productive')}</span>}
+				label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
 				className='es-max-w-80 es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
 			>
 				<AsyncSelect

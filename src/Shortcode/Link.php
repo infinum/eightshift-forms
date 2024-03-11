@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Shortcode class.
+ * Shortcode class - link.
  *
  * @package EightshiftForms\Shortcode
  */
@@ -13,9 +13,9 @@ namespace EightshiftForms\Shortcode;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * ShortcodeLink class.
+ * Link class.
  */
-class ShortcodeLink implements ServiceInterface
+class Link implements ServiceInterface
 {
 	/**
 	 * Register all the hooks
@@ -38,8 +38,8 @@ class ShortcodeLink implements ServiceInterface
 	{
 		$params = \shortcode_atts(
 			[
-				'url' => 'something',
-				'label' => 'something else',
+				'url' => '',
+				'label' => '',
 			],
 			$atts
 		);

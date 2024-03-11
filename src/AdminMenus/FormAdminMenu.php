@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
+use EightshiftForms\CustomPostType\Result;
+use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftForms\Misc\SettingsWpml;
@@ -188,10 +190,11 @@ class FormAdminMenu extends AbstractAdminMenu
 	{
 		$type = isset($_GET['type']) ? \sanitize_text_field(\wp_unslash($_GET['type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$formId = isset($_GET['formId']) ? \sanitize_text_field(\wp_unslash($_GET['formId'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$parent = isset($_GET['parent']) ? \sanitize_text_field(\wp_unslash($_GET['parent'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$output = [];
 
 		switch ($type) {
-			case 'locations':
+			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
 				$items = UtilsGeneralHelper::getBlockLocations($formId);
 				$count = \count($items);
 				$formTitle = \get_the_title((int) $formId);
@@ -203,7 +206,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					'adminListingPageSubTitle' => $count === 1 ? \__('Showing 1 form location.', 'eightshift-forms') : \sprintf(\__('Showing %s form locations.', 'eightshift-forms'), $count),
 				];
 				break;
-			case 'entries':
+			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$items = EntriesHelper::getEntries($formId);
 				$count = \count($items);
 				$formTitle = \get_the_title((int) $formId);
@@ -215,19 +218,63 @@ class FormAdminMenu extends AbstractAdminMenu
 					'adminListingPageSubTitle' => $count === 1 ? \__('Showing 1 form entry.', 'eightshift-forms') : \sprintf(\__('Showing %s form entries.', 'eightshift-forms'), $count),
 				];
 				break;
-			case 'trash':
-				$items = $this->formsListing->getFormsList($type);
+			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
+				$items = $this->formsListing->getFormsList($type, $parent);
+				$count = \count($items);
+
+				if ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) {
+					$output = [
+						// Translators: %s is the form title.
+						'adminListingPageTitle' => $this->getMultilangTitle(\__('Deleted result outputs', 'eightshift-forms')),
+						// Translators: %s is the number of trashed forms.
+						'adminListingPageSubTitle' => \sprintf(
+							_n(
+								'Showing %d trashed result output.',
+								'Showing %d trashed result outputs.',
+								$count,
+								'eightshift-forms'
+							),
+							$count
+						),
+					];
+				} else {
+					$output = [
+						// Translators: %s is the form title.
+						'adminListingPageTitle' => $this->getMultilangTitle(\__('Deleted forms', 'eightshift-forms')),
+						// Translators: %s is the number of trashed forms.
+						'adminListingPageSubTitle' => \sprintf(
+							_n(
+								'Showing %d trashed form.',
+								'Showing %d trashed forms.',
+								$count,
+								'eightshift-forms'
+							),
+							$count
+						),
+					];
+				}
+				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
+				$items = $this->formsListing->getFormsList($type, $parent);
 				$count = \count($items);
 
 				$output = [
 					// Translators: %s is the form title.
-					'adminListingPageTitle' => $this->getMultilangTitle(\__('Deleted forms', 'eightshift-forms')),
+					'adminListingPageTitle' => $this->getMultilangTitle(\__('Result outputs', 'eightshift-forms')),
 					// Translators: %s is the number of trashed forms.
-					'adminListingPageSubTitle' => $count === 1 ? \__('Showing 1 trashed form.', 'eightshift-forms') : \sprintf(\__('Showing %s trashed forms.', 'eightshift-forms'), $count),
+					'adminListingPageSubTitle' => \sprintf(
+						_n(
+							'Showing %d result output.',
+							'Showing %d result outputs.',
+							$count,
+							'eightshift-forms'
+						),
+						$count
+					),
 				];
 				break;
 			default:
-				$items = $this->formsListing->getFormsList($type);
+				$items = $this->formsListing->getFormsList($type, $parent);
 				$count = \count($items);
 
 				$output = [
@@ -242,9 +289,9 @@ class FormAdminMenu extends AbstractAdminMenu
 			$output,
 			[
 				'adminListingShowNoItems' => $count === 0,
-				'adminListingItems' => $this->getListingItems($items, $type),
-				'adminListingTopItems' => $this->getTopBarItems($type, $formId),
-				'adminListingNoItems' => $this->getNoItemsMessage($type),
+				'adminListingItems' => $this->getListingItems($items, $type, $parent),
+				'adminListingTopItems' => $this->getTopBarItems($type, $formId, $parent),
+				'adminListingNoItems' => $this->getNoItemsMessage($type, $parent),
 			]
 		);
 	}
@@ -273,16 +320,16 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * Get no items message output.
 	 *
 	 * @param string $type Type of the listing.
+	 * @param string $parent Post type of the listing.
 	 *
 	 * @return array<int, string>
 	 */
-	private function getNoItemsMessage(string $type): array
+	private function getNoItemsMessage(string $type, string $parent): array
 	{
-		$newUrl = UtilsGeneralHelper::getNewFormPageUrl();
 		$listingUrl = UtilsGeneralHelper::getListingPageUrl();
 
 		switch ($type) {
-			case 'locations':
+			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
 					Components::render('highlighted-content', [
 						'highlightedContentTitle' => \__('Location list is empty', 'eightshift-forms'),
@@ -294,19 +341,44 @@ class FormAdminMenu extends AbstractAdminMenu
 					]),
 				];
 				break;
-			case 'trash':
+			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
+				if ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) {
+					$output = [
+						Components::render('highlighted-content', [
+							'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
+							// Translators: %s is the link to the forms listing page.
+							'highlightedContentSubtitle' => \sprintf(\__('
+								Your don\'t have any result outputs in trash.<br />
+								<br /><a class="es-submit es-submit--outline" href="%s">Go to result outputs</a>', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS, '', esc_url($parent))),
+							'highlightedContentIcon' => 'emptyStateTrash',
+						]),
+					];
+				} else {
+					$output = [
+						Components::render('highlighted-content', [
+							'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
+							// Translators: %s is the link to the forms listing page.
+							'highlightedContentSubtitle' => \sprintf(\__('
+								Your don\'t have any form in trash.<br />
+								<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), esc_url($listingUrl)),
+							'highlightedContentIcon' => 'emptyStateTrash',
+						]),
+					];
+				}
+				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
 				$output = [
 					Components::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
+						'highlightedContentTitle' => \__('Result output list is empty', 'eightshift-forms'),
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
-							Your don\'t have any form in trash.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), $listingUrl),
-						'highlightedContentIcon' => 'emptyStateTrash',
+							Your don\'t have any result outputs.<br />
+							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), esc_url(UtilsGeneralHelper::getListingPageUrl())),
+						'highlightedContentIcon' => 'emptyStateResults',
 					]),
 				];
 				break;
-			case 'entries':
+			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [
 					Components::render('highlighted-content', [
 						'highlightedContentTitle' => \__('Entrie list is empty', 'eightshift-forms'),
@@ -325,7 +397,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
 							You don\'t have any forms to show.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Add your first form</a>', 'eightshift-forms'), $newUrl),
+							<br /><a class="es-submit es-submit--outline" href="%s">Add your first form</a>', 'eightshift-forms'), esc_url(UtilsGeneralHelper::getNewFormPageUrl(Forms::POST_TYPE_SLUG))),
 						'highlightedContentIcon' => 'emptyStateFormList',
 					]),
 				];
@@ -340,10 +412,11 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @param string $type Type of the listing.
 	 * @param string $formId Form ID.
+	 * @param string $parent Parent type of the listing.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getTopBarItems(string $type, string $formId): array
+	private function getTopBarItems(string $type, string $formId, string $parent): array
 	{
 		$bulkSelector = UtilsHelper::getStateSelectorAdmin('listingBulk');
 		$filterSelector = UtilsHelper::getStateSelectorAdmin('listingFilter');
@@ -354,7 +427,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		$right = [];
 
 		switch ($type) {
-			case 'locations':
+			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
 				$left = [
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
@@ -365,7 +438,56 @@ class FormAdminMenu extends AbstractAdminMenu
 					]),
 				];
 				break;
-			case 'entries':
+			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
+				$left = [
+					Components::render('checkbox', [
+						'checkboxValue' => 'all',
+						'checkboxName' => 'all',
+						'additionalClass' => $selectAllSelector,
+					]),
+					Components::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
+						'submitValue' => \__('Back', 'eightshift-forms'),
+						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
+					]),
+					Components::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitValue' => \__('Delete', 'eightshift-forms'),
+						'submitIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'submitAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'delete',
+						],
+					]),
+					Components::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitValue' => \__('Duplicate', 'eightshift-forms'),
+						'submitIsDisabled' => true,
+						'additionalClass' => $bulkSelector,
+						'submitAttrs' => [
+							UtilsHelper::getStateAttribute('bulkType') => 'duplicate',
+						],
+					]),
+				];
+
+				$right = [
+					Components::render('submit', [
+						'submitVariant' => 'outline',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_TRASH, '', UtilsConfig::SLUG_ADMIN_LISTING_RESULTS),
+						'submitValue' => \__('Trashed', 'eightshift-forms'),
+					]),
+					Components::render('submit', [
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getNewFormPageUrl(Result::POST_TYPE_SLUG),
+						'submitValue' => \__('Create', 'eightshift-forms'),
+						'submitIcon' => UtilsHelper::getUtilsIcons('addHighContrast')
+					]),
+				];
+				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$left = [
 					Components::render('checkbox', [
 						'checkboxValue' => 'all',
@@ -412,32 +534,58 @@ class FormAdminMenu extends AbstractAdminMenu
 					]),
 				];
 				break;
-			case 'trash':
-				$left = [
-					Components::render('checkbox', [
-						'checkboxValue' => 'all',
-						'checkboxName' => 'all',
-						'additionalClass' => $selectAllSelector,
-					]),
-					Components::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
-						'submitValue' => \__('Back', 'eightshift-forms'),
-						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
-					]),
-				];
+			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
+				if ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) {
+					$left = [
+						Components::render('checkbox', [
+							'checkboxValue' => 'all',
+							'checkboxName' => 'all',
+							'additionalClass' => $selectAllSelector,
+						]),
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitButtonAsLink' => true,
+							'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS),
+							'submitValue' => \__('Back', 'eightshift-forms'),
+							'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
+						]),
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitValue' => \__('Restore', 'eightshift-forms'),
+							'submitIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'submitAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'restore',
+							],
+						]),
+					];
+				} else {
+					$left = [
+						Components::render('checkbox', [
+							'checkboxValue' => 'all',
+							'checkboxName' => 'all',
+							'additionalClass' => $selectAllSelector,
+						]),
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitButtonAsLink' => true,
+							'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
+							'submitValue' => \__('Back', 'eightshift-forms'),
+							'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
+						]),
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitValue' => \__('Restore', 'eightshift-forms'),
+							'submitIsDisabled' => true,
+							'additionalClass' => $bulkSelector,
+							'submitAttrs' => [
+								UtilsHelper::getStateAttribute('bulkType') => 'restore',
+							],
+						]),
+					];
+				}
 
 				$right = [
-					Components::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitValue' => \__('Restore', 'eightshift-forms'),
-						'submitIsDisabled' => true,
-						'additionalClass' => $bulkSelector,
-						'submitAttrs' => [
-							UtilsHelper::getStateAttribute('bulkType') => 'restore',
-						],
-					]),
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete permanently', 'eightshift-forms'),
@@ -496,12 +644,12 @@ class FormAdminMenu extends AbstractAdminMenu
 					Components::render('submit', [
 						'submitVariant' => 'outline',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getFormsTrashPageUrl(),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_TRASH),
 						'submitValue' => \__('Trashed', 'eightshift-forms'),
 					]),
 					Components::render('submit', [
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getNewFormPageUrl(),
+						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
 						'submitValue' => \__('Create', 'eightshift-forms'),
 						'submitIcon' => UtilsHelper::getUtilsIcons('addHighContrast')
 					]),
@@ -520,16 +668,17 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @param array<string, mixed> $items Items to be rendered.
 	 * @param string $type Type of the listing.
+	 * @param string $parent Parent type of the listing.
 	 *
 	 * @return array<mixed>
 	 */
-	private function getListingItems(array $items, string $type): array
+	private function getListingItems(array $items, string $type, string $parent): array
 	{
 		$output = [];
 		$isDevMode = UtilsDeveloperHelper::isDeveloperModeActive();
 
 		switch ($type) {
-			case 'locations':
+			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
 				foreach ($items as $item) {
 					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 					$postType = $item['postType'] ?? '';
@@ -545,11 +694,36 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineUseHover' => true,
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
 						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type)),
+						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type, $parent)),
 					]);
 				}
 				break;
-			case 'entries':
+			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
+				foreach ($items as $item) {
+					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$postType = $item['postType'] ?? '';
+					$editLink = $item['editLink'] ?? '';
+
+					$title = \get_the_title($id);
+
+					$output[] = Components::render('card-inline', [
+						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
+						'cardInlineTitleLink' => $editLink,
+						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['status'])),
+						'cardInlineUseHover' => true,
+						'cardInlineIcon' => UtilsHelper::getUtilsIcons('resultOutput'),
+						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
+						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type, $parent)),
+						'additionalAttributes' => [
+							UtilsHelper::getStateAttribute('bulkId') => $id,
+						],
+						'additionalClass' => Components::classnames([
+							UtilsHelper::getStateSelectorAdmin('listingItem'),
+						]),
+					]);
+				}
+				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$i = 0;
 				$count = \count($items);
 				foreach (\array_reverse($items) as $item) {
@@ -598,6 +772,34 @@ class FormAdminMenu extends AbstractAdminMenu
 					$i++;
 				}
 				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
+				foreach ($items as $item) {
+					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$title = $item['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+					if (!$title) {
+						// Translators: %s is the form ID.
+						$title = \sprintf(\__('Form %s', 'eightshift-forms'), $id);
+					}
+
+					$output[] = Components::render('card-inline', [
+						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
+						'cardInlineTitleLink' => $item['editLink'] ?? '#',
+						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['all'])),
+						'cardInlineIcon' => UtilsHelper::getUtilsIcons('listingGeneric'),
+						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
+						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type, $parent)),
+						'cardInlineUseHover' => true,
+						'additionalAttributes' => [
+							UtilsHelper::getStateAttribute('bulkId') => $id,
+						],
+						'additionalClass' => Components::classnames([
+							UtilsHelper::getStateSelectorAdmin('listingItem'),
+						]),
+					]);
+				}
+
+				break;
 			default:
 				foreach ($items as $item) {
 					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -620,7 +822,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
 						'cardInlineIcon' => $cardIcon,
 						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type)),
+						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type, $parent)),
 						'cardInlineInvalid' => !$isValid,
 						'cardInlineUseHover' => true,
 						'additionalAttributes' => [
@@ -658,12 +860,19 @@ class FormAdminMenu extends AbstractAdminMenu
 	 * Get subtitle.
 	 *
 	 * @param array<string, mixed> $item Item to be checked.
+	 * @param array<string> $showOnly Show only these items.
 	 *
 	 * @return array<string>
 	 */
-	private function getSubtitle(array $item): array
+	private function getSubtitle(array $item, array $showOnly = []): array
 	{
 		$output = [];
+
+		$showOnly = \array_flip($showOnly);
+		$showOnlyStatus = isset($showOnly['status']) || empty($showOnly);
+		$showOnlyIntegrationIsActive = isset($showOnly['integrationIsActive']) || empty($showOnly);
+		$showOnlyIntegrationIsValid = isset($showOnly['integrationIsValid']) || empty($showOnly);
+		$showOnlyIntegrationIsApiValid = isset($showOnly['integrationIsApiValid']) || empty($showOnly);
 
 		$status = $item['status'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$postType = $item['postType'] ?? '';
@@ -671,7 +880,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		$isValid = $item['activeIntegration']['isValid'] ?? false;
 		$isApiValid = $item['activeIntegration']['isApiValid'] ?? false;
 
-		if ($status !== 'publish') {
+		if ($status !== 'publish' && $showOnlyStatus) {
 			$output[] = \ucfirst($status);
 
 			if ($postType) {
@@ -679,15 +888,15 @@ class FormAdminMenu extends AbstractAdminMenu
 			}
 		}
 
-		if (!$isActive) {
+		if (!$isActive && $showOnlyIntegrationIsActive) {
 			$output[] = '<span class="error-text">' . \esc_html__('Integration not enabled', 'eightshift-forms') . '</span>';
 		}
 
-		if (!$isValid) {
+		if (!$isValid && $showOnlyIntegrationIsValid) {
 			$output[] = '<span class="error-text">' . \esc_html__('Form configuration not valid', 'eightshift-forms') . '</span>';
 		}
 
-		if (!$isApiValid) {
+		if (!$isApiValid && $showOnlyIntegrationIsApiValid) {
 			$output[] = '<span class="error-text">' . \esc_html__('Missing form fields', 'eightshift-forms') . '</span>';
 		}
 
@@ -718,15 +927,18 @@ class FormAdminMenu extends AbstractAdminMenu
 	 *
 	 * @param array<string, mixed> $item Item to be checked.
 	 * @param string $type Type of the listing.
+	 * @param string $parent Parent type of the listing.
 	 *
 	 * @return array<mixed>
 	 */
-	private function getRightContent(array $item, string $type): array
+	private function getRightContent(array $item, string $type, string $parent): array
 	{
 		$formId = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
+		$output = [];
+
 		switch ($type) {
-			case 'locations':
+			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
 					Components::render('submit', [
 						'submitVariant' => 'ghost',
@@ -736,8 +948,48 @@ class FormAdminMenu extends AbstractAdminMenu
 					]),
 				];
 				break;
-			case 'entries':
+			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
+				$output = [
+					Components::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => $item['editLink'] ?? '',
+						'submitValue' => \__('Edit', 'eightshift-forms'),
+					]),
+				];
+				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [];
+				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
+				$entriesCount = EntriesHelper::getEntriesCount((string) $formId);
+
+				if ($parent === '') {
+					$output = [
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitValue' => \__('Locations', 'eightshift-forms'),
+							'submitAttrs' => [
+								UtilsHelper::getStateAttribute('locationsId') => $formId
+							],
+							'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
+						]),
+						($entriesCount > 0) ?
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitButtonAsLink' => true,
+							'submitButtonAsLinkUrl' => $item['entriesLink'] ?? '',
+							// Translators: %s is the number of entries.
+							'submitValue' => \sprintf(\__('Entries (%s)', 'eightshift-forms'), $entriesCount),
+						]) : null,
+						Components::render('submit', [
+							'submitVariant' => 'ghost',
+							'submitButtonAsLink' => true,
+							'submitButtonAsLinkUrl' => $item['settingsLink'] ?? '',
+							'submitValue' => \__('Settings', 'eightshift-forms'),
+						]),
+					];
+				}
 				break;
 			default:
 				$entriesCount = EntriesHelper::getEntriesCount((string) $formId);

@@ -24,7 +24,7 @@ export const PhoneOptions = (attributes) => {
 	const phoneName = checkAttr('phoneName', attributes, manifest);
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
-	const phoneIsNumber = checkAttr('phoneIsNumber', attributes, manifest);
+	const phoneIsNumber = checkAttr('phoneIsNumber', attributes, manifest); // Used in validation class to validate if the input is a number.
 	const phoneIsDisabled = checkAttr('phoneIsDisabled', attributes, manifest);
 	const phoneIsReadOnly = checkAttr('phoneIsReadOnly', attributes, manifest);
 	const phoneIsRequired = checkAttr('phoneIsRequired', attributes, manifest);

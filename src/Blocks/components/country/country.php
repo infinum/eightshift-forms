@@ -35,6 +35,7 @@ $countryTypeCustom = Components::checkAttr('countryTypeCustom', $attributes, $ma
 $countryFieldAttrs = Components::checkAttr('countryFieldAttrs', $attributes, $manifest);
 $countryPlaceholder = Components::checkAttr('countryPlaceholder', $attributes, $manifest);
 $countryUseLabelAsPlaceholder = Components::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
+$countrySingleSubmit = Components::checkAttr('countrySingleSubmit', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $countryHideLabel = false;
@@ -44,6 +45,7 @@ $countryClass = Components::classnames([
 	Components::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
 	Components::selector($componentClass, $componentClass, 'select'),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($countrySingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 if ($countryUseSearch) {

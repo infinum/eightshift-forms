@@ -25,7 +25,8 @@ import {
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
-import { FormEditButton,
+import {
+	FormEditButton,
 	LocationsButton,
 	SettingsButton,
 	getSettingsJsonOptions,

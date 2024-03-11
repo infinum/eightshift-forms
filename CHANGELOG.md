@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.0]
+
+### Added
+- `range` field for the forms.
+- `singleSubmit` attribute on all fields to allow only one submit per form to be used as calculation form.
+- "Result output" custom post type.
+- Blocks for the result output.
+- Calculator form type and necessary filters.
+- Forms can now use `single submit` option to send data without submit button.
+- Setting for single form to hide global msg on submit success.
+
+### Changed
+- `Input` fields now output correct types for e-mail and URL fields, so the experience on mobile devices should be much better.
+- Admin listing URLs can now support additional types.
+- All icons are now used from utils lib.
+
+### Fixed
+- JS errors when missing data.
+- Broken URLs for admin listing when using custom post types.
+
+### Removed
+- Unnecessary options in the `rating` field.
+
 ## [3.0.5]
 
 ### Fixed
@@ -256,6 +279,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.0]: https://github.com/infinum/eightshift-forms/compare/3.0.5...3.1.0
 [3.0.5]: https://github.com/infinum/eightshift-forms/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/infinum/eightshift-forms/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/infinum/eightshift-forms/compare/3.0.2...3.0.3

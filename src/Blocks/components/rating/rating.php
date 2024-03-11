@@ -30,11 +30,13 @@ $ratingTracking = Components::checkAttr('ratingTracking', $attributes, $manifest
 $ratingAttrs = Components::checkAttr('ratingAttrs', $attributes, $manifest);
 $ratingFieldAttrs = Components::checkAttr('ratingFieldAttrs', $attributes, $manifest);
 $ratingAmount = Components::checkAttr('ratingAmount', $attributes, $manifest);
+$ratingSingleSubmit = Components::checkAttr('ratingSingleSubmit', $attributes, $manifest);
 $ratingHideLabel = false;
 
 $ratingClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 	UtilsHelper::getStateSelector('rating'),
 ]);
 

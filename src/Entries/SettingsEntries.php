@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
@@ -161,7 +162,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Store entries in database', 'eightshift-forms'),
 										// translators: %s is replaced with the form entries page URL.
-										'checkboxHelp' => $isUsed ? \sprintf(\__("You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.", 'eightshift-forms'), UtilsGeneralHelper::getFormsEntriesPageUrl($formId)) : '',
+										'checkboxHelp' => $isUsed ? \sprintf(\__("You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.", 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
 										'checkboxIsChecked' => $isUsed,
 										'checkboxValue' => self::SETTINGS_ENTRIES_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,

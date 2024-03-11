@@ -8,6 +8,7 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 $manifest = Components::getManifest(__DIR__);
@@ -34,6 +35,7 @@ $inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
 $inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
 $inputFieldAttrs = Components::checkAttr('inputFieldAttrs', $attributes, $manifest);
 $inputUseLabelAsPlaceholder = Components::checkAttr('inputUseLabelAsPlaceholder', $attributes, $manifest);
+$inputSingleSubmit = Components::checkAttr('inputSingleSubmit', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputHideLabel = false;
@@ -42,12 +44,8 @@ $inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attrib
 $inputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
-
-// Override types.
-if ($inputType === 'email' || $inputType === 'url') {
-	$inputType = 'text';
-}
 
 if ($inputValue) {
 	$inputAttrs['value'] = esc_attr($inputValue);
@@ -60,6 +58,16 @@ if ($inputPlaceholder) {
 if ($inputUseLabelAsPlaceholder) {
 	$inputAttrs['placeholder'] = esc_attr($inputFieldLabel);
 	$inputHideLabel = true;
+}
+
+if ($inputType === 'range') {
+	$inputAttrs['min'] = esc_attr($inputMin);
+	$inputAttrs['max'] = esc_attr($inputMax);
+	$inputAttrs['step'] = esc_attr($inputStep);
+
+	if (!$inputValue) {
+		$inputAttrs['value'] = esc_attr($inputMin);
+	}
 }
 
 $inputAttrsOutput = '';

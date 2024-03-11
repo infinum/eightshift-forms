@@ -275,8 +275,12 @@ export class Utils {
 		messageContainer?.classList?.add(this.state.getStateSelector('isActive'));
 		messageContainer.dataset.status = status;
 
-		// Scroll to msg if the condition is right.
+		// Scroll to msg if the condition is matched.
 		if (status === 'success') {
+			if (this.state.getStateFormGlobalMsgHideOnSuccess(formId)) {
+				return;
+			}
+
 			if (!this.state.getStateSettingsDisableScrollToGlobalMsgOnSuccess(formId)) {
 				this.scrollToGlobalMsg(formId);
 			}
@@ -1245,6 +1249,89 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillItem(formId, name);
 
 		this.conditionalTags.setField(formId, name);
+	}
+
+	/**
+	 * Set output results.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {object} response Api response.
+	 *
+	 * @returns {void}
+	 */
+	setResultsOutput(formId, data) {
+		// Check if we have output element - block.
+		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`);
+
+		// If no output element, bailout.
+		if (!outputElement) {
+			return;
+		}
+
+		this.resetResultsOutput(formId);
+
+		// Check if we have output items.
+		const outputItems = data?.[this.state.getStateResponseOutputKey('resultOutputItems')] ?? {};
+
+		if (Object.keys(outputItems).length) {
+			for(const [key, value] of Object.entries(outputItems)) {
+				const itemElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"][${this.state.getStateAttribute('resultOutputItemValue')}="${value}"]`);
+
+				itemElement.forEach((item) => {
+					item.classList.remove(this.state.getStateSelector('isHidden'));
+				});
+			}
+		}
+
+		// Check if we have output parts.
+		const outputParts = data?.[this.state.getStateResponseOutputKey('resultOutputParts')] ?? {};
+
+		if (Object.keys(outputParts).length) {
+			for(const [key, value] of Object.entries(outputParts)) {
+				const partElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputPart', true)}[${this.state.getStateAttribute('resultOutputPart')}="${key}"]`);
+
+				if (partElement.length && value) {
+					partElement.forEach((item) => {
+						item.classList.remove(this.state.getStateSelector('isHidden'));
+						item.innerHTML = value;
+					});
+				}
+			}
+		}
+
+		// Check if output block is hidden.
+		const outputElementIsHidden = outputElement.classList.contains(this.state.getStateSelector('isHidden'));
+
+		// If hidden, show it.
+		if (outputElementIsHidden) {
+			outputElement.classList.remove(this.state.getStateSelector('isHidden'));
+		}
+	}
+
+	resetResultsOutput(formId) {
+		// Check if we have output element - block.
+		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`);
+		if (!outputElement) {
+			return;
+		}
+
+		// Reset items.
+		const itemElements = outputElement.querySelectorAll(this.state.getStateSelector('resultOutputItem', true));
+		if (itemElements.length) {
+			itemElements.forEach((item) => {
+				item.classList.add(this.state.getStateSelector('isHidden'));
+			});
+		}
+
+		// Reset parts.
+		const partElements = outputElement.querySelectorAll(this.state.getStateSelector('resultOutputPart', true));
+		if (partElements.length) {
+			partElements.forEach((item) => {
+				if (item.hasAttribute(this.state.getStateAttribute('resultOutputPartDefault'))) {
+					item.innerHTML = item.getAttribute(this.state.getStateAttribute('resultOutputPartDefault'));
+				}
+			});
+		}
 	}
 
 	////////////////////////////////////////////////////////////////

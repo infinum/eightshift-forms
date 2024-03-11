@@ -19,6 +19,7 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
@@ -127,10 +128,29 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		$this->sendConfirmationEmail($formId, $params, $files);
 
+		$additionalOutput = [];
+
+		// Output result output items as a response key.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
+		if (\has_filter($filterName)) {
+			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
+		}
+
+		// Output result output parts as a response key.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
+		if (\has_filter($filterName)) {
+			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
+		}
+
+		$additionalOutput = \array_merge(
+			$additionalOutput,
+			UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails)
+		);
+
 		// Finish.
 		return UtilsApiHelper::getApiSuccessPublicOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
-			UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails),
+			$additionalOutput,
 			$debug
 		);
 	}

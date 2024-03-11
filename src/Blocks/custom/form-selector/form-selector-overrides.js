@@ -3,6 +3,7 @@
 
 import globalManifest from '../../manifest.json';
 import manifest from './manifest.json';
+import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 const forms = [
 	...manifest.forms,
@@ -24,4 +25,7 @@ forms.forEach((form) => {
 export const overrides = {
 	...manifest,
 	forms: outputForms,
+	icon:{
+		src: getUtilsIcons('formPicker') ?? manifest.icon.src,
+	}
 };

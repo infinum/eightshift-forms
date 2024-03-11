@@ -430,6 +430,9 @@ export class Form {
 				if (isFinalStep) {
 					this.steps.resetSteps(formId);
 				}
+
+				// Set output results.
+				this.utils.setResultsOutput(formId, data);
 			}
 		}
 	}
@@ -1000,7 +1003,16 @@ export class Form {
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
 		input.addEventListener('blur', this.onBlurEvent);
-		input.addEventListener('input', this.onInputEvent);
+
+		if (
+			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'range'))
+		) {
+			input.addEventListener('input', debounce(this.onInputEvent, 500));
+		} else {
+			input.addEventListener('input', this.onInputEvent);
+
+		}
 	}
 
 	/**
@@ -1638,7 +1650,10 @@ export class Form {
 			this.utils.unsetFilledState(formId, name);
 		}
 
-		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
+		if (
+			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
+			this.state.getStateFormConfigUseSingleSubmit(formId)
+		) {
 			debounce(
 				this.formSubmit(
 					formId, {
@@ -1662,7 +1677,14 @@ export class Form {
 
 		this.utils.setOnUserChangeInput(event.target);
 
-		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
+		if (
+			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (
+				this.state.getStateElementTypeCustom(name, formId) === 'range') ||
+				this.state.getStateElementTypeCustom(name, formId) === 'checkbox' ||
+				this.state.getStateElementTypeCustom(name, formId) === 'radio'
+			)
+		) {
 			debounce(
 				this.formSubmit(
 					formId, {
@@ -1690,7 +1712,10 @@ export class Form {
 
 		this.utils.setOnUserChangeInput(input);
 
-		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
+		if (
+			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
+			this.state.getStateFormConfigUseSingleSubmit(formId)
+		) {
 			debounce(
 				this.formSubmit(
 					formId, {

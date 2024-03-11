@@ -134,6 +134,9 @@ export class State {
 	getStateFormGlobalMsgHeadingError = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], formId);
 	};
+	getStateFormGlobalMsgHideOnSuccess = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HIDE_ON_SUCCESS], formId);
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Config getters.
@@ -153,6 +156,9 @@ export class State {
 	};
 	getStateFormConfigSuccessRedirectDownloads = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], formId);
+	};
+	getStateFormConfigUseSingleSubmit = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_USE_SINGLE_SUBMIT], formId);
 	};
 
 	////////////////////////////////////////////////////////////////

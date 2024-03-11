@@ -1,0 +1,48 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "result-output",
+	"title": "Result output",
+	"description" : "Display the result output of the form after success",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-checkbox"
+	},
+	"keywords": [
+		"result",
+		"output",
+		"results"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {
+		"resultOutputName": {
+			"type": "string"
+		},
+		"resultOutputValue": {
+			"type": "string"
+		},
+		"resultOutputPostId": {
+			"type": "string"
+		},
+		"resultOutputPostIdRaw": {
+			"type": "object"
+		},
+		"resultOutputFormPostId": {
+			"type": "string"
+		},
+		"resultOutputFormPostIdRaw": {
+			"type": "object"
+		},
+		"resultOutputServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"resultOutputHide": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"attributesSsr": [
+		"resultOutputPostId",
+		"resultOutputFormPostId"
+	]
+}

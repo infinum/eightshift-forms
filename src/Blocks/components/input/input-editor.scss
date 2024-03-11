@@ -2,6 +2,10 @@
 
 input.es-input {
 	@include input-styles-editor;
+
+	&[type='range'] {
+		padding: 0 !important; // stylelint-disable-line declaration-no-important
+	}
 }
 
 // Collision with WPML.

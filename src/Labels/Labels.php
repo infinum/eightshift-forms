@@ -22,6 +22,7 @@ use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
 /**
@@ -46,6 +47,7 @@ class Labels implements LabelsInterface
 		'workableSuccess',
 		'jiraSuccess',
 		'pipedriveSuccess',
+		'calculatorSuccess',
 	];
 
 	/**
@@ -120,6 +122,11 @@ class Labels implements LabelsInterface
 		// Pipedrive.
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
 			$output = \array_merge($output, $this->getPipedriveLabels());
+		}
+
+		// Calculator.
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
+			$output = \array_merge($output, $this->getCalculatorLabels());
 		}
 
 		return $output;
@@ -483,6 +490,20 @@ class Labels implements LabelsInterface
 			'pipedriveWrongDataset' => \__('Integration dataset is invalid.', 'eightshift-forms'),
 			'pipedriveBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'pipedriveSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Calculator
+	 *
+	 * @return array<string, string>
+	 */
+	private function getCalculatorLabels(): array
+	{
+		return [
+			'calculatorErrorSettingsMissing' => \__('Calculator integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'calculatorBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'calculatorSuccess' => \__('Calculator result success. Thank you!', 'eightshift-forms'),
 		];
 	}
 }

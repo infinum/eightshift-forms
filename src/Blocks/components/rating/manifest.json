@@ -60,46 +60,10 @@
 		},
 		"ratingDisabledOptions": {
 			"type": "array"
-		}
-	},
-	"options": {
-		"ratingType": [
-			{
-				"label": "Plain text",
-				"value": "text"
-			},
-			{
-				"label": "E-mail",
-				"value": "email"
-			},
-			{
-				"label": "URL",
-				"value": "url"
-			},
-			{
-				"label": "Number",
-				"value": "number"
-			}
-		],
-		"ratingMinLength": {
-			"min":  0,
-			"step": 1
 		},
-		"ratingMaxLength": {
-			"min":  1,
-			"step": 1
-		},
-		"ratingMin": {
-			"min":  0,
-			"step": 1
-		},
-		"ratingMax": {
-			"min":  1,
-			"step": 1
-		},
-		"ratingStep": {
-			"min":  1,
-			"step": 1
+		"ratingSingleSubmit": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

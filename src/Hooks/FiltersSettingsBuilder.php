@@ -54,6 +54,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
+use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -434,6 +435,16 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'desc' => \__('Pipedrive integration settings.', 'eightshift-forms'),
 					'detail' => \__('Pipedrive is a web-based Sales CRM and pipeline management solution that enables businesses to plan their sales activities and monitor deals.', 'eightshift-forms'),
 					'externalLink' => 'https://www.pipedrive.com/',
+				],
+			],
+			SettingsCalculator::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsCalculator::FILTER_SETTINGS_GLOBAL_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'use' => SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY,
+				'labels' => [
+					'title' => \__('Calculator', 'eightshift-forms'),
+					'desc' => \__('Calculator form type settings.', 'eightshift-forms'),
 				],
 			],
 			// ------------------------------

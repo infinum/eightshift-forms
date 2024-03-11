@@ -81,6 +81,9 @@ export const InputOptions = (attributes) => {
 		inputValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
 
+	// Output number to 2 decimal places if it's a float, otherwise output to fixed number.
+	const formatNumber = (number) => (Number.isInteger(number) ? number.toString() : number.toFixed(2));
+
 	return (
 		<PanelBody title={title}>
 			<Section showIf={showInputPlaceholder || showInputType || showInputName} icon={icons.options} label={__('General', 'eightshift-forms')}>
@@ -113,7 +116,7 @@ export const InputOptions = (attributes) => {
 								setAttributes({ [getAttrKey('inputIsEmail', attributes, manifest)]: true });
 							}
 
-							if (value === 'number') {
+							if (value === 'number' || value === 'range') {
 								setAttributes({ [getAttrKey('inputIsNumber', attributes, manifest)]: true });
 							}
 
@@ -213,7 +216,7 @@ export const InputOptions = (attributes) => {
 					/>
 				}
 
-				{(showInputMinLength || showInputMaxLength) &&
+				{(!['number', 'range'].includes(inputType) && (showInputMinLength || showInputMaxLength)) &&
 					<Control
 						icon={icons.textLength}
 						label={__('Entry length', 'eightshift-forms')}
@@ -276,7 +279,7 @@ export const InputOptions = (attributes) => {
 					</Control>
 				}
 
-				{inputType === 'number' && (showInputMin || showInputMax) &&
+				{((inputType === 'number' || inputType === 'range') && (showInputMin || showInputMax)) &&
 					<Control
 						icon={icons.range}
 						label={__('Value range', 'eightshift-forms')}
@@ -288,7 +291,7 @@ export const InputOptions = (attributes) => {
 									<NumberPicker
 										label={__('Min', 'eightshift-forms')}
 										value={inputMin}
-										onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: value })}
+										onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: formatNumber(value) })}
 										min={options.inputMin.min}
 										step={options.inputMin.step}
 										disabled={isOptionDisabled(getAttrKey('inputMin', attributes, manifest), inputDisabledOptions)}
@@ -314,7 +317,7 @@ export const InputOptions = (attributes) => {
 									<NumberPicker
 										label={__('Max', 'eightshift-forms')}
 										value={inputMax}
-										onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: value })}
+										onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: formatNumber(value) })}
 										min={options.inputMax.min}
 										step={options.inputMax.step}
 										disabled={isOptionDisabled(getAttrKey('inputMax', attributes, manifest), inputDisabledOptions)}
@@ -338,18 +341,17 @@ export const InputOptions = (attributes) => {
 					</Control>
 				}
 
-				{inputType === 'number' && showInputStep &&
+				{(inputType === 'number' || inputType === 'range') && showInputStep &&
 					<Control label={__('Increment step', 'eightshift-forms')} additionalLabelClasses='es-mb-0!'>
 						<div className='es-display-flex es-items-end es-gap-2'>
 							<NumberPicker
 								value={inputStep}
-								onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: value })}
+								onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: formatNumber(value) })}
 								min={options.inputStep.min}
 								step={options.inputStep.step}
 								disabled={isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions)}
 								fixedWidth={4}
 								noBottomSpacing
-								placeholder='1'
 							/>
 
 							{inputStep > 0 && !isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions) &&

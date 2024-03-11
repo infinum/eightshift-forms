@@ -224,7 +224,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		if (\count($details) > 1) {
 			$msgOutput = [
 				// translators: %s replaces type.
-				\sprintf(\esc_html__('Not all forms were %s with success. Please check the following log.', 'eightshift-forms'), $intrernaType, $msg),
+				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $intrernaType),
 			];
 
 			if ($error) {
@@ -252,22 +252,20 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			return [
 				'status' => 'success',
 				// translators: %s replaces form msg type.
-				'msg' => \sprintf(\esc_html__('Success, all selected %1$s were %2$s.', 'eightshift-forms'), $intrernaType, $msg),
+				'msg' => \sprintf(\esc_html__('Success, all selected items were %s.', 'eightshift-forms'), $msg),
 			];
 		}
 
 		if ($skip) {
 			return [
 				'status' => 'warning',
-				// translators: %s replaces form msg type.
-				'msg' => \sprintf(\esc_html__('Warning, all selected %s were skipped.', 'eightshift-forms'), $intrernaType),
+				'msg' => \esc_html__('Warning, all selected items were skipped.', 'eightshift-forms'),
 			];
 		}
 
 		return [
 			'status' => 'error',
-			// translators: %s replaces form msg type.
-			'msg' => \sprintf(\esc_html__('There was and error on all selected %s.', 'eightshift-forms'), $intrernaType),
+			'msg' => \esc_html__('There was an error on all selected items.', 'eightshift-forms'),
 		];
 	}
 
@@ -320,7 +318,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 
 			if (!$title) {
 				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
+				$title = \sprintf(\esc_html__('Item %s', 'eightshift-forms'), $id);
 			}
 
 			$action = \wp_trash_post((int) $id);
@@ -351,7 +349,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 
 			if (!$title) {
 				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
+				$title = \sprintf(\esc_html__('Item %s', 'eightshift-forms'), $id);
 			}
 
 			$action = \wp_delete_post((int) $id, true);
@@ -413,7 +411,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 
 			if (!$title) {
 				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
+				$title = \sprintf(\esc_html__('Item %s', 'eightshift-forms'), $id);
 			}
 
 			$action = \wp_update_post([
@@ -447,7 +445,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 
 			if (!$title) {
 				// translators: %s replaces form id.
-				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
+				$title = \sprintf(\esc_html__('Item %s', 'eightshift-forms'), $id);
 			}
 
 			$export = $this->transfer->getExportForm((string) $id);
