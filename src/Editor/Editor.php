@@ -50,7 +50,7 @@ class Editor implements ServiceInterface
 
 			$typeKey = ($type === Forms::POST_TYPE_SLUG) ? '' : UtilsConfig::SLUG_ADMIN_LISTING_RESULTS;
 
-			if (\in_array($actualUrl, $links, true)) {
+			if (isset($links[$actualUrl])) {
 				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 			}
 		}
@@ -66,12 +66,12 @@ class Editor implements ServiceInterface
 	private function getListOfLinks(string $type): array
 	{
 		return [
-			\get_admin_url(null, "edit.php?post_type={$type}"),
-			\get_admin_url(null, "edit.php?post_status=publish&post_type={$type}"),
-			\get_admin_url(null, "edit.php?post_status=draft&post_type={$type}"),
-			\get_admin_url(null, "edit.php?post_status=trash&post_type={$type}"),
-			\get_admin_url(null, "edit.php?post_status=publish&post_type={$type}"),
-			\get_admin_url(null, "edit.php?post_status=future&post_type={$type}"),
+			\get_admin_url(null, "edit.php?post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=publish&post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=draft&post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=trash&post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=publish&post_type={$type}") => '',
+			\get_admin_url(null, "edit.php?post_status=future&post_type={$type}") => '',
 		];
 	}
 }
