@@ -37,8 +37,14 @@ $inputFieldAttrs = Components::checkAttr('inputFieldAttrs', $attributes, $manife
 $inputUseLabelAsPlaceholder = Components::checkAttr('inputUseLabelAsPlaceholder', $attributes, $manifest);
 $inputSingleSubmit = Components::checkAttr('inputSingleSubmit', $attributes, $manifest);
 $inputRangeShowMin = Components::checkAttr('inputRangeShowMin', $attributes, $manifest);
+$inputRangeShowMinPrefix = Components::checkAttr('inputRangeShowMinPrefix', $attributes, $manifest);
+$inputRangeShowMinSuffix = Components::checkAttr('inputRangeShowMinSuffix', $attributes, $manifest);
 $inputRangeShowMax = Components::checkAttr('inputRangeShowMax', $attributes, $manifest);
+$inputRangeShowMaxPrefix = Components::checkAttr('inputRangeShowMaxPrefix', $attributes, $manifest);
+$inputRangeShowMaxSuffix = Components::checkAttr('inputRangeShowMaxSuffix', $attributes, $manifest);
 $inputRangeShowCurrent = Components::checkAttr('inputRangeShowCurrent', $attributes, $manifest);
+$inputRangeShowCurrentPrefix = Components::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
+$inputRangeShowCurrentSuffix = Components::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputHideLabel = false;
@@ -81,16 +87,14 @@ if ($inputType === 'range') {
 			Components::selector($componentClass, $componentClass, 'range', 'min'),
 		]);
 
-		$additionalContent .= '<span class="' . esc_attr($cssSelector) . '">' . esc_html($inputAttrs['min']) . '</span>';
+		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$inputAttrs['min']}{$inputRangeShowMinSuffix}</span>");
 	}
 
 	if ($inputRangeShowCurrent) {
-		$cssSelector = Components::classnames([
-			UtilsHelper::getStateSelector('inputRangeCurrent'),
-			Components::selector($componentClass, $componentClass, 'range', 'current'),
-		]);
+		$cssSelector = Components::selector($componentClass, $componentClass, 'range', 'current');
+		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
 
-		$additionalContent .= '<span class="' . esc_attr($cssSelector) . '">' . esc_html($inputAttrs['value']) . '</span>';
+		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
 	}
 
 	if ($inputRangeShowMax) {
@@ -99,7 +103,7 @@ if ($inputType === 'range') {
 			Components::selector($componentClass, $componentClass, 'range', 'max'),
 		]);
 
-		$additionalContent .= '<span class="' . esc_attr($cssSelector) . '">' . esc_html($inputAttrs['max']) . '</span>';
+		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$inputAttrs['max']}{$inputRangeShowMaxSuffix}</span>");
 	}
 }
 

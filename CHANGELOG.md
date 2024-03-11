@@ -9,7 +9,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Added
 - `range` field for the forms.
 - `singleSubmit` attribute on all fields to allow only one submit per form to be used as calculation form.
-- Result output custom post type.
+- `Result output` custom post type.
 - Blocks for the result output.
 - Calculator form type and necessary filters.
 - Forms can now use `single submit` option to send data without submit button.

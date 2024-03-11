@@ -46,20 +46,19 @@ class RangeCurrent implements ServiceInterface
 			[
 				'value' => '',
 				'prefix' => '',
-				'sufix' => '',
+				'suffix' => '',
 			],
 			$atts
 		);
 
 		$value = isset($params['value']) ? \esc_html($params['value']) : '';
 		$prefix = isset($params['prefix']) ? \esc_html($params['prefix']) : '';
-		$sufix = isset($params['sufix']) ? \esc_html($params['sufix']) : '';
+		$suffix = isset($params['suffix']) ? \esc_html($params['suffix']) : '';
 
-		$cssSelector = Components::classnames([
-			UtilsHelper::getStateSelector('inputRangeCurrent'),
-			Components::selector($componentClass, $componentClass, 'range', 'current'),
-		]);
+		$cssSelector = Components::selector($componentClass, $componentClass, 'range', 'current');
 
-		return "<span class='{$cssSelector}'>{$prefix}{$value}{$sufix}</span>";
+		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
+
+		return "<span class='{$cssSelector}'>{$prefix}<span class='{$cssJsSelector}'>{$value}</span>{$suffix}</span>";
 	}
 }
