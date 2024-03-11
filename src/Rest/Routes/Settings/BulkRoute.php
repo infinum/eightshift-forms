@@ -224,7 +224,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		if (\count($details) > 1) {
 			$msgOutput = [
 				// translators: %s replaces type.
-				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $intrernaType, $msg),
+				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $intrernaType),
 			];
 
 			if ($error) {
@@ -265,7 +265,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 
 		return [
 			'status' => 'error',
-			'msg' => \esc_html__('There was and error on all selected items.', 'eightshift-forms'),
+			'msg' => \esc_html__('There was an error on all selected items.', 'eightshift-forms'),
 		];
 	}
 

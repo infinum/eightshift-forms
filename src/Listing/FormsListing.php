@@ -38,11 +38,7 @@ class FormsListing implements FormListingInterface
 
 		switch ($type) {
 			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
-				$postType = Forms::POST_TYPE_SLUG;
-
-				if ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) {
-					$postType = Result::POST_TYPE_SLUG;
-				}
+				$postType = ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) ? Result::POST_TYPE_SLUG : Forms::POST_TYPE_SLUG;
 				$showTrash = true;
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:

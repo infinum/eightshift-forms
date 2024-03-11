@@ -29,7 +29,7 @@ export const ResultOutputOptions = ({
 		<PanelBody title={__('Result Output', 'infobip')}>
 			<AsyncSelect
 				label={__('Result Output', 'eightshift-forms')}
-				help={__('If you can\'t find your output item, start typing its name while the dropdown is open.', 'eightshift-forms')}
+				help={__('If you can\'t find your output item, try typing its name while the dropdown is open.', 'eightshift-forms')}
 				value={outputFormSelectItemWithIcon(Object.keys(resultOutputPostIdRaw ?? {}).length ? resultOutputPostIdRaw : {id: resultOutputPostId})}
 				loadOptions={resultSelectOptions}
 				onChange={(value) => {
@@ -47,7 +47,7 @@ export const ResultOutputOptions = ({
 
 			<AsyncSelect
 				label={__('Connected Form', 'eightshift-forms')}
-				help={__('If you can\'t find your connected form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+				help={__('If you can\'t find your connected form, try typing its name while the dropdown is open.', 'eightshift-forms')}
 				value={outputFormSelectItemWithIcon(Object.keys(resultOutputFormPostIdRaw ?? {}).length ? resultOutputFormPostIdRaw : {id: resultOutputFormPostId})}
 				loadOptions={formSelectOptions}
 				onChange={(value) => {
@@ -66,9 +66,10 @@ export const ResultOutputOptions = ({
 			<IconToggle
 				icon={icons.visibilityAlt}
 				label={__('Hide by default', 'eightshift-forms')}
-				help={__('Hide result output block by default. We will show this block only on form success.', 'eightshift-forms')}
+				help={__('Hide result output block by default. It will be shown only on form success.', 'eightshift-forms')}
 				checked={resultOutputHide}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputHide', attributes, manifest)]: value })}
+				noBottomSpacing
 			/>
 		</PanelBody>
 	);

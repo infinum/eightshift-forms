@@ -48,7 +48,7 @@ class Editor implements ServiceInterface
 		foreach ($types as $type) {
 			$links = $this->getListOfLinks($type);
 
-			$typeKey = $type === Forms::POST_TYPE_SLUG ? '' : UtilsConfig::SLUG_ADMIN_LISTING_RESULTS;
+			$typeKey = ($type === Forms::POST_TYPE_SLUG) ? '' : UtilsConfig::SLUG_ADMIN_LISTING_RESULTS;
 
 			if (\in_array($actualUrl, $links, true)) {
 				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

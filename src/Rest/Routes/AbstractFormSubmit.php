@@ -403,7 +403,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$this->getFormSubmitMailer()->sendEmails($formDetails);
 			}
 
-			// Output result output items as a response key.
+			// Return result output items as a response key.
 			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
 			if (\has_filter($filterName)) {
 				$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];

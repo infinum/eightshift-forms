@@ -275,7 +275,7 @@ export class Utils {
 		messageContainer?.classList?.add(this.state.getStateSelector('isActive'));
 		messageContainer.dataset.status = status;
 
-		// Scroll to msg if the condition is right.
+		// Scroll to msg if the condition is matched.
 		if (status === 'success') {
 			if (this.state.getStateFormGlobalMsgHideOnSuccess(formId)) {
 				return;

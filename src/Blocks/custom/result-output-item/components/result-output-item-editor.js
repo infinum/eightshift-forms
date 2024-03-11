@@ -16,7 +16,7 @@ export const ResultOutputItemEditor = ({ attributes, clientId }) => {
 		<div className={blockClass}>
 			<div className={selector(blockClass, blockClass, 'intro')}>
 				<div className={selector(blockClass, blockClass, 'intro-inner')}>
-					{__('Show if the following condition match:', 'eightshift-forms')}
+					{__('Show if the following condition matches:', 'eightshift-forms')}
 					<br/>
 					<br/>
 					{resultOutputItemName} = {resultOutputItemValue}

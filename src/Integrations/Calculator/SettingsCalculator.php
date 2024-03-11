@@ -90,7 +90,7 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Calculator is uses to output dinamic data to the user, it doesn\'t send any emails or is not integrated with any integration.', 'eightshift-forms'),
+								'introSubtitle' => \__('Calculator is used to output dynamic data to the user, it doesn\'t send any emails nor is implemented in any integration.', 'eightshift-forms'),
 							],
 						],
 					],

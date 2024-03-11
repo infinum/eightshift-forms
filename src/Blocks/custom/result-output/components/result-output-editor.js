@@ -41,7 +41,7 @@ export const ResultOutputEditor = ({
 				>
 					<AsyncSelect
 						label={__('Result Output', 'eightshift-forms')}
-						help={__('If you can\'t find your output item, start typing its name while the dropdown is open.', 'eightshift-forms')}
+						help={__('If you can\'t find your output item, try typing its name while the dropdown is open.', 'eightshift-forms')}
 						value={outputFormSelectItemWithIcon(Object.keys(resultOutputPostIdRaw).length ? resultOutputPostIdRaw : {id: resultOutputPostId})}
 						loadOptions={resultSelectOptions}
 						onChange={(value) => {
@@ -60,7 +60,7 @@ export const ResultOutputEditor = ({
 
 					<AsyncSelect
 						label={__('Connected Form', 'eightshift-forms')}
-						help={__('If you can\'t find your connected form, start typing its name while the dropdown is open.', 'eightshift-forms')}
+						help={__('If you can\'t find your connected form, try typing its name while the dropdown is open.', 'eightshift-forms')}
 						value={outputFormSelectItemWithIcon(Object.keys(resultOutputFormPostIdRaw).length ? resultOutputFormPostIdRaw : {id: resultOutputFormPostId})}
 						loadOptions={formSelectOptions}
 						onChange={(value) => {
@@ -81,7 +81,6 @@ export const ResultOutputEditor = ({
 	}
 
 	return (
-		<>
 			<ServerSideRender
 				block={blockFullName}
 				attributes={
@@ -94,6 +93,5 @@ export const ResultOutputEditor = ({
 					)
 				}
 			/>
-		</>
 	);
 };

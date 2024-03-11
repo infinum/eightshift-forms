@@ -15,19 +15,19 @@ export const ResultOutputItemOptions = ({
 	return (
 		<PanelBody title={__('Result Item', 'infobip')}>
 			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Variable Name', 'infobip')} />}
+				label={<IconLabel icon={icons.id} label={__('Variable Name', 'eightshift-forms')} />}
 				value={resultOutputItemName}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemName', attributes, manifest)]: value })}
 			/>
 			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Variable Value', 'infobip')} />}
+				label={<IconLabel icon={icons.id} label={__('Variable Value', 'eightshift-forms')} />}
 				value={resultOutputItemValue}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValue', attributes, manifest)]: value })}
 			/>
 
 		<Notification
-			text={__('This block requires some code implementation. When form is submitted you must provide a filter output based on the field settings or use our premium Computed fields addon.', 'eightshift-forms')}
-			type={'warning'}
+			text={__('The block will not show anything if filters are not added through code! If you have the Computed fields add-on, its output is also supported.', 'eightshift-forms')}
+			type='warning'
 		/>
 
 		</PanelBody>

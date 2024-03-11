@@ -325,7 +325,9 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 									By selecting single submit form your form will not wait for the click on the submit button.
 									The form will submit data to the server as soon as the user changes are made.
 									<br /><br />
-									Not all fields are supported with this option. Supported fields:
+									Not all fields are supported with this option.
+									<br />
+									Supported fields are:
 									<ul>
 										<li>Input range</li>
 										<li>Checkbox</li>

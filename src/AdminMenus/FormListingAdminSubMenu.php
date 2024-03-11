@@ -60,7 +60,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 			20
 		);
 
-		\add_action('admin_menu', [$this, 'addCustomLinkIntoAppearnaceMenu'], 32);
+		\add_action('admin_menu', [$this, 'addCustomLinkIntoAppearanceMenu'], 32);
 	}
 
 	/**
@@ -181,7 +181,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @return void
 	 */
-	public function addCustomLinkIntoAppearnaceMenu(): void
+	public function addCustomLinkIntoAppearanceMenu(): void
 	{
 		global $submenu;
 

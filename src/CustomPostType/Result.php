@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds class for Result custom post type registration.
+ * File that holds class for Result custom post type registration.
  *
  * @package EightshiftForms\CustomPostType
  */
