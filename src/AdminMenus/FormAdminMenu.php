@@ -227,14 +227,30 @@ class FormAdminMenu extends AbstractAdminMenu
 						// Translators: %s is the form title.
 						'adminListingPageTitle' => $this->getMultilangTitle(\__('Deleted result outputs', 'eightshift-forms')),
 						// Translators: %s is the number of trashed forms.
-						'adminListingPageSubTitle' => $count === 1 ? \__('Showing 1 trashed result output.', 'eightshift-forms') : \sprintf(\__('Showing %s trashed result outputs.', 'eightshift-forms'), $count),
+						'adminListingPageSubTitle' => \sprintf(
+							_n(
+								'Showing %d trashed result output.',
+								'Showing %d trashed result outputs.',
+								$count,
+								'eightshift-forms'
+							),
+							$count
+						),
 					];
 				} else {
 					$output = [
 						// Translators: %s is the form title.
 						'adminListingPageTitle' => $this->getMultilangTitle(\__('Deleted forms', 'eightshift-forms')),
 						// Translators: %s is the number of trashed forms.
-						'adminListingPageSubTitle' => $count === 1 ? \__('Showing 1 trashed form.', 'eightshift-forms') : \sprintf(\__('Showing %s trashed forms.', 'eightshift-forms'), $count),
+						'adminListingPageSubTitle' => \sprintf(
+							_n(
+								'Showing %d trashed form.',
+								'Showing %d trashed forms.',
+								$count,
+								'eightshift-forms'
+							),
+							$count
+						),
 					];
 				}
 				break;
@@ -246,7 +262,15 @@ class FormAdminMenu extends AbstractAdminMenu
 					// Translators: %s is the form title.
 					'adminListingPageTitle' => $this->getMultilangTitle(\__('Result outputs', 'eightshift-forms')),
 					// Translators: %s is the number of trashed forms.
-					'adminListingPageSubTitle' => $count === 1 ? \__('Showing 1 result output.', 'eightshift-forms') : \sprintf(\__('Showing %s result outputs.', 'eightshift-forms'), $count),
+					'adminListingPageSubTitle' => \sprintf(
+						_n(
+							'Showing %d result output.',
+							'Showing %d result outputs.',
+							$count,
+							'eightshift-forms'
+						),
+						$count
+					),
 				];
 				break;
 			default:
@@ -325,7 +349,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							// Translators: %s is the link to the forms listing page.
 							'highlightedContentSubtitle' => \sprintf(\__('
 								Your don\'t have any result outputs in trash.<br />
-								<br /><a class="es-submit es-submit--outline" href="%s">Go to result outputs</a>', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS, '', $parent)),
+								<br /><a class="es-submit es-submit--outline" href="%s">Go to result outputs</a>', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS, '', esc_url($parent))),
 							'highlightedContentIcon' => 'emptyStateTrash',
 						]),
 					];
@@ -336,7 +360,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							// Translators: %s is the link to the forms listing page.
 							'highlightedContentSubtitle' => \sprintf(\__('
 								Your don\'t have any form in trash.<br />
-								<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), $listingUrl),
+								<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), esc_url($listingUrl)),
 							'highlightedContentIcon' => 'emptyStateTrash',
 						]),
 					];
@@ -349,7 +373,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
 							Your don\'t have any result outputs.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl()),
+							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), esc_url(UtilsGeneralHelper::getListingPageUrl())),
 						'highlightedContentIcon' => 'emptyStateResults',
 					]),
 				];
@@ -373,7 +397,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
 							You don\'t have any forms to show.<br />
-							<br /><a class="es-submit es-submit--outline" href="%s">Add your first form</a>', 'eightshift-forms'), UtilsGeneralHelper::getNewFormPageUrl(Forms::POST_TYPE_SLUG)),
+							<br /><a class="es-submit es-submit--outline" href="%s">Add your first form</a>', 'eightshift-forms'), esc_url(UtilsGeneralHelper::getNewFormPageUrl(Forms::POST_TYPE_SLUG))),
 						'highlightedContentIcon' => 'emptyStateFormList',
 					]),
 				];
@@ -683,7 +707,6 @@ class FormAdminMenu extends AbstractAdminMenu
 					$title = \get_the_title($id);
 
 					$output[] = Components::render('card-inline', [
-						// Translators: %1$s is the post type, %2$s is the post title.
 						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['status'])),
