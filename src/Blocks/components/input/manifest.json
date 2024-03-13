@@ -76,13 +76,13 @@
 			"type": "integer"
 		},
 		"inputMin": {
-			"type": "integer"
+			"type": "number"
 		},
 		"inputMax": {
-			"type": "integer"
+			"type": "number"
 		},
 		"inputStep": {
-			"type": "integer"
+			"type": "number"
 		},
 		"inputMeta": {
 			"type": "string"
@@ -99,6 +99,36 @@
 		"inputSingleSubmit": {
 			"type": "boolean",
 			"default": false
+		},
+		"inputRangeShowMin": {
+			"type": "boolean",
+			"default": false
+		},
+		"inputRangeShowMinPrefix": {
+			"type": "string"
+		},
+		"inputRangeShowMinSuffix": {
+			"type": "string"
+		},
+		"inputRangeShowMax": {
+			"type": "boolean",
+			"default": false
+		},
+		"inputRangeShowMaxPrefix": {
+			"type": "string"
+		},
+		"inputRangeShowMaxSuffix": {
+			"type": "string"
+		},
+		"inputRangeShowCurrent": {
+			"type": "boolean",
+			"default": false
+		},
+		"inputRangeShowCurrentPrefix": {
+			"type": "string"
+		},
+		"inputRangeShowCurrentSuffix": {
+			"type": "string"
 		}
 	},
 	"options": {

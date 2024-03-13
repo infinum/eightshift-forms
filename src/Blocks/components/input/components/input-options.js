@@ -17,6 +17,7 @@ import {
 	Section,
 	NumberPicker,
 	IconToggle,
+	UseToggle,
 	Control,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
@@ -74,6 +75,15 @@ export const InputOptions = (attributes) => {
 	const inputStep = checkAttr('inputStep', attributes, manifest);
 	const inputDisabledOptions = checkAttr('inputDisabledOptions', attributes, manifest);
 	const inputUseLabelAsPlaceholder = checkAttr('inputUseLabelAsPlaceholder', attributes, manifest);
+	const inputRangeShowMin = checkAttr('inputRangeShowMin', attributes, manifest);
+	const inputRangeShowMinPrefix = checkAttr('inputRangeShowMinPrefix', attributes, manifest);
+	const inputRangeShowMinSuffix = checkAttr('inputRangeShowMinSuffix', attributes, manifest);
+	const inputRangeShowMax = checkAttr('inputRangeShowMax', attributes, manifest);
+	const inputRangeShowMaxPrefix = checkAttr('inputRangeShowMaxPrefix', attributes, manifest);
+	const inputRangeShowMaxSuffix = checkAttr('inputRangeShowMaxSuffix', attributes, manifest);
+	const inputRangeShowCurrent = checkAttr('inputRangeShowCurrent', attributes, manifest);
+	const inputRangeShowCurrentPrefix = checkAttr('inputRangeShowCurrentPrefix', attributes, manifest);
+	const inputRangeShowCurrentSuffix = checkAttr('inputRangeShowCurrentSuffix', attributes, manifest);
 
 	let inputValidationPatternOptions = [];
 
@@ -82,7 +92,7 @@ export const InputOptions = (attributes) => {
 	}
 
 	// Output number to 2 decimal places if it's a float, otherwise output to fixed number.
-	const formatNumber = (number) => (Number.isInteger(number) ? number.toString() : number.toFixed(2));
+	const formatNumber = (number) => Number((Number.isInteger(number) ? number.toString() : number.toFixed(2)));
 
 	return (
 		<PanelBody title={title}>
@@ -285,6 +295,103 @@ export const InputOptions = (attributes) => {
 						label={__('Value range', 'eightshift-forms')}
 						additionalLabelClasses='es-mb-0!'
 					>
+						{inputType === 'range' &&
+							<>
+								<UseToggle
+									label={__('Show min value', 'eightshift-forms')}
+									checked={inputRangeShowMin}
+									onChange={(value) => {
+										setAttributes({ [getAttrKey('inputRangeShowMin', attributes, manifest)]: value });
+
+										if (!value) {
+											setAttributes({ [getAttrKey('inputRangeShowMinPrefix', attributes, manifest)]: undefined });
+											setAttributes({ [getAttrKey('inputRangeShowMinSuffix', attributes, manifest)]: undefined });
+										}
+									}}
+									disabled={isOptionDisabled(getAttrKey('inputRangeShowMin', attributes, manifest), inputDisabledOptions)}
+									noBottomSpacing
+								>
+									<div className='es-h-center es-mb-5'>
+										<TextControl
+											label={<IconLabel label={__('Min prefix', 'eightshift-forms')} />}
+											value={inputRangeShowMinPrefix}
+											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMinPrefix', attributes, manifest)]: value })}
+											disabled={isOptionDisabled(getAttrKey('inputRangeShowMinPrefix', attributes, manifest), inputDisabledOptions)}
+											className='es-no-field-spacing'
+										/>
+										<TextControl
+											label={<IconLabel label={__('Min suffix', 'eightshift-forms')} />}
+											value={inputRangeShowMinSuffix}
+											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMinSuffix', attributes, manifest)]: value })}
+											disabled={isOptionDisabled(getAttrKey('inputRangeShowMinSuffix', attributes, manifest), inputDisabledOptions)}
+											className='es-no-field-spacing'
+										/>
+									</div>
+								</UseToggle>
+								<UseToggle
+									label={__('Show current value', 'eightshift-forms')}
+									checked={inputRangeShowCurrent}
+									onChange={(value) => {
+										setAttributes({ [getAttrKey('inputRangeShowCurrent', attributes, manifest)]: value });
+
+										if (!value) {
+											setAttributes({ [getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest)]: undefined });
+											setAttributes({ [getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest)]: undefined });
+										}
+									}}
+									disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrent', attributes, manifest), inputDisabledOptions)}
+									noBottomSpacing
+								>
+									<div className='es-h-center es-mb-5'>
+										<TextControl
+											label={<IconLabel label={__('Current prefix', 'eightshift-forms')} />}
+											value={inputRangeShowCurrentPrefix}
+											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest)]: value })}
+											disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest), inputDisabledOptions)}
+											className='es-no-field-spacing'
+										/>
+										<TextControl
+											label={<IconLabel label={__('Current suffix', 'eightshift-forms')} />}
+											value={inputRangeShowCurrentSuffix}
+											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest)]: value })}
+											disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest), inputDisabledOptions)}
+											className='es-no-field-spacing'
+										/>
+									</div>
+								</UseToggle>
+								<UseToggle
+									label={__('Show max value', 'eightshift-forms')}
+									checked={inputRangeShowMax}
+									onChange={(value) => {
+										setAttributes({ [getAttrKey('inputRangeShowMax', attributes, manifest)]: value });
+
+										if (!value) {
+											setAttributes({ [getAttrKey('inputRangeShowMaxPrefix', attributes, manifest)]: undefined });
+											setAttributes({ [getAttrKey('inputRangeShowMaxSuffix', attributes, manifest)]: undefined });
+										}
+									}}
+									disabled={isOptionDisabled(getAttrKey('inputRangeShowMax', attributes, manifest), inputDisabledOptions)}
+								>
+									<div className='es-h-center es-mb-5'>
+										<TextControl
+											label={<IconLabel label={__('Max prefix', 'eightshift-forms')} />}
+											value={inputRangeShowMaxPrefix}
+											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMaxPrefix', attributes, manifest)]: value })}
+											disabled={isOptionDisabled(getAttrKey('inputRangeShowMaxPrefix', attributes, manifest), inputDisabledOptions)}
+											className='es-no-field-spacing'
+										/>
+										<TextControl
+											label={<IconLabel label={__('Max suffix', 'eightshift-forms')} />}
+											value={inputRangeShowMaxSuffix}
+											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMaxSuffix', attributes, manifest)]: value })}
+											disabled={isOptionDisabled(getAttrKey('inputRangeShowMaxSuffix', attributes, manifest), inputDisabledOptions)}
+											className='es-no-field-spacing'
+										/>
+									</div>
+								</UseToggle>
+							</>
+						}
+
 						<div className='es-h-spaced es-gap-5!'>
 							{showInputMin &&
 								<div className='es-display-flex es-items-end es-gap-2'>

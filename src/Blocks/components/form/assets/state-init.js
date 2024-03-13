@@ -25,6 +25,7 @@ export const StateEnum = {
 	ACTION: 'action',
 	ACTION_EXTERNAL: 'actionExternal',
 	FIELD: 'field',
+	RANGE_CURRENT: 'rangeCurrent',
 	VALUE: 'value',
 	VALUE_COMBINED: 'valueCombined',
 	INITIAL: 'initial',
@@ -462,6 +463,14 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
+				break;
+			case 'range':
+				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], field.querySelector(getStateSelector('inputRangeCurrent', true)), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 			default:

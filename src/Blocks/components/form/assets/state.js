@@ -359,6 +359,9 @@ export class State {
 	getStateElementInput = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.INPUT], formId);
 	};
+	getStateElementRangeCurrent = (name, formId) => {
+		return getState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], formId);
+	};
 	getStateElementItemsInput = (name, nameItem, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, nameItem, StateEnum.INPUT], formId);
 	};

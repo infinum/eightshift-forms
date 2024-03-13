@@ -36,6 +36,15 @@ $inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
 $inputFieldAttrs = Components::checkAttr('inputFieldAttrs', $attributes, $manifest);
 $inputUseLabelAsPlaceholder = Components::checkAttr('inputUseLabelAsPlaceholder', $attributes, $manifest);
 $inputSingleSubmit = Components::checkAttr('inputSingleSubmit', $attributes, $manifest);
+$inputRangeShowMin = Components::checkAttr('inputRangeShowMin', $attributes, $manifest);
+$inputRangeShowMinPrefix = Components::checkAttr('inputRangeShowMinPrefix', $attributes, $manifest);
+$inputRangeShowMinSuffix = Components::checkAttr('inputRangeShowMinSuffix', $attributes, $manifest);
+$inputRangeShowMax = Components::checkAttr('inputRangeShowMax', $attributes, $manifest);
+$inputRangeShowMaxPrefix = Components::checkAttr('inputRangeShowMaxPrefix', $attributes, $manifest);
+$inputRangeShowMaxSuffix = Components::checkAttr('inputRangeShowMaxSuffix', $attributes, $manifest);
+$inputRangeShowCurrent = Components::checkAttr('inputRangeShowCurrent', $attributes, $manifest);
+$inputRangeShowCurrentPrefix = Components::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
+$inputRangeShowCurrentSuffix = Components::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputHideLabel = false;
@@ -46,6 +55,9 @@ $inputClass = Components::classnames([
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
+
+// Additional content filter.
+$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('input', $attributes);
 
 if ($inputValue) {
 	$inputAttrs['value'] = esc_attr($inputValue);
@@ -68,6 +80,31 @@ if ($inputType === 'range') {
 	if (!$inputValue) {
 		$inputAttrs['value'] = esc_attr($inputMin);
 	}
+
+	if ($inputRangeShowMin) {
+		$cssSelector = Components::classnames([
+			UtilsHelper::getStateSelector('inputRangeMin'),
+			Components::selector($componentClass, $componentClass, 'range', 'min'),
+		]);
+
+		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$inputAttrs['min']}{$inputRangeShowMinSuffix}</span>");
+	}
+
+	if ($inputRangeShowCurrent) {
+		$cssSelector = Components::selector($componentClass, $componentClass, 'range', 'current');
+		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
+
+		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
+	}
+
+	if ($inputRangeShowMax) {
+		$cssSelector = Components::classnames([
+			UtilsHelper::getStateSelector('inputRangeMax'),
+			Components::selector($componentClass, $componentClass, 'range', 'max'),
+		]);
+
+		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$inputAttrs['max']}{$inputRangeShowMaxSuffix}</span>");
+	}
 }
 
 $inputAttrsOutput = '';
@@ -76,9 +113,6 @@ if ($inputAttrs) {
 		$inputAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 }
-
-// Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('input', $attributes);
 
 $input = '
 	<input
