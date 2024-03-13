@@ -54,6 +54,7 @@ $inputClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
 	Components::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+	Components::selector($inputType === 'range', $componentClass, 'range'),
 ]);
 
 // Additional content filter.

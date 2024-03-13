@@ -408,7 +408,9 @@ export class Form {
 				this.utils.redirectToUrl(formId, data);
 			} else {
 				// Clear form values.
-				this.utils.resetForm(formId);
+				if (!this.state.getStateFormIsSingleSubmit(formId)) {
+					this.utils.resetForm(formId);
+				}
 
 				// Set global msg.
 				this.utils.setGlobalMsg(formId, message, status);
@@ -1008,7 +1010,7 @@ export class Form {
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
 			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'range'))
 		) {
-			input.addEventListener('input', debounce(this.onInputEvent, 500));
+			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
 			input.addEventListener('input', this.onInputEvent);
 
