@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.2]
+
+### Fixed
+- issue with multiple select fields not being saved correctly in Moments integration.
+- single submit logic for the forms.
+
 ## [3.1.1]
 
 ### Fixed
@@ -287,6 +293,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.2]: https://github.com/infinum/eightshift-forms/compare/3.1.1...3.1.2
 [3.1.1]: https://github.com/infinum/eightshift-forms/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/infinum/eightshift-forms/compare/3.0.5...3.1.0
 [3.0.5]: https://github.com/infinum/eightshift-forms/compare/3.0.4...3.0.5

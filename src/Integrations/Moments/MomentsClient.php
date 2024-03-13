@@ -427,6 +427,11 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			}
 
 			switch ($type) {
+				case 'select':
+					$explode = \explode(UtilsConfig::DELIMITER, $value);
+
+					$value = \count($explode) > 1 ? $explode : $value;
+					break;
 				case 'checkbox':
 					$value = \explode(UtilsConfig::DELIMITER, $value);
 					break;
