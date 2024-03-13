@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.1]
+
+### Fixed
+- issue with multiple select fields not being saved correctly.
+
 ## [3.1.0]
 
 ### Added
@@ -33,6 +38,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Fixed
 - File upload validation will no longer break if API returns invalid type.
+- issue with multiple select fields not being saved correctly.
 
 ## [3.0.4]
 
@@ -281,6 +287,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.1]: https://github.com/infinum/eightshift-forms/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/infinum/eightshift-forms/compare/3.0.5...3.1.0
 [3.0.5]: https://github.com/infinum/eightshift-forms/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/infinum/eightshift-forms/compare/3.0.3...3.0.4
