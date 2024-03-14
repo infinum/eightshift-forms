@@ -1682,10 +1682,10 @@ export class Form {
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
 			(this.state.getStateFormConfigUseSingleSubmit(formId) && (
-				this.state.getStateElementTypeCustom(name, formId) === 'range') ||
+				this.state.getStateElementTypeCustom(name, formId) === 'range' ||
 				this.state.getStateElementTypeCustom(name, formId) === 'checkbox' ||
 				this.state.getStateElementTypeCustom(name, formId) === 'radio'
-			)
+			))
 		) {
 			debounce(
 				this.formSubmit(
