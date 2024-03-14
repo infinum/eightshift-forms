@@ -1669,10 +1669,7 @@ export class Form {
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			debounce(
-				this.formSubmit(
-					formId,
-			), 100);
+			debounce(this.formSubmit(formId), 100);
 		}
 	};
 
@@ -1709,10 +1706,7 @@ export class Form {
 				this.state.getStateElementTypeCustom(name, formId) === 'radio'
 			)
 		) {
-			debounce(
-				this.formSubmit(
-					formId
-			), 100);
+			debounce(this.formSubmit(formId), 100);
 		}
 	};
 
@@ -1746,10 +1740,7 @@ export class Form {
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			debounce(
-				this.formSubmit(
-					formId
-			), 100);
+			debounce(this.formSubmit(formId), 100);
 		}
 	};
 
