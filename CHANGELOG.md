@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.3]
+
+### Fixed
+- single submit on calculation forms will now send all form data on submit.
+- range current state will now update on initial load.
+
 ## [3.1.2]
 
 ### Fixed
@@ -39,6 +45,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Removed
 - Unnecessary options in the `rating` field.
+
+## [3.0.6]
+
+### Fixed
+- issue with multiple select fields not being saved correctly in Moments integration.
 
 ## [3.0.5]
 
@@ -293,9 +304,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.3]: https://github.com/infinum/eightshift-forms/compare/3.1.2...3.1.3
 [3.1.2]: https://github.com/infinum/eightshift-forms/compare/3.1.1...3.1.2
 [3.1.1]: https://github.com/infinum/eightshift-forms/compare/3.1.0...3.1.1
-[3.1.0]: https://github.com/infinum/eightshift-forms/compare/3.0.5...3.1.0
+[3.1.0]: https://github.com/infinum/eightshift-forms/compare/3.0.6...3.1.0
+[3.0.6]: https://github.com/infinum/eightshift-forms/compare/3.0.5...3.0.6
 [3.0.5]: https://github.com/infinum/eightshift-forms/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/infinum/eightshift-forms/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/infinum/eightshift-forms/compare/3.0.2...3.0.3
