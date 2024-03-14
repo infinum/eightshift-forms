@@ -9,6 +9,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Fixed
 - single submit on calculation forms will now send all form data on submit.
 - range current state will now update on initial load.
+- issue with not syncing correctly form fields with escape characters.
 
 ## [3.1.2]
 

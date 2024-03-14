@@ -1102,8 +1102,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	 */
 	private function getInnerBlocksKeyName(string $prefix, array $attributes, int $index, string $parentName): string
 	{
-		$value = $attributes["{$prefix}Value"] ?? '';
-		$label = $attributes["{$prefix}Label"] ?? '';
+		$value = isset($attributes["{$prefix}Value"]) ? \wp_specialchars_decode($attributes["{$prefix}Value"]) : '';
+		$label = isset($attributes["{$prefix}Label"]) ? \wp_specialchars_decode($attributes["{$prefix}Label"]) : '';
 
 		if (!$value) {
 			$value = $label;
