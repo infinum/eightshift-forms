@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.3]
+
+### Fixed
+- single submit on calculation forms will now send all form data on submit.
+- range current state will now update on initial load.
+- issue with not syncing correctly form fields with escape characters.
+
 ## [3.1.2]
 
 ### Fixed
@@ -298,6 +305,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.3]: https://github.com/infinum/eightshift-forms/compare/3.1.2...3.1.3
 [3.1.2]: https://github.com/infinum/eightshift-forms/compare/3.1.1...3.1.2
 [3.1.1]: https://github.com/infinum/eightshift-forms/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/infinum/eightshift-forms/compare/3.0.6...3.1.0

@@ -1006,6 +1006,11 @@ export class Form {
 		input.addEventListener('focus', this.onFocusEvent);
 		input.addEventListener('blur', this.onBlurEvent);
 
+		// If field range, set current value to DOM.
+		if (this.state.getStateElementTypeCustom(name, formId) === 'range') {
+			this.utils.setRangeCurrentValue(formId, name);
+		}
+
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
 			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'range'))
@@ -1652,16 +1657,19 @@ export class Form {
 			this.utils.unsetFilledState(formId, name);
 		}
 
-		if (
-			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			this.state.getStateFormConfigUseSingleSubmit(formId)
-		) {
+		// Used only for admin single submit.
+		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
 				this.formSubmit(
 					formId, {
 						[this.FILTER_USE_ONLY_FIELDS]: [name]
 					}
 			), 100);
+		}
+
+		// Used only on frontend for single submit.
+		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
+			debounce(this.formSubmit(formId), 100);
 		}
 	};
 
@@ -1679,20 +1687,26 @@ export class Form {
 
 		this.utils.setOnUserChangeInput(event.target);
 
-		if (
-			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			(this.state.getStateFormConfigUseSingleSubmit(formId) && (
-				this.state.getStateElementTypeCustom(name, formId) === 'range' ||
-				this.state.getStateElementTypeCustom(name, formId) === 'checkbox' ||
-				this.state.getStateElementTypeCustom(name, formId) === 'radio'
-			))
-		) {
+		// Used only for admin single submit.
+		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
 				this.formSubmit(
 					formId, {
 						[this.FILTER_USE_ONLY_FIELDS]: [name]
 					}
 			), 100);
+		}
+
+		// Used only on frontend for single submit.
+		if (
+			!this.state.getStateConfigIsAdmin() &&
+			this.state.getStateFormConfigUseSingleSubmit(formId) && (
+				this.state.getStateElementTypeCustom(name, formId) === 'range' ||
+				this.state.getStateElementTypeCustom(name, formId) === 'checkbox' ||
+				this.state.getStateElementTypeCustom(name, formId) === 'radio'
+			)
+		) {
+			debounce(this.formSubmit(formId), 100);
 		}
 	};
 
@@ -1714,16 +1728,19 @@ export class Form {
 
 		this.utils.setOnUserChangeInput(input);
 
-		if (
-			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			this.state.getStateFormConfigUseSingleSubmit(formId)
-		) {
+		// Used only for admin single submit.
+		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
 				this.formSubmit(
 					formId, {
 						[this.FILTER_USE_ONLY_FIELDS]: [name]
 					}
 			), 100);
+		}
+
+		// Used only on frontend for single submit.
+		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
+			debounce(this.formSubmit(formId), 100);
 		}
 	};
 
