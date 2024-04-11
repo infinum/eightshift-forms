@@ -61,8 +61,8 @@ export class State {
 	getStateFormPostId = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.POST_ID], formId);
 	};
-	getStateFormIsSingleSubmit = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.IS_SINGLE_SUBMIT], formId);
+	getStateFormIsAdminSingleSubmit = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], formId);
 	};
 	getStateFormType = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.TYPE], formId);
@@ -86,8 +86,8 @@ export class State {
 	setStateFormIsLoaded = (value, formId) => {
 		setState([StateEnum.FORM, StateEnum.ISLOADED], value, formId);
 	};
-	setStateFormIsSingleSubmit = (value, formId) => {
-		setState([StateEnum.FORM, StateEnum.IS_SINGLE_SUBMIT], value, formId);
+	setStateFormIsAdminSingleSubmit = (value, formId) => {
+		setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], value, formId);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -339,7 +339,7 @@ export class State {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], formId);
 	};
 	getStateElementIsSingleSubmit = (name, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], formId);
+		return getState([StateEnum.ELEMENTS, name, StateEnum.IS_ADMIN_SINGLE_SUBMIT], formId);
 	};
 	getStateElementSaveAsJson = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.SAVE_AS_JSON], formId);
