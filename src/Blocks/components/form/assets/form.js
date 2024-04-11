@@ -391,7 +391,7 @@ export class Form {
 			// Set global msg.
 			this.utils.setGlobalMsg(formId, message, status);
 
-			if (this.state.getStateFormIsSingleSubmit(formId)) {
+			if (this.state.getStateFormIsAdminSingleSubmit(formId)) {
 				this.utils.redirectToUrlByReference(formId, window.location.href, true);
 			}
 		} else {
@@ -408,9 +408,7 @@ export class Form {
 				this.utils.redirectToUrl(formId, data);
 			} else {
 				// Clear form values.
-				if (!this.state.getStateFormIsSingleSubmit(formId)) {
-					this.utils.resetForm(formId);
-				}
+				this.utils.resetForm(formId);
 
 				// Set global msg.
 				this.utils.setGlobalMsg(formId, message, status);
@@ -602,7 +600,7 @@ export class Form {
 
 		// Used for single submit.
 		const useOnlyFields = filter?.[this.FILTER_USE_ONLY_FIELDS] ?? [];
-		this.state.setStateFormIsSingleSubmit(Boolean(useOnlyFields.length), formId);
+		this.state.setStateFormIsAdminSingleSubmit(Boolean(useOnlyFields.length), formId);
 
 		// Used for group submit.
 		const skipFields = filter?.[this.FILTER_SKIP_FIELDS] ?? [];

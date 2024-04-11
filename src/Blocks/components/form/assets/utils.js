@@ -502,6 +502,14 @@ export class Utils {
 			return;
 		}
 
+		if (this.state.getStateFormIsAdminSingleSubmit(formId)) {
+			return;
+		}
+
+		if (this.state.getStateFormConfigUseSingleSubmit(formId)) {
+			return;
+		}
+
 		for (const [name] of this.state.getStateElements(formId)) {
 			const initial = this.state.getStateElementInitial(name, formId);
 

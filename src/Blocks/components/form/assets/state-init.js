@@ -51,7 +51,7 @@ export const StateEnum = {
 	HEADING_SUCCESS: 'headingSuccess',
 	HEADING_ERROR: 'headingError',
 	HIDE_ON_SUCCESS: 'hideOnSuccess',
-	IS_SINGLE_SUBMIT: 'isSingleSubmit',
+	IS_ADMIN_SINGLE_SUBMIT: 'isAdminSingleSubmit',
 	SAVE_AS_JSON: 'saveAsJson',
 	IS_ADMIN: 'isAdmin',
 	IS_USED: 'isUsed',
@@ -316,7 +316,7 @@ export function setStateFormInitial(formId) {
 
 	setState([StateEnum.FORM, StateEnum.POST_ID],formElement?.getAttribute(getStateAttribute('postId')), formId);
 	setState([StateEnum.FORM, StateEnum.ISLOADED], false, formId);
-	setState([StateEnum.FORM, StateEnum.IS_SINGLE_SUBMIT], false, formId);
+	setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], false, formId);
 	setState([StateEnum.FORM, StateEnum.ELEMENT], formElement, formId);
 	setState([StateEnum.FORM, StateEnum.TYPE], formElement?.getAttribute(getStateAttribute('formType')), formId);
 	setState([StateEnum.FORM, StateEnum.METHOD], formElement?.getAttribute('method'), formId);
@@ -497,7 +497,7 @@ export function setStateFormInitial(formId) {
 		setState([StateEnum.ELEMENTS, name, StateEnum.NAME], name, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.FIELD], field, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.ERROR], field?.querySelector(getStateSelector('error', true)), formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.IS_SINGLE_SUBMIT], item?.classList?.contains(getStateSelector('submitSingle', true).substring(1)), formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.IS_ADMIN_SINGLE_SUBMIT], item?.classList?.contains(getStateSelector('submitSingle', true).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.SAVE_AS_JSON], Boolean(item.getAttribute(getStateAttribute('saveAsJson'))), formId);
 	});
