@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Security;
 
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -54,6 +55,11 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 	 * Rate limit window key.
 	 */
 	public const SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY = 'security-rate-limit-window';
+
+	/**
+	 * IP ignore key.
+	 */
+	public const SETTINGS_SECURITY_IP_IGNORE_KEY = 'security-ip-ignore';
 
 	/**
 	 * Register all the hooks
@@ -136,6 +142,23 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 								'inputFieldAfterContent' => \__('sec', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
 								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY),
+							],
+							[
+								'component' => 'textarea',
+								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_IP_IGNORE_KEY),
+								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
+								'textareaFieldLabel' => \__('Ignore IPs', 'eightshift-forms'),
+								// translators: %s will be replaced with local validation patterns.
+								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\__("
+									If you need to ignore specific IPs, you can add them here. <br />
+									Enter one IP per line, in the following format:<br />
+									Example:
+									<ul>
+									<li>192.168.1.100</li>
+									<li>192.168.1.101</li>
+									</ul>", 'eightshift-forms')),
+								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_SECURITY_IP_IGNORE_KEY, 1),
 							],
 						],
 					],

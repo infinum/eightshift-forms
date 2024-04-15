@@ -11,6 +11,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 - reCaptcha will now send fallback email if there is an issue with the validation.
+- Security feature now supports option to ignore IPs.
 
 ## [3.1.4]
 

@@ -260,13 +260,13 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for min number value.
 					case 'min':
-						if ((string) $dataValue > (string) $inputValue) {
+						if ((string) $dataValue > (string) $inputValue && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMin', $formId), $dataValue);
 						}
 						break;
 					// Check validation for min number value.
 					case 'max':
-						if ((string) $dataValue < (string) $inputValue) {
+						if ((string) $dataValue < (string) $inputValue && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMax', $formId), $dataValue);
 						}
 						break;
