@@ -14,7 +14,6 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use Throwable;
 
 /**
@@ -204,12 +203,9 @@ class Captcha implements CaptchaInterface
 
 		// If error status returns error.
 		if (!$success) {
-			// Find error codes to use in msg response.
-			$errorCode = $responseBody['error-codes'][0] ?? '';
-
 			// Bailout on error.
 			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel("captcha" . \ucfirst(Components::kebabToCamelCase($errorCode))),
+				$this->labels->getLabel('captchaError'),
 				[
 					'response' => $responseBody,
 				],
