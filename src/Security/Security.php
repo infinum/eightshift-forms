@@ -54,7 +54,7 @@ class Security implements SecurityInterface
 		// Bailout if the IP is in the ignore list.
 		$ignoreIps = Components::flattenArray(UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_IP_IGNORE_KEY));
 
-		if (\array_key_exists($ip, \array_flip($ignoreIps))) {
+		if (isset(\array_flip($ignoreIps)[$ip])) {
 			return true;
 		}
 
