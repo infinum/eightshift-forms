@@ -12,6 +12,7 @@ namespace EightshiftForms\Security;
 
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Security class.
@@ -47,8 +48,18 @@ class Security implements SecurityInterface
 		$key = SettingsSecurity::SETTINGS_SECURITY_DATA_KEY;
 		$keyName = UtilsSettingsHelper::getOptionName($key);
 		$data = UtilsSettingsHelper::getOptionValueGroup($key);
-		$ip = $this->getIpAddress(true);
+		$ip = $this->getIpAddress();
 		$time = \time();
+
+		// Bailout if the IP is in the ignore list.
+		$ignoreIps = Components::flattenArray(UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_IP_IGNORE_KEY));
+
+		if (isset(\array_flip($ignoreIps)[$ip])) {
+			return true;
+		}
+
+		// Hash the IP for anonymization.
+		$ip = \md5($ip);
 
 		// If this is the first iteration of this user just add it to the list.
 		if (!isset($data[$ip])) {
