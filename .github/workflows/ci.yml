@@ -1,6 +1,7 @@
 name: Continuous Integration - Plugin
 
 on:
+  workflow_dispatch:
   pull_request:
 
 concurrency:
