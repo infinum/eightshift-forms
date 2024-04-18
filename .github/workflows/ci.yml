@@ -16,13 +16,14 @@ jobs:
       fail-fast: false
       matrix:
         node: [ 'latest' ]
+        php: [ '7.4' ]
     steps:
       - name: Lint assets
         uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-assets-forms@main
         with:
           NODE_VERSION: ${{ matrix.node }}
-          PROJECT_PATH: '.'
           PHP_VERSION: ${{ matrix.php }}
+          PROJECT_PATH: '.'
 
   phpstan:
     name: PHP Static code analysis using PHP - ${{ matrix.php }}
