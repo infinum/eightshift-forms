@@ -22,6 +22,7 @@ jobs:
         with:
           NODE_VERSION: ${{ matrix.node }}
           PROJECT_PATH: '.'
+          PHP_VERSION: ${{ matrix.php }}
 
   phpstan:
     name: PHP Static code analysis using PHP - ${{ matrix.php }}
