@@ -16,6 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [ 'latest' ]
+        php: [ '7.4' ]
     steps:
       - name: Lint assets
         uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle-release@main
@@ -23,3 +24,4 @@ jobs:
           PROJECT_PATH: '.'
           REPO_NAME: 'eightshift-forms'
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          PHP_VERSION: ${{ matrix.php }}
