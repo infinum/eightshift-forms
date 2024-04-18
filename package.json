@@ -24,7 +24,7 @@
 		"lintJs": "eslint src/",
 		"lint": "npm run lintJs && npm run lintStyle && composer test:standards",
 		"start": "webpack --progress --watch --mode development",
-		"build": "webpack --progress --mode production",
+		"build": "webpack --mode production",
 		"test": "wp boilerplate"
 	},
 	"devDependencies": {

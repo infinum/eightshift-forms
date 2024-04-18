@@ -42,4 +42,4 @@ When submitting issues or otherwise participating in development, please follow 
 Eightshift Forms is maintained and sponsored by [Infinum](https://infinum.com).
 
 ## ⚖️ License
-Eightshift Forms &copy;2022 [Infinum](https://infinum.com). It is free software, and may be redistributed under the terms specified in the LICENSE file.
+Eightshift Forms by [Infinum](https://infinum.com). It is free software, and may be redistributed under the terms specified in the LICENSE file.
