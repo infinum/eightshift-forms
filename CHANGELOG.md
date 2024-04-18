@@ -16,6 +16,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Updated
 - Eightshift-forms-utils to the latest version `1.3.3`.
 - License updated.
+- Deploy scripts.
 
 ## [3.1.4]
 

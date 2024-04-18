@@ -1,0 +1,27 @@
+name: Bundle release
+
+on:
+  release:
+    types: [ published ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bundle:
+    name: Add zip to release
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 'latest' ]
+        php: [ '7.4' ]
+    steps:
+      - name: Bundle release
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle-release@main
+        with:
+          PROJECT_PATH: '.'
+          REPO_NAME: 'eightshift-forms'
+          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          PHP_VERSION: ${{ matrix.php }}
