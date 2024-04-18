@@ -2,8 +2,6 @@ name: Continuous Integration - Plugin
 
 on:
   pull_request:
-    paths:
-      - '!**.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
