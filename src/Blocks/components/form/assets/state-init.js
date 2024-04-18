@@ -1,7 +1,7 @@
 /* global esFormsLocalization */
 
 import globalManifest from '../../../manifest.json';
-import utilsManifest from '../../../../../vendor/infinum/eightshift-forms-utils/src/manifest.json';
+import utilsManifest from '../../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
 import { CONDITIONAL_TAGS_ACTIONS } from '../../conditional-tags/assets/utils';
 
 ////////////////////////////////////////////////////////////////

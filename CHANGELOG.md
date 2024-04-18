@@ -13,6 +13,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - reCaptcha will now send fallback email if there is an issue with the validation.
 - Security feature now supports option to ignore IPs.
 
+### Updated
+- Eightshift-forms-utils to the latest version `1.3.3`.
+- License updated.
+- Deploy scripts.
+
 ## [3.1.4]
 
 ### Fixed

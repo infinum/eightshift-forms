@@ -1,96 +1,54 @@
-name: Continuous integration checks
+name: Continuous Integration
 
 on:
-  push:
-    branches:
-      - develop
-      - main
-    paths-ignore:
-      - '**.md'
-  pull_request:
-    paths-ignore:
-      - '**.md'
-  # Allow manually triggering the workflow.
   workflow_dispatch:
+  pull_request:
 
-# Prevent multiple unnecessary CI runs on the same branch.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # Lint JS and CSS files.
   lint:
-    name: File linting using Node version - ${{ matrix.node }}
+    name: Lint assets JS and CSS using Node version - ${{ matrix.node }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         node: [ 'latest' ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set Node.js version - ${{ matrix.node }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-          cache: 'npm'
-
-      - name: Install node packages
-        run: npm install
-
-      - name: Run linters
-        run: npm run lintJs && npm run lintStyle
-
-  # PHP check coding standards.
-  phpcs:
-    name: PHPCS check on PHP version - ${{ matrix.php }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
         php: [ '7.4' ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: PHP setup
-        uses: shivammathur/setup-php@v2
+      - name: Lint assets
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-assets-forms@main
         with:
-          php-version: ${{ matrix.php }}
-          coverage: none
-          tools: cs2pr
+          NODE_VERSION: ${{ matrix.node }}
+          PHP_VERSION: ${{ matrix.php }}
+          PROJECT_PATH: '.'
 
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
-
-      - name: Check coding standards using PHPCS
-        run: composer test:standards -- --runtime-set testVersion ${{ matrix.php }}- --report-full --report-checkstyle=./phpcs-report.xml
-
-      - name: Show PHPCS results in PR
-        run: cs2pr ./phpcs-report.xml
-
-  # PHP Static code analaysis.
   phpstan:
-    name: PHPStan check on PHP version - ${{ matrix.php }}
+    name: PHP Static code analysis using PHP - ${{ matrix.php }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php: [ '7.4' ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: PHP setup
-        uses: shivammathur/setup-php@v2
+      - name: PHP Static code analysis
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php-static@main
         with:
-          php-version: ${{ matrix.php }}
-          coverage: none
+          PHP_VERSION: ${{ matrix.php }}
+          PROJECT_PATH: '.'
 
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
-
-      - name: Run PHP Static code analaysis
-        run: composer test:types
+  phpcs:
+    name: PHP check coding standards using PHP - ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4' ]
+    steps:
+      - name: PHP check coding standards
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php@main
+        with:
+          PHP_VERSION: ${{ matrix.php }}
+          PROJECT_PATH: '.'
