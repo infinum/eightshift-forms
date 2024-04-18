@@ -20,6 +20,7 @@ jobs:
         uses: infinum/eightshift-deploy-actions/.github/actions/lint-assets@main
         with:
           NODE_VERSION: ${{ matrix.node }}
+          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
 
   phpstan:
     name: PHP Static code analysis using PHP - ${{ matrix.php }}
@@ -33,6 +34,7 @@ jobs:
         uses: infinum/eightshift-deploy-actions/.github/actions/lint-php-static@main
         with:
           PHP_VERSION: ${{ matrix.php }}
+          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
 
   phpcs:
     name: PHP check coding standards using PHP - ${{ matrix.php }}
@@ -46,3 +48,4 @@ jobs:
         uses: infinum/eightshift-deploy-actions/.github/actions/lint-php@main
         with:
           PHP_VERSION: ${{ matrix.php }}
+          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
