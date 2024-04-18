@@ -7,7 +7,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [3.1.5]
 
 ### Fixed
-- reCaptcha will now output the correct msg on the frontend in any case.
+- reCaptcha will now output the correct message on the frontend in any case.
 
 ### Added
 - reCaptcha will now send fallback email if there is an issue with the validation.

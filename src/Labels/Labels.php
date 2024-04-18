@@ -403,7 +403,7 @@ class Labels implements LabelsInterface
 		return [
 			'captchaBadRequest' => \__('Spam prevention system encountered an error. Captcha "request" is invalid or malformed.', 'eightshift-forms'),
 			'captchaWrongAction' => \__('Spam prevention system encountered an error. Captcha response "action" is not valid.', 'eightshift-forms'),
-			'captchaScoreSpam' => \__('Our system detected this request as a potential spam request. Please try again.', 'eightshift-forms'),
+			'captchaScoreSpam' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),
 			'captchaError' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
 		];
 	}
