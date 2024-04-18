@@ -1,4 +1,4 @@
-name: Bundle release - Plugin
+name: Bundle release
 
 on:
   release:

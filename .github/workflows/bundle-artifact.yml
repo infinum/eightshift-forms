@@ -1,4 +1,4 @@
-name: Bundle artifact - Plugin
+name: Bundle artifact
 
 on:
   workflow_dispatch:
