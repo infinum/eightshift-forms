@@ -22,5 +22,4 @@ jobs:
         with:
           PROJECT_PATH: '.'
           REPO_NAME: 'eightshift-forms'
-          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
           PHP_VERSION: ${{ matrix.php }}
