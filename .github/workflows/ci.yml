@@ -1,4 +1,4 @@
-name: Continuous Integration - Plugin
+name: Continuous Integration
 
 on:
   workflow_dispatch:

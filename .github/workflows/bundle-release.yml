@@ -1,0 +1,25 @@
+name: Bundle release - Plugin
+
+on:
+  release:
+    types: [ published ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bundle:
+    name: Add zip to release
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 'latest' ]
+    steps:
+      - name: Lint assets
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle-release@main
+        with:
+          PROJECT_PATH: '.'
+          REPO_NAME: 'eightshift-forms'
+          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
