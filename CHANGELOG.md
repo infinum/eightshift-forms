@@ -14,7 +14,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Security feature now supports option to ignore IPs.
 
 ### Updated
-- Eightshift-forms-utils to the latest version `1.3.3`.
+- Eightshift-forms-utils to the latest version `1.3.5`.
 - License updated.
 - Deploy scripts.
 
