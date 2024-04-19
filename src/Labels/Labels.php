@@ -401,16 +401,10 @@ class Labels implements LabelsInterface
 	private function getCaptchaLabels(): array
 	{
 		return [
-			'captchaMissingInputSecret' => \__('The Captcha "secret" parameter is missing.', 'eightshift-forms'),
-			'captchaInvalidInputSecret' => \__('The Captcha "secret" parameter is invalid or malformed.', 'eightshift-forms'),
-			'captchaInvalidInputResponse' => \__('The Captcha "response" parameter is invalid or malformed.', 'eightshift-forms'),
-			'captchaMissingInputResponse' => \__('The Captcha "response" parameter is missing.', 'eightshift-forms'),
-			'captchaBadRequest' => \__('The Captcha "request" is invalid or malformed.', 'eightshift-forms'),
-			'captchaTimeoutOrDuplicate' => \__('The Captcha response is no longer valid: either is too old or has been used previously.', 'eightshift-forms'),
-			'captchaWrongAction' => \__('The Captcha response "action" is not valid.', 'eightshift-forms'),
-			'captchaIncorrectCaptchaSol' => \__('The Captcha keys are not valid. Please check your site and secret key configuration.', 'eightshift-forms'),
-			'captchaScoreSpam' => \__('The automated system detected this request as a potential spam request. Please try again.', 'eightshift-forms'),
-			'captchaBrowserError' => \__('The Captcha check encountered an error. Please try again.', 'eightshift-forms'),
+			'captchaBadRequest' => \__('Spam prevention system encountered an error. Captcha "request" is invalid or malformed.', 'eightshift-forms'),
+			'captchaWrongAction' => \__('Spam prevention system encountered an error. Captcha response "action" is not valid.', 'eightshift-forms'),
+			'captchaScoreSpam' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),
+			'captchaError' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
 		];
 	}
 

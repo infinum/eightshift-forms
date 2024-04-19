@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.5]
+
+### Fixed
+- reCaptcha will now output the correct message on the frontend in any case.
+
+### Added
+- reCaptcha will now send fallback email if there is an issue with the validation.
+- Security feature now supports option to ignore IPs.
+
+### Updated
+- Eightshift-forms-utils to the latest version `1.3.5`.
+- License updated.
+- Deploy scripts.
+
 ## [3.1.4]
 
 ### Fixed
@@ -310,6 +324,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.5]: https://github.com/infinum/eightshift-forms/compare/3.1.4...3.1.5
 [3.1.4]: https://github.com/infinum/eightshift-forms/compare/3.1.3...3.1.4
 [3.1.3]: https://github.com/infinum/eightshift-forms/compare/3.1.2...3.1.3
 [3.1.2]: https://github.com/infinum/eightshift-forms/compare/3.1.1...3.1.2

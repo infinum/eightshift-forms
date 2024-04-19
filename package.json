@@ -24,7 +24,7 @@
 		"lintJs": "eslint src/",
 		"lint": "npm run lintJs && npm run lintStyle && composer test:standards",
 		"start": "webpack --progress --watch --mode development",
-		"build": "webpack --progress --mode production",
+		"build": "webpack --mode production",
 		"test": "wp boilerplate"
 	},
 	"devDependencies": {
@@ -33,7 +33,7 @@
 		"webpack-cli": "^5.1.4"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs": "^9.4.2",
+		"@eightshift/frontend-libs": "^10.0.0",
 		"autosize": "^6.0.1",
 		"choices.js": "^10.2.0",
 		"dropzone": "^6.0.0-beta.2",
