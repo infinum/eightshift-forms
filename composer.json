@@ -40,7 +40,7 @@
 	"require": {
 		"php": "^7.4 || >=8.0",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^1.3.3"
+		"infinum/eightshift-forms-utils": "^1.3.5"
 	},
 	"autoload": {
 		"psr-4": {
