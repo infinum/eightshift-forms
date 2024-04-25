@@ -8,6 +8,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Updated
 - Eightshift-forms-utils to the latest version `1.3.6`.
+- Updated create entries helper to check if the database table exists.
+- Updated validator to load email tld manifest data from cache.
 
 ## [3.1.5]
 
