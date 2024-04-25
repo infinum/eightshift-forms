@@ -45,6 +45,13 @@ class Validator extends AbstractValidation
 	protected $validationPatterns;
 
 	/**
+	 * File path getter for better loading time.
+	 *
+	 * @var array<mixed>
+	 */
+	private static $esFormsValidatorEmailTld = [];
+
+	/**
 	 * Validation Fields to check.
 	 * If adding a new validation type put it here.
 	 *
@@ -235,14 +242,10 @@ class Validator extends AbstractValidation
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 						} else {
 							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
-								$path = \dirname(__FILE__) . '/manifest.json';
+								$data = $this->getEmailTldData();
 
-								if (\file_exists($path)) {
-									$data = \json_decode(\implode(' ', (array)\file($path)), true);
-
-									if (!$this->isEmailTlValid($inputValue, $data)) {
-										$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
-									}
+								if (!$this->isEmailTlValid($inputValue, $data)) {
+									$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
 								}
 							}
 						}
@@ -658,5 +661,27 @@ class Validator extends AbstractValidation
 		}
 
 		return $inputValue;
+	}
+
+	/**
+	 * Get Email TLD manifest data.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getEmailTldData(): array
+	{
+		if (!empty(self::$esFormsValidatorEmailTld)) {
+			return self::$esFormsValidatorEmailTld;
+		}
+
+		$path = \dirname(__FILE__) . '/manifest.json';
+
+		if (\file_exists($path)) {
+			self::$esFormsValidatorEmailTld = \json_decode(\implode(' ', (array)\file($path)), true);
+
+			return self::$esFormsValidatorEmailTld;
+		}
+
+		return [];
 	}
 }

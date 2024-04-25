@@ -35,7 +35,10 @@ class CreateEntriesTable implements ServiceInterface
 	 */
 	public function createTable(): void
 	{
+		require_once(\ABSPATH . 'wp-admin/includes/upgrade.php');
+
 		global $wpdb;
+
 		$tableName = $wpdb->prefix . EntriesHelper::TABLE_NAME;
 
 		$charsetCollate = $wpdb->get_charset_collate();
@@ -48,7 +51,6 @@ class CreateEntriesTable implements ServiceInterface
 			PRIMARY KEY  (id)
 		) $charsetCollate;";
 
-		require_once(\ABSPATH . 'wp-admin/includes/upgrade.php');
-		\dbDelta($sql);
+		\maybe_create_table($tableName, $sql);
 	}
 }
