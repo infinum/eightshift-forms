@@ -18,6 +18,8 @@ use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftForms_Parsedown as Parsedown;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class Mailer
@@ -139,7 +141,7 @@ class Mailer implements MailerInterface
 					}
 					break;
 				default:
-					$filesOutput = UtilsGeneralHelper::recursiveFind($files, 'path');
+					$filesOutput = Components::recursiveArrayFind($files, 'path');
 					break;
 			}
 		}
@@ -220,7 +222,7 @@ class Mailer implements MailerInterface
 					}
 					break;
 				default:
-					$filesOutput = UtilsGeneralHelper::recursiveFind($files, 'path');
+					$filesOutput = Components::recursiveArrayFind($files, 'path');
 					break;
 			}
 		}
@@ -247,7 +249,7 @@ class Mailer implements MailerInterface
 	private function getDebugOptions(): array
 	{
 		return [
-			'forms' => UtilsGeneralHelper::getProjectVersion(),
+			'forms' => Helpers::getPluginVersion(),
 			'php' => \phpversion(),
 			'wp' => \get_bloginfo('version'),
 			'url' => \get_bloginfo('url'),

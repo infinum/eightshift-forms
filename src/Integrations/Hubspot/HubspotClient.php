@@ -221,7 +221,7 @@ class HubspotClient implements HubspotClientInterface
 			'context' => [
 				'ipAddress' => $this->security->getIpAddress(),
 				'hutk' => $params[UtilsHelper::getStateParam('hubspotCookie')]['value'],
-				'pageUri' => UtilsGeneralHelper::cleanPageUrl($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value']),
+				'pageUri' => Components::cleanUrlParams($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value']),
 				'pageName' => $params[UtilsHelper::getStateParam('hubspotPageName')]['value'],
 			],
 		];

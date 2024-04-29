@@ -6,6 +6,7 @@
  * @package EightshiftForms\Helpers
  */
 
+use EightshiftForms\Cache\ManifestCache;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\General\SettingsGeneral;
@@ -62,7 +63,8 @@ function esFormsDecryptor(string $value)
  */
 function esFormsGeolocationCountriesList(): array
 {
-	return (new Geolocation())->getCountriesList();
+	$cache = new ManifestCache();
+	return (new Geolocation($cache))->getCountriesList();
 }
 
 /**
@@ -101,7 +103,7 @@ function esFormsGetComponentsRender(string $component, array $attributes = []): 
 function esFormRenderForm(string $formId, array $attributes = []): string
 {
 	return Components::render(
-		'forms/forms.php',
+		'forms',
 		[
 			'formsFormPostId' => $formId,
 			'formsStyle' => $attributes['style'] ?? [],
@@ -109,7 +111,7 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 			'formsFormGeolocation' => $attributes['geolocation'] ?? [],
 			'formsFormGeolocationAlternatives' => $attributes['geolocationAlternatives'] ?? [],
 		],
-		Components::getProjectPaths('blocksDestinationCustom'),
+		'blocks',
 		true
 	);
 }

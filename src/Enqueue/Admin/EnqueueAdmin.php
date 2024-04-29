@@ -14,8 +14,8 @@ use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class EnqueueAdmin
@@ -28,16 +28,6 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 * Use shared helper trait.
 	 */
 	use SharedEnqueue;
-
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
-	 */
-	public function __construct(ManifestInterface $manifest)
-	{
-		$this->manifest = $manifest;
-	}
 
 	/**
 	 * Register all the hooks
@@ -67,7 +57,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsVersion(): string
 	{
-		return UtilsGeneralHelper::getProjectVersion();
+		return Helpers::getPluginVersion();
 	}
 
 	/**

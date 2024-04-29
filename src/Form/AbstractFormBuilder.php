@@ -79,7 +79,7 @@ abstract class AbstractFormBuilder
 				'additionalClass' => 'es-submit--global',
 				'submitValue' => \__('Save changes', 'eightshift-forms'),
 			]),
-			'',
+			'components',
 			true
 		);
 
@@ -149,7 +149,7 @@ abstract class AbstractFormBuilder
 							$output .= Components::render(
 								$item['component'],
 								Components::props($innerComponent, $item),
-								'',
+								'components',
 								true
 							);
 						}
@@ -177,7 +177,7 @@ abstract class AbstractFormBuilder
 				Components::props($component, $attributes),
 				$additionalAttributes
 			),
-			'',
+			'components',
 			true
 		);
 	}
@@ -242,7 +242,7 @@ abstract class AbstractFormBuilder
 		return Components::render(
 			'form',
 			Components::props('form', [], $formProps),
-			'',
+			'components',
 			true
 		);
 	}

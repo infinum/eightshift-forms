@@ -11,7 +11,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Components::getManifestByDir(__DIR__);
 
 $fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
 if (!$fieldUse) {
@@ -160,14 +160,20 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 
 	<?php
 	if ($fieldUniqueId) {
-		echo Components::outputCssVariables($attributes, $manifest, $fieldUniqueId, [], 'wp-block');
+		echo Components::outputCssVariables($attributes, $manifest, $fieldUniqueId, 'wp-block');
 	} else {
 		echo Components::outputCssVariables($attributes, $manifest, $unique);
 	}
 
-	echo Components::renderPartial('component', 'utils', 'debug-field-details', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		'name' => Components::checkAttr('fieldName', $attributes, $manifest),
-	]);
+	echo Components::render(
+		'debug-field-details',
+		[
+			'name' => Components::checkAttr('fieldName', $attributes, $manifest),
+		],
+		'components',
+		false,
+		'utils/partials'
+	);
 
 	?>
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
@@ -219,7 +225,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 				Components::props('error', $attributes, [
 					'errorId' => $fieldId,
 					'selectorClass' => $componentClass
-				])
+				]),
 			);
 		}
 		?>

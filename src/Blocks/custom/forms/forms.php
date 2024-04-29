@@ -11,7 +11,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Components::getManifestByDir(__DIR__);
 $manifestInvalid = Components::getComponent('invalid');
 $manifestSettings = Components::getSettings();
 

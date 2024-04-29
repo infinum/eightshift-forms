@@ -18,6 +18,7 @@ namespace EightshiftForms;
 
 use EightshiftForms\Main\Main;
 use EightshiftForms\Testfilters\Testfilters;
+use EightshiftForms\Cache\ManifestCache;
 
 /**
  * If this file is called directly, abort.
@@ -61,6 +62,8 @@ require __DIR__ . '/vendor-prefixed/autoload.php';
  */
 if (\class_exists(Main::class)) {
 	$sep = \DIRECTORY_SEPARATOR;
+
+	(new ManifestCache())->setProjectAllCache();
 
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 

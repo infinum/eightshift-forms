@@ -9,7 +9,7 @@
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Components::getManifest(dirname(__DIR__, 2));
+$manifest = Components::getManifestByDir(dirname(__DIR__, 2));
 
 $steps = $attributes['steps'] ?? [];
 

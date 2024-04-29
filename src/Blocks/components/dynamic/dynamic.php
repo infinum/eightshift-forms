@@ -9,7 +9,7 @@
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Components::getManifestByDir(__DIR__);
 
 $dynamicName = Components::checkAttr('dynamicName', $attributes, $manifest);
 if (!$dynamicName) {

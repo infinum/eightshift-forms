@@ -9,7 +9,7 @@
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Components::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -41,16 +41,28 @@ $progressBarClass = Components::classnames([
 <div class="<?php echo esc_attr($progressBarClass); ?>">
 	<?php
 	if (!$progressBarMultiflowUse) {
-		echo Components::renderPartial('component', $manifest['componentName'], 'multistep', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-			'steps' => $progressBarSteps,
-			'componentClass' => $componentClass,
-			'jsClass' => UtilsHelper::getStateSelector('stepProgressBar'),
-			'hideLabels' => Components::checkAttr('progressBarHideLabels', $attributes, $manifest),
-		]);
+		echo Components::render(
+			'multistep',
+			[
+				'steps' => $progressBarSteps,
+				'componentClass' => $componentClass,
+				'jsClass' => UtilsHelper::getStateSelector('stepProgressBar'),
+				'hideLabels' => Components::checkAttr('progressBarHideLabels', $attributes, $manifest),
+			],
+			'components',
+			false,
+			"{$manifest['componentName']}/partials"
+		);
 	} else {
-		echo Components::renderPartial('component', $manifest['componentName'], 'multiflow', [  // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-			'count' => Components::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest),
-		]);
+		echo Components::render(
+			'multiflow',
+			[
+				'count' => Components::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest),
+			],
+			'components',
+			false,
+			"{$manifest['componentName']}/partials"
+		);
 	}
 	?>
 </div>

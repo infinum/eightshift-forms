@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Cache\ManifestCache;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
@@ -23,6 +24,7 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
@@ -45,11 +47,11 @@ class Validator extends AbstractValidation
 	protected $validationPatterns;
 
 	/**
-	 * File path getter for better loading time.
+	 * Instance variable for manifest cache.
 	 *
-	 * @var array<mixed>
+	 * @var ManifestCacheInterface
 	 */
-	private static $esFormsValidatorEmailTld = [];
+	protected $manifestCache;
 
 	/**
 	 * Validation Fields to check.
@@ -100,13 +102,16 @@ class Validator extends AbstractValidation
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
 	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 */
 	public function __construct(
 		LabelsInterface $labels,
-		ValidationPatternsInterface $validationPatterns
+		ValidationPatternsInterface $validationPatterns,
+		ManifestCacheInterface $manifestCache
 	) {
 		$this->labels = $labels;
 		$this->validationPatterns = $validationPatterns;
+		$this->manifestCache = $manifestCache;
 	}
 
 	/**
@@ -242,9 +247,7 @@ class Validator extends AbstractValidation
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 						} else {
 							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
-								$data = $this->getEmailTldData();
-
-								if (!$this->isEmailTlValid($inputValue, $data)) {
+								if (!$this->isEmailTlValid($inputValue, \array_values($this->manifestCache->getManifestCacheTopItem(ManifestCache::TLD_KEY, ManifestCache::TYPE_FORMS)))) {
 									$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
 								}
 							}
@@ -661,27 +664,5 @@ class Validator extends AbstractValidation
 		}
 
 		return $inputValue;
-	}
-
-	/**
-	 * Get Email TLD manifest data.
-	 *
-	 * @return array<mixed>
-	 */
-	private function getEmailTldData(): array
-	{
-		if (!empty(self::$esFormsValidatorEmailTld)) {
-			return self::$esFormsValidatorEmailTld;
-		}
-
-		$path = \dirname(__FILE__) . '/manifest.json';
-
-		if (\file_exists($path)) {
-			self::$esFormsValidatorEmailTld = \json_decode(\implode(' ', (array)\file($path)), true);
-
-			return self::$esFormsValidatorEmailTld;
-		}
-
-		return [];
 	}
 }

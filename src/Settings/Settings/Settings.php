@@ -16,6 +16,7 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
 /**
  * Settings class.
@@ -111,7 +112,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			UtilsHelper::getStateAttribute('formId') => $formId,
 			UtilsHelper::getStateAttribute('formType') => $internalType,
 			UtilsHelper::getStateAttribute('settingsType') => $type,
-			UtilsHelper::getStateAttribute('successRedirect') => UtilsGeneralHelper::getCurrentUrl(),
+			UtilsHelper::getStateAttribute('successRedirect') => Components::getCurrentUrl(),
 		];
 
 		// Populate and build form.

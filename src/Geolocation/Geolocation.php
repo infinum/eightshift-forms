@@ -113,7 +113,8 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$path = UtilsDataHelper::getDataManifestPath('geolocation', 'geoip.phar');
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = UtilsDataHelper::getDataManifestPath("eolocation{$sep}geoip.phar");
 
 		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
@@ -137,7 +138,8 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$path = UtilsDataHelper::getDataManifestPath('geolocation', 'geoip.mmdb');
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = UtilsDataHelper::getDataManifestPath("geolocation{$sep}geoip.mmdb");
 
 		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {

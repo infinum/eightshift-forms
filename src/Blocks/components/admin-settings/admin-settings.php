@@ -9,7 +9,7 @@
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Components::getManifestByDir(__DIR__);
 $manifestSection = Components::getComponent('admin-settings-section');
 
 echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
@@ -45,9 +45,14 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	<?php if ($adminSettingsNotice) { ?>
 		<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
 			<?php
-			echo Components::render('notice', [
-				'noticeContent' => $adminSettingsNotice,
-			], '', true);
+				echo Components::render(
+					'notice',
+					[
+					'noticeContent' => $adminSettingsNotice,
+					],
+					'components',
+					true
+				);
 			?>
 		</div>
 	<?php } ?>
@@ -65,11 +70,18 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 
 		<?php
 		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		echo Components::renderPartial('component', $componentName, 'sidebar-section', [
-			'items' => $adminSettingsSidebar,
-			'sectionClass' => $sectionClass,
-			'adminSettingsType' => $adminSettingsType,
-		]);
+		echo $componentName;
+		echo Components::render(
+			'sidebar-section',
+			[
+				'items' => $adminSettingsSidebar,
+				'sectionClass' => $sectionClass,
+				'adminSettingsType' => $adminSettingsType,
+			],
+			'components',
+			false,
+			"{$componentName}/partials"
+		);
 		?>
 	</div>
 	<div class="<?php echo esc_attr("{$sectionClass}__main"); ?>">

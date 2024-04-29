@@ -13,7 +13,7 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Components::getManifestByDir(__DIR__);
 $manifestSelect = Components::getComponent('select');
 
 $componentName = $manifest['componentName'] ?? '';

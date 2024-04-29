@@ -14,7 +14,10 @@
 		"outputCssOptimize": true,
 		"outputCssSelectorName": "esFormsCssVariables",
 		"outputCssGloballyAdditionalStyles": [],
-		"useWrapper": false
+		"useWrapper": false,
+		"useBlocks": true,
+		"useComponents": true,
+		"useVariations": false
 	},
 	"allowedBlocksNoneBuilderBlocksList": [
 		"eightshift-forms/form-selector",

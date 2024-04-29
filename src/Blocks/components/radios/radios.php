@@ -10,7 +10,7 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Components::getManifestByDir(__DIR__);
 
 $radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
 if (!$radiosName) {

@@ -91,7 +91,20 @@ class Forms extends AbstractPostType
 		];
 
 		return [
-			'label' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
+			// phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified
+			'labels' => [
+				'name' => esc_html_x(
+					'Eightshift Forms',
+					'post type plural name',
+					'eightshift-forms'
+				),
+				'singular_name' => esc_html_x(
+					'Eightshift Form',
+					'post type singular name',
+					'eightshift-forms'
+				),
+			],
+			// phpcs:enable
 			'public' => true,
 			'menu_position' => static::MENU_POSITION,
 			'menu_icon' => static::MENU_ICON,
