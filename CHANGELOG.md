@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.6]
+
+### Updated
+- Eightshift-forms-utils to the latest version `1.3.6`.
+- Updated create entries helper to check if the database table exists.
+- Updated validator to load email tld manifest data from cache.
+
 ## [3.1.5]
 
 ### Fixed
@@ -324,6 +331,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.6]: https://github.com/infinum/eightshift-forms/compare/3.1.5...3.1.6
 [3.1.5]: https://github.com/infinum/eightshift-forms/compare/3.1.4...3.1.5
 [3.1.4]: https://github.com/infinum/eightshift-forms/compare/3.1.3...3.1.4
 [3.1.3]: https://github.com/infinum/eightshift-forms/compare/3.1.2...3.1.3

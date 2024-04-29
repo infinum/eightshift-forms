@@ -16,7 +16,6 @@ use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -110,61 +109,6 @@ class FormAdminTopBarMenu implements ServiceInterface
 				'href' => UtilsGeneralHelper::getListingPageUrl(),
 			],
 		);
-
-		$items = $this->formsListing->getFormsList();
-
-		if ($items) {
-			foreach ($items as $item) {
-				$id = $item['id'] ?? '';
-				$title = $item['title'] ?? '';
-				$url = $item['editLink'] ?? null;
-
-				if (!$title) {
-					// Translators: %s is the form ID.
-					$title = \sprintf(\__('Form %s', 'eightshift-forms'), $id);
-				}
-
-				if ($isDevelopMode) {
-					$title = "{$title} ($id)";
-				}
-
-				$link = "{$listingPrefix}-{$id}";
-
-				$adminBar->add_menu(
-					[
-						'id' => "{$listingPrefix}-{$id}",
-						'parent' => $listingPrefix,
-						'title' => $title,
-						'href' => $url,
-					],
-				);
-
-				$adminBar->add_menu(
-					[
-						'id' => "{$listingPrefix}-{$id}-edit",
-						'parent' => $link,
-						'title' => \esc_html__('Edit form', 'eightshift-forms'),
-						'href' => $url,
-					],
-				);
-				$adminBar->add_menu(
-					[
-						'id' => "{$listingPrefix}-{$id}-settings",
-						'parent' => $link,
-						'title' => \esc_html__('Settings', 'eightshift-forms'),
-						'href' => $item['settingsLink'] ?? null,
-					],
-				);
-				$adminBar->add_menu(
-					[
-						'id' => "{$listingPrefix}-{$id}-locations",
-						'parent' => $link,
-						'title' => \esc_html__('Locations', 'eightshift-forms'),
-						'href' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS, (string) $id),
-					],
-				);
-			}
-		}
 
 		$adminBar->add_menu(
 			[
