@@ -14,7 +14,7 @@ use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -39,7 +39,7 @@ class Editor implements ServiceInterface
 	 */
 	public function getEditorBackLink(): void
 	{
-		$actualUrl = Components::getCurrentUrl();
+		$actualUrl = Helpers::getCurrentUrl();
 
 		$types = [
 			Forms::POST_TYPE_SLUG,

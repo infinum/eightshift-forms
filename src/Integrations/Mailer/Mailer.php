@@ -18,7 +18,6 @@ use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftForms_Parsedown as Parsedown;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -141,7 +140,7 @@ class Mailer implements MailerInterface
 					}
 					break;
 				default:
-					$filesOutput = Components::recursiveArrayFind($files, 'path');
+					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
 					break;
 			}
 		}
@@ -222,7 +221,7 @@ class Mailer implements MailerInterface
 					}
 					break;
 				default:
-					$filesOutput = Components::recursiveArrayFind($files, 'path');
+					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
 					break;
 			}
 		}
