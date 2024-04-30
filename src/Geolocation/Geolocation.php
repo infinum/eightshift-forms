@@ -114,7 +114,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function getGeolocationPharLocation(): string
 	{
 		$sep = \DIRECTORY_SEPARATOR;
-		$path = UtilsDataHelper::getDataManifestPath("eolocation{$sep}geoip.phar");
+		$path = UtilsDataHelper::getDataManifestPath("geolocation{$sep}geoip.phar");
 
 		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {

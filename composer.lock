@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "3939fc98bdf096d91678f8c10f2a65591c9e784c"
+                "reference": "56ddbd962c6b165cb142e1080bd8a77a2c3aceb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/3939fc98bdf096d91678f8c10f2a65591c9e784c",
-                "reference": "3939fc98bdf096d91678f8c10f2a65591c9e784c",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/56ddbd962c6b165cb142e1080bd8a77a2c3aceb0",
+                "reference": "56ddbd962c6b165cb142e1080bd8a77a2c3aceb0",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2024-04-29T19:29:06+00:00"
+            "time": "2024-04-29T21:24:40+00:00"
         },
         {
             "name": "infinum/eightshift-libs",
@@ -141,12 +141,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "a2c3e3e93be13133102b474db6aaca3d6b4d7db5"
+                "reference": "2f4219360624622df50fef77345555b10285b3ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/a2c3e3e93be13133102b474db6aaca3d6b4d7db5",
-                "reference": "a2c3e3e93be13133102b474db6aaca3d6b4d7db5",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/2f4219360624622df50fef77345555b10285b3ed",
+                "reference": "2f4219360624622df50fef77345555b10285b3ed",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2024-04-29T21:20:36+00:00"
+            "time": "2024-04-30T10:59:48+00:00"
         },
         {
             "name": "opis/closure",
