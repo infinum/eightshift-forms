@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.2.0]
+
+### Updated
+- `Eightshift-forms-utils` to the latest version `2.0.0`.
+- `@infinum/eightshift-libs` to the latest version `8.0.0`.
+- `@infinum/eightshift-frontend-libs` to the latest version `12.0.0`.
+
+### Removed
+- All `Data` are not loaded from utils lib.
+- Top bar no longer supports listing all forms items for faster loading.
+- `src/Exception/MissingFilterInfoException.php` because it is not used anymore.
+
+### Added
+- New `Caching` service for manifest data.
+
+### Fixed
+- Custom post type labels are not translatable.
+
+### Changed
+- Filter `script_dependency_theme` is now `script_dependency_theme_captcha`.
+
 ## [3.1.6]
 
 ### Updated
@@ -331,6 +352,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.2.0]: https://github.com/infinum/eightshift-forms/compare/3.1.6...3.2.0
 [3.1.6]: https://github.com/infinum/eightshift-forms/compare/3.1.5...3.1.6
 [3.1.5]: https://github.com/infinum/eightshift-forms/compare/3.1.4...3.1.5
 [3.1.4]: https://github.com/infinum/eightshift-forms/compare/3.1.3...3.1.4
