@@ -63,7 +63,7 @@ require __DIR__ . '/vendor-prefixed/autoload.php';
 if (\class_exists(Main::class)) {
 	$sep = \DIRECTORY_SEPARATOR;
 
-	(new ManifestCache())->setProjectAllCache();
+	(new ManifestCache())->setProjectCache();
 
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 

@@ -76,14 +76,14 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 	 *
 	 * @var GeolocationInterface
 	 */
-	protected GeolocationInterface $geolocation;
+	private GeolocationInterface $geolocation;
 
 	/**
 	 * Instance variable for manifest cache.
 	 *
 	 * @var ManifestCacheInterface
 	 */
-	protected $manifestCache;
+	private $manifestCache;
 
 	/**
 	 * Create a new admin instance.

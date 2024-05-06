@@ -247,7 +247,7 @@ class Validator extends AbstractValidation
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 						} else {
 							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
-								if (!$this->isEmailTlValid($inputValue, \array_values($this->manifestCache->getManifestCacheTopItem(ManifestCache::TLD_KEY, ManifestCache::TYPE_FORMS)))) {
+								if (!$this->isEmailTldValid($inputValue, \array_values($this->manifestCache->getManifestCacheTopItem(ManifestCache::TLD_KEY, ManifestCache::TYPE_FORMS)))) {
 									$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
 								}
 							}

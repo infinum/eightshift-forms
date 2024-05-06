@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File containing an abstract class for holding Manifest Cache functionality.
+ * File containing an implementation of the ManifestCache class.
  *
  * It is used to provide manifest.json file location stored in the transient cache.
  *
@@ -53,13 +53,13 @@ class ManifestCache extends AbstractManifestCache
 	}
 
 	/**
-	 * Set all cache.
+	 * Set the cache for the entire project.
 	 *
 	 * @param array<string> $ignoreCache Array of cache to ignore.
 	 *
 	 * @return void
 	 */
-	public function setProjectAllCache($ignoreCache = []): void
+	public function setProjectCache($ignoreCache = []): void
 	{
 		$this->setAllCache($ignoreCache);
 
