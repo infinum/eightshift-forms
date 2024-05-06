@@ -88,7 +88,7 @@ class Result extends AbstractPostType
 			// phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified
 			'labels' => [
 				'name' => esc_html_x(
-					'Result Outputs',
+					'Results Output',
 					'post type plural name',
 					'eightshift-forms'
 				),
