@@ -48,7 +48,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 				echo Components::render(
 					'notice',
 					[
-					'noticeContent' => $adminSettingsNotice,
+						'noticeContent' => $adminSettingsNotice,
 					],
 					'components',
 					true
