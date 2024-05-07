@@ -321,7 +321,7 @@ export class Steps {
 	 * @returns {vodi}
 	 */
 	removeEvents(formId) {
-		this.state.getStateFormElement(formId).removeEventListener(
+		this.state.getStateFormElement(formId)?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
@@ -423,8 +423,8 @@ export class Steps {
 			getIgnoreFields: (formId) => {
 				return this.getIgnoreFields(formId);
 			},
-			removeEvents: () => {
-				this.removeEvents();
+			removeEvents: (formId) => {
+				this.removeEvents(formId);
 			},
 			onInitEvent: (event) => {
 				this.onInitEvent(event);

@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.7]
+
+### Updated
+- Strauss to the latest version.
+
+### Added
+- ability for checkboxes and radios when used as a "show as" option to select to have placeholder text.
+- Check for enrichment if the locals storage is available.
+
+### Fixed
+- Google reCaptcha will now throw an error if it is not set up correctly.
+- JS errors on multiple locations.
+- Google reCaptcha will now send fallback email if there is an issue with the validation only.
+- Cleanup of the fallback email for the data that is not necessary.
+- Enrichment will now only prefill visible fields.
+
 ## [3.1.6]
 
 ### Fixed
@@ -329,6 +345,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.7]: https://github.com/infinum/eightshift-forms/compare/3.1.6...3.1.7
 [3.1.6]: https://github.com/infinum/eightshift-forms/compare/3.1.5...3.1.6
 [3.1.5]: https://github.com/infinum/eightshift-forms/compare/3.1.4...3.1.5
 [3.1.4]: https://github.com/infinum/eightshift-forms/compare/3.1.3...3.1.4

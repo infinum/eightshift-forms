@@ -95,6 +95,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected const VALIDATION_ERROR_DATA = 'validationErrorData';
 	protected const VALIDATION_ERROR_MSG = 'validationErrorMsg';
 	protected const VALIDATION_ERROR_OUTPUT = 'validationOutput';
+	protected const VALIDATION_ERROR_IS_SPAM = 'validationIsSpam';
 
 
 	/**
@@ -243,22 +244,26 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						}
 
 						$captcha = $this->getCaptcha()->check(
-							$captchaParams['token'] ?? '',
-							$captchaParams['action'] ?? '',
-							(bool) $captchaParams['isEnterprise'] ?: false // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+							$captchaParams['token'],
+							$captchaParams['action'],
+							$captchaParams['isEnterprise'] === 'true'
 						);
 
 						if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
-							// Send fallback email if there is an issue with reCaptcha.
-							$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
-								$formDetails,
-								// translators: %s is the form ID.
-								\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
-								'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>',
-								[
-									self::VALIDATION_ERROR_DATA => $captcha,
-								]
-							);
+							$isSpam = $captcha['data']['isSpam'] ?? false;
+
+							if (!$isSpam) {
+								// Send fallback email if there is an issue with reCaptcha.
+								$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
+									$formDetails,
+									// translators: %s is the form ID.
+									\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+									'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>',
+									[
+										self::VALIDATION_ERROR_DATA => $captcha,
+									]
+								);
+							}
 
 							return \rest_ensure_response($captcha);
 						}

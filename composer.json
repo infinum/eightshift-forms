@@ -91,7 +91,9 @@
 	"extra": {
 		"strauss": {
 			"namespace_prefix": "EightshiftFormsVendor",
-			"delete_vendor_packages": true
+			"exclude_from_prefix": {
+				"file_patterns": ["/Example.php$/"]
+			}
 		}
 	}
 }
