@@ -47,7 +47,7 @@ class ResultOutputItemPart implements ServiceInterface
 
 		$name = isset($params['name']) ? \esc_html($params['name']) : '';
 
-		if (!$name || !$content) {
+		if ($name === '') {
 			return '';
 		}
 
