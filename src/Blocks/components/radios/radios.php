@@ -52,7 +52,7 @@ $radiosHideLabel = false;
 $radiosFieldLabel = $attributes[Components::getAttrKey('radiosFieldLabel', $attributes, $manifest)] ?? '';
 $radiosShowAs = $attributes[Components::getAttrKey('radiosShowAs', $attributes, $manifest)] ?? '';
 
-// radios don't use placeholder so we are not going to render it.
+// Radios don't use placeholder so we are not going to render it.
 if ($radiosShowAs !== '') {
 	// Placeholder input value.
 	if ($radiosPlaceholder) {

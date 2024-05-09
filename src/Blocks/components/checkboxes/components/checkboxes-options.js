@@ -103,7 +103,7 @@ export const CheckboxesOptions = (attributes) => {
 						}
 						<IconToggle
 							icon={icons.fieldPlaceholder}
-							label={__('Use label as placeholder', 'eightshift-forms')}
+							label={__('Use label as a placeholder', 'eightshift-forms')}
 							checked={checkboxesUseLabelAsPlaceholder}
 							onChange={(value) => {
 								setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: undefined });

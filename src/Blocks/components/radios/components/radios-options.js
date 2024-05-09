@@ -84,7 +84,7 @@ export const RadiosOptions = (attributes) => {
 						}
 						<IconToggle
 							icon={icons.fieldPlaceholder}
-							label={__('Use label as placeholder', 'eightshift-forms')}
+							label={__('Use label as a placeholder', 'eightshift-forms')}
 							checked={radiosUseLabelAsPlaceholder}
 							onChange={(value) => {
 								setAttributes({ [getAttrKey('radiosPlaceholder', attributes, manifest)]: undefined });

@@ -10,14 +10,14 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Strauss to the latest version.
 
 ### Added
-- ability for checkboxes and radios when used as a "show as" option to select to have placeholder text.
-- Check for enrichment if the locals storage is available.
+- Ability for checkboxes and radios when used as a "show as" option to select to have placeholder text.
+- Check for the enrichment if locale storage is available.
 
 ### Fixed
-- Google reCaptcha will now throw an error if it is not set up correctly.
+- Google reCaptcha will now throw an error if not set up correctly.
 - JS errors on multiple locations.
-- Google reCaptcha will now send fallback email if there is an issue with the validation only.
-- Cleanup of the fallback email for the data that is not necessary.
+- Google reCaptcha will now send a fallback email if there is an issue with the validation only.
+- Cleaned up unnecessary data from fallback e-mails.
 - Enrichment will now only prefill visible fields.
 
 ## [3.1.6]
