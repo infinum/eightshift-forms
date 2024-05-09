@@ -86,10 +86,7 @@ $fieldOutput = [
 	'fieldName' => $checkboxesName,
 	'fieldIsRequired' => $checkboxesIsRequired,
 	'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-	'fieldConditionalTags' => Components::render(
-		'conditional-tags',
-		Components::props('conditionalTags', $attributes)
-	),
+	'fieldConditionalTags' => Components::render('conditional-tags', Components::props('conditionalTags', $attributes)),
 	'fieldAttrs' => $checkboxesFieldAttrs,
 ];
 

@@ -89,10 +89,7 @@ $fieldOutput = [
 	'fieldId' => $radiosName,
 	'fieldTracking' => $radiosTracking,
 	'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-	'fieldConditionalTags' => Components::render(
-		'conditional-tags',
-		Components::props('conditionalTags', $attributes)
-	),
+	'fieldConditionalTags' => Components::render('conditional-tags', Components::props('conditionalTags', $attributes)),
 	'fieldAttrs' => $radiosFieldAttrs,
 ];
 
