@@ -90,28 +90,26 @@ export const CheckboxesOptions = (attributes) => {
 			/>
 
 			{checkboxesShowAs === 'select' &&
-				<>
-					<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
-						{!checkboxesUseLabelAsPlaceholder &&
-							<TextControl
-								help={__('Shown when the field is empty', 'eightshift-forms')}
-								value={checkboxesPlaceholder}
-								onChange={(value) => setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })}
-								disabled={isOptionDisabled(getAttrKey('checkboxesPlaceholder', attributes, manifest), checkboxesDisabledOptions)}
-								className='es-no-field-spacing'
-							/>
-						}
-						<IconToggle
-							icon={icons.fieldPlaceholder}
-							label={__('Use label as a placeholder', 'eightshift-forms')}
-							checked={checkboxesUseLabelAsPlaceholder}
-							onChange={(value) => {
-								setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: undefined });
-								setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
-							}}
+				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
+					{!checkboxesUseLabelAsPlaceholder &&
+						<TextControl
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={checkboxesPlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('checkboxesPlaceholder', attributes, manifest), checkboxesDisabledOptions)}
+							className='es-no-field-spacing'
 						/>
-					</Section>
-				</>
+					}
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Use label as a placeholder', 'eightshift-forms')}
+						checked={checkboxesUseLabelAsPlaceholder}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: undefined });
+							setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
+						}}
+					/>
+				</Section>
 			}
 
 			<FieldOptionsLayout

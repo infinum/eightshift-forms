@@ -73,11 +73,11 @@ if ($checkboxesShowAs !== '') {
 	);
 }
 
-$checkboxes = '
-	' . $placeholder . '
-	' . $checkboxesContent . '
-	' . $additionalContent . '
-';
+$checkboxes = "
+	{$placeholder}
+	{$checkboxesContent}
+	{$additionalContent}
+";
 
 $fieldOutput = [
 	'fieldContent' => $checkboxes,

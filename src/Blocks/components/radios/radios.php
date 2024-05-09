@@ -75,11 +75,11 @@ if ($radiosShowAs !== '') {
 	);
 }
 
-$radios = '
-	' . $placeholder . '
-	' . $radiosContent . '
-	' . $additionalContent . '
-';
+$radios = "
+	{$placeholder}
+	{$radiosContent}
+	{$additionalContent}
+";
 
 $fieldOutput = [
 	'fieldContent' => $radios,

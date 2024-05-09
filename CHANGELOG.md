@@ -15,7 +15,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Fixed
 - Google reCaptcha will now throw an error if not set up correctly.
-- JS errors on multiple locations.
+- Multiple JS errors when array or objects are missing.
 - Google reCaptcha will now send a fallback email if there is an issue with the validation only.
 - Cleaned up unnecessary data from fallback e-mails.
 - Enrichment will now only prefill visible fields.
