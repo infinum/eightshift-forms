@@ -21,6 +21,8 @@ $checkboxesContent = Components::checkAttr('checkboxesContent', $attributes, $ma
 $checkboxesIsRequired = Components::checkAttr('checkboxesIsRequired', $attributes, $manifest);
 $checkboxesTypeCustom = Components::checkAttr('checkboxesTypeCustom', $attributes, $manifest);
 $checkboxesFieldAttrs = Components::checkAttr('checkboxesFieldAttrs', $attributes, $manifest);
+$checkboxesUseLabelAsPlaceholder = Components::checkAttr('checkboxesUseLabelAsPlaceholder', $attributes, $manifest);
+$checkboxesPlaceholder = Components::checkAttr('checkboxesPlaceholder', $attributes, $manifest);
 
 // Add internal counter name key.
 $checkboxesContent = (string) preg_replace_callback('/name=""/', function () use ($checkboxesName) {
@@ -42,27 +44,61 @@ $checkboxesContent = (string) preg_replace_callback('/for=""/', function () use 
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('checkboxes', $attributes);
 
-$checkboxes = '
-	' . $checkboxesContent . '
-	' . $additionalContent . '
-';
+$placeholderLabel = '';
+$placeholder = '';
+$checkboxesHideLabel = false;
+$checkboxesFieldLabel = $attributes[Components::getAttrKey('checkboxesFieldLabel', $attributes, $manifest)] ?? '';
+$checkboxesShowAs = $attributes[Components::getAttrKey('checkboxesShowAs', $attributes, $manifest)] ?? '';
+
+// Checkboxes don't use placeholder so we are not going to render it.
+if ($checkboxesShowAs !== '') {
+	// Placeholder input value.
+	if ($checkboxesPlaceholder) {
+		$placeholderLabel = $checkboxesPlaceholder;
+	}
+
+	// Placeholder label for value.
+	if ($checkboxesUseLabelAsPlaceholder) {
+		$checkboxesHideLabel = true;
+		$placeholderLabel = esc_attr($checkboxesFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	}
+
+	$placeholder = Components::render(
+		'checkbox',
+		[
+			'checkboxLabel' => $placeholderLabel,
+			'checkboxAsPlaceholder' => true,
+			'checkboxIsHidden' => true,
+		]
+	);
+}
+
+$checkboxes = "
+	{$placeholder}
+	{$checkboxesContent}
+	{$additionalContent}
+";
+
+$fieldOutput = [
+	'fieldContent' => $checkboxes,
+	'fieldId' => $checkboxesName,
+	'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
+	'fieldName' => $checkboxesName,
+	'fieldIsRequired' => $checkboxesIsRequired,
+	'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldConditionalTags' => Components::render('conditional-tags', Components::props('conditionalTags', $attributes)),
+	'fieldAttrs' => $checkboxesFieldAttrs,
+];
+
+// Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
+if ($checkboxesHideLabel) {
+	$fieldOutput['fieldHideLabel'] = true;
+}
 
 echo Components::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
-			'fieldContent' => $checkboxes,
-			'fieldId' => $checkboxesName,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
-			'fieldName' => $checkboxesName,
-			'fieldIsRequired' => $checkboxesIsRequired,
-			'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldConditionalTags' => Components::render(
-				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => $checkboxesFieldAttrs,
-		]),
+		Components::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',

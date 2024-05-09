@@ -33,6 +33,8 @@ export const RadiosOptions = (attributes) => {
 	const radiosDisabledOptions = checkAttr('radiosDisabledOptions', attributes, manifest);
 	const radiosTracking = checkAttr('radiosTracking', attributes, manifest);
 	const radiosShowAs = checkAttr('radiosShowAs', attributes, manifest);
+	const radiosUseLabelAsPlaceholder = checkAttr('radiosUseLabelAsPlaceholder', attributes, manifest);
+	const radiosPlaceholder = checkAttr('radiosPlaceholder', attributes, manifest);
 
 	return (
 		<PanelBody title={__('Radio buttons', 'eightshift-forms')}>
@@ -67,6 +69,29 @@ export const RadiosOptions = (attributes) => {
 					fieldDisabledOptions: radiosDisabledOptions,
 				})}
 			/>
+
+			{radiosShowAs === 'select' &&
+				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
+					{!radiosUseLabelAsPlaceholder &&
+						<TextControl
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={radiosPlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('radiosPlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('radiosPlaceholder', attributes, manifest), radiosDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Use label as a placeholder', 'eightshift-forms')}
+						checked={radiosUseLabelAsPlaceholder}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('radiosPlaceholder', attributes, manifest)]: undefined });
+							setAttributes({ [getAttrKey('radiosUseLabelAsPlaceholder', attributes, manifest)]: value });
+						}}
+					/>
+				</Section>
+			}
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {

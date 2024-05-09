@@ -191,9 +191,9 @@ class Mailer implements MailerInterface
 		$files = $formDetails[UtilsConfig::FD_FILES] ?? [];
 
 		$output = [
-			'formDetails' => $formDetails,
-			'debug' => $this->getDebugOptions(),
 			'customData' => $customData,
+			'debug' => $this->getDebugOptions(),
+			'formDetails' => $this->cleanUpFormDetails($formDetails),
 		];
 
 		// translators: %s replaces the formId.
@@ -403,5 +403,29 @@ class Mailer implements MailerInterface
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Clean up form details.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function cleanUpFormDetails(array $formDetails): array
+	{
+		$list = [
+			UtilsConfig::FD_FIELDS,
+			UtilsConfig::FD_FIELDS_ONLY,
+			UtilsConfig::FD_ICON,
+		];
+
+		foreach ($list as $item) {
+			if (isset($formDetails[$item])) {
+				unset($formDetails[$item]);
+			}
+		}
+
+		return $formDetails;
 	}
 }

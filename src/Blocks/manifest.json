@@ -83,7 +83,9 @@
 				"checkboxesCheckboxesDisabledOptions": "selectSelectDisabledOptions",
 				"checkboxesCheckboxesTypeCustom": "selectSelectTypeCustom",
 				"checkboxesCheckboxesShowAs": "selectSelectShowAs",
-				"checkboxesCheckboxesFieldAttrs": "selectSelectFieldAttrs"
+				"checkboxesCheckboxesFieldAttrs": "selectSelectFieldAttrs",
+				"checkboxesCheckboxesPlaceholder": "selectSelectPlaceholder",
+				"checkboxesCheckboxesUseLabelAsPlaceholder": "selectSelectUseLabelAsPlaceholder"
 			},
 			"children": {
 				"checkboxCheckboxLabel": "selectOptionSelectOptionLabel",
@@ -170,7 +172,9 @@
 				 "radiosRadiosDisabledOptions": "selectSelectDisabledOptions",
 				 "radiosRadiosTypeCustom": "selectSelectTypeCustom",
 				 "radiosRadiosShowAs": "selectSelectShowAs",
-				 "radiosRadiosFieldAttrs": "selectSelectFieldAttrs"
+				 "radiosRadiosFieldAttrs": "selectSelectFieldAttrs",
+				 "radiosRadiosPlaceholder": "selectSelectPlaceholder",
+				 "radiosRadiosUseLabelAsPlaceholder": "selectSelectUseLabelAsPlaceholder"
 			},
 			"children": {
 				"radioRadioLabel": "selectOptionSelectOptionLabel",

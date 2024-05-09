@@ -38,6 +38,8 @@ export const CheckboxesOptions = (attributes) => {
 	const checkboxesIsRequiredCount = checkAttr('checkboxesIsRequiredCount', attributes, manifest);
 	const checkboxesDisabledOptions = checkAttr('checkboxesDisabledOptions', attributes, manifest);
 	const checkboxesShowAs = checkAttr('checkboxesShowAs', attributes, manifest);
+	const checkboxesUseLabelAsPlaceholder = checkAttr('checkboxesUseLabelAsPlaceholder', attributes, manifest);
+	const checkboxesPlaceholder = checkAttr('checkboxesPlaceholder', attributes, manifest);
 
 	const [countInnerBlocks, setCountInnerBlocks] = useState(0);
 
@@ -86,6 +88,29 @@ export const CheckboxesOptions = (attributes) => {
 					fieldDisabledOptions: checkboxesDisabledOptions,
 				})}
 			/>
+
+			{checkboxesShowAs === 'select' &&
+				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
+					{!checkboxesUseLabelAsPlaceholder &&
+						<TextControl
+							help={__('Shown when the field is empty', 'eightshift-forms')}
+							value={checkboxesPlaceholder}
+							onChange={(value) => setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })}
+							disabled={isOptionDisabled(getAttrKey('checkboxesPlaceholder', attributes, manifest), checkboxesDisabledOptions)}
+							className='es-no-field-spacing'
+						/>
+					}
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Use label as a placeholder', 'eightshift-forms')}
+						checked={checkboxesUseLabelAsPlaceholder}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: undefined });
+							setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
+						}}
+					/>
+				</Section>
+			}
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
