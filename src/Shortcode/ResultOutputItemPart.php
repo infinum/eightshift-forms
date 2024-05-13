@@ -41,6 +41,7 @@ class ResultOutputItemPart implements ServiceInterface
 		$params = \shortcode_atts(
 			[
 				'name' => '',
+				'type' => '',
 			],
 			$atts
 		);
@@ -51,11 +52,23 @@ class ResultOutputItemPart implements ServiceInterface
 			return '';
 		}
 
-		$classSelector = UtilsHelper::getStateSelector('resultOutputPart');
+		$attrs = [
+			UtilsHelper::getStateAttribute('resultOutputPart') => $name,
+			UtilsHelper::getStateAttribute('resultOutputPartDefault') => $content,
+			'class' => UtilsHelper::getStateSelector('resultOutputPart'),
+		];
 
-		$attrPartName = UtilsHelper::getStateAttribute('resultOutputPart');
-		$attrPartDefaultName = UtilsHelper::getStateAttribute('resultOutputPartDefault');
+		$type = isset($params['type']) ? \esc_html($params['type']) : '';
 
-		return "<span class='{$classSelector}' {$attrPartName}='{$name}' {$attrPartDefaultName}='{$content}'>{$content}</span>";
+		if ($type) {
+			$attrs['data-type'] = $type;
+		}
+
+		$attrsOutput = '';
+		foreach ($attrs as $key => $value) {
+			$attrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
+		}
+
+		return "<span {$attrsOutput}>{$content}</span>";
 	}
 }
