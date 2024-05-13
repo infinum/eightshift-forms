@@ -64,9 +64,13 @@ $formDataTypeSelector = apply_filters(
 
 $formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
 
+$customClassSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'customClassSelector']);
+$customClassSelector = $formDataTypeSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
+
 $formClass = Components::classnames([
 	Components::selector($componentClass, $componentClass),
 	Components::selector($additionalClass, $additionalClass),
+	Components::selector($customClassSelector, $customClassSelector),
 	UtilsHelper::getStateSelector('form'),
 ]);
 

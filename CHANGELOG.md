@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.8]
+
+### Added
+- New filer `es_forms_block_form_custom_class_selector` for adding custom class to the form block.
+- New type attribute to the `esFormsROIP` shortcode.
+
 ## [3.1.7]
 
 ### Updated
@@ -345,6 +351,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.8]: https://github.com/infinum/eightshift-forms/compare/3.1.7...3.1.8
 [3.1.7]: https://github.com/infinum/eightshift-forms/compare/3.1.6...3.1.7
 [3.1.6]: https://github.com/infinum/eightshift-forms/compare/3.1.5...3.1.6
 [3.1.5]: https://github.com/infinum/eightshift-forms/compare/3.1.4...3.1.5
