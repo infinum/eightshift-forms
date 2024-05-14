@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.9]
+
+### Removed
+- Reverted changes for enrichment prefill hidden fields.
+
 ## [3.1.8]
 
 ### Added
@@ -351,6 +356,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.9]: https://github.com/infinum/eightshift-forms/compare/3.1.8...3.1.9
 [3.1.8]: https://github.com/infinum/eightshift-forms/compare/3.1.7...3.1.8
 [3.1.7]: https://github.com/infinum/eightshift-forms/compare/3.1.6...3.1.7
 [3.1.6]: https://github.com/infinum/eightshift-forms/compare/3.1.5...3.1.6

@@ -310,11 +310,6 @@ export class Enrichment {
 				return;
 			}
 
-			// Don't prefill hidden fields.
-			if (this.state.getStateElementField(name, formId)?.classList?.contains(this.state.getStateSelector('isHidden'))) {
-				return;
-			}
-
 			switch (this.state.getStateElementTypeField(name, formId)) {
 				case 'phone':
 					this.utils.setManualPhoneValue(formId, name, value);
