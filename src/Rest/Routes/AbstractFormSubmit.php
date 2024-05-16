@@ -16,6 +16,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
+use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -204,7 +205,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 					// Validate allowed number of requests.
 					// We don't want to limit any custom requests like files, settings, steps, etc.
-					if (!$this->getSecurity()->isRequestValid()) {
+					if (!$this->getSecurity()->isRequestValid($formDetails[UtilsConfig::FD_TYPE])) {
 						throw new UnverifiedRequestException(
 							$this->getValidatorLabels()->getLabel('validationSecurity'),
 							[
@@ -230,7 +231,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					}
 
 					// Validate captcha.
-					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) && $formDetails[UtilsConfig::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY) {
 						$captchaParams = $formDetails[UtilsConfig::FD_CAPTCHA] ?? [];
 
 						if (!$captchaParams) {
@@ -299,11 +300,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					[
 						'exception' => $e,
 						'request' => $request,
-						'formDetails' => $formDetails,
 						self::VALIDATION_ERROR_CODE => \esc_html($e->getData()[self::VALIDATION_ERROR_CODE] ?? ''),
 						self::VALIDATION_ERROR_MSG => \esc_html($e->getMessage()),
 						self::VALIDATION_ERROR_OUTPUT => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? '',
 						self::VALIDATION_ERROR_DATA => $e->getData()[self::VALIDATION_ERROR_DATA] ?? '',
+						'formDetails' => $formDetails,
 					]
 				)
 			);

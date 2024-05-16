@@ -51,7 +51,7 @@ export class Captcha {
 		}
 
 		if (this.state.getStateCaptchaIsEnterprise()) {
-			grecaptcha?.enterprise.ready(async () => {
+			grecaptcha?.enterprise?.ready(async () => {
 				try {
 					const token = await grecaptcha?.enterprise?.execute(siteKey, {action: actionName});
 
@@ -128,7 +128,7 @@ export class Captcha {
 			return;
 		}
 
-		document.querySelector('body').setAttribute(this.state.getStateAttribute('hideCaptchaBadge'), this.state.getStateCaptchaHideBadge());
+		document?.body?.setAttribute(this.state.getStateAttribute('hideCaptchaBadge'), this.state.getStateCaptchaHideBadge());
 	}
 
 	////////////////////////////////////////////////////////////////

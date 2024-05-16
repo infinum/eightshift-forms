@@ -220,9 +220,9 @@ class HubspotClient implements HubspotClientInterface
 		$body = [
 			'context' => [
 				'ipAddress' => $this->security->getIpAddress(),
-				'hutk' => $params[UtilsHelper::getStateParam('hubspotCookie')]['value'],
-				'pageUri' => UtilsGeneralHelper::cleanPageUrl($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value']),
-				'pageName' => $params[UtilsHelper::getStateParam('hubspotPageName')]['value'],
+				'hutk' => $params[UtilsHelper::getStateParam('hubspotCookie')]['value'] ?? '',
+				'pageUri' => UtilsGeneralHelper::cleanPageUrl($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value'] ?? ''),
+				'pageName' => $params[UtilsHelper::getStateParam('hubspotPageName')]['value'] ?? '',
 			],
 		];
 
