@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Security;
 
+use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
@@ -36,18 +37,19 @@ class Security implements SecurityInterface
 	/**
 	 * Detect if the request is valid using rate limiting.
 	 *
+	 * @param string $formType Form type.
+	 *
 	 * @return boolean
 	 */
-	public function isRequestValid(): bool
+	public function isRequestValid(string $formType): bool
 	{
 		// Bailout if this feature is not enabled.
 		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_IS_VALID_NAME, [])) {
 			return true;
 		}
 
-		$key = SettingsSecurity::SETTINGS_SECURITY_DATA_KEY;
-		$keyName = UtilsSettingsHelper::getOptionName($key);
-		$data = UtilsSettingsHelper::getOptionValueGroup($key);
+		$keyName = UtilsSettingsHelper::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
+		$data = UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
 		$ip = $this->getIpAddress();
 		$time = \time();
 
@@ -85,7 +87,15 @@ class Security implements SecurityInterface
 		}
 
 		// Check if the request count exceeds the rate limit.
-		if ($count >= \intval(UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT))) {
+		$rateLimitGeneral = UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
+		$rateLimitCalculator = UtilsSettingsHelper::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
+
+		// Different rate limit for calculator.
+		if ($rateLimitCalculator && $formType === SettingsCalculator::SETTINGS_TYPE_KEY) {
+			$rateLimitGeneral = $rateLimitCalculator;
+		}
+
+		if ($count >= \intval($rateLimitGeneral)) {
 			return false;
 		}
 

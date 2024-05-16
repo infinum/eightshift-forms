@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.10]
+
+### Fixed
+- Airtable integration now supports multiple select fields.
+- Moments form validation of input fields limiting the number of characters to 1000.
+- Calculator will no longer break reCaptcha validation.
+- Single submit with global msg disabled will no longer output the empty success message.
+- Single submit now supports input type number.
+
+### Added
+- Security feature now supports calculator rate limiting separate setting.
+
 ## [3.1.9]
 
 ### Removed
@@ -356,6 +368,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.10]: https://github.com/infinum/eightshift-forms/compare/3.1.9...3.1.10
 [3.1.9]: https://github.com/infinum/eightshift-forms/compare/3.1.8...3.1.9
 [3.1.8]: https://github.com/infinum/eightshift-forms/compare/3.1.7...3.1.8
 [3.1.7]: https://github.com/infinum/eightshift-forms/compare/3.1.6...3.1.7

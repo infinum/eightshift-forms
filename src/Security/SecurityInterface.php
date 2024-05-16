@@ -18,9 +18,11 @@ interface SecurityInterface
 	/**
 	 * Detect if the request is valid using rate limiting.
 	 *
+	 * @param string $formType Form type.
+	 *
 	 * @return boolean
 	 */
-	public function isRequestValid(): bool;
+	public function isRequestValid(string $formType): bool;
 
 	/**
 	 * Get users Ip address.

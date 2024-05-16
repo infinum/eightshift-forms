@@ -1011,7 +1011,8 @@ export class Form {
 
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'range'))
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'range')) ||
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'number'))
 		) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
@@ -1705,6 +1706,7 @@ export class Form {
 			!this.state.getStateConfigIsAdmin() &&
 			this.state.getStateFormConfigUseSingleSubmit(formId) && (
 				this.state.getStateElementTypeCustom(name, formId) === 'range' ||
+				this.state.getStateElementTypeCustom(name, formId) === 'number' ||
 				this.state.getStateElementTypeCustom(name, formId) === 'checkbox' ||
 				this.state.getStateElementTypeCustom(name, formId) === 'radio'
 			)

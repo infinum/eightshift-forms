@@ -52,6 +52,11 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 	public const SETTINGS_SECURITY_RATE_LIMIT_KEY = 'security-rate-limit';
 
 	/**
+	 * Rate limit calculator key.
+	 */
+	public const SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY = 'security-rate-limit-calculator';
+
+	/**
 	 * Rate limit window key.
 	 */
 	public const SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY = 'security-rate-limit-window';
@@ -118,8 +123,8 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
-								'inputFieldLabel' => \__('Number of requests', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Number of requests general', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period for all forms.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 1,
 								'inputMax' => 300,
@@ -128,6 +133,20 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
 								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
+							],
+							[
+								'component' => 'input',
+								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY),
+								'inputFieldLabel' => \__('Number of requests for calculator', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period for calculator forms with single submit.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 1,
+								'inputMax' => 300,
+								'inputStep' => 1,
+								'inputPlaceholder' => Security::RATE_LIMIT,
+								'inputFieldAfterContent' => \__('per min', 'eightshift-forms'),
+								'inputFieldInlineBeforeAfterContent' => true,
+								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY),
 							],
 							[
 								'component' => 'input',
