@@ -55,6 +55,7 @@ export const StateEnum = {
 	SAVE_AS_JSON: 'saveAsJson',
 	IS_ADMIN: 'isAdmin',
 	IS_USED: 'isUsed',
+	IS_USED_LOCALSTORAGE: 'isUsedLocalStorage',
 	IS_USED_PREFILL: 'isUsedPrefill',
 	IS_USED_PREFILL_URL: 'isUsedPrefillUrl',
 	NONCE: 'nonce',
@@ -274,8 +275,9 @@ export function setStateInitial() {
 	// Enrichment.
 	const enrichment = esFormsLocalization.enrichment ?? {};
 	setState([StateEnum.IS_USED], Boolean(enrichment.isUsed), StateEnum.ENRICHMENT);
-	
+
 	if (enrichment.isUsed) {
+		setState([StateEnum.IS_USED_LOCALSTORAGE], isLocalStorageAvailable(), StateEnum.ENRICHMENT);
 		setState([StateEnum.IS_USED_PREFILL], Boolean(enrichment.isUsedPrefill), StateEnum.ENRICHMENT);
 		setState([StateEnum.IS_USED_PREFILL_URL], Boolean(enrichment.isUsedPrefillUrl), StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_EXPIRATION], enrichment.expiration, StateEnum.ENRICHMENT);
@@ -1162,4 +1164,25 @@ export function getRestUrlByType(type, value, isPartial = false, checkRef = fals
  */
 export function getUtilsIcons(name) {
 	return utilsManifest?.icons?.[name];
+}
+
+////////////////////////////////////////////////////////////////
+// Internal helpers.
+////////////////////////////////////////////////////////////////
+
+/**
+ * Check if local storage is available.
+ *
+ * @returns {boolean}
+ */
+function isLocalStorageAvailable() {
+	const test = 'test';
+
+	try {
+		localStorage.setItem(test, test);
+		localStorage.removeItem(test);
+		return true;
+	} catch(e) {
+		return false;
+	}
 }

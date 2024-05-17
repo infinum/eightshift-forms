@@ -263,6 +263,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			return;
 		}
 
+
 		$this->enqueueBlockFrontendStyle($hook);
 	}
 

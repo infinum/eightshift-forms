@@ -7,15 +7,15 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 
-$resultOutputPostId = Components::checkAttr('resultOutputPostId', $attributes, $manifest);
-$resultOutputFormPostId = Components::checkAttr('resultOutputFormPostId', $attributes, $manifest);
-$resultOutputHide = Components::checkAttr('resultOutputHide', $attributes, $manifest);
+$resultOutputPostId = Helpers::checkAttr('resultOutputPostId', $attributes, $manifest);
+$resultOutputFormPostId = Helpers::checkAttr('resultOutputFormPostId', $attributes, $manifest);
+$resultOutputHide = Helpers::checkAttr('resultOutputHide', $attributes, $manifest);
 
 $resultAttrs = [
 	UtilsHelper::getStateAttribute('formId') => esc_attr($resultOutputFormPostId),
@@ -26,9 +26,9 @@ foreach ($resultAttrs as $key => $value) {
 	$resultAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 }
 
-$resultClass = Components::classnames([
-	Components::selector($blockClass, $blockClass),
-	Components::selector($resultOutputHide, UtilsHelper::getStateSelector('isHidden')),
+$resultClass = Helpers::classnames([
+	Helpers::selector($blockClass, $blockClass),
+	Helpers::selector($resultOutputHide, UtilsHelper::getStateSelector('isHidden')),
 	UtilsHelper::getStateSelector('resultOutput'),
 ]);
 

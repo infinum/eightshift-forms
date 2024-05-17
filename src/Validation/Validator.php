@@ -25,7 +25,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class Validator
@@ -542,14 +542,14 @@ class Validator extends AbstractValidation
 		}
 
 		foreach ($block['attrs'] as $attributeKey => $attributeValue) {
-			$attrName = Components::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
+			$attrName = Helpers::kebabToCamelCase($namespace === 'internal-settings' ? $name : "{$name}-{$name}");
 			$id = $block['attrs']["{$attrName}Name"] ?? '';
 
 			// Get all validation fields with the correct prefix.
 			$valid = \array_flip(
 				\array_map(
 					static function ($item) use ($attrName) {
-						return Components::kebabToCamelCase("{$attrName}-{$item}");
+						return Helpers::kebabToCamelCase("{$attrName}-{$item}");
 					},
 					self::VALIDATION_FIELDS
 				)

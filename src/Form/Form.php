@@ -18,7 +18,7 @@ use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -134,18 +134,18 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	{
 		$output = [];
 
-		$formsNamespace = Components::getSettingsNamespace();
-		$manifest = Components::getBlock('forms');
-		$formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
-		$formsSuccessRedirectVariation = Components::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
-		$formsSuccessRedirectVariationUrl = Components::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
-		$formsSuccessRedirectVariationUrlTitle = Components::checkAttr('formsSuccessRedirectVariationUrlTitle', $attributes, $manifest);
-		$formsDownloads = Components::checkAttr('formsDownloads', $attributes, $manifest);
-		$formsFormDataTypeSelector = Components::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
-		$formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
-		$formsConditionalTagsRulesForms = Components::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
-		$formsAttrs = Components::checkAttr('formsAttrs', $attributes, $manifest);
-		$formsCustomName = Components::checkAttr('formsCustomName', $attributes, $manifest);
+		$formsNamespace = Helpers::getSettingsNamespace();
+		$manifest = Helpers::getBlock('forms');
+		$formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
+		$formsSuccessRedirectVariation = Helpers::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
+		$formsSuccessRedirectVariationUrl = Helpers::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
+		$formsSuccessRedirectVariationUrlTitle = Helpers::checkAttr('formsSuccessRedirectVariationUrlTitle', $attributes, $manifest);
+		$formsDownloads = Helpers::checkAttr('formsDownloads', $attributes, $manifest);
+		$formsFormDataTypeSelector = Helpers::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
+		$formsServerSideRender = Helpers::checkAttr('formsServerSideRender', $attributes, $manifest);
+		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
+		$formsAttrs = Helpers::checkAttr('formsAttrs', $attributes, $manifest);
+		$formsCustomName = Helpers::checkAttr('formsCustomName', $attributes, $manifest);
 
 		$checkStyleEnqueue = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
@@ -230,7 +230,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						case 'phone':
 						case 'country':
 						case 'dynamic':
-							$inBlock['attrs'][Components::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
+							$inBlock['attrs'][Helpers::kebabToCamelCase("{$name}-{$name}FormPostId")] = $formsFormPostId;
 							break;
 						case 'select':
 						case 'checkboxes':
@@ -245,8 +245,8 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						$customUsedAttrsDiff = \array_intersect_key(
 							$inBlock['attrs'] ?? [],
 							\array_merge(
-								Components::getComponent('field')['attributes'],
-								Components::getComponent('conditional-tags')['attributes'],
+								Helpers::getComponent('field')['attributes'],
+								Helpers::getComponent('conditional-tags')['attributes'],
 							)
 						);
 
@@ -390,7 +390,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			return $block;
 		}
 
-		$showAs = $attrs[Components::kebabToCamelCase("{$name}-{$name}-showAs")] ?? '';
+		$showAs = $attrs[Helpers::kebabToCamelCase("{$name}-{$name}-showAs")] ?? '';
 
 		if ($showAs === $name || $showAs === 'default' || !$showAs) {
 			return $block;
@@ -439,7 +439,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	private function getShowAsOutputItem(string $name, string $showAs, string $namespace, array $attrs, array $innerBlocks, bool $isFlipped = false): array
 	{
 		$output = [];
-		$maps = Components::getSettings()['showAsMap'];
+		$maps = Helpers::getSettings()['showAsMap'];
 
 		$mapName = "{$name}-{$showAs}";
 
@@ -521,7 +521,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	{
 		$output = [];
 
-		$namespace = Components::getSettingsNamespace();
+		$namespace = Helpers::getSettingsNamespace();
 
 		foreach ($items as $item) {
 			$name = $item['name'] ?? '';

@@ -747,7 +747,7 @@ export class ConditionalTags {
 	 * @returns {vodi}
 	 */
 	removeEvents(formId) {
-		this.state.getStateFormElement(formId).removeEventListener(
+		this.state.getStateFormElement(formId)?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
@@ -847,8 +847,8 @@ export class ConditionalTags {
 			getIgnoreFields: (formId) => {
 				return this.getIgnoreFields(formId);
 			},
-			removeEvents: () => {
-				this.removeEvents();
+			removeEvents: (formId) => {
+				this.removeEvents(formId);
 			},
 			onInitEvent: (event) => {
 				this.onInitEvent(event);

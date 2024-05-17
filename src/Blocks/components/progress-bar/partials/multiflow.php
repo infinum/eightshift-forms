@@ -6,9 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(dirname(__DIR__, 2));
+$manifest = Helpers::getManifestByDir(dirname(__DIR__, 2));
 
 $count = $attributes['count'] ? (int) $attributes['count'] : 0;
 

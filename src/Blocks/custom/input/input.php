@@ -6,9 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-echo Components::render(
+echo Helpers::render(
 	'input',
-	Components::props('input', $attributes)
+	Helpers::props('input', $attributes)
 );

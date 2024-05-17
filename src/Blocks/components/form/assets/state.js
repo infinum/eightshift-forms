@@ -451,6 +451,9 @@ export class State {
 	getStateEnrichmentIsUsed = () => {
 		return getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
+	getStateEnrichmentIsLocalStorageUsed = () => {
+		return getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+	};
 	getStateEnrichmentIsPrefillUsed = () => {
 		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};

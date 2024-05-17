@@ -9,17 +9,17 @@
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
-$fieldUse = Components::checkAttr('fieldUse', $attributes, $manifest);
+$fieldUse = Helpers::checkAttr('fieldUse', $attributes, $manifest);
 if (!$fieldUse) {
 	return;
 }
 
-$fieldContent = Components::checkAttr('fieldContent', $attributes, $manifest);
-$fieldSkip = Components::checkAttr('fieldSkip', $attributes, $manifest);
+$fieldContent = Helpers::checkAttr('fieldContent', $attributes, $manifest);
+$fieldSkip = Helpers::checkAttr('fieldSkip', $attributes, $manifest);
 
 // Enable option to skip field and just render content.
 if ($fieldSkip) {
@@ -45,35 +45,35 @@ if (has_filter($filterName)) {
 		isset($customMediaBreakpoints['desktop']) &&
 		isset($customMediaBreakpoints['large'])
 	) {
-			Components::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
+			Helpers::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
 	}
 }
 
-$unique = Components::getUnique();
+$unique = Helpers::getUnique();
 
-$fieldLabel = Components::checkAttr('fieldLabel', $attributes, $manifest);
-$fieldHideLabel = Components::checkAttr('fieldHideLabel', $attributes, $manifest);
-$fieldId = Components::checkAttr('fieldId', $attributes, $manifest);
-$fieldName = Components::checkAttr('fieldName', $attributes, $manifest);
-$fieldBeforeContent = Components::checkAttr('fieldBeforeContent', $attributes, $manifest);
-$fieldAfterContent = Components::checkAttr('fieldAfterContent', $attributes, $manifest);
-$fieldType = Components::checkAttr('fieldType', $attributes, $manifest);
-$fieldUseError = Components::checkAttr('fieldUseError', $attributes, $manifest);
-$fieldUseTooltip = Components::checkAttr('fieldUseTooltip', $attributes, $manifest);
-$fieldHelp = Components::checkAttr('fieldHelp', $attributes, $manifest);
-$fieldDisabled = Components::checkAttr('fieldDisabled', $attributes, $manifest);
-$fieldHidden = Components::checkAttr('fieldHidden', $attributes, $manifest);
-$fieldStyle = Components::checkAttr('fieldStyle', $attributes, $manifest);
-$fieldUniqueId = Components::checkAttr('fieldUniqueId', $attributes, $manifest);
-$fieldAttrs = Components::checkAttr('fieldAttrs', $attributes, $manifest);
-$fieldIsRequired = Components::checkAttr('fieldIsRequired', $attributes, $manifest);
-$fieldConditionalTags = Components::checkAttr('fieldConditionalTags', $attributes, $manifest);
-$fieldInlineBeforeAfterContent = Components::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
-$fieldIsFiftyFiftyHorizontal = Components::checkAttr('fieldIsFiftyFiftyHorizontal', $attributes, $manifest);
-$fieldTypeCustom = Components::checkAttr('fieldTypeCustom', $attributes, $manifest);
-$fieldTracking = Components::checkAttr('fieldTracking', $attributes, $manifest);
-$fieldTypeInternal = Components::checkAttr('fieldTypeInternal', $attributes, $manifest);
-$fieldIsNoneFormBlock = Components::checkAttr('fieldIsNoneFormBlock', $attributes, $manifest);
+$fieldLabel = Helpers::checkAttr('fieldLabel', $attributes, $manifest);
+$fieldHideLabel = Helpers::checkAttr('fieldHideLabel', $attributes, $manifest);
+$fieldId = Helpers::checkAttr('fieldId', $attributes, $manifest);
+$fieldName = Helpers::checkAttr('fieldName', $attributes, $manifest);
+$fieldBeforeContent = Helpers::checkAttr('fieldBeforeContent', $attributes, $manifest);
+$fieldAfterContent = Helpers::checkAttr('fieldAfterContent', $attributes, $manifest);
+$fieldType = Helpers::checkAttr('fieldType', $attributes, $manifest);
+$fieldUseError = Helpers::checkAttr('fieldUseError', $attributes, $manifest);
+$fieldUseTooltip = Helpers::checkAttr('fieldUseTooltip', $attributes, $manifest);
+$fieldHelp = Helpers::checkAttr('fieldHelp', $attributes, $manifest);
+$fieldDisabled = Helpers::checkAttr('fieldDisabled', $attributes, $manifest);
+$fieldHidden = Helpers::checkAttr('fieldHidden', $attributes, $manifest);
+$fieldStyle = Helpers::checkAttr('fieldStyle', $attributes, $manifest);
+$fieldUniqueId = Helpers::checkAttr('fieldUniqueId', $attributes, $manifest);
+$fieldAttrs = Helpers::checkAttr('fieldAttrs', $attributes, $manifest);
+$fieldIsRequired = Helpers::checkAttr('fieldIsRequired', $attributes, $manifest);
+$fieldConditionalTags = Helpers::checkAttr('fieldConditionalTags', $attributes, $manifest);
+$fieldInlineBeforeAfterContent = Helpers::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
+$fieldIsFiftyFiftyHorizontal = Helpers::checkAttr('fieldIsFiftyFiftyHorizontal', $attributes, $manifest);
+$fieldTypeCustom = Helpers::checkAttr('fieldTypeCustom', $attributes, $manifest);
+$fieldTracking = Helpers::checkAttr('fieldTracking', $attributes, $manifest);
+$fieldTypeInternal = Helpers::checkAttr('fieldTypeInternal', $attributes, $manifest);
+$fieldIsNoneFormBlock = Helpers::checkAttr('fieldIsNoneFormBlock', $attributes, $manifest);
 
 $fieldStyleOutput = [];
 $filterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleClasses']);
@@ -89,28 +89,28 @@ if (has_filter($filterName)) {
 if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	$fieldStyleOutput = array_map(
 		static function ($item) use ($componentClass) {
-			return Components::selector(true, $componentClass, '', $item);
+			return Helpers::selector(true, $componentClass, '', $item);
 		},
 		$fieldStyle
 	);
 }
 
-$fieldClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($componentClass, $componentClass, '', $selectorClass),
-	Components::selector($additionalFieldClass, $additionalFieldClass),
-	Components::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
-	Components::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
+$fieldClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($componentClass, $componentClass, '', $selectorClass),
+	Helpers::selector($additionalFieldClass, $additionalFieldClass),
+	Helpers::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
+	Helpers::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
 	UtilsHelper::getStateSelector('field'),
-	Components::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
-	Components::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
-	Components::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
+	Helpers::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
+	Helpers::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
+	Helpers::selector($fieldIsFiftyFiftyHorizontal && $componentClass, $componentClass, '', 'fifty-fifty-horizontal'),
 	...$fieldStyleOutput,
 ]);
 
-$labelClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'label'),
-	Components::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
+$labelClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'label'),
+	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
 ]);
 
 $fieldTag = 'div';
@@ -160,15 +160,15 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 
 	<?php
 	if ($fieldUniqueId) {
-		echo Components::outputCssVariables($attributes, $manifest, $fieldUniqueId, 'wp-block');
+		echo Helpers::outputCssVariables($attributes, $manifest, $fieldUniqueId, 'wp-block');
 	} else {
-		echo Components::outputCssVariables($attributes, $manifest, $unique);
+		echo Helpers::outputCssVariables($attributes, $manifest, $unique);
 	}
 
-	echo Components::render(
+	echo Helpers::render(
 		'debug-field-details',
 		[
-			'name' => Components::checkAttr('fieldName', $attributes, $manifest),
+			'name' => Helpers::checkAttr('fieldName', $attributes, $manifest),
 		],
 		'components',
 		false,
@@ -187,9 +187,9 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 
 					<?php
 					if ($fieldUseTooltip) {
-						echo Components::render(
+						echo Helpers::render(
 							'tooltip',
-							Components::props('tooltip', $attributes, [
+							Helpers::props('tooltip', $attributes, [
 								'selectorClass' => $componentClass
 							])
 						);
@@ -220,9 +220,9 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		<?php } ?>
 		<?php
 		if ($fieldUseError) {
-			echo Components::render(
+			echo Helpers::render(
 				'error',
-				Components::props('error', $attributes, [
+				Helpers::props('error', $attributes, [
 					'errorId' => $fieldId,
 					'selectorClass' => $componentClass
 				]),

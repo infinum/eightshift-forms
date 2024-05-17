@@ -9,28 +9,28 @@
 use EightshiftForms\Form\Form;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
-$manifestInvalid = Components::getComponent('invalid');
-$manifestSettings = Components::getSettings();
+$manifest = Helpers::getManifestByDir(__DIR__);
+$manifestInvalid = Helpers::getComponent('invalid');
+$manifestSettings = Helpers::getSettings();
 
-echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
 
 $blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$manifestSettings['blockClassPrefix']}-{$manifest['blockName']}";
 
 // Check formPost ID prop.
-$formsFormPostId = Components::checkAttr('formsFormPostId', $attributes, $manifest);
-$formsStyle = Components::checkAttr('formsStyle', $attributes, $manifest);
-$formsServerSideRender = Components::checkAttr('formsServerSideRender', $attributes, $manifest);
-$formsFormGeolocation = Components::checkAttr('formsFormGeolocation', $attributes, $manifest);
-$formsFormGeolocationAlternatives = Components::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
+$formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
+$formsStyle = Helpers::checkAttr('formsStyle', $attributes, $manifest);
+$formsServerSideRender = Helpers::checkAttr('formsServerSideRender', $attributes, $manifest);
+$formsFormGeolocation = Helpers::checkAttr('formsFormGeolocation', $attributes, $manifest);
+$formsFormGeolocationAlternatives = Helpers::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
 
 $formsStyleOutput = [];
 if ($formsStyle && gettype($formsStyle) === 'array') {
 	$formsStyleOutput = array_map(
 		static function ($item) use ($blockClass) {
-			return Components::selector(true, $blockClass, '', $item);
+			return Helpers::selector(true, $blockClass, '', $item);
 		},
 		$formsStyle
 	);
@@ -51,7 +51,7 @@ if ($formsServerSideRender) {
 
 	// Not published or removed at somepoint.
 	if (get_post_status($formsFormPostId) !== 'publish') {
-		echo Components::render(
+		echo Helpers::render(
 			'invalid',
 			[
 				'heading' => __('Form cannot be found', 'eightshift-forms'),
@@ -98,10 +98,10 @@ if ($formAttrs) {
 	}
 }
 
-$formsClass = Components::classnames([
-	Components::selector($blockClass, $blockClass),
+$formsClass = Helpers::classnames([
+	Helpers::selector($blockClass, $blockClass),
 	UtilsHelper::getStateSelector('forms'),
-	Components::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
+	Helpers::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
 	$attributes['className'] ?? '',
 	...$formsStyleOutput,
 ]);
@@ -137,9 +137,9 @@ $formsClass = Components::classnames([
 		}
 	}
 
-	echo Components::render(
+	echo Helpers::render(
 		'loader',
-		Components::props('loader', $attributes, [
+		Helpers::props('loader', $attributes, [
 			'loaderIsGeolocation' => true,
 		])
 	);
@@ -148,4 +148,4 @@ $formsClass = Components::classnames([
 
 <?php
 
-echo Components::outputCssVariablesInline(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesInline(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped

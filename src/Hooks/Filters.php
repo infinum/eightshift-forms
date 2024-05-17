@@ -85,6 +85,7 @@ final class Filters
 					'additionalHiddenFields',
 					'resultOutputItems',
 					'resultOutputParts',
+					'customClassSelector',
 				],
 				'formSelector' => [
 					'formTemplates',

@@ -14,7 +14,7 @@ namespace EightshiftForms\Blocks;
 use EightshiftFormsVendor\EightshiftFormsUtils\Blocks\UtilsBlocks;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_Block_Editor_Context;
 use WP_Post;
 
@@ -64,7 +64,7 @@ class Blocks extends UtilsBlocks
 		}
 
 		// Allow forms blocks.
-		foreach (Components::getSettings()['allowedBlocksNoneBuilderBlocksList'] as $value) {
+		foreach (Helpers::getSettings()['allowedBlocksNoneBuilderBlocksList'] as $value) {
 			$allowedBlockTypes[] = $value;
 		}
 

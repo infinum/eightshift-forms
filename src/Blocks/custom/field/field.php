@@ -6,18 +6,18 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes),
+		Helpers::props('field', $attributes),
 		[
 			'selectorClass' => 'field',
 			'fieldFieldIsNoneFormBlock' => true,
-			'fieldFieldConditionalTags' => Components::render(
+			'fieldFieldConditionalTags' => Helpers::render(
 				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
+				Helpers::props('conditionalTags', $attributes)
 			),
 		]
 	)

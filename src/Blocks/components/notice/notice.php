@@ -7,20 +7,20 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalNoticeClass = $attributes['additionalNoticeClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$noticeContent = Components::checkAttr('noticeContent', $attributes, $manifest);
+$noticeContent = Helpers::checkAttr('noticeContent', $attributes, $manifest);
 
-$noticeClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($selectorClass, $selectorClass, $componentClass),
-	Components::selector($additionalNoticeClass, $additionalNoticeClass),
+$noticeClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($selectorClass, $selectorClass, $componentClass),
+	Helpers::selector($additionalNoticeClass, $additionalNoticeClass),
 ]);
 
 ?>

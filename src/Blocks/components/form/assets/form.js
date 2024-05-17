@@ -513,9 +513,9 @@ export class Form {
 		const siteKey = this.state.getStateCaptchaSiteKey();
 
 		if (this.state.getStateCaptchaIsEnterprise()) {
-			grecaptcha.enterprise.ready(async () => {
+			grecaptcha?.enterprise?.ready(async () => {
 				try {
-					const token = await grecaptcha.enterprise.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.enterprise?.execute(siteKey, {action: actionName});
 
 					this.setFormDataCaptcha({
 						token,
@@ -534,9 +534,9 @@ export class Form {
 				}
 			});
 		} else {
-			grecaptcha.ready(async () => {
+			grecaptcha?.ready(async () => {
 				try {
-					const token = await grecaptcha.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.execute(siteKey, {action: actionName});
 
 					this.setFormDataCaptcha({
 						token,
@@ -1011,7 +1011,8 @@ export class Form {
 
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'range'))
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'range')) ||
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'number'))
 		) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
@@ -1425,7 +1426,12 @@ export class Form {
 				...this.state.getStateElementByTypeField('select', formId),
 				...this.state.getStateElementByTypeField('country', formId),
 			].forEach((select) => {
-				this.state.getStateElementCustom(select.name, formId)?.destroy();
+				const choices = this.state.getStateElementCustom(select.name, formId);
+
+				choices?.passedElement?.element?.removeEventListener('showDropdown', this.onFocusEvent);
+				choices?.passedElement?.element?.removeEventListener('hideDropdown', this.onBlurEvent);
+				choices?.passedElement?.element?.removeEventListener('change', this.onSelectChangeEvent);
+				choices?.destroy();
 			});
 
 			// File.
@@ -1700,6 +1706,7 @@ export class Form {
 			!this.state.getStateConfigIsAdmin() &&
 			this.state.getStateFormConfigUseSingleSubmit(formId) && (
 				this.state.getStateElementTypeCustom(name, formId) === 'range' ||
+				this.state.getStateElementTypeCustom(name, formId) === 'number' ||
 				this.state.getStateElementTypeCustom(name, formId) === 'checkbox' ||
 				this.state.getStateElementTypeCustom(name, formId) === 'radio'
 			)

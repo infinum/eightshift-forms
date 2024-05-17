@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [ 'latest' ]
-        php: [ '7.4' ]
+        php: [ '8.2', '8.3' ]
     steps:
       - name: Lint assets
         uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-assets-forms@main
@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        php: [ '8.2', '8.3' ]
     steps:
       - name: PHP Static code analysis
         uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php-static@main
@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        php: [ '8.2', '8.3' ]
     steps:
       - name: PHP check coding standards
         uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php@main

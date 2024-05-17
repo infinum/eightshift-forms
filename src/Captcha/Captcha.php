@@ -254,13 +254,14 @@ class Captcha implements CaptchaInterface
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
 					'response' => $responseBody,
+					'isSpam' => true,
 				],
 				$debug
 			);
 		}
 
 		return UtilsApiHelper::getApiSuccessPublicOutput(
-			'',
+			'Success',
 			[
 				'response' => $responseBody,
 			],

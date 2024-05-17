@@ -14,7 +14,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_REST_Request;
 
 /**
@@ -198,7 +198,7 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 
 		foreach ($items as $value) {
 			$blockName = UtilsGeneralHelper::getBlockNameDetails($value['blockName']);
-			$prefix = Components::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
+			$prefix = Helpers::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
 
 			$name = $value['attrs']["{$prefix}Name"] ?? '';
 
@@ -252,7 +252,7 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 
 		foreach ($items as $item) {
 			$blockName = UtilsGeneralHelper::getBlockNameDetails($item['blockName']);
-			$prefix = Components::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
+			$prefix = Helpers::kebabToCamelCase("{$blockName['nameAttr']}-{$blockName['nameAttr']}");
 
 			$innerKeyValue =  $item['attrs']["{$prefix}Value"] ?? '';
 

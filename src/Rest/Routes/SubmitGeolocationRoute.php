@@ -15,7 +15,7 @@ use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use Throwable;
 use WP_REST_Request;
 
@@ -98,7 +98,7 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 
 			$params = UtilsEncryption::decryptor($data);
 
-			if (!Components::isJson($params)) {
+			if (!Helpers::isJson($params)) {
 				return \rest_ensure_response(
 					UtilsApiHelper::getApiErrorPublicOutput(
 						\esc_html__('The geolocation data is malformed or not valid.', 'eightshift-forms'),

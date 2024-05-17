@@ -6,9 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-echo Components::render(
+echo Helpers::render(
 	'dynamic',
-	Components::props('dynamic', $attributes)
+	Helpers::props('dynamic', $attributes)
 );

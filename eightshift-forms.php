@@ -28,30 +28,52 @@ if (! \defined('WPINC')) {
 }
 
 /**
- * Include the autoloader so we can dynamically include the rest of the classes.
+ * Bailout, if the plugin is not loaded via Composer.
+ */
+if (!\file_exists(__DIR__ . '/vendor/autoload.php')) {
+	return;
+}
+
+/**
+ * Require the Composer autoloader.
  */
 $loader = require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/vendor-prefixed/autoload.php';
 
 /**
- * The code that runs during plugin activation.
+ * Require the Composer autoloader for the prefixed libraries.
  */
-\register_activation_hook(
-	__FILE__,
-	function () {
-		PluginFactory::activate();
-	}
-);
+if (\file_exists(__DIR__ . '/vendor-prefixed/autoload.php')) {
+	require __DIR__ . '/vendor-prefixed/autoload.php';
+}
+
+if (\class_exists(PluginFactory::class)) {
+	/**
+	 * The code that runs during plugin activation.
+	 */
+	\register_activation_hook(
+		__FILE__,
+		function () {
+			PluginFactory::activate();
+		}
+	);
+
+	/**
+	 * The code that runs during plugin deactivation.
+	 */
+	\register_deactivation_hook(
+		__FILE__,
+		function () {
+			PluginFactory::deactivate();
+		}
+	);
+}
 
 /**
- * The code that runs during plugin deactivation.
+ * Set all the cache for the plugin.
  */
-\register_deactivation_hook(
-	__FILE__,
-	function () {
-		PluginFactory::deactivate();
-	}
-);
+if (\class_exists(ManifestCache::class)) {
+	(new ManifestCache())->setAllCache();
+}
 
 /**
  * Begins execution of the plugin.
@@ -62,8 +84,6 @@ require __DIR__ . '/vendor-prefixed/autoload.php';
  */
 if (\class_exists(Main::class)) {
 	$sep = \DIRECTORY_SEPARATOR;
-
-	(new ManifestCache())->setProjectCache();
 
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 

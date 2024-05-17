@@ -14,7 +14,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_REST_Request;
 
 /**
@@ -67,12 +67,12 @@ class LocationsRoute extends AbstractUtilsBaseRoute
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
-					'output' => Components::render(
+					'output' => Helpers::render(
 						'item-details',
 						[
 							'items' => UtilsGeneralHelper::getBlockLocations($id),
 							'type' => UtilsGeneralHelper::getFormTypeById($id),
-							'sectionClass' => Components::getComponent('admin-listing')['componentClass'],
+							'sectionClass' => Helpers::getComponent('admin-listing')['componentClass'],
 							'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms'),
 							'additionalAttributes' => [
 								UtilsHelper::getStateAttribute('adminIntegrationType') => $type,

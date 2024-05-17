@@ -17,7 +17,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * ClearbitClient integration class.
@@ -128,7 +128,7 @@ class ClearbitClient implements ClearbitClientInterface
 	{
 		$output = [];
 
-		$customFields = \array_flip(Components::flattenArray(UtilsHelper::getStateParams()));
+		$customFields = \array_flip(Helpers::flattenArray(UtilsHelper::getStateParams()));
 
 		foreach ($params as $key => $param) {
 			// Remove unecesery fields.

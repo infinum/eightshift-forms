@@ -13,7 +13,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * Outputs the forms custom unique name set in the settings by provided form ID.
@@ -89,7 +89,7 @@ function esFormsGetSelectOptionsArrayFromString(string $options): array
  */
 function esFormsGetComponentsRender(string $component, array $attributes = []): string
 {
-	return Components::render($component, $attributes);
+	return Helpers::render($component, $attributes);
 }
 
 /**
@@ -102,7 +102,7 @@ function esFormsGetComponentsRender(string $component, array $attributes = []): 
  */
 function esFormRenderForm(string $formId, array $attributes = []): string
 {
-	return Components::render(
+	return Helpers::render(
 		'forms',
 		[
 			'formsFormPostId' => $formId,

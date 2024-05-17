@@ -7,22 +7,22 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalTooltipClass = $attributes['additionalTooltipClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$tooltipContent = Components::checkAttr('tooltipContent', $attributes, $manifest);
-$tooltipPosition = Components::checkAttr('tooltipPosition', $attributes, $manifest);
+$tooltipContent = Helpers::checkAttr('tooltipContent', $attributes, $manifest);
+$tooltipPosition = Helpers::checkAttr('tooltipPosition', $attributes, $manifest);
 
-$tooltipClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($tooltipPosition, $componentClass, '', $tooltipPosition),
-	Components::selector($selectorClass, $selectorClass, $componentClass),
-	Components::selector($additionalTooltipClass, $additionalTooltipClass),
+$tooltipClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($tooltipPosition, $componentClass, '', $tooltipPosition),
+	Helpers::selector($selectorClass, $selectorClass, $componentClass),
+	Helpers::selector($additionalTooltipClass, $additionalTooltipClass),
 ]);
 
 ?>

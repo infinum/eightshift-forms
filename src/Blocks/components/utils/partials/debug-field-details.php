@@ -9,7 +9,7 @@
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 if (UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
 	return;
@@ -19,11 +19,11 @@ if (!UtilsDeveloperHelper::isDeveloperModeActive()) {
 	return;
 }
 
-$fieldManifest = Components::getComponent('field');
+$fieldManifest = Helpers::getComponent('field');
 
-$componentClass = Components::classnames([
+$componentClass = Helpers::classnames([
 	UtilsHelper::getStateSelector('field'),
-	Components::selector(true, $fieldManifest['componentClass'], 'debug'),
+	Helpers::selector(true, $fieldManifest['componentClass'], 'debug'),
 ]);
 
 $output = [

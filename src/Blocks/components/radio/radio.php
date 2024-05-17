@@ -7,41 +7,41 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$radioValue = Components::checkAttr('radioValue', $attributes, $manifest);
+$radioValue = Helpers::checkAttr('radioValue', $attributes, $manifest);
 if (!$radioValue) {
 	return;
 }
 
-$radioLabel = Components::checkAttr('radioLabel', $attributes, $manifest);
-$radioHideLabel = Components::checkAttr('radioHideLabel', $attributes, $manifest);
-$radioHideLabelText = Components::checkAttr('radioHideLabelText', $attributes, $manifest);
-$radioName = Components::checkAttr('radioName', $attributes, $manifest);
-$radioIsChecked = Components::checkAttr('radioIsChecked', $attributes, $manifest);
-$radioIsDisabled = Components::checkAttr('radioIsDisabled', $attributes, $manifest);
-$radioSingleSubmit = Components::checkAttr('radioSingleSubmit', $attributes, $manifest);
-$radioAttrs = Components::checkAttr('radioAttrs', $attributes, $manifest);
-$radioFieldAttrs = Components::checkAttr('radioFieldAttrs', $attributes, $manifest);
-$radioIcon = Components::checkAttr('radioIcon', $attributes, $manifest);
-$radioIsHidden = Components::checkAttr('radioIsHidden', $attributes, $manifest);
+$radioLabel = Helpers::checkAttr('radioLabel', $attributes, $manifest);
+$radioHideLabel = Helpers::checkAttr('radioHideLabel', $attributes, $manifest);
+$radioHideLabelText = Helpers::checkAttr('radioHideLabelText', $attributes, $manifest);
+$radioName = Helpers::checkAttr('radioName', $attributes, $manifest);
+$radioIsChecked = Helpers::checkAttr('radioIsChecked', $attributes, $manifest);
+$radioIsDisabled = Helpers::checkAttr('radioIsDisabled', $attributes, $manifest);
+$radioSingleSubmit = Helpers::checkAttr('radioSingleSubmit', $attributes, $manifest);
+$radioAttrs = Helpers::checkAttr('radioAttrs', $attributes, $manifest);
+$radioFieldAttrs = Helpers::checkAttr('radioFieldAttrs', $attributes, $manifest);
+$radioIcon = Helpers::checkAttr('radioIcon', $attributes, $manifest);
+$radioIsHidden = Helpers::checkAttr('radioIsHidden', $attributes, $manifest);
 
-$radioClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($radioIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
-	Components::selector($radioIsHidden, UtilsHelper::getStateSelector('isHidden')),
+$radioClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($radioIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
+	Helpers::selector($radioIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);
 
-$radioInputClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'input'),
-	Components::selector($radioSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+$radioInputClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'input'),
+	Helpers::selector($radioSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 $radioAttrs['value'] = esc_attr($radioValue);
@@ -53,9 +53,9 @@ if ($radioAttrs) {
 	}
 }
 
-$conditionalTags = Components::render(
+$conditionalTags = Helpers::render(
 	'conditional-tags',
-	Components::props('conditionalTags', $attributes)
+	Helpers::props('conditionalTags', $attributes)
 );
 
 if ($conditionalTags) {

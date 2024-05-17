@@ -15,9 +15,9 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -30,43 +30,47 @@ $attributes = apply_filters(
 	$attributes
 );
 
-$formName = Components::checkAttr('formName', $attributes, $manifest);
-$formAction = Components::checkAttr('formAction', $attributes, $manifest);
-$formActionExternal = Components::checkAttr('formActionExternal', $attributes, $manifest);
-$formMethod = Components::checkAttr('formMethod', $attributes, $manifest);
-$formId = Components::checkAttr('formId', $attributes, $manifest);
-$formPostId = Components::checkAttr('formPostId', $attributes, $manifest);
-$formContent = Components::checkAttr('formContent', $attributes, $manifest);
-$formSuccessRedirect = Components::checkAttr('formSuccessRedirect', $attributes, $manifest);
-$formSuccessRedirectVariation = Components::checkAttr('formSuccessRedirectVariation', $attributes, $manifest);
-$formTrackingEventName = Components::checkAttr('formTrackingEventName', $attributes, $manifest);
-$formTrackingAdditionalData = Components::checkAttr('formTrackingAdditionalData', $attributes, $manifest);
-$formPhoneSync = Components::checkAttr('formPhoneSync', $attributes, $manifest);
-$formPhoneDisablePicker = Components::checkAttr('formPhoneDisablePicker', $attributes, $manifest);
-$formType = Components::checkAttr('formType', $attributes, $manifest);
-$formServerSideRender = Components::checkAttr('formServerSideRender', $attributes, $manifest);
-$formConditionalTags = Components::checkAttr('formConditionalTags', $attributes, $manifest);
-$formDownloads = Components::checkAttr('formDownloads', $attributes, $manifest);
-$formSuccessRedirectVariationUrl = Components::checkAttr('formSuccessRedirectVariationUrl', $attributes, $manifest);
-$formSuccessRedirectVariationUrlTitle = Components::checkAttr('formSuccessRedirectVariationUrlTitle', $attributes, $manifest);
-$formDisabledDefaultStyles = Components::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
-$formHasSteps = Components::checkAttr('formHasSteps', $attributes, $manifest);
-$formCustomName = Components::checkAttr('formCustomName', $attributes, $manifest);
-$formHideGlobalMsgOnSuccess = Components::checkAttr('formHideGlobalMsgOnSuccess', $attributes, $manifest);
-$formUseSingleSubmit = Components::checkAttr('formUseSingleSubmit', $attributes, $manifest);
+$formName = Helpers::checkAttr('formName', $attributes, $manifest);
+$formAction = Helpers::checkAttr('formAction', $attributes, $manifest);
+$formActionExternal = Helpers::checkAttr('formActionExternal', $attributes, $manifest);
+$formMethod = Helpers::checkAttr('formMethod', $attributes, $manifest);
+$formId = Helpers::checkAttr('formId', $attributes, $manifest);
+$formPostId = Helpers::checkAttr('formPostId', $attributes, $manifest);
+$formContent = Helpers::checkAttr('formContent', $attributes, $manifest);
+$formSuccessRedirect = Helpers::checkAttr('formSuccessRedirect', $attributes, $manifest);
+$formSuccessRedirectVariation = Helpers::checkAttr('formSuccessRedirectVariation', $attributes, $manifest);
+$formTrackingEventName = Helpers::checkAttr('formTrackingEventName', $attributes, $manifest);
+$formTrackingAdditionalData = Helpers::checkAttr('formTrackingAdditionalData', $attributes, $manifest);
+$formPhoneSync = Helpers::checkAttr('formPhoneSync', $attributes, $manifest);
+$formPhoneDisablePicker = Helpers::checkAttr('formPhoneDisablePicker', $attributes, $manifest);
+$formType = Helpers::checkAttr('formType', $attributes, $manifest);
+$formServerSideRender = Helpers::checkAttr('formServerSideRender', $attributes, $manifest);
+$formConditionalTags = Helpers::checkAttr('formConditionalTags', $attributes, $manifest);
+$formDownloads = Helpers::checkAttr('formDownloads', $attributes, $manifest);
+$formSuccessRedirectVariationUrl = Helpers::checkAttr('formSuccessRedirectVariationUrl', $attributes, $manifest);
+$formSuccessRedirectVariationUrlTitle = Helpers::checkAttr('formSuccessRedirectVariationUrlTitle', $attributes, $manifest);
+$formDisabledDefaultStyles = Helpers::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
+$formHasSteps = Helpers::checkAttr('formHasSteps', $attributes, $manifest);
+$formCustomName = Helpers::checkAttr('formCustomName', $attributes, $manifest);
+$formHideGlobalMsgOnSuccess = Helpers::checkAttr('formHideGlobalMsgOnSuccess', $attributes, $manifest);
+$formUseSingleSubmit = Helpers::checkAttr('formUseSingleSubmit', $attributes, $manifest);
 
 $formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
-	Components::checkAttr('formDataTypeSelector', $attributes, $manifest),
+	Helpers::checkAttr('formDataTypeSelector', $attributes, $manifest),
 	$attributes
 );
 
-$formAttrs = Components::checkAttr('formAttrs', $attributes, $manifest);
+$formAttrs = Helpers::checkAttr('formAttrs', $attributes, $manifest);
 
-$formClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
+$customClassSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'customClassSelector']);
+$customClassSelector = $formDataTypeSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
+
+$formClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($customClassSelector, $customClassSelector),
 	UtilsHelper::getStateSelector('form'),
 ]);
 
@@ -257,14 +261,14 @@ if ($formAttrs) {
 	<?php } ?>
 
 	<?php
-	echo Components::render(
+	echo Helpers::render(
 		'global-msg',
-		Components::props('globalMsg', $attributes)
+		Helpers::props('globalMsg', $attributes)
 	);
 
-	echo Components::render(
+	echo Helpers::render(
 		'progress-bar',
-		Components::props('progressBar', $attributes)
+		Helpers::props('progressBar', $attributes)
 	);
 	?>
 
@@ -275,9 +279,9 @@ if ($formAttrs) {
 	</div>
 
 	<?php
-	echo Components::render(
+	echo Helpers::render(
 		'loader',
-		Components::props('loader', $attributes)
+		Helpers::props('loader', $attributes)
 	);
 	?>
 </<?php echo $formServerSideRender ? 'div' : 'form'; ?>>

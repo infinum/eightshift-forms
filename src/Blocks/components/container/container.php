@@ -6,19 +6,19 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
-$containerUse = Components::checkAttr('containerUse', $attributes, $manifest);
+$containerUse = Helpers::checkAttr('containerUse', $attributes, $manifest);
 
 if (!$containerUse) {
 	return;
 }
 
-$containerClass = Components::checkAttr('containerClass', $attributes, $manifest);
-$containerContent = Components::checkAttr('containerContent', $attributes, $manifest);
-$containerTag = Components::checkAttr('containerTag', $attributes, $manifest);
+$containerClass = Helpers::checkAttr('containerClass', $attributes, $manifest);
+$containerContent = Helpers::checkAttr('containerContent', $attributes, $manifest);
+$containerTag = Helpers::checkAttr('containerTag', $attributes, $manifest);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 ?>

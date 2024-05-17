@@ -7,20 +7,20 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$highlightedContentTitle = Components::checkAttr('highlightedContentTitle', $attributes, $manifest);
-$highlightedContentSubtitle = Components::checkAttr('highlightedContentSubtitle', $attributes, $manifest);
-$highlightedContentIcon = Components::checkAttr('highlightedContentIcon', $attributes, $manifest);
+$highlightedContentTitle = Helpers::checkAttr('highlightedContentTitle', $attributes, $manifest);
+$highlightedContentSubtitle = Helpers::checkAttr('highlightedContentSubtitle', $attributes, $manifest);
+$highlightedContentIcon = Helpers::checkAttr('highlightedContentIcon', $attributes, $manifest);
 
-$highlightedContentClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
+$highlightedContentClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
 ?>

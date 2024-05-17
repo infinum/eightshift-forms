@@ -7,9 +7,9 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifestByDir(dirname(__DIR__, 2));
+$manifest = Helpers::getManifestByDir(dirname(__DIR__, 2));
 
 $steps = $attributes['steps'] ?? [];
 
@@ -22,9 +22,9 @@ $jsClass = $attributes['jsClass'] ?? '';
 
 $hideLabels = $attributes['hideLabels'] ?? false;
 
-$progressBarItemClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'item'),
-	Components::selector($jsClass, $jsClass),
+$progressBarItemClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'item'),
+	Helpers::selector($jsClass, $jsClass),
 ]);
 
 foreach ($steps as $step) {

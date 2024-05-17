@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
@@ -158,7 +158,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
-		return Components::render($this->getViewComponent(), $attributes);
+		return Helpers::render($this->getViewComponent(), $attributes);
 	}
 
 	/**

@@ -7,7 +7,7 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $items = $attributes['items'] ?? [];
 
@@ -43,7 +43,7 @@ foreach ($items as $key => $innerItems) {
 					<li class="<?php echo esc_attr("{$sectionClass}__menu-item"); ?>">
 						<a
 							href="<?php echo esc_url($url); ?>"
-							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Components::selector($internalKey === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
+							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Helpers::selector($internalKey === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
 							title="<?php echo esc_html($desc); ?>"
 						>
 							<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
