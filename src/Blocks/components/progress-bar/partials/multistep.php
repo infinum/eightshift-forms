@@ -42,7 +42,7 @@ foreach ($steps as $step) {
 		$progressBarAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 	?>
-	<div class="<?php echo esc_attr($progressBarItemClass); ?>" <?php echo $progressBarAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+	<div class="<?php echo esc_attr($progressBarItemClass); ?>" <?php echo $progressBarAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 		<div class="<?php echo esc_attr("{$componentClass}__item-inner"); ?>">
 			<?php
 			if (!$hideLabels) {

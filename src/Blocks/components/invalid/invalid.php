@@ -20,7 +20,7 @@ $icon = $attributes['icon'] ?? '';
 
 <div class="<?php echo esc_attr($componentClass); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-		<?php echo $icon ? UtilsHelper::getUtilsIcons($icon) : UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $icon ? UtilsHelper::getUtilsIcons($icon) : UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 	</div>
 
 	<?php if ($heading) { ?>

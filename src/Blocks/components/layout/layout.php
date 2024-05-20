@@ -46,6 +46,6 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 	?>
 >
 	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 	</div>
 </<?php echo esc_attr($layoutTag); ?>>

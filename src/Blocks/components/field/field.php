@@ -23,7 +23,7 @@ $fieldSkip = Helpers::checkAttr('fieldSkip', $attributes, $manifest);
 
 // Enable option to skip field and just render content.
 if ($fieldSkip) {
-	echo $fieldContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	return;
 }
 
@@ -155,7 +155,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 <<?php echo esc_attr($fieldTag); ?>
 	class="<?php echo esc_attr($fieldClass); ?>"
 	data-id="<?php echo esc_attr($unique); ?>"
-	<?php echo $fieldAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $fieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 >
 
 	<?php
@@ -201,21 +201,21 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 			<?php if ($fieldBeforeContent) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
-					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
 			<div class="<?php echo esc_attr("{$componentClass}__content-wrap"); ?>">
-				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			</div>
 			<?php if ($fieldAfterContent) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__after-content"); ?>">
-					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
 		</div>
 		<?php if ($fieldHelp) { ?>
 			<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
-				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			</div>
 		<?php } ?>
 		<?php
@@ -231,5 +231,5 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		?>
 	</div>
 
-	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 </<?php echo esc_attr($fieldTag); ?>>

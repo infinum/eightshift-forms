@@ -60,7 +60,7 @@ $groupClass = Helpers::classnames([
 
 	<?php if ($groupContent) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 

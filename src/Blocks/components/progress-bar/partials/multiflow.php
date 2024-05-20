@@ -23,5 +23,5 @@ for ($i = 0; $i < $count; $i++) {
 		$filled = 'es-form-is-filled';
 	}
 
-	echo "<div class='{$filled}'></div>"; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	echo "<div class='{$filled}'></div>"; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 }

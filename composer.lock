@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "09debb9423104634abd58d83617ae43f",
+    "content-hash": "c563e82a038e64f28c132340b511fcb9",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -129,12 +129,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "249a574558abafb9a98d4935577bbe5687ef4eca"
+                "reference": "67814d371091b86588e8fb8d3e0fb9b84805d827"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/249a574558abafb9a98d4935577bbe5687ef4eca",
-                "reference": "249a574558abafb9a98d4935577bbe5687ef4eca",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/67814d371091b86588e8fb8d3e0fb9b84805d827",
+                "reference": "67814d371091b86588e8fb8d3e0fb9b84805d827",
                 "shasum": ""
             },
             "require": {
@@ -188,7 +188,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2024-05-17T08:39:27+00:00"
+            "time": "2024-05-20T07:11:38+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -955,16 +955,16 @@
         },
         {
             "name": "infinum/eightshift-coding-standards",
-            "version": "2.0.0-beta",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-coding-standards.git",
-                "reference": "57719e1c758e48129b5fd03a88859b7f4afa2dd9"
+                "reference": "aaceba336d7effefcbf6c29a3525d2b859ab0a6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-coding-standards/zipball/57719e1c758e48129b5fd03a88859b7f4afa2dd9",
-                "reference": "57719e1c758e48129b5fd03a88859b7f4afa2dd9",
+                "url": "https://api.github.com/repos/infinum/eightshift-coding-standards/zipball/aaceba336d7effefcbf6c29a3525d2b859ab0a6f",
+                "reference": "aaceba336d7effefcbf6c29a3525d2b859ab0a6f",
                 "shasum": ""
             },
             "require": {
@@ -1008,7 +1008,7 @@
                 "issues": "https://github.com/infinum/eightshift-coding-standards/issues",
                 "source": "https://github.com/infinum/eightshift-coding-standards"
             },
-            "time": "2023-09-22T13:43:43+00:00"
+            "time": "2024-05-20T07:30:13+00:00"
         },
         {
             "name": "mockery/mockery",

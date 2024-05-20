@@ -52,7 +52,7 @@ if ($selectOptionAttrs) {
 	value="<?php echo esc_attr($selectOptionValue); ?>"
 	<?php selected($selectOptionIsSelected); ?>
 	<?php disabled($selectOptionIsDisabled); ?>
-	<?php echo $selectOptionAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $selectOptionAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 >
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

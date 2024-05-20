@@ -53,7 +53,7 @@ $nextButtonComponent = '';
 
 ?>
 
-<div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+<div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 
 	<div class="<?php echo esc_attr("{$componentClass}__debug-details"); ?>">
 		<?php
@@ -63,7 +63,7 @@ $nextButtonComponent = '';
 	</div>
 
 	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
-		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 
 		<div class="<?php echo esc_attr("{$componentFieldClass} {$componentClass}__navigation"); ?>">
 			<div class="<?php echo esc_attr("{$componentFieldClass} {$componentClass}__navigation-inner"); ?>">
@@ -127,7 +127,7 @@ $nextButtonComponent = '';
 					)
 				);
 
-				echo $stepSubmit; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				echo $stepSubmit; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 				?>
 			</div>
 		</div>

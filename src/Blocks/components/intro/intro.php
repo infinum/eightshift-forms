@@ -43,12 +43,12 @@ $titleClass = Helpers::classnames([
 <div class="<?php echo esc_attr($introClass); ?>">
 	<?php
 	if ($introIsHighlightedImportant) {
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		echo UtilsHelper::getUtilsIcons('warning');
 	}
 
 	if ($introIcon) {
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		echo UtilsHelper::getUtilsIcons($introIcon);
 	}
 	?>

@@ -27,5 +27,5 @@ $loaderClass = Helpers::classnames([
 ?>
 
 <div class="<?php echo esc_attr($loaderClass); ?>">
-	<?php echo UtilsHelper::getUtilsIcons('loader'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo UtilsHelper::getUtilsIcons('loader'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 </div>

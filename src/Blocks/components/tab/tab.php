@@ -38,5 +38,5 @@ if (!$tabLabel || !$tabContent) {
 </button>
 
 <div class="<?php echo esc_attr($tabContentClass); ?>">
-	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 </div>

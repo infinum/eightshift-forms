@@ -123,7 +123,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the phar location.
-			throw new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), $path));
+			throw new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), \esc_html($path)));
 		}
 
 		return $path;
@@ -148,7 +148,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the database location.
-			throw new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), $path));
+			throw new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), \esc_html($path)));
 		}
 
 		return $path;

@@ -35,7 +35,7 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 	?>
 >
 	<?php
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		echo $containerContent;
 	?>
 </<?php echo esc_attr($containerTag); ?>>

@@ -54,7 +54,7 @@ if ($globalMsgAttrs) {
 
 <div
 	class="<?php echo esc_attr($globalMsgClass); ?>"
-	<?php echo $globalMsgAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $globalMsgAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 >
 	<?php echo esc_html($globalMsgValue); ?>
 </div>

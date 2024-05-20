@@ -34,8 +34,8 @@ $resultClass = Helpers::classnames([
 
 ?>
 
-<div class="<?php echo esc_attr($resultClass); ?>" <?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+<div class="<?php echo esc_attr($resultClass); ?>" <?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 <?php
-	echo do_blocks(get_the_content(null, false, $resultOutputPostId)); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	echo do_blocks(get_the_content(null, false, $resultOutputPostId)); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 ?>
 </div>

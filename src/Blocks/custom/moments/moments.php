@@ -8,8 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-dump($renderContent);
-
 echo Helpers::render(
 	'form',
 	Helpers::props('form', $attributes, [

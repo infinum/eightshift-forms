@@ -15,7 +15,7 @@ $manifest = Helpers::getManifestByDir(__DIR__);
 $manifestInvalid = Helpers::getComponent('invalid');
 $manifestSettings = Helpers::getSettings();
 
-echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
 $blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$manifestSettings['blockClassPrefix']}-{$manifest['blockName']}";
 
@@ -108,7 +108,7 @@ $formsClass = Helpers::classnames([
 
 ?>
 
-<div class="<?php echo esc_attr($formsClass); ?>" <?php echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+<div class="<?php echo esc_attr($formsClass); ?>" <?php echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 	<?php
 	foreach ($allForms as $formId) {
 		// Convert blocks to array.
@@ -132,7 +132,7 @@ $formsClass = Helpers::classnames([
 
 		// Render blocks.
 		foreach ($output as $block) {
-			// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+			// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			echo apply_filters('the_content', render_block($block));
 		}
 	}
@@ -148,4 +148,4 @@ $formsClass = Helpers::classnames([
 
 <?php
 
-echo Helpers::outputCssVariablesInline(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesInline(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped

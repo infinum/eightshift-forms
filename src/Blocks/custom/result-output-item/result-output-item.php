@@ -38,6 +38,6 @@ $resultClass = Helpers::classnames([
 
 ?>
 
-<div class="<?php echo esc_attr($resultClass); ?>" <?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
-	<?php echo $renderContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+<div class="<?php echo esc_attr($resultClass); ?>" <?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
+	<?php echo $renderContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 </div>

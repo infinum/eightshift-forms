@@ -52,7 +52,7 @@ class Editor implements ServiceInterface
 			$typeKey = ($type === Forms::POST_TYPE_SLUG) ? '' : UtilsConfig::SLUG_ADMIN_LISTING_RESULTS;
 
 			if (isset($links[$actualUrl])) {
-				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			}
 		}
 	}

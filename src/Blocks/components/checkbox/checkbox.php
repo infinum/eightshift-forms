@@ -98,14 +98,14 @@ if ($checkboxFieldAttrs) {
 
 ?>
 
-<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxName); ?>"
-			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>
 			<?php wp_readonly($checkboxIsReadOnly); ?>
@@ -129,7 +129,7 @@ if ($checkboxFieldAttrs) {
 	</div>
 	<?php if ($checkboxHelp) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
-			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 </div>

@@ -12,7 +12,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 $manifest = Helpers::getManifestByDir(__DIR__);
 $manifestSection = Helpers::getComponent('admin-settings-section');
 
-echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
@@ -61,7 +61,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo esc_attr("{$sectionClass}__menu-link {$sectionClass}__menu-link--fit"); ?>">
 				<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
 					<?php
-					echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+					echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 					esc_html__('Forms', 'eightshift-forms');
 					?>
 				</span>
@@ -69,7 +69,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 		</div>
 
 		<?php
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		echo $componentName;
 		echo Helpers::render(
 			'sidebar-section',
@@ -96,7 +96,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 						<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
 							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
 								<?php
-									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+									// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 									echo UtilsHelper::getUtilsIcons('edit'),
 									esc_html__('Edit form', 'eightshift-forms');
 								?>
@@ -104,7 +104,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 
 							<a href="<?php echo esc_url($adminSettingsFormLocationsLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
 								<?php
-									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+									// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 									echo UtilsHelper::getUtilsIcons('location'),
 									esc_html__('Locations used', 'eightshift-forms');
 								?>
@@ -120,7 +120,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 				<?php } ?>
 			</div>
 			<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
-				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 				?>
 			</div>
 		</div>

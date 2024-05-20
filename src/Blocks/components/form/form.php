@@ -212,7 +212,7 @@ if ($formAttrs) {
 
 <<?php echo $formServerSideRender ? 'div' : 'form'; ?>
 	class="<?php echo esc_attr($formClass); ?>"
-	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 	novalidate
 	onsubmit="event.preventDefault();"
 >
@@ -224,7 +224,7 @@ if ($formAttrs) {
 					href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formPostId)) ?>"
 					title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>"
 				>
-					<?php echo UtilsHelper::getUtilsIcons('edit'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+					<?php echo UtilsHelper::getUtilsIcons('edit'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
@@ -234,7 +234,7 @@ if ($formAttrs) {
 					href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
 					title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>"
 				>
-				<?php echo UtilsHelper::getUtilsIcons('settings'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+				<?php echo UtilsHelper::getUtilsIcons('settings'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</a>
 			<?php } ?>
 
@@ -244,7 +244,7 @@ if ($formAttrs) {
 				href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
 				title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>"
 			>
-					<?php echo UtilsHelper::getUtilsIcons('dashboard'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+					<?php echo UtilsHelper::getUtilsIcons('dashboard'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</a>
 
 				<?php if ($formHasSteps) { ?>
@@ -253,7 +253,7 @@ if ($formAttrs) {
 						href="#" class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
 						title="<?php esc_html_e('Debug form', 'eightshift-forms'); ?>"
 					>
-						<?php echo UtilsHelper::getUtilsIcons('debug'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+						<?php echo UtilsHelper::getUtilsIcons('debug'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 					</a>
 				<?php } ?>
 			<?php } ?>
@@ -273,9 +273,9 @@ if ($formAttrs) {
 	?>
 
 	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
-		<?php echo $formContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 
-		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 	</div>
 
 	<?php

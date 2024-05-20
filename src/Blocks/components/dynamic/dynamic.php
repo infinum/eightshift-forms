@@ -24,7 +24,7 @@ if ($dynamicIsDeactivated) {
 
 $filterName = UtilsHooksHelper::getFilterName(['block', 'dynamic', 'dataOutput']);
 
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo apply_filters( // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	$filterName,
 	$attributes,
 	Helpers::checkAttr('dynamicFormPostId', $attributes, $manifest)

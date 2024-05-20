@@ -28,7 +28,7 @@ $tooltipClass = Helpers::classnames([
 ?>
 
 <span class="<?php echo esc_attr($tooltipClass); ?>">
-	<?php echo UtilsHelper::getUtilsIcons('tooltip'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo UtilsHelper::getUtilsIcons('tooltip'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 	<span class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
 		<?php echo esc_html($tooltipContent); ?>
 	</span>

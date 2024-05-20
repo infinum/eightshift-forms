@@ -77,7 +77,7 @@ if ($radioFieldAttrs) {
 
 ?>
 
-<div class="<?php echo esc_attr($radioClass); ?>" <?php echo $radioFieldAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+<div class="<?php echo esc_attr($radioClass); ?>" <?php echo $radioFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<input
 			class="<?php echo esc_attr($radioInputClass); ?>"
@@ -86,7 +86,7 @@ if ($radioFieldAttrs) {
 			id="<?php echo esc_attr($radioName); ?>"
 			<?php checked($radioIsChecked); ?>
 			<?php disabled($radioIsDisabled); ?>
-			<?php echo $radioAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo $radioAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 		/>
 		<?php if (!$radioHideLabel) { ?>
 			<label

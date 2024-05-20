@@ -30,6 +30,6 @@ if (!$tabsContent) {
 ?>
 <div class="<?php echo esc_attr($tabsClass); ?>">
 	<?php
-	echo $tabsContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	echo $tabsContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	?>
 </div>

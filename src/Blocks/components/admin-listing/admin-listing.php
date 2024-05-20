@@ -12,7 +12,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 $manifest = Helpers::getManifestByDir(__DIR__);
 $manifestSection = Helpers::getComponent('admin-settings-section');
 
-echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
