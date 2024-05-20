@@ -123,8 +123,8 @@ class SettingsSecurity implements UtilsSettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'input',
 								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_SECURITY_RATE_LIMIT_KEY),
-								'inputFieldLabel' => \__('Number of requests general', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period for all forms.', 'eightshift-forms'),
+								'inputFieldLabel' => \__('Number of default requests', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define the maximum number of requests a user can make in the given time period for all forms excluding specifics listed below.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 1,
 								'inputMax' => 300,

@@ -259,7 +259,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 									$formDetails,
 									// translators: %s is the form ID.
 									\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
-									'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>',
+									'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the available data for debugging purposes.', 'eightshift-forms') . '</p>',
 									[
 										self::VALIDATION_ERROR_DATA => $captcha,
 									]
