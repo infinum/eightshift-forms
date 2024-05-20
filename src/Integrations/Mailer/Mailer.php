@@ -421,6 +421,6 @@ class Mailer implements MailerInterface
 			UtilsConfig::FD_ICON,
 		];
 
-		return array_diff_key($formDetails, array_flip($list));
+		return \array_diff_key($formDetails, \array_flip($list));
 	}
 }
