@@ -421,12 +421,6 @@ class Mailer implements MailerInterface
 			UtilsConfig::FD_ICON,
 		];
 
-		foreach ($list as $item) {
-			if (isset($formDetails[$item])) {
-				unset($formDetails[$item]);
-			}
-		}
-
-		return $formDetails;
+		return array_diff_key($formDetails, array_flip($list));
 	}
 }
