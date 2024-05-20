@@ -30,14 +30,16 @@ if (! \defined('WPINC')) {
 /**
  * Bailout, if the plugin is not loaded via Composer.
  */
-if (!\file_exists(__DIR__ . '/vendor/autoload.php')) {
+$autoloadPath = __DIR__ . '/vendor/autoload.php';
+
+if (!\file_exists($autoloadPath)) {
 	return;
 }
 
 /**
  * Require the Composer autoloader.
  */
-$loader = require __DIR__ . '/vendor/autoload.php';
+$loader = require $autoloadPath;
 
 /**
  * Require the Composer autoloader for the prefixed libraries.
