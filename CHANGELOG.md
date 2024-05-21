@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.11]
+
+### Changed
+- Updated the `@infinum/eightshift-forms-utils` to the latest version.
+
+### Added
+- Two new filters for encryption and decryption of the data.
+
 ## [3.1.10]
 
 ### Fixed
@@ -368,6 +376,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.11]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.1.11
 [3.1.10]: https://github.com/infinum/eightshift-forms/compare/3.1.9...3.1.10
 [3.1.9]: https://github.com/infinum/eightshift-forms/compare/3.1.8...3.1.9
 [3.1.8]: https://github.com/infinum/eightshift-forms/compare/3.1.7...3.1.8
