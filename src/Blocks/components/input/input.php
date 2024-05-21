@@ -9,52 +9,52 @@
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$inputName = Components::checkAttr('inputName', $attributes, $manifest);
+$inputName = Helpers::checkAttr('inputName', $attributes, $manifest);
 if (!$inputName) {
 	return;
 }
 
-$inputValue = Components::checkAttr('inputValue', $attributes, $manifest);
-$inputPlaceholder = Components::checkAttr('inputPlaceholder', $attributes, $manifest);
-$inputType = Components::checkAttr('inputType', $attributes, $manifest);
-$inputTypeCustom = Components::checkAttr('inputTypeCustom', $attributes, $manifest);
-$inputIsDisabled = Components::checkAttr('inputIsDisabled', $attributes, $manifest);
-$inputIsReadOnly = Components::checkAttr('inputIsReadOnly', $attributes, $manifest);
-$inputIsRequired = Components::checkAttr('inputIsRequired', $attributes, $manifest);
-$inputTracking = Components::checkAttr('inputTracking', $attributes, $manifest);
-$inputMin = Components::checkAttr('inputMin', $attributes, $manifest);
-$inputMax = Components::checkAttr('inputMax', $attributes, $manifest);
-$inputStep = Components::checkAttr('inputStep', $attributes, $manifest);
-$inputAttrs = Components::checkAttr('inputAttrs', $attributes, $manifest);
-$inputFieldAttrs = Components::checkAttr('inputFieldAttrs', $attributes, $manifest);
-$inputUseLabelAsPlaceholder = Components::checkAttr('inputUseLabelAsPlaceholder', $attributes, $manifest);
-$inputSingleSubmit = Components::checkAttr('inputSingleSubmit', $attributes, $manifest);
-$inputRangeShowMin = Components::checkAttr('inputRangeShowMin', $attributes, $manifest);
-$inputRangeShowMinPrefix = Components::checkAttr('inputRangeShowMinPrefix', $attributes, $manifest);
-$inputRangeShowMinSuffix = Components::checkAttr('inputRangeShowMinSuffix', $attributes, $manifest);
-$inputRangeShowMax = Components::checkAttr('inputRangeShowMax', $attributes, $manifest);
-$inputRangeShowMaxPrefix = Components::checkAttr('inputRangeShowMaxPrefix', $attributes, $manifest);
-$inputRangeShowMaxSuffix = Components::checkAttr('inputRangeShowMaxSuffix', $attributes, $manifest);
-$inputRangeShowCurrent = Components::checkAttr('inputRangeShowCurrent', $attributes, $manifest);
-$inputRangeShowCurrentPrefix = Components::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
-$inputRangeShowCurrentSuffix = Components::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
+$inputValue = Helpers::checkAttr('inputValue', $attributes, $manifest);
+$inputPlaceholder = Helpers::checkAttr('inputPlaceholder', $attributes, $manifest);
+$inputType = Helpers::checkAttr('inputType', $attributes, $manifest);
+$inputTypeCustom = Helpers::checkAttr('inputTypeCustom', $attributes, $manifest);
+$inputIsDisabled = Helpers::checkAttr('inputIsDisabled', $attributes, $manifest);
+$inputIsReadOnly = Helpers::checkAttr('inputIsReadOnly', $attributes, $manifest);
+$inputIsRequired = Helpers::checkAttr('inputIsRequired', $attributes, $manifest);
+$inputTracking = Helpers::checkAttr('inputTracking', $attributes, $manifest);
+$inputMin = Helpers::checkAttr('inputMin', $attributes, $manifest);
+$inputMax = Helpers::checkAttr('inputMax', $attributes, $manifest);
+$inputStep = Helpers::checkAttr('inputStep', $attributes, $manifest);
+$inputAttrs = Helpers::checkAttr('inputAttrs', $attributes, $manifest);
+$inputFieldAttrs = Helpers::checkAttr('inputFieldAttrs', $attributes, $manifest);
+$inputUseLabelAsPlaceholder = Helpers::checkAttr('inputUseLabelAsPlaceholder', $attributes, $manifest);
+$inputSingleSubmit = Helpers::checkAttr('inputSingleSubmit', $attributes, $manifest);
+$inputRangeShowMin = Helpers::checkAttr('inputRangeShowMin', $attributes, $manifest);
+$inputRangeShowMinPrefix = Helpers::checkAttr('inputRangeShowMinPrefix', $attributes, $manifest);
+$inputRangeShowMinSuffix = Helpers::checkAttr('inputRangeShowMinSuffix', $attributes, $manifest);
+$inputRangeShowMax = Helpers::checkAttr('inputRangeShowMax', $attributes, $manifest);
+$inputRangeShowMaxPrefix = Helpers::checkAttr('inputRangeShowMaxPrefix', $attributes, $manifest);
+$inputRangeShowMaxSuffix = Helpers::checkAttr('inputRangeShowMaxSuffix', $attributes, $manifest);
+$inputRangeShowCurrent = Helpers::checkAttr('inputRangeShowCurrent', $attributes, $manifest);
+$inputRangeShowCurrentPrefix = Helpers::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
+$inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputHideLabel = false;
-$inputFieldLabel = $attributes[Components::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
+$inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
 
-$inputClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
-	Components::selector($inputType === 'range', $componentClass, 'range'),
+$inputClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+	Helpers::selector($inputType === 'range', $componentClass, 'range'),
 ]);
 
 // Additional content filter.
@@ -83,25 +83,25 @@ if ($inputType === 'range') {
 	}
 
 	if ($inputRangeShowMin) {
-		$cssSelector = Components::classnames([
+		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMin'),
-			Components::selector($componentClass, $componentClass, 'range', 'min'),
+			Helpers::selector($componentClass, $componentClass, 'range', 'min'),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$inputAttrs['min']}{$inputRangeShowMinSuffix}</span>");
 	}
 
 	if ($inputRangeShowCurrent) {
-		$cssSelector = Components::selector($componentClass, $componentClass, 'range', 'current');
+		$cssSelector = Helpers::selector($componentClass, $componentClass, 'range', 'current');
 		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
 	}
 
 	if ($inputRangeShowMax) {
-		$cssSelector = Components::classnames([
+		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMax'),
-			Components::selector($componentClass, $componentClass, 'range', 'max'),
+			Helpers::selector($componentClass, $componentClass, 'range', 'max'),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$inputAttrs['max']}{$inputRangeShowMaxSuffix}</span>");
@@ -128,10 +128,10 @@ $input = '
 	' . $additionalContent . '
 ';
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
+		Helpers::props('field', $attributes, [
 			'fieldContent' => $input,
 			'fieldId' => $inputName,
 			'fieldName' => $inputName,
@@ -142,9 +142,9 @@ echo Components::render(
 			'fieldTypeCustom' => $inputTypeCustom ?: $inputType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $inputTracking,
 			'fieldHideLabel' => $inputHideLabel || $inputType === 'hidden',
-			'fieldConditionalTags' => Components::render(
+			'fieldConditionalTags' => Helpers::render(
 				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
+				Helpers::props('conditionalTags', $attributes)
 			),
 			'fieldAttrs' => $inputFieldAttrs,
 		]),

@@ -7,16 +7,16 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
-$dynamicName = Components::checkAttr('dynamicName', $attributes, $manifest);
+$dynamicName = Helpers::checkAttr('dynamicName', $attributes, $manifest);
 if (!$dynamicName) {
 	return;
 }
 
-$dynamicIsDeactivated = Components::checkAttr('dynamicIsDeactivated', $attributes, $manifest);
+$dynamicIsDeactivated = Helpers::checkAttr('dynamicIsDeactivated', $attributes, $manifest);
 
 if ($dynamicIsDeactivated) {
 	return;
@@ -24,8 +24,8 @@ if ($dynamicIsDeactivated) {
 
 $filterName = UtilsHooksHelper::getFilterName(['block', 'dynamic', 'dataOutput']);
 
-echo apply_filters( // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo apply_filters( // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	$filterName,
 	$attributes,
-	Components::checkAttr('dynamicFormPostId', $attributes, $manifest)
+	Helpers::checkAttr('dynamicFormPostId', $attributes, $manifest)
 );

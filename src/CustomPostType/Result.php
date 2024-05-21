@@ -85,7 +85,20 @@ class Result extends AbstractPostType
 	protected function getPostTypeArguments(): array
 	{
 		return [
-			'label' => \esc_html__('Result outputs', 'eightshift-forms'),
+			// phpcs:disable SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified
+			'labels' => [
+				'name' => esc_html_x(
+					'Results Output',
+					'post type plural name',
+					'eightshift-forms'
+				),
+				'singular_name' => esc_html_x(
+					'Result Output',
+					'post type singular name',
+					'eightshift-forms'
+				),
+			],
+			// phpcs:enable
 			'public' => true,
 			'menu_position' => static::MENU_POSITION,
 			'menu_icon' => static::MENU_ICON,

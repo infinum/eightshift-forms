@@ -272,14 +272,14 @@ export class Utils {
 			return;
 		}
 
-		messageContainer?.classList?.add(this.state.getStateSelector('isActive'));
-		messageContainer.dataset.status = status;
-
 		// Scroll to msg if the condition is matched.
 		if (status === 'success') {
 			if (this.state.getStateFormGlobalMsgHideOnSuccess(formId)) {
 				return;
 			}
+
+			messageContainer?.classList?.add(this.state.getStateSelector('isActive'));
+			messageContainer.dataset.status = status;
 
 			if (!this.state.getStateSettingsDisableScrollToGlobalMsgOnSuccess(formId)) {
 				this.scrollToGlobalMsg(formId);
@@ -293,6 +293,9 @@ export class Utils {
 				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
 			}
 		} else {
+			messageContainer?.classList?.add(this.state.getStateSelector('isActive'));
+			messageContainer.dataset.status = status;
+
 			const headingError = this.state.getStateFormGlobalMsgHeadingError(formId);
 
 			if (headingError) {

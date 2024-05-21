@@ -51,7 +51,7 @@ abstract class AbstractValidation implements ValidatorInterface
 	 *
 	 * @return boolean
 	 */
-	public function isEmailTlValid(string $email, array $db): bool
+	public function isEmailTldValid(string $email, array $db): bool
 	{
 		$email = \strtolower($email);
 		$email = \explode('.', $email);

@@ -85,6 +85,7 @@ final class Filters
 					'additionalHiddenFields',
 					'resultOutputItems',
 					'resultOutputParts',
+					'customClassSelector',
 				],
 				'formSelector' => [
 					'formTemplates',
@@ -152,7 +153,7 @@ final class Filters
 			'scripts' => [
 				'dependency' => [
 					'admin',
-					'theme',
+					'captcha',
 					'blocksEditor',
 					'blocksFrontend',
 				],

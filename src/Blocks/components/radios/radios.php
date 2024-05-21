@@ -8,20 +8,22 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
-$radiosName = Components::checkAttr('radiosName', $attributes, $manifest);
+$radiosName = Helpers::checkAttr('radiosName', $attributes, $manifest);
 if (!$radiosName) {
 	return;
 }
 
-$radiosContent = Components::checkAttr('radiosContent', $attributes, $manifest);
-$radiosIsRequired = Components::checkAttr('radiosIsRequired', $attributes, $manifest);
-$radiosTypeCustom = Components::checkAttr('radiosTypeCustom', $attributes, $manifest);
-$radiosFieldAttrs = Components::checkAttr('radiosFieldAttrs', $attributes, $manifest);
-$radiosTracking = Components::checkAttr('radiosTracking', $attributes, $manifest);
+$radiosContent = Helpers::checkAttr('radiosContent', $attributes, $manifest);
+$radiosIsRequired = Helpers::checkAttr('radiosIsRequired', $attributes, $manifest);
+$radiosTypeCustom = Helpers::checkAttr('radiosTypeCustom', $attributes, $manifest);
+$radiosFieldAttrs = Helpers::checkAttr('radiosFieldAttrs', $attributes, $manifest);
+$radiosTracking = Helpers::checkAttr('radiosTracking', $attributes, $manifest);
+$radiosUseLabelAsPlaceholder = Helpers::checkAttr('radiosUseLabelAsPlaceholder', $attributes, $manifest);
+$radiosPlaceholder = Helpers::checkAttr('radiosPlaceholder', $attributes, $manifest);
 
 // Add internal counter name key.
 $radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
@@ -43,28 +45,63 @@ $radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$i
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('radios', $attributes);
 
-$radios = '
-	' . $radiosContent . '
-	' . $additionalContent . '
-';
 
-echo Components::render(
+$placeholderLabel = '';
+$placeholder = '';
+$radiosHideLabel = false;
+$radiosFieldLabel = $attributes[Helpers::getAttrKey('radiosFieldLabel', $attributes, $manifest)] ?? '';
+$radiosShowAs = $attributes[Helpers::getAttrKey('radiosShowAs', $attributes, $manifest)] ?? '';
+
+// Radios don't use placeholder so we are not going to render it.
+if ($radiosShowAs !== '') {
+	// Placeholder input value.
+	if ($radiosPlaceholder) {
+		$placeholderLabel = $radiosPlaceholder;
+	}
+
+	// Placeholder label for value.
+	if ($radiosUseLabelAsPlaceholder) {
+		$radiosHideLabel = true;
+		$placeholderLabel = esc_attr($radiosFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	}
+
+	$placeholder = Helpers::render(
+		'checkbox',
+		[
+			'checkboxLabel' => $placeholderLabel,
+			'checkboxAsPlaceholder' => true,
+			'checkboxIsHidden' => true,
+		]
+	);
+}
+
+$radios = "
+	{$placeholder}
+	{$radiosContent}
+	{$additionalContent}
+";
+
+$fieldOutput = [
+	'fieldContent' => $radios,
+	'fieldName' => $radiosName,
+	'fieldIsRequired' => $radiosIsRequired,
+	'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
+	'fieldId' => $radiosName,
+	'fieldTracking' => $radiosTracking,
+	'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),
+	'fieldAttrs' => $radiosFieldAttrs,
+];
+
+// Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
+if ($radiosHideLabel) {
+	$fieldOutput['fieldHideLabel'] = true;
+}
+
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
-			'fieldContent' => $radios,
-			'fieldName' => $radiosName,
-			'fieldIsRequired' => $radiosIsRequired,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
-			'fieldId' => $radiosName,
-			'fieldTracking' => $radiosTracking,
-			'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldConditionalTags' => Components::render(
-				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => $radiosFieldAttrs,
-		]),
+		Helpers::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',

@@ -9,39 +9,39 @@
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$dateName = Components::checkAttr('dateName', $attributes, $manifest);
+$dateName = Helpers::checkAttr('dateName', $attributes, $manifest);
 if (!$dateName) {
 	return;
 }
 
-$dateValue = Components::checkAttr('dateValue', $attributes, $manifest);
-$datePlaceholder = Components::checkAttr('datePlaceholder', $attributes, $manifest);
-$dateIsDisabled = Components::checkAttr('dateIsDisabled', $attributes, $manifest);
-$dateIsReadOnly = Components::checkAttr('dateIsReadOnly', $attributes, $manifest);
-$dateIsRequired = Components::checkAttr('dateIsRequired', $attributes, $manifest);
-$dateTracking = Components::checkAttr('dateTracking', $attributes, $manifest);
-$dateType = Components::checkAttr('dateType', $attributes, $manifest);
-$dateTypeCustom = Components::checkAttr('dateTypeCustom', $attributes, $manifest);
-$dateAttrs = Components::checkAttr('dateAttrs', $attributes, $manifest);
-$datePreviewFormat = Components::checkAttr('datePreviewFormat', $attributes, $manifest);
-$dateOutputFormat = Components::checkAttr('dateOutputFormat', $attributes, $manifest);
-$dateFieldAttrs = Components::checkAttr('dateFieldAttrs', $attributes, $manifest);
-$dateUseLabelAsPlaceholder = Components::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
+$dateValue = Helpers::checkAttr('dateValue', $attributes, $manifest);
+$datePlaceholder = Helpers::checkAttr('datePlaceholder', $attributes, $manifest);
+$dateIsDisabled = Helpers::checkAttr('dateIsDisabled', $attributes, $manifest);
+$dateIsReadOnly = Helpers::checkAttr('dateIsReadOnly', $attributes, $manifest);
+$dateIsRequired = Helpers::checkAttr('dateIsRequired', $attributes, $manifest);
+$dateTracking = Helpers::checkAttr('dateTracking', $attributes, $manifest);
+$dateType = Helpers::checkAttr('dateType', $attributes, $manifest);
+$dateTypeCustom = Helpers::checkAttr('dateTypeCustom', $attributes, $manifest);
+$dateAttrs = Helpers::checkAttr('dateAttrs', $attributes, $manifest);
+$datePreviewFormat = Helpers::checkAttr('datePreviewFormat', $attributes, $manifest);
+$dateOutputFormat = Helpers::checkAttr('dateOutputFormat', $attributes, $manifest);
+$dateFieldAttrs = Helpers::checkAttr('dateFieldAttrs', $attributes, $manifest);
+$dateUseLabelAsPlaceholder = Helpers::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $dateHideLabel = false;
-$dateFieldLabel = $attributes[Components::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
+$dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
 
-$dateClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
+$dateClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
 if ($dateValue) {
@@ -88,10 +88,10 @@ $date = '
 	' . $additionalContent . '
 ';
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
+		Helpers::props('field', $attributes, [
 			'fieldContent' => $date,
 			'fieldId' => $dateName,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType($dateType === 'date' ? 'date' : 'dateTime'),
@@ -101,9 +101,9 @@ echo Components::render(
 			'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $dateTracking,
 			'fieldHideLabel' => $dateHideLabel,
-			'fieldConditionalTags' => Components::render(
+			'fieldConditionalTags' => Helpers::render(
 				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
+				Helpers::props('conditionalTags', $attributes)
 			),
 			'fieldAttrs' => $dateFieldAttrs,
 		]),

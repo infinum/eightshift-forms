@@ -19,17 +19,17 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
-use EightshiftForms\Enqueue\Theme\EnqueueTheme;
+use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
-use EightshiftFormsVendor\EightshiftLibs\Manifest\ManifestInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * EnqueueBlocks class.
@@ -56,18 +56,25 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	protected EnrichmentInterface $enrichment;
 
 	/**
+	 * Instance variable for manifest cache.
+	 *
+	 * @var ManifestCacheInterface
+	 */
+	protected $manifestCache;
+
+	/**
 	 * Create a new admin instance.
 	 *
-	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
 	public function __construct(
-		ManifestInterface $manifest,
+		ManifestCacheInterface $manifestCache,
 		ValidationPatternsInterface $validationPatterns,
 		EnrichmentInterface $enrichment
 	) {
-		$this->manifest = $manifest;
+		$this->manifestCache = $manifestCache;
 		$this->validationPatterns = $validationPatterns;
 		$this->enrichment = $enrichment;
 	}
@@ -108,7 +115,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function getAssetsVersion(): string
 	{
-		return UtilsGeneralHelper::getProjectVersion();
+		return Helpers::getPluginVersion();
 	}
 
 	// -----------------------------------------------------
@@ -128,7 +135,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		\wp_register_style(
 			$handle,
-			$this->manifest->getAssetsManifestItem(static::BLOCKS_EDITOR_STYLE_URI),
+			$this->setAssetsItem(static::BLOCKS_EDITOR_STYLE_URI),
 			[],
 			$this->getAssetsVersion(),
 			$this->getMedia()
@@ -230,7 +237,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		\wp_register_style(
 			$handle,
-			$this->manifest->getAssetsManifestItem('applicationBlocksFrontendMandatory.css'),
+			$this->setAssetsItem('applicationBlocksFrontendMandatory.css'),
 			$this->getFrontendStyleDependencies(),
 			$this->getAssetsVersion(),
 			$this->getMedia()
@@ -255,6 +262,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return;
 		}
+
 
 		$this->enqueueBlockFrontendStyle($hook);
 	}
@@ -345,7 +353,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output = \wp_json_encode($output);
 
-		\wp_add_inline_script($this->getBlockFrontentScriptHandle(), "const esFormsLocalization = {$output}", 'before');
+		\wp_add_inline_script($this->getBlockFrontendScriptHandle(), "const esFormsLocalization = {$output}", 'before');
 	}
 
 	/**
@@ -367,7 +375,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		}
 
 		return [
-			"{$this->getAssetsPrefix()}-" . EnqueueTheme::CAPTCHA_ENQUEUE_HANDLE,
+			"{$this->getAssetsPrefix()}-" . EnqueueCaptcha::CAPTCHA_ENQUEUE_HANDLE,
 			...$scriptsDependencyOutput,
 		];
 	}

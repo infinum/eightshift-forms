@@ -18,6 +18,7 @@ use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftForms_Parsedown as Parsedown;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * Class Mailer
@@ -139,7 +140,7 @@ class Mailer implements MailerInterface
 					}
 					break;
 				default:
-					$filesOutput = UtilsGeneralHelper::recursiveFind($files, 'path');
+					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
 					break;
 			}
 		}
@@ -191,9 +192,9 @@ class Mailer implements MailerInterface
 		$files = $formDetails[UtilsConfig::FD_FILES] ?? [];
 
 		$output = [
-			'formDetails' => $formDetails,
-			'debug' => $this->getDebugOptions(),
 			'customData' => $customData,
+			'debug' => $this->getDebugOptions(),
+			'formDetails' => $this->cleanUpFormDetails($formDetails),
 		];
 
 		// translators: %s replaces the formId.
@@ -220,7 +221,7 @@ class Mailer implements MailerInterface
 					}
 					break;
 				default:
-					$filesOutput = UtilsGeneralHelper::recursiveFind($files, 'path');
+					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
 					break;
 			}
 		}
@@ -247,7 +248,7 @@ class Mailer implements MailerInterface
 	private function getDebugOptions(): array
 	{
 		return [
-			'forms' => UtilsGeneralHelper::getProjectVersion(),
+			'forms' => Helpers::getPluginVersion(),
 			'php' => \phpversion(),
 			'wp' => \get_bloginfo('version'),
 			'url' => \get_bloginfo('url'),
@@ -403,5 +404,23 @@ class Mailer implements MailerInterface
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Clean up form details.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function cleanUpFormDetails(array $formDetails): array
+	{
+		$list = [
+			UtilsConfig::FD_FIELDS,
+			UtilsConfig::FD_FIELDS_ONLY,
+			UtilsConfig::FD_ICON,
+		];
+
+		return \array_diff_key($formDetails, \array_flip($list));
 	}
 }

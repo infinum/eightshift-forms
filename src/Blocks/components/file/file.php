@@ -8,36 +8,36 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$fileName = Components::checkAttr('fileName', $attributes, $manifest);
+$fileName = Helpers::checkAttr('fileName', $attributes, $manifest);
 if (!$fileName) {
 	return;
 }
 
-$fileIsRequired = Components::checkAttr('fileIsRequired', $attributes, $manifest);
-$fileIsMultiple = Components::checkAttr('fileIsMultiple', $attributes, $manifest);
-$fileTracking = Components::checkAttr('fileTracking', $attributes, $manifest);
-$fileCustomInfoText = Components::checkAttr('fileCustomInfoText', $attributes, $manifest);
-$fileCustomInfoTextUse = Components::checkAttr('fileCustomInfoTextUse', $attributes, $manifest);
-$fileCustomInfoButtonText = Components::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
-$fileTypeCustom = Components::checkAttr('fileTypeCustom', $attributes, $manifest);
-$fileAttrs = Components::checkAttr('fileAttrs', $attributes, $manifest);
-$fileFieldAttrs = Components::checkAttr('fileFieldAttrs', $attributes, $manifest);
-$fileIsDisabled = Components::checkAttr('fileIsDisabled', $attributes, $manifest);
+$fileIsRequired = Helpers::checkAttr('fileIsRequired', $attributes, $manifest);
+$fileIsMultiple = Helpers::checkAttr('fileIsMultiple', $attributes, $manifest);
+$fileTracking = Helpers::checkAttr('fileTracking', $attributes, $manifest);
+$fileCustomInfoText = Helpers::checkAttr('fileCustomInfoText', $attributes, $manifest);
+$fileCustomInfoTextUse = Helpers::checkAttr('fileCustomInfoTextUse', $attributes, $manifest);
+$fileCustomInfoButtonText = Helpers::checkAttr('fileCustomInfoButtonText', $attributes, $manifest);
+$fileTypeCustom = Helpers::checkAttr('fileTypeCustom', $attributes, $manifest);
+$fileAttrs = Helpers::checkAttr('fileAttrs', $attributes, $manifest);
+$fileFieldAttrs = Helpers::checkAttr('fileFieldAttrs', $attributes, $manifest);
+$fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
-$fileFieldLabel = $attributes[Components::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
+$fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
-$fileClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
+$fileClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
 $fileIsMultiple = $fileIsMultiple ? 'multiple' : '';
@@ -85,10 +85,10 @@ $file = '
 	' . $additionalContent . '
 ';
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
+		Helpers::props('field', $attributes, [
 			'fieldContent' => $file,
 			'fieldId' => $fileName,
 			'fieldName' => $fileName,
@@ -97,9 +97,9 @@ echo Components::render(
 			'fieldIsRequired' => $fileIsRequired,
 			'fieldTypeCustom' => $fileTypeCustom ?: 'file', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $fileTracking,
-			'fieldConditionalTags' => Components::render(
+			'fieldConditionalTags' => Helpers::render(
 				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
+				Helpers::props('conditionalTags', $attributes)
 			),
 			'fieldAttrs' => $fileFieldAttrs,
 		]),

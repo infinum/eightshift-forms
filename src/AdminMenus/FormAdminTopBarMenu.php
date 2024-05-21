@@ -19,6 +19,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Admin_Bar;
 
@@ -82,7 +83,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 		$isDevelopMode = UtilsDeveloperHelper::isDeveloperModeActive();
 		$isDevelopModeQmLog = UtilsDeveloperHelper::isDeveloperQMLogActive();
 
-		$version = UtilsGeneralHelper::getProjectVersion();
+		$version = Helpers::getPluginVersion();
 
 		$mainLabel = \esc_html__('Eightshift Forms', 'eightshift-forms');
 

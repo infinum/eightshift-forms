@@ -14,7 +14,10 @@
 		"outputCssOptimize": true,
 		"outputCssSelectorName": "esFormsCssVariables",
 		"outputCssGloballyAdditionalStyles": [],
-		"useWrapper": false
+		"useWrapper": false,
+		"useBlocks": true,
+		"useComponents": true,
+		"useVariations": false
 	},
 	"allowedBlocksNoneBuilderBlocksList": [
 		"eightshift-forms/form-selector",
@@ -83,7 +86,9 @@
 				"checkboxesCheckboxesDisabledOptions": "selectSelectDisabledOptions",
 				"checkboxesCheckboxesTypeCustom": "selectSelectTypeCustom",
 				"checkboxesCheckboxesShowAs": "selectSelectShowAs",
-				"checkboxesCheckboxesFieldAttrs": "selectSelectFieldAttrs"
+				"checkboxesCheckboxesFieldAttrs": "selectSelectFieldAttrs",
+				"checkboxesCheckboxesPlaceholder": "selectSelectPlaceholder",
+				"checkboxesCheckboxesUseLabelAsPlaceholder": "selectSelectUseLabelAsPlaceholder"
 			},
 			"children": {
 				"checkboxCheckboxLabel": "selectOptionSelectOptionLabel",
@@ -170,7 +175,9 @@
 				 "radiosRadiosDisabledOptions": "selectSelectDisabledOptions",
 				 "radiosRadiosTypeCustom": "selectSelectTypeCustom",
 				 "radiosRadiosShowAs": "selectSelectShowAs",
-				 "radiosRadiosFieldAttrs": "selectSelectFieldAttrs"
+				 "radiosRadiosFieldAttrs": "selectSelectFieldAttrs",
+				 "radiosRadiosPlaceholder": "selectSelectPlaceholder",
+				 "radiosRadiosUseLabelAsPlaceholder": "selectSelectUseLabelAsPlaceholder"
 			},
 			"children": {
 				"radioRadioLabel": "selectOptionSelectOptionLabel",

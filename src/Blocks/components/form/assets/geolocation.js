@@ -48,7 +48,7 @@ export class Geolocation {
 	 * @returns {vodi}
 	 */
 	removeEvents(formId) {
-		this.state.getStateFormElement(formId).removeEventListener(
+		this.state.getStateFormElement(formId)?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);

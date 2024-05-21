@@ -7,26 +7,26 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
-$manifestSection = Components::getComponent('admin-settings-section');
+$manifest = Helpers::getManifestByDir(__DIR__);
+$manifestSection = Helpers::getComponent('admin-settings-section');
 
-echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
-$adminListingPageTitle = Components::checkAttr('adminListingPageTitle', $attributes, $manifest);
-$adminListingPageSubTitle = Components::checkAttr('adminListingPageSubTitle', $attributes, $manifest);
-$adminListingShowNoItems = Components::checkAttr('adminListingShowNoItems', $attributes, $manifest);
-$adminListingItems = Components::checkAttr('adminListingItems', $attributes, $manifest);
-$adminListingTopItems = Components::checkAttr('adminListingTopItems', $attributes, $manifest);
-$adminListingNoItems = Components::checkAttr('adminListingNoItems', $attributes, $manifest);
+$adminListingPageTitle = Helpers::checkAttr('adminListingPageTitle', $attributes, $manifest);
+$adminListingPageSubTitle = Helpers::checkAttr('adminListingPageSubTitle', $attributes, $manifest);
+$adminListingShowNoItems = Helpers::checkAttr('adminListingShowNoItems', $attributes, $manifest);
+$adminListingItems = Helpers::checkAttr('adminListingItems', $attributes, $manifest);
+$adminListingTopItems = Helpers::checkAttr('adminListingTopItems', $attributes, $manifest);
+$adminListingNoItems = Helpers::checkAttr('adminListingNoItems', $attributes, $manifest);
 
-$help = Components::render('container', [
-	'containerContent' => Components::render('highlighted-content', [
+$help = Helpers::render('container', [
+	'containerContent' => Helpers::render('highlighted-content', [
 		'highlightedContentTitle' => __('Need help?', 'eightshift-forms'),
 		'highlightedContentSubtitle' => __('Explore the in-depth documentation available for Eightshift Forms on the official website and gain the confidence you need to create powerful forms with ease!', 'eightshift-forms') . '<br /><br /><a class="es-submit es-submit--outline" target="__blank" rel="noopener noreferrer" href="https://eightshift.com/forms/welcome/">' . __('Visit Documentation', 'eightshift-forms') . '</a>',
 		'highlightedContentIcon' => 'docsFormList',
@@ -38,7 +38,7 @@ $help = Components::render('container', [
 <div class="<?php echo esc_attr($componentClass); ?>">
 	<?php
 	if ($adminListingPageTitle) {
-		echo Components::render('intro', [
+		echo Helpers::render('intro', [
 			'introTitle' => $adminListingPageTitle,
 			// Translators: %s is the number of forms.
 			'introSubtitle' => $adminListingPageSubTitle,
@@ -48,21 +48,21 @@ $help = Components::render('container', [
 	?>
 
 	<?php
-	echo Components::render('layout', [
+	echo Helpers::render('layout', [
 		'layoutType' => 'layout-v-stack-card-fullwidth',
-		'layoutContent' => Components::ensureString([
-			Components::render('container', [
-				'containerContent' => Components::ensureString([
-					Components::render('container', [
+		'layoutContent' => Helpers::ensureString([
+			Helpers::render('container', [
+				'containerContent' => Helpers::ensureString([
+					Helpers::render('container', [
 						'containerUse' => $adminListingTopItems,
 						'containerClass' => "{$componentClass}__top-bar",
-						'containerContent' => Components::ensureString([
-							Components::render('container', [
+						'containerContent' => Helpers::ensureString([
+							Helpers::render('container', [
 								'containerClass' => "{$componentClass}__top-bar-left",
 								'containerUse' => !empty($adminListingTopItems['left']),
 								'containerContent' => $adminListingTopItems['left'] ?? '',
 							]),
-							Components::render('container', [
+							Helpers::render('container', [
 								'containerClass' => "{$componentClass}__top-bar-right",
 								'containerUse' => !empty($adminListingTopItems['right']),
 								'containerContent' => $adminListingTopItems['right'] ?? '',
@@ -70,8 +70,8 @@ $help = Components::render('container', [
 						]),
 					]),
 					$adminListingShowNoItems ?
-					Components::ensureString($adminListingNoItems) :
-					Components::ensureString($adminListingItems),
+					Helpers::ensureString($adminListingNoItems) :
+					Helpers::ensureString($adminListingItems),
 				]),
 			]),
 			$help,
@@ -88,12 +88,12 @@ $help = Components::render('container', [
 
 // This is fake form to be able to init state for global msg.
 
-$formClasses = Components::classnames([
+$formClasses = Helpers::classnames([
 	UtilsHelper::getStateSelector('form'),
-	Components::selector($componentClass, $componentClass, 'form'),
+	Helpers::selector($componentClass, $componentClass, 'form'),
 ]);
 ?>
 <form class="<?php echo esc_attr($formClasses); ?>" <?php echo esc_attr(UtilsHelper::getStateAttribute('formId')); ?>="0" novalidate>
-	<?php echo Components::render('global-msg', Components::props('globalMsg', $attributes)); ?>
-	<?php echo Components::render('loader', Components::props('loader', $attributes)); ?>
+	<?php echo Helpers::render('global-msg', Helpers::props('globalMsg', $attributes)); ?>
+	<?php echo Helpers::render('loader', Helpers::props('loader', $attributes)); ?>
 </form>

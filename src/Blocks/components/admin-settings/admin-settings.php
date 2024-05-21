@@ -7,32 +7,32 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
-$manifestSection = Components::getComponent('admin-settings-section');
+$manifest = Helpers::getManifestByDir(__DIR__);
+$manifestSection = Helpers::getComponent('admin-settings-section');
 
-echo Components::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';
 
-$adminSettingsPageTitle = Components::checkAttr('adminSettingsPageTitle', $attributes, $manifest);
-$adminSettingsSubTitle = Components::checkAttr('adminSettingsSubTitle', $attributes, $manifest);
-$adminSettingsBackLink = Components::checkAttr('adminSettingsBackLink', $attributes, $manifest);
-$adminSettingsFormEditLink = Components::checkAttr('adminSettingsFormEditLink', $attributes, $manifest);
-$adminSettingsFormLocationsLink = Components::checkAttr('adminSettingsFormLocationsLink', $attributes, $manifest);
-$adminSettingsSidebar = Components::checkAttr('adminSettingsSidebar', $attributes, $manifest);
-$adminSettingsForm = Components::checkAttr('adminSettingsForm', $attributes, $manifest);
-$adminSettingsType = Components::checkAttr('adminSettingsType', $attributes, $manifest);
-$adminSettingsIsGlobal = Components::checkAttr('adminSettingsIsGlobal', $attributes, $manifest);
-$adminSettingsNotice = Components::checkAttr('adminSettingsNotice', $attributes, $manifest);
+$adminSettingsPageTitle = Helpers::checkAttr('adminSettingsPageTitle', $attributes, $manifest);
+$adminSettingsSubTitle = Helpers::checkAttr('adminSettingsSubTitle', $attributes, $manifest);
+$adminSettingsBackLink = Helpers::checkAttr('adminSettingsBackLink', $attributes, $manifest);
+$adminSettingsFormEditLink = Helpers::checkAttr('adminSettingsFormEditLink', $attributes, $manifest);
+$adminSettingsFormLocationsLink = Helpers::checkAttr('adminSettingsFormLocationsLink', $attributes, $manifest);
+$adminSettingsSidebar = Helpers::checkAttr('adminSettingsSidebar', $attributes, $manifest);
+$adminSettingsForm = Helpers::checkAttr('adminSettingsForm', $attributes, $manifest);
+$adminSettingsType = Helpers::checkAttr('adminSettingsType', $attributes, $manifest);
+$adminSettingsIsGlobal = Helpers::checkAttr('adminSettingsIsGlobal', $attributes, $manifest);
+$adminSettingsNotice = Helpers::checkAttr('adminSettingsNotice', $attributes, $manifest);
 
-$layoutClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($sectionClass, $sectionClass),
-	Components::selector($sectionClass, $sectionClass, '', 'with-sidebar'),
+$layoutClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($sectionClass, $sectionClass),
+	Helpers::selector($sectionClass, $sectionClass, '', 'with-sidebar'),
 ]);
 
 if (!$adminSettingsSidebar || !$adminSettingsForm) {
@@ -45,9 +45,14 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	<?php if ($adminSettingsNotice) { ?>
 		<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
 			<?php
-			echo Components::render('notice', [
-				'noticeContent' => $adminSettingsNotice,
-			], '', true);
+				echo Helpers::render(
+					'notice',
+					[
+						'noticeContent' => $adminSettingsNotice,
+					],
+					'components',
+					true
+				);
 			?>
 		</div>
 	<?php } ?>
@@ -56,7 +61,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 			<a href="<?php echo esc_url($adminSettingsBackLink); ?>" class="<?php echo esc_attr("{$sectionClass}__menu-link {$sectionClass}__menu-link--fit"); ?>">
 				<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
 					<?php
-					echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+					echo UtilsHelper::getUtilsIcons('arrowLeft'), // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 					esc_html__('Forms', 'eightshift-forms');
 					?>
 				</span>
@@ -64,12 +69,19 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 		</div>
 
 		<?php
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		echo Components::renderPartial('component', $componentName, 'sidebar-section', [
-			'items' => $adminSettingsSidebar,
-			'sectionClass' => $sectionClass,
-			'adminSettingsType' => $adminSettingsType,
-		]);
+		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+		echo $componentName;
+		echo Helpers::render(
+			'sidebar-section',
+			[
+				'items' => $adminSettingsSidebar,
+				'sectionClass' => $sectionClass,
+				'adminSettingsType' => $adminSettingsType,
+			],
+			'components',
+			false,
+			"{$componentName}/partials"
+		);
 		?>
 	</div>
 	<div class="<?php echo esc_attr("{$sectionClass}__main"); ?>">
@@ -84,7 +96,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 						<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
 							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
 								<?php
-									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+									// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 									echo UtilsHelper::getUtilsIcons('edit'),
 									esc_html__('Edit form', 'eightshift-forms');
 								?>
@@ -92,7 +104,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 
 							<a href="<?php echo esc_url($adminSettingsFormLocationsLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
 								<?php
-									// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+									// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 									echo UtilsHelper::getUtilsIcons('location'),
 									esc_html__('Locations used', 'eightshift-forms');
 								?>
@@ -108,7 +120,7 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 				<?php } ?>
 			</div>
 			<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
-				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				<?php echo $adminSettingsForm; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 				?>
 			</div>
 		</div>

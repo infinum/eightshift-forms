@@ -6,23 +6,23 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$dividerExtraVSpacing = Components::checkAttr('dividerExtraVSpacing', $attributes, $manifest);
-$dividerNoSpacing = Components::checkAttr('dividerNoSpacing', $attributes, $manifest);
-$dividerNoDivider = Components::checkAttr('dividerNoDivider', $attributes, $manifest);
+$dividerExtraVSpacing = Helpers::checkAttr('dividerExtraVSpacing', $attributes, $manifest);
+$dividerNoSpacing = Helpers::checkAttr('dividerNoSpacing', $attributes, $manifest);
+$dividerNoDivider = Helpers::checkAttr('dividerNoDivider', $attributes, $manifest);
 
-$dividerClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($dividerExtraVSpacing, $componentClass, '', 'extra-v-spacing'),
-	Components::selector($dividerNoSpacing, $componentClass, '', 'no-spacing'),
-	Components::selector($dividerNoDivider, $componentClass, '', 'no-divider'),
+$dividerClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($dividerExtraVSpacing, $componentClass, '', 'extra-v-spacing'),
+	Helpers::selector($dividerNoSpacing, $componentClass, '', 'no-spacing'),
+	Helpers::selector($dividerNoDivider, $componentClass, '', 'no-divider'),
 ]);
 ?>
 

@@ -16,6 +16,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
+use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -95,6 +96,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected const VALIDATION_ERROR_DATA = 'validationErrorData';
 	protected const VALIDATION_ERROR_MSG = 'validationErrorMsg';
 	protected const VALIDATION_ERROR_OUTPUT = 'validationOutput';
+	protected const VALIDATION_ERROR_IS_SPAM = 'validationIsSpam';
 
 
 	/**
@@ -203,7 +205,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 					// Validate allowed number of requests.
 					// We don't want to limit any custom requests like files, settings, steps, etc.
-					if (!$this->getSecurity()->isRequestValid()) {
+					if (!$this->getSecurity()->isRequestValid($formDetails[UtilsConfig::FD_TYPE])) {
 						throw new UnverifiedRequestException(
 							$this->getValidatorLabels()->getLabel('validationSecurity'),
 							[
@@ -229,7 +231,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					}
 
 					// Validate captcha.
-					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) && $formDetails[UtilsConfig::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY) {
 						$captchaParams = $formDetails[UtilsConfig::FD_CAPTCHA] ?? [];
 
 						if (!$captchaParams) {
@@ -243,22 +245,26 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						}
 
 						$captcha = $this->getCaptcha()->check(
-							$captchaParams['token'] ?? '',
-							$captchaParams['action'] ?? '',
-							(bool) $captchaParams['isEnterprise'] ?: false // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+							$captchaParams['token'],
+							$captchaParams['action'],
+							$captchaParams['isEnterprise'] === 'true'
 						);
 
 						if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
-							// Send fallback email if there is an issue with reCaptcha.
-							$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
-								$formDetails,
-								// translators: %s is the form ID.
-								\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
-								'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>',
-								[
-									self::VALIDATION_ERROR_DATA => $captcha,
-								]
-							);
+							$isSpam = $captcha['data']['isSpam'] ?? false;
+
+							if (!$isSpam) {
+								// Send fallback email if there is an issue with reCaptcha.
+								$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
+									$formDetails,
+									// translators: %s is the form ID.
+									\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+									'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the available data for debugging purposes.', 'eightshift-forms') . '</p>',
+									[
+										self::VALIDATION_ERROR_DATA => $captcha,
+									]
+								);
+							}
 
 							return \rest_ensure_response($captcha);
 						}
@@ -294,11 +300,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					[
 						'exception' => $e,
 						'request' => $request,
-						'formDetails' => $formDetails,
 						self::VALIDATION_ERROR_CODE => \esc_html($e->getData()[self::VALIDATION_ERROR_CODE] ?? ''),
 						self::VALIDATION_ERROR_MSG => \esc_html($e->getMessage()),
 						self::VALIDATION_ERROR_OUTPUT => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? '',
 						self::VALIDATION_ERROR_DATA => $e->getData()[self::VALIDATION_ERROR_DATA] ?? '',
+						'formDetails' => $formDetails,
 					]
 				)
 			);

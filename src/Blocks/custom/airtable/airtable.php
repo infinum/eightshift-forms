@@ -6,11 +6,11 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-echo Components::render(
+echo Helpers::render(
 	'form',
-	Components::props('form', $attributes, [
-		'formContent' => $innerBlockContent,
+	Helpers::props('form', $attributes, [
+		'formContent' => $renderContent,
 	])
 );

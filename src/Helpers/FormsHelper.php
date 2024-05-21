@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * FormsHelper class.
@@ -26,6 +26,6 @@ final class FormsHelper
 	 */
 	public static function getStateFieldType(string $name): string
 	{
-		return Components::getSettings()['enums']['typeInternal'][$name] ?? '';
+		return Helpers::getSettings()['enums']['typeInternal'][$name] ?? '';
 	}
 }

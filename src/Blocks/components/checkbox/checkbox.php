@@ -7,53 +7,53 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$checkboxValue = Components::checkAttr('checkboxValue', $attributes, $manifest);
+$checkboxValue = Helpers::checkAttr('checkboxValue', $attributes, $manifest);
 if (!$checkboxValue) {
 	return;
 }
 
-$checkboxLabel = Components::checkAttr('checkboxLabel', $attributes, $manifest);
-$checkboxName = Components::checkAttr('checkboxName', $attributes, $manifest);
-$checkboxUncheckedValue = Components::checkAttr('checkboxUncheckedValue', $attributes, $manifest);
-$checkboxIsChecked = Components::checkAttr('checkboxIsChecked', $attributes, $manifest);
-$checkboxIsDisabled = Components::checkAttr('checkboxIsDisabled', $attributes, $manifest);
-$checkboxIsReadOnly = Components::checkAttr('checkboxIsReadOnly', $attributes, $manifest);
-$checkboxTracking = Components::checkAttr('checkboxTracking', $attributes, $manifest);
-$checkboxSingleSubmit = Components::checkAttr('checkboxSingleSubmit', $attributes, $manifest);
-$checkboxAttrs = Components::checkAttr('checkboxAttrs', $attributes, $manifest);
-$checkboxAsToggle = Components::checkAttr('checkboxAsToggle', $attributes, $manifest);
-$checkboxAsToggleSize = Components::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
-$checkboxHideLabelText = Components::checkAttr('checkboxHideLabelText', $attributes, $manifest);
-$checkboxHideLabel = Components::checkAttr('checkboxHideLabel', $attributes, $manifest);
-$checkboxHelp = Components::checkAttr('checkboxHelp', $attributes, $manifest);
-$checkboxFieldAttrs = Components::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
-$checkboxIcon = Components::checkAttr('checkboxIcon', $attributes, $manifest);
-$checkboxIsHidden = Components::checkAttr('checkboxIsHidden', $attributes, $manifest);
+$checkboxLabel = Helpers::checkAttr('checkboxLabel', $attributes, $manifest);
+$checkboxName = Helpers::checkAttr('checkboxName', $attributes, $manifest);
+$checkboxUncheckedValue = Helpers::checkAttr('checkboxUncheckedValue', $attributes, $manifest);
+$checkboxIsChecked = Helpers::checkAttr('checkboxIsChecked', $attributes, $manifest);
+$checkboxIsDisabled = Helpers::checkAttr('checkboxIsDisabled', $attributes, $manifest);
+$checkboxIsReadOnly = Helpers::checkAttr('checkboxIsReadOnly', $attributes, $manifest);
+$checkboxTracking = Helpers::checkAttr('checkboxTracking', $attributes, $manifest);
+$checkboxSingleSubmit = Helpers::checkAttr('checkboxSingleSubmit', $attributes, $manifest);
+$checkboxAttrs = Helpers::checkAttr('checkboxAttrs', $attributes, $manifest);
+$checkboxAsToggle = Helpers::checkAttr('checkboxAsToggle', $attributes, $manifest);
+$checkboxAsToggleSize = Helpers::checkAttr('checkboxAsToggleSize', $attributes, $manifest);
+$checkboxHideLabelText = Helpers::checkAttr('checkboxHideLabelText', $attributes, $manifest);
+$checkboxHideLabel = Helpers::checkAttr('checkboxHideLabel', $attributes, $manifest);
+$checkboxHelp = Helpers::checkAttr('checkboxHelp', $attributes, $manifest);
+$checkboxFieldAttrs = Helpers::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
+$checkboxIcon = Helpers::checkAttr('checkboxIcon', $attributes, $manifest);
+$checkboxIsHidden = Helpers::checkAttr('checkboxIsHidden', $attributes, $manifest);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
 }
 
-$checkboxClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($checkboxIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
-	Components::selector($checkboxIsHidden, UtilsHelper::getStateSelector('isHidden')),
+$checkboxClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($checkboxIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
+	Helpers::selector($checkboxIsHidden, UtilsHelper::getStateSelector('isHidden')),
 ]);
 
-$checkboxInputClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'input'),
-	Components::selector($checkboxSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+$checkboxInputClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'input'),
+	Helpers::selector($checkboxSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 $checkboxAttrs['value'] = esc_attr($checkboxValue);
@@ -70,9 +70,9 @@ if (strlen($checkboxUncheckedValue) !== 0) {
 	$checkboxAttrsOutput .= wp_kses_post(" data-unchecked-value='" . $checkboxUncheckedValue . "'");
 }
 
-$conditionalTags = Components::render(
+$conditionalTags = Helpers::render(
 	'conditional-tags',
-	Components::props('conditionalTags', $attributes)
+	Helpers::props('conditionalTags', $attributes)
 );
 
 if ($conditionalTags) {
@@ -98,14 +98,14 @@ if ($checkboxFieldAttrs) {
 
 ?>
 
-<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxName); ?>"
-			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>
 			<?php wp_readonly($checkboxIsReadOnly); ?>
@@ -129,7 +129,7 @@ if ($checkboxFieldAttrs) {
 	</div>
 	<?php if ($checkboxHelp) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
-			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 </div>

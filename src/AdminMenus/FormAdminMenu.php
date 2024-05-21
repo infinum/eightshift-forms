@@ -13,7 +13,7 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Entries\EntriesHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
@@ -171,7 +171,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	public function render(array $attributes = [], string $innerBlockContent = ''): string
 	{
-		return Components::render($this->getViewComponent(), $attributes);
+		return Helpers::render($this->getViewComponent(), $attributes);
 	}
 
 	/**
@@ -343,7 +343,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		switch ($type) {
 			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
-					Components::render('highlighted-content', [
+					Helpers::render('highlighted-content', [
 						'highlightedContentTitle' => \__('Location list is empty', 'eightshift-forms'),
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
@@ -356,7 +356,7 @@ class FormAdminMenu extends AbstractAdminMenu
 			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
 				if ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) {
 					$output = [
-						Components::render('highlighted-content', [
+						Helpers::render('highlighted-content', [
 							'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
 							// Translators: %s is the link to the forms listing page.
 							'highlightedContentSubtitle' => \sprintf(\__('
@@ -367,7 +367,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					];
 				} else {
 					$output = [
-						Components::render('highlighted-content', [
+						Helpers::render('highlighted-content', [
 							'highlightedContentTitle' => \__('Trash list is empty', 'eightshift-forms'),
 							// Translators: %s is the link to the forms listing page.
 							'highlightedContentSubtitle' => \sprintf(\__('
@@ -380,7 +380,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
 				$output = [
-					Components::render('highlighted-content', [
+					Helpers::render('highlighted-content', [
 						'highlightedContentTitle' => \__('Result output list is empty', 'eightshift-forms'),
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
@@ -392,7 +392,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [
-					Components::render('highlighted-content', [
+					Helpers::render('highlighted-content', [
 						'highlightedContentTitle' => \__('Entrie list is empty', 'eightshift-forms'),
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
@@ -404,7 +404,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			default:
 				$output = [
-					Components::render('highlighted-content', [
+					Helpers::render('highlighted-content', [
 						'highlightedContentTitle' => \__('You have no forms', 'eightshift-forms'),
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
@@ -441,7 +441,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		switch ($type) {
 			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
 				$left = [
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
@@ -452,19 +452,19 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
 				$left = [
-					Components::render('checkbox', [
+					Helpers::render('checkbox', [
 						'checkboxValue' => 'all',
 						'checkboxName' => 'all',
 						'additionalClass' => $selectAllSelector,
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
 						'submitValue' => \__('Back', 'eightshift-forms'),
 						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -473,7 +473,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							UtilsHelper::getStateAttribute('bulkType') => 'delete',
 						],
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Duplicate', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -485,13 +485,13 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 
 				$right = [
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'outline',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_TRASH, '', UtilsConfig::SLUG_ADMIN_LISTING_RESULTS),
 						'submitValue' => \__('Trashed', 'eightshift-forms'),
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getNewFormPageUrl(Result::POST_TYPE_SLUG),
 						'submitValue' => \__('Create', 'eightshift-forms'),
@@ -501,19 +501,19 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$left = [
-					Components::render('checkbox', [
+					Helpers::render('checkbox', [
 						'checkboxValue' => 'all',
 						'checkboxName' => 'all',
 						'additionalClass' => $selectAllSelector,
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
 						'submitValue' => \__('Back', 'eightshift-forms'),
 						'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -522,7 +522,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							UtilsHelper::getStateAttribute('bulkType') => 'delete-entry',
 						],
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Duplicate', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -534,7 +534,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 
 				$right = [
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Export to CSV', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -549,19 +549,19 @@ class FormAdminMenu extends AbstractAdminMenu
 			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
 				if ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) {
 					$left = [
-						Components::render('checkbox', [
+						Helpers::render('checkbox', [
 							'checkboxValue' => 'all',
 							'checkboxName' => 'all',
 							'additionalClass' => $selectAllSelector,
 						]),
-						Components::render('submit', [
+						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitButtonAsLink' => true,
 							'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS),
 							'submitValue' => \__('Back', 'eightshift-forms'),
 							'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 						]),
-						Components::render('submit', [
+						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitValue' => \__('Restore', 'eightshift-forms'),
 							'submitIsDisabled' => true,
@@ -573,19 +573,19 @@ class FormAdminMenu extends AbstractAdminMenu
 					];
 				} else {
 					$left = [
-						Components::render('checkbox', [
+						Helpers::render('checkbox', [
 							'checkboxValue' => 'all',
 							'checkboxName' => 'all',
 							'additionalClass' => $selectAllSelector,
 						]),
-						Components::render('submit', [
+						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitButtonAsLink' => true,
 							'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(),
 							'submitValue' => \__('Back', 'eightshift-forms'),
 							'submitIcon' => UtilsHelper::getUtilsIcons('arrowLeft')
 						]),
-						Components::render('submit', [
+						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitValue' => \__('Restore', 'eightshift-forms'),
 							'submitIsDisabled' => true,
@@ -598,7 +598,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				}
 
 				$right = [
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete permanently', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -611,19 +611,19 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			default:
 				$left = [
-					Components::render('checkbox', [
+					Helpers::render('checkbox', [
 						'checkboxValue' => 'all',
 						'checkboxName' => 'all',
 						'additionalClass' => $selectAllSelector,
 					]),
-					Components::render('select', [
+					Helpers::render('select', [
 						'fieldSkip' => true,
 						'selectName' => 'filter',
 						'selectContent' => $this->getFilterOptions(),
 						'selectPlaceholder' => \__('Show all', 'eightshift-forms'),
 						'additionalClass' => $filterSelector,
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Delete', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -632,7 +632,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							UtilsHelper::getStateAttribute('bulkType') => 'delete',
 						],
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Sync', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -641,7 +641,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							UtilsHelper::getStateAttribute('bulkType') => 'sync',
 						],
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Duplicate', 'eightshift-forms'),
 						'submitIsDisabled' => true,
@@ -653,13 +653,13 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 
 				$right = [
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'outline',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_TRASH),
 						'submitValue' => \__('Trashed', 'eightshift-forms'),
 					]),
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => UtilsGeneralHelper::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
 						'submitValue' => \__('Create', 'eightshift-forms'),
@@ -670,8 +670,8 @@ class FormAdminMenu extends AbstractAdminMenu
 		}
 
 		return [
-			'left' => Components::ensureString($left),
-			'right' => Components::ensureString($right),
+			'left' => Helpers::ensureString($left),
+			'right' => Helpers::ensureString($right),
 		];
 	}
 
@@ -698,15 +698,15 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$title = \get_the_title($id);
 
-					$output[] = Components::render('card-inline', [
+					$output[] = Helpers::render('card-inline', [
 						// Translators: %1$s is the post type, %2$s is the post title.
 						'cardInlineTitle' => \sprintf(\__('%1$s - %2$s', 'eightshift-forms'), \ucfirst($postType), $title) . ($isDevMode ? " ({$id})" : ''),
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
 						'cardInlineUseHover' => true,
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
-						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type, $parent)),
+						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
+						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 					]);
 				}
 				break;
@@ -718,18 +718,18 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$title = \get_the_title($id);
 
-					$output[] = Components::render('card-inline', [
+					$output[] = Helpers::render('card-inline', [
 						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['status'])),
 						'cardInlineUseHover' => true,
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('resultOutput'),
-						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type, $parent)),
+						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
+						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('bulkId') => $id,
 						],
-						'additionalClass' => Components::classnames([
+						'additionalClass' => Helpers::classnames([
 							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
@@ -764,19 +764,19 @@ class FormAdminMenu extends AbstractAdminMenu
 					}
 					$content .= '</ul>';
 
-					$output[] = Components::render('card-inline', [
+					$output[] = Helpers::render('card-inline', [
 						// Translators: %s is the entry ID.
 						'cardInlineTitle' => \sprintf(\__('Entry %s', 'eightshift-forms'), $id),
 						'cardInlineSubTitle' => $createdAt,
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
-						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
+						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
 						'cardInlineContent' => $content,
 						'cardInlineUseDivider' => true,
 						'cardInlineLastItem' => $i === $count - 1,
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('bulkId') => $id,
 						],
-						'additionalClass' => Components::classnames([
+						'additionalClass' => Helpers::classnames([
 							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
@@ -794,18 +794,18 @@ class FormAdminMenu extends AbstractAdminMenu
 						$title = \sprintf(\__('Form %s', 'eightshift-forms'), $id);
 					}
 
-					$output[] = Components::render('card-inline', [
+					$output[] = Helpers::render('card-inline', [
 						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
 						'cardInlineTitleLink' => $item['editLink'] ?? '#',
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['all'])),
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('listingGeneric'),
-						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type, $parent)),
+						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
+						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 						'cardInlineUseHover' => true,
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('bulkId') => $id,
 						],
-						'additionalClass' => Components::classnames([
+						'additionalClass' => Helpers::classnames([
 							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
@@ -828,20 +828,20 @@ class FormAdminMenu extends AbstractAdminMenu
 
 					$isValid = $this->isIntegrationValid($item);
 
-					$output[] = Components::render('card-inline', [
+					$output[] = Helpers::render('card-inline', [
 						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
 						'cardInlineIcon' => $cardIcon,
-						'cardInlineLeftContent' => Components::ensureString($this->getLeftContent($item)),
-						'cardInlineRightContent' => Components::ensureString($this->getRightContent($item, $type, $parent)),
+						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
+						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 						'cardInlineInvalid' => !$isValid,
 						'cardInlineUseHover' => true,
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('adminIntegrationType') => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
 							UtilsHelper::getStateAttribute('bulkId') => $id,
 						],
-						'additionalClass' => Components::classnames([
+						'additionalClass' => Helpers::classnames([
 							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
@@ -927,7 +927,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		return [
-			Components::render('checkbox', [
+			Helpers::render('checkbox', [
 				'checkboxValue' => $id,
 				'checkboxName' => $id,
 			]),
@@ -952,7 +952,7 @@ class FormAdminMenu extends AbstractAdminMenu
 		switch ($type) {
 			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
 				$output = [
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $item['viewLink'] ?? '',
@@ -962,7 +962,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
 				$output = [
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $item['editLink'] ?? '',
@@ -978,7 +978,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 				if ($parent === '') {
 					$output = [
-						Components::render('submit', [
+						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitValue' => \__('Locations', 'eightshift-forms'),
 							'submitAttrs' => [
@@ -987,14 +987,14 @@ class FormAdminMenu extends AbstractAdminMenu
 							'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 						]),
 						($entriesCount > 0) ?
-						Components::render('submit', [
+						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitButtonAsLink' => true,
 							'submitButtonAsLinkUrl' => $item['entriesLink'] ?? '',
 							// Translators: %s is the number of entries.
 							'submitValue' => \sprintf(\__('Entries (%s)', 'eightshift-forms'), $entriesCount),
 						]) : null,
-						Components::render('submit', [
+						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitButtonAsLink' => true,
 							'submitButtonAsLinkUrl' => $item['settingsLink'] ?? '',
@@ -1007,7 +1007,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				$entriesCount = EntriesHelper::getEntriesCount((string) $formId);
 
 				$output = [
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitValue' => \__('Locations', 'eightshift-forms'),
 						'submitAttrs' => [
@@ -1016,14 +1016,14 @@ class FormAdminMenu extends AbstractAdminMenu
 						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 					]),
 					($entriesCount > 0) ?
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $item['entriesLink'] ?? '',
 						// Translators: %s is the number of entries.
 						'submitValue' => \sprintf(\__('Entries (%s)', 'eightshift-forms'), $entriesCount),
 					]) : null,
-					Components::render('submit', [
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $item['settingsLink'] ?? '',
@@ -1043,7 +1043,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	private function getFilterOptions(): string
 	{
-		$filterOptions = Components::render(
+		$filterOptions = Helpers::render(
 			'select-option',
 			[
 				'selectOptionLabel' => \__('Not Configured', 'eightshift-forms'),
@@ -1064,7 +1064,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				continue;
 			}
 
-			$filterOptions .= Components::render(
+			$filterOptions .= Helpers::render(
 				'select-option',
 				[
 					'selectOptionLabel' => $value['labels']['title'] ?? '',

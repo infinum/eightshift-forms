@@ -6,13 +6,14 @@
  * @package EightshiftForms\Helpers
  */
 
+use EightshiftForms\Cache\ManifestCache;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * Outputs the forms custom unique name set in the settings by provided form ID.
@@ -62,7 +63,8 @@ function esFormsDecryptor(string $value)
  */
 function esFormsGeolocationCountriesList(): array
 {
-	return (new Geolocation())->getCountriesList();
+	$cache = new ManifestCache();
+	return (new Geolocation($cache))->getCountriesList();
 }
 
 /**
@@ -87,7 +89,7 @@ function esFormsGetSelectOptionsArrayFromString(string $options): array
  */
 function esFormsGetComponentsRender(string $component, array $attributes = []): string
 {
-	return Components::render($component, $attributes);
+	return Helpers::render($component, $attributes);
 }
 
 /**
@@ -100,8 +102,8 @@ function esFormsGetComponentsRender(string $component, array $attributes = []): 
  */
 function esFormRenderForm(string $formId, array $attributes = []): string
 {
-	return Components::render(
-		'forms/forms.php',
+	return Helpers::render(
+		'forms',
 		[
 			'formsFormPostId' => $formId,
 			'formsStyle' => $attributes['style'] ?? [],
@@ -109,7 +111,7 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 			'formsFormGeolocation' => $attributes['geolocation'] ?? [],
 			'formsFormGeolocationAlternatives' => $attributes['geolocationAlternatives'] ?? [],
 		],
-		Components::getProjectPaths('blocksDestinationCustom'),
+		'blocks',
 		true
 	);
 }

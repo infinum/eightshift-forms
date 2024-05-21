@@ -6,19 +6,19 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
-$containerUse = Components::checkAttr('containerUse', $attributes, $manifest);
+$containerUse = Helpers::checkAttr('containerUse', $attributes, $manifest);
 
 if (!$containerUse) {
 	return;
 }
 
-$containerClass = Components::checkAttr('containerClass', $attributes, $manifest);
-$containerContent = Components::checkAttr('containerContent', $attributes, $manifest);
-$containerTag = Components::checkAttr('containerTag', $attributes, $manifest);
+$containerClass = Helpers::checkAttr('containerClass', $attributes, $manifest);
+$containerContent = Helpers::checkAttr('containerContent', $attributes, $manifest);
+$containerTag = Helpers::checkAttr('containerTag', $attributes, $manifest);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 ?>
@@ -35,7 +35,7 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 	?>
 >
 	<?php
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		echo $containerContent;
 	?>
 </<?php echo esc_attr($containerTag); ?>>

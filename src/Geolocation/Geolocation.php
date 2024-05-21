@@ -113,7 +113,8 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$path = UtilsDataHelper::getDataManifestPath('geolocation', 'geoip.phar');
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = UtilsDataHelper::getDataManifestPath("geolocation{$sep}geoip.phar");
 
 		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
@@ -122,7 +123,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the phar location.
-			throw new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), $path));
+			throw new Exception(\sprintf(\esc_html__('Missing Geolocation phar on this location %s', 'eightshift-libs'), \esc_html($path)));
 		}
 
 		return $path;
@@ -137,7 +138,8 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$path = UtilsDataHelper::getDataManifestPath('geolocation', 'geoip.mmdb');
+		$sep = \DIRECTORY_SEPARATOR;
+		$path = UtilsDataHelper::getDataManifestPath("geolocation{$sep}geoip.mmdb");
 
 		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
@@ -146,7 +148,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 		if (!\file_exists($path)) {
 			// translators: %s will be replaced with the database location.
-			throw new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), $path));
+			throw new Exception(\sprintf(\esc_html__('Missing Geolocation database on this location %s', 'eightshift-libs'), \esc_html($path)));
 		}
 
 		return $path;

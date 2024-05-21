@@ -7,41 +7,41 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$selectName = Components::checkAttr('selectName', $attributes, $manifest);
+$selectName = Helpers::checkAttr('selectName', $attributes, $manifest);
 if (!$selectName) {
 	return;
 }
 
-$selectIsDisabled = Components::checkAttr('selectIsDisabled', $attributes, $manifest);
-$selectIsRequired = Components::checkAttr('selectIsRequired', $attributes, $manifest);
-$selectContent = Components::checkAttr('selectContent', $attributes, $manifest);
-$selectTracking = Components::checkAttr('selectTracking', $attributes, $manifest);
-$selectSingleSubmit = Components::checkAttr('selectSingleSubmit', $attributes, $manifest);
-$selectAttrs = Components::checkAttr('selectAttrs', $attributes, $manifest);
-$selectUseSearch = Components::checkAttr('selectUseSearch', $attributes, $manifest);
-$selectPlaceholder = Components::checkAttr('selectPlaceholder', $attributes, $manifest);
-$selectTypeCustom = Components::checkAttr('selectTypeCustom', $attributes, $manifest);
-$selectFieldAttrs = Components::checkAttr('selectFieldAttrs', $attributes, $manifest);
-$selectUseLabelAsPlaceholder = Components::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
-$selectIsMultiple = Components::checkAttr('selectIsMultiple', $attributes, $manifest);
+$selectIsDisabled = Helpers::checkAttr('selectIsDisabled', $attributes, $manifest);
+$selectIsRequired = Helpers::checkAttr('selectIsRequired', $attributes, $manifest);
+$selectContent = Helpers::checkAttr('selectContent', $attributes, $manifest);
+$selectTracking = Helpers::checkAttr('selectTracking', $attributes, $manifest);
+$selectSingleSubmit = Helpers::checkAttr('selectSingleSubmit', $attributes, $manifest);
+$selectAttrs = Helpers::checkAttr('selectAttrs', $attributes, $manifest);
+$selectUseSearch = Helpers::checkAttr('selectUseSearch', $attributes, $manifest);
+$selectPlaceholder = Helpers::checkAttr('selectPlaceholder', $attributes, $manifest);
+$selectTypeCustom = Helpers::checkAttr('selectTypeCustom', $attributes, $manifest);
+$selectFieldAttrs = Helpers::checkAttr('selectFieldAttrs', $attributes, $manifest);
+$selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
+$selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectHideLabel = false;
-$selectFieldLabel = $attributes[Components::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
+$selectFieldLabel = $attributes[Helpers::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
 
-$selectClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'select'),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($selectSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+$selectClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'select'),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($selectSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 if ($selectUseSearch) {
@@ -66,7 +66,7 @@ if ($selectUseLabelAsPlaceholder) {
 	$placeholderLabel = esc_attr($selectFieldLabel) ?: esc_html__('Select option', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 }
 
-$placeholder = Components::render(
+$placeholder = Helpers::render(
 	'select-option',
 	[
 		'selectOptionLabel' => $placeholderLabel,
@@ -108,23 +108,22 @@ $fieldOutput = [
 	'fieldDisabled' => !empty($selectIsDisabled),
 	'fieldTypeCustom' => $selectTypeCustom ?: 'select', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldTracking' => $selectTracking,
-	'fieldConditionalTags' => Components::render(
+	'fieldConditionalTags' => Helpers::render(
 		'conditional-tags',
-		Components::props('conditionalTags', $attributes)
+		Helpers::props('conditionalTags', $attributes)
 	),
 	'fieldAttrs' => $selectFieldAttrs,
 ];
-
 
 // Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
 if ($selectHideLabel) {
 	$fieldOutput['fieldHideLabel'] = true;
 }
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, $fieldOutput),
+		Helpers::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',

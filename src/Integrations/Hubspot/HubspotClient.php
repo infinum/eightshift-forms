@@ -23,7 +23,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * HubspotClient integration class.
@@ -220,9 +220,9 @@ class HubspotClient implements HubspotClientInterface
 		$body = [
 			'context' => [
 				'ipAddress' => $this->security->getIpAddress(),
-				'hutk' => $params[UtilsHelper::getStateParam('hubspotCookie')]['value'],
-				'pageUri' => UtilsGeneralHelper::cleanPageUrl($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value']),
-				'pageName' => $params[UtilsHelper::getStateParam('hubspotPageName')]['value'],
+				'hutk' => $params[UtilsHelper::getStateParam('hubspotCookie')]['value'] ?? '',
+				'pageUri' => Helpers::cleanUrlParams($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value'] ?? ''),
+				'pageName' => $params[UtilsHelper::getStateParam('hubspotPageName')]['value'] ?? '',
 			],
 		];
 
@@ -297,7 +297,7 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$properties = [];
 
-		$customFields = \array_flip(Components::flattenArray(UtilsHelper::getStateParams()));
+		$customFields = \array_flip(Helpers::flattenArray(UtilsHelper::getStateParams()));
 
 		if ($params) {
 			foreach ($params as $key => $value) {
@@ -649,7 +649,7 @@ class HubspotClient implements HubspotClientInterface
 		$consentData = $consentData[0] ?? '';
 
 		// Validate if json.
-		if (!Components::isJson($consentData)) {
+		if (!Helpers::isJson($consentData)) {
 			return [];
 		}
 

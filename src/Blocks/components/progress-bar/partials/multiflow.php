@@ -6,9 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(dirname(__DIR__, 2));
+$manifest = Helpers::getManifestByDir(dirname(__DIR__, 2));
 
 $count = $attributes['count'] ? (int) $attributes['count'] : 0;
 
@@ -23,5 +23,5 @@ for ($i = 0; $i < $count; $i++) {
 		$filled = 'es-form-is-filled';
 	}
 
-	echo "<div class='{$filled}'></div>"; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+	echo "<div class='{$filled}'></div>"; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 }

@@ -19,7 +19,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * GoodbitsClient integration class.
@@ -61,7 +61,7 @@ class GoodbitsClient implements ClientInterface
 	{
 		$key = $this->getApiKey();
 
-		if (\is_string($key) && Components::isJson($key)) {
+		if (\is_string($key) && Helpers::isJson($key)) {
 			$key = \json_decode($key);
 
 			$output = [];

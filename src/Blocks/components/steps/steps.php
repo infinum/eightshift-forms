@@ -6,17 +6,17 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 
-$stepsTitle = Components::checkAttr('stepsTitle', $attributes, $manifest);
-$stepsContent = Components::checkAttr('stepsContent', $attributes, $manifest);
+$stepsTitle = Helpers::checkAttr('stepsTitle', $attributes, $manifest);
+$stepsContent = Helpers::checkAttr('stepsContent', $attributes, $manifest);
 
-$stepsClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
+$stepsClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
 ]);
 
 if (!$stepsContent) {

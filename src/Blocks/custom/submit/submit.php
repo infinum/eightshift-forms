@@ -7,9 +7,9 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $button = '';
 
@@ -27,9 +27,9 @@ if (!$ssr) {
 	}
 }
 
-echo Components::render(
+echo Helpers::render(
 	'submit',
-	Components::props('submit', $attributes, [
+	Helpers::props('submit', $attributes, [
 		'submitButtonComponent' => $button
 	])
 );

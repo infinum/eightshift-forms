@@ -6,11 +6,11 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$props['checkboxesContent'] = $innerBlockContent;
+$props['checkboxesContent'] = $renderContent;
 
-echo Components::render(
+echo Helpers::render(
 	'checkboxes',
-	Components::props('checkboxes', $attributes, $props)
+	Helpers::props('checkboxes', $attributes, $props)
 );

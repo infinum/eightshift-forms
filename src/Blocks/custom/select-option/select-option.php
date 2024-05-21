@@ -6,9 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-echo Components::render(
+echo Helpers::render(
 	'select-option',
-	Components::props('selectOption', $attributes)
+	Helpers::props('selectOption', $attributes)
 );

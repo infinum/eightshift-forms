@@ -7,25 +7,25 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$loaderIsGeolocation = Components::checkAttr('loaderIsGeolocation', $attributes, $manifest);
+$loaderIsGeolocation = Helpers::checkAttr('loaderIsGeolocation', $attributes, $manifest);
 
-$loaderClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
+$loaderClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('loader'),
-	Components::selector($loaderIsGeolocation && $componentClass, $componentClass, 'geolocation'),
-	Components::selector(!$loaderIsGeolocation && $componentClass, $componentClass, 'form'),
+	Helpers::selector($loaderIsGeolocation && $componentClass, $componentClass, 'geolocation'),
+	Helpers::selector(!$loaderIsGeolocation && $componentClass, $componentClass, 'form'),
 ]);
 
 ?>
 
 <div class="<?php echo esc_attr($loaderClass); ?>">
-	<?php echo UtilsHelper::getUtilsIcons('loader'); // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo UtilsHelper::getUtilsIcons('loader'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 </div>

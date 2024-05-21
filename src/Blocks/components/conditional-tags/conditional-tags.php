@@ -6,12 +6,12 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
-$conditionalTagsUse = Components::checkAttr('conditionalTagsUse', $attributes, $manifest);
-$conditionalTagsRules = Components::checkAttr('conditionalTagsRules', $attributes, $manifest);
+$conditionalTagsUse = Helpers::checkAttr('conditionalTagsUse', $attributes, $manifest);
+$conditionalTagsRules = Helpers::checkAttr('conditionalTagsRules', $attributes, $manifest);
 
 if (!$conditionalTagsUse) {
 	return;

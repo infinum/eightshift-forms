@@ -41,7 +41,7 @@ export class Enrichment {
 	 */
 	setLocalStorageEnrichment() {
 		// Check if enrichment is used.
-		if (!this.state.getStateEnrichmentIsUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
 			return;
 		}
 
@@ -102,7 +102,7 @@ export class Enrichment {
 	 */
 	setLocalStorageFormPrefillItem(formId, name) {
 		// Check if enrichment is used.
-		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsPrefillUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsPrefillUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
 			return;
 		}
 
@@ -143,7 +143,7 @@ export class Enrichment {
 	 */
 	setLocalStorage(newStorage, storageName, expiration = this.state.getStateEnrichmentExpiration()) {
 		// Check if enrichment is used.
-		if (!this.state.getStateEnrichmentIsUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
 			return;
 		}
 
@@ -158,7 +158,7 @@ export class Enrichment {
 		if (this.getLocalStorage(storageName) === null) {
 			newStorage.timestamp = newStorage.timestamp.toString();
 
-			localStorage.setItem(
+			localStorage?.setItem(
 				storageName,
 				JSON.stringify(newStorage)
 			);
@@ -186,7 +186,7 @@ export class Enrichment {
 
 			// Remove expired storage if it exists.
 			if (expirationDate.getTime() < currentStorage.timestamp) {
-				localStorage.removeItem(storageName);
+				localStorage?.removeItem(storageName);
 			}
 		}
 
@@ -213,7 +213,7 @@ export class Enrichment {
 		};
 
 		// Update localStorage with the new item.
-		localStorage.setItem(storageName, JSON.stringify(finalOutput));
+		localStorage?.setItem(storageName, JSON.stringify(finalOutput));
 	}
 
 	/**
@@ -224,7 +224,11 @@ export class Enrichment {
 	 * @returns {object}
 	 */
 	getLocalStorage(storageName) {
-		return localStorage.getItem(storageName);
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
+			return null;
+		}
+
+		return localStorage?.getItem(storageName);
 	}
 
 	/**
@@ -235,7 +239,11 @@ export class Enrichment {
 	 * @returns {void}
 	 */
 	deleteLocalStorage(storageName) {
-		localStorage.removeItem(storageName);
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
+			return;
+		}
+
+		localStorage?.removeItem(storageName);
 	}
 
 	/**
@@ -342,12 +350,12 @@ export class Enrichment {
 	 * @returns {vodi}
 	 */
 	removeEvents(formId) {
-		this.state.getStateFormElement(formId).removeEventListener(
+		this.state.getStateFormElement(formId)?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onPrefillEvent
 		);
 
-		this.state.getStateFormElement(formId).removeEventListener(
+		this.state.getStateFormElement(formId)?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onUrlParamsPrefillEvent
 		);
@@ -471,8 +479,8 @@ export class Enrichment {
 			prefillByData: (formId, data) => {
 				this.prefillByData(formId, data);
 			},
-			removeEvents: () => {
-				this.removeEvents();
+			removeEvents: (formId) => {
+				this.removeEvents(formId);
 			},
 			onUrlParamsPrefillEvent: (event) => {
 				this.onUrlParamsPrefillEvent(event);

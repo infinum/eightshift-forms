@@ -16,5 +16,6 @@ parameters:
 	ignoreErrors:
 		# Block templates
 		- '#^Variable \$attributes might not be defined\.#'
-		- '#^Variable \$innerBlockContent might not be defined\.#'
-	checkGenericClassInNonGenericObjectType: false
+		- '#^Variable \$renderContent might not be defined\.#'
+		- identifier: missingType.generics
+

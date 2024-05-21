@@ -9,34 +9,34 @@
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$ratingName = Components::checkAttr('ratingName', $attributes, $manifest);
+$ratingName = Helpers::checkAttr('ratingName', $attributes, $manifest);
 if (!$ratingName) {
 	return;
 }
 
-$ratingValue = Components::checkAttr('ratingValue', $attributes, $manifest);
-$ratingTypeCustom = Components::checkAttr('ratingTypeCustom', $attributes, $manifest);
-$ratingIsDisabled = Components::checkAttr('ratingIsDisabled', $attributes, $manifest);
-$ratingIsReadOnly = Components::checkAttr('ratingIsReadOnly', $attributes, $manifest);
-$ratingIsRequired = Components::checkAttr('ratingIsRequired', $attributes, $manifest);
-$ratingTracking = Components::checkAttr('ratingTracking', $attributes, $manifest);
-$ratingAttrs = Components::checkAttr('ratingAttrs', $attributes, $manifest);
-$ratingFieldAttrs = Components::checkAttr('ratingFieldAttrs', $attributes, $manifest);
-$ratingAmount = Components::checkAttr('ratingAmount', $attributes, $manifest);
-$ratingSingleSubmit = Components::checkAttr('ratingSingleSubmit', $attributes, $manifest);
+$ratingValue = Helpers::checkAttr('ratingValue', $attributes, $manifest);
+$ratingTypeCustom = Helpers::checkAttr('ratingTypeCustom', $attributes, $manifest);
+$ratingIsDisabled = Helpers::checkAttr('ratingIsDisabled', $attributes, $manifest);
+$ratingIsReadOnly = Helpers::checkAttr('ratingIsReadOnly', $attributes, $manifest);
+$ratingIsRequired = Helpers::checkAttr('ratingIsRequired', $attributes, $manifest);
+$ratingTracking = Helpers::checkAttr('ratingTracking', $attributes, $manifest);
+$ratingAttrs = Helpers::checkAttr('ratingAttrs', $attributes, $manifest);
+$ratingFieldAttrs = Helpers::checkAttr('ratingFieldAttrs', $attributes, $manifest);
+$ratingAmount = Helpers::checkAttr('ratingAmount', $attributes, $manifest);
+$ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $manifest);
 $ratingHideLabel = false;
 
-$ratingClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+$ratingClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 	UtilsHelper::getStateSelector('rating'),
 ]);
 
@@ -91,10 +91,10 @@ $rating = '
 	' . $additionalContent . '
 ';
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
+		Helpers::props('field', $attributes, [
 			'fieldContent' => $rating,
 			'fieldId' => $ratingName,
 			'fieldName' => $ratingName,
@@ -104,9 +104,9 @@ echo Components::render(
 			'fieldTypeCustom' => $ratingTypeCustom ?: 'rating', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $ratingTracking,
 			'fieldHideLabel' => $ratingHideLabel,
-			'fieldConditionalTags' => Components::render(
+			'fieldConditionalTags' => Helpers::render(
 				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
+				Helpers::props('conditionalTags', $attributes)
 			),
 			'fieldAttrs' => $ratingFieldAttrs,
 		]),

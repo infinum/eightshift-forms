@@ -39,6 +39,13 @@
 		},
 		"radiosFieldAttrs": {
 			"type": "object"
+		},
+		"radiosPlaceholder": {
+			"type": "string"
+		},
+		"radiosUseLabelAsPlaceholder": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

@@ -14,7 +14,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_REST_Request;
 
 /**
@@ -91,7 +91,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
 
 		if ($type === 'all') {
-			$allItems = Components::flattenArray(\array_map(
+			$allItems = Helpers::flattenArray(\array_map(
 				static function ($item) {
 					if (isset($item['cache'])) {
 						return $item['cache'];

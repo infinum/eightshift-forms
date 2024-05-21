@@ -8,9 +8,9 @@
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getComponent('admin-listing');
+$manifest = Helpers::getComponent('admin-listing');
 $selectorJsItem = UtilsHelper::getStateSelectorAdmin('listingItem');
 
 $isDevMode = UtilsDeveloperHelper::isDeveloperModeActive();
@@ -40,14 +40,14 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 
 			$itemTitle = get_the_title($id);
 
-			echo Components::render('card-inline', [
+			echo Helpers::render('card-inline', [
 				// translators: %1$s is the post type, %2$s is the post title.
 				'cardInlineTitle' => sprintf(__('%1$s - %2$s', 'eightshift-forms'), ucfirst($postType), $itemTitle) . ($isDevMode ? " ({$id})" : ''),
 				'cardInlineTitleLink' => $item['editLink'] ?? '',
 				'cardInlineIndented' => true,
 				'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
-				'cardInlineRightContent' => Components::ensureString([
-					Components::render('submit', [
+				'cardInlineRightContent' => Helpers::ensureString([
+					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $item['viewLink'] ?? '',
@@ -57,7 +57,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 			]);
 		}
 	} else {
-		echo Components::render('card-inline', [
+		echo Helpers::render('card-inline', [
 			'cardInlineTitle' => $emptyContent,
 			'cardInlineIndented' => true,
 			'cardInlineInvalid' => true,

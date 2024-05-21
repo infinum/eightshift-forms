@@ -17,7 +17,7 @@ use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -89,7 +89,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			return $syncForm;
 		}
 
-		$namespace = Components::getSettingsNamespace();
+		$namespace = Helpers::getSettingsNamespace();
 
 		$keys = $this->getBlockKeysOutput();
 
@@ -615,7 +615,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Remove item if block is not present on integration, output nothing.
 		if (!$integration) {
 			// Skip removing step block because it doesn't exist on the integration.
-			if (isset($content['component']) && $content['component'] === Components::getBlock('step')['blockName']) {
+			if (isset($content['component']) && $content['component'] === Helpers::getBlock('step')['blockName']) {
 				$output['update'] = false;
 				$output['output'] = $content;
 				return $output;
@@ -646,7 +646,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$innerOutput = $content;
 
 		// Find prefix of the component.
-		$prefix = Components::kebabToCamelCase($integration['component'] . \ucfirst($integration['component']));
+		$prefix = Helpers::kebabToCamelCase($integration['component'] . \ucfirst($integration['component']));
 
 		// Find components disabled options.
 		$disabledOptionsIntegration = $integration['attrs']["{$prefix}DisabledOptions"] ?? [];
@@ -751,7 +751,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$output = [];
 
 		$nestedKeys = \array_flip(AbstractFormBuilder::NESTED_KEYS);
-		$namespace = Components::getSettingsNamespace();
+		$namespace = Helpers::getSettingsNamespace();
 
 		foreach ($blocks as $block) {
 			$blockTypeOriginal = $block['component'] ?? '';
@@ -760,7 +760,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				continue;
 			}
 
-			$blockType = Components::kebabToCamelCase($blockTypeOriginal, '-');
+			$blockType = Helpers::kebabToCamelCase($blockTypeOriginal, '-');
 			$blockName = "{$blockType}Name";
 
 			$name = $block[$blockName] ?? '';
@@ -789,7 +789,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 						continue;
 					}
 
-					$blockInnerType = Components::kebabToCamelCase($blockInnerTypeOriginal, '-');
+					$blockInnerType = Helpers::kebabToCamelCase($blockInnerTypeOriginal, '-');
 					$blockInnerAttributes = $this->prepareBlockAttributes($innerBlock, $blockInnerType);
 					$innerPrefix = $blockInnerType . \ucfirst($blockInnerType);
 
@@ -836,7 +836,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$blockNamespace = $blockType['namespace'];
 
 			// Output block as is if it is not forms block.
-			if ($blockNamespace !== Components::getSettingsNamespace()) {
+			if ($blockNamespace !== Helpers::getSettingsNamespace()) {
 				$noneFormsBlockName = "{$blockTypeOriginal}-{$index}";
 
 				$output[$noneFormsBlockName]['content']  = [
@@ -942,7 +942,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$editorOutput
 		);
 
-		$namespace = Components::getSettingsNamespace();
+		$namespace = Helpers::getSettingsNamespace();
 
 		$keys = $this->getBlockKeysOutput($editorOutput);
 
@@ -1238,7 +1238,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	{
 		$output = [];
 
-		$attributes = Components::getComponent($name)['attributes'];
+		$attributes = Helpers::getComponent($name)['attributes'];
 
 		foreach ($attributes as $key => $value) {
 			if (!isset($value['default'])) {

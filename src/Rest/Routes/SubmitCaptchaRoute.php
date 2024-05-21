@@ -95,12 +95,12 @@ class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 		try {
 			$params = $this->prepareSimpleApiParams($request);
 
-			$token = $params['token'] ?? '';
-			$action = $params['action'] ?? '';
-			$isEnterprise = $params['isEnterprise'] ?? false;
+			$token = $params['token'];
+			$action = $params['action'];
+			$isEnterprise = $params['isEnterprise'];
 
 			return \rest_ensure_response(
-				$this->captcha->check($token, $action, (bool) $isEnterprise)
+				$this->captcha->check($token, $action, $isEnterprise === 'true')
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(

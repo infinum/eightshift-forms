@@ -14,7 +14,7 @@ use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\MapperInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -351,8 +351,8 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			return '';
 		}
 
-		$manifest = Components::getComponent('dynamic');
-		$data = Components::checkAttr('dynamicData', $attributes, $manifest);
+		$manifest = Helpers::getComponent('dynamic');
+		$data = Helpers::checkAttr('dynamicData', $attributes, $manifest);
 
 		if (!$data) {
 			return '';
@@ -387,7 +387,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 				continue;
 			}
 
-			$content .= Components::render(
+			$content .= Helpers::render(
 				'select-option',
 				[
 					'selectOptionLabel' => $title,
@@ -396,15 +396,15 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			);
 		}
 
-		return Components::render(
+		return Helpers::render(
 			'select',
-			Components::props('select', [
-				'selectName' => Components::checkAttr('dynamicName', $attributes, $manifest),
-				'selectTracking' => Components::checkAttr('dynamicTracking', $attributes, $manifest),
-				'selectFieldLabel' => Components::checkAttr('dynamicFieldLabel', $attributes, $manifest),
-				'selectIsMultiple' => Components::checkAttr('dynamicIsMultiple', $attributes, $manifest),
-				'selectIsRequired' => Components::checkAttr('dynamicIsRequired', $attributes, $manifest),
-				'selectTypeCustom' => Components::checkAttr('dynamicTypeCustom', $attributes, $manifest),
+			Helpers::props('select', [
+				'selectName' => Helpers::checkAttr('dynamicName', $attributes, $manifest),
+				'selectTracking' => Helpers::checkAttr('dynamicTracking', $attributes, $manifest),
+				'selectFieldLabel' => Helpers::checkAttr('dynamicFieldLabel', $attributes, $manifest),
+				'selectIsMultiple' => Helpers::checkAttr('dynamicIsMultiple', $attributes, $manifest),
+				'selectIsRequired' => Helpers::checkAttr('dynamicIsRequired', $attributes, $manifest),
+				'selectTypeCustom' => Helpers::checkAttr('dynamicTypeCustom', $attributes, $manifest),
 				'selectContent' => $content,
 			])
 		);

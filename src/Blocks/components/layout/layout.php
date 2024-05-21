@@ -6,11 +6,11 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
-$layoutUse = Components::checkAttr('layoutUse', $attributes, $manifest);
+$layoutUse = Helpers::checkAttr('layoutUse', $attributes, $manifest);
 if (!$layoutUse) {
 	return;
 }
@@ -20,14 +20,14 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$layoutContent = Components::checkAttr('layoutContent', $attributes, $manifest);
-$layoutTag = Components::checkAttr('layoutTag', $attributes, $manifest);
-$layoutType = Components::checkAttr('layoutType', $attributes, $manifest);
+$layoutContent = Helpers::checkAttr('layoutContent', $attributes, $manifest);
+$layoutTag = Helpers::checkAttr('layoutTag', $attributes, $manifest);
+$layoutType = Helpers::checkAttr('layoutType', $attributes, $manifest);
 
-$layoutClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($blockClass, $blockClass, $selectorClass),
-	Components::selector($additionalClass, $additionalClass),
+$layoutClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($blockClass, $blockClass, $selectorClass),
+	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
@@ -46,6 +46,6 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 	?>
 >
 	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 	</div>
 </<?php echo esc_attr($layoutTag); ?>>

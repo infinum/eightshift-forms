@@ -20,7 +20,7 @@
 	<file>.</file>
 
 	<!-- Check for PHP cross-version compatibility. -->
-	<config name="testVersion" value="7.4-"/>
+	<config name="testVersion" value="8.2-"/>
 	<rule ref="PHPCompatibilityWP"/>
 
 	<config name="minimum_supported_wp_version" value="6.0"/>

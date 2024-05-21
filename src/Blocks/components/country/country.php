@@ -7,45 +7,45 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
-$manifest = Components::getManifest(__DIR__);
-$manifestSelect = Components::getComponent('select');
+$manifest = Helpers::getManifestByDir(__DIR__);
+$manifestSelect = Helpers::getComponent('select');
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$countryName = Components::checkAttr('countryName', $attributes, $manifest);
+$countryName = Helpers::checkAttr('countryName', $attributes, $manifest);
 if (!$countryName) {
 	return;
 }
 
-$countryIsDisabled = Components::checkAttr('countryIsDisabled', $attributes, $manifest);
-$countryIsRequired = Components::checkAttr('countryIsRequired', $attributes, $manifest);
-$countryTracking = Components::checkAttr('countryTracking', $attributes, $manifest);
-$countryAttrs = Components::checkAttr('countryAttrs', $attributes, $manifest);
-$countryUseSearch = Components::checkAttr('countryUseSearch', $attributes, $manifest);
-$countryFormPostId = Components::checkAttr('countryFormPostId', $attributes, $manifest);
-$countryTypeCustom = Components::checkAttr('countryTypeCustom', $attributes, $manifest);
-$countryFieldAttrs = Components::checkAttr('countryFieldAttrs', $attributes, $manifest);
-$countryPlaceholder = Components::checkAttr('countryPlaceholder', $attributes, $manifest);
-$countryUseLabelAsPlaceholder = Components::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
-$countrySingleSubmit = Components::checkAttr('countrySingleSubmit', $attributes, $manifest);
+$countryIsDisabled = Helpers::checkAttr('countryIsDisabled', $attributes, $manifest);
+$countryIsRequired = Helpers::checkAttr('countryIsRequired', $attributes, $manifest);
+$countryTracking = Helpers::checkAttr('countryTracking', $attributes, $manifest);
+$countryAttrs = Helpers::checkAttr('countryAttrs', $attributes, $manifest);
+$countryUseSearch = Helpers::checkAttr('countryUseSearch', $attributes, $manifest);
+$countryFormPostId = Helpers::checkAttr('countryFormPostId', $attributes, $manifest);
+$countryTypeCustom = Helpers::checkAttr('countryTypeCustom', $attributes, $manifest);
+$countryFieldAttrs = Helpers::checkAttr('countryFieldAttrs', $attributes, $manifest);
+$countryPlaceholder = Helpers::checkAttr('countryPlaceholder', $attributes, $manifest);
+$countryUseLabelAsPlaceholder = Helpers::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
+$countrySingleSubmit = Helpers::checkAttr('countrySingleSubmit', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $countryHideLabel = false;
-$countryFieldLabel = $attributes[Components::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
+$countryFieldLabel = $attributes[Helpers::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
 
-$countryClass = Components::classnames([
-	Components::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
-	Components::selector($componentClass, $componentClass, 'select'),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($countrySingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
+$countryClass = Helpers::classnames([
+	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
+	Helpers::selector($componentClass, $componentClass, 'select'),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($countrySingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
 if ($countryUseSearch) {
@@ -67,7 +67,7 @@ if ($countryAttrs) {
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('country', $attributes);
 
-$placeholder = $countryPlaceholder ? Components::render(
+$placeholder = $countryPlaceholder ? Helpers::render(
 	'select-option',
 	[
 		'selectOptionLabel' => $countryPlaceholder, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
@@ -120,10 +120,10 @@ $country = '
 	' . $additionalContent . '
 ';
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
+		Helpers::props('field', $attributes, [
 			'fieldContent' => $country,
 			'fieldId' => $countryName,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
@@ -133,9 +133,9 @@ echo Components::render(
 			'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $countryTracking,
 			'fieldHideLabel' => $countryHideLabel,
-			'fieldConditionalTags' => Components::render(
+			'fieldConditionalTags' => Helpers::render(
 				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
+				Helpers::props('conditionalTags', $attributes)
 			),
 			'fieldAttrs' => $countryFieldAttrs,
 		]),

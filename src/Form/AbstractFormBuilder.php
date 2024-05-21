@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Form;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * FormBuilder class.
@@ -73,13 +73,13 @@ abstract class AbstractFormBuilder
 		$formContent = '';
 
 		// Add submit on the bottom of every form.
-		$formContent .= Components::render(
+		$formContent .= Helpers::render(
 			'submit',
-			Components::props('submit', [
+			Helpers::props('submit', [
 				'additionalClass' => 'es-submit--global',
 				'submitValue' => \__('Save changes', 'eightshift-forms'),
 			]),
-			'',
+			'components',
 			true
 		);
 
@@ -109,7 +109,7 @@ abstract class AbstractFormBuilder
 		}
 
 		// Determin component name.
-		$component = $attributes['component'] ? Components::kebabToCamelCase($attributes['component']) : '';
+		$component = $attributes['component'] ? Helpers::kebabToCamelCase($attributes['component']) : '';
 
 		// Check children components for specific components.
 		if (
@@ -129,7 +129,7 @@ abstract class AbstractFormBuilder
 					// Loop children and do the same on top level.
 					foreach ($attributes[$nestedKey] as $item) {
 						// Determine the component's name.
-						$innerComponent = isset($item['component']) ? Components::kebabToCamelCase($item['component']) : '';
+						$innerComponent = isset($item['component']) ? Helpers::kebabToCamelCase($item['component']) : '';
 
 						// Build child component.
 						if ($item) {
@@ -146,10 +146,10 @@ abstract class AbstractFormBuilder
 								$item[$itemKey] = $itemValue;
 							}
 
-							$output .= Components::render(
+							$output .= Helpers::render(
 								$item['component'],
-								Components::props($innerComponent, $item),
-								'',
+								Helpers::props($innerComponent, $item),
+								'components',
 								true
 							);
 						}
@@ -171,13 +171,13 @@ abstract class AbstractFormBuilder
 		}
 
 		// Build the component.
-		return Components::render(
+		return Helpers::render(
 			$attributes['component'],
 			\array_merge(
-				Components::props($component, $attributes),
+				Helpers::props($component, $attributes),
 				$additionalAttributes
 			),
-			'',
+			'components',
 			true
 		);
 	}
@@ -193,7 +193,7 @@ abstract class AbstractFormBuilder
 	 */
 	protected function prepareDisabledOptions(string $component, array $options = [], bool $useDefault = true): array
 	{
-		$component = Components::kebabToCamelCase($component);
+		$component = Helpers::kebabToCamelCase($component);
 
 		$default = [
 			"{$component}Name",
@@ -239,10 +239,10 @@ abstract class AbstractFormBuilder
 		}
 
 		// Build form component.
-		return Components::render(
+		return Helpers::render(
 			'form',
-			Components::props('form', [], $formProps),
-			'',
+			Helpers::props('form', [], $formProps),
+			'components',
 			true
 		);
 	}

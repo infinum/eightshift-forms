@@ -7,9 +7,9 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(dirname(__DIR__, 2));
+$manifest = Helpers::getManifestByDir(dirname(__DIR__, 2));
 
 $steps = $attributes['steps'] ?? [];
 
@@ -22,9 +22,9 @@ $jsClass = $attributes['jsClass'] ?? '';
 
 $hideLabels = $attributes['hideLabels'] ?? false;
 
-$progressBarItemClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'item'),
-	Components::selector($jsClass, $jsClass),
+$progressBarItemClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'item'),
+	Helpers::selector($jsClass, $jsClass),
 ]);
 
 foreach ($steps as $step) {
@@ -42,7 +42,7 @@ foreach ($steps as $step) {
 		$progressBarAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
 	}
 	?>
-	<div class="<?php echo esc_attr($progressBarItemClass); ?>" <?php echo $progressBarAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>>
+	<div class="<?php echo esc_attr($progressBarItemClass); ?>" <?php echo $progressBarAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 		<div class="<?php echo esc_attr("{$componentClass}__item-inner"); ?>">
 			<?php
 			if (!$hideLabels) {

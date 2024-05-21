@@ -7,26 +7,26 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalGroupClass = $attributes['additionalGroupClass'] ?? '';
 
-$groupLabel = Components::checkAttr('groupLabel', $attributes, $manifest);
-$groupSublabel = Components::checkAttr('groupSublabel', $attributes, $manifest);
-$groupContent = Components::checkAttr('groupContent', $attributes, $manifest);
-$groupName = Components::checkAttr('groupName', $attributes, $manifest);
-$groupSaveOneField = Components::checkAttr('groupSaveOneField', $attributes, $manifest);
-$groupStyle = Components::checkAttr('groupStyle', $attributes, $manifest);
-$groupBeforeContent = Components::checkAttr('groupBeforeContent', $attributes, $manifest);
-$groupHelp = Components::checkAttr('groupHelp', $attributes, $manifest);
+$groupLabel = Helpers::checkAttr('groupLabel', $attributes, $manifest);
+$groupSublabel = Helpers::checkAttr('groupSublabel', $attributes, $manifest);
+$groupContent = Helpers::checkAttr('groupContent', $attributes, $manifest);
+$groupName = Helpers::checkAttr('groupName', $attributes, $manifest);
+$groupSaveOneField = Helpers::checkAttr('groupSaveOneField', $attributes, $manifest);
+$groupStyle = Helpers::checkAttr('groupStyle', $attributes, $manifest);
+$groupBeforeContent = Helpers::checkAttr('groupBeforeContent', $attributes, $manifest);
+$groupHelp = Helpers::checkAttr('groupHelp', $attributes, $manifest);
 
-$groupClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalGroupClass, $additionalGroupClass),
-	Components::selector($groupStyle, $componentClass, '', $groupStyle),
+$groupClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalGroupClass, $additionalGroupClass),
+	Helpers::selector($groupStyle, $componentClass, '', $groupStyle),
 	UtilsHelper::getStateSelector('group'),
 ]);
 
@@ -60,7 +60,7 @@ $groupClass = Components::classnames([
 
 	<?php if ($groupContent) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
 

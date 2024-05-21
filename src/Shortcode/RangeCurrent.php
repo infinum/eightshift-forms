@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Shortcode;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -38,7 +38,7 @@ class RangeCurrent implements ServiceInterface
 	 */
 	public function callback(array $atts): string
 	{
-		$manifest = Components::getComponent('input');
+		$manifest = Helpers::getComponent('input');
 
 		$componentClass = $manifest['componentClass'] ?? '';
 
@@ -55,7 +55,7 @@ class RangeCurrent implements ServiceInterface
 		$prefix = isset($params['prefix']) ? \esc_html($params['prefix']) : '';
 		$suffix = isset($params['suffix']) ? \esc_html($params['suffix']) : '';
 
-		$cssSelector = Components::selector($componentClass, $componentClass, 'range', 'current');
+		$cssSelector = Helpers::selector($componentClass, $componentClass, 'range', 'current');
 
 		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
 

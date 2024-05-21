@@ -6,16 +6,16 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $stepName = $attributes['stepStepName'] ?? '';
 $props = [];
 
 if (empty($stepName)) {
-	$props['stepName'] = Components::getUnique();
+	$props['stepName'] = Helpers::getUnique();
 }
 
-echo Components::render(
+echo Helpers::render(
 	'step',
-	Components::props('step', $attributes, $props)
+	Helpers::props('step', $attributes, $props)
 );

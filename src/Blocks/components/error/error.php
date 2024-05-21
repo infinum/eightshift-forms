@@ -7,21 +7,21 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalErrorClass = $attributes['additionalErrorClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$errorValue = Components::checkAttr('errorValue', $attributes, $manifest);
-$errorId = Components::checkAttr('errorId', $attributes, $manifest);
+$errorValue = Helpers::checkAttr('errorValue', $attributes, $manifest);
+$errorId = Helpers::checkAttr('errorId', $attributes, $manifest);
 
-$errorClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($selectorClass, $selectorClass, $componentClass),
-	Components::selector($additionalErrorClass, $additionalErrorClass),
+$errorClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($selectorClass, $selectorClass, $componentClass),
+	Helpers::selector($additionalErrorClass, $additionalErrorClass),
 	UtilsHelper::getStateSelector('error'),
 ]);
 

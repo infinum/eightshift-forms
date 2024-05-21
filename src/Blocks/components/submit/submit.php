@@ -7,33 +7,33 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$submitName = Components::checkAttr('submitName', $attributes, $manifest);
-$submitValue = Components::checkAttr('submitValue', $attributes, $manifest);
-$submitIsDisabled = Components::checkAttr('submitIsDisabled', $attributes, $manifest);
-$submitTracking = Components::checkAttr('submitTracking', $attributes, $manifest);
-$submitAttrs = Components::checkAttr('submitAttrs', $attributes, $manifest);
-$submitServerSideRender = Components::checkAttr('submitServerSideRender', $attributes, $manifest);
-$submitUniqueId = Components::checkAttr('submitUniqueId', $attributes, $manifest);
-$submitIcon = Components::checkAttr('submitIcon', $attributes, $manifest);
-$submitVariant = Components::checkAttr('submitVariant', $attributes, $manifest);
-$submitButtonComponent = Components::checkAttr('submitButtonComponent', $attributes, $manifest);
-$submitButtonAsLink = Components::checkAttr('submitButtonAsLink', $attributes, $manifest);
-$submitButtonAsLinkUrl = Components::checkAttr('submitButtonAsLinkUrl', $attributes, $manifest);
+$submitName = Helpers::checkAttr('submitName', $attributes, $manifest);
+$submitValue = Helpers::checkAttr('submitValue', $attributes, $manifest);
+$submitIsDisabled = Helpers::checkAttr('submitIsDisabled', $attributes, $manifest);
+$submitTracking = Helpers::checkAttr('submitTracking', $attributes, $manifest);
+$submitAttrs = Helpers::checkAttr('submitAttrs', $attributes, $manifest);
+$submitServerSideRender = Helpers::checkAttr('submitServerSideRender', $attributes, $manifest);
+$submitUniqueId = Helpers::checkAttr('submitUniqueId', $attributes, $manifest);
+$submitIcon = Helpers::checkAttr('submitIcon', $attributes, $manifest);
+$submitVariant = Helpers::checkAttr('submitVariant', $attributes, $manifest);
+$submitButtonComponent = Helpers::checkAttr('submitButtonComponent', $attributes, $manifest);
+$submitButtonAsLink = Helpers::checkAttr('submitButtonAsLink', $attributes, $manifest);
+$submitButtonAsLinkUrl = Helpers::checkAttr('submitButtonAsLinkUrl', $attributes, $manifest);
 
-$submitClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($submitIcon, $componentClass, '', 'with-icon'),
-	Components::selector($submitVariant, $componentClass, '', $submitVariant),
+$submitClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($submitIcon, $componentClass, '', 'with-icon'),
+	Helpers::selector($submitVariant, $componentClass, '', $submitVariant),
 ]);
 
 // Additional content filter.
@@ -67,10 +67,10 @@ if ($submitButtonComponent) {
 	$button = "{$submitButtonComponent}{$additionalContent}";
 }
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
+		Helpers::props('field', $attributes, [
 			'fieldContent' => $button,
 			'fieldId' => $submitName,
 			'fieldUseError' => false,

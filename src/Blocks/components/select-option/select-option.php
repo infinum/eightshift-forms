@@ -7,26 +7,26 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
-$selectOptionValue = Components::checkAttr('selectOptionValue', $attributes, $manifest);
-$selectOptionAsPlaceholder = Components::checkAttr('selectOptionAsPlaceholder', $attributes, $manifest);
-$selectOptionLabel = Components::checkAttr('selectOptionLabel', $attributes, $manifest);
+$selectOptionValue = Helpers::checkAttr('selectOptionValue', $attributes, $manifest);
+$selectOptionAsPlaceholder = Helpers::checkAttr('selectOptionAsPlaceholder', $attributes, $manifest);
+$selectOptionLabel = Helpers::checkAttr('selectOptionLabel', $attributes, $manifest);
 
 if ((!$selectOptionValue || !$selectOptionLabel) && !$selectOptionAsPlaceholder) {
 	return;
 }
 
-$selectOptionIsSelected = Components::checkAttr('selectOptionIsSelected', $attributes, $manifest);
-$selectOptionIsDisabled = Components::checkAttr('selectOptionIsDisabled', $attributes, $manifest);
-$selectOptionIsHidden = Components::checkAttr('selectOptionIsHidden', $attributes, $manifest);
-$selectOptionAttrs = Components::checkAttr('selectOptionAttrs', $attributes, $manifest);
+$selectOptionIsSelected = Helpers::checkAttr('selectOptionIsSelected', $attributes, $manifest);
+$selectOptionIsDisabled = Helpers::checkAttr('selectOptionIsDisabled', $attributes, $manifest);
+$selectOptionIsHidden = Helpers::checkAttr('selectOptionIsHidden', $attributes, $manifest);
+$selectOptionAttrs = Helpers::checkAttr('selectOptionAttrs', $attributes, $manifest);
 
-$conditionalTags = Components::render(
+$conditionalTags = Helpers::render(
 	'conditional-tags',
-	Components::props('conditionalTags', $attributes)
+	Helpers::props('conditionalTags', $attributes)
 );
 
 $customAttributes = [];
@@ -52,7 +52,7 @@ if ($selectOptionAttrs) {
 	value="<?php echo esc_attr($selectOptionValue); ?>"
 	<?php selected($selectOptionIsSelected); ?>
 	<?php disabled($selectOptionIsDisabled); ?>
-	<?php echo $selectOptionAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $selectOptionAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 >
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

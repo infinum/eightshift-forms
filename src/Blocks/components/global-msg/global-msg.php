@@ -8,19 +8,19 @@
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $globalMsgAttrs = [];
 
-$globalMsgValue = Components::checkAttr('globalMsgValue', $attributes, $manifest);
+$globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
 
-$globalMsgClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
+$globalMsgClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('globalMsg'),
 ]);
 
@@ -54,7 +54,7 @@ if ($globalMsgAttrs) {
 
 <div
 	class="<?php echo esc_attr($globalMsgClass); ?>"
-	<?php echo $globalMsgAttrsOutput; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $globalMsgAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 >
 	<?php echo esc_html($globalMsgValue); ?>
 </div>

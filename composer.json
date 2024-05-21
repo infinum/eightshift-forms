@@ -26,11 +26,13 @@
 		"issues": "https://github.com/infinum/eightshift-forms/issues",
 		"source": "https://github.com/infinum/eightshift-forms"
 	},
+
 	"require-dev": {
 		"brain/faker": "dev-master",
 		"brain/monkey": "^2.6.1",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
-		"infinum/eightshift-coding-standards": "^1.6",
+		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
+		"infinum/eightshift-coding-standards": "3.0.0",
+		"php-parallel-lint/php-parallel-lint": "^1.3",
 		"pestphp/pest": "^1.23.0",
 		"php-stubs/wordpress-stubs": "^6.3",
 		"phpunit/phpunit": "^9.6.8",
@@ -38,9 +40,9 @@
 		"wp-cli/wp-cli": "^2.9"
 	},
 	"require": {
-		"php": "^7.4 || >=8.0",
+		"php": ">=8.2",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^1.3.5"
+		"infinum/eightshift-forms-utils": "dev-develop"
 	},
 	"autoload": {
 		"psr-4": {
@@ -65,11 +67,11 @@
 	},
 	"scripts": {
 		"test:types": "@php ./vendor/bin/phpstan analyze",
-		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 7.4-",
+		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.2-",
 		"test:unit": "@php ./vendor/bin/pest --group=unit",
 		"test:unit-report": "@php ./vendor/bin/pest --group=unit --log-junit tests/coverage/report.xml",
 		"test:coverage": "@php ./vendor/bin/pest --group=unit --coverage",
-		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 7.4-",
+		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.2-",
 		"test": [
 			"@test:standards",
 			"@test:types",
@@ -91,7 +93,9 @@
 	"extra": {
 		"strauss": {
 			"namespace_prefix": "EightshiftFormsVendor",
-			"delete_vendor_packages": true
+			"exclude_from_prefix": {
+				"file_patterns": ["/Example.php$/"]
+			}
 		}
 	}
 }

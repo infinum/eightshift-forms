@@ -7,35 +7,35 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$introTitle = Components::checkAttr('introTitle', $attributes, $manifest);
-$introTitleSize = Components::checkAttr('introTitleSize', $attributes, $manifest);
-$introSubtitle = Components::checkAttr('introSubtitle', $attributes, $manifest);
-$introHelp = Components::checkAttr('introHelp', $attributes, $manifest);
-$introIsHighlighted = Components::checkAttr('introIsHighlighted', $attributes, $manifest);
-$introIsHighlightedImportant = Components::checkAttr('introIsHighlightedImportant', $attributes, $manifest);
-$introIsHeading = Components::checkAttr('introIsHeading', $attributes, $manifest);
-$introIcon = Components::checkAttr('introIcon', $attributes, $manifest);
+$introTitle = Helpers::checkAttr('introTitle', $attributes, $manifest);
+$introTitleSize = Helpers::checkAttr('introTitleSize', $attributes, $manifest);
+$introSubtitle = Helpers::checkAttr('introSubtitle', $attributes, $manifest);
+$introHelp = Helpers::checkAttr('introHelp', $attributes, $manifest);
+$introIsHighlighted = Helpers::checkAttr('introIsHighlighted', $attributes, $manifest);
+$introIsHighlightedImportant = Helpers::checkAttr('introIsHighlightedImportant', $attributes, $manifest);
+$introIsHeading = Helpers::checkAttr('introIsHeading', $attributes, $manifest);
+$introIcon = Helpers::checkAttr('introIcon', $attributes, $manifest);
 
-$introClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($introIsHighlighted && $componentClass, $componentClass, 'highlighted'),
-	Components::selector($introIsHighlightedImportant && $componentClass, $componentClass, 'highlighted', 'important'),
-	Components::selector($introIsHeading && $componentClass, $componentClass, '', 'heading'),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($introTitleSize, $componentClass, 'size', $introTitleSize),
-	Components::selector($introIcon, $componentClass, '', 'with-icon'),
+$introClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($introIsHighlighted && $componentClass, $componentClass, 'highlighted'),
+	Helpers::selector($introIsHighlightedImportant && $componentClass, $componentClass, 'highlighted', 'important'),
+	Helpers::selector($introIsHeading && $componentClass, $componentClass, '', 'heading'),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($introTitleSize, $componentClass, 'size', $introTitleSize),
+	Helpers::selector($introIcon, $componentClass, '', 'with-icon'),
 ]);
 
-$titleClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'title'),
-	Components::selector($introTitleSize, $componentClass, 'title', $introTitleSize),
+$titleClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'title'),
+	Helpers::selector($introTitleSize, $componentClass, 'title', $introTitleSize),
 ]);
 
 ?>
@@ -43,12 +43,12 @@ $titleClass = Components::classnames([
 <div class="<?php echo esc_attr($introClass); ?>">
 	<?php
 	if ($introIsHighlightedImportant) {
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		echo UtilsHelper::getUtilsIcons('warning');
 	}
 
 	if ($introIcon) {
-		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 		echo UtilsHelper::getUtilsIcons($introIcon);
 	}
 	?>

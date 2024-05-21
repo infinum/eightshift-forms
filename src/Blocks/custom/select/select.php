@@ -6,11 +6,11 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$props['selectContent'] = $innerBlockContent;
+$props['selectContent'] = $renderContent;
 
-echo Components::render(
+echo Helpers::render(
 	'select',
-	Components::props('select', $attributes, $props)
+	Helpers::props('select', $attributes, $props)
 );

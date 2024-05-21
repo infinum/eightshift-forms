@@ -6,35 +6,35 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 
-$cardInlineTitle = Components::checkAttr('cardInlineTitle', $attributes, $manifest);
-$cardInlineTitleLink = Components::checkAttr('cardInlineTitleLink', $attributes, $manifest);
-$cardInlineSubTitle = Components::checkAttr('cardInlineSubTitle', $attributes, $manifest);
-$cardInlineContent = Components::checkAttr('cardInlineContent', $attributes, $manifest);
-$cardInlineIcon = Components::checkAttr('cardInlineIcon', $attributes, $manifest);
-$cardInlineRightContent = Components::checkAttr('cardInlineRightContent', $attributes, $manifest);
-$cardInlineLeftContent = Components::checkAttr('cardInlineLeftContent', $attributes, $manifest);
-$cardInlineLastItem = Components::checkAttr('cardInlineLastItem', $attributes, $manifest);
-$cardInlineInvalid = Components::checkAttr('cardInlineInvalid', $attributes, $manifest);
-$cardInlineIndented = Components::checkAttr('cardInlineIndented', $attributes, $manifest);
-$cardInlineUseHover = Components::checkAttr('cardInlineUseHover', $attributes, $manifest);
-$cardInlineUseDivider = Components::checkAttr('cardInlineUseDivider', $attributes, $manifest);
+$cardInlineTitle = Helpers::checkAttr('cardInlineTitle', $attributes, $manifest);
+$cardInlineTitleLink = Helpers::checkAttr('cardInlineTitleLink', $attributes, $manifest);
+$cardInlineSubTitle = Helpers::checkAttr('cardInlineSubTitle', $attributes, $manifest);
+$cardInlineContent = Helpers::checkAttr('cardInlineContent', $attributes, $manifest);
+$cardInlineIcon = Helpers::checkAttr('cardInlineIcon', $attributes, $manifest);
+$cardInlineRightContent = Helpers::checkAttr('cardInlineRightContent', $attributes, $manifest);
+$cardInlineLeftContent = Helpers::checkAttr('cardInlineLeftContent', $attributes, $manifest);
+$cardInlineLastItem = Helpers::checkAttr('cardInlineLastItem', $attributes, $manifest);
+$cardInlineInvalid = Helpers::checkAttr('cardInlineInvalid', $attributes, $manifest);
+$cardInlineIndented = Helpers::checkAttr('cardInlineIndented', $attributes, $manifest);
+$cardInlineUseHover = Helpers::checkAttr('cardInlineUseHover', $attributes, $manifest);
+$cardInlineUseDivider = Helpers::checkAttr('cardInlineUseDivider', $attributes, $manifest);
 
-$cardInlineClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($cardInlineLastItem, $componentClass, '', 'last'),
-	Components::selector($cardInlineInvalid, $componentClass, '', 'invalid'),
-	Components::selector($cardInlineIndented, $componentClass, '', 'indented'),
-	Components::selector($cardInlineUseHover, $componentClass, '', 'use-hover'),
-	Components::selector($cardInlineUseDivider, $componentClass, '', 'use-divider'),
+$cardInlineClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($cardInlineLastItem, $componentClass, '', 'last'),
+	Helpers::selector($cardInlineInvalid, $componentClass, '', 'invalid'),
+	Helpers::selector($cardInlineIndented, $componentClass, '', 'indented'),
+	Helpers::selector($cardInlineUseHover, $componentClass, '', 'use-hover'),
+	Helpers::selector($cardInlineUseDivider, $componentClass, '', 'use-divider'),
 ]);
 
 ?>

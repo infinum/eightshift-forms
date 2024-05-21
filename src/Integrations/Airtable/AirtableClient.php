@@ -449,7 +449,7 @@ class AirtableClient implements AirtableClientInterface
 					break;
 				case 'dynamicSelect':
 					if (!\is_array($value)) {
-						$value = [$value];
+						$value = \explode(UtilsConfig::DELIMITER, $value);
 					}
 					break;
 				default:

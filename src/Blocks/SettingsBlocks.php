@@ -10,15 +10,16 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Blocks;
 
+use EightshiftForms\Cache\ManifestCache;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
+use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -75,16 +76,27 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 	 *
 	 * @var GeolocationInterface
 	 */
-	protected GeolocationInterface $geolocation;
+	private GeolocationInterface $geolocation;
+
+	/**
+	 * Instance variable for manifest cache.
+	 *
+	 * @var ManifestCacheInterface
+	 */
+	private $manifestCache;
 
 	/**
 	 * Create a new admin instance.
 	 *
 	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 */
-	public function __construct(GeolocationInterface $geolocation)
-	{
+	public function __construct(
+		GeolocationInterface $geolocation,
+		ManifestCacheInterface $manifestCache
+	) {
 		$this->geolocation = $geolocation;
+		$this->manifestCache = $manifestCache;
 	}
 
 	/**
@@ -354,7 +366,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 		}
 
 		if (!$output) {
-			$countries = UtilsGeneralHelper::getCountrySelectList();
+			$countries = $this->manifestCache->getManifestCacheTopItem(ManifestCache::COUNTRIES_KEY, ManifestCache::TYPE_FORMS);
 
 			$output = [
 				'default' => [

@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.2.0]
+
+### Updated
+- `Eightshift-forms-utils` to the latest version `2.0.0`.
+- `@infinum/eightshift-libs` to the latest version `8.0.0`.
+- `@infinum/eightshift-frontend-libs` to the latest version `12.0.0`.
+
+### Removed
+- All `Data` are not loaded from utils lib.
+- Top bar no longer supports listing all forms items for faster loading.
+- `src/Exception/MissingFilterInfoException.php` because it is not used anymore.
+
+### Added
+- New `Caching` service for manifest data.
+
+### Fixed
+- Custom post type labels are not translatable.
+
+### Changed
+- Filter `script_dependency_theme` is now `script_dependency_theme_captcha`.
+
+## [3.1.10]
+
+### Fixed
+- Airtable integration now supports multiple select fields.
+- Moments form validation of input fields limiting the number of characters to 1000.
+- Calculator will no longer break reCaptcha validation.
+- Single submit with global msg disabled will no longer output the empty success message.
+- Single submit now supports input type number.
+
+### Added
+- Security feature now supports calculator rate limiting separate setting.
+
+## [3.1.9]
+
+### Removed
+- Reverted changes for enrichment prefill hidden fields.
+
+## [3.1.8]
+
+### Added
+- New filer `es_forms_block_form_custom_class_selector` for adding custom class to the form block.
+- New type attribute to the `esFormsROIP` shortcode.
+
+## [3.1.7]
+
+### Updated
+- Strauss to the latest version.
+
+### Added
+- Ability for checkboxes and radios when used as a "show as" option to select to have placeholder text.
+- Check for the enrichment if locale storage is available.
+
+### Fixed
+- Google reCaptcha will now throw an error if not set up correctly.
+- Multiple JS errors when array or objects are missing.
+- Google reCaptcha will now send a fallback email if there is an issue with the validation only.
+- Cleaned up unnecessary data from fallback e-mails.
+- Enrichment will now only prefill visible fields.
+
 ## [3.1.6]
 
 ### Updated
@@ -331,6 +391,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.2.0]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.2.0
+[3.1.10]: https://github.com/infinum/eightshift-forms/compare/3.1.9...3.1.10
+[3.1.9]: https://github.com/infinum/eightshift-forms/compare/3.1.8...3.1.9
+[3.1.8]: https://github.com/infinum/eightshift-forms/compare/3.1.7...3.1.8
+[3.1.7]: https://github.com/infinum/eightshift-forms/compare/3.1.6...3.1.7
 [3.1.6]: https://github.com/infinum/eightshift-forms/compare/3.1.5...3.1.6
 [3.1.5]: https://github.com/infinum/eightshift-forms/compare/3.1.4...3.1.5
 [3.1.4]: https://github.com/infinum/eightshift-forms/compare/3.1.3...3.1.4

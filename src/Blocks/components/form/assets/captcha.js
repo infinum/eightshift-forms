@@ -51,9 +51,9 @@ export class Captcha {
 		}
 
 		if (this.state.getStateCaptchaIsEnterprise()) {
-			grecaptcha.enterprise.ready(async () => {
+			grecaptcha?.enterprise?.ready(async () => {
 				try {
-					const token = await grecaptcha.enterprise.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.enterprise?.execute(siteKey, {action: actionName});
 
 					this.formSubmitCaptchaInvisible(token, true, actionName);
 				} catch (error) {
@@ -61,9 +61,9 @@ export class Captcha {
 				}
 			});
 		} else {
-			grecaptcha.ready(async () => {
+			grecaptcha?.ready(async () => {
 				try {
-					const token = await grecaptcha.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.execute(siteKey, {action: actionName});
 
 					this.formSubmitCaptchaInvisible(token, false, actionName);
 				} catch (error) {
@@ -110,6 +110,10 @@ export class Captcha {
 		.then((responseData) => {
 			const response = this.utils.formSubmitIsJsonString(responseData, 'invisibleCaptcha', null);
 
+			if (response?.status === 'error' && !response?.data?.isSpam) {
+				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response.message} Action: ${action}`);
+			}
+
 			this.utils.dispatchFormEvent(window, this.state.getStateEvent('afterCaptchaInit'), response);
 		});
 	}
@@ -124,7 +128,7 @@ export class Captcha {
 			return;
 		}
 
-		document.querySelector('body').setAttribute(this.state.getStateAttribute('hideCaptchaBadge'), this.state.getStateCaptchaHideBadge());
+		document?.body?.setAttribute(this.state.getStateAttribute('hideCaptchaBadge'), this.state.getStateCaptchaHideBadge());
 	}
 
 	////////////////////////////////////////////////////////////////

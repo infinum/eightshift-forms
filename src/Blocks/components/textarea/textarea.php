@@ -9,44 +9,44 @@
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$textareaName = Components::checkAttr('textareaName', $attributes, $manifest);
+$textareaName = Helpers::checkAttr('textareaName', $attributes, $manifest);
 if (!$textareaName) {
 	return;
 }
-$textareaValue = Components::checkAttr('textareaValue', $attributes, $manifest);
-$textareaPlaceholder = Components::checkAttr('textareaPlaceholder', $attributes, $manifest);
-$textareaIsDisabled = Components::checkAttr('textareaIsDisabled', $attributes, $manifest);
-$textareaIsReadOnly = Components::checkAttr('textareaIsReadOnly', $attributes, $manifest);
-$textareaIsRequired = Components::checkAttr('textareaIsRequired', $attributes, $manifest);
-$textareaTracking = Components::checkAttr('textareaTracking', $attributes, $manifest);
-$textareaAttrs = Components::checkAttr('textareaAttrs', $attributes, $manifest);
-$textareaIsMonospace = Components::checkAttr('textareaIsMonospace', $attributes, $manifest);
-$textareaSaveAsJson = Components::checkAttr('textareaSaveAsJson', $attributes, $manifest);
-$textareaTypeCustom = Components::checkAttr('textareaTypeCustom', $attributes, $manifest);
-$textareaFieldAttrs = Components::checkAttr('textareaFieldAttrs', $attributes, $manifest);
-$textareaSize = Components::checkAttr('textareaSize', $attributes, $manifest);
-$textareaLimitHeight = Components::checkAttr('textareaLimitHeight', $attributes, $manifest);
-$textareaIsPreventSubmit = Components::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
-$textareaUseLabelAsPlaceholder = Components::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
+$textareaValue = Helpers::checkAttr('textareaValue', $attributes, $manifest);
+$textareaPlaceholder = Helpers::checkAttr('textareaPlaceholder', $attributes, $manifest);
+$textareaIsDisabled = Helpers::checkAttr('textareaIsDisabled', $attributes, $manifest);
+$textareaIsReadOnly = Helpers::checkAttr('textareaIsReadOnly', $attributes, $manifest);
+$textareaIsRequired = Helpers::checkAttr('textareaIsRequired', $attributes, $manifest);
+$textareaTracking = Helpers::checkAttr('textareaTracking', $attributes, $manifest);
+$textareaAttrs = Helpers::checkAttr('textareaAttrs', $attributes, $manifest);
+$textareaIsMonospace = Helpers::checkAttr('textareaIsMonospace', $attributes, $manifest);
+$textareaSaveAsJson = Helpers::checkAttr('textareaSaveAsJson', $attributes, $manifest);
+$textareaTypeCustom = Helpers::checkAttr('textareaTypeCustom', $attributes, $manifest);
+$textareaFieldAttrs = Helpers::checkAttr('textareaFieldAttrs', $attributes, $manifest);
+$textareaSize = Helpers::checkAttr('textareaSize', $attributes, $manifest);
+$textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $manifest);
+$textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
+$textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaHideLabel = false;
-$textareaFieldLabel = $attributes[Components::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
+$textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
 
-$textareaClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
-	Components::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
-	Components::selector($textareaSize, $componentClass, 'size', $textareaSize),
-	Components::selector($textareaLimitHeight, $componentClass, '', 'limit-height'),
+$textareaClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
+	Helpers::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
+	Helpers::selector($textareaSize, $componentClass, 'size', $textareaSize),
+	Helpers::selector($textareaLimitHeight, $componentClass, '', 'limit-height'),
 ]);
 
 if ($textareaSaveAsJson) {
@@ -88,10 +88,10 @@ $textarea = '<textarea
 	' . $additionalContent . '
 ';
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
+		Helpers::props('field', $attributes, [
 			'fieldContent' => $textarea,
 			'fieldId' => $textareaName,
 			'fieldName' => $textareaName,
@@ -101,9 +101,9 @@ echo Components::render(
 			'fieldTypeCustom' => $textareaTypeCustom ?: 'textarea', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $textareaTracking,
 			'fieldHideLabel' => $textareaHideLabel,
-			'fieldConditionalTags' => Components::render(
+			'fieldConditionalTags' => Helpers::render(
 				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
+				Helpers::props('conditionalTags', $attributes)
 			),
 			'fieldAttrs' => $textareaFieldAttrs,
 		]),

@@ -7,24 +7,24 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Components::getManifest(__DIR__);
-$manifestTabs = Components::getComponent('tabs');
+$manifest = Helpers::getManifestByDir(__DIR__);
+$manifestTabs = Helpers::getComponent('tabs');
 $componentClass = $manifest['componentClass'] ?? '';
 
-$tabLabel = Components::checkAttr('tabLabel', $attributes, $manifest);
-$tabContent = Components::checkAttr('tabContent', $attributes, $manifest);
-$tabFull = Components::checkAttr('tabFull', $attributes, $manifest);
+$tabLabel = Helpers::checkAttr('tabLabel', $attributes, $manifest);
+$tabContent = Helpers::checkAttr('tabContent', $attributes, $manifest);
+$tabFull = Helpers::checkAttr('tabFull', $attributes, $manifest);
 
-$tabLabelClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'label'),
+$tabLabelClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'label'),
 	UtilsHelper::getStateSelectorAdmin('tabsItem'),
 ]);
 
-$tabContentClass = Components::classnames([
-	Components::selector($componentClass, $componentClass, 'content'),
-	Components::selector($tabFull, $componentClass, 'content', 'full'),
+$tabContentClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass, 'content'),
+	Helpers::selector($tabFull, $componentClass, 'content', 'full'),
 ]);
 
 if (!$tabLabel || !$tabContent) {
@@ -38,5 +38,5 @@ if (!$tabLabel || !$tabContent) {
 </button>
 
 <div class="<?php echo esc_attr($tabContentClass); ?>">
-	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 </div>

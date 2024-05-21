@@ -14,6 +14,7 @@ use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -38,7 +39,7 @@ class Editor implements ServiceInterface
 	 */
 	public function getEditorBackLink(): void
 	{
-		$actualUrl = UtilsGeneralHelper::getCurrentUrl();
+		$actualUrl = Helpers::getCurrentUrl();
 
 		$types = [
 			Forms::POST_TYPE_SLUG,
@@ -51,7 +52,7 @@ class Editor implements ServiceInterface
 			$typeKey = ($type === Forms::POST_TYPE_SLUG) ? '' : UtilsConfig::SLUG_ADMIN_LISTING_RESULTS;
 
 			if (isset($links[$actualUrl])) {
-				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
+				echo '<script>window.location.replace("' . UtilsGeneralHelper::getListingPageUrl($typeKey) . '");</script>'; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 			}
 		}
 	}

@@ -6,7 +6,7 @@
  * Description: Eightshift Forms is a complete form builder plugin that utilizes modern Block editor features with multiple third-party integrations, bringing your project to a new level.
  * Author: WordPress team @Infinum
  * Author URI: https://eightshift.com/
- * Version: 3.1.6
+ * Version: 3.2.0
  * Text Domain: eightshift-forms
  *
  * @package EightshiftForms
@@ -18,6 +18,7 @@ namespace EightshiftForms;
 
 use EightshiftForms\Main\Main;
 use EightshiftForms\Testfilters\Testfilters;
+use EightshiftForms\Cache\ManifestCache;
 
 /**
  * If this file is called directly, abort.
@@ -27,30 +28,49 @@ if (! \defined('WPINC')) {
 }
 
 /**
- * Include the autoloader so we can dynamically include the rest of the classes.
+ * Bailout, if the plugin is not loaded via Composer.
  */
-$loader = require __DIR__ . '/vendor/autoload.php';
+$autoloadPath = __DIR__ . '/vendor/autoload.php';
+$autoloadVendorPath = __DIR__ . '/vendor-prefixed/autoload.php';
+
+if (!\file_exists($autoloadPath) || !\file_exists($autoloadVendorPath)) {
+	return;
+}
+
+/**
+ * Require the Composer autoloader.
+ */
+$loader = require $autoloadPath;
 require __DIR__ . '/vendor-prefixed/autoload.php';
 
-/**
- * The code that runs during plugin activation.
- */
-\register_activation_hook(
-	__FILE__,
-	function () {
-		PluginFactory::activate();
-	}
-);
+if (\class_exists(PluginFactory::class)) {
+	/**
+	 * The code that runs during plugin activation.
+	 */
+	\register_activation_hook(
+		__FILE__,
+		function () {
+			PluginFactory::activate();
+		}
+	);
+
+	/**
+	 * The code that runs during plugin deactivation.
+	 */
+	\register_deactivation_hook(
+		__FILE__,
+		function () {
+			PluginFactory::deactivate();
+		}
+	);
+}
 
 /**
- * The code that runs during plugin deactivation.
+ * Set all the cache for the plugin.
  */
-\register_deactivation_hook(
-	__FILE__,
-	function () {
-		PluginFactory::deactivate();
-	}
-);
+if (\class_exists(ManifestCache::class)) {
+	(new ManifestCache())->setAllCache();
+}
 
 /**
  * Begins execution of the plugin.

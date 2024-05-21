@@ -7,48 +7,48 @@
  */
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
-$manifest = Components::getManifest(__DIR__);
-$manifestSelect = Components::getComponent('select');
+$manifest = Helpers::getManifestByDir(__DIR__);
+$manifestSelect = Helpers::getComponent('select');
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
-$phoneName = Components::checkAttr('phoneName', $attributes, $manifest);
+$phoneName = Helpers::checkAttr('phoneName', $attributes, $manifest);
 if (!$phoneName) {
 	return;
 }
 
-$phoneValue = Components::checkAttr('phoneValue', $attributes, $manifest);
-$phonePlaceholder = Components::checkAttr('phonePlaceholder', $attributes, $manifest);
-$phoneIsDisabled = Components::checkAttr('phoneIsDisabled', $attributes, $manifest);
-$phoneIsReadOnly = Components::checkAttr('phoneIsReadOnly', $attributes, $manifest);
-$phoneIsRequired = Components::checkAttr('phoneIsRequired', $attributes, $manifest);
-$phoneTracking = Components::checkAttr('phoneTracking', $attributes, $manifest);
-$phoneAttrs = Components::checkAttr('phoneAttrs', $attributes, $manifest);
-$phoneUseSearch = Components::checkAttr('phoneUseSearch', $attributes, $manifest);
-$phoneFormPostId = Components::checkAttr('phoneFormPostId', $attributes, $manifest);
-$phoneTypeCustom = Components::checkAttr('phoneTypeCustom', $attributes, $manifest);
-$phoneFieldAttrs = Components::checkAttr('phoneFieldAttrs', $attributes, $manifest);
-$phoneUseLabelAsPlaceholder = Components::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
+$phoneValue = Helpers::checkAttr('phoneValue', $attributes, $manifest);
+$phonePlaceholder = Helpers::checkAttr('phonePlaceholder', $attributes, $manifest);
+$phoneIsDisabled = Helpers::checkAttr('phoneIsDisabled', $attributes, $manifest);
+$phoneIsReadOnly = Helpers::checkAttr('phoneIsReadOnly', $attributes, $manifest);
+$phoneIsRequired = Helpers::checkAttr('phoneIsRequired', $attributes, $manifest);
+$phoneTracking = Helpers::checkAttr('phoneTracking', $attributes, $manifest);
+$phoneAttrs = Helpers::checkAttr('phoneAttrs', $attributes, $manifest);
+$phoneUseSearch = Helpers::checkAttr('phoneUseSearch', $attributes, $manifest);
+$phoneFormPostId = Helpers::checkAttr('phoneFormPostId', $attributes, $manifest);
+$phoneTypeCustom = Helpers::checkAttr('phoneTypeCustom', $attributes, $manifest);
+$phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest);
+$phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $phoneHideLabel = false;
-$phoneFieldLabel = $attributes[Components::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
+$phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
-$phoneClass = Components::classnames([
-	Components::selector($componentClass, $componentClass),
-	Components::selector($additionalClass, $additionalClass),
+$phoneClass = Helpers::classnames([
+	Helpers::selector($componentClass, $componentClass),
+	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
-$phoneSelectClass = Components::classnames([
-	Components::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
-	Components::selector($componentClass, $componentClass, 'select'),
+$phoneSelectClass = Helpers::classnames([
+	Helpers::selector($manifestSelect['componentClass'], $manifestSelect['componentClass'], 'select'),
+	Helpers::selector($componentClass, $componentClass, 'select'),
 ]);
 
 if ($phoneValue) {
@@ -125,10 +125,10 @@ $phone = '
 	' . $additionalContent . '
 ';
 
-echo Components::render(
+echo Helpers::render(
 	'field',
 	array_merge(
-		Components::props('field', $attributes, [
+		Helpers::props('field', $attributes, [
 			'fieldContent' => $phone,
 			'fieldId' => $phoneName,
 			'fieldName' => $phoneName,
@@ -138,9 +138,9 @@ echo Components::render(
 			'fieldTypeCustom' => $phoneTypeCustom ?: 'phone', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 			'fieldTracking' => $phoneTracking,
 			'fieldHideLabel' => $phoneHideLabel,
-			'fieldConditionalTags' => Components::render(
+			'fieldConditionalTags' => Helpers::render(
 				'conditional-tags',
-				Components::props('conditionalTags', $attributes)
+				Helpers::props('conditionalTags', $attributes)
 			),
 			'fieldAttrs' => $phoneFieldAttrs,
 		]),

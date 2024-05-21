@@ -14,7 +14,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * MigrationHelper trait.
@@ -49,7 +49,7 @@ trait MigrationHelper
 		}
 
 		// Get our namespace.
-		$namespace = Components::getSettingsNamespace();
+		$namespace = Helpers::getSettingsNamespace();
 
 		$newBlockName = "{$namespace}/" . SettingsMailer::SETTINGS_TYPE_KEY;
 
@@ -152,7 +152,7 @@ trait MigrationHelper
 
 		foreach ($syncFormOutput as $key => $block) {
 			$blockName = UtilsGeneralHelper::getBlockNameDetails($block['blockName'])['name'];
-			$prefix = Components::kebabToCamelCase("{$blockName}-{$blockName}");
+			$prefix = Helpers::kebabToCamelCase("{$blockName}-{$blockName}");
 			$name = $block['attrs']["{$prefix}Name"] ?? '';
 			$label = $block['attrs']["{$prefix}FieldLabel"] ?? '';
 

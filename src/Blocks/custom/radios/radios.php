@@ -6,11 +6,11 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Components;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$props['radiosContent'] = $innerBlockContent;
+$props['radiosContent'] = $renderContent;
 
-echo Components::render(
+echo Helpers::render(
 	'radios',
-	Components::props('radios', $attributes, $props)
+	Helpers::props('radios', $attributes, $props)
 );
