@@ -25,6 +25,14 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Changed
 - Filter `script_dependency_theme` is now `script_dependency_theme_captcha`.
 
+## [3.1.11]
+
+### Changed
+- Updated the `@infinum/eightshift-forms-utils` to the latest version.
+
+### Added
+- Two new filters for encryption and decryption of the data.
+
 ## [3.1.10]
 
 ### Fixed
@@ -70,6 +78,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Eightshift-forms-utils to the latest version `1.3.6`.
 - Updated create entries helper to check if the database table exists.
 - Updated validator to load email tld manifest data from cache.
+
+### Fixed
+- Fix the shortcode for displaying the output of the calculations.
 
 ## [3.1.5]
 
@@ -391,7 +402,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[3.2.0]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.2.0
+[3.2.0]: https://github.com/infinum/eightshift-forms/compare/3.1.11...3.2.0
+[3.1.11]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.1.11
 [3.1.10]: https://github.com/infinum/eightshift-forms/compare/3.1.9...3.1.10
 [3.1.9]: https://github.com/infinum/eightshift-forms/compare/3.1.8...3.1.9
 [3.1.8]: https://github.com/infinum/eightshift-forms/compare/3.1.7...3.1.8

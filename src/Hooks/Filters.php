@@ -250,6 +250,10 @@ final class Filters
 			'validation' => [
 				'forceMimetypeFromFs',
 			],
+			'encryption' => [
+				'secretKey',
+				'secretIvKey',
+			],
 			'admin' => [
 				'topBarMenu' => [
 					'items',
