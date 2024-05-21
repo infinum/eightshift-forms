@@ -31,8 +31,9 @@ if (! \defined('WPINC')) {
  * Bailout, if the plugin is not loaded via Composer.
  */
 $autoloadPath = __DIR__ . '/vendor/autoload.php';
+$autoloadVendorPath = __DIR__ . '/vendor-prefixed/autoload.php';
 
-if (!\file_exists($autoloadPath)) {
+if (!\file_exists($autoloadPath) || !\file_exists($autoloadVendorPath)) {
 	return;
 }
 
@@ -40,13 +41,7 @@ if (!\file_exists($autoloadPath)) {
  * Require the Composer autoloader.
  */
 $loader = require $autoloadPath;
-
-/**
- * Require the Composer autoloader for the prefixed libraries.
- */
-if (\file_exists(__DIR__ . '/vendor-prefixed/autoload.php')) {
-	require __DIR__ . '/vendor-prefixed/autoload.php';
-}
+require __DIR__ . '/vendor-prefixed/autoload.php';
 
 if (\class_exists(PluginFactory::class)) {
 	/**
