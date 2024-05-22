@@ -99,6 +99,21 @@ export class Form {
 	 * @param {object} formsElement Forms element.
 	 */
 	initGolocationForm(formsElement) {
+		// If you have geolocation configured on the form but global setting is turned off. Return first form.
+		if (!this.state.getStateGeolocationIsUsed()) {
+			const formId = formsElement?.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0';
+
+			this.initOnlyFormsInner(formId);
+
+			// Remove geolocation data attribute from forms element.
+			formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
+
+			// Remove loading class from forms element.
+			formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
+
+			return;
+		}
+
 		const forms = formsElement?.querySelectorAll(this.state.getStateSelector('form', true));
 
 		const formData = new FormData();

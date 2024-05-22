@@ -217,14 +217,27 @@ class HubspotClient implements HubspotClientInterface
 		$paramsPrepared = $this->prepareParams($params, $formId);
 		$paramsFiles = $this->prepareFiles($files, $formId);
 
-		$body = [
-			'context' => [
-				'ipAddress' => $this->security->getIpAddress(),
-				'hutk' => $params[UtilsHelper::getStateParam('hubspotCookie')]['value'] ?? '',
-				'pageUri' => UtilsGeneralHelper::cleanPageUrl($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value'] ?? ''),
-				'pageName' => $params[UtilsHelper::getStateParam('hubspotPageName')]['value'] ?? '',
-			],
-		];
+		$body = [];
+
+		$pageUrl = UtilsGeneralHelper::cleanPageUrl($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value'] ?? '');
+		if ($pageUrl) {
+			$body['context']['pageUri'] = $pageUrl;
+		}
+
+		$pageName = $params[UtilsHelper::getStateParam('hubspotPageName')]['value'] ?? '';
+		if ($pageName) {
+			$body['context']['pageName'] = $pageName;
+		}
+
+		$hutk = $params[UtilsHelper::getStateParam('hubspotCookie')]['value'] ?? '';
+		if ($hutk) {
+			$body['context']['hutk'] = $hutk;
+		}
+
+		$ip = $this->security->getIpAddress();
+		if ($ip) {
+			$body['context']['ipAddress'] = $ip;
+		}
 
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
