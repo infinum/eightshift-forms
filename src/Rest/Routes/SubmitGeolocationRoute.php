@@ -71,11 +71,11 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 			'request' => $request,
 		];
 
-		// Bailout if troubleshooting "skip captcha" is on.
+		// Bailout if geolocation setting is off.
 		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessPublicOutput(
-					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
+					\esc_html__('Form geolocation skipped. Feature inactive.', 'eightshift-forms'),
 					[],
 					$debug
 				)

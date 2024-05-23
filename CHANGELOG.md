@@ -25,6 +25,15 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Changed
 - Filter `script_dependency_theme` is now `script_dependency_theme_captcha`.
 
+## [3.1.12]
+
+### Fixed
+- Geolocation will now work even if forms is configured but global setting is disabled.
+- HubSpot Client fixes for additional params broken after security fixes on the Chrome browser.
+
+### Added
+- Two new filters for encryption and decryption of the data.
+
 ## [3.1.11]
 
 ### Changed
@@ -402,7 +411,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[3.2.0]: https://github.com/infinum/eightshift-forms/compare/3.1.11...3.2.0
+[3.2.0]: https://github.com/infinum/eightshift-forms/compare/3.1.12...3.2.0
+[3.1.12]: https://github.com/infinum/eightshift-forms/compare/3.1.11...3.1.12
 [3.1.11]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.1.11
 [3.1.10]: https://github.com/infinum/eightshift-forms/compare/3.1.9...3.1.10
 [3.1.9]: https://github.com/infinum/eightshift-forms/compare/3.1.8...3.1.9
