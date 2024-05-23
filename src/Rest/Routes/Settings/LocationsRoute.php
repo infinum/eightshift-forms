@@ -80,7 +80,7 @@ class LocationsRoute extends AbstractUtilsBaseRoute
 						],
 						'components',
 						false,
-						'admin-listing'
+						'admin-listing/partials'
 					),
 				],
 				$debug

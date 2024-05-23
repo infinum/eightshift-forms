@@ -8,7 +8,7 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(dirname(__DIR__, 2));
+$manifest = Helpers::getManifestByDir(dirname(__DIR__, 1));
 
 $count = $attributes['count'] ? (int) $attributes['count'] : 0;
 
