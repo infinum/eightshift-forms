@@ -1018,6 +1018,8 @@ export class Form {
 		input.addEventListener('keydown', this.onFocusEvent);
 		input.addEventListener('focus', this.onFocusEvent);
 		input.addEventListener('blur', this.onBlurEvent);
+		input.addEventListener('keydown', this.onKeyDownEvent);
+
 
 		// If field range, set current value to DOM.
 		if (this.state.getStateElementTypeCustom(name, formId) === 'range') {
@@ -1477,6 +1479,7 @@ export class Form {
 				input?.removeEventListener('focus', this.onFocusEvent);
 				input?.removeEventListener('blur', this.onBlurEvent);
 				input?.removeEventListener('input', this.onInputEvent);
+				input?.removeEventListener('keydown', this.onKeyDownEvent);
 			});
 
 			// Date.
@@ -1659,6 +1662,46 @@ export class Form {
 	};
 
 	/**
+	 * On keypress event for regular fields.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onKeyDownEvent = (event) => {
+		const formId = this.state.getFormIdByElement(event.target);
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+
+		if (this.state.getStateElementTypeCustom(name, formId) === 'number') {
+			const allowedKeys = [
+				'Backspace',
+				'Enter',
+				'ArrowUp',
+				'ArrowDown',
+				'ArrowLeft',
+				'ArrowRight',
+				'0',
+				'1',
+				'2',
+				'3',
+				'4',
+				'5',
+				'6',
+				'7',
+				'8',
+				'9',
+				'.',
+				'-'
+			];
+			// Prevent the default action if the key is not allowed
+			if (!allowedKeys.includes(event.key)) {
+				event.preventDefault();
+			}
+		}
+	};
+
+	/**
 	 * On Select change event.
 	 *
 	 * @param {object} event Event callback.
@@ -1703,6 +1746,7 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		const customType = this.state.getStateElementTypeCustom(name, formId);
 
 		this.utils.setOnUserChangeInput(event.target);
 
@@ -1720,10 +1764,10 @@ export class Form {
 		if (
 			!this.state.getStateConfigIsAdmin() &&
 			this.state.getStateFormConfigUseSingleSubmit(formId) && (
-				this.state.getStateElementTypeCustom(name, formId) === 'range' ||
-				this.state.getStateElementTypeCustom(name, formId) === 'number' ||
-				this.state.getStateElementTypeCustom(name, formId) === 'checkbox' ||
-				this.state.getStateElementTypeCustom(name, formId) === 'radio'
+				customType === 'range' ||
+				customType === 'number' ||
+				customType === 'checkbox' ||
+				customType === 'radio'
 			)
 		) {
 			debounce(this.formSubmit(formId), 100);
@@ -1900,6 +1944,9 @@ export class Form {
 			},
 			onFocusEvent: (event) => {
 				this.onFocusEvent(event);
+			},
+			onKeyDownEvent: (event) => {
+				this.onKeyDownEvent(event);
 			},
 			onSelectChangeEvent: (event) => {
 				this.onSelectChangeEvent(event);
