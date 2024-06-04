@@ -18,6 +18,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 - New `Caching` service for manifest data.
+- Input number validation for allowed keys.
 
 ### Fixed
 - Custom post type labels are not translatable.
