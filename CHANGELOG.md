@@ -19,6 +19,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Added
 - New `Caching` service for manifest data and new options to flush cache from the settings.
 - Input number validation for allowed keys.
+- WP Rocket cache options settings.
 
 ### Fixed
 - Custom post type labels are not translatable.
