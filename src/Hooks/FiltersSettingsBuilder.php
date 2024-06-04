@@ -58,6 +58,7 @@ use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
@@ -464,6 +465,15 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'labels' => [
 					'title' => \__('WPML', 'eightshift-forms'),
 					'desc' => \__('WPML is a WordPress plugin, which allows building and running multilingual sites. It integrates with almost all popular WordPress themes and plugins and allows building anything from multilingual blogs to complex e-commerce and corporate sites.', 'eightshift-forms'),
+				],
+			],
+			SettingsRocketCache::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsRocketCache::FILTER_SETTINGS_GLOBAL_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
+				'use' => SettingsRocketCache::SETTINGS_ROCKET_CACHE_USE_KEY,
+				'labels' => [
+					'title' => \__('Rocket Cache', 'eightshift-forms'),
+					'desc' => \__('WP Rocket cache is a WordPress plugin that speeds up your website by caching static content, minifying CSS and JavaScript, and optimizing images.', 'eightshift-forms'),
 				],
 			],
 			SettingsCloudflare::SETTINGS_TYPE_KEY => [

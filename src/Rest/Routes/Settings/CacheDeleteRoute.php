@@ -14,6 +14,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_REST_Request;
 
@@ -30,14 +31,24 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 	protected $validator;
 
 	/**
+	 * Instance variable for listing data.
+	 *
+	 * @var ManifestCacheInterface
+	 */
+	protected $manifestCache;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param ManifestCacheInterface $manifestCache Inject manifest cache interface.
 	 */
 	public function __construct(
-		ValidatorInterface $validator
+		ValidatorInterface $validator,
+		ManifestCacheInterface $manifestCache
 	) {
 		$this->validator = $validator;
+		$this->manifestCache = $manifestCache;
 	}
 
 	/**
@@ -90,36 +101,47 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 
 		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
 
-		if ($type === 'all') {
-			$allItems = Helpers::flattenArray(\array_map(
-				static function ($item) {
-					if (isset($item['cache'])) {
-						return $item['cache'];
+		switch ($type) {
+			case 'allOperational':
+				$allItems = Helpers::flattenArray(\array_map(
+					static function ($item) {
+						if (isset($item['cache'])) {
+							return $item['cache'];
+						}
+					},
+					$data
+				));
+	
+				if ($allItems) {
+					foreach ($allItems as $item) {
+						\delete_transient($item);
 					}
-				},
-				$data
-			));
+				}
 
-			if ($allItems) {
-				foreach ($allItems as $item) {
+				$outputTitle = \esc_html__('All operational', 'eightshift-forms');
+				break;
+			case 'allInteral':
+				$outputTitle = \esc_html__('All internal', 'eightshift-forms');
+				$this->manifestCache->deleteAllCache();
+				break;
+			default:
+				$cacheTypes = $data[$type]['cache'] ?? [];
+				if (!$cacheTypes) {
+					return \rest_ensure_response(
+						UtilsApiHelper::getApiErrorPublicOutput(
+							\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
+							[],
+							$debug
+						)
+					);
+				}
+
+				foreach ($cacheTypes as $item) {
 					\delete_transient($item);
 				}
-			}
-		} else {
-			$cacheTypes = $data[$type]['cache'] ?? [];
-			if (!$cacheTypes) {
-				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorPublicOutput(
-						\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
-						[],
-						$debug
-					)
-				);
-			}
 
-			foreach ($cacheTypes as $item) {
-				\delete_transient($item);
-			}
+				$outputTitle = \ucfirst($type);
+				break;
 		}
 
 		// Clear WP-Rocket cache if cache is cleared.
@@ -131,7 +153,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				// translators: %s will be replaced with the form type.
-				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), \ucfirst($type)),
+				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), $outputTitle),
 				[],
 				$debug
 			)
