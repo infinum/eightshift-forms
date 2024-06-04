@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
@@ -111,7 +112,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 					},
 					$data
 				));
-	
+
 				if ($allItems) {
 					foreach ($allItems as $item) {
 						\delete_transient($item);
@@ -145,7 +146,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 		}
 
 		// Clear WP-Rocket cache if cache is cleared.
-		if (\function_exists('rocket_clean_domain')) {
+		if (\function_exists('rocket_clean_domain') && \apply_filters(SettingsRocketCache::FILTER_SETTINGS_IS_VALID_NAME, false)) {
 			\rocket_clean_domain();
 		}
 

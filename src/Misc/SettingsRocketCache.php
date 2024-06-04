@@ -80,7 +80,7 @@ class SettingsRocketCache implements UtilsSettingGlobalInterface, ServiceInterfa
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			UtilsSettingsOutputHelper::getMiscDisclaimer(__('WP Rocket Cache', 'eightshift-forms')),
+			UtilsSettingsOutputHelper::getMiscDisclaimer(\__('WP Rocket Cache', 'eightshift-forms')),
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Features affected by WP Rocket cache are:', 'eightshift-forms'),

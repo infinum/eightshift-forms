@@ -130,8 +130,8 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 				'layoutContent' => [
 					[
 						'component' => 'card-inline',
-						'cardInlineTitle' => __('All operational cache', 'eightshift-forms'),
-						'cardInlineSubTitle' => __('Delete all forms operational cache at once!', 'eightshift-forms'),
+						'cardInlineTitle' => \__('All operational cache', 'eightshift-forms'),
+						'cardInlineSubTitle' => \__('Delete all forms operational cache at once!', 'eightshift-forms'),
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
 						'cardInlineRightContent' => [
 							[
@@ -152,8 +152,8 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 					],
 					[
 						'component' => 'card-inline',
-						'cardInlineTitle' => __('All internal cache', 'eightshift-forms'),
-						'cardInlineSubTitle' => __('Delete all forms internal cache at once!', 'eightshift-forms'),
+						'cardInlineTitle' => \__('All internal cache', 'eightshift-forms'),
+						'cardInlineSubTitle' => \__('Delete all forms internal cache at once!', 'eightshift-forms'),
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
 						'cardInlineRightContent' => [
 							[
@@ -172,8 +172,8 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('Integration cache', 'eightshift-forms'),
-				'introSubtitle' => __('Here you can clear individual cache for each integration.', 'eightshift-forms'),
+				'introTitle' => \__('Integration cache', 'eightshift-forms'),
+				'introSubtitle' => \__('Here you can clear individual cache for each integration.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'layout',
@@ -182,8 +182,8 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 			],
 			[
 				'component' => 'intro',
-				'introTitle' => __('Operational cache', 'eightshift-forms'),
-				'introSubtitle' => __('Here you can clear individual operational cache.', 'eightshift-forms'),
+				'introTitle' => \__('Operational cache', 'eightshift-forms'),
+				'introSubtitle' => \__('Here you can clear individual operational cache.', 'eightshift-forms'),
 			],
 			[
 				'component' => 'layout',
