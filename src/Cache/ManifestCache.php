@@ -15,6 +15,7 @@ namespace EightshiftForms\Cache;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDataHelper;
 use EightshiftFormsVendor\EightshiftLibs\Cache\AbstractManifestCache;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * The project cache class.
@@ -50,6 +51,16 @@ class ManifestCache extends AbstractManifestCache
 	public function getCacheName(): string
 	{
 		return UtilsConfig::MAIN_PLUGIN_MANIFEST_CACHE_NAME;
+	}
+
+	/**
+	 * Get cache version.
+	 *
+	 * @return string
+	 */
+	public function getVersion(): string
+	{
+		return Helpers::getPluginVersion();
 	}
 
 	/**
