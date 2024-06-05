@@ -70,7 +70,6 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 
 		<?php
 		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-		echo $componentName;
 		echo Helpers::render(
 			'sidebar-section',
 			[

@@ -128,20 +128,10 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
-					...$outputIntegrations,
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					],
-					...$outputOther,
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					],
 					[
 						'component' => 'card-inline',
-						'cardInlineTitle' => 'All caches',
-						'cardInlineSubTitle' => 'Use with caution!',
+						'cardInlineTitle' => \__('All operational cache', 'eightshift-forms'),
+						'cardInlineSubTitle' => \__('Delete all forms operational cache at once!', 'eightshift-forms'),
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
 						'cardInlineRightContent' => [
 							[
@@ -149,7 +139,29 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									UtilsHelper::getStateAttribute('cacheType') => 'all',
+									UtilsHelper::getStateAttribute('cacheType') => 'allOperational',
+									UtilsHelper::getStateAttribute('reload') => 'false',
+								],
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
+							],
+						],
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
+					[
+						'component' => 'card-inline',
+						'cardInlineTitle' => \__('All internal cache', 'eightshift-forms'),
+						'cardInlineSubTitle' => \__('Delete all forms internal cache at once!', 'eightshift-forms'),
+						'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
+						'cardInlineRightContent' => [
+							[
+								'component' => 'submit',
+								'submitValue' => \__('Clear', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
+								'submitAttrs' => [
+									UtilsHelper::getStateAttribute('cacheType') => 'allInteral',
 									UtilsHelper::getStateAttribute('reload') => 'false',
 								],
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
@@ -157,6 +169,26 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 						],
 					],
 				]
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => \__('Integration cache', 'eightshift-forms'),
+				'introSubtitle' => \__('Here you can clear individual cache for each integration.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-clean',
+				'layoutContent' => $outputIntegrations,
+			],
+			[
+				'component' => 'intro',
+				'introTitle' => \__('Operational cache', 'eightshift-forms'),
+				'introSubtitle' => \__('Here you can clear individual operational cache.', 'eightshift-forms'),
+			],
+			[
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-clean',
+				'layoutContent' => $outputOther,
 			],
 		];
 	}

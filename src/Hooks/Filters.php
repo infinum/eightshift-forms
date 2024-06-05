@@ -33,6 +33,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
@@ -349,6 +350,8 @@ final class Filters
 			SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 
 			SettingsWpml::SETTINGS_WPML_USE_KEY,
+
+			SettingsRocketCache::SETTINGS_ROCKET_CACHE_USE_KEY,
 
 			SettingsFallback::SETTINGS_FALLBACK_USE_KEY,
 

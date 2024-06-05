@@ -17,8 +17,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `src/Exception/MissingFilterInfoException.php` because it is not used anymore.
 
 ### Added
-- New `Caching` service for manifest data.
+- New `Caching` service for manifest data and new options to flush cache from the settings.
 - Input number validation for allowed keys.
+- WP Rocket cache options settings.
 
 ### Fixed
 - Custom post type labels are not translatable.

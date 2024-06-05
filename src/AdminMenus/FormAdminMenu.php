@@ -319,7 +319,7 @@ class FormAdminMenu extends AbstractAdminMenu
 	 */
 	private function getMultilangTitle(string $title): string
 	{
-		$useWpml = \apply_filters(SettingsWpml::FILTER_SETTINGS_IS_VALID_NAME, []);
+		$useWpml = \apply_filters(SettingsWpml::FILTER_SETTINGS_IS_VALID_NAME, false);
 		if ($useWpml) {
 			$lang = \apply_filters('wpml_current_language', '');
 			if ($lang) {

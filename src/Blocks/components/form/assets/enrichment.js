@@ -147,7 +147,7 @@ export class Enrichment {
 			return;
 		}
 
-		if (!newStorage) {
+		if (!localStorage || !newStorage) {
 			return;
 		}
 
@@ -228,6 +228,10 @@ export class Enrichment {
 			return null;
 		}
 
+		if (!localStorage) {
+			return null;
+		}
+
 		return localStorage?.getItem(storageName);
 	}
 
@@ -240,6 +244,10 @@ export class Enrichment {
 	 */
 	deleteLocalStorage(storageName) {
 		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
+			return;
+		}
+
+		if (!localStorage) {
 			return;
 		}
 
