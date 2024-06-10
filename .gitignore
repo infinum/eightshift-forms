@@ -9,3 +9,4 @@
 # Tests
 tests/coverage/*
 .phpunit.result.cache
+.phpunit.cache

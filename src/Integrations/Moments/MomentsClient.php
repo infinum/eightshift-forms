@@ -72,6 +72,8 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		if (empty($output)) {
 			$items = $this->getMomentsLists();
 
+			dump($items);
+
 			if ($items) {
 				foreach ($items as $item) {
 					$id = $item['id'] ?? '';
@@ -336,7 +338,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	 */
 	public function getTestApi(): array
 	{
-		$url = "{$this->getBaseUrl()}/forms/1/forms?limit=1";
+		$url = "{$this->getBaseUrl()}forms/1/forms?limit=1";
 
 		$response = \wp_remote_get(
 			$url,
@@ -360,7 +362,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	 */
 	private function getMomentsLists()
 	{
-		$url = "{$this->getBaseUrl()}/forms/1/forms?limit=100";
+		$url = "{$this->getBaseUrl()}forms/1/forms?limit=100";
 
 		$response = \wp_remote_get(
 			$url,
@@ -378,6 +380,8 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
+
+		dump($details);
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 

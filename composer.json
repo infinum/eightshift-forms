@@ -32,10 +32,9 @@
 		"brain/monkey": "^2.6.1",
 		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
 		"infinum/eightshift-coding-standards": "3.0.0",
+		"pestphp/pest": "^2.34",
 		"php-parallel-lint/php-parallel-lint": "^v1.4.0",
-		"pestphp/pest": "^v1.23.1",
 		"php-stubs/wordpress-stubs": "^v6.5.3",
-		"phpunit/phpunit": "^9.6.19",
 		"szepeviktor/phpstan-wordpress": "^v1.3.4",
 		"wp-cli/wp-cli": "^v2.10.0"
 	},
@@ -68,10 +67,10 @@
 	"scripts": {
 		"test:types": "@php ./vendor/bin/phpstan analyze",
 		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.2-",
+		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.2-",
 		"test:unit": "@php ./vendor/bin/pest --group=unit",
 		"test:unit-report": "@php ./vendor/bin/pest --group=unit --log-junit tests/coverage/report.xml",
-		"test:coverage": "@php ./vendor/bin/pest --group=unit --coverage",
-		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.2-",
+		"test:unit-coverage": "@php ./vendor/bin/pest --group=unit --coverage",
 		"test": [
 			"@test:standards",
 			"@test:types",
