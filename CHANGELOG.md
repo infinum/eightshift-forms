@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [4.0.1]
+
+### Fixed
+- Changing the main Manifest cache function for setting up initial cache.
+
 ## [4.0.0]
 
 ### Updated
@@ -413,6 +418,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[4.0.1]: https://github.com/infinum/eightshift-forms/compare/4.0.0...4.0.1
 [4.0.0]: https://github.com/infinum/eightshift-forms/compare/3.1.12...4.0.0
 [3.1.12]: https://github.com/infinum/eightshift-forms/compare/3.1.11...3.1.12
 [3.1.11]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.1.11
