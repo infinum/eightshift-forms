@@ -58,6 +58,11 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 			return;
 		}
 
+		// Bailout if headers are already sent usually triggered by crawler bots.
+		if (headers_sent()) {
+			return;
+		}
+
 		try {
 			$cookieValue = $this->getUsersGeolocation();
 
