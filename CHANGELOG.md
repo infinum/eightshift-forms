@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [4.0.3]
+
+### Changed
+- Countries list is now loaded from php file and not from the manifest json.
+
+### Removed
+- Countries list from cache.
+
+### Added
+- Translations for the countries list for 14 languages.
+
 ## [4.0.2]
 
 ### Fixed
@@ -423,6 +434,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[4.0.3]: https://github.com/infinum/eightshift-forms/compare/4.0.2...4.0.3
 [4.0.2]: https://github.com/infinum/eightshift-forms/compare/4.0.1...4.0.2
 [4.0.1]: https://github.com/infinum/eightshift-forms/compare/4.0.0...4.0.1
 [4.0.0]: https://github.com/infinum/eightshift-forms/compare/3.1.12...4.0.0

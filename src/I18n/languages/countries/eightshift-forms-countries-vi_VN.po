@@ -1,0 +1,731 @@
+msgid "Afghanistan"
+msgstr "Afghanistan"
+
+msgid "Åland Islands"
+msgstr "Quần đảo Åland"
+
+msgid "Albania"
+msgstr "Albania"
+
+msgid "Algeria"
+msgstr "Algeria"
+
+msgid "American Samoa"
+msgstr "Samoa thuộc Mỹ"
+
+msgid "Andorra"
+msgstr "Andorra"
+
+msgid "Angola"
+msgstr "Angola"
+
+msgid "Anguilla"
+msgstr "Anguilla"
+
+msgid "Antarctica"
+msgstr "Nam Cực"
+
+msgid "Antigua and Barbuda"
+msgstr "Antigua và Barbuda"
+
+msgid "Argentina"
+msgstr "Argentina"
+
+msgid "Armenia"
+msgstr "Armenia"
+
+msgid "Aruba"
+msgstr "Aruba"
+
+msgid "Australia"
+msgstr "Úc"
+
+msgid "Austria"
+msgstr "Áo"
+
+msgid "Azerbaijan"
+msgstr "Azerbaijan"
+
+msgid "Bahamas"
+msgstr "Bahamas"
+
+msgid "Bahrain"
+msgstr "Bahrain"
+
+msgid "Bangladesh"
+msgstr "Bangladesh"
+
+msgid "Barbados"
+msgstr "Barbados"
+
+msgid "Belarus"
+msgstr "Belarus"
+
+msgid "Belgium"
+msgstr "Bỉ"
+
+msgid "Belize"
+msgstr "Belize"
+
+msgid "Benin"
+msgstr "Benin"
+
+msgid "Bermuda"
+msgstr "Bermuda"
+
+msgid "Bhutan"
+msgstr "Bhutan"
+
+msgid "Bolivia"
+msgstr "Bolivia"
+
+msgid "Bonaire"
+msgstr "Bonaire"
+
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnia và Herzegovina"
+
+msgid "Botswana"
+msgstr "Botswana"
+
+msgid "Brazil"
+msgstr "Brazil"
+
+msgid "British Indian Ocean Territory"
+msgstr "Lãnh thổ Ấn Độ Dương thuộc Anh"
+
+msgid "Brunei Darussalam"
+msgstr "Brunei Darussalam"
+
+msgid "Bulgaria"
+msgstr "Bulgaria"
+
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+msgid "Burundi"
+msgstr "Burundi"
+
+msgid "Cambodia"
+msgstr "Campuchia"
+
+msgid "Cameroon"
+msgstr "Cameroon"
+
+msgid "Canada"
+msgstr "Canada"
+
+msgid "Cabo Verde"
+msgstr "Cabo Verde"
+
+msgid "Cayman Islands"
+msgstr "Quần đảo Cayman"
+
+msgid "Central African Republic"
+msgstr "Cộng hòa Trung Phi"
+
+msgid "Chad"
+msgstr "Chad"
+
+msgid "Chile"
+msgstr "Chile"
+
+msgid "China"
+msgstr "Trung Quốc"
+
+msgid "Christmas Island"
+msgstr "Đảo Giáng Sinh"
+
+msgid "Cocos (Keeling) Island"
+msgstr "Đảo Cocos (Keeling)"
+
+msgid "Colombia"
+msgstr "Colombia"
+
+msgid "Comoros"
+msgstr "Comoros"
+
+msgid "Congo"
+msgstr "Congo"
+
+msgid "Congo (Democratic Republic)"
+msgstr "Cộng hòa Dân chủ Congo"
+
+msgid "Cook Islands"
+msgstr "Quần đảo Cook"
+
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+msgid "Côte d'Ivoire"
+msgstr "Bờ Biển Ngà"
+
+msgid "Croatia"
+msgstr "Croatia"
+
+msgid "Curaçao"
+msgstr "Curaçao"
+
+msgid "Cyprus"
+msgstr "Síp"
+
+msgid "Czech Republic"
+msgstr "Cộng hòa Séc"
+
+msgid "Denmark"
+msgstr "Đan Mạch"
+
+msgid "Djibouti"
+msgstr "Djibouti"
+
+msgid "Dominica"
+msgstr "Dominica"
+
+msgid "Dominican Republic"
+msgstr "Cộng hòa Dominica"
+
+msgid "Ecuador"
+msgstr "Ecuador"
+
+msgid "Egypt"
+msgstr "Ai Cập"
+
+msgid "El Salvador"
+msgstr "El Salvador"
+
+msgid "Equatorial Guinea"
+msgstr "Guinea Xích đạo"
+
+msgid "Eritrea"
+msgstr "Eritrea"
+
+msgid "Estonia"
+msgstr "Estonia"
+
+msgid "Eswatini"
+msgstr "Eswatini"
+
+msgid "Ethiopia"
+msgstr "Ethiopia"
+
+msgid "Falkland Islands"
+msgstr "Quần đảo Falkland"
+
+msgid "Faroe Islands"
+msgstr "Quần đảo Faroe"
+
+msgid "Fiji"
+msgstr "Fiji"
+
+msgid "Finland"
+msgstr "Phần Lan"
+
+msgid "France"
+msgstr "Pháp"
+
+msgid "French Guiana"
+msgstr "Guiana thuộc Pháp"
+
+msgid "French Polynesia"
+msgstr "Polynesia thuộc Pháp"
+
+msgid "French Southern Territories"
+msgstr "Lãnh thổ phía Nam thuộc Pháp"
+
+msgid "Gabon"
+msgstr "Gabon"
+
+msgid "Gambia"
+msgstr "Gambia"
+
+msgid "Georgia"
+msgstr "Gruzia"
+
+msgid "Germany"
+msgstr "Đức"
+
+msgid "Ghana"
+msgstr "Ghana"
+
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+msgid "Greece"
+msgstr "Hy Lạp"
+
+msgid "Greenland"
+msgstr "Greenland"
+
+msgid "Grenada"
+msgstr "Grenada"
+
+msgid "Guadeloupe"
+msgstr "Guadeloupe"
+
+msgid "Guam"
+msgstr "Guam"
+
+msgid "Guatemala"
+msgstr "Guatemala"
+
+msgid "Guernsey"
+msgstr "Guernsey"
+
+msgid "Guinea"
+msgstr "Guinea"
+
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau"
+
+msgid "Guyana"
+msgstr "Guyana"
+
+msgid "Haiti"
+msgstr "Haiti"
+
+msgid "Holy See"
+msgstr "Tòa Thánh"
+
+msgid "Honduras"
+msgstr "Honduras"
+
+msgid "Hong Kong"
+msgstr "Hồng Kông"
+
+msgid "Hungary"
+msgstr "Hungary"
+
+msgid "Iceland"
+msgstr "Iceland"
+
+msgid "India"
+msgstr "Ấn Độ"
+
+msgid "Indonesia"
+msgstr "Indonesia"
+
+msgid "Iraq"
+msgstr "Iraq"
+
+msgid "Ireland"
+msgstr "Ireland"
+
+msgid "Isle of Man"
+msgstr "Đảo Man"
+
+msgid "Israel"
+msgstr "Israel"
+
+msgid "Italy"
+msgstr "Ý"
+
+msgid "Jamaica"
+msgstr "Jamaica"
+
+msgid "Japan"
+msgstr "Nhật Bản"
+
+msgid "Jersey"
+msgstr "Jersey"
+
+msgid "Jordan"
+msgstr "Jordan"
+
+msgid "Kazakhstan"
+msgstr "Kazakhstan"
+
+msgid "Kenya"
+msgstr "Kenya"
+
+msgid "Kiribati"
+msgstr "Kiribati"
+
+msgid "Korea, the Republic of"
+msgstr "Hàn Quốc"
+
+msgid "Kuwait"
+msgstr "Kuwait"
+
+msgid "Kyrgyzstan"
+msgstr "Kyrgyzstan"
+
+msgid "Lao People's Democratic Republic"
+msgstr "Cộng hòa Dân chủ Nhân dân Lào"
+
+msgid "Latvia"
+msgstr "Latvia"
+
+msgid "Lebanon"
+msgstr "Lebanon"
+
+msgid "Lesotho"
+msgstr "Lesotho"
+
+msgid "Liberia"
+msgstr "Liberia"
+
+msgid "Libya"
+msgstr "Libya"
+
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+msgid "Lithuania"
+msgstr "Lithuania"
+
+msgid "Luxembourg"
+msgstr "Luxembourg"
+
+msgid "Macao"
+msgstr "Ma Cao"
+
+msgid "Madagascar"
+msgstr "Madagascar"
+
+msgid "Malawi"
+msgstr "Malawi"
+
+msgid "Malaysia"
+msgstr "Malaysia"
+
+msgid "Maldives"
+msgstr "Maldives"
+
+msgid "Mali"
+msgstr "Mali"
+
+msgid "Malta"
+msgstr "Malta"
+
+msgid "Marshall Islands"
+msgstr "Quần đảo Marshall"
+
+msgid "Martinique"
+msgstr "Martinique"
+
+msgid "Mauritania"
+msgstr "Mauritania"
+
+msgid "Mauritius"
+msgstr "Mauritius"
+
+msgid "Mayotte"
+msgstr "Mayotte"
+
+msgid "Mexico"
+msgstr "Mexico"
+
+msgid "Micronesia (Federated States of)"
+msgstr "Micronesia (Liên bang Micronesia)"
+
+msgid "Moldova"
+msgstr "Moldova"
+
+msgid "Monaco"
+msgstr "Monaco"
+
+msgid "Mongolia"
+msgstr "Mông Cổ"
+
+msgid "Montenegro"
+msgstr "Montenegro"
+
+msgid "Montserrat"
+msgstr "Montserrat"
+
+msgid "Morocco"
+msgstr "Maroc"
+
+msgid "Mozambique"
+msgstr "Mozambique"
+
+msgid "Myanmar"
+msgstr "Myanmar"
+
+msgid "Namibia"
+msgstr "Namibia"
+
+msgid "Nauru"
+msgstr "Nauru"
+
+msgid "Nepal"
+msgstr "Nepal"
+
+msgid "Netherlands"
+msgstr "Hà Lan"
+
+msgid "New Caledonia"
+msgstr "New Caledonia"
+
+msgid "New Zealand"
+msgstr "New Zealand"
+
+msgid "Nicaragua"
+msgstr "Nicaragua"
+
+msgid "Niger"
+msgstr "Niger"
+
+msgid "Nigeria"
+msgstr "Nigeria"
+
+msgid "Niue"
+msgstr "Niue"
+
+msgid "Norfolk Island"
+msgstr "Đảo Norfolk"
+
+msgid "North Macedonia"
+msgstr "Bắc Macedonia"
+
+msgid "Northern Mariana Islands"
+msgstr "Quần đảo Bắc Mariana"
+
+msgid "Norway"
+msgstr "Na Uy"
+
+msgid "Oman"
+msgstr "Oman"
+
+msgid "Pakistan"
+msgstr "Pakistan"
+
+msgid "Palau"
+msgstr "Palau"
+
+msgid "Palestine"
+msgstr "Palestine"
+
+msgid "Panama"
+msgstr "Panama"
+
+msgid "Papua New Guinea"
+msgstr "Papua New Guinea"
+
+msgid "Paraguay"
+msgstr "Paraguay"
+
+msgid "Peru"
+msgstr "Peru"
+
+msgid "Philippines"
+msgstr "Philippines"
+
+msgid "Pitcairn"
+msgstr "Pitcairn"
+
+msgid "Poland"
+msgstr "Ba Lan"
+
+msgid "Portugal"
+msgstr "Bồ Đào Nha"
+
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
+msgid "Qatar"
+msgstr "Qatar"
+
+msgid "Réunion"
+msgstr "Réunion"
+
+msgid "Romania"
+msgstr "Romania"
+
+msgid "Russian Federation"
+msgstr "Liên bang Nga"
+
+msgid "Rwanda"
+msgstr "Rwanda"
+
+msgid "Saba"
+msgstr "Saba"
+
+msgid "Saint Barthélemy"
+msgstr "Saint Barthélemy"
+
+msgid "Saint Helena"
+msgstr "Saint Helena"
+
+msgid "Saint Kitts and Nevis"
+msgstr "Saint Kitts và Nevis"
+
+msgid "Saint Lucia"
+msgstr "Saint Lucia"
+
+msgid "Saint Martin (French part)"
+msgstr "Saint Martin (phần thuộc Pháp)"
+
+msgid "Saint Pierre and Miquelon"
+msgstr "Saint Pierre và Miquelon"
+
+msgid "Saint Vincent and The Grenadines"
+msgstr "Saint Vincent và Grenadines"
+
+msgid "Samoa"
+msgstr "Samoa"
+
+msgid "San Marino"
+msgstr "San Marino"
+
+msgid "Sao Tome and Principe"
+msgstr "Sao Tome và Principe"
+
+msgid "Saudi Arabia"
+msgstr "Ả Rập Xê Út"
+
+msgid "Senegal"
+msgstr "Senegal"
+
+msgid "Serbia"
+msgstr "Serbia"
+
+msgid "Seychelles"
+msgstr "Seychelles"
+
+msgid "Sierra Leone"
+msgstr "Sierra Leone"
+
+msgid "Singapore"
+msgstr "Singapore"
+
+msgid "Sint Maarten"
+msgstr "Sint Maarten"
+
+msgid "Slovakia"
+msgstr "Slovakia"
+
+msgid "Slovenia"
+msgstr "Slovenia"
+
+msgid "Solomon Islands"
+msgstr "Quần đảo Solomon"
+
+msgid "Somalia"
+msgstr "Somalia"
+
+msgid "South Africa"
+msgstr "Nam Phi"
+
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "Nam Georgia và Quần đảo Nam Sandwich"
+
+msgid "South Sudan"
+msgstr "Nam Sudan"
+
+msgid "Spain"
+msgstr "Tây Ban Nha"
+
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+msgid "Sudan"
+msgstr "Sudan"
+
+msgid "Suriname"
+msgstr "Suriname"
+
+msgid "Svalbard"
+msgstr "Svalbard"
+
+msgid "Sweden"
+msgstr "Thụy Điển"
+
+msgid "Switzerland"
+msgstr "Thụy Sĩ"
+
+msgid "Taiwan, China"
+msgstr "Đài Loan, Trung Quốc"
+
+msgid "Tajikistan"
+msgstr "Tajikistan"
+
+msgid "Tanzania"
+msgstr "Tanzania"
+
+msgid "Thailand"
+msgstr "Thái Lan"
+
+msgid "Timor-Leste"
+msgstr "Timor-Leste"
+
+msgid "Togo"
+msgstr "Togo"
+
+msgid "Tokelau"
+msgstr "Tokelau"
+
+msgid "Tonga"
+msgstr "Tonga"
+
+msgid "Trinidad and Tobago"
+msgstr "Trinidad và Tobago"
+
+msgid "Tunisia"
+msgstr "Tunisia"
+
+msgid "Turkey"
+msgstr "Thổ Nhĩ Kỳ"
+
+msgid "Turkmenistan"
+msgstr "Turkmenistan"
+
+msgid "Turks and Caicos Islands"
+msgstr "Quần đảo Turks và Caicos"
+
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+msgid "Uganda"
+msgstr "Uganda"
+
+msgid "Ukraine"
+msgstr "Ukraine"
+
+msgid "United Arab Emirates"
+msgstr "Các Tiểu vương quốc Ả Rập Thống nhất"
+
+msgid "United Kingdom"
+msgstr "Vương quốc Anh"
+
+msgid "United States"
+msgstr "Hoa Kỳ"
+
+msgid "United States Minor Outlying Islands"
+msgstr "Các đảo nhỏ xa xôi của Hoa Kỳ"
+
+msgid "Uruguay"
+msgstr "Uruguay"
+
+msgid "Uzbekistan"
+msgstr "Uzbekistan"
+
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+msgid "Venezuela"
+msgstr "Venezuela"
+
+msgid "Vietnam"
+msgstr "Việt Nam"
+
+msgid "Virgin Islands (British)"
+msgstr "Quần đảo Virgin (Anh)"
+
+msgid "Virgin Islands (U.S.)"
+msgstr "Quần đảo Virgin (Mỹ)"
+
+msgid "Wallis and Futuna"
+msgstr "Wallis và Futuna"
+
+msgid "Western Sahara"
+msgstr "Tây Sahara"
+
+msgid "Yemen"
+msgstr "Yemen"
+
+msgid "Zambia"
+msgstr "Zambia"
+
+msgid "Zimbabwe"
+msgstr "Zimbabwe"
