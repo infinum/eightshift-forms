@@ -59,7 +59,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Bailout if headers are already sent usually triggered by crawler bots.
-		if (headers_sent()) {
+		if (\headers_sent()) {
 			return;
 		}
 

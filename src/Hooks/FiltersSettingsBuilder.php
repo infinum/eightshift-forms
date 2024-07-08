@@ -180,9 +180,6 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settings' => SettingsBlocks::FILTER_SETTINGS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'countryOutput' => SettingsBlocks::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME,
-				'cache' => [
-					SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME,
-				],
 				'labels' => [
 					'title' => \__('Blocks', 'eightshift-forms'),
 					'desc' => \__('Settings specific to forms blocks.', 'eightshift-forms'),

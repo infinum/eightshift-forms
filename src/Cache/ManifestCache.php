@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Cache;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDataHelper;
 use EightshiftFormsVendor\EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -28,13 +27,6 @@ class ManifestCache extends AbstractManifestCache
 	 * @var string
 	 */
 	public const TYPE_FORMS = 'forms';
-
-	/**
-	 * Cache key - countries.
-	 *
-	 * @var string
-	 */
-	public const COUNTRIES_KEY = 'countries';
 
 	/**
 	 * Cache key - countries.
@@ -92,9 +84,6 @@ class ManifestCache extends AbstractManifestCache
 			parent::getCacheBuilder(),
 			[
 				self::TYPE_FORMS => [
-					self::COUNTRIES_KEY => [
-						'pathCustom' => UtilsDataHelper::getDataManifestPath('countries'),
-					],
 					self::TLD_KEY => [
 						'fileName' => "Validation{$sep}manifest.json",
 						'path' => 'srcDestination',

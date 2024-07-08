@@ -10,16 +10,12 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Blocks;
 
-use EightshiftForms\Cache\ManifestCache;
-use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Countries\CountriesInterface;
 use EightshiftForms\Geolocation\GeolocationInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -48,11 +44,6 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 	public const SETTINGS_TYPE_KEY = 'blocks';
 
 	/**
-	 * Transient cache name for block country data set. No need to flush it because it is short live.
-	 */
-	public const CACHE_BLOCK_COUNTRY_DATE_SET_NAME = 'es_block_country_data_set_cache';
-
-	/**
 	 * Country keys.
 	 */
 	public const SETTINGS_BLOCK_COUNTRY_OVERRIDE_GLOBAL_SETTINGS_KEY = 'block-country-override-global-settings';
@@ -79,24 +70,24 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 	private GeolocationInterface $geolocation;
 
 	/**
-	 * Instance variable for manifest cache.
+	 * Instance variable of countries data.
 	 *
-	 * @var ManifestCacheInterface
+	 * @var CountriesInterface
 	 */
-	private $manifestCache;
+	private CountriesInterface $countries;
 
 	/**
 	 * Create a new admin instance.
 	 *
 	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
+	 * @param CountriesInterface $countries Inject countries which holds data about for storing to countries.
 	 */
 	public function __construct(
 		GeolocationInterface $geolocation,
-		ManifestCacheInterface $manifestCache
+		CountriesInterface $countries
 	) {
 		$this->geolocation = $geolocation;
-		$this->manifestCache = $manifestCache;
+		$this->countries = $countries;
 	}
 
 	/**
@@ -261,7 +252,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 								'textareaIsReadOnly' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'country',
-								'textareaValue' => \wp_json_encode($this->getCountriesDataSet(), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
+								'textareaValue' => \wp_json_encode($this->countries->getCountriesDataSet(), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
 								'textareaSize' => 'huge',
 								'textareaLimitHeight' => true,
 							],
@@ -345,129 +336,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 				'dataset' => $phoneDatasetValue,
 				'preselectedValue' => $preselectedValue,
 			],
-			'countries' => $this->getCountriesDataSet(),
-		];
-	}
-
-	/**
-	 * Get countries data set depending on the provided filter and default set.
-	 *
-	 * @param bool $useFullOutput Used to output limited output used for seetings and output.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getCountriesDataSet(bool $useFullOutput = true): array
-	{
-		$output = \get_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
-			$output = [];
-		}
-
-		if (!$output) {
-			$countries = $this->manifestCache->getManifestCacheTopItem(ManifestCache::COUNTRIES_KEY, ManifestCache::TYPE_FORMS);
-
-			$output = [
-				'default' => [
-					'label' => \__('Default', 'eightshift-forms'),
-					'slug' => 'default',
-					'items' => $countries,
-					'codes' => \array_map(
-						static function ($item) {
-							return [
-								'label' => $item[0],
-								'value' => $item[1],
-							];
-						},
-						$countries
-					)
-				]
-			];
-
-			$alternative = [];
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'country', 'alternativeDataSet']);
-			if (\has_filter($filterName)) {
-				$alternative = \apply_filters($filterName, []);
-			}
-
-			$alternativeOutput = [];
-
-			if ($alternative) {
-				foreach ($alternative as $value) {
-					$label = $value['label'] ?? '';
-					$slug = $value['slug'] ?? '';
-					$removed = isset($value['remove']) ? \array_flip($value['remove']) : [];
-					$onlyUse = isset($value['onlyUse']) ? \array_flip($value['onlyUse']) : [];
-					$changed = $value['change'] ?? [];
-
-					if (!$label || !$slug) {
-						continue;
-					}
-
-					$slug = \strtolower(\str_replace(' ', '-', $slug));
-
-					$alternativeOutput[$slug] = [
-						'label' => $label,
-						'slug' => $slug,
-						'items' => $countries,
-					];
-
-					$itemOutput = [];
-
-					foreach ($alternativeOutput[$slug]['items'] as $key => $item) {
-						$countryCode = $item[1] ? \strtolower($item[1]) : '';
-
-						// Only use.
-						if ($onlyUse && !isset($onlyUse[$countryCode])) {
-							continue;
-						}
-
-						// Remove item from list.
-						if (isset($removed[$countryCode])) {
-							continue;
-						}
-
-						// // Change label in the list.
-						foreach ($changed as $changedKey => $changedValue) {
-							if ($countryCode === $changedKey) {
-								$item[0] = $changedValue;
-							}
-						}
-
-						$itemOutput[] = $item;
-					}
-
-
-					$alternativeOutput[$slug]['items'] = $itemOutput;
-				}
-			}
-
-			$output = \array_merge(
-				$alternativeOutput,
-				$output,
-			);
-
-			\set_transient(SettingsBlocks::CACHE_BLOCK_COUNTRY_DATE_SET_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['quick']);
-		}
-
-		if ($useFullOutput) {
-			return $output;
-		}
-
-		return [
-			'label' => $output['default']['label'],
-			'slug' => $output['default']['slug'],
-			'items' => \array_values(\array_map(
-				static function ($item) {
-					return [
-						'label' => $item['label'],
-						'value' => $item['slug'],
-					];
-				},
-				$output
-			)),
-			'codes' => $output['default']['codes'],
+			'countries' => $this->countries->getCountriesDataSet(),
 		];
 	}
 
@@ -497,7 +366,7 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 					'selectOptionIsSelected' => $value === $selectedValue,
 				];
 			},
-			$this->getCountriesDataSet(false)[$list]
+			$this->countries->getCountriesDataSet(false)[$list]
 		);
 	}
 }
