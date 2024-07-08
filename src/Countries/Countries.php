@@ -57,49 +57,35 @@ class Countries implements CountriesInterface
 			foreach ($alternative as $value) {
 				$label = $value['label'] ?? '';
 				$slug = $value['slug'] ?? '';
-				$removed = isset($value['remove']) ? \array_flip($value['remove']) : [];
-				$onlyUse = isset($value['onlyUse']) ? \array_flip($value['onlyUse']) : [];
-				$changed = $value['change'] ?? [];
-
 				if (!$label || !$slug) {
 					continue;
 				}
 
 				$slug = \strtolower(\str_replace(' ', '-', $slug));
-
 				$alternativeOutput[$slug] = [
 					'label' => $label,
 					'slug' => $slug,
-					'items' => $countries,
+					'items' => [],
 				];
 
-				$itemOutput = [];
+				$removed = $value['remove'] ?? [];
+				$onlyUse = $value['onlyUse'] ?? [];
+				$changed = $value['change'] ?? [];
 
-				foreach ($alternativeOutput[$slug]['items'] as $key => $item) {
-					$countryCode = $item[1] ? \strtolower($item[1]) : '';
+				foreach ($countries as $item) {
+					$countryCode = \strtolower($item[1]);
 
-					// Only use.
-					if ($onlyUse && !isset($onlyUse[$countryCode])) {
+					if ((!empty($onlyUse) && !in_array($countryCode, $onlyUse)) ||
+						in_array($countryCode, $removed)) {
 						continue;
 					}
 
-					// Remove item from list.
-					if (isset($removed[$countryCode])) {
-						continue;
+					if (array_key_exists($countryCode, $changed)) {
+						$item[0] = $changed[$countryCode];
 					}
 
-					// // Change label in the list.
-					foreach ($changed as $changedKey => $changedValue) {
-						if ($countryCode === $changedKey) {
-							$item[0] = $changedValue;
-						}
-					}
-
-					$itemOutput[] = $item;
+					$alternativeOutput[$slug]['items'][] = $item;
 				}
-
-
-				$alternativeOutput[$slug]['items'] = $itemOutput;
 			}
 		}
 
