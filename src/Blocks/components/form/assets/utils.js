@@ -210,6 +210,7 @@ export class Utils {
 	 */
 	setFieldError(formId, name, msg) {
 		const error = this.state.getStateElementError(name, formId);
+
 		if (!error) {
 			return;
 		}
@@ -234,6 +235,7 @@ export class Utils {
 
 		// Scroll to element if the condition is right.
 		const firstItemWithErrorName = this.state.getStateElementByHasError(true, formId)?.[0]?.[StateEnum.NAME];
+
 		if (firstItemWithErrorName && !this.state.getStateSettingsDisableScrollToFieldOnError()) {
 			this.scrollToElement(formId, firstItemWithErrorName);
 		}
@@ -315,10 +317,12 @@ export class Utils {
 	 */
 	getGtmData(formId) {
 		const output = {};
+
 		for (const [name] of this.state.getStateElements(formId)) {
 			const value = this.state.getStateElementValue(name, formId);
 			const trackingName = this.state.getStateElementTracking(name, formId);
 			const valueCountry = this.state.getStateElementValueCountry(name, formId);
+
 			if (!trackingName) {
 				continue;
 			}
@@ -338,7 +342,7 @@ export class Utils {
 					}
 					break;
 				case 'phone':
-					let telValue = value; // eslint-disable-line no-case-declarations
+					let telValue = value;
 
 					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
 						telValue = `${valueCountry.number}${value}`;
@@ -593,6 +597,7 @@ export class Utils {
 		const url = new URL(redirectUrl);
 
 		const downloads = this.state.getStateFormConfigSuccessRedirectDownloads(formId);
+
 		if (downloads) {
 			let downloadsName = 'all';
 
@@ -621,11 +626,13 @@ export class Utils {
 		}
 
 		const successRedirectData = additionalData?.[this.state.getStateResponseOutputKey('successRedirect')];
+
 		if (successRedirectData) {
 				url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('data'), successRedirectData);
 		}
 
 		const variation = this.state.getStateFormConfigSuccessRedirectVariation(formId);
+
 		if (variation) {
 			url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('variation'), variation);
 		}
@@ -1088,6 +1095,7 @@ export class Utils {
 
 		if (input) {
 			input.value = newValue;
+
 			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
 				custom.setChoiceByValue(value?.prefix);
 				this.setOnUserChangeSelect(inputSelect, true);
@@ -1162,6 +1170,7 @@ export class Utils {
 	setManualCheckboxValue(formId, name, value) {
 		Object.entries(value).forEach(([innerName, innerValue]) => {
 			const innerInput = this.state.getStateElementItemsInput(name, innerName, formId);
+
 			if (innerInput) {
 				innerInput.checked = innerValue;
 				this.setOnUserChangeInput(innerInput);
@@ -1345,12 +1354,14 @@ export class Utils {
 	resetResultsOutput(formId) {
 		// Check if we have output element - block.
 		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`);
+
 		if (!outputElement) {
 			return;
 		}
 
 		// Reset items.
 		const itemElements = outputElement.querySelectorAll(this.state.getStateSelector('resultOutputItem', true));
+
 		if (itemElements.length) {
 			itemElements.forEach((item) => {
 				item.classList.add(this.state.getStateSelector('isHidden'));
@@ -1359,6 +1370,7 @@ export class Utils {
 
 		// Reset parts.
 		const partElements = outputElement.querySelectorAll(this.state.getStateSelector('resultOutputPart', true));
+
 		if (partElements.length) {
 			partElements.forEach((item) => {
 				if (item.hasAttribute(this.state.getStateAttribute('resultOutputPartDefault'))) {

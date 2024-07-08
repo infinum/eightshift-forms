@@ -67,10 +67,12 @@ export class Form {
 			// If is admin do normal init.
 			this.initOnlyFormsInner(document.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0');
 		} else {
-			// Find all forms elements
+			// Find all forms elements.
 			const forms = document.querySelectorAll(this.state.getStateSelector('forms', true));
+
 			if (!forms.length) {
 				this.utils.removeFormsWithMissingFormsBlock();
+
 				return;
 			}
 
@@ -136,6 +138,7 @@ export class Form {
 		fetch(this.state.getRestUrl('geolocation'), body)
 		.then((response) => {
 			this.utils.formSubmitErrorContentType(response, 'geolocation', null);
+
 			return response.text();
 		})
 		.then((responseData) => {
@@ -302,6 +305,7 @@ export class Form {
 		fetch(url, body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'formSubmit', formId);
+
 				return response.text();
 			})
 			.then((responseData) => {
@@ -352,6 +356,7 @@ export class Form {
 		fetch(url, body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'formSubmitStep', formId);
+
 				return response.text();
 			})
 			.then((responseData) => {
@@ -621,7 +626,7 @@ export class Form {
 		const skipFields = filter?.[this.FILTER_SKIP_FIELDS] ?? [];
 
 		// Iterate all form items.
-		for (const [key] of this.state.getStateElements(formId)) { // eslint-disable-line no-unused-vars
+		for (const [key] of this.state.getStateElements(formId)) {
 
 			const name = key;
 			const internalType = this.state.getStateElementTypeField(key, formId);
@@ -666,7 +671,8 @@ export class Form {
 
 			switch (internalType) {
 				case 'checkbox':
-					let indexCheck = 0; // eslint-disable-line no-case-declarations
+					let indexCheck = 0;
+
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						if (disabled[checkName]) {
 							continue;
@@ -680,7 +686,8 @@ export class Form {
 					}
 					break;
 				case 'radio':
-					let indexRadio = 0; // eslint-disable-line no-case-declarations
+					let indexRadio = 0;
+
 					for(const [radioName, radioValue] of Object.entries(items)) {
 						if (disabled[radioName]) {
 							continue;
@@ -726,7 +733,7 @@ export class Form {
 					}
 
 					// If custom file use files got from the global object of files uploaded.
-					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? []; // eslint-disable-line no-case-declarations
+					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? [];
 
 					// Loop files and append.
 					if (fileList.length) {
@@ -780,7 +787,7 @@ export class Form {
 			return output;
 		}
 
-		for (const [key, group] of Object.entries(groups)) { // eslint-disable-line no-unused-vars
+		for (const [key, group] of Object.entries(groups)) {
 			const groupSaveAsOneField = Boolean(group.getAttribute(this.state.getStateAttribute('groupSaveAsOneField')));
 
 			if (!groupSaveAsOneField) {
@@ -795,7 +802,7 @@ export class Form {
 
 			const groupInnerItems = {};
 
-			for (const [key, groupInnerItem] of Object.entries(groupInner)) { // eslint-disable-line no-unused-vars
+			for (const [key, groupInnerItem] of Object.entries(groupInner)) {
 				const {
 					name,
 					value,
@@ -1201,6 +1208,7 @@ export class Form {
 							if (properties) {
 								customProperties.forEach((property) => {
 									const check = properties?.[property];
+
 									if (check) {
 										element.setAttribute(property, check);
 									}
@@ -1217,6 +1225,7 @@ export class Form {
 							if (properties) {
 								customProperties.forEach((property) => {
 									const check = properties?.[property];
+
 									if (check) {
 										element.setAttribute(property, check);
 									}
@@ -1397,6 +1406,7 @@ export class Form {
 				} = file.xhr;
 
 				let msg = 'serverError';
+
 				if (response.includes("wordfence") || response.includes("Wordfence")) {
 					msg = 'wordfenceFirewall';
 				}
@@ -1579,7 +1589,7 @@ export class Form {
 				case this.steps.STEP_DIRECTION_NEXT:
 					this.utils.showLoader(formId);
 
-					const filterNext = { // eslint-disable-line no-case-declarations
+					const filterNext = {
 						[this.FILTER_SKIP_FIELDS]: [
 							...this.conditionalTags.getIgnoreFields(formId),
 						],
@@ -1593,7 +1603,7 @@ export class Form {
 				default:
 					this.utils.showLoader(formId);
 
-					const filterFinal = { // eslint-disable-line no-case-declarations
+					const filterFinal = {
 						[this.FILTER_SKIP_FIELDS]: [
 							...this.steps.getIgnoreFields(formId),
 							...this.conditionalTags.getIgnoreFields(formId),
@@ -1694,6 +1704,7 @@ export class Form {
 				'.',
 				'-'
 			];
+
 			// Prevent the default action if the key is not allowed
 			if (!allowedKeys.includes(event.key)) {
 				event.preventDefault();

@@ -83,6 +83,7 @@ export class Geolocation {
 			const custom = this.state.getStateElementCustom(name, formId);
 
 			const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, custom);
+
 			if (selectValue) {
 				this.utils.setManualSelectValue(formId, name, selectValue);
 			}
@@ -96,6 +97,7 @@ export class Geolocation {
 				const custom = this.state.getStateElementCustom(name, formId);
 
 				const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, custom);
+
 				if (selectValue) {
 					this.utils.setManualPhoneValue(
 						formId,

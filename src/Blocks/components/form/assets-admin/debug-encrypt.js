@@ -45,6 +45,7 @@ export class DebugEncrypt {
 		fetch(this.state.getRestUrl('debugEncrypt'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'debugEncrypt', formId);
+
 				return response.text();
 			})
 			.then((responseData) => {

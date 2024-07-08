@@ -84,6 +84,7 @@ export const ConditionalTagsOptions = (attributes) => {
 
 				{conditionalTagsRules?.[1]?.map((_, index) => {
 					const total = conditionalTagsRules[1].length;
+
 					return (
 						<>
 							{conditionalTagsRules?.[1]?.[index]?.map((_, innerIndex) => {

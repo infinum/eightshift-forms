@@ -405,7 +405,7 @@ export function setStateFormInitial(formId) {
 			case 'select-one':
 			case 'select-multiple':
 				// Combined fields like phone can have field null.
-				const isMultiple = Boolean(item.getAttribute(getStateAttribute('selectIsMultiple'))); // eslint-disable-line no-case-declarations
+				const isMultiple = Boolean(item.getAttribute(getStateAttribute('selectIsMultiple')));
 
 				if (item.options.length && (fieldType === 'phone' || fieldType === 'country')) {
 					let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
@@ -425,6 +425,7 @@ export function setStateFormInitial(formId) {
 
 					[...item.children].forEach((option) => {
 						const value = option?.value;
+
 						if (value) {
 							setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, name, StateEnum.NAME], value, formId);
 						}
@@ -816,6 +817,7 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 	// This can happend if the user deletes a field and the conditional tag is still there on other field.
 	const output = tag[1].map((item) => item.filter((inner) => {
 		const itemName = inner[0] ?? '';
+
 		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
 	})).filter(outputInner => outputInner.length > 0);
 
@@ -859,6 +861,7 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 	// This can happend if the user deletes a field and the conditional tag is still there on other field.
 	const output = tag[1].map((item) => item.filter((inner) => {
 		const itemName = inner[0] ?? '';
+
 		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
 	})).filter(outputInner => outputInner.length > 0);
 
@@ -975,6 +978,7 @@ export function removeStateForm(formId) {
 
 	const index = state[StateEnum.FORMS].indexOf(formId);
 	const forms = state[StateEnum.FORMS];
+
 	if (index > -1) {
 		forms.splice(index, 1);
 
@@ -1000,8 +1004,9 @@ export function getState(keys, formId) {
 		return undefined;
 	}
 
-	keys.forEach((key) => { // eslint-disable-line consistent-return
+	keys.forEach((key) => {
 		stateObject = stateObject?.[key];
+
 		if (!stateObject) {
 			return undefined;
 		}
@@ -1181,6 +1186,7 @@ function isLocalStorageAvailable() {
 	try {
 		localStorage.setItem(test, test);
 		localStorage.removeItem(test);
+
 		return true;
 	} catch(e) {
 		return false;

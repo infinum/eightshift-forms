@@ -52,6 +52,7 @@ export class Export {
 		fetch(this.state.getRestUrl('export'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'bulk', null);
+
 				return response.text();
 			})
 			.then((responseData) => {

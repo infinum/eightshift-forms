@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 /* global esFormsLocalization */
 
 import globalManifest from '../../manifest.json';

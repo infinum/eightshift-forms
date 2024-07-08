@@ -1,6 +1,0 @@
-{
-	"extends": "./node_modules/@eightshift/frontend-libs/linters/eslint.config.js",
-	"rules": {
-		"max-len": 0
-	}
-}

@@ -162,6 +162,7 @@ export class Enrichment {
 				storageName,
 				JSON.stringify(newStorage)
 			);
+
 			return;
 		}
 

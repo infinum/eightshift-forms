@@ -173,10 +173,12 @@ export class State {
 	};
 	getStateFormStepsFirstStep = (formId) => {
 		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], formId);
+
 		return typeof items !== 'undefined' ? items[0] : '';
 	};
 	getStateFormStepsLastStep = (formId) => {
 		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ORDER], formId);
+
 		return typeof items !== 'undefined' ? items?.[items?.length - 1] : '';
 	};
 	getStateFormStepsItem = (stepId, formId) => {
@@ -190,6 +192,7 @@ export class State {
 	};
 	getStateFormStepsElements = (formId) => {
 		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS], formId);
+
 		return items ? Object.values(items) : [];
 	};
 	getStateFormStepsElement = (stepId, formId) => {
@@ -197,6 +200,7 @@ export class State {
 	};
 	getStateFormStepsElementsProgressBar = (formId) => {
 		const items = getState([StateEnum.FORM, StateEnum.STEPS, StateEnum.STEPS_ELEMENTS_PROGRESS_BAR], formId);
+
 		return items ? Object.values(items) : [];
 	};
 	getStateFormStepsElementProgressBar = (stepId, formId) => {
@@ -274,6 +278,7 @@ export class State {
 	////////////////////////////////////////////////////////////////
 	getStateElementByTypeField = (type, formId) => {
 		const intType = this.getStateFieldType(type);
+
 		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_FIELD, intType, formId);
 	};
 	getStateElementByHasError = (type, formId) => {
@@ -284,10 +289,12 @@ export class State {
 	};
 	getStateElements = (formId) => {
 		const items = getState([StateEnum.ELEMENTS], formId);
+
 		return items ? Object.entries(items) : [];
 	};
 	getStateElementsFields = (formId) => {
 		const items = getState([StateEnum.ELEMENTS_FIELDS], formId);
+
 		return items ? Object.entries(items) : [];
 	};
 	getStateElementConditionalTagsDefaults = (name, formId) => {
@@ -452,13 +459,19 @@ export class State {
 		return getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
 	getStateEnrichmentIsLocalStorageUsed = () => {
-		return getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) &&
+		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
+		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
 	getStateEnrichmentIsPrefillUsed = () => {
-		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) &&
+		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
+		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
 	getStateEnrichmentIsPrefillUrlUsed = () => {
-		return getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) &&
+		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
+		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
 	getStateEnrichmentExpiration = () => {
 		return getState([StateEnum.ENRICHMENT_EXPIRATION], StateEnum.ENRICHMENT);
@@ -545,7 +558,13 @@ export class State {
 	////////////////////////////////////////////////////////////////
 
 	getStateFilteredBykey = (obj, targetKey, findItem, formId) => {
-		return Object?.values(Object?.fromEntries(Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem))); // eslint-disable-line no-unused-vars
+		return Object?.values(
+			Object?.fromEntries(
+				Object?.entries(
+					getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem
+				)
+			)
+		);
 	};
 	getFormElementByChild = (element) => {
 		return element?.closest(this.getStateSelector('form', true));

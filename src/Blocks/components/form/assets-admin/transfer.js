@@ -66,6 +66,7 @@ export class Transfer {
 		fetch(this.state.getRestUrl('transfer'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'transfer', formId);
+
 				return response.text();
 			})
 			.then((responseData) => {

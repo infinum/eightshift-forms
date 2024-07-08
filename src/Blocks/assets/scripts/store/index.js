@@ -35,7 +35,7 @@ const actions = {
 };
 
 // Define reducers - only setters.
-const reducer = ( state = DEFAULT_STATE, action ) => { // eslint-disable-line consistent-return
+const reducer = ( state = DEFAULT_STATE, action ) => {
 	switch (action.type) {
 		case 'SET_SYNC_DIALOG': {
 			return {

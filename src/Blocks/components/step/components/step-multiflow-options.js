@@ -135,7 +135,13 @@ export const StepMultiflowOptions = (attributes) => {
 							<>
 								{stepMultiflowRules?.[topParent]?.[2]?.[index]?.map((_, innerIndex) => {
 										return (
-											<ConditionalTagsItem key={innerIndex} topParent={topParent} parent={index} index={innerIndex} total={stepMultiflowRules[topParent][2][index].length} />
+											<ConditionalTagsItem
+												key={innerIndex}
+												topParent={topParent}
+												parent={index}
+												index={innerIndex}
+												total={stepMultiflowRules[topParent][2][index].length}
+											/>
 										);
 									})
 								}
