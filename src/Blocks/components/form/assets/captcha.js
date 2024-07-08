@@ -105,6 +105,7 @@ export class Captcha {
 		fetch(this.state.getRestUrl('captcha'), body)
 		.then((response) => {
 			this.utils.formSubmitErrorContentType(response, 'invisibleCaptcha', null);
+
 			return response.text();
 		})
 		.then((responseData) => {

@@ -285,6 +285,7 @@ export const getConstantsOptions = (options, useEmpty = false) => {
 	};
 
 	const items = [];
+
 	if (options) {
 		for (const [key, value] of Object.entries(options)) {
 			items.push({
@@ -311,6 +312,7 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
 	};
 
 	const items = [];
+
 	if (options) {
 		options.map((item) => {
 			items.push({

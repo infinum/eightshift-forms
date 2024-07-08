@@ -42,6 +42,7 @@ export class ManualImportApi {
 				this.importErrorMsg,
 				'error'
 			);
+
 			return;
 		}
 
@@ -132,6 +133,7 @@ export class ManualImportApi {
 				fetch(this.state.getRestUrlByType('prefixSubmit', item.type), body)
 					.then((response) => {
 						this.utils.formSubmitErrorContentType(response, 'manualImport', formId);
+
 						return response.text();
 					})
 					.then((responseData) => {

@@ -45,6 +45,7 @@ export class Locations {
 		fetch(this.state.getRestUrl('locations'), body)
 			.then((response) => {
 				this.utils.formSubmitErrorContentType(response, 'location', this.FORM_ID);
+
 				return response.text();
 			})
 			.then((responseData) => {

@@ -76,6 +76,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 									label: __('All fields', 'eightshift-forms'),
 								};
 							}
+
 							return item;
 						})}
 						onChange={(value) => {

@@ -330,7 +330,13 @@ export const FormsOptions = ({
 								return (
 									<div className='es-h-spaced es-mb-2' key={index}>
 										<AsyncSelect
-											value={outputFormSelectItemWithIcon(Object.keys(formsFormGeolocationAlternatives?.[index]?.form ?? {}).length ? formsFormGeolocationAlternatives?.[index]?.form : {id: formsFormGeolocationAlternatives?.[index]?.formId})}
+											value={
+												outputFormSelectItemWithIcon(
+													Object.keys(formsFormGeolocationAlternatives?.[index]?.form ?? {}).length ?
+													formsFormGeolocationAlternatives?.[index]?.form :
+													{id: formsFormGeolocationAlternatives?.[index]?.formId}
+												)
+											}
 											loadOptions={formSelectOptions}
 											onChange={(value) => {
 												const newData = [...formsFormGeolocationAlternatives];

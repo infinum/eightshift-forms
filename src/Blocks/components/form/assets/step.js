@@ -152,7 +152,7 @@ export class Steps {
 	 */
 	goToStepWithError(formId, errors) {
 		const flow = this.state.getStateFormStepsFlow(formId);
-		const nextStep = Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) => arr.includes(Object.keys(errors)[0]))?.[0] || null; // eslint-disable-line no-unused-vars
+		const nextStep = Object.entries(this.state.getStateFormStepsItems(formId)).find(([key, arr]) => arr.includes(Object.keys(errors)[0]))?.[0] || null;
 		const nextStepIndex = flow.findIndex((item) => item === nextStep);
 
 		const newFlow = [
@@ -176,6 +176,7 @@ export class Steps {
 	 */
 	resetSteps(formId) {
 		const firstStep = this.state.getStateFormStepsFirstStep(formId);
+
 		if (!firstStep) {
 			return;
 		}
