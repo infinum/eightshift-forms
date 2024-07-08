@@ -75,12 +75,11 @@ class Countries implements CountriesInterface
 				foreach ($countries as $item) {
 					$countryCode = \strtolower($item[1]);
 
-					if ((!empty($onlyUse) && !in_array($countryCode, $onlyUse)) ||
-						in_array($countryCode, $removed)) {
+					if ((!empty($onlyUse) && !\in_array($countryCode, $onlyUse, true)) || \in_array($countryCode, $removed, true)) {
 						continue;
 					}
 
-					if (array_key_exists($countryCode, $changed)) {
+					if (\array_key_exists($countryCode, $changed)) {
 						$item[0] = $changed[$countryCode];
 					}
 
