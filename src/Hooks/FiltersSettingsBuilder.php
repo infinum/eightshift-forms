@@ -60,6 +60,7 @@ use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
+use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
@@ -202,6 +203,15 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'labels' => [
 					'title' => \__('Entries', 'eightshift-forms'),
 					'desc' => \__('Collect form entries in your project database.', 'eightshift-forms'),
+				],
+			],
+			SettingsResultOutput::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsResultOutput::FILTER_SETTINGS_GLOBAL_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
+				'use' => SettingsResultOutput::SETTINGS_RESULT_OUTPUT_USE_KEY,
+				'labels' => [
+					'title' => \__('Result Outputs', 'eightshift-forms'),
+					'desc' => \__('Output form results to various services like tnx page.', 'eightshift-forms'),
 				],
 			],
 			// ------------------------------
