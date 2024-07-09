@@ -17,6 +17,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -69,41 +70,11 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			$attributes["{$prefix}Type"] = SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY;
 		}
 
-		// Tracking event name.
-		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($type, $formId)['data'];
-		if ($trackingEventName) {
-			$attributes["{$prefix}TrackingEventName"] = $trackingEventName;
-		}
-
-		// Provide additional data to tracking attr.
-		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($type, $formId)['data'];
-		if ($trackingAdditionalData) {
-			$attributes["{$prefix}TrackingAdditionalData"] = \wp_json_encode($trackingAdditionalData);
-		}
-
-		// Success redirect url.
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
-		if ($successRedirectUrl) {
-			$attributes["{$prefix}SuccessRedirect"] = $successRedirectUrl;
-		}
-
-		// Success redirect variation.
-		if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
-			$successRedirectUrl = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
-
-			if ($successRedirectUrl) {
-				$attributes["{$prefix}SuccessRedirectVariation"] = $successRedirectUrl;
-			}
-		}
-
 		// Custom form name.
 		$customFormName = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
 		if ($customFormName) {
 			$attributes["{$prefix}CustomName"] = $customFormName;
 		}
-
-		// Custom form name.
-		$attributes["{$prefix}HideGlobalMsgOnSuccess"] = !!UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
 
 		// Use single submit.
 		$attributes["{$prefix}UseSingleSubmit"] = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId);
@@ -118,6 +89,12 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		$attributes["{$prefix}PhoneDisablePicker"] = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
+
+		// Output secure data.
+		$outputSecureData = $this->getSecureFormData($type, $formId, $prefix, $attributes);
+		if ($outputSecureData) {
+			$attributes['secureData'] = $outputSecureData;
+		}
 
 		return $attributes;
 	}
@@ -545,5 +522,35 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Get secure form data.
+	 *
+	 * @param string $type Type of the form.
+	 * @param string $formId Form ID.
+	 * @param string $prefix Prefix of the form.
+	 * @param array<string, mixed> $attributes Attributes of the form.
+	 *
+	 * @return string
+	 */
+	private function getSecureFormData(string $type, string $formId, string $prefix, array $attributes): string
+	{
+		$outputSecureData = [];
+
+		// Success redirect variation.
+		if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
+			$successRedirectUrl = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
+
+			if ($successRedirectUrl) {
+				$outputSecureData["SuccessRedirectVariation"] = $successRedirectUrl;
+			}
+		}
+
+		if (!$outputSecureData) {
+			return '';
+		}
+		
+		return UtilsEncryption::encryptor(wp_json_encode($outputSecureData));
 	}
 }

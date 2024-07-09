@@ -78,6 +78,10 @@ if ($formDataTypeSelector) {
 	$formAttrs[UtilsHelper::getStateAttribute('typeSelector')] = esc_attr($formDataTypeSelector);
 }
 
+if (isset($attributes['secureData'])) {
+	$formAttrs[UtilsHelper::getStateAttribute('formSecureData')] = esc_attr($attributes['secureData']);
+}
+
 if ($formSuccessRedirect) {
 	$formAttrs[UtilsHelper::getStateAttribute('successRedirect')] = esc_attr($formSuccessRedirect);
 }

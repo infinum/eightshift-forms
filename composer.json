@@ -39,10 +39,17 @@
 		"szepeviktor/phpstan-wordpress": "^v1.3.4",
 		"wp-cli/wp-cli": "^v2.10.0"
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/infinum/eightshift-forms-utils.git"
+		}
+	],
 	"require": {
 		"php": ">=8.2",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^2.0.0"
+		"infinum/eightshift-forms-utils": "dev-feature/gated"
+
 	},
 	"autoload": {
 		"psr-4": {

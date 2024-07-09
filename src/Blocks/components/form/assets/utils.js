@@ -652,16 +652,14 @@ export class Utils {
 	redirectToUrlByReference(formId, redirectUrl, reload = false) {
 		this.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitSuccessBeforeRedirect'), redirectUrl);
 
-		if (!this.state.getStateSettingsDisableNativeRedirectOnSuccess(formId)) {
-			// Do the actual redirect after some time.
-			setTimeout(() => {
-				window.location = redirectUrl;
+		// Do the actual redirect after some time.
+		setTimeout(() => {
+			window.location = redirectUrl;
 
-				if (reload) {
-					window.location.reload();
-				}
-			}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
-		}
+			if (reload) {
+				window.location.reload();
+			}
+		}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
 	}
 
 	/**

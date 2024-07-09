@@ -207,6 +207,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsResultOutput::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsResultOutput::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsResultOutput::FILTER_SETTINGS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsResultOutput::SETTINGS_RESULT_OUTPUT_USE_KEY,
 				'labels' => [

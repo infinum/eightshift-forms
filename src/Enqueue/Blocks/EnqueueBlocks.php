@@ -296,10 +296,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableNativeRedirectOnSuccess'] = UtilsSettingsHelper::isOptionCheckboxChecked(
-			SettingsSettings::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
-			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-		);
 		$output['formDisableAutoInit'] = UtilsSettingsHelper::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY

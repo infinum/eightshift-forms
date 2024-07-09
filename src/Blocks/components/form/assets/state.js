@@ -248,9 +248,6 @@ export class State {
 	getStateSettingsResetOnSuccess = () => {
 		return getState([StateEnum.SETTINGS_FORM_RESET_ON_SUCCESS], StateEnum.SETTINGS);
 	};
-	getStateSettingsDisableNativeRedirectOnSuccess = () => {
-		return getState([StateEnum.SETTINGS_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS], StateEnum.SETTINGS);
-	};
 	getStateSettingsRedirectionTimeout = () => {
 		return getState([StateEnum.SETTINGS_REDIRECTION_TIMEOUT], StateEnum.SETTINGS);
 	};

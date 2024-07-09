@@ -16,6 +16,8 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
+use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
@@ -28,6 +30,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
@@ -334,6 +337,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
 		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
+		$status = $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR;
 
 		$disableFallbackEmail = false;
 
@@ -372,26 +376,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
 
-		return $this->getIntegrationCommonSubmitOutput(
-			$formDetails,
-			$labelsOutput
-		);
-	}
-
-	/**
-	 * Output for getIntegrationCommonSubmitOutput method.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param string $msg Message to output.
-	 *
-	 * @return array<string, array<mixed>|int|string>
-	 */
-	protected function getIntegrationCommonSubmitOutput(array $formDetails, string $msg): array
-	{
-		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
-		$status = $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR;
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-
 		$additionalOutput = [];
 
 		if (isset($response[UtilsConfig::IARD_VALIDATION])) {
@@ -411,7 +395,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$filterDetails = \apply_filters($filterName, [], $formDetails);
 
 				if ($filterDetails) {
-					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
+					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
 				}
 			}
 
@@ -420,35 +404,86 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$this->getFormSubmitMailer()->sendEmails($formDetails);
 			}
 
-			// Return result output items as a response key.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
-			if (\has_filter($filterName)) {
-				$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-			}
-
-			// Output result output parts as a response key.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
-			if (\has_filter($filterName)) {
-				$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-			}
-
-			$additionalOutput = \array_merge(
-				$additionalOutput,
-				UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails)
-			);
-
 			return UtilsApiHelper::getApiSuccessPublicOutput(
-				$msg,
-				$additionalOutput,
+				$labelsOutput,
+				\array_merge(
+					$additionalOutput,
+					$this->getFormAdditionalOptionsData($formDetails)
+				),
 				$response
 			);
 		}
 
 		return UtilsApiHelper::getApiErrorPublicOutput(
-			$msg,
+			$labelsOutput,
 			$additionalOutput,
 			$response
 		);
+	}
+
+	/**
+	 * Output form additional options data.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getFormAdditionalOptionsData(array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+
+		$output = [];
+
+		// Return result output items as a response key.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
+		if (\has_filter($filterName)) {
+			$output[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
+		}
+
+		// Output result output parts as a response key.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
+		if (\has_filter($filterName)) {
+			$output[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
+		}
+
+		// Tracking event name.
+		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($type, $formId)['data'];
+		if ($trackingEventName) {
+			$output[UtilsHelper::getStateResponseOutputKey('trackingEventName')] = $trackingEventName;
+		}
+
+		// Provide additional data to tracking attr.
+		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($type, $formId)['data'];
+		if ($trackingAdditionalData) {
+			$output[UtilsHelper::getStateResponseOutputKey('trackingAdditionalData')] = $trackingAdditionalData;
+		}
+
+		// Hide global message on success.
+		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
+		if ($hideGlobalMsgOnSuccess) {
+			$output[UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
+		}
+
+		// Success redirect url.
+		// $successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
+		// if ($successRedirectUrl) {
+		// 	$outputSecureData["successRedirectUrl"] = $successRedirectUrl;
+		// }
+
+		if (isset($formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_URL]) && $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_URL]) {
+			$output[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_URL];
+		}
+
+		if (isset($formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA]) && $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA]) {
+			$output[UtilsHelper::getStateResponseOutputKey('successRedirectData')] = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA];
+		}
+
+		if (isset($formDetails[UtilsConfig::FD_ADDON]) && $formDetails[UtilsConfig::FD_ADDON]) {
+			$output[UtilsHelper::getStateResponseOutputKey('addon')] = $formDetails[UtilsConfig::FD_ADDON];
+		}
+
+		return $output;
 	}
 
 	/**

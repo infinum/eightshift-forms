@@ -16,6 +16,7 @@ use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper as HelpersUtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
@@ -97,7 +98,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 				$filterDetails = \apply_filters($filterName, [], $formDetails);
 
 				if ($filterDetails) {
-					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
+					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
 				}
 			}
 		}
@@ -128,29 +129,10 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		$this->sendConfirmationEmail($formId, $params, $files);
 
-		$additionalOutput = [];
-
-		// Output result output items as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
-		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
-
-		// Output result output parts as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
-		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
-
-		$additionalOutput = \array_merge(
-			$additionalOutput,
-			UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails)
-		);
-
 		// Finish.
 		return UtilsApiHelper::getApiSuccessPublicOutput(
 			$this->labels->getLabel('mailerSuccess', $formId),
-			$additionalOutput,
+			$this->getFormAdditionalOptionsData($formDetails),
 			$debug
 		);
 	}
@@ -263,11 +245,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId)['data'] ?? '';
 		if ($successRedirectUrl) {
 			// Add success redirect data, usualy got from the add-on plugin or filters.
-			$successRedirect = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] ?? '';
+			$successRedirect = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA] ?? '';
 			if ($successRedirect) {
 				$successRedirectUrl = \add_query_arg(
 					[
-						'es-data' => $successRedirect,
+						HelpersUtilsHelper::getStateSuccessRedirectUrlKey('data') => $successRedirect,
 					],
 					$successRedirectUrl
 				);
@@ -278,7 +260,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			if ($successRedirectVariation) {
 				$successRedirectUrl = \add_query_arg(
 					[
-						'es-variation' => UtilsEncryption::encryptor($successRedirectVariation),
+						HelpersUtilsHelper::getStateSuccessRedirectUrlKey('variation') => UtilsEncryption::encryptor($successRedirectVariation),
 					],
 					$successRedirectUrl
 				);

@@ -16,6 +16,7 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Listing\FormListingInterface;
+use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
@@ -969,6 +970,15 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitValue' => \__('Edit', 'eightshift-forms'),
 					]),
 				];
+
+				if (\apply_filters(SettingsResultOutput::FILTER_SETTINGS_IS_VALID_NAME, false)) {
+					$output[] = Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => get_permalink($formId),
+						'submitValue' => \__('View', 'eightshift-forms'),
+					]);
+				}
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [];
