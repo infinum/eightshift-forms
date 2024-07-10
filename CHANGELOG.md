@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [4.0.5]
+
+### Updated
+- `Eightshift-forms-utils` to the latest version `2.0.1`.
+
+### Fixed
+- Countries get list pulled the data from the wrong manifest cache file.
+
 ## [4.0.4]
 
 ### Fixed
@@ -442,6 +450,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[4.0.5]: https://github.com/infinum/eightshift-forms/compare/4.0.4...4.0.5
 [4.0.4]: https://github.com/infinum/eightshift-forms/compare/4.0.3...4.0.4
 [4.0.3]: https://github.com/infinum/eightshift-forms/compare/4.0.2...4.0.3
 [4.0.2]: https://github.com/infinum/eightshift-forms/compare/4.0.1...4.0.2
