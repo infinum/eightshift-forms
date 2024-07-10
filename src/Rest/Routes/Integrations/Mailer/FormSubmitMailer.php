@@ -78,29 +78,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
-				[],
-				$debug
-			);
-		}
-
-		if ($useSuccessAction) {
-			// Save entries.
-			if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-				$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-				$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
-			}
-
-			// Pre response filter for success redirect data.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-			if (\has_filter($filterName)) {
-				$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-				if ($filterDetails) {
-					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
-				}
-			}
+			return [
+				'status' => UtilsConfig::STATUS_ERROR,
+				'label' => 'mailerErrorSettingsMissing',
+				'debug' => $debug,
+			];
 		}
 
 		// This data is set here because $formDetails can me modified in the previous filters.
@@ -120,21 +102,20 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// If email fails.
 		if (!$response) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('mailerErrorEmailSend', $formId),
-				[],
-				$debug
-			);
+			return [
+				'status' => UtilsConfig::STATUS_ERROR,
+				'label' => 'mailerErrorEmailSend',
+				'debug' => $debug,
+			];
 		}
 
 		$this->sendConfirmationEmail($formId, $params, $files);
 
-		// Finish.
-		return UtilsApiHelper::getApiSuccessPublicOutput(
-			$this->labels->getLabel('mailerSuccess', $formId),
-			$this->getFormAdditionalOptionsData($formDetails),
-			$debug
-		);
+		return [
+			'status' => UtilsConfig::STATUS_SUCCESS,
+			'label' => 'mailerSuccess',
+			'debug' => $debug,
+		];
 	}
 
 	/**
