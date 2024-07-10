@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -21,8 +19,6 @@ use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Class FormSubmitMailerRoute
@@ -79,55 +75,38 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		// Pre response filter for addon data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterName)) {
-			$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-			if ($filterDetails) {
-				$formDetails[UtilsConfig::FD_ADDON] = $filterDetails;
-			}
-		}
-
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-			$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
-		}
+		// Pre submit form details manipulation.
+		$formDetails = $this->getIntegrationResponsePreSubmitFormDetailsManipulation($formDetails);
 
-		// Pre response filter for success redirect data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-		if (\has_filter($filterName)) {
-			$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-			if ($filterDetails) {
-				$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
-			}
-		}
-
-		$mailerResponse = $this->getFormSubmitMailer($formDetails);
+		// Send email.
+		$mailerResponse = $this->getFormSubmitMailer()->sendEmails($formDetails);
 
 		$status = $mailerResponse['status'] ?? UtilsConfig::STATUS_ERROR;
 		$label = $mailerResponse['label'] ?? 'mailerErrorEmailSend';
 		$debug = $mailerResponse['debug'] ?? [];
 
-		if ($status === UtilsConfig::STATUS_ERROR) {
+		if ($status === UtilsConfig::STATUS_SUCCESS) {
+			// Pre success form details manipulation.
+			$formDetails = $this->getIntegrationResponsePreSuccessFormDetailsManipulation($formDetails);
+
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel($label, $formId),
-					[],
+					$this->getIntegrationResponseSuccessOutputAdditionalData($formDetails),
 					$debug
 				)
 			);
 		}
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			UtilsApiHelper::getApiErrorPublicOutput(
 				$this->labels->getLabel($label, $formId),
-				$this->getFormAdditionalOptionsData($formDetails),
+				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 				$debug
 			)
 		);
+
 	}
 }

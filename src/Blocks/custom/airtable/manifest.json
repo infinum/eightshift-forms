@@ -24,12 +24,6 @@
 		"airtableIntegrationInnerId": {
 			"type": "string"
 		},
-		"airtableFormPostId": {
-			"type": "string"
-		},
-		"airtableFormDataTypeSelector": {
-			"type": "string"
-		},
 		"airtableAllowedBlocks": {
 			"type": "array",
 			"default": []

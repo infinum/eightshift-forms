@@ -83,11 +83,6 @@ abstract class AbstractFormBuilder
 			true
 		);
 
-		// If form needs refreshing like on general setting just pass formSuccessRedirect as true and the form will refresh on the same settings page.
-		if (isset($formAdditionalProps['formSuccessRedirect']) && $formAdditionalProps['formSuccessRedirect']) {
-			$formAdditionalProps['formSuccessRedirect'] = $this->getAdminRefreshUrl();
-		}
-
 		$formAdditionalProps['formResetOnSuccess'] = false;
 		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = true;
 

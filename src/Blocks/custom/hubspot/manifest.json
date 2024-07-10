@@ -21,12 +21,6 @@
 		"hubspotIntegrationId": {
 			"type": "string"
 		},
-		"hubspotFormPostId": {
-			"type": "string"
-		},
-		"hubspotFormDataTypeSelector": {
-			"type": "string"
-		},
 		"hubspotAllowedBlocks": {
 			"type": "array",
 			"default": []

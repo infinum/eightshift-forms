@@ -10,18 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper as HelpersUtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
@@ -61,11 +56,10 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * Send emails method.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param boolean $useSuccessAction If success action should be used.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDetails, bool $useSuccessAction = false): array
+	public function sendEmails(array $formDetails): array
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
@@ -225,12 +219,13 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		// Success redirect.
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId)['data'] ?? '';
 		if ($successRedirectUrl) {
+			// TODO
 			// Add success redirect data, usualy got from the add-on plugin or filters.
 			$successRedirect = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA] ?? '';
 			if ($successRedirect) {
 				$successRedirectUrl = \add_query_arg(
 					[
-						HelpersUtilsHelper::getStateSuccessRedirectUrlKey('data') => $successRedirect,
+						UtilsHelper::getStateSuccessRedirectUrlKey('data') => $successRedirect,
 					],
 					$successRedirectUrl
 				);
@@ -241,7 +236,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			if ($successRedirectVariation) {
 				$successRedirectUrl = \add_query_arg(
 					[
-						HelpersUtilsHelper::getStateSuccessRedirectUrlKey('variation') => UtilsEncryption::encryptor($successRedirectVariation),
+						UtilsHelper::getStateSuccessRedirectUrlKey('variation') => UtilsEncryption::encryptor($successRedirectVariation),
 					],
 					$successRedirectUrl
 				);

@@ -19,11 +19,10 @@ interface FormSubmitMailerInterface
 	 * Send emails method.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param boolean $useSuccessAction If success action should be used.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDetails, bool $useSuccessAction = false): array;
+	public function sendEmails(array $formDetails): array;
 
 	/**
 	 * Send fallback email

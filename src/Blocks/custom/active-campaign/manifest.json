@@ -24,12 +24,6 @@
 		"activeCampaignIntegrationInnerId": {
 			"type": "string"
 		},
-		"activeCampaignFormPostId": {
-			"type": "string"
-		},
-		"activeCampaignFormDataTypeSelector": {
-			"type": "string"
-		},
 		"activeCampaignAllowedBlocks": {
 			"type": "array",
 			"default": []

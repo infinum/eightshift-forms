@@ -409,29 +409,29 @@ export class Form {
 
 		if (this.state.getStateConfigIsAdmin()) {
 			// Set global msg.
-			this.utils.setGlobalMsg(formId, message, status);
+			this.utils.setGlobalMsg(formId, message, status, data);
 
 			if (this.state.getStateFormIsAdminSingleSubmit(formId)) {
 				this.utils.redirectToUrlByReference(formId, window.location.href, true);
 			}
 		} else {
 			// Send GTM.
-			this.utils.gtmSubmit(formId, status);
+			this.utils.gtmSubmit(formId, status, data);
 
-			if (this.state.getStateFormConfigSuccessRedirect(formId)) {
+			if (data?.[this.state.getStateResponseOutputKey('successRedirectUrl')]) {
 				// Remove local storage for prefill.
 				if (this.state.getStateEnrichmentIsUsed()) {
 					this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
 				}
 
 				// Redirect to url and update url params from from data.
-				this.utils.redirectToUrl(formId, data);
+				this.utils.redirectToUrlByReference(formId, data?.[this.state.getStateResponseOutputKey('successRedirectUrl')]);
 			} else {
 				// Clear form values.
 				this.utils.resetForm(formId);
 
 				// Set global msg.
-				this.utils.setGlobalMsg(formId, message, status);
+				this.utils.setGlobalMsg(formId, message, status, data);
 
 				// Remove local storage for prefill.
 				if (this.state.getStateEnrichmentIsUsed()) {
@@ -475,9 +475,9 @@ export class Form {
 
 		const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 
-		this.utils.setGlobalMsg(formId, message, status);
+		this.utils.setGlobalMsg(formId, message, status, data);
 
-		this.utils.gtmSubmit(formId, status, data?.[validationOutputKey]);
+		this.utils.gtmSubmit(formId, status, data);
 
 		// Dispatch event.
 		if (data?.[validationOutputKey] !== undefined) {

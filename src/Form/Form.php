@@ -153,17 +153,20 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				$blockName = UtilsGeneralHelper::getBlockNameDetails($innerBlock['blockName'])['name'];
 
 				// Populate forms blocks attributes to the form component later in the chain.
-				$innerBlock['attrs']["{$blockName}FormSuccessRedirectVariation"] = $formsSuccessRedirectVariation;
-				$innerBlock['attrs']["{$blockName}FormSuccessRedirectVariationUrl"] = $formsSuccessRedirectVariationUrl;
-				$innerBlock['attrs']["{$blockName}FormSuccessRedirectVariationUrlTitle"] = $formsSuccessRedirectVariationUrlTitle;
-				$innerBlock['attrs']["{$blockName}FormDownloads"] = $formsDownloads;
-				$innerBlock['attrs']["{$blockName}FormType"] = $blockName;
-				$innerBlock['attrs']["{$blockName}FormPostId"] = $formsFormPostId;
-				$innerBlock['attrs']["{$blockName}FormDataTypeSelector"] = $formsFormDataTypeSelector;
+				$innerBlock['attrs']["{$blockName}FormParentSettings"] = [
+					'variation' => $formsSuccessRedirectVariation,
+					'variationUrl' => $formsSuccessRedirectVariationUrl,
+					'variationUrlTitle' => $formsSuccessRedirectVariationUrlTitle,
+					'downloads' => $formsDownloads,
+					'customName' => $formsCustomName,
+					'conditionalTags' => \wp_json_encode($formsConditionalTagsRulesForms),
+					'disabledDefaultStyles' => $checkStyleEnqueue,
+					'dataTypeSelector' => $formsFormDataTypeSelector,
+					'postId' => $formsFormPostId,
+					'formType' => $blockName,
+				];
+
 				$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
-				$innerBlock['attrs']["{$blockName}FormDisabledDefaultStyles"] = $checkStyleEnqueue;
-				$innerBlock['attrs']["{$blockName}FormConditionalTags"] = \wp_json_encode($formsConditionalTagsRulesForms);
-				$innerBlock['attrs']["{$blockName}FormCustomName"] = $formsCustomName;
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
 				$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
 
@@ -538,14 +541,16 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	{
 		$outputSecureData = [];
 
-		// Success redirect variation.
-		if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
-			$successRedirectUrl = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
+		dump($attributes);
 
-			if ($successRedirectUrl) {
-				$outputSecureData["SuccessRedirectVariation"] = $successRedirectUrl;
-			}
-		}
+		// Success redirect variation.
+		// if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
+		// 	$successRedirectUrl = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
+
+		// 	if ($successRedirectUrl) {
+		// 		$outputSecureData["SuccessRedirectVariation"] = $successRedirectUrl;
+		// 	}
+		// }
 
 		if (!$outputSecureData) {
 			return '';

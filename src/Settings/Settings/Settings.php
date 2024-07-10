@@ -112,7 +112,6 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			UtilsHelper::getStateAttribute('formId') => $formId,
 			UtilsHelper::getStateAttribute('formType') => $internalType,
 			UtilsHelper::getStateAttribute('settingsType') => $type,
-			UtilsHelper::getStateAttribute('successRedirect') => Helpers::getCurrentUrl(),
 		];
 
 		// Populate and build form.

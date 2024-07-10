@@ -107,7 +107,6 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 		[
 			'formsFormPostId' => $formId,
 			'formsStyle' => $attributes['style'] ?? [],
-			'formsDownloads' => $attributes['downloads'] ?? [],
 			'formsFormGeolocation' => $attributes['geolocation'] ?? [],
 			'formsFormGeolocationAlternatives' => $attributes['geolocationAlternatives'] ?? [],
 		],

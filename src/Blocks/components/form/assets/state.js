@@ -91,17 +91,6 @@ export class State {
 	};
 
 	////////////////////////////////////////////////////////////////
-	// Tracking getters.
-	////////////////////////////////////////////////////////////////
-
-	getStateFormTrackingEventName = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_NAME], formId);
-	};
-	getStateFormTrackingEventAdditionalData = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_ADDITIONAL_DATA], formId);
-	};
-
-	////////////////////////////////////////////////////////////////
 	// Conditional tags getters.
 	////////////////////////////////////////////////////////////////
 
@@ -134,9 +123,6 @@ export class State {
 	getStateFormGlobalMsgHeadingError = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], formId);
 	};
-	getStateFormGlobalMsgHideOnSuccess = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HIDE_ON_SUCCESS], formId);
-	};
 
 	////////////////////////////////////////////////////////////////
 	// Config getters.
@@ -147,15 +133,6 @@ export class State {
 	};
 	getStateFormConfigPhoneUseSync = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_USE_PHONE_SYNC], formId);
-	};
-	getStateFormConfigSuccessRedirect = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT], formId);
-	};
-	getStateFormConfigSuccessRedirectVariation = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formId);
-	};
-	getStateFormConfigSuccessRedirectDownloads = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], formId);
 	};
 	getStateFormConfigUseSingleSubmit = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_USE_SINGLE_SUBMIT], formId);

@@ -324,20 +324,12 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	protected function getIntegrationCommonSubmitAction(array $formDetails, $callbackStart = null): array
 	{
-		// Pre response filter for addon data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterName)) {
-			$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-			if ($filterDetails) {
-				$formDetails[UtilsConfig::FD_ADDON] = $filterDetails;
-			}
-		}
-
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
 		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
 		$status = $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR;
+
+		$formDetails = $this->getIntegrationResponsePreSubmitFormDetailsManipulation($formDetails);
 
 		$disableFallbackEmail = false;
 
@@ -383,21 +375,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		if ($status === UtilsConfig::STATUS_SUCCESS) {
-			// Order of this filter is important as you can use filters in the getApiPublicAdditionalDataOutput helper.
-			if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-				$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-				$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
-			}
-
-			// Pre response filter for success redirect data.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-			if (\has_filter($filterName)) {
-				$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-				if ($filterDetails) {
-					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
-				}
-			}
+			$formDetails = $this->getIntegrationResponsePreSuccessFormDetailsManipulation($formDetails);
 
 			// Send email if it is configured in the backend.
 			if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
@@ -408,7 +386,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$labelsOutput,
 				\array_merge(
 					$additionalOutput,
-					$this->getFormAdditionalOptionsData($formDetails)
+					$this->getIntegrationResponseSuccessOutputAdditionalData($formDetails)
 				),
 				$response
 			);
@@ -416,36 +394,66 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		return UtilsApiHelper::getApiErrorPublicOutput(
 			$labelsOutput,
-			$additionalOutput,
+			$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 			$response
 		);
 	}
 
 	/**
-	 * Output form additional options data.
+	 * Get integration response pre submit form details manipulation.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getFormAdditionalOptionsData(array $formDetails): array
+	protected function getIntegrationResponsePreSubmitFormDetailsManipulation(array $formDetails): array
 	{
+		// Pre response filter for addon data.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
+		if (\has_filter($filterName)) {
+			$filterDetails = \apply_filters($filterName, [], $formDetails);
+
+			if ($filterDetails) {
+				$formDetails[UtilsConfig::FD_ADDON] = $filterDetails;
+			}
+		}
+
+		return $formDetails;
+	}
+
+	/**
+	 * Get integration response pre success form details manipulation.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getIntegrationResponsePreSuccessFormDetailsManipulation(array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+
+		// This filter must be always on the fitsr place in order to work properly with addons.
+		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
+			$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
+		}
+
+		return $formDetails;
+	}
+
+
+	/**
+	 * Get integration response output additional data on error or success.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getIntegrationResponseAnyOutputAdditionalData(array $formDetails): array {
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
 		$output = [];
-
-		// Return result output items as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
-		if (\has_filter($filterName)) {
-			$output[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
-
-		// Output result output parts as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
-		if (\has_filter($filterName)) {
-			$output[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
 
 		// Tracking event name.
 		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($type, $formId)['data'];
@@ -459,6 +467,43 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$output[UtilsHelper::getStateResponseOutputKey('trackingAdditionalData')] = $trackingAdditionalData;
 		}
 
+		return $output;
+	}
+
+	/**
+	 * Get integration response output additional data on success.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getIntegrationResponseSuccessOutputAdditionalData(array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+
+		$output = [];
+
+		// Return result output items as a response key.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
+		if (\has_filter($filterName)) {
+			$filterOutput = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
+
+			if ($filterOutput) {
+				$output[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = $filterOutput;
+			}
+		}
+
+		// Output result output parts as a response key.
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
+		if (\has_filter($filterName)) {
+			$filterOutput = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
+
+			if ($filterOutput) {
+				$output[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = $filterOutput;
+			}
+		}
+
 		// Hide global message on success.
 		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
 		if ($hideGlobalMsgOnSuccess) {
@@ -466,24 +511,57 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		// Success redirect url.
-		// $successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
-		// if ($successRedirectUrl) {
-		// 	$outputSecureData["successRedirectUrl"] = $successRedirectUrl;
-		// }
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
+		if ($successRedirectUrl) {
+			dump($formDetails);
+			$redirectDataOutput = [];
 
-		if (isset($formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_URL]) && $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_URL]) {
-			$output[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_URL];
+			// Replace {field_name} with the actual value.
+			foreach ($formDetails[UtilsConfig::FD_PARAMS_RAW] as $name => $value) {
+				if (\is_array($value)) {
+					$value = \implode(', ', $value);
+				}
+				$successRedirectUrl = \str_replace("{" . $name . "}", $value, $successRedirectUrl);
+			}
+
+			// Pre response filter for success redirect data.
+			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
+			if (\has_filter($filterName)) {
+				$filterDetails = \apply_filters($filterName, [], $formDetails);
+
+				if ($filterDetails) {
+					$redirectDataOutput = $filterDetails;
+				}
+			}
+
+			$output[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
+				[
+					UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
+				],
+				$successRedirectUrl
+			);
 		}
 
-		if (isset($formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA]) && $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA]) {
-			$output[UtilsHelper::getStateResponseOutputKey('successRedirectData')] = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA];
-		}
-
+		// Append additional addon data from filter.
 		if (isset($formDetails[UtilsConfig::FD_ADDON]) && $formDetails[UtilsConfig::FD_ADDON]) {
 			$output[UtilsHelper::getStateResponseOutputKey('addon')] = $formDetails[UtilsConfig::FD_ADDON];
 		}
 
-		return $output;
+		return array_merge(
+			$output,
+			$this->getIntegrationResponseAnyOutputAdditionalData($formDetails)
+		);
+	}
+
+	/**
+	 * Get integration response output additional data on error.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getIntegrationResponseErrorOutputAdditionalData(array $formDetails): array {
+		return $this->getIntegrationResponseAnyOutputAdditionalData($formDetails);
 	}
 
 	/**
