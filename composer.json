@@ -49,7 +49,6 @@
 		"php": ">=8.2",
 		"erusev/parsedown": "^1.7.4",
 		"infinum/eightshift-forms-utils": "dev-feature/gated"
-
 	},
 	"autoload": {
 		"psr-4": {
