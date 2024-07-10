@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
@@ -164,7 +165,7 @@ final class FiltersOuputMock
 		$data = $dataGlobal;
 
 		// Find local settings for form.
-		$dataLocal = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
+		$dataLocal = UtilsSettingsHelper::getSettingValue(SettingsResultOutput::SETTINGS_RESULT_OUTPUT_SUCCESS_REDIRECT_URL_KEY, $formId);
 
 		if ($dataLocal) {
 			$data = $dataLocal;

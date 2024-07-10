@@ -16,7 +16,6 @@ use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -540,8 +539,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	private function getSecureFormData(string $type, string $formId, string $prefix, array $attributes): string
 	{
 		$outputSecureData = [];
-
-		dump($attributes);
 
 		// Success redirect variation.
 		// if (!$attributes["{$prefix}SuccessRedirectVariation"]) {

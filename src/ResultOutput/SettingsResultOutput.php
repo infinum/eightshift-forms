@@ -57,7 +57,7 @@ class SettingsResultOutput implements UtilsSettingGlobalInterface, ServiceInterf
 	/**
 	 * Result output success redirect url key.
 	 */
-	public const SETTINGS_RESULT_OUTPUT_SUCCESS_REDIRECT_URL_KEY = 'redirection-success';
+	public const SETTINGS_RESULT_OUTPUT_SUCCESS_REDIRECT_URL_KEY = 'general-redirection-success';
 
 	/**
 	 * Result output use key.
@@ -135,6 +135,10 @@ class SettingsResultOutput implements UtilsSettingGlobalInterface, ServiceInterf
 	 */
 	public function getSettingsData(string $formId): array
 	{
+		if (!$this->isSettingsGlobalValid()) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		}
+
 		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
 		$formType = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 

@@ -232,7 +232,10 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
 				'emailTemplateTags' => [
-					'mailerSuccessRedirectUrl' => '', // Empty string as we are not using it to match the value.
+					 // Empty string as we are not using it to match the value.
+					'mailerSuccessRedirectUrl' => '',
+					'mailerResultOutputItems' => '',
+					'mailerResultOutputParts' => '',
 				],
 				'labels' => [
 					'title' => \__('Mailer', 'eightshift-forms'),

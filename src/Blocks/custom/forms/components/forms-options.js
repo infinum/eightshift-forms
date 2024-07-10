@@ -33,6 +33,7 @@ import {
 	outputFormSelectItemWithIcon,
 } from '../../../components/utils';
 import { getRestUrl } from '../../../components/form/assets/state-init';
+import { ResultsOutputOptions } from './results-output';
 
 export const FormsOptions = ({
 	attributes,
@@ -145,7 +146,7 @@ export const FormsOptions = ({
 				}
 			</PanelBody>
 
-			<PanelBody title={__('"Thank you" page', 'eightshift-forms')} initialOpen={true}>
+			<PanelBody title={__('Results output', 'eightshift-forms')} initialOpen={true}>
 				<Select
 					icon={icons.paletteColor}
 					label={__('Variant', 'eightshift-forms')}
@@ -253,6 +254,11 @@ export const FormsOptions = ({
 					</>
 				</Collapsable>
 			</PanelBody>
+
+			<ResultsOutputOptions
+				attributes={attributes}
+				setAttributes={setAttributes}
+			/>
 
 			<ConditionalTagsFormsOptions
 				{...props('conditionalTags', attributes, {

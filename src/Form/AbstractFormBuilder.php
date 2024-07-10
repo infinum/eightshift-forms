@@ -241,16 +241,4 @@ abstract class AbstractFormBuilder
 			true
 		);
 	}
-
-	/**
-	 * Returns the current admin page url for refresh.
-	 *
-	 * @return string
-	 */
-	private function getAdminRefreshUrl(): string
-	{
-		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		return \admin_url(\sprintf(\basename($request)));
-	}
 }

@@ -68,6 +68,13 @@
 		},
 		"formsAttrs": {
 			"type": "object"
+		},
+		"formsResultsOutputUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"formsResultsOutputData": {
+			"type": "array"
 		}
 	},
 	"components": {

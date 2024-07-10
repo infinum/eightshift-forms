@@ -586,13 +586,13 @@ export class Utils {
 		this.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitSuccessBeforeRedirect'), redirectUrl);
 
 		// Do the actual redirect after some time.
-		// setTimeout(() => {
-		// 	window.location = redirectUrl;
+		setTimeout(() => {
+			window.location = redirectUrl;
 
-		// 	if (reload) {
-		// 		window.location.reload();
-		// 	}
-		// }, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
+			if (reload) {
+				window.location.reload();
+			}
+		}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
 	}
 
 	/**

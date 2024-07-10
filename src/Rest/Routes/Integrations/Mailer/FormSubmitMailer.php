@@ -56,10 +56,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * Send emails method.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $responseTags Response tags.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDetails): array
+	public function sendEmails(array $formDetails, array $responseTags = []): array
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
@@ -91,7 +92,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
 			$params,
-			$this->prepareEmailResponseTags($formDetails)
+			$responseTags
 		);
 
 		// If email fails.
@@ -194,58 +195,5 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			$files,
 			$params
 		);
-	}
-
-	/**
-	 * Prepare all email response tags.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function prepareEmailResponseTags(array $formDetails): array
-	{
-		$output = [];
-
-		// Output all the response tags.
-		$responseTags = $formDetails[UtilsConfig::FD_EMAIL_RESPONSE_TAGS] ?? [];
-		if ($responseTags) {
-			$output = $responseTags;
-		}
-
-		$formType = $formDetails[UtilsConfig::FD_TYPE] ?? '';
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-
-		// Success redirect.
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId)['data'] ?? '';
-		if ($successRedirectUrl) {
-			// TODO
-			// Add success redirect data, usualy got from the add-on plugin or filters.
-			$successRedirect = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT_DATA] ?? '';
-			if ($successRedirect) {
-				$successRedirectUrl = \add_query_arg(
-					[
-						UtilsHelper::getStateSuccessRedirectUrlKey('data') => $successRedirect,
-					],
-					$successRedirectUrl
-				);
-			}
-
-			// Add variation data, this filter will not take in effect if the success redirect variation isn't set in the block editor.
-			$successRedirectVariation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($formType, $formId)['data'] ?? '';
-			if ($successRedirectVariation) {
-				$successRedirectUrl = \add_query_arg(
-					[
-						UtilsHelper::getStateSuccessRedirectUrlKey('variation') => UtilsEncryption::encryptor($successRedirectVariation),
-					],
-					$successRedirectUrl
-				);
-			}
-
-			// Output mailer response tag.
-			$output["mailerSuccessRedirectUrl"] = $successRedirectUrl;
-		}
-
-		return $output;
 	}
 }

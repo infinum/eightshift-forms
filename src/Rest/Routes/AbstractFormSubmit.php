@@ -22,6 +22,7 @@ use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -377,16 +378,21 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if ($status === UtilsConfig::STATUS_SUCCESS) {
 			$formDetails = $this->getIntegrationResponsePreSuccessFormDetailsManipulation($formDetails);
 
+			$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
+
 			// Send email if it is configured in the backend.
 			if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
-				$this->getFormSubmitMailer()->sendEmails($formDetails);
+				$this->getFormSubmitMailer()->sendEmails(
+					$formDetails,
+					$this->getCombinedEmailResponseTags($formDetails, $successAdditionalData)
+				);
 			}
 
 			return UtilsApiHelper::getApiSuccessPublicOutput(
 				$labelsOutput,
 				\array_merge(
 					$additionalOutput,
-					$this->getIntegrationResponseSuccessOutputAdditionalData($formDetails)
+					$successAdditionalData
 				),
 				$response
 			);
@@ -505,7 +511,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		// Hide global message on success.
-		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
+		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsResultOutput::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsResultOutput::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
 		if ($hideGlobalMsgOnSuccess) {
 			$output[UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
 		}
@@ -513,7 +519,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		// Success redirect url.
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
 		if ($successRedirectUrl) {
-			dump($formDetails);
 			$redirectDataOutput = [];
 
 			// Replace {field_name} with the actual value.
@@ -562,6 +567,58 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	protected function getIntegrationResponseErrorOutputAdditionalData(array $formDetails): array {
 		return $this->getIntegrationResponseAnyOutputAdditionalData($formDetails);
+	}
+
+	/**
+	 * Prepare email response tags from the API response.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getEmailResponseTags(array $formDetails): array
+	{
+		return [];
+	}
+
+	/**
+	 * Prepare all email response tags.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $data Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getCombinedEmailResponseTags(array $formDetails, array $data): array
+	{
+		return \array_merge(
+			$this->getCommonEmailResponseTags($data),
+			$this->getEmailResponseTags($formDetails)
+		);
+	}
+
+		/**
+	 * Prepare all email response tags.
+	 *
+	 * @param array<string, mixed> $data Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getCommonEmailResponseTags(array $data): array
+	{
+		$output = [];
+
+		foreach ($data as $key => $value) {
+			$key = \ucfirst($key);
+
+			if (\is_array($value)) {
+				$value = \json_encode($value);
+			}
+
+			$output["mailer{$key}"] = $value;
+		}
+
+		return $output;
 	}
 
 	/**

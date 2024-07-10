@@ -80,8 +80,14 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		// Pre submit form details manipulation.
 		$formDetails = $this->getIntegrationResponsePreSubmitFormDetailsManipulation($formDetails);
 
+		// Located before the sendEmail mentod so we can utilize common email response tags.
+		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
+
 		// Send email.
-		$mailerResponse = $this->getFormSubmitMailer()->sendEmails($formDetails);
+		$mailerResponse = $this->getFormSubmitMailer()->sendEmails(
+			$formDetails,
+			$this->getCommonEmailResponseTags($successAdditionalData)
+		);
 
 		$status = $mailerResponse['status'] ?? UtilsConfig::STATUS_ERROR;
 		$label = $mailerResponse['label'] ?? 'mailerErrorEmailSend';
@@ -94,7 +100,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel($label, $formId),
-					$this->getIntegrationResponseSuccessOutputAdditionalData($formDetails),
+					$successAdditionalData,
 					$debug
 				)
 			);

@@ -40,11 +40,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_TYPE_KEY = 'general';
 
 	/**
-	 * Redirection Success key.
-	 */
-	public const SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY = 'general-redirection-success';
-
-	/**
 	 * Redirection Success key for each integration with type prefix.
 	 */
 	public const SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY = 'redirection-success';
@@ -68,11 +63,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 * Form custom name key.
 	 */
 	public const SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
-
-	/**
-	 * Hide global message on success key.
-	 */
-	public const SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY = 'hide-global-msg-on-success';
 
 	/**
 	 * Use single submit key.
@@ -126,33 +116,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 						'tabLabel' => \__('After form submission', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY),
-								'inputFieldLabel' => \__('Redirect to URL', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name and filter output copy.
-								'inputFieldHelp' => \sprintf(\__('
-									After a successful submission, the user will be redirected to the provided URL and the success message will <b>not</b> be shown.<br /><br />
-									If you need to include some of the submitted data, use template tags (e.g. <code>{field-name}</code>).<br />
-									<details class="is-filter-applied">
-										<summary>Available tags</summary>
-										<ul>
-											%1$s
-										</ul>
-
-										<br />
-										Tag missing? Make sure its field has a <b>Name</b> set!
-									</details>
-									%2$s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS]), $successRedirectUrl['settingsLocal']),
-								'inputType' => 'url',
-								'inputIsUrl' => true,
-								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
-								'inputValue' => $successRedirectUrl['dataLocal'],
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
 								'component' => 'select',
 								'selectFieldLabel' => \__('Redirect variation', 'eightshift-forms'),
 								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY),
@@ -176,25 +139,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										$successRedirectVariationOptions['data']
 									)
 								),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									]
-								]
 							],
 						],
 					],

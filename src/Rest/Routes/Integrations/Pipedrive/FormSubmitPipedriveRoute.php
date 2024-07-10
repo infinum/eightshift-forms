@@ -96,7 +96,6 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 		);
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
-		$formDetails[UtilsConfig::FD_EMAIL_RESPONSE_TAGS] = $this->getEmailResponseTags($formDetails);
 
 		// Finish.
 		return \rest_ensure_response(
@@ -111,7 +110,7 @@ class FormSubmitPipedriveRoute extends AbstractFormSubmit
 	 *
 	 * @return array<string, string>
 	 */
-	private function getEmailResponseTags(array $formDetails): array
+	protected function getEmailResponseTags(array $formDetails): array
 	{
 		$body = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];
 		$output = [];
