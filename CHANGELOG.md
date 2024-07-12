@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [4.0.6]
+
+### Updated
+- `Eightshift-forms-utils` to the latest version `2.0.2`.
+- Result output item now supports conditional logic with both single and duplicate value.
+
 ## [4.0.5]
 
 ### Updated
@@ -450,6 +456,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[4.0.6]: https://github.com/infinum/eightshift-forms/compare/4.0.5...4.0.6
 [4.0.5]: https://github.com/infinum/eightshift-forms/compare/4.0.4...4.0.5
 [4.0.4]: https://github.com/infinum/eightshift-forms/compare/4.0.3...4.0.4
 [4.0.3]: https://github.com/infinum/eightshift-forms/compare/4.0.2...4.0.3
