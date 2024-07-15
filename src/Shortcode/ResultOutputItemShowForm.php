@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Shortcode;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -38,8 +40,26 @@ class ResultOutputItemShowForm implements ServiceInterface
 	 */
 	public function callback(array $atts, string $content): string
 	{
-		$selector =  UtilsHelper::getStateSelector('resultOutputShowForm');
+		$buttonComponent = '';
 
-		return "<button href='#' class={$selector}>{$content}</button>";
+		$filterNameComponentNext = UtilsHooksHelper::getFilterName(['block', 'form', 'component_show_form']);
+
+		if (\has_filter($filterNameComponentNext)) {
+			$buttonComponent = \apply_filters($filterNameComponentNext, [
+				'value' => $content,
+				'jsSelector' => UtilsHelper::getStateSelector('resultOutputShowForm'),
+			]);
+		}
+
+		return Helpers::render(
+			'submit',
+			\array_merge(
+				Helpers::props('submit', [], [
+					'submitButtonComponent' => $buttonComponent,
+				]),
+			),
+			'components',
+			true
+		);
 	}
 }

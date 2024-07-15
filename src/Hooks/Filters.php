@@ -87,6 +87,7 @@ final class Filters
 					'resultOutputItems',
 					'resultOutputParts',
 					'customClassSelector',
+					'componentShowForm',
 				],
 				'formSelector' => [
 					'formTemplates',
