@@ -54,6 +54,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"formHideFormOnSuccess": {
+			"type": "boolean",
+			"default": false
+		},
 		"formSuccessRedirect": {
 			"type": "string"
 		},

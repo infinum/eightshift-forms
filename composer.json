@@ -42,7 +42,7 @@
 	"require": {
 		"php": ">=8.2",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^2.0.1"
+		"infinum/eightshift-forms-utils": "^2.0.2"
 	},
 	"autoload": {
 		"psr-4": {

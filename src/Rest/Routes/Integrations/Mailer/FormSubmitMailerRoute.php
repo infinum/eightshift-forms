@@ -85,6 +85,10 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			}
 		}
 
+		$this->getFormSubmitMailer()->sendFallbackIntegrationEmail(
+			$formDetails
+		);
+
 		return \rest_ensure_response(
 			$this->getFormSubmitMailer()->sendEmails(
 				$formDetails,

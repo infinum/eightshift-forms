@@ -1356,6 +1356,15 @@ export class Utils {
 		if (outputElementIsHidden) {
 			outputElement.classList.remove(this.state.getStateSelector('isHidden'));
 		}
+
+		// Show form elements.
+		const showFormElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputShowForm', true)}`);
+
+		if (showFormElement) {
+			showFormElement.forEach((item) => {
+				item.addEventListener('click', this.onFormShowEvent);
+			});
+		}
 	}
 
 	/**
@@ -1419,6 +1428,27 @@ export class Utils {
 			[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BNS]: (input, value, end) => 
 				parseFloat(String(input)) <= parseFloat(String(value)) || parseFloat(String(input)) >= parseFloat(String(end)),
 		};
+	};
+
+	////////////////////////////////////////////////////////////////
+	// Events callback
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Handle form show event.
+	 *
+	 * @param {object} event Event callback.
+	 * @returns {void}
+	 */
+	onFormShowEvent = (e) => {
+		const forms = e?.target?.closest(this.state.getStateSelector('resultOutput', true));
+
+		if (!forms) {
+			return;
+		}
+
+		forms?.classList?.add(this.state.getStateSelector('isHidden'));
+		this.state.getStateFormElement(forms?.getAttribute(this.state.getStateAttribute('formId')))?.classList?.remove(this.state.getStateSelector('isHidden'));
 	};
 
 	////////////////////////////////////////////////////////////////

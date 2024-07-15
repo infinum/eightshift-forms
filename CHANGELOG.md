@@ -8,7 +8,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Updated
 - `Eightshift-forms-utils` to the latest version `2.0.2`.
-- Result output item now supports conditional logic with both single and duplicate value.
+- result output item now supports conditional logic with both single and duplicate values.
+
+### Added
+- email fallbacks now supports request IP sent from the server, the data is anonymized.
+- new form setting that will hide form once it is submitted with success.
+- new `esFormsROISF` shortcode that can be used inside the result output item to show the form again.
 
 ## [4.0.5]
 
