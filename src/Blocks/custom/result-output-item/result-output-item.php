@@ -23,6 +23,8 @@ if (!$resultOutputItemName || !$resultOutputItemValue) {
 $resultAttrs = [
 	UtilsHelper::getStateAttribute('resultOutputItemKey') => esc_attr($resultOutputItemName),
 	UtilsHelper::getStateAttribute('resultOutputItemValue') => esc_attr($resultOutputItemValue),
+	UtilsHelper::getStateAttribute('resultOutputItemValueEnd') => esc_attr(Helpers::checkAttr('resultOutputItemValueEnd', $attributes, $manifest)),
+	UtilsHelper::getStateAttribute('resultOutputItemOperator') => esc_attr(Helpers::checkAttr('resultOutputItemOperator', $attributes, $manifest)),
 ];
 
 $resultAttrsOutput = '';

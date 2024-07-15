@@ -3,6 +3,7 @@ import {
 	CONDITIONAL_TAGS_ACTIONS,
 	CONDITIONAL_TAGS_LOGIC,
 	CONDITIONAL_TAGS_OPERATORS,
+	CONDITIONAL_TAGS_OPERATORS_EXTENDED,
 } from '../assets/utils';
 
 export const CONDITIONAL_TAGS_OPERATORS_LABELS = {
@@ -15,6 +16,13 @@ export const CONDITIONAL_TAGS_OPERATORS_LABELS = {
 	[CONDITIONAL_TAGS_OPERATORS.C]: __('contains', 'eightshift-forms'),
 	[CONDITIONAL_TAGS_OPERATORS.SW]: __('starts with', 'eightshift-forms'),
 	[CONDITIONAL_TAGS_OPERATORS.EW]: __('ends with', 'eightshift-forms'),
+};
+
+export const CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS = {
+	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.B]: __('in range', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BS]: __('in range (strict)', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BN]: __('not in range', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BNS]: __('not in range (strict)', 'eightshift-forms'),
 };
 
 export const CONDITIONAL_TAGS_ACTIONS_LABELS = {

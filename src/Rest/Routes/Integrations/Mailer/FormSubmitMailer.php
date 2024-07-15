@@ -14,6 +14,7 @@ use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -39,17 +40,27 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	public $mailer;
 
 	/**
+	 * Instance variable of SecurityInterface data.
+	 *
+	 * @var SecurityInterface
+	 */
+	protected $security;
+
+	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param SecurityInterface $security Inject security methods.
 	 */
 	public function __construct(
 		MailerInterface $mailer,
-		LabelsInterface $labels
+		LabelsInterface $labels,
+		SecurityInterface $security
 	) {
 		$this->mailer = $mailer;
 		$this->labels = $labels;
+		$this->security = $security;
 	}
 
 	/**
@@ -129,6 +140,10 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		string $customMsg = '',
 		array $customData = []
 	): bool {
+		$customData['debug'] = [
+			'requestIP' => $this->security->getIpAddress('anonymize'),
+		];
+
 		return $this->mailer->fallbackIntegrationEmail(
 			$formDetails,
 			$customSubject,
@@ -154,6 +169,10 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		string $customMsg = '',
 		array $customData = []
 	): bool {
+		$customData['debug'] = [
+			'requestIP' => $this->security->getIpAddress('anonymize'),
+		];
+
 		return $this->mailer->fallbackProcessingEmail(
 			$formDetails,
 			$customSubject,

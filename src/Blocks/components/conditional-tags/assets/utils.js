@@ -1,18 +1,12 @@
 /**
  * Conditional tags operators constants.
  *
- * show - show item if conditions is set, hidden by default.
- * hide - hide item if conditions is set, visible by default.
- *
- * all - activate condition if all conditions in rules array are met.
- * any - activate condition if at least one condition in rules array is met.
- *
  * is  - is                  - if value is exact match.
  * isn - is not              - if value is not exact match.
  * gt  - greater than        - if value is greater than.
- * gte  - greater/equal than - if value is greater/equal than.
+ * gte - greater/equal than  - if value is greater/equal than.
  * lt  - less than           - if value is less than.
- * lte  - less/equal than    - if value is less/equal than.
+ * lte - less/equal than     - if value is less/equal than.
  * c   - contains            - if value contains value.
  * sw  - starts with         - if value starts with value.
  * ew  - ends with           - if value starts with value.
@@ -27,6 +21,21 @@ export const CONDITIONAL_TAGS_OPERATORS = {
 	C: 'c',
 	SW: 'sw',
 	EW: 'ew',
+};
+
+/**
+ * Conditional tags operators constants - extended.
+ *
+ * b   - between range                    - if value is between two values.
+ * bs  - between range strict             - if value is between two values strict.
+ * bn  - not between range                - if value is not between two values.
+ * bns - not between between range strict - if value is not between two values strict.
+ */
+export const CONDITIONAL_TAGS_OPERATORS_EXTENDED = {
+	B: 'b',
+	BS: 'bs',
+	BN: 'bn',
+	BNS: 'bns',
 };
 
 /**

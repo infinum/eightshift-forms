@@ -74,6 +74,11 @@ class SettingsResultOutput implements UtilsSettingGlobalInterface, ServiceInterf
 	 */
 	public const SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY = 'hide-global-msg-on-success';
 
+	/**
+	 * Hide form on success key.
+	 */
+	public const SETTINGS_RESULT_OUTPUT_HIDE_FORM_ON_SUCCESS_KEY = 'hide-form-on-success';
+
 
 	/**
 	 * Register all the hooks
@@ -198,26 +203,42 @@ class SettingsResultOutput implements UtilsSettingGlobalInterface, ServiceInterf
 									'inputIsDisabled' => $successRedirectUrl['filterUsed'],
 									'inputValue' => $successRedirectUrl['dataLocal'],
 								],
-								[
-									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
-								],
-								[
-									'component' => 'checkboxes',
-									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
-									'checkboxesContent' => [
-										[
-											'component' => 'checkbox',
-											'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
-											'checkboxValue' => self::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
-											'checkboxSingleSubmit' => true,
-											'checkboxAsToggle' => true,
-										]
-									]
-								],
 							] : []),
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
+										'checkboxHelp' => \__('Usualy used in combination with single submit for calculators.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_RESULT_OUTPUT_HIDE_FORM_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide form on success', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_RESULT_OUTPUT_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_RESULT_OUTPUT_HIDE_FORM_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_RESULT_OUTPUT_HIDE_FORM_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
 						],
 					],
 				],
