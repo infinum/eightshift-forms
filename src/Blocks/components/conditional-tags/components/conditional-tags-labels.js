@@ -19,10 +19,10 @@ export const CONDITIONAL_TAGS_OPERATORS_LABELS = {
 };
 
 export const CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS = {
-	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.B]: __('between range', 'eightshift-forms'),
-	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BS]: __('between range strict', 'eightshift-forms'),
-	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BN]: __('not between range', 'eightshift-forms'),
-	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BNS]: __('not between between range strict', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.B]: __('in range', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BS]: __('in range (strict)', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BN]: __('not in range', 'eightshift-forms'),
+	[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BNS]: __('not in range (strict)', 'eightshift-forms'),
 };
 
 export const CONDITIONAL_TAGS_ACTIONS_LABELS = {
