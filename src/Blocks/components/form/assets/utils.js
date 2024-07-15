@@ -1,3 +1,4 @@
+import { CONDITIONAL_TAGS_OPERATORS, CONDITIONAL_TAGS_OPERATORS_EXTENDED } from '../../conditional-tags/assets/utils';
 import { ConditionalTags } from './conditional-tags';
 import { Enrichment } from './enrichment';
 import { Geolocation } from './geolocation';
@@ -1318,10 +1319,16 @@ export class Utils {
 
 		if (Object.keys(outputItems).length) {
 			for(const [key, value] of Object.entries(outputItems)) {
-				const itemElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"][${this.state.getStateAttribute('resultOutputItemValue')}="${value}"]`);
+				const itemElements = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"]`);
 
-				itemElement.forEach((item) => {
-					item.classList.remove(this.state.getStateSelector('isHidden'));
+				itemElements.forEach((item) => {
+					const operator = item.getAttribute(this.state.getStateAttribute('resultOutputItemOperator')) || CONDITIONAL_TAGS_OPERATORS.IS;
+					const startValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValue'));
+					const endValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValueEnd'));
+
+					if (this.getComparator()[operator](String(value), String(startValue), String(endValue))) {
+						item.classList.remove(this.state.getStateSelector('isHidden'));
+					}
 				});
 			}
 		}
@@ -1349,8 +1356,24 @@ export class Utils {
 		if (outputElementIsHidden) {
 			outputElement.classList.remove(this.state.getStateSelector('isHidden'));
 		}
+
+		// Show form elements.
+		const showFormElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputShowForm', true)}`);
+
+		if (showFormElement) {
+			showFormElement.forEach((item) => {
+				item.addEventListener('click', this.onFormShowEvent);
+			});
+		}
 	}
 
+	/**
+	 * Reset output results.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	resetResultsOutput(formId) {
 		// Check if we have output element - block.
 		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`);
@@ -1379,6 +1402,54 @@ export class Utils {
 			});
 		}
 	}
+
+	/**
+	 * Get comparator object with all available operators.
+	 *
+	 * @returns {object}
+	 */
+	getComparator() {
+		return {
+			[CONDITIONAL_TAGS_OPERATORS.IS]: (input, value) => value === input,
+			[CONDITIONAL_TAGS_OPERATORS.ISN]: (input, value) => value !== input,
+			[CONDITIONAL_TAGS_OPERATORS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
+			[CONDITIONAL_TAGS_OPERATORS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
+			[CONDITIONAL_TAGS_OPERATORS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
+			[CONDITIONAL_TAGS_OPERATORS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
+			[CONDITIONAL_TAGS_OPERATORS.C]: (input, value) => input.includes(value),
+			[CONDITIONAL_TAGS_OPERATORS.SW]: (input, value) => input.startsWith(value),
+			[CONDITIONAL_TAGS_OPERATORS.EW]: (input, value) => input.endsWith(value),
+			[CONDITIONAL_TAGS_OPERATORS_EXTENDED.B]: (input, value, end) => 
+				parseFloat(String(input)) > parseFloat(String(value)) && parseFloat(String(input)) < parseFloat(String(end)),
+			[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BS]: (input, value, end) => 
+				parseFloat(String(input)) >= parseFloat(String(value)) && parseFloat(String(input)) <= parseFloat(String(end)),
+			[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BN]: (input, value, end) => 
+				parseFloat(String(input)) < parseFloat(String(value)) || parseFloat(String(input)) > parseFloat(String(end)),
+			[CONDITIONAL_TAGS_OPERATORS_EXTENDED.BNS]: (input, value, end) => 
+				parseFloat(String(input)) <= parseFloat(String(value)) || parseFloat(String(input)) >= parseFloat(String(end)),
+		};
+	};
+
+	////////////////////////////////////////////////////////////////
+	// Events callback
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Handle form show event.
+	 *
+	 * @param {object} event Event callback.
+	 * @returns {void}
+	 */
+	onFormShowEvent = (e) => {
+		const forms = e?.target?.closest(this.state.getStateSelector('resultOutput', true));
+
+		if (!forms) {
+			return;
+		}
+
+		forms?.classList?.add(this.state.getStateSelector('isHidden'));
+		this.state.getStateFormElement(forms?.getAttribute(this.state.getStateAttribute('formId')))?.classList?.remove(this.state.getStateSelector('isHidden'));
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.

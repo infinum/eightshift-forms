@@ -50,18 +50,16 @@ class Security implements SecurityInterface
 
 		$keyName = UtilsSettingsHelper::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
 		$data = UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
-		$ip = $this->getIpAddress();
 		$time = \time();
 
 		// Bailout if the IP is in the ignore list.
 		$ignoreIps = Helpers::flattenArray(UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_IP_IGNORE_KEY));
 
-		if (isset(\array_flip($ignoreIps)[$ip])) {
+		if (isset(\array_flip($ignoreIps)[$this->getIpAddress()])) {
 			return true;
 		}
 
-		// Hash the IP for anonymization.
-		$ip = \md5($ip);
+		$ip = $this->getIpAddress('hash');
 
 		// If this is the first iteration of this user just add it to the list.
 		if (!isset($data[$ip])) {
@@ -112,11 +110,11 @@ class Security implements SecurityInterface
 	/**
 	 * Get users Ip address.
 	 *
-	 * @param bool $secure Determine if the function will return normal IP or hashed IP.
+	 * @param string $secureType Determine if the function will return normal, hashed or anonymized IP.
 	 *
 	 * @return string
 	 */
-	public function getIpAddress(bool $secure = false): string
+	public function getIpAddress(string $secureType = 'none'): string
 	{
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
@@ -128,10 +126,29 @@ class Security implements SecurityInterface
 			return '';
 		}
 
-		if ($secure) {
-			return \md5($ip);
-		}
+		switch ($secureType) {
+			case 'hash':
+				return \md5($ip);
+			case 'anonymize':
+				if (\filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
+					$output = \explode('.', $ip);
+					if ($output) {
+						$output[\array_key_last($output)] = 'xxx';
+						return \implode('.', $output);
+					}
+				}
 
-		return $ip;
+				if (\filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+					$output = \explode(':', $ip);
+					if ($output) {
+						$output[\end($output)] = 'xxx';
+						return \implode(':', $output);
+					}
+				}
+
+				return 'xxx.xxx.xxx.xxx';
+			default:
+				return $ip;
+		}
 	}
 }

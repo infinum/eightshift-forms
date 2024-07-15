@@ -1,5 +1,4 @@
 import {
-	CONDITIONAL_TAGS_OPERATORS,
 	CONDITIONAL_TAGS_ACTIONS,
 	CONDITIONAL_TAGS_LOGIC,
 } from '../../conditional-tags/assets/utils';
@@ -26,17 +25,7 @@ export class ConditionalTags {
 		this.AND = CONDITIONAL_TAGS_LOGIC.AND;
 
 		// Map all conditional logic as a object.
-		this.OPERATORS = {
-			[CONDITIONAL_TAGS_OPERATORS.IS]: (input, value) => value === input,
-			[CONDITIONAL_TAGS_OPERATORS.ISN]: (input, value) => value !== input,
-			[CONDITIONAL_TAGS_OPERATORS.GT]: (input, value) => parseFloat(String(input)) > parseFloat(String(value)),
-			[CONDITIONAL_TAGS_OPERATORS.GTE]: (input, value) => parseFloat(String(input)) >= parseFloat(String(value)),
-			[CONDITIONAL_TAGS_OPERATORS.LT]: (input, value) => parseFloat(String(input)) < parseFloat(String(value)),
-			[CONDITIONAL_TAGS_OPERATORS.LTE]: (input, value) => parseFloat(String(input)) <= parseFloat(String(value)),
-			[CONDITIONAL_TAGS_OPERATORS.C]: (input, value) => input.includes(value),
-			[CONDITIONAL_TAGS_OPERATORS.SW]: (input, value) => input.startsWith(value),
-			[CONDITIONAL_TAGS_OPERATORS.EW]: (input, value) => input.endsWith(value),
-		};
+		this.OPERATORS = this.utils.getComparator();
 
 		// Set all public methods.
 		this.publicMethods();

@@ -73,6 +73,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 * Hide global message on success key.
 	 */
 	public const SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY = 'hide-global-msg-on-success';
+	public const SETTINGS_HIDE_FORM_ON_SUCCESS_KEY = 'hide-form-on-success';
 
 	/**
 	 * Use single submit key.
@@ -191,6 +192,21 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
 										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide form on success', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									]
