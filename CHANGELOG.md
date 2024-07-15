@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [4.0.7]
+
+### Fixed
+- removed unnecessary fallback email fallback.
+
 ## [4.0.6]
 
 ### Updated
@@ -461,6 +466,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[4.0.7]: https://github.com/infinum/eightshift-forms/compare/4.0.6...4.0.7
 [4.0.6]: https://github.com/infinum/eightshift-forms/compare/4.0.5...4.0.6
 [4.0.5]: https://github.com/infinum/eightshift-forms/compare/4.0.4...4.0.5
 [4.0.4]: https://github.com/infinum/eightshift-forms/compare/4.0.3...4.0.4
