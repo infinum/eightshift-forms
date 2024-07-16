@@ -21,6 +21,7 @@ import {
 } from '@eightshift/frontend-libs/scripts';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType, getUtilsIcons } from '../form/assets/state-init';
+import utilsManifest from '../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -412,12 +413,18 @@ export const NameField = ({
 	const isDisabled = isOptionDisabled(attribute, disabledOptions);
 
 	const NameFieldLabel = () => {
+		let labelTipText = !isOptional ? __('The form may not work correctly.', 'eightshift-forms') : __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms');
+
+		if (type === 'resultOutputItem') {
+			labelTipText = __(`Variable name you can use is "${utilsManifest.enums.successRedirectUrlKeys.variation}" or any other provided by the add-on plugins.`, 'eightshift-forms');
+		}
+
 		return (
 			<div className='es-h-between es-w-full'>
 				<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
 
 				<AnimatedContentVisibility showIf={!value}>
-					<Tooltip text={!isOptional ? __('The form may not work correctly.', 'eightshift-forms') : __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms')}>
+					<Tooltip text={labelTipText}>
 						{
 							!isOptional ? 
 							<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span> :
@@ -432,16 +439,22 @@ export const NameField = ({
 						onClick={() => {
 							setIsChanged(true);
 
-							const valueName = `${type}-${getUnique()}`;
+							const valueName = type === 'resultOutputItem' ? utilsManifest.enums.successRedirectUrlKeys.variation : `${type}-${getUnique()}`;
 							setAttributes({ [attribute]: valueName });
 						}}
 					>
-						{__('Generate name', 'eightshift-forms')}
+						{type === 'resultOutputItem' ? __('Set name', 'eightshift-forms') : __('Generate name', 'eightshift-forms')}
 					</Button>
 				}
 			</div>
 		);
 	};
+
+	let helpText = sprintf(__('Identifies the %s within form submission data. Must be unique. %s', 'eightshift-forms'), type, help);
+
+	if (type === 'resultOutputItem') {
+		helpText = __('Identifies the what result output item the user will see after sucesfull submit redirect.', 'eightshift-forms');
+	}
 
 	return (
 		<>
@@ -449,7 +462,7 @@ export const NameField = ({
 				<>
 					<TextControl
 						label={<NameFieldLabel />}
-						help={sprintf(__('Identifies the %s within form submission data. Must be unique. %s', 'eightshift-forms'), type, help)}
+						help={helpText}
 						value={value}
 						onChange={(value) => {
 							setIsChanged(true);
@@ -458,7 +471,7 @@ export const NameField = ({
 						disabled={isDisabled}
 					/>
 
-					<NameChangeWarning isChanged={isChanged} />
+					<NameChangeWarning isChanged={isChanged} type={type} />
 				</>
 			}
 		</>
@@ -513,6 +526,9 @@ export const NameChangeWarning = ({
 			break;
 		case 'step':
 			text = __('After changing the step name, ensure that you review forms multi-flow configurations to avoid any errors.', 'eightshift-forms');
+			break;
+		case 'resultOutputItem':
+			text = __('After changing the result item variable name, ensure that you provide the correct variation name via form settings.', 'eightshift-forms');
 			break;
 		default:
 			text = __('After changing the field name, ensure that you review all conditional tags and form multi-flow configurations to avoid any errors.', 'eightshift-forms');

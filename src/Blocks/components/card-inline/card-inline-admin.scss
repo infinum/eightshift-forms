@@ -119,6 +119,27 @@
 			@include media(desktop up) {
 				grid-template-columns: repeat(3, 1fr);
 			}
+
+			&--break-words {
+				li {
+					text-overflow: ellipsis;
+					overflow: auto;
+
+					strong {
+						display: block;
+					}
+
+					span {
+						white-space: nowrap;
+					}
+
+					&:hover {
+						span {
+							white-space: inherit;
+						}
+					}
+				}
+			}
 		}
 	}
 

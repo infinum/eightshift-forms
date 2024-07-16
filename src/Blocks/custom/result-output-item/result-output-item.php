@@ -40,6 +40,11 @@ $resultClass = Helpers::classnames([
 
 $data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? json_decode(esFormsDecryptor(sanitize_text_field(wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))), true) : [];
 
+if (isset($data[UtilsHelper::getStateSuccessRedirectUrlKey('variation')])) {
+	dump($data);
+}
+
+
 ?>
 
 <div class="<?php echo esc_attr($resultClass); ?>" <?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>

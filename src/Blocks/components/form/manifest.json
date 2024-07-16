@@ -67,13 +67,6 @@
 		"formUseSingleSubmit": {
 			"type": "boolean",
 			"default": false
-		},
-		"formDownloads": {
-			"type": "array",
-			"items": {
-				"type": "object"
-			},
-			"default": []
 		}
 	},
 	"options": {

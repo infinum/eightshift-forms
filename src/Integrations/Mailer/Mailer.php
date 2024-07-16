@@ -343,7 +343,7 @@ class Mailer implements MailerInterface
 				$value = \implode(', ', $value);
 			}
 
-			$template = \str_replace("{" . $name . "}", $value, $template);
+			$template = \str_replace("{" . $name . "}", (string) $value, $template);
 		}
 
 		if ($type === 'message') {

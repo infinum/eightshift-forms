@@ -111,7 +111,6 @@ class FiltersSettingsBuilder implements ServiceInterface
 				],
 			],
 			SettingsGeneral::SETTINGS_TYPE_KEY => [
-				'settingsGlobal' => SettingsGeneral::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsGeneral::FILTER_SETTINGS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
@@ -207,9 +206,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsResultOutput::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsResultOutput::FILTER_SETTINGS_GLOBAL_NAME,
-				'settings' => SettingsResultOutput::FILTER_SETTINGS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
-				'use' => SettingsResultOutput::SETTINGS_RESULT_OUTPUT_USE_KEY,
+				'use' => SettingsResultOutput::SETTINGS_USE_KEY,
 				'labels' => [
 					'title' => \__('Result Outputs', 'eightshift-forms'),
 					'desc' => \__('Output form results to various services like tnx page.', 'eightshift-forms'),

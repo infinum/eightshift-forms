@@ -40,26 +40,13 @@
 			},
 			"default": []
 		},
-		"formsDownloads": {
-			"type": "array",
-			"items": {
-				"type": "object"
-			},
-			"default": []
-		},
-		"formsSuccessRedirectVariationUrl": {
-			"type": "string"
-		},
-		"formsSuccessRedirectVariationUrlTitle": {
+		"formsSuccessRedirectVariation": {
 			"type": "string"
 		},
 		"formsFormDataTypeSelector": {
 			"type": "string"
 		},
 		"formsCustomName": {
-			"type": "string"
-		},
-		"formsSuccessRedirectVariation": {
 			"type": "string"
 		},
 		"formsServerSideRender": {

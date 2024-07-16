@@ -26,7 +26,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
  */
 function esFormsGetFormIdByName(string $formId): string
 {
-	return UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+	return UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId);
 }
 
 /**

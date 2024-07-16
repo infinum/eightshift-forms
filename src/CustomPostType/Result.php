@@ -120,7 +120,7 @@ class Result extends AbstractPostType
 			$output['rewrite']['with_front'] = false;
 			$output['show_in_menu'] = true;
 
-			$prefix = UtilsSettingsHelper::getOptionValue(SettingsResultOutput::SETTINGS_RESULT_OUTPUT_URL_PREFIX_KEY);
+			$prefix = UtilsSettingsHelper::getOptionValue(SettingsResultOutput::SETTINGS_GLOBAL_URL_PREFIX_KEY);
 
 			if ($prefix) {
 				$output['rewrite']['slug'] = $prefix;

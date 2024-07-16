@@ -13,16 +13,15 @@ namespace EightshiftForms\Integrations\Workable;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsWorkable class.
  */
-class SettingsWorkable implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -121,7 +120,6 @@ class SettingsWorkable implements UtilsSettingGlobalInterface, ServiceInterface
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY);
 
 		return [
@@ -193,19 +191,7 @@ class SettingsWorkable implements UtilsSettingGlobalInterface, ServiceInterface
 						'component' => 'tab',
 						'tabLabel' => \__('Options', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
-								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name and filter output copy.
-								'inputFieldHelp' => \sprintf(\__('
-									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
-									<br />
-									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
-								'inputType' => 'url',
-								'inputIsUrl' => true,
-								'inputValue' => $successRedirectUrl['dataGlobal'],
-							],
+							...$this->getGlobalGeneralSettings(self::SETTINGS_TYPE_KEY),
 							[
 								'component' => 'input',
 								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),

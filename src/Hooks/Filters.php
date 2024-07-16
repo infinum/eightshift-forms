@@ -74,7 +74,6 @@ final class Filters
 					'hideGlobalMsgTimeout',
 					'successRedirectUrl',
 					'successRedirectVariation',
-					'successRedirectVariationOptions',
 					'trackingEventName',
 					'trackingAdditionalData',
 					'dataTypeSelector',

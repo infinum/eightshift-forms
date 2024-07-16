@@ -180,10 +180,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			'forms' => Forms::POST_TYPE_SLUG,
 		];
 
-		$output['settings'] = [
-			'successRedirectVariations' => FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue()['data'],
-		];
-
 		$output['use'] = [
 			'activeIntegrations' => UtilsIntegrationsHelper::getActiveIntegrations(),
 			'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),

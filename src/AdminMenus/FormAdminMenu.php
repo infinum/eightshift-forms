@@ -744,7 +744,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$entryValue = $item['entryValue'] ?? [];
 					$createdAt = $item['createdAt'] ?? '';
 
-					$content = '<ul class="is-list">';
+					$content = '<ul class="is-list is-list--break-words">';
 					foreach ($entryValue as $entryKey => $entryValue) {
 						if (\gettype($entryValue) === 'array') {
 							if (\array_key_first($entryValue) === 0) {
@@ -761,7 +761,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							}
 						}
 
-						$content .= "<li><strong>{$entryKey}</strong>: {$entryValue}</li>";
+						$content .= "<li><strong>{$entryKey}:</strong><span>{$entryValue}</span></li>";
 					}
 					$content .= '</ul>';
 
@@ -971,7 +971,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					]),
 				];
 
-				if (\apply_filters(SettingsResultOutput::FILTER_SETTINGS_IS_VALID_NAME, false)) {
+				if (\apply_filters(SettingsResultOutput::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 					$output[] = Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,

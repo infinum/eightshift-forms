@@ -433,8 +433,8 @@ export class Form {
 				// Set global msg.
 				this.utils.setGlobalMsg(formId, message, status, data);
 
-				// This will be changed in the next release.
-				if (Boolean(this.state.getStateFormElement(formId)?.getAttribute(this.state.getStateAttribute('formHideOnSuccess')))) {
+				// Hide form on success.
+				if (data?.[this.state.getStateResponseOutputKey('hideFormOnSuccess')]) {
 					this.state.getStateFormElement(formId).classList.add(this.state.getStateSelector('isHidden'));
 				}
 

@@ -14,16 +14,15 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailer class.
  */
-class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -427,8 +426,6 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
@@ -448,19 +445,7 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 						'component' => 'tab',
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
-								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name and filter output copy.
-								'inputFieldHelp' => \sprintf(\__('
-									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
-									<br />
-									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
-								'inputType' => 'url',
-								'inputIsUrl' => true,
-								'inputValue' => $successRedirectUrl['dataGlobal'],
-							],
+							...$this->getGlobalGeneralSettings(self::SETTINGS_TYPE_KEY),
 						],
 					],
 				],

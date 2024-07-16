@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "712a8914f1a89d4db5102583f4a8490797e612b5"
+                "reference": "41ddd61d676db1f8606ec2bd09ad585e8ea2479a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/712a8914f1a89d4db5102583f4a8490797e612b5",
-                "reference": "712a8914f1a89d4db5102583f4a8490797e612b5",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/41ddd61d676db1f8606ec2bd09ad585e8ea2479a",
+                "reference": "41ddd61d676db1f8606ec2bd09ad585e8ea2479a",
                 "shasum": ""
             },
             "require": {
@@ -134,7 +134,7 @@
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2024-07-15T14:22:57+00:00"
+            "time": "2024-07-16T08:00:21+00:00"
         },
         {
             "name": "infinum/eightshift-libs",

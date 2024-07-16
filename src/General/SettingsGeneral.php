@@ -12,7 +12,6 @@ namespace EightshiftForms\General;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
@@ -22,17 +21,12 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsGeneral class.
  */
-class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
 	 */
 	public const FILTER_SETTINGS_NAME = 'es_forms_settings_general';
-
-	/**
-	 * Filter global settings key.
-	 */
-	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_general';
 
 	/**
 	 * Settings key.
@@ -56,18 +50,40 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY = 'general-tracking-additional-data-success';
 	public const SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY = 'general-tracking-additional-data-error';
 
-	public const SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY = 'general-success-redirect-variation-options';
-	public const SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY = 'general-success-redirect-variation';
+	/**
+	 * Success redirect variation key.
+	 */
+	public const SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY = 'success-redirect-variation';
+
+	/**
+	 * Success redirect variation should append on global key.
+	 */
+	public const SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY = 'success-redirect-variation-should-append-on-global';
 
 	/**
 	 * Form custom name key.
 	 */
-	public const SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
+	public const SETTINGS_FORM_CUSTOM_NAME_KEY = 'form-custom-name';
 
 	/**
 	 * Use single submit key.
 	 */
 	public const SETTINGS_USE_SINGLE_SUBMIT_KEY = 'use-single-submit';
+
+	/**
+	 * Success redirect url key.
+	 */
+	public const SETTINGS_SUCCESS_REDIRECT_URL_KEY = 'general-redirection-success';
+
+	/**
+	 * Hide global message on success key.
+	 */
+	public const SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY = 'hide-global-msg-on-success';
+
+	/**
+	 * Hide form on success key.
+	 */
+	public const SETTINGS_HIDE_FORM_ON_SUCCESS_KEY = 'hide-form-on-success';
 
 	/**
 	 * Register all the hooks
@@ -77,7 +93,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
-		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 	}
 
 	/**
@@ -102,7 +117,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
 		$successRedirectVariation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($formType, $formId);
-		$successRedirectVariationOptions = FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue();
 		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($formType, $formId);
 
@@ -116,29 +130,90 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 						'tabLabel' => \__('After form submission', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'select',
-								'selectFieldLabel' => \__('Redirect variation', 'eightshift-forms'),
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY),
-								'selectPlaceholder' => \__('Pick an option', 'eightshift-forms'),
-								'selectIsDisabled' => $successRedirectVariation['filterUsed'],
+								'component' => 'input',
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_SUCCESS_REDIRECT_URL_KEY),
+								'inputFieldLabel' => \__('Redirect to URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
-								'selectFieldHelp' => \sprintf(\__('
-									Variation value will be appended to the redirect URL as a parameter to allow you to privide different version of the "Thank you" page.
-									<br />
-									%s', 'eightshift-forms'), $successRedirectVariation['settings']),
-								'selectContent' => \array_values(
-									\array_map(
-										function ($selectOption) use ($successRedirectVariation) {
-											return [
-												'component' => 'select-option',
-												'selectOptionLabel' => $selectOption[1],
-												'selectOptionValue' => $selectOption[0],
-												'selectOptionIsSelected' => $selectOption[0] === $successRedirectVariation['data'],
-											];
-										},
-										$successRedirectVariationOptions['data']
-									)
-								),
+								'inputFieldHelp' => \sprintf(\__('
+									After a successful submission, the user will be redirected to the provided URL and the success message will <b>not</b> be shown.<br /><br />
+									If you need to include some of the submitted data, use template tags (e.g. <code>{field-name}</code>).<br />
+									<details class="is-filter-applied">
+										<summary>Available tags</summary>
+										<ul>
+											%1$s
+										</ul>
+
+										<br />
+										Tag missing? Make sure its field has a <b>Name</b> set!
+									</details>
+									%2$s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS]), $successRedirectUrl['settingsLocal']),
+								'inputType' => 'url',
+								'inputIsUrl' => true,
+								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
+								'inputValue' => $successRedirectUrl['dataLocal'],
+							],
+							[
+								'component' => 'textarea',
+								'textareaFieldLabel' => \__('Redirect variation', 'eightshift-forms'),
+								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
+								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY),
+								'textareaFieldHelp' => \sprintf(\__('
+									Define redirection value that you can use in your Result output items.<br/>
+									Each key must be in a separate line.
+									%s', 'eightshift-forms'), $successRedirectVariation['settingsLocal']),
+								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, $formId, 1),
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Append on global variations', 'eightshift-forms'),
+										'checkboxHelp' => \__('By default form variations will override the global variations. With this option you can append form specific variations to global.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, self::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
+										'checkboxHelp' => \__('Usualy used in combination with single submit for calculators.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Hide form on success', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+								],
 							],
 						],
 					],
@@ -225,12 +300,12 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
-								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY),
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_FORM_CUSTOM_NAME_KEY),
+								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_FORM_CUSTOM_NAME_KEY),
 								'inputFieldLabel' => \__('Form custom name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Target a form (or a set of forms) and apply changes through filters, in code.', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId),
+								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId),
 							]
 						],
 					],
@@ -284,45 +359,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 						],
 					],
 				]
-			],
-		];
-	}
-
-	/**
-	 * Get global settings array for building settings page.
-	 *
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function getSettingsGlobalData(): array
-	{
-		$successRedirectVariationOptions = FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue();
-
-		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			[
-				'component' => 'tabs',
-				'tabsContent' => [
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Submit', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
-								'textareaIsMonospace' => true,
-								'selectIsDisabled' => $successRedirectVariationOptions['filterUsed'],
-								'textareaSaveAsJson' => true,
-								'textareaFieldLabel' => \__('After form submission redirect variants', 'eightshift-forms'),
-								// translators: %s will be replaced with local validation patterns.
-								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
-									These entries will populate the dropdown in the \"Thank you page\" options so different styles can be selected based on the use case.<br /><br />
-									Provide one key-value pair per line, in this format: %1\$s
-									%2\$s", 'eightshift-forms'), '<code>slug : label</code>', $successRedirectVariationOptions['settings'])),
-								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY, 2),
-							],
-						],
-					],
-				],
 			],
 		];
 	}

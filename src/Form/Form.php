@@ -70,7 +70,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		// Custom form name.
-		$customFormName = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+		$customFormName = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId);
 		if ($customFormName) {
 			$attributes["{$prefix}CustomName"] = $customFormName;
 		}
@@ -114,9 +114,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$manifest = Helpers::getBlock('forms');
 		$formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
 		$formsSuccessRedirectVariation = Helpers::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
-		$formsSuccessRedirectVariationUrl = Helpers::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
-		$formsSuccessRedirectVariationUrlTitle = Helpers::checkAttr('formsSuccessRedirectVariationUrlTitle', $attributes, $manifest);
-		$formsDownloads = Helpers::checkAttr('formsDownloads', $attributes, $manifest);
 		$formsFormDataTypeSelector = Helpers::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 		$formsServerSideRender = Helpers::checkAttr('formsServerSideRender', $attributes, $manifest);
 		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
@@ -154,9 +151,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 				// Populate forms blocks attributes to the form component later in the chain.
 				$innerBlock['attrs']["{$blockName}FormParentSettings"] = [
 					'variation' => $formsSuccessRedirectVariation,
-					'variationUrl' => $formsSuccessRedirectVariationUrl,
-					'variationUrlTitle' => $formsSuccessRedirectVariationUrlTitle,
-					'downloads' => $formsDownloads,
 					'customName' => $formsCustomName,
 					'conditionalTags' => \wp_json_encode($formsConditionalTagsRulesForms),
 					'disabledDefaultStyles' => $checkStyleEnqueue,

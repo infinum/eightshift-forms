@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
@@ -74,45 +73,6 @@ final class FiltersOuputMock
 	}
 
 	/**
-	 * Return success redirect variations options data filter output.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getSuccessRedirectVariationOptionsFilterValue(): array
-	{
-		$settings = '';
-		$data = '';
-		$filterData = [];
-		$filterUsed = false;
-
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'successRedirectVariationOptions']);
-		if (\has_filter($filterName)) {
-			$filterData = \apply_filters($filterName, []);
-
-			if ($filterData) {
-				$settings .= \__('This field has a code filter applied to it, and the following items will be applied to the output:', 'eightshift-forms');
-				$settings .= '<ul>';
-				foreach ($filterData as $value) {
-					$settings .= "<li><code>{$value[0]}</code> : <code>{$value[1]}</code></li>";
-				}
-				$settings .= '</ul>';
-				$filterUsed = true;
-			}
-		}
-
-		$data = [
-			...UtilsSettingsHelper::getOptionValueGroup(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
-			...$filterData,
-		];
-
-		return [
-			'settings' => self::getSettingsDivWrap($settings, $filterUsed, false),
-			'data' => $data,
-			'filterUsed' => $filterUsed,
-		];
-	}
-
-	/**
 	 * Return success redirect variations data filter output.
 	 *
 	 * @param string $type Type of integration.
@@ -122,15 +82,24 @@ final class FiltersOuputMock
 	 */
 	public static function getSuccessRedirectVariationFilterValue(string $type, string $formId): array
 	{
-		$settings = '';
-		$data = '';
+		// Find global settings per integration.
+		$data = UtilsSettingsHelper::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY);
 		$filterUsed = false;
 
-		$data = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		// Find local settings for form.
+		$dataLocal = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		if ($dataLocal) {
+			if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId)) {
+				$data = \array_merge($data, $dataLocal);
+			} else {
+				$data = $dataLocal;
+			}
+		}
 
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'successRedirectVariation']);
-		if (\has_filter($filterName)) {
-			$dataFilter = \apply_filters($filterName, $type, $formId);
+		// Find local settings per integration or filter data.
+		$filterNameLocal = UtilsHooksHelper::getFilterName(['block', 'form', 'successRedirectVariation']);
+		if (\has_filter($filterNameLocal)) {
+			$dataFilter = \apply_filters($filterNameLocal, [], $type, $formId) ?? [];
 
 			if ($dataFilter) {
 				$data = $dataFilter;
@@ -139,8 +108,9 @@ final class FiltersOuputMock
 		}
 
 		return [
-			'settings' => self::getSettingsDivWrap($settings, $filterUsed),
 			'data' => $data,
+			'settingsGlobal' => self::getSettingsDivWrap(''),
+			'settingsLocal' => self::getSettingsDivWrap('', $filterUsed),
 			'filterUsed' => $filterUsed,
 		];
 	}
@@ -165,7 +135,7 @@ final class FiltersOuputMock
 		$data = $dataGlobal;
 
 		// Find local settings for form.
-		$dataLocal = UtilsSettingsHelper::getSettingValue(SettingsResultOutput::SETTINGS_RESULT_OUTPUT_SUCCESS_REDIRECT_URL_KEY, $formId);
+		$dataLocal = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_URL_KEY, $formId);
 
 		if ($dataLocal) {
 			$data = $dataLocal;

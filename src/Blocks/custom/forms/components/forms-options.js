@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
-import { MediaPlaceholder } from '@wordpress/block-editor';
 import { select } from '@wordpress/data';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
@@ -16,12 +15,9 @@ import {
 	props,
 	AsyncSelect,
 	MultiSelect,
-	Select,
 	IconToggle,
 	Control,
 	Section,
-	truncateMiddle,
-	Collapsable,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
@@ -29,11 +25,9 @@ import {
 	FormEditButton,
 	LocationsButton,
 	SettingsButton,
-	getSettingsJsonOptions,
 	outputFormSelectItemWithIcon,
 } from '../../../components/utils';
 import { getRestUrl } from '../../../components/form/assets/state-init';
-import { ResultsOutputOptions } from './results-output';
 
 export const FormsOptions = ({
 	attributes,
@@ -42,12 +36,6 @@ export const FormsOptions = ({
 	formSelectOptions
 }) => {
 	const manifest = select(STORE_NAME).getBlock('forms');
-
-	const {
-		settings: {
-			successRedirectVariations,
-		}
-	} = esFormsLocalization;
 
 	const {
 		isGeoPreview,
@@ -60,10 +48,7 @@ export const FormsOptions = ({
 	const formsFormDataTypeSelector = checkAttr('formsFormDataTypeSelector', attributes, manifest);
 	const formsFormGeolocation = checkAttr('formsFormGeolocation', attributes, manifest);
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
-	const formsDownloads = checkAttr('formsDownloads', attributes, manifest);
 	const formsSuccessRedirectVariation = checkAttr('formsSuccessRedirectVariation', attributes, manifest);
-	const formsSuccessRedirectVariationUrl = checkAttr('formsSuccessRedirectVariationUrl', attributes, manifest);
-	const formsSuccessRedirectVariationUrlTitle = checkAttr('formsSuccessRedirectVariationUrlTitle', attributes, manifest);
 
 	const [isGeoModalOpen, setIsGeoModalOpen] = useState(false);
 	const [geoFormFields, setGeoFormFields] = useState([]);
@@ -146,126 +131,14 @@ export const FormsOptions = ({
 				}
 			</PanelBody>
 
-			<PanelBody title={__('Results output', 'eightshift-forms')} initialOpen={true}>
-				<Select
-					icon={icons.paletteColor}
-					label={__('Variant', 'eightshift-forms')}
+			<PanelBody title={__('Results output', 'eightshift-forms')} initialOpen={false}>
+				<TextControl
+					label={<IconLabel icon={icons.anchor} label={__('Success redirect variation', 'eightshift-forms')} />}
+					help={__('Override form settings success redirect variation value', 'eightshift-forms')}
 					value={formsSuccessRedirectVariation}
-					options={getSettingsJsonOptions(successRedirectVariations)}
-					onChange={(value) => {
-						setAttributes({ [getAttrKey('formsSuccessRedirectVariation', attributes, manifest)]: value });
-					}}
-					additionalSelectClasses='es-w-36'
-					simpleValue
-					inlineLabel
-					clearable
+					onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariation', attributes, manifest)]: value })}
 				/>
-
-				<Collapsable
-					icon={icons.fileDownload}
-					label={__('Enrichment', 'eightshift-forms')}
-					subtitle={formsDownloads?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), formsDownloads?.length)}
-					noBottomSpacing
-				>
-					<>
-						<TextControl
-							label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
-							help={__('Additional internal/external url that will be passed to the "Thank you" page.', 'eightshift-forms')}
-							value={formsSuccessRedirectVariationUrl}
-							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
-						/>
-						<TextControl
-							label={<IconLabel icon={icons.anchor} label={__('Url title', 'eightshift-forms')} />}
-							help={__('Additional internal/external url title that will be passed to the "Thank you" page.', 'eightshift-forms')}
-							value={formsSuccessRedirectVariationUrlTitle}
-							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrlTitle', attributes, manifest)]: value })}
-						/>
-						<Control reducedBottomSpacing={formsDownloads?.length > 0} noBottomSpacing={formsDownloads?.length < 1}>
-							<MediaPlaceholder
-								icon={icons.image}
-								multiple
-								onSelect={(value) => {
-									const items = value.map((item) => {
-										const mimeType = item?.mime_type ?? item?.mime ?? '';
-
-										return {
-											title: item?.filename ?? item?.slug ?? 'UNKNOWN',
-											id: item.id,
-											isImage: mimeType?.startsWith('image/'),
-											condition: 'all',
-											fileTitle: '',
-										};
-									});
-									setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
-								}}
-							/>
-						</Control>
-
-						{formsDownloads.length > 0 &&
-							<>
-								<div className='es-text-3 es-color-cool-gray-450 es-mb-5'>
-									{__('Add conditional tag to limit the usage of this file. Example: "field_name=field_value".', 'eightshift-forms')}
-								</div>
-
-								{formsDownloads.map((item, index) => {
-									return (
-										<>
-											<Control
-												key={index}
-												icon={item?.isImage ? icons.image : icons.file}
-												label={truncateMiddle(item.title, 28)}
-												noBottomSpacing
-												additionalClasses={'es-border-t-cool-gray-300 es-mt-4 es-pt-4'}
-												actions={
-													<Button
-														onClick={() => {
-															delete formsDownloads[index];
-															const item = formsDownloads.filter((_, i) => i !== index);
-															setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
-														}}
-														icon={icons.trash}
-														className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
-													/>
-												}
-											>
-												<TextControl
-													label={__('Conditional fields', 'eightshift-forms')}
-													value={item?.condition}
-													onChange={(value) => {
-														formsDownloads[index].condition = value;
-														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
-													}}
-												/>
-												<TextControl
-													label={__('File title', 'eightshift-forms')}
-													value={item?.fileTitle}
-													onChange={(value) => {
-														formsDownloads[index].fileTitle = value;
-														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
-													}}
-												/>
-											</Control>
-										</>
-									);
-								})}
-							</>
-
-						}
-					</>
-				</Collapsable>
 			</PanelBody>
-
-			<ResultsOutputOptions
-				attributes={attributes}
-				setAttributes={setAttributes}
-			/>
-
-			<ConditionalTagsFormsOptions
-				{...props('conditionalTags', attributes, {
-					setAttributes,
-					conditionalTagsPostId: formsFormPostId,
-				})}
-			/>
 
 			{formsUseGeolocation &&
 				<PanelBody title={__('Geolocation', 'eightshift-forms')} initialOpen={false}>
@@ -406,6 +279,13 @@ export const FormsOptions = ({
 					)}
 				</PanelBody>
 			}
+
+			<ConditionalTagsFormsOptions
+				{...props('conditionalTags', attributes, {
+					setAttributes,
+					conditionalTagsPostId: formsFormPostId,
+				})}
+			/>
 		</>
 	);
 };

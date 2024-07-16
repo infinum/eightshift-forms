@@ -19,6 +19,7 @@ use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -511,9 +512,15 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		// Hide global message on success.
-		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsResultOutput::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsResultOutput::SETTINGS_RESULT_OUTPUT_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
+		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
 		if ($hideGlobalMsgOnSuccess) {
 			$output[UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
+		}
+
+		// Hide form on success.
+		$hideFormOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId);
+		if ($hideFormOnSuccess) {
+			$output[UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
 		}
 
 		// Success redirect url.
@@ -526,7 +533,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				if (\is_array($value)) {
 					$value = \implode(', ', $value);
 				}
-				$successRedirectUrl = \str_replace("{" . $name . "}", $value, $successRedirectUrl);
+				$successRedirectUrl = \str_replace("{" . $name . "}", (string) $value, $successRedirectUrl);
 			}
 
 			// Pre response filter for success redirect data.
@@ -537,6 +544,12 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				if ($filterDetails) {
 					$redirectDataOutput = $filterDetails;
 				}
+			}
+
+			// Add success redirect variation.
+			$variation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
+			if ($variation) {
+				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $variation;
 			}
 
 			$output[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
@@ -608,14 +621,20 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	{
 		$output = [];
 
+		$allowedTags = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsMailer::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [];
+
 		foreach ($data as $key => $value) {
-			$key = \ucfirst($key);
+			$key = "mailer" . \ucfirst($key);
+
+			if (!isset($allowedTags[$key])) {
+				continue;
+			}
 
 			if (\is_array($value)) {
 				$value = \json_encode($value);
 			}
 
-			$output["mailer{$key}"] = $value;
+			$output[$key] = $value;
 		}
 
 		return $output;

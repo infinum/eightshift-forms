@@ -7,14 +7,13 @@ import {
 	getAttrKey,
 	icons,
 	IconLabel,
-	Notification,
 	Select,
 } from '@eightshift/frontend-libs/scripts';
 import {
 	CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
 	CONDITIONAL_TAGS_OPERATORS_LABELS,
 } from './../../../components/conditional-tags/components/conditional-tags-labels';
-import { getConstantsOptions } from './../../../components/utils';
+import { getConstantsOptions, NameField } from './../../../components/utils';
 import manifest from '../manifest.json';
 import { CONDITIONAL_TAGS_OPERATORS_EXTENDED } from '../../../components/conditional-tags/assets/utils';
 
@@ -22,6 +21,7 @@ export const ResultOutputItemOptions = ({
 	attributes,
 	setAttributes,
 }) => {
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const resultOutputItemName = checkAttr('resultOutputItemName', attributes, manifest);
 	const resultOutputItemValue = checkAttr('resultOutputItemValue', attributes, manifest);
@@ -32,10 +32,13 @@ export const ResultOutputItemOptions = ({
 
 	return (
 		<PanelBody title={__('Result item', 'eightshift-forms')}>
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Variable name', 'eightshift-forms')} />}
+			<NameField
 				value={resultOutputItemName}
-				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemName', attributes, manifest)]: value })}
+				attribute={getAttrKey('resultOutputItemName', attributes, manifest)}
+				setAttributes={setAttributes}
+				type='resultOutputItem'
+				isChanged={isNameChanged}
+				setIsChanged={setIsNameChanged}
 			/>
 
 			<TextControl
@@ -78,11 +81,6 @@ export const ResultOutputItemOptions = ({
 					help={showEndValue && __('End value must be number.', 'eightshift-forms')}
 				/>
 			}
-
-		<Notification
-			text={__('The block will not show anything if filters are not added through code! If you have the Computed fields add-on, its output is also supported.', 'eightshift-forms')}
-			type='warning'
-		/>
 
 		</PanelBody>
 	);
