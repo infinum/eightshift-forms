@@ -1,12 +1,9 @@
 import {
-	CONDITIONAL_TAGS_ACTIONS,
-	CONDITIONAL_TAGS_LOGIC,
-} from '../../conditional-tags/assets/utils';
-import {
 	prefix,
 	setStateWindow,
 	StateEnum,
 } from './state-init';
+import globalManifest from './../../../manifest.json';
 
 /**
  * Main conditon tags class.
@@ -19,10 +16,10 @@ export class ConditionalTags {
 		this.state = this.utils.getState();
 
 		// Simplify usage of constants
-		this.SHOW = CONDITIONAL_TAGS_ACTIONS.SHOW;
-		this.HIDE = CONDITIONAL_TAGS_ACTIONS.HIDE;
-		this.OR = CONDITIONAL_TAGS_LOGIC.OR;
-		this.AND = CONDITIONAL_TAGS_LOGIC.AND;
+		this.SHOW = globalManifest.comparatorActions.SHOW;
+		this.HIDE = globalManifest.comparatorActions.HIDE;
+		this.OR = globalManifest.comparatorLogic.OR;
+		this.AND = globalManifest.comparatorLogic.AND;
 
 		// Map all conditional logic as a object.
 		this.OPERATORS = this.utils.getComparator();

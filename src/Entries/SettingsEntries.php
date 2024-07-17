@@ -64,6 +64,11 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS = 'entries-save-empty-fields';
 
 	/**
+	 * Entries send entry in form submit key.
+	 */
+	public const SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY = 'entries-send-entry-in-form-submit';
+
+	/**
 	 * Data data key.
 	 */
 	public const SETTINGS_ENTRIES_DATA_KEY = 'entries-data';
@@ -186,6 +191,22 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 											'checkboxHelp' => \__('All empty field values will not be saved to database by default.', 'eightshift-forms'),
 											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId),
 											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										]
+									]
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Send entry number via form submit data', 'eightshift-forms'),
+											'checkboxHelp' => \__('Once entry is created its Id will be added to the form response data and also sent to success redirect variation data.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY, self::SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
 										]

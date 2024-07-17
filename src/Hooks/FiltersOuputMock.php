@@ -73,15 +73,18 @@ final class FiltersOuputMock
 	}
 
 	/**
-	 * Return success redirect variations data filter output.
+	 * Return variations data filter output.
 	 *
 	 * @param string $type Type of integration.
 	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getSuccessRedirectVariationFilterValue(string $type, string $formId): array
+	public static function getVariationFilterValue(string $type, string $formId, array $formDetails): array
 	{
+		$shouldAppend = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId);
+
 		// Find global settings per integration.
 		$data = UtilsSettingsHelper::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY);
 		$filterUsed = false;
@@ -89,20 +92,16 @@ final class FiltersOuputMock
 		// Find local settings for form.
 		$dataLocal = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
 		if ($dataLocal) {
-			if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId)) {
-				$data = \array_merge($data, $dataLocal);
-			} else {
-				$data = $dataLocal;
-			}
+			$data = $shouldAppend ? \array_merge($data, $dataLocal) : $dataLocal;
 		}
 
 		// Find local settings per integration or filter data.
-		$filterNameLocal = UtilsHooksHelper::getFilterName(['block', 'form', 'successRedirectVariation']);
+		$filterNameLocal = UtilsHooksHelper::getFilterName(['block', 'form', 'variation']);
 		if (\has_filter($filterNameLocal)) {
-			$dataFilter = \apply_filters($filterNameLocal, [], $type, $formId) ?? [];
+			$dataFilter = \apply_filters($filterNameLocal, [], $formDetails, $formId);
 
 			if ($dataFilter) {
-				$data = $dataFilter;
+				$data = $shouldAppend ? \array_merge(\array_column($data, 1, 0), $dataFilter) : $dataFilter;
 				$filterUsed = true;
 			}
 		}

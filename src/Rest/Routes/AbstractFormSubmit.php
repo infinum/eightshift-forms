@@ -23,7 +23,6 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -331,8 +330,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
 		$status = $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR;
 
-		$formDetails = $this->getIntegrationResponsePreSubmitFormDetailsManipulation($formDetails);
-
 		$disableFallbackEmail = false;
 
 		// Output integrations validation issues.
@@ -377,8 +374,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		if ($status === UtilsConfig::STATUS_SUCCESS) {
-			$formDetails = $this->getIntegrationResponsePreSuccessFormDetailsManipulation($formDetails);
-
 			$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 			// Send email if it is configured in the backend.
@@ -407,49 +402,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Get integration response pre submit form details manipulation.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function getIntegrationResponsePreSubmitFormDetailsManipulation(array $formDetails): array
-	{
-		// Pre response filter for addon data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterName)) {
-			$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-			if ($filterDetails) {
-				$formDetails[UtilsConfig::FD_ADDON] = $filterDetails;
-			}
-		}
-
-		return $formDetails;
-	}
-
-	/**
-	 * Get integration response pre success form details manipulation.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function getIntegrationResponsePreSuccessFormDetailsManipulation(array $formDetails): array
-	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-
-		// This filter must be always on the fitsr place in order to work properly with addons.
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-			$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
-		}
-
-		return $formDetails;
-	}
-
-
-	/**
 	 * Get integration response output additional data on error or success.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -474,6 +426,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$output[UtilsHelper::getStateResponseOutputKey('trackingAdditionalData')] = $trackingAdditionalData;
 		}
 
+		$output[UtilsHelper::getStateResponseOutputKey('formId')] = $formId;
+
 		return $output;
 	}
 
@@ -491,23 +445,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		$output = [];
 
-		// Return result output items as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
-		if (\has_filter($filterName)) {
-			$filterOutput = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-
-			if ($filterOutput) {
-				$output[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = $filterOutput;
-			}
-		}
-
-		// Output result output parts as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
-		if (\has_filter($filterName)) {
-			$filterOutput = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-
-			if ($filterOutput) {
-				$output[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = $filterOutput;
+		// Set entries.
+		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
+			if ($entryId && UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY, SettingsEntries::SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY, $formId)) {
+				$output[UtilsHelper::getStateResponseOutputKey('entry')] = (string) $entryId;
 			}
 		}
 
@@ -521,6 +463,12 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		$hideFormOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId);
 		if ($hideFormOnSuccess) {
 			$output[UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
+		}
+
+		// Add success redirect variation.
+		$variation = FiltersOuputMock::getVariationFilterValue($type, $formId, $formDetails)['data'];
+		if ($variation) {
+			$output[UtilsHelper::getStateResponseOutputKey('variation')] = $variation;
 		}
 
 		// Success redirect url.
@@ -546,10 +494,12 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				}
 			}
 
-			// Add success redirect variation.
-			$variation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
-			if ($variation) {
-				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $variation;
+			if (isset($output[UtilsHelper::getStateResponseOutputKey('variation')])) {
+				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $output[UtilsHelper::getStateResponseOutputKey('variation')];
+			}
+
+			if (isset($output[UtilsHelper::getStateResponseOutputKey('entry')])) {
+				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output[UtilsHelper::getStateResponseOutputKey('entry')];
 			}
 
 			$output[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
@@ -560,12 +510,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			);
 		}
 
-		// Append additional addon data from filter.
-		if (isset($formDetails[UtilsConfig::FD_ADDON]) && $formDetails[UtilsConfig::FD_ADDON]) {
-			$output[UtilsHelper::getStateResponseOutputKey('addon')] = $formDetails[UtilsConfig::FD_ADDON];
-		}
-
-		return array_merge(
+		return \array_merge(
 			$output,
 			$this->getIntegrationResponseAnyOutputAdditionalData($formDetails)
 		);
@@ -623,18 +568,23 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		$allowedTags = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsMailer::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [];
 
-		foreach ($data as $key => $value) {
-			$key = "mailer" . \ucfirst($key);
+		foreach ($allowedTags as $key => $value) {
+			switch ($key) {
+				case 'mailerSuccessRedirectUrl':
+					$output[$key] = $data[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] ?? '';
+					break;
+				case 'mailerEntryId':
+					$output[$key] = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
+					break;
+				case 'mailerEntryUrl':
+					$entryId = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
+					$formId = $data[UtilsHelper::getStateResponseOutputKey('formId')] ?? '';
 
-			if (!isset($allowedTags[$key])) {
-				continue;
+					if ($entryId && $formId) {
+						$output[$key] = EntriesHelper::getEntryAdminUrl($entryId, $formId);
+					}
+					break;
 			}
-
-			if (\is_array($value)) {
-				$value = \json_encode($value);
-			}
-
-			$output[$key] = $value;
 		}
 
 		return $output;

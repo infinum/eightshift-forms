@@ -232,8 +232,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'emailTemplateTags' => [
 					 // Empty string as we are not using it to match the value.
 					'mailerSuccessRedirectUrl' => '',
-					'mailerResultOutputItems' => '',
-					'mailerResultOutputParts' => '',
+					'mailerEntryId' => '',
+					'mailerEntryUrl' => '',
 				],
 				'labels' => [
 					'title' => \__('Mailer', 'eightshift-forms'),

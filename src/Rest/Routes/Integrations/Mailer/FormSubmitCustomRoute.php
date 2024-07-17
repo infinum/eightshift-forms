@@ -22,7 +22,6 @@ use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
@@ -81,12 +80,6 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		$params = $formDetails[UtilsConfig::FD_PARAMS];
 		$action = $formDetails[UtilsConfig::FD_ACTION];
 		$actionExternal = $formDetails[UtilsConfig::FD_ACTION_EXTERNAL];
-
-		// Save entries.
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-			$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
-		}
 
 		$debug = [
 			'formDetails' => $formDetails,
@@ -148,25 +141,11 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			);
 		}
 
-		$additionalOutput = [];
-
-		// Output result output items as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
-		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
-
-		// Output result output parts as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
-		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
-
 		// Finish.
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				$this->labels->getLabel('customSuccess', $formId),
-				$additionalOutput,
+				[],
 				$debug
 			)
 		);

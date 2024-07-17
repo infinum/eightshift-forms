@@ -15,7 +15,7 @@ import {
 } from './../../../components/conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions, NameField } from './../../../components/utils';
 import manifest from '../manifest.json';
-import { CONDITIONAL_TAGS_OPERATORS_EXTENDED } from '../../../components/conditional-tags/assets/utils';
+import globalManifest from '../../../manifest.json';
 
 export const ResultOutputItemOptions = ({
 	attributes,
@@ -28,7 +28,7 @@ export const ResultOutputItemOptions = ({
 	const resultOutputItemValueEnd = checkAttr('resultOutputItemValueEnd', attributes, manifest);
 	const resultOutputItemOperator = checkAttr('resultOutputItemOperator', attributes, manifest);
 
-	const [showEndValue, setShowEndValue] = useState(resultOutputItemOperator.toUpperCase() in CONDITIONAL_TAGS_OPERATORS_EXTENDED);
+	const [showEndValue, setShowEndValue] = useState(resultOutputItemOperator.toUpperCase() in globalManifest.comparatorExtended);
 
 	return (
 		<PanelBody title={__('Result item', 'eightshift-forms')}>
@@ -39,6 +39,23 @@ export const ResultOutputItemOptions = ({
 				type='resultOutputItem'
 				isChanged={isNameChanged}
 				setIsChanged={setIsNameChanged}
+			/>
+
+			<Select
+				label={<IconLabel icon={icons.containerSpacing} label={__('Compare operator', 'eightshift-forms')} />}
+				value={resultOutputItemOperator}
+				options={getConstantsOptions(
+					{
+						...CONDITIONAL_TAGS_OPERATORS_LABELS,
+						...CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
+					}
+				)}
+				onChange={(value) => {
+					setShowEndValue(value.toUpperCase() in globalManifest.comparatorExtended);
+					setAttributes({ [getAttrKey('resultOutputItemOperator', attributes, manifest)]: value });
+				}}
+				simpleValue
+				closeMenuAfterSelect
 			/>
 
 			<TextControl
@@ -54,23 +71,6 @@ export const ResultOutputItemOptions = ({
 				help={showEndValue && __('Start value must be number.', 'eightshift-forms')}
 				value={resultOutputItemValue}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValue', attributes, manifest)]: value })}
-			/>
-
-			<Select
-				label={<IconLabel icon={icons.containerSpacing} label={__('Compare operator', 'eightshift-forms')} />}
-				value={resultOutputItemOperator}
-				options={getConstantsOptions(
-					{
-						...CONDITIONAL_TAGS_OPERATORS_LABELS,
-						...CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
-					}
-				)}
-				onChange={(value) => {
-					setShowEndValue(value.toUpperCase() in CONDITIONAL_TAGS_OPERATORS_EXTENDED);
-					setAttributes({ [getAttrKey('resultOutputItemOperator', attributes, manifest)]: value });
-				}}
-				simpleValue
-				closeMenuAfterSelect
 			/>
 
 			{showEndValue && 

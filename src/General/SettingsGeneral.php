@@ -116,7 +116,7 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 		$formType = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
-		$successRedirectVariation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($formType, $formId);
+		$variation = FiltersOuputMock::getVariationFilterValue($formType, $formId, []);
 		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($formType, $formId);
 		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($formType, $formId);
 
@@ -154,15 +154,15 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'textarea',
-								'textareaFieldLabel' => \__('Redirect variation', 'eightshift-forms'),
+								'textareaFieldLabel' => \__('Variation', 'eightshift-forms'),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY),
 								'textareaFieldHelp' => \sprintf(\__('
 									Define redirection value that you can use in your Result output items.<br/>
 									Each key must be in a separate line.
-									%s', 'eightshift-forms'), $successRedirectVariation['settingsLocal']),
-								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, $formId, 1),
+									%s', 'eightshift-forms'), $variation['settingsLocal']),
+								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, $formId, 2),
 							],
 							[
 								'component' => 'checkboxes',

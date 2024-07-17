@@ -5,12 +5,12 @@ import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
 import { icons, getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
-import { CONDITIONAL_TAGS_OPERATORS } from '../../conditional-tags/assets/utils';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
 import { ProgressBarOptions } from '../../progress-bar/components/progress-bar-options';
 import { MultiflowFormsReactFlow } from '../../react-flow';
+import globalManifest from '../../../manifest.json';
 
 export const StepMultiflowOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
@@ -159,7 +159,7 @@ export const StepMultiflowOptions = (attributes) => {
 					<Button
 						icon={icons.plusCircleFillAlt}
 						onClick={() => {
-							stepMultiflowRules[topParent][2].push([[formFields?.[topParent]?.subItems?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '']]);
+							stepMultiflowRules[topParent][2].push([[formFields?.[topParent]?.subItems?.[0]?.value ?? '', globalManifest.comparator.IS, '']]);
 							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 						}}
 						className='es-rounded-1 es-mt-4'
@@ -185,7 +185,7 @@ export const StepMultiflowOptions = (attributes) => {
 	};
 
 	const ConditionalTagsItem = ({ topParent, parent, index, total }) => {
-		const operatorValue = stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[1] ?? CONDITIONAL_TAGS_OPERATORS.IS;
+		const operatorValue = stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[1] ?? globalManifest.comparator.IS;
 		const fieldValue = stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[0];
 
 		// Internal state due to rerendering issue.
@@ -193,7 +193,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 		const formFieldOptions = formFields?.find((item) => item.value === stepMultiflowRules[topParent][1])?.subItems ?? [];
 		const formFieldSelectedItem = formFieldOptions?.find((item) => item.value === fieldValue)?.subItems ?? [];
-		const showRuleValuePicker = formFieldSelectedItem?.length > 0 && (operatorValue === CONDITIONAL_TAGS_OPERATORS.IS || operatorValue === CONDITIONAL_TAGS_OPERATORS.ISN);
+		const showRuleValuePicker = formFieldSelectedItem?.length > 0 && (operatorValue === globalManifest.comparator.IS || operatorValue === globalManifest.comparator.ISN);
 
 		return (
 			<>
@@ -254,7 +254,7 @@ export const StepMultiflowOptions = (attributes) => {
 						<Button
 							icon={icons.plusCircleFillAlt}
 							onClick={() => {
-								stepMultiflowRules[topParent][2][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, ''];
+								stepMultiflowRules[topParent][2][parent][index + 1] = [formFields?.[0]?.value ?? '', globalManifest.comparator.IS, ''];
 								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 							}}
 							className='es-rounded-1'

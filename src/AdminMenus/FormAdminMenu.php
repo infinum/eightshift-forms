@@ -744,7 +744,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$entryValue = $item['entryValue'] ?? [];
 					$createdAt = $item['createdAt'] ?? '';
 
-					$content = '<ul class="is-list is-list--break-words">';
+					$content = "<ul class='is-list is-list--break-words' id='entry-{$id}'>";
 					foreach ($entryValue as $entryKey => $entryValue) {
 						if (\gettype($entryValue) === 'array') {
 							if (\array_key_first($entryValue) === 0) {

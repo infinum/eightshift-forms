@@ -536,7 +536,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Success redirect variation.
 		// if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
-		// 	$successRedirectUrl = FiltersOuputMock::getSuccessRedirectVariationFilterValue($type, $formId)['data'];
+		// 	$successRedirectUrl = FiltersOuputMock::getVariationFilterValue($type, $formId)['data'];
 
 		// 	if ($successRedirectUrl) {
 		// 		$outputSecureData["SuccessRedirectVariation"] = $successRedirectUrl;

@@ -77,9 +77,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
-		// Pre submit form details manipulation.
-		$formDetails = $this->getIntegrationResponsePreSubmitFormDetailsManipulation($formDetails);
-
 		// Located before the sendEmail mentod so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
@@ -94,9 +91,6 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		$debug = $mailerResponse['debug'] ?? [];
 
 		if ($status === UtilsConfig::STATUS_SUCCESS) {
-			// Pre success form details manipulation.
-			$formDetails = $this->getIntegrationResponsePreSuccessFormDetailsManipulation($formDetails);
-
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel($label, $formId),

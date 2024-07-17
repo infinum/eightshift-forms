@@ -28,7 +28,7 @@ abstract class AbstractSettingsIntegrations
 	protected function getGlobalGeneralSettings(string $integrationType): array
 	{
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($integrationType, '');
-		$successRedirectVariation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($integrationType, '');
+		$variation = FiltersOuputMock::getVariationFilterValue($integrationType, '', []);
 
 		return [
 			[
@@ -59,9 +59,9 @@ abstract class AbstractSettingsIntegrations
 					%s
 					', 'eightshift-forms'),
 					\ucfirst($integrationType),
-					$successRedirectVariation['settingsGlobal'],
+					$variation['settingsGlobal'],
 				),
-				'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson($integrationType . '-' . SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, 1),
+				'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson($integrationType . '-' . SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, 2),
 			],
 		];
 	}

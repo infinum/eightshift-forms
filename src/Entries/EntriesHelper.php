@@ -85,6 +85,19 @@ class EntriesHelper
 	}
 
 	/**
+	 * Get entry admin URL.
+	 *
+	 * @param string $entryId Entry Id.
+	 * @param string $formId Form Id.
+	 *
+	 * @return string
+	 */
+	public static function getEntryAdminUrl(string $entryId, string $formId): string
+	{
+		return UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId) . "#entry-{$entryId}";
+	}
+
+	/**
 	 * Get entry by ID.
 	 *
 	 * @param string $id Entry Id.

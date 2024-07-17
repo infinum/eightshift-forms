@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Shortcode;
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -41,7 +42,6 @@ class ResultOutputItemPart implements ServiceInterface
 		$params = \shortcode_atts(
 			[
 				'name' => '',
-				'type' => '',
 			],
 			$atts
 		);
@@ -52,17 +52,22 @@ class ResultOutputItemPart implements ServiceInterface
 			return '';
 		}
 
+		// Check if we are on success redirect page.
+		$resultOutputData = FormsHelper::getResultOutputSuccessItemPartShortcodeValue($name);
+
+		// Used only on success redirect page.
+		if ($resultOutputData['isRedirectPage']) {
+			$class = UtilsHelper::getStateSelector('resultOutputPart');
+			$outputValue = $resultOutputData['value'] ?? $content;
+			return "<span class='{$class}'>{$outputValue}</span>";
+		}
+
+		// Used on the same page as the form and changed via JS.
 		$attrs = [
 			UtilsHelper::getStateAttribute('resultOutputPart') => $name,
 			UtilsHelper::getStateAttribute('resultOutputPartDefault') => $content,
 			'class' => UtilsHelper::getStateSelector('resultOutputPart'),
 		];
-
-		$type = isset($params['type']) ? \esc_html($params['type']) : '';
-
-		if ($type) {
-			$attrs['data-type'] = $type;
-		}
 
 		$attrsOutput = '';
 		foreach ($attrs as $key => $value) {

@@ -2,7 +2,6 @@
 
 import globalManifest from '../../../manifest.json';
 import utilsManifest from '../../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
-import { CONDITIONAL_TAGS_ACTIONS } from '../../conditional-tags/assets/utils';
 
 ////////////////////////////////////////////////////////////////
 // Constants
@@ -789,7 +788,7 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 
 	const parentStorage = isNoneFormBlock ? StateEnum.ELEMENTS_FIELDS : StateEnum.ELEMENTS;
 
-	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], CONDITIONAL_TAGS_ACTIONS.SHOW, formId);
+	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], globalManifest.comparatorActions.SHOW, formId);
 	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], [], formId);
 	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], [], formId);
 
@@ -833,7 +832,7 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 		return;
 	}
 
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], CONDITIONAL_TAGS_ACTIONS.SHOW, formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], globalManifest.comparatorActions.SHOW, formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS], [], formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_REF], [], formId);
 
