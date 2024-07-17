@@ -99,7 +99,10 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel($label, $formId),
-					$successAdditionalData['public'],
+					\array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['additional']
+					),
 					$debug
 				)
 			);

@@ -319,12 +319,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * Get integration common submit action
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param mixed $callbackStart Callback start of the function.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getIntegrationCommonSubmitAction(array $formDetails, $callbackStart = null): array
-	{
+	protected function getIntegrationCommonSubmitAction(array $formDetails): array {
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
 		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
@@ -336,11 +334,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if ($validation) {
 			$response[UtilsConfig::IARD_VALIDATION] = $this->validator->getValidationLabelItems($validation, $formId);
 			$disableFallbackEmail = true;
-		}
-
-		// Run any function callback if it is set.
-		if (\is_callable($callbackStart)) {
-			\call_user_func($callbackStart);
 		}
 
 		// Skip fallback email if integration is disabled.
@@ -390,11 +383,14 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				);
 			}
 
+			$this->callIntegrationResponseSuccessCallback($formDetails, $successAdditionalData);
+
 			return UtilsApiHelper::getApiSuccessPublicOutput(
 				$labelsOutput,
 				\array_merge(
 					$additionalOutput,
-					$successAdditionalData['public']
+					$successAdditionalData['public'],
+					$successAdditionalData['additional']
 				),
 				$response
 			);
@@ -431,8 +427,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if ($trackingAdditionalData) {
 			$output[UtilsHelper::getStateResponseOutputKey('trackingAdditionalData')] = $trackingAdditionalData;
 		}
-
-		$output[UtilsHelper::getStateResponseOutputKey('formId')] = $formId;
 
 		return $output;
 	}
@@ -544,6 +538,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			}
 		}
 
+		$output['private'][UtilsHelper::getStateResponseOutputKey('formId')] = $formId;
+
 		return [
 			'private' => $output['private'],
 			'public' => $output['public'],
@@ -560,6 +556,19 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	protected function getIntegrationResponseErrorOutputAdditionalData(array $formDetails): array {
 		return $this->getIntegrationResponseAnyOutputAdditionalData($formDetails);
+	}
+
+	/**
+	 * Call integration response success callback.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 *
+	 * @return void
+	 */
+	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
+	{
+		return;
 	}
 
 	/**

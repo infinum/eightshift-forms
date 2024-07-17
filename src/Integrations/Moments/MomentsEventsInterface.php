@@ -21,6 +21,7 @@ interface MomentsEventsInterface
 	 * @param string $eventName Event name value.
 	 * @param array<string> $map Map value.
 	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $additionaParams Additional params.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -29,6 +30,7 @@ interface MomentsEventsInterface
 		string $emailKey,
 		string $eventName,
 		array $map,
-		string $formId
+		string $formId,
+		array $additionaParams = []
 	): array;
 }

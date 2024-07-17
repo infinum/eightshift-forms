@@ -29,6 +29,7 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 	 * @param string $eventName Event name value.
 	 * @param array<string> $map Map value.
 	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $additionaParams Additional params.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -37,13 +38,14 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		string $emailKey,
 		string $eventName,
 		array $map,
-		string $formId
+		string $formId,
+		array $additionaParams = []
 	): array {
 		$email = \rawurlencode(UtilsGeneralHelper::getFieldDetailsByName($params, $emailKey)['value']);
 
 		$url = "{$this->getBaseUrl()}peopleevents/1/persons/{$email}/definitions/{$eventName}/events";
 
-		$body = $this->prepareParams($params, $eventName, $map, $formId);
+		$body = $this->prepareParams($params, $eventName, $map, $additionaParams, $formId);
 
 		$response = \wp_remote_post(
 			$url,
@@ -84,12 +86,18 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 	 * @param array<string, mixed> $params Form fields params.
 	 * @param string $eventName Event name value.
 	 * @param array<string, mixed> $map Map value.
+	 * @param array<string, mixed> $additionaParams Additional params.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params, string $eventName, array $map, string $formId): array
-	{
+	private function prepareParams(
+		array $params,
+		string $eventName,
+		array $map,
+		array $additionaParams,
+		string $formId
+	): array {
 		// Prepare output.
 		$output = [
 			'definitionId' => $eventName,
@@ -102,7 +110,7 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		// Filter params.
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $eventName, $map, $formId) ?? [];
+			$params = \apply_filters($filterName, $params, $eventName, $map, $additionaParams, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
@@ -124,11 +132,13 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		// Filter params.
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParamsAfter']);
 		if (\has_filter($filterName)) {
-			$properties = \apply_filters($filterName, $properties, $params, $eventName, $formId) ?? [];
+			$properties = \apply_filters($filterName, $properties, $params, $eventName, $additionaParams, $formId) ?? [];
 		}
 
 		// Add custom properties.
 		$output['properties'] = $properties;
+
+		dump($output);
 
 		return $output;
 	}
