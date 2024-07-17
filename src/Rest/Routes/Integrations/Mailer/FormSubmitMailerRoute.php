@@ -83,7 +83,12 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		// Send email.
 		$mailerResponse = $this->getFormSubmitMailer()->sendEmails(
 			$formDetails,
-			$this->getCommonEmailResponseTags($successAdditionalData)
+			$this->getCommonEmailResponseTags(
+				\array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['private']
+				)
+			)
 		);
 
 		$status = $mailerResponse['status'] ?? UtilsConfig::STATUS_ERROR;
@@ -94,7 +99,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel($label, $formId),
-					$successAdditionalData,
+					$successAdditionalData['public'],
 					$debug
 				)
 			);

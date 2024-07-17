@@ -244,6 +244,43 @@ class EntriesHelper
 	}
 
 	/**
+	 * Update entry.
+	 *
+	 * @param array<string, mixed> $data Data to update.
+	 * @param string $id Entry Id.
+	 *
+	 * @return boolean
+	 */
+	public static function updateEntry(array $data, string $id): bool
+	{
+		global $wpdb;
+
+		$output = \wp_json_encode($data);
+
+		$result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			self::getFullTableName(),
+			[
+				'entry_value' => $output,
+			],
+			[
+				'id' => (int) $id,
+			],
+			[
+				'%s',
+			],
+			[
+				'%d',
+			]
+		);
+
+		if (\is_wp_error($result)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Delete entry.
 	 *
 	 * @param string $id Entry Id.

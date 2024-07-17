@@ -380,7 +380,13 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
 				$this->getFormSubmitMailer()->sendEmails(
 					$formDetails,
-					$this->getCombinedEmailResponseTags($formDetails, $successAdditionalData)
+					$this->getCombinedEmailResponseTags(
+						$formDetails,
+						\array_merge(
+							$successAdditionalData['public'],
+							$successAdditionalData['private'],
+						)
+					)
 				);
 			}
 
@@ -388,7 +394,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$labelsOutput,
 				\array_merge(
 					$additionalOutput,
-					$successAdditionalData
+					$successAdditionalData['public']
 				),
 				$response
 			);
@@ -443,32 +449,36 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
-		$output = [];
+		$output = [
+			'private' => [],
+			'public' => [],
+		];
 
 		// Set entries.
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+		$useEntries = \apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+		if ($useEntries) {
 			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-			if ($entryId && UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY, SettingsEntries::SETTINGS_ENTRIES_SEND_ENTRY_IN_FORM_SUBMIT_KEY, $formId)) {
-				$output[UtilsHelper::getStateResponseOutputKey('entry')] = (string) $entryId;
+			if ($entryId) {
+				$output['private'][UtilsHelper::getStateResponseOutputKey('entry')] = (string) $entryId;
 			}
 		}
 
 		// Hide global message on success.
 		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
 		if ($hideGlobalMsgOnSuccess) {
-			$output[UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
+			$output['public'][UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
 		}
 
 		// Hide form on success.
 		$hideFormOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId);
 		if ($hideFormOnSuccess) {
-			$output[UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
+			$output['public'][UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
 		}
 
 		// Add success redirect variation.
 		$variation = FiltersOuputMock::getVariationFilterValue($type, $formId, $formDetails)['data'];
 		if ($variation) {
-			$output[UtilsHelper::getStateResponseOutputKey('variation')] = $variation;
+			$output['public'][UtilsHelper::getStateResponseOutputKey('variation')] = $variation;
 		}
 
 		// Success redirect url.
@@ -494,15 +504,15 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				}
 			}
 
-			if (isset($output[UtilsHelper::getStateResponseOutputKey('variation')])) {
-				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $output[UtilsHelper::getStateResponseOutputKey('variation')];
+			if (isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])) {
+				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
 			}
 
-			if (isset($output[UtilsHelper::getStateResponseOutputKey('entry')])) {
-				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output[UtilsHelper::getStateResponseOutputKey('entry')];
+			if (isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
+				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
 			}
 
-			$output[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
+			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
 				[
 					UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
 				],
@@ -510,10 +520,35 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			);
 		}
 
-		return \array_merge(
-			$output,
-			$this->getIntegrationResponseAnyOutputAdditionalData($formDetails)
-		);
+		// Update created entry with additional values.
+		if ($useEntries && isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
+			$entryData = EntriesHelper::getEntry($output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
+
+			if ($entryData) {
+				$entryNewData = $entryData['entryValue'] ?? [];
+				if (
+					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+					isset($output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')])
+				) {
+					$entryNewData[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = $output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')];
+				}
+
+				if (
+					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+					isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])
+				) {
+					$entryNewData[UtilsHelper::getStateResponseOutputKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
+				}
+
+				EntriesHelper::updateEntry($entryNewData, $output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
+			}
+		}
+
+		return [
+			'private' => $output['private'],
+			'public' => $output['public'],
+			'additional' => $this->getIntegrationResponseAnyOutputAdditionalData($formDetails),
+		];
 	}
 
 	/**
