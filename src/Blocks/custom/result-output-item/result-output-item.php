@@ -44,7 +44,6 @@ if (isset($data[UtilsHelper::getStateSuccessRedirectUrlKey('variation')])) {
 	dump($data);
 }
 
-
 ?>
 
 <div class="<?php echo esc_attr($resultClass); ?>" <?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
