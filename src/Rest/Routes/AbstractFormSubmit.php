@@ -506,6 +506,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
 			}
 
+			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectBaseUrl')] = $successRedirectUrl;
 			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
 				[
 					UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
@@ -540,11 +541,19 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		$output['private'][UtilsHelper::getStateResponseOutputKey('formId')] = $formId;
 
-		return [
+		$finalOutput = [
 			'private' => $output['private'],
 			'public' => $output['public'],
 			'additional' => $this->getIntegrationResponseAnyOutputAdditionalData($formDetails),
 		];
+
+		// Filter params.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', $type, 'beforeSuccessResponse']);
+		if (\has_filter($filterName)) {
+			return \apply_filters($filterName, $finalOutput, $formDetails, $formId);
+		}
+
+		return $finalOutput;
 	}
 
 	/**

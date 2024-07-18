@@ -765,7 +765,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							$entryValue = "<a href='{$entryValue}' target='_blank' rel='noopener noreferrer'>{$entryValue}</a>";
 						}
 
-						$content .= "<li><strong>{$entryKey}:</strong><span>{$entryValue}</span></li>";
+						$content .= "<li><strong>{$entryKey}:</strong><span>- {$entryValue}</span></li>";
 					}
 					$content .= '</ul>';
 

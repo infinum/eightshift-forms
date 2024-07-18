@@ -124,6 +124,15 @@
 				li {
 					text-overflow: ellipsis;
 					overflow: auto;
+					transition: {
+						duration: 0.3s;
+						property: color;
+						timing-function: ease-in-out;
+					}
+
+					&:hover {
+						color: var(--global-colors-esf-gray-950);
+					}
 
 					strong {
 						display: block;
@@ -131,6 +140,7 @@
 
 					span {
 						white-space: nowrap;
+						padding-left: 0.9375rem;
 					}
 
 					&:hover {
