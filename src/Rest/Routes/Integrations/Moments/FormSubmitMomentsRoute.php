@@ -162,8 +162,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 			$emailKey,
 			$eventName,
 			$map,
-			$formId,
-			$successAdditionalData
+			$formId
 		);
 
 		if ($response[UtilsConfig::IARD_CODE] >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $response[UtilsConfig::IARD_CODE] <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
