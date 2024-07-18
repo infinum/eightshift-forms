@@ -82,7 +82,6 @@ final class Filters
 					'phoneSync',
 					'globalMsgHeadings',
 					'additionalContent',
-					'preResponseSuccessRedirectData',
 					'additionalHiddenFields',
 					'customClassSelector',
 					'componentShowForm',

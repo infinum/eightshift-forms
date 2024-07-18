@@ -170,21 +170,54 @@ export const FormsOptions = ({
 			</PanelBody>
 
 			<PanelBody title={__('Results output', 'eightshift-forms')} initialOpen={true}>
-				<TextControl
-					label={<IconLabel icon={icons.anchor} label={__('Variation', 'eightshift-forms')} />}
-					help={__('Override form settings variation value', 'eightshift-forms')}
-					value={formsVariation}
-					onChange={(value) => setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: value })}
-				/>
+				<Repeater
+					noReordering
+					icon={icons.paletteColor}
+					label={__('Variation', 'eightshift-forms')}
+					items={formsVariation}
+					attributeName={getAttrKey('formsVariation', attributes, manifest)}
+					setAttributes={setAttributes}
+				>
+					{formsVariation.map((item, index) => (
+						<RepeaterItem
+							key={index}
+							icon={icons.paletteColor}
+							title={item?.title}
+						>
+							<div className='es-fifty-fifty-h'>
+								<TextControl
+									value={item.title}
+									label={__('Key', 'eightshift-forms')}
+									onChange={(value) => {
+										const newArray = [...formsVariation];
+										newArray[index].title = value;
+
+										setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
+									}}
+								/>
+								<TextControl
+									value={item.slug}
+									label={__('Value', 'eightshift-forms')}
+									onChange={(value) => {
+										const newArray = [...formsVariation];
+										newArray[index].slug = value;
+
+										setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
+									}}
+								/>
+							</div>
+						</RepeaterItem>
+					))}
+				</Repeater>
 
 				{formsUseCustomResultOutputFeature &&
 					<>
 						<Button
-							variant='tertiary'
+							variant='secondary'
 							onClick={() => setIsResultOutputModalOpen(true)}
-							className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
+							className='es-rounded-1.5 es-font-weight-500'
 						>
-							{__('Edit', 'eightshift-forms')}
+							{__('Edit custom result output', 'eightshift-forms')}
 						</Button>
 
 						{isResultOutputModalOpen && (
@@ -224,11 +257,12 @@ export const FormsOptions = ({
 									items={formsVariationDataFiles}
 									attributeName={getAttrKey('formsVariationDataFiles', attributes, manifest)}
 									setAttributes={setAttributes}
+									additionalClasses='es-border-t-cool-gray-300 es-mt-4 es-pt-4'
 								>
 									{formsVariationDataFiles.map((item, index) => (
 										<RepeaterItem
 											key={index}
-											icon={item?.icon ?? icons.emptyCircle}
+											icon={icons.emptyCircle}
 											title={item?.title}
 										>
 											<TextControl
@@ -241,6 +275,7 @@ export const FormsOptions = ({
 													setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
 												}}
 											/>
+
 											<Toggle
 												value={item.url}
 												checked={item.asFile}
@@ -259,6 +294,7 @@ export const FormsOptions = ({
 													setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
 												}}
 											/>
+
 											{!formsVariationDataFiles[index].asFile &&
 												<LinkInput
 													value={item.url}
@@ -271,6 +307,7 @@ export const FormsOptions = ({
 													}}
 												/>
 											}
+
 											{formsVariationDataFiles[index].asFile && (
 												<>
 													{!formsVariationDataFiles[index].file && (
@@ -308,6 +345,29 @@ export const FormsOptions = ({
 													)}
 												</>
 											)}
+
+											<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-fifty-fifty-h'>
+												<TextControl
+													value={item.fieldName}
+													label={__('Field Name', 'eightshift-forms')}
+													onChange={(value) => {
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].fieldName = value;
+	
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+													}}
+												/>
+												<TextControl
+													value={item.fieldValue}
+													label={__('Field Value', 'eightshift-forms')}
+													onChange={(value) => {
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].fieldValue = value;
+	
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+													}}
+												/>
+											</div>
 										</RepeaterItem>
 									))}
 								</Repeater>

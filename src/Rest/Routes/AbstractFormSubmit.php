@@ -488,34 +488,39 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$successRedirectUrl = \str_replace("{" . $name . "}", (string) $value, $successRedirectUrl);
 			}
 
-			// Pre response filter for success redirect data.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-			if (\has_filter($filterName)) {
-				$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-				if ($filterDetails) {
-					$redirectDataOutput = $filterDetails;
-				}
-			}
-
+			// Redirect variation.
 			if (isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])) {
 				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
 			}
 
+			// Redirect entry id.
 			if (isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
 				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
 			}
 
+			// Redirect secrue data.
 			if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
 				$secureData = json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true);
+
+				// Legacy data.
 				if (isset($secureData['l'])) {
 					$redirectDataOutput['es-legacy'] = $this->processLegacyData($secureData['l'], $formDetails[UtilsConfig::FD_PARAMS_RAW], $formId);
 				}
+
+				// Redirect custom result output feature.
+				$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
+				if (\apply_filters($formsUseCustomResultOutputFeatureFilterName, false)) {
+					$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('customResultOutput')] = $this->processCustomResultOutputData($secureData, $formDetails[UtilsConfig::FD_PARAMS_RAW]);
+				}
 			} else {
+				// Legacy data.
 				$redirectDataOutput['es-legacy']['v'] = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
 			}
 
+			// Redirect base url.
 			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectBaseUrl')] = $successRedirectUrl;
+
+			// Redirect full url.
 			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
 				[
 					UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
@@ -548,6 +553,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			}
 		}
 
+		// Add form ID to the output.
 		$output['private'][UtilsHelper::getStateResponseOutputKey('formId')] = $formId;
 
 		$finalOutput = [
@@ -561,6 +567,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $finalOutput, $formDetails, $formId);
 		}
+
+		dump($finalOutput);
 
 		return $finalOutput;
 	}
@@ -782,5 +790,54 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Process custom result output data.
+	 *
+	 * @param array<string, mixed> $data Data from secure data.
+	 * @param array<string, mixed> $params Raw params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function processCustomResultOutputData(array $data, array $params): array
+	{
+		$output = [];
+
+		// Output title.
+		if (isset($data['t'])) {
+			$output['t'] = $data['t'];
+		}
+
+		// Output subtitle.
+		if (isset($data['st'])) {
+			$output['st'] = $data['st'];
+		}
+
+		// Output files.
+		$files = $data['d'] ?? [];
+		if ($files) {
+			$outputFiles = [];
+			foreach ($files as $file) {
+				$fieldName = $file['cfn'] ?? '';
+				$fieldValue = $file['cfv'] ?? '';
+
+				// If empty use the download.
+				if (!$fieldName || !$fieldValue) {
+					$outputFiles[] = $file;
+					continue;
+				}
+
+				// If field condition is met use the download.
+				if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
+					$outputFiles[] = $file;
+					continue;
+				}
+			}
+
+			$output['d'] = $outputFiles;
+		}
+
+		return $output;
 	}
 }

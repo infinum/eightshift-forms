@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
@@ -95,9 +97,18 @@ final class FiltersOuputMock
 			$data = $shouldAppend ? \array_merge($data, $dataLocal) : $dataLocal;
 		}
 
+		// Get data from forms block.
+		$secureData = $formDetails[UtilsConfig::FD_SECURE_DATA] ?? [];
+		if ($secureData) {
+			$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true)['v'] ?? [];
+
+			if ($secureData) {
+				$data = $shouldAppend ? \array_merge($data, $secureData) : $secureData;
+			}
+		}
+
 		// Find local settings per integration or filter data.
 		$filterNameLocal = UtilsHooksHelper::getFilterName(['block', 'form', 'variation']);
-
 		if (\has_filter($filterNameLocal)) {
 			$dataFilter = \apply_filters($filterNameLocal, [], $formDetails, $formId);
 

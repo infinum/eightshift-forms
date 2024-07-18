@@ -41,7 +41,8 @@
 			"default": []
 		},
 		"formsVariation": {
-			"type": "string"
+			"type": "array",
+			"default": []
 		},
 		"formsVariationData": {
 			"type": "object",

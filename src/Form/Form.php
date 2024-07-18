@@ -553,71 +553,98 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			return '';
 		}
 
-		$legacy = $parentSettings['legacy'] ?? [];
-		if ($legacy) {
-			if (isset($legacy['downloads'])) {
-				$downloads = [];
-				foreach ($legacy['downloads'] as $download) {
-					$id = $download['id'] ?? '';
+		// Output variation.
+		$variation = $parentSettings['variation'] ?? [];
+		if ($variation) {
+			$variationOutput = [];
+			foreach ($variation as $value) {
+				$title = $value['title'] ?? '';
+				$slug = $value['slug'] ?? '';
 
-					if (!$id) {
-						continue;
-					}
-
-					$downloads[] = \array_filter([
-						'u' => \wp_get_attachment_url((int) $id),
-						'c' => $download['condition'] ?? '',
-						't' => $download['fileTitle'] ?? '',
-					]);
+				if (!$title || !$slug) {
+					continue;
 				}
 
-				$legacy['downloads'] = $downloads;
+				$variationOutput[] = [
+					$title,
+					$slug,
+				];
 			}
 
-			$items = \array_filter([
-				'v' => $legacy['variation'] ?? '',
-				'u' => $legacy['variationUrl'] ?? '',
-				't' => $legacy['variationUrlTitle'] ?? '',
-				'd' => $legacy['downloads'] ?? [],
-			]);
-
-			if ($items) {
-				$output['l'] = $items;
-			}
+			$output['v'] = $variationOutput;
 		}
 
-		$variation = $parentSettings['variation'] ?? '';
-		if ($variation) {
-			$output['v'] = $variation;
-		}
-
-		if (isset($parentSettings['variationData']['title'])) {
-			$output['t'] = $parentSettings['variationData']['title'];
-		}
-		if (isset($parentSettings['variationData']['subtitle'])) {
-			$output['st'] = $parentSettings['variationData']['subtitle'];
-		}
-
-		$variationDataFiles = $parentSettings['variationDataFiles'] ?? [];
-		if ($variationDataFiles) {
-			$variationDataFilesOutput = [];
-			foreach ($variationDataFiles as $item) {
-				$variationDataFilesOutput[] = \array_filter([
-					't' => $item['title'] ?? '',
-					'af' => $item['asFile'] ?? false,
-					'f' => $item['file']['id'] ?? '',
-					'u' => $item['url'] ?? '',
+		// Legacy attributes - this will be removed in the future.
+		$formsUseLegacyTnxPageFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useLegacyTnxPageFeature']);
+		if (\apply_filters($formsUseLegacyTnxPageFeatureFilterName, false)) {
+			$legacy = $parentSettings['legacy'] ?? [];
+			if ($legacy) {
+				if (isset($legacy['downloads'])) {
+					$downloads = [];
+					foreach ($legacy['downloads'] as $download) {
+						$id = $download['id'] ?? '';
+	
+						if (!$id) {
+							continue;
+						}
+	
+						$downloads[] = \array_filter([
+							'u' => $id,
+							'c' => $download['condition'] ?? '',
+							't' => $download['fileTitle'] ?? '',
+						]);
+					}
+	
+					$legacy['downloads'] = $downloads;
+				}
+	
+				$items = \array_filter([
+					'v' => $legacy['variation'] ?? '',
+					'u' => $legacy['variationUrl'] ?? '',
+					't' => $legacy['variationUrlTitle'] ?? '',
+					'd' => $legacy['downloads'] ?? [],
 				]);
+	
+				if ($items) {
+					$output['l'] = $items;
+				}
+			}
+		}
 
-				$output['d'] = $variationDataFilesOutput;
+		// Output custom result output.
+		$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
+		if (\apply_filters($formsUseCustomResultOutputFeatureFilterName, false)) {
+			// Output title.
+			if (isset($parentSettings['variationData']['title'])) {
+				$output['t'] = $parentSettings['variationData']['title'];
+			}
+
+			// Output subtitle.
+			if (isset($parentSettings['variationData']['subtitle'])) {
+				$output['st'] = $parentSettings['variationData']['subtitle'];
+			}
+
+			// Output files.
+			$variationDataFiles = $parentSettings['variationDataFiles'] ?? [];
+			if ($variationDataFiles) {
+				$variationDataFilesOutput = [];
+				foreach ($variationDataFiles as $item) {
+					$variationDataFilesOutput[] = \array_filter([
+						't' => $item['title'] ?? '',
+						'f' => $item['file']['id'] ?? '',
+						'u' => $item['url'] ?? '',
+						'cfn' => $item['fieldName'] ?? '',
+						'cfv' => $item['fieldValue'] ?? '',
+					]);
+
+					$output['d'] = \array_filter($variationDataFilesOutput);
+				}
 			}
 		}
 
 		if (!$output) {
 			return '';
 		}
-
-		dump($output);
 
 		return UtilsEncryption::encryptor(wp_json_encode(\array_filter($output)));
 	}
