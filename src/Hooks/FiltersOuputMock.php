@@ -83,20 +83,21 @@ final class FiltersOuputMock
 	 */
 	public static function getVariationFilterValue(string $type, string $formId, array $formDetails): array
 	{
-		$shouldAppend = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId);
+		$shouldAppend = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId);
 
 		// Find global settings per integration.
-		$data = UtilsSettingsHelper::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY);
+		$data = UtilsSettingsHelper::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY);
 		$filterUsed = false;
 
 		// Find local settings for form.
-		$dataLocal = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		$dataLocal = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_VARIATION_KEY, $formId);
 		if ($dataLocal) {
 			$data = $shouldAppend ? \array_merge($data, $dataLocal) : $dataLocal;
 		}
 
 		// Find local settings per integration or filter data.
 		$filterNameLocal = UtilsHooksHelper::getFilterName(['block', 'form', 'variation']);
+
 		if (\has_filter($filterNameLocal)) {
 			$dataFilter = \apply_filters($filterNameLocal, [], $formDetails, $formId);
 

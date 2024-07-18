@@ -6,7 +6,6 @@
  * @package EightshiftFormsAddonComputedFields
  */
 
-use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;

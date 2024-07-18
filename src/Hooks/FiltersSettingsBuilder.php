@@ -112,6 +112,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsGeneral::SETTINGS_TYPE_KEY => [
 				'settings' => SettingsGeneral::FILTER_SETTINGS_NAME,
+				'settingsGlobal' => SettingsGeneral::FILTER_SETTINGS_GLOBAL_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('General', 'eightshift-forms'),

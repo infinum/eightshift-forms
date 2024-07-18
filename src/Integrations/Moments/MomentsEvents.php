@@ -134,8 +134,6 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		// Add custom properties.
 		$output['properties'] = $properties;
 
-		dump($output);
-
 		return $output;
 	}
 }

@@ -47,10 +47,10 @@ abstract class AbstractSettingsIntegrations
 			],
 			[
 				'component' => 'textarea',
-				'textareaFieldLabel' => \__('Redirect variation', 'eightshift-forms'),
+				'textareaFieldLabel' => \__('Variation', 'eightshift-forms'),
 				'textareaIsMonospace' => true,
 				'textareaSaveAsJson' => true,
-				'textareaName' => UtilsSettingsHelper::getSettingName($integrationType . '-' . SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY),
+				'textareaName' => UtilsSettingsHelper::getSettingName($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY),
 				/* translators: %s is the integration type */
 				'textareaFieldHelp' => \sprintf(
 					\__('Define redirection value that you can use in your Result output items.<br />
@@ -61,7 +61,7 @@ abstract class AbstractSettingsIntegrations
 					\ucfirst($integrationType),
 					$variation['settingsGlobal'],
 				),
-				'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson($integrationType . '-' . SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_VARIATION_KEY, 2),
+				'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY, 2),
 			],
 		];
 	}

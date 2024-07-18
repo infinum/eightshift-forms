@@ -54,6 +54,13 @@
 			"type": "boolean",
 			"default": false
 		},
+		"formSecureData": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
+		},
 		"formMeta": {
 			"type": "string"
 		},

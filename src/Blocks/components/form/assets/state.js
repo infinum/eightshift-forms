@@ -76,6 +76,9 @@ export class State {
 	getStateFormActionExternal = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formId);
 	};
+	getStateFormSecureData = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.SECURE_DATA], formId);
+	};
 	getStateFormTypeSettings = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.TYPE_SETTINGS], formId);
 	};

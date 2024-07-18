@@ -58,7 +58,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	{
 		$prefix = $attributes['prefix'] ?? '';
 		$type = $attributes['blockName'] ?? '';
-		$formId = $attributes["{$prefix}PostId"] ?? '';
+		$formId = $attributes["{$prefix}ParentSettings"]['postId'] ?? '';
 
 		if (!$prefix || !$type || !$formId) {
 			return $attributes;
@@ -90,9 +90,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$attributes["{$prefix}PhoneDisablePicker"] = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
 
 		// Output secure data.
-		$outputSecureData = $this->getSecureFormData($type, $formId, $prefix, $attributes);
+		$outputSecureData = $this->getSecureFormData($prefix, $attributes);
 		if ($outputSecureData) {
-			$attributes['secureData'] = $outputSecureData;
+			$attributes["{$prefix}SecureData"] = $outputSecureData;
 		}
 
 		return $attributes;
@@ -113,12 +113,20 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsNamespace = Helpers::getSettingsNamespace();
 		$manifest = Helpers::getBlock('forms');
 		$formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
-		$formsSuccessRedirectVariation = Helpers::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
+		$formsVariation = Helpers::checkAttr('formsVariation', $attributes, $manifest);
+		$formsVariationData = Helpers::checkAttr('formsVariationData', $attributes, $manifest);
+		$formsVariationDataFiles = Helpers::checkAttr('formsVariationDataFiles', $attributes, $manifest);
 		$formsFormDataTypeSelector = Helpers::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 		$formsServerSideRender = Helpers::checkAttr('formsServerSideRender', $attributes, $manifest);
 		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Helpers::checkAttr('formsAttrs', $attributes, $manifest);
 		$formsCustomName = Helpers::checkAttr('formsCustomName', $attributes, $manifest);
+
+		// Legacy attributes.
+		$formsDownloads = Helpers::checkAttr('formsDownloads', $attributes, $manifest);
+		$formsSuccessRedirectVariation = Helpers::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
+		$formsSuccessRedirectVariationUrl = Helpers::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
+		$formsSuccessRedirectVariationUrlTitle = Helpers::checkAttr('formsSuccessRedirectVariationUrlTitle', $attributes, $manifest);
 
 		$checkStyleEnqueue = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
@@ -150,13 +158,21 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 				// Populate forms blocks attributes to the form component later in the chain.
 				$innerBlock['attrs']["{$blockName}FormParentSettings"] = [
-					'variation' => $formsSuccessRedirectVariation,
+					'variation' => $formsVariation,
+					'variationData' => $formsVariationData,
+					'variationDataFiles' => $formsVariationDataFiles,
 					'customName' => $formsCustomName,
 					'conditionalTags' => \wp_json_encode($formsConditionalTagsRulesForms),
 					'disabledDefaultStyles' => $checkStyleEnqueue,
 					'dataTypeSelector' => $formsFormDataTypeSelector,
 					'postId' => $formsFormPostId,
 					'formType' => $blockName,
+					'legacy' => [
+						'downloads' => $formsDownloads,
+						'variation' => $formsSuccessRedirectVariation,
+						'variationUrl' => $formsSuccessRedirectVariationUrl,
+						'variationUrlTitle' => $formsSuccessRedirectVariationUrlTitle,
+					],
 				];
 
 				$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
@@ -523,30 +539,86 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	/**
 	 * Get secure form data.
 	 *
-	 * @param string $type Type of the form.
-	 * @param string $formId Form ID.
 	 * @param string $prefix Prefix of the form.
 	 * @param array<string, mixed> $attributes Attributes of the form.
 	 *
 	 * @return string
 	 */
-	private function getSecureFormData(string $type, string $formId, string $prefix, array $attributes): string
+	private function getSecureFormData(string $prefix, array $attributes): string
 	{
-		$outputSecureData = [];
+		$output = [];
 
-		// Success redirect variation.
-		// if (!$attributes["{$prefix}SuccessRedirectVariation"]) {
-		// 	$successRedirectUrl = FiltersOuputMock::getVariationFilterValue($type, $formId)['data'];
-
-		// 	if ($successRedirectUrl) {
-		// 		$outputSecureData["SuccessRedirectVariation"] = $successRedirectUrl;
-		// 	}
-		// }
-
-		if (!$outputSecureData) {
+		$parentSettings = $attributes["{$prefix}ParentSettings"] ?? [];
+		if (!$parentSettings) {
 			return '';
 		}
-		
-		return UtilsEncryption::encryptor(wp_json_encode($outputSecureData));
+
+		$legacy = $parentSettings['legacy'] ?? [];
+		if ($legacy) {
+			if (isset($legacy['downloads'])) {
+				$downloads = [];
+				foreach ($legacy['downloads'] as $download) {
+					$id = $download['id'] ?? '';
+
+					if (!$id) {
+						continue;
+					}
+
+					$downloads[] = \array_filter([
+						'u' => \wp_get_attachment_url((int) $id),
+						'c' => $download['condition'] ?? '',
+						't' => $download['fileTitle'] ?? '',
+					]);
+				}
+
+				$legacy['downloads'] = $downloads;
+			}
+
+			$items = \array_filter([
+				'v' => $legacy['variation'] ?? '',
+				'u' => $legacy['variationUrl'] ?? '',
+				't' => $legacy['variationUrlTitle'] ?? '',
+				'd' => $legacy['downloads'] ?? [],
+			]);
+
+			if ($items) {
+				$output['l'] = $items;
+			}
+		}
+
+		$variation = $parentSettings['variation'] ?? '';
+		if ($variation) {
+			$output['v'] = $variation;
+		}
+
+		if (isset($parentSettings['variationData']['title'])) {
+			$output['t'] = $parentSettings['variationData']['title'];
+		}
+		if (isset($parentSettings['variationData']['subtitle'])) {
+			$output['st'] = $parentSettings['variationData']['subtitle'];
+		}
+
+		$variationDataFiles = $parentSettings['variationDataFiles'] ?? [];
+		if ($variationDataFiles) {
+			$variationDataFilesOutput = [];
+			foreach ($variationDataFiles as $item) {
+				$variationDataFilesOutput[] = \array_filter([
+					't' => $item['title'] ?? '',
+					'af' => $item['asFile'] ?? false,
+					'f' => $item['file']['id'] ?? '',
+					'u' => $item['url'] ?? '',
+				]);
+
+				$output['d'] = $variationDataFilesOutput;
+			}
+		}
+
+		if (!$output) {
+			return '';
+		}
+
+		dump($output);
+
+		return UtilsEncryption::encryptor(wp_json_encode(\array_filter($output)));
 	}
 }

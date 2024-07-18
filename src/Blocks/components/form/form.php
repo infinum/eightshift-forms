@@ -41,12 +41,14 @@ $formServerSideRender = Helpers::checkAttr('formServerSideRender', $attributes, 
 $formHasSteps = Helpers::checkAttr('formHasSteps', $attributes, $manifest);
 $formUseSingleSubmit = Helpers::checkAttr('formUseSingleSubmit', $attributes, $manifest);
 $formParentSettings = Helpers::checkAttr('formParentSettings', $attributes, $manifest);
+$formSecureData = Helpers::checkAttr('formSecureData', $attributes, $manifest);
 
 $formCustomName = $formParentSettings['customName'] ?? '';
 $formPostId = $formParentSettings['postId'] ?? '';
 $formConditionalTags = $formParentSettings['conditionalTags'] ?? '';
 $formDisabledDefaultStyles = $formParentSettings['disabledDefaultStyles'] ?? false;
 $formType = $formParentSettings['formType'] ?? '';
+$legacy = $formParentSettings['legacy'] ?? [];
 
 $formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
@@ -71,8 +73,8 @@ if ($formDataTypeSelector) {
 	$formAttrs[UtilsHelper::getStateAttribute('typeSelector')] = esc_attr($formDataTypeSelector);
 }
 
-if (isset($attributes['secureData'])) {
-	$formAttrs[UtilsHelper::getStateAttribute('formSecureData')] = esc_attr($attributes['secureData']);
+if ($formSecureData) {
+	$formAttrs[UtilsHelper::getStateAttribute('formSecureData')] = $formSecureData; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 }
 
 if ($formPhoneSync) {

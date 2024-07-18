@@ -425,7 +425,7 @@ export class Form {
 				}
 
 				// Redirect to url and update url params from from data.
-				this.utils.redirectToUrlByReference(formId, data?.[this.state.getStateResponseOutputKey('successRedirectUrl')]);
+				// this.utils.redirectToUrlByReference(formId, data?.[this.state.getStateResponseOutputKey('successRedirectUrl')]);
 			} else {
 				// Clear form values.
 				this.utils.resetForm(formId);
@@ -887,6 +887,10 @@ export class Form {
 			{
 				name: this.state.getStateParam('actionExternal'),
 				value: this.state.getStateFormActionExternal(formId),
+			},
+			{
+				name: this.state.getStateParam('secureData'),
+				value: this.state.getStateFormSecureData(formId),
 			},
 		]);
 	}

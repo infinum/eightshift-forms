@@ -506,6 +506,15 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
 			}
 
+			if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
+				$secureData = json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true);
+				if (isset($secureData['l'])) {
+					$redirectDataOutput['es-legacy'] = $this->processLegacyData($secureData['l'], $formDetails[UtilsConfig::FD_PARAMS_RAW], $formId);
+				}
+			} else {
+				$redirectDataOutput['es-legacy']['v'] = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+			}
+
 			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectBaseUrl')] = $successRedirectUrl;
 			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
 				[
@@ -721,4 +730,57 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * @return mixed
 	 */
 	abstract protected function submitAction(array $formDetails);
+
+	/**
+	 * Process legacy data.
+	 *
+	 * @param array<string, mixed> $data Data from secure data.
+	 * @param array<string, mixed> $params Raw params.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function processLegacyData(array $data, array $params, string $formId): array
+	{
+		$downloads = $data['d'] ?? [];
+
+		$output = [];
+
+		foreach ($downloads as $download) {
+			$condition = $download['c'] ?? '';
+
+			// If empty use the download.
+			if (!$condition || $condition === 'all') {
+				$output[] = $download;
+				continue;
+			}
+
+			$condition = \explode('=', $condition);
+
+			$fieldName = $condition[0] ?? '';
+			$fieldValue = $condition[1] ?? '';
+
+			// If condition is not valid use the download.
+			if (!$fieldName || !$fieldValue) {
+				$output[] = $download;
+				continue;
+			}
+
+			// If field condition is met use the download.
+			if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
+				$output[] = $download;
+				continue;
+			}
+		}
+
+		if ($output) {
+			$data['d'] = $output;
+		}
+
+		if (!isset($data['v'])) {
+			$data['v'] = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		}
+
+		return $data;
+	}
 }

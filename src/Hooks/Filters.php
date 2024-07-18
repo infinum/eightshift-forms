@@ -68,6 +68,8 @@ final class Filters
 			'block' => [
 				'forms' => [
 					'styleOptions',
+					'useCustomResultOutputFeature',
+					'useLegacyTnxPageFeature',
 				],
 				'form' => [
 					'redirectionTimeout',
