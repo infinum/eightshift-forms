@@ -13,7 +13,7 @@
 @import './parts/shared';
 
 // Find all components and require component_name-style.scss inside it.
-@import './../../components/*/*-frontend-mandatory';
+@import './../../components/*/*-frontend-mandatory.scss';
 
 // Find all blocks and require block_name-editor.scss inside it.
-@import './../../custom/*/*-frontend-mandatory';
+@import './../../custom/*/*-frontend-mandatory.scss';

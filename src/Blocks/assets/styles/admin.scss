@@ -13,7 +13,7 @@
 @import './parts/shared';
 
 // Find all components and require component_name-admin.scss inside it.
-@import './../../components/*/*-admin';
+@import './../../components/*/*-admin.scss';
 
 // Additional variables.
 :root {
