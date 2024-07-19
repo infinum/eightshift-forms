@@ -583,28 +583,28 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					$downloads = [];
 					foreach ($legacy['downloads'] as $download) {
 						$id = $download['id'] ?? '';
-	
+
 						if (!$id) {
 							continue;
 						}
-	
+
 						$downloads[] = \array_filter([
 							'u' => $id,
 							'c' => $download['condition'] ?? '',
 							't' => $download['fileTitle'] ?? '',
 						]);
 					}
-	
+
 					$legacy['downloads'] = $downloads;
 				}
-	
+
 				$items = \array_filter([
 					'v' => $legacy['variation'] ?? '',
 					'u' => $legacy['variationUrl'] ?? '',
 					't' => $legacy['variationUrlTitle'] ?? '',
 					'd' => $legacy['downloads'] ?? [],
 				]);
-	
+
 				if ($items) {
 					$output['l'] = $items;
 				}
@@ -646,6 +646,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			return '';
 		}
 
-		return UtilsEncryption::encryptor(wp_json_encode(\array_filter($output)));
+		return UtilsEncryption::encryptor(\wp_json_encode(\array_filter($output)));
 	}
 }

@@ -322,7 +322,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getIntegrationCommonSubmitAction(array $formDetails): array {
+	protected function getIntegrationCommonSubmitAction(array $formDetails): array
+	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
 		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
@@ -410,7 +411,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getIntegrationResponseAnyOutputAdditionalData(array $formDetails): array {
+	protected function getIntegrationResponseAnyOutputAdditionalData(array $formDetails): array
+	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
@@ -500,7 +502,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 			// Redirect secrue data.
 			if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
-				$secureData = json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true);
+				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true);
 
 				// Legacy data.
 				if (isset($secureData['l'])) {
@@ -568,8 +570,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			return \apply_filters($filterName, $finalOutput, $formDetails, $formId);
 		}
 
-		dump($finalOutput);
-
 		return $finalOutput;
 	}
 
@@ -580,7 +580,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getIntegrationResponseErrorOutputAdditionalData(array $formDetails): array {
+	protected function getIntegrationResponseErrorOutputAdditionalData(array $formDetails): array
+	{
 		return $this->getIntegrationResponseAnyOutputAdditionalData($formDetails);
 	}
 
@@ -625,7 +626,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		);
 	}
 
-		/**
+	/**
 	 * Prepare all email response tags.
 	 *
 	 * @param array<string, mixed> $data Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.

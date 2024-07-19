@@ -1,3 +1,5 @@
+// stylelint-disable max-nesting-depth
+
 .es-card-inline {
 	$this: &;
 	position: relative;
@@ -132,6 +134,10 @@
 
 					&:hover {
 						color: var(--global-colors-esf-gray-950);
+
+						span {
+							white-space: inherit;
+						}
 					}
 
 					strong {
@@ -141,12 +147,6 @@
 					span {
 						white-space: nowrap;
 						padding-left: 0.9375rem;
-					}
-
-					&:hover {
-						span {
-							white-space: inherit;
-						}
 					}
 				}
 			}

@@ -33,28 +33,29 @@ final class FormsHelper
 	/**
 	 * Return field type internal enum values by name.
 	 *
-	 * is  - is                               - if value is exact match.
-	 * isn - is not                           - if value is not exact match.
-	 * gt  - greater than                     - if value is greater than.
-	 * gte - greater/equal than               - if value is greater/equal than.
-	 * lt  - less than                        - if value is less than.
-	 * lte - less/equal than                  - if value is less/equal than.
+	 * Is  - is                               - if value is exact match.
+	 * Isn - is not                           - if value is not exact match.
+	 * Gt  - greater than                     - if value is greater than.
+	 * Gte - greater/equal than               - if value is greater/equal than.
+	 * Lt  - less than                        - if value is less than.
+	 * Lte - less/equal than                  - if value is less/equal than.
 	 * c   - contains                         - if value contains value.
-	 * sw  - starts with                      - if value starts with value.
-	 * ew  - ends with                        - if value starts with value.
-	 * b   - between range                    - if value is between two values.
-	 * bs  - between range strict             - if value is between two values strict.
-	 * bn  - not between range                - if value is not between two values.
-	 * bns - not between between range strict - if value is not between two values strict.
+	 * Ww  - starts with                      - if value starts with value.
+	 * Ew  - ends with                        - if value starts with value.
+	 * B   - between range                    - if value is between two values.
+	 * Bs  - between range strict             - if value is between two values strict.
+	 * Bn  - not between range                - if value is not between two values.
+	 * Bns - not between between range strict - if value is not between two values strict.
 	 *
 	 * @param string $action Action to perform.
 	 * @param string $start  Start value.
 	 * @param string $value  Value to compare.
 	 * @param string $end    End value.
 	 *
-	 * @return array<string, callable>
+	 * @return boolean
 	 */
-	public static function getComparator(string $action, string $start, string $value, string $end = '') {
+	public static function getComparator(string $action, string $start, string $value, string $end = ''): bool
+	{
 		$operator = Helpers::getSettings()['comparator'];
 		$operatorExtended = Helpers::getSettings()['comparatorExtended'];
 
@@ -103,7 +104,8 @@ final class FormsHelper
 	 */
 	public static function checkResultOutputSuccess(string $name, string $operator, string $start, string $value, string $end): array
 	{
-		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? json_decode(esFormsDecryptor(sanitize_text_field(wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))), true) : [];
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? \json_decode(\esFormsDecryptor(\sanitize_text_field(\wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))), true) : [];
 
 		if (!$data) {
 			return [
@@ -127,17 +129,17 @@ final class FormsHelper
 			if (!$key || !$value) {
 				continue;
 			}
-	
+
 			if ($name !== $key) {
 				continue;
 			}
-	
+
 			if (FormsHelper::getComparator($operator, $start, $value, $end)) {
 				$showOutput = true;
 				break;
 			}
 		}
-	
+
 		if (!$showOutput) {
 			return [
 				'isRedirectPage' => true,
@@ -148,61 +150,6 @@ final class FormsHelper
 		return [
 			'isRedirectPage' => true,
 			'showOutput' => true,
-		];
-	}
-
-	/**
-	 * Get result output success item part shortcode value.
-	 *
-	 * @param string $name Name of the item.
-	 *
-	 * @return string
-	 */
-	public static function getResultOutputSuccessItemPartShortcodeValue(string $name): array
-	{
-		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? json_decode(esFormsDecryptor(sanitize_text_field(wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))), true) : [];
-
-		if (!$data) {
-			return [
-				'isRedirectPage' => false,
-				'value' => '',
-			];
-		}
-
-		$variationData = $data[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] ?? [];
-
-		if (!$variationData) {
-			return [
-				'isRedirectPage' => false,
-				'value' => '',
-			];
-		}
-
-		$output = '';
-
-		foreach ($variationData as $key => $value) {
-			if (!$key || !$value) {
-				continue;
-			}
-	
-			if ($name !== $key) {
-				continue;
-			}
-
-			$output = $value;
-			break;
-		}
-
-		if (!$output) {
-			[
-				'isRedirectPage' => true,
-				'value' => '',
-			];
-		}
-
-		return [
-			'isRedirectPage' => true,
-			'value' => $output,
 		];
 	}
 }

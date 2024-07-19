@@ -257,7 +257,7 @@ class EntriesHelper
 
 		$output = \wp_json_encode($data);
 
-		$result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			self::getFullTableName(),
 			[
 				'entry_value' => $output,

@@ -108,7 +108,9 @@ class Mailer implements MailerInterface
 			UtilsConfig::IARD_ITEM_ID => $response[UtilsConfig::IARD_ITEM_ID] ?? '',
 			UtilsConfig::IARD_FORM_ID => $formId,
 			UtilsConfig::FD_POST_ID => $formDetails[UtilsConfig::FD_POST_ID] ?? '',
-			'debug' => $this->getDebugOptions($customDebugData),
+			'customData' => $customData,
+			'debug' => $this->getDebugOptions($customDebugData, $formDetails),
+			'formDetails' => $this->cleanUpFormDetails($formDetails),
 		];
 
 		if ($customData) {
@@ -203,7 +205,7 @@ class Mailer implements MailerInterface
 
 		$output = [
 			'customData' => $customData,
-			'debug' => $this->getDebugOptions($customDebugData),
+			'debug' => $this->getDebugOptions($customDebugData, $formDetails),
 			'formDetails' => $this->cleanUpFormDetails($formDetails),
 		];
 
@@ -254,11 +256,14 @@ class Mailer implements MailerInterface
 	 * Get debug options.
 	 *
 	 * @param array<string, mixed> $customData Custom data for the email.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getDebugOptions(array $customData): array
+	private function getDebugOptions(array $customData, array $formDetails): array
 	{
+		$customDebugData['originalParams'] = $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG] ?? '';
+
 		return \array_merge(
 			[
 				'forms' => Helpers::getPluginVersion(),
@@ -267,6 +272,8 @@ class Mailer implements MailerInterface
 				'url' => \get_bloginfo('url'),
 				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
 				'time' => \wp_date('Y-m-d H:i:s'),
+				'requestUrl' => Helpers::getCurrentUrl(),
+				'originalParams' => $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG] ?? '',
 			],
 			$customData
 		);
@@ -434,6 +441,7 @@ class Mailer implements MailerInterface
 			UtilsConfig::FD_FIELDS,
 			UtilsConfig::FD_FIELDS_ONLY,
 			UtilsConfig::FD_ICON,
+			UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG,
 		];
 
 		return \array_diff_key($formDetails, \array_flip($list));

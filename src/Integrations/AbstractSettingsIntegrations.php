@@ -14,16 +14,17 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
+/**
+ * Abstract class for shared functionality for all integrations.
+ */
 abstract class AbstractSettingsIntegrations
 {
-
 	/**
 	 * Get global settings for the integration.
 	 *
 	 * @param string $integrationType Integration type.
 	 *
-	 * @return array<string, mixed>
-	 
+	 * @return array<int, array<string, mixed>>
 	 */
 	protected function getGlobalGeneralSettings(string $integrationType): array
 	{
@@ -35,8 +36,8 @@ abstract class AbstractSettingsIntegrations
 				'component' => 'input',
 				'inputName' => UtilsSettingsHelper::getOptionName($integrationType . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 				'inputFieldLabel' => \__('Redirect to URL', 'eightshift-forms'),
-				/* translators: %s is the integration type */
 				'inputFieldHelp' => \sprintf(
+					/* translators: %s is the integration type */
 					\__('After a successful submission, the user will be redirected to the provided URL and the success message will <b>not</b> be shown.
 					This settings will be used in all your %s form types.', 'eightshift-forms'),
 					\ucfirst($integrationType)
@@ -51,13 +52,12 @@ abstract class AbstractSettingsIntegrations
 				'textareaIsMonospace' => true,
 				'textareaSaveAsJson' => true,
 				'textareaName' => UtilsSettingsHelper::getSettingName($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY),
-				/* translators: %s is the integration type */
 				'textareaFieldHelp' => \sprintf(
+					/* translators: %s is the integration type */
 					\__('Define redirection value that you can use in your Result output items.<br />
 					Each key must be in a separate line.<br />
-					This settings will be used in all your %s form types.
-					%s
-					', 'eightshift-forms'),
+					This settings will be used in all your %1$s form types.
+					%2$s', 'eightshift-forms'),
 					\ucfirst($integrationType),
 					$variation['settingsGlobal'],
 				),

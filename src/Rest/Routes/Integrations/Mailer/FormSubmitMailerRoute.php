@@ -115,6 +115,5 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 				$debug
 			)
 		);
-
 	}
 }

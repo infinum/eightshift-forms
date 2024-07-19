@@ -92,11 +92,15 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_HIDE_FORM_ON_SUCCESS_KEY = 'hide-form-on-success';
 
 	/**
+	 * General success redirect variation options key.
+	 *
 	 * @deprecated 5.0.0 It will be removed in the 6.0.0 release.
 	 */
 	public const SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY = 'general-success-redirect-variation-options';
 
 	/**
+	 * General success redirect variation key.
+	 *
 	 * @deprecated 5.0.0 It will be removed in the 6.0.0 release.
 	 */
 	public const SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY = 'general-success-redirect-variation';
@@ -177,6 +181,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VARIATION_KEY),
+								// translators: %s will be replaced with forms field name and filter output copy.
 								'textareaFieldHelp' => \sprintf(\__('
 									Define redirection value that you can use in your Result output items.<br/>
 									Each key must be in a separate line.

@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Shortcode;
 
-use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -53,7 +52,7 @@ class ResultOutputItemPart implements ServiceInterface
 		}
 
 		// Check if we are on success redirect page.
-		$resultOutputData = FormsHelper::getResultOutputSuccessItemPartShortcodeValue($name);
+		$resultOutputData = $this->getResultOutputSuccessItemPartShortcodeValue($name);
 
 		// Used only on success redirect page.
 		if ($resultOutputData['isRedirectPage']) {
@@ -75,5 +74,61 @@ class ResultOutputItemPart implements ServiceInterface
 		}
 
 		return "<span {$attrsOutput}>{$content}</span>";
+	}
+
+	/**
+	 * Get result output success item part shortcode value.
+	 *
+	 * @param string $name Name of the item.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getResultOutputSuccessItemPartShortcodeValue(string $name): array
+	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? \json_decode(\esFormsDecryptor(\sanitize_text_field(\wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))), true) : [];
+
+		if (!$data) {
+			return [
+				'isRedirectPage' => false,
+				'value' => '',
+			];
+		}
+
+		$variationData = $data[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] ?? [];
+
+		if (!$variationData) {
+			return [
+				'isRedirectPage' => false,
+				'value' => '',
+			];
+		}
+
+		$output = '';
+
+		foreach ($variationData as $key => $value) {
+			if (!$key || !$value) {
+				continue;
+			}
+
+			if ($name !== $key) {
+				continue;
+			}
+
+			$output = $value;
+			break;
+		}
+
+		if (!$output) {
+			[
+				'isRedirectPage' => true,
+				'value' => '',
+			];
+		}
+
+		return [
+			'isRedirectPage' => true,
+			'value' => $output,
+		];
 	}
 }

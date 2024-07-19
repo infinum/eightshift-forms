@@ -761,7 +761,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							}
 						}
 
-						if (\filter_var($entryValue, FILTER_VALIDATE_URL)) {
+						if (\filter_var($entryValue, \FILTER_VALIDATE_URL)) {
 							$entryValue = "<a href='{$entryValue}' target='_blank' rel='noopener noreferrer'>{$entryValue}</a>";
 						}
 
@@ -979,7 +979,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$output[] = Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => get_permalink($formId),
+						'submitButtonAsLinkUrl' => \get_permalink($formId),
 						'submitValue' => \__('View', 'eightshift-forms'),
 					]);
 				}

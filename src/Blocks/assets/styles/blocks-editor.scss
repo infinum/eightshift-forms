@@ -12,11 +12,11 @@
 @import './parts/shared';
 
 // Utils helpers
-@import '@eightshift/frontend-libs/styles/es-utility-classes.scss';
-@import '@eightshift/frontend-libs/styles/es-component-styles.scss';
+@import '@eightshift/frontend-libs/styles/es-utility-classes';
+@import '@eightshift/frontend-libs/styles/es-component-styles';
 
 // Find all components and require component_name-style.scss inside it.
-@import './../../components/*/*-editor.scss';
+@import './../../components/*/*-editor';
 
 // Find all blocks and require block_name-editor.scss inside it.
-@import './../../custom/*/*-editor.scss';
+@import './../../custom/*/*-editor';
