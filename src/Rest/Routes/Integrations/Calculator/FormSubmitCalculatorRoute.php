@@ -89,10 +89,15 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 			$formDetails[UtilsConfig::FD_PARAMS] = \apply_filters($filterName, $formDetails[UtilsConfig::FD_PARAMS], $formId) ?? [];
 		}
 
+		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
+
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				$this->labels->getLabel('calculatorSuccess', $formId),
-				[],
+				\array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['additional']
+				),
 				$debug
 			)
 		);
