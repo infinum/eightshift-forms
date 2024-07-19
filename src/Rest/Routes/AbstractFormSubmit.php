@@ -823,6 +823,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$fieldName = $file['cfn'] ?? '';
 				$fieldValue = $file['cfv'] ?? '';
 
+				unset($file['cfn'], $file['cfv']);
+
 				// If empty use the download.
 				if (!$fieldName || !$fieldValue) {
 					$outputFiles[] = $file;

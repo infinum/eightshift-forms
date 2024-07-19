@@ -772,6 +772,8 @@ export class Form {
 				value: skipFieldsOutput,
 				type: 'hidden',
 				typeCustom: 'hidden',
+				custom: '',
+				innerName: '',
 			}));
 		}
 	}

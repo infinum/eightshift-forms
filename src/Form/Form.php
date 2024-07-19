@@ -633,6 +633,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 						't' => $item['title'] ?? '',
 						'f' => $item['file']['id'] ?? '',
 						'u' => $item['url'] ?? '',
+						'l' => $item['label'] ?? '',
 						'cfn' => $item['fieldName'] ?? '',
 						'cfv' => $item['fieldValue'] ?? '',
 					]);

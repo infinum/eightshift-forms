@@ -265,16 +265,29 @@ export const FormsOptions = ({
 											icon={icons.emptyCircle}
 											title={item?.title}
 										>
-											<TextControl
-												value={item.title}
-												label={__('Title', 'eightshift-forms')}
-												onChange={(value) => {
-													const newArray = [...formsVariationDataFiles];
-													newArray[index].title = value;
+											<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-fifty-fifty-h'>
+												<TextControl
+													value={item.title}
+													label={__('Title', 'eightshift-forms')}
+													onChange={(value) => {
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].title = value;
 
-													setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
-												}}
-											/>
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+													}}
+												/>
+
+												<TextControl
+													value={item.label}
+													label={__('Label', 'eightshift-forms')}
+													onChange={(value) => {
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].label = value;
+
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+													}}
+												/>
+											</div>
 
 											<Toggle
 												value={item.url}
