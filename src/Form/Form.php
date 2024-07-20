@@ -59,14 +59,10 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$prefix = $attributes['prefix'] ?? '';
 		$type = $attributes['blockName'] ?? '';
 		$formId = $attributes["{$prefix}ParentSettings"]['postId'] ?? '';
+		$action = $attributes["{$prefix}Action"] ?? '';
 
 		if (!$prefix || !$type || !$formId) {
 			return $attributes;
-		}
-
-		// Change form type depending if it is mailer empty.
-		if ($type === SettingsMailer::SETTINGS_TYPE_KEY && isset($attributes["{$prefix}Action"])) {
-			$attributes["{$prefix}Type"] = SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY;
 		}
 
 		// Custom form name.
@@ -93,6 +89,10 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$outputSecureData = $this->getSecureFormData($prefix, $attributes);
 		if ($outputSecureData) {
 			$attributes["{$prefix}SecureData"] = $outputSecureData;
+		}
+
+		if ($action) {
+			$attributes["{$prefix}ParentSettings"]['formType'] = SettingsMailer::SETTINGS_TYPE_CUSTOM_KEY;
 		}
 
 		return $attributes;

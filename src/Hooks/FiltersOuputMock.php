@@ -89,11 +89,16 @@ final class FiltersOuputMock
 
 		// Find global settings per integration.
 		$data = UtilsSettingsHelper::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY);
+		if ($data) {
+			$data = \array_column($data, 1, 0);
+		}
+
 		$filterUsed = false;
 
 		// Find local settings for form.
 		$dataLocal = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_VARIATION_KEY, $formId);
 		if ($dataLocal) {
+			$dataLocal = \array_column($dataLocal, 1, 0);
 			$data = $shouldAppend ? \array_merge($data, $dataLocal) : $dataLocal;
 		}
 
@@ -103,6 +108,7 @@ final class FiltersOuputMock
 			$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true)['v'] ?? [];
 
 			if ($secureData) {
+				$secureData = \array_column($secureData, 1, 0);
 				$data = $shouldAppend ? \array_merge($data, $secureData) : $secureData;
 			}
 		}
@@ -113,7 +119,8 @@ final class FiltersOuputMock
 			$dataFilter = \apply_filters($filterNameLocal, [], $formDetails, $formId);
 
 			if ($dataFilter) {
-				$data = $shouldAppend ? \array_merge(\array_column($data, 1, 0), $dataFilter) : $dataFilter;
+				$dataFilter = \array_column($dataFilter, 1, 0);
+				$data = $shouldAppend ? \array_merge($data, $dataFilter) : $dataFilter;
 				$filterUsed = true;
 			}
 		}

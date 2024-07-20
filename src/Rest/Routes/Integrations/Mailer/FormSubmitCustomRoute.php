@@ -20,6 +20,7 @@ use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
@@ -99,7 +100,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					[
-						'processExternaly' => true,
+						UtilsHelper::getStateResponseOutputKey('processExternally') => true,
 					],
 					$debug
 				)
@@ -107,10 +108,12 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		}
 
 		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'customPrePostParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
+			$formDetails[UtilsConfig::FD_PARAMS] = \apply_filters($filterName, $params, $formId) ?? [];
 		}
+
+		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Prepare params for output.
 		$params = UtilsGeneralHelper::prepareGenericParamsOutput($params);
@@ -133,7 +136,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorPublicOutput(
 					$this->labels->getLabel('customError', $formId),
-					[],
+					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 					$debug
 				)
 			);
@@ -143,7 +146,10 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				$this->labels->getLabel('customSuccess', $formId),
-				[],
+				\array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['additional']
+				),
 				$debug
 			)
 		);
