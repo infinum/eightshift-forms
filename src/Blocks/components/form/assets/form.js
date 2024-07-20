@@ -443,12 +443,9 @@ export class Form {
 					this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
 				}
 
-				console.log(data);
-
 				// Do normal success without redirect.
 				// Do the actual redirect after some time for custom form processed externally.
 				if (data?.[this.state.getStateResponseOutputKey('processExternally')]) {
-					console.log(data);
 					setTimeout(() => {
 						this.state.getStateFormElement().submit();
 					}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
