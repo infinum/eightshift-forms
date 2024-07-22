@@ -37,7 +37,7 @@ export const ResultOutputItemEditor = ({ attributes, clientId }) => {
 
 				{isValidConfiguration &&
 					<>
-						<b>{__(`SHOW`, 'eightshift-forms')}</b>
+						<b>{__('SHOW', 'eightshift-forms')}</b>
 						{__(` if the variable name is `, 'eightshift-forms')}
 						<b>{resultOutputItemName}</b>
 						{__(` and variable value`, 'eightshift-forms')}

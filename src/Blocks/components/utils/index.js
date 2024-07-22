@@ -416,7 +416,7 @@ export const NameField = ({
 		let labelTipText = !isOptional ? __('The form may not work correctly.', 'eightshift-forms') : __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms');
 
 		if (type === 'resultOutputItem') {
-			labelTipText = __(`Variable name you can use is "${utilsManifest.enums.successRedirectUrlKeys.variation}" or any other provided by the add-on plugins.`, 'eightshift-forms');
+			labelTipText = __(`Variable name you can use is "${utilsManifest.enums.successRedirectUrlKeys.variation}" or any other provided by the plugins' add-on.`, 'eightshift-forms');
 		}
 
 		return (
