@@ -1338,7 +1338,7 @@ export class Utils {
 	 * lte - less/equal than                  - if value is less/equal than.
 	 * c   - contains                         - if value contains value.
 	 * sw  - starts with                      - if value starts with value.
-	 * ew  - ends with                        - if value starts with value.
+	 * ew  - ends with                        - if value ends with value.
 	 * b   - between range                    - if value is between two values.
 	 * bs  - between range strict             - if value is between two values strict.
 	 * bn  - not between range                - if value is not between two values.

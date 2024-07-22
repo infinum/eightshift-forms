@@ -35,7 +35,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [4.0.7]
 
 ### Fixed
-- removed unnecessary fallback email fallback.
+- removed unnecessary email fallback.
 
 ## [4.0.6]
 
@@ -44,7 +44,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - result output item now supports conditional logic with both single and duplicate values.
 
 ### Added
-- email fallbacks now supports request IP sent from the server, the data is anonymized.
+- email fallback now supports request IP sent from the server, the data is anonymized.
 - new form setting that will hide form once it is submitted with success.
 - new `esFormsROISF` shortcode that can be used inside the result output item to show the form again.
 
