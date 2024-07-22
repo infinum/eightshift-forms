@@ -210,8 +210,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsResultOutput::SETTINGS_USE_KEY,
 				'labels' => [
-					'title' => \__('Result Outputs', 'eightshift-forms'),
-					'desc' => \__('Output form results to various services like tnx page.', 'eightshift-forms'),
+					'title' => \__('Result outputs', 'eightshift-forms'),
+					'desc' => \__('Output form results to various services like "thank you" pages.', 'eightshift-forms'),
 				],
 			],
 			// ------------------------------
