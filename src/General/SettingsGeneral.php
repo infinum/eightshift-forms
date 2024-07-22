@@ -183,7 +183,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VARIATION_KEY),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'textareaFieldHelp' => \sprintf(\__('
-									Define redirection value that you can use in your Result output items.<br/>
+									Define redirection values that you can use in Result output items.<br/>
 									Each key must be in a separate line.
 									%s', 'eightshift-forms'), $variation['settingsLocal']),
 								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_VARIATION_KEY, $formId, 2),
@@ -196,7 +196,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Append on global variations', 'eightshift-forms'),
-										'checkboxHelp' => \__('By default form variations will override the global variations. With this option you can append form specific variations to global.', 'eightshift-forms'),
+										'checkboxHelp' => \__('By default form variations will override the global variations. With this option you can append form-specific variations to global.', 'eightshift-forms'),
 										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY,
 										'checkboxSingleSubmit' => true,
@@ -249,7 +249,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY),
 								'selectPlaceholder' => \__('Pick an option', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
-								'selectFieldHelp' => \sprintf(\__('Variation value will be appended to the redirect URL as a parameter to allow you to privide different version of the "Thank you" page.', 'eightshift-forms')),
+								'selectFieldHelp' => \sprintf(\__('Variation value will be appended to the redirect URL as a parameter to allow you to provide different version of the "Thank you" page.', 'eightshift-forms')),
 								'selectContent' => \array_values(
 									\array_map(
 										function ($selectOption) use ($successRedirectVariation) {

@@ -38,7 +38,7 @@ abstract class AbstractSettingsIntegrations
 				'inputFieldLabel' => \__('Redirect to URL', 'eightshift-forms'),
 				'inputFieldHelp' => \sprintf(
 					/* translators: %s is the integration type */
-					\__('After a successful submission, the user will be redirected to the provided URL and the success message will <b>not</b> be shown.
+					\__('After a successful submission the user will be redirected to the provided URL and the success message will <b>not</b> be shown.
 					This settings will be used in all your %s form types.', 'eightshift-forms'),
 					\ucfirst($integrationType)
 				),
@@ -53,8 +53,8 @@ abstract class AbstractSettingsIntegrations
 				'textareaSaveAsJson' => true,
 				'textareaName' => UtilsSettingsHelper::getSettingName($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY),
 				'textareaFieldHelp' => \sprintf(
-					/* translators: %1$s is the integration type, %2$s is the global settings link */
-					\__('Define redirection value that you can use in your Result output items.<br />
+					/* translators: %1$s is the integration type, %2$s is the global settings */
+					\__('Define redirection values that can be used in Result output items.<br />
 					Each key must be in a separate line.<br />
 					This settings will be used in all your %1$s form types.
 					%2$s', 'eightshift-forms'),

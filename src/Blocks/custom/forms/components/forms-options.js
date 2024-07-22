@@ -241,7 +241,7 @@ export const FormsOptions = ({
 
 								<TextControl
 									value={formsVariationData?.subtitle}
-									label={__('SubTitle', 'eightshift-forms')}
+									label={__('Subtitle', 'eightshift-forms')}
 									onChange={(value) => {
 										const newArray = {...formsVariationData};
 										newArray.subtitle = value;
@@ -292,7 +292,7 @@ export const FormsOptions = ({
 											<Toggle
 												value={item.url}
 												checked={item.asFile}
-												label={__('Use this item as a file or as a link?', 'eightshift-forms')}
+												label={__('Use this item as a file or as a link', 'eightshift-forms')}
 												reducedBottomSpacing
 												onChange={(value) => {
 													const newArray = [...formsVariationDataFiles];

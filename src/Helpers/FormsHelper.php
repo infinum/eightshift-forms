@@ -41,7 +41,7 @@ final class FormsHelper
 	 * Lte - less/equal than                  - if value is less/equal than.
 	 * c   - contains                         - if value contains value.
 	 * Ww  - starts with                      - if value starts with value.
-	 * Ew  - ends with                        - if value starts with value.
+	 * Ew  - ends with                        - if value ends with value.
 	 * B   - between range                    - if value is between two values.
 	 * Bs  - between range strict             - if value is between two values strict.
 	 * Bn  - not between range                - if value is not between two values.
