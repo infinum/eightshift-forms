@@ -283,7 +283,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 									'component' => 'textarea',
 									'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 									'textareaFieldLabel' => \__('Content', 'eightshift-forms'),
-									// translators: %s will be replaced with forms field name.
+									// translators: %1$s will be replaced with forms field name, %2$s will be replaced with response tags, %3$s will be replaced with field names tags.
 									'textareaFieldHelp' => \sprintf(\__('
 										Specify e-mail body template with this field. You can use plain text or markdown.<br /><br />
 										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags), UtilsSettingsOutputHelper::getPartialResponseTags($formResponseTags)),

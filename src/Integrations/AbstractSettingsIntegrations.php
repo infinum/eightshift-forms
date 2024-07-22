@@ -53,7 +53,7 @@ abstract class AbstractSettingsIntegrations
 				'textareaSaveAsJson' => true,
 				'textareaName' => UtilsSettingsHelper::getSettingName($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY),
 				'textareaFieldHelp' => \sprintf(
-					/* translators: %s is the integration type */
+					/* translators: %1$s is the integration type, %2$s is the global settings link */
 					\__('Define redirection value that you can use in your Result output items.<br />
 					Each key must be in a separate line.<br />
 					This settings will be used in all your %1$s form types.
