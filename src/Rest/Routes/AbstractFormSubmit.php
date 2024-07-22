@@ -831,7 +831,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					continue;
 				}
 
-				// If field condition is met use the download.
+				// If field condition is met use the file.
 				if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
 					$outputFiles[] = $file;
 					continue;
