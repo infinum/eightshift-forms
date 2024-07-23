@@ -83,11 +83,6 @@ abstract class AbstractFormBuilder
 			true
 		);
 
-		// If form needs refreshing like on general setting just pass formSuccessRedirect as true and the form will refresh on the same settings page.
-		if (isset($formAdditionalProps['formSuccessRedirect']) && $formAdditionalProps['formSuccessRedirect']) {
-			$formAdditionalProps['formSuccessRedirect'] = $this->getAdminRefreshUrl();
-		}
-
 		$formAdditionalProps['formResetOnSuccess'] = false;
 		$formAdditionalProps['formDisableScrollToGlobalMessageOnSuccess'] = true;
 
@@ -245,17 +240,5 @@ abstract class AbstractFormBuilder
 			'components',
 			true
 		);
-	}
-
-	/**
-	 * Returns the current admin page url for refresh.
-	 *
-	 * @return string
-	 */
-	private function getAdminRefreshUrl(): string
-	{
-		$request = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		return \admin_url(\sprintf(\basename($request)));
 	}
 }

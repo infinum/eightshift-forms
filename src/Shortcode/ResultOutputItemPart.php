@@ -41,7 +41,6 @@ class ResultOutputItemPart implements ServiceInterface
 		$params = \shortcode_atts(
 			[
 				'name' => '',
-				'type' => '',
 			],
 			$atts
 		);
@@ -52,17 +51,22 @@ class ResultOutputItemPart implements ServiceInterface
 			return '';
 		}
 
+		// Check if we are on success redirect page.
+		$resultOutputData = $this->getResultOutputSuccessItemPartShortcodeValue($name);
+
+		// Used only on success redirect page.
+		if ($resultOutputData['isRedirectPage']) {
+			$class = UtilsHelper::getStateSelector('resultOutputPart');
+			$outputValue = $resultOutputData['value'] ?? $content;
+			return "<span class='{$class}'>{$outputValue}</span>";
+		}
+
+		// Used on the same page as the form and changed via JS.
 		$attrs = [
 			UtilsHelper::getStateAttribute('resultOutputPart') => $name,
 			UtilsHelper::getStateAttribute('resultOutputPartDefault') => $content,
 			'class' => UtilsHelper::getStateSelector('resultOutputPart'),
 		];
-
-		$type = isset($params['type']) ? \esc_html($params['type']) : '';
-
-		if ($type) {
-			$attrs['data-type'] = $type;
-		}
 
 		$attrsOutput = '';
 		foreach ($attrs as $key => $value) {
@@ -70,5 +74,61 @@ class ResultOutputItemPart implements ServiceInterface
 		}
 
 		return "<span {$attrsOutput}>{$content}</span>";
+	}
+
+	/**
+	 * Get result output success item part shortcode value.
+	 *
+	 * @param string $name Name of the item.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getResultOutputSuccessItemPartShortcodeValue(string $name): array
+	{
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? \json_decode(\esFormsDecryptor(\sanitize_text_field(\wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))), true) : [];
+
+		if (!$data) {
+			return [
+				'isRedirectPage' => false,
+				'value' => '',
+			];
+		}
+
+		$variationData = $data[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] ?? [];
+
+		if (!$variationData) {
+			return [
+				'isRedirectPage' => false,
+				'value' => '',
+			];
+		}
+
+		$output = '';
+
+		foreach ($variationData as $key => $value) {
+			if (!$key || !$value) {
+				continue;
+			}
+
+			if ($name !== $key) {
+				continue;
+			}
+
+			$output = $value;
+			break;
+		}
+
+		if (!$output) {
+			[
+				'isRedirectPage' => true,
+				'value' => '',
+			];
+		}
+
+		return [
+			'isRedirectPage' => true,
+			'value' => $output,
+		];
 	}
 }

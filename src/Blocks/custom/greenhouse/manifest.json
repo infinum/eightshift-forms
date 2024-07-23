@@ -21,12 +21,6 @@
 		"greenhouseIntegrationId": {
 			"type": "string"
 		},
-		"greenhouseFormPostId": {
-			"type": "string"
-		},
-		"greenhouseFormDataTypeSelector": {
-			"type": "string"
-		},
 		"greenhouseAllowedBlocks": {
 			"type": "array",
 			"default": []

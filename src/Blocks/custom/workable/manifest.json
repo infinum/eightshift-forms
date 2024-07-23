@@ -21,12 +21,6 @@
 		"workableIntegrationId": {
 			"type": "string"
 		},
-		"workableFormPostId": {
-			"type": "string"
-		},
-		"workableFormDataTypeSelector": {
-			"type": "string"
-		},
 		"workableAllowedBlocks": {
 			"type": "array",
 			"default": []

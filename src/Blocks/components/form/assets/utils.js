@@ -14,6 +14,7 @@ import { StateEnum,
 	setStateValuesCountry,
 } from './state-init';
 import { Steps } from './step';
+import globalManifest from './../../../manifest.json';
 
 /**
  * Main Utilities class.
@@ -264,10 +265,13 @@ export class Utils {
 	 * Set global msg.
 	 *
 	 * @param {string} formId Form Id.
+	 * @param {string} msg Message text.
+	 * @param {string} status Message status.
+	 * @param {object} responseData Additional responseData.
 	 *
 	 * @returns {void}
 	 */
-	setGlobalMsg(formId, msg, status) {
+	setGlobalMsg(formId, msg, status, responseData = {}) {
 		const messageContainer = this.state.getStateFormGlobalMsgElement(formId);
 
 		if (!messageContainer) {
@@ -276,7 +280,7 @@ export class Utils {
 
 		// Scroll to msg if the condition is matched.
 		if (status === 'success') {
-			if (this.state.getStateFormGlobalMsgHideOnSuccess(formId)) {
+			if (responseData?.[this.state.getStateResponseOutputKey('hideGlobalMsgOnSuccess')]) {
 				return;
 			}
 
@@ -356,7 +360,7 @@ export class Utils {
 			}
 		}
 
-		return Object.assign({}, { event: this.state.getStateFormTrackingEventName(formId), ...output });
+		return output;
 	}
 
 	/**
@@ -364,56 +368,63 @@ export class Utils {
 	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} status Response status.
-	 * @param {object} errors Errors object.
+	 * @param {object} responseData Additional responseData.
 	 *
 	 * @returns {void}
 	 */
-	gtmSubmit(formId, status, errors) {
-		const eventName = this.state.getStateFormTrackingEventName(formId);
+	gtmSubmit(formId, status, responseData = {}) {
+		const eventName = responseData?.[this.state.getStateResponseOutputKey('trackingEventName')];
+		const errors = responseData?.[this.state.getStateResponseOutputKey('validation')];
 
-		if (eventName) {
-			const gtmData = this.getGtmData(formId);
+		if (!eventName) {
+			return;
+		}
 
-			const additionalData = this.state.getStateFormTrackingEventAdditionalData(formId);
-			let additionalDataItems = additionalData?.general;
+		const gtmData = {
+			event: eventName,
+			...this.getGtmData(formId),
+		};
 
-			if (status === 'success') {
-				additionalDataItems = {
-					...additionalDataItems,
-					...additionalData?.success,
-				};
-			}
+		const additionalData = responseData?.[this.state.getStateResponseOutputKey('trackingAdditionalData')];
 
-			if (status === 'error') {
-				additionalDataItems = {
-					...additionalDataItems,
-					...additionalData?.error,
-				};
-			}
+		let additionalDataItems = additionalData?.general;
 
-			if (errors) {
-				for (const [key, value] of Object.entries(additionalDataItems)) {
-					if (value === '{invalidFieldsString}') {
-						additionalDataItems[key] = Object.keys(errors).join(',');
-					}
-	
-					if (value === '{invalidFieldsArray}') {
-						additionalDataItems[key] = Object.keys(errors);
-					}
+		if (status === 'success') {
+			additionalDataItems = {
+				...additionalDataItems,
+				...additionalData?.success,
+			};
+		}
+
+		if (status === 'error') {
+			additionalDataItems = {
+				...additionalDataItems,
+				...additionalData?.error,
+			};
+		}
+
+		if (errors) {
+			for (const [key, value] of Object.entries(additionalDataItems)) {
+				if (value === '{invalidFieldsString}') {
+					additionalDataItems[key] = Object.keys(errors).join(',');
+				}
+
+				if (value === '{invalidFieldsArray}') {
+					additionalDataItems[key] = Object.keys(errors);
 				}
 			}
+		}
 
-			if (window?.dataLayer && gtmData?.event) {
-				window.dataLayer.push({...gtmData, ...additionalDataItems});
+		if (window?.dataLayer && gtmData?.event) {
+			window.dataLayer.push({...gtmData, ...additionalDataItems});
 
-				this.dispatchFormEvent(
-					formId,
-					this.state.getStateEvent('afterGtmDataPush'), {
-						gtmData,
-						additionalDataItems,
-					}
-				);
-			}
+			this.dispatchFormEvent(
+				formId,
+				this.state.getStateEvent('afterGtmDataPush'), {
+					gtmData,
+					additionalDataItems,
+				}
+			);
 		}
 	}
 
@@ -564,83 +575,6 @@ export class Utils {
 	}
 
 	/**
-	 * Redirect to url and update url params from from data.
-	 *
-	 * @param {string} formId Form Id.
-	 * @param {object} additionalData Additional data to add to url.
-	 *
-	 * @returns {void}
-	 */
-	redirectToUrl(formId, additionalData = {}) {
-		let redirectUrl = this.state.getStateFormConfigSuccessRedirect(formId);
-
-		if (!redirectUrl) {
-			return;
-		}
-
-		// Replace string templates used for passing data via url.
-		for(const [name] of this.state.getStateElements(formId)) {
-			let value = this.state.getStateElementValue(name, formId);
-
-			// If checkbox split multiple.
-			if (this.state.getStateElementTypeField(name, formId) === 'checkbox') {
-				value = Object.values(value)?.filter((n) => n);
-			}
-
-			if (!value) {
-				value = '';
-			}
-
-			redirectUrl = redirectUrl.replaceAll(`{${name}}`, encodeURIComponent(value));
-		}
-
-		const url = new URL(redirectUrl);
-
-		const downloads = this.state.getStateFormConfigSuccessRedirectDownloads(formId);
-
-		if (downloads) {
-			let downloadsName = 'all';
-
-			for(const key of Object.keys(downloads)) {
-				if (key === 'all') {
-					continue;
-				}
-
-				const keyFull = key.split("=");
-
-				if (keyFull <= 1) {
-					continue;
-				}
-
-				const value = this.state.getStateElementValue(keyFull[0], formId);
-
-				if (value === keyFull[1]) {
-					downloadsName = key;
-					continue;
-				}
-			}
-
-			if (downloads?.[downloadsName]) {
-				url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('downloads'), downloads[downloadsName]);
-			}
-		}
-
-		const successRedirectData = additionalData?.[this.state.getStateResponseOutputKey('successRedirect')];
-
-		if (successRedirectData) {
-				url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('data'), successRedirectData);
-		}
-
-		const variation = this.state.getStateFormConfigSuccessRedirectVariation(formId);
-
-		if (variation) {
-			url.searchParams.append(this.state.getStateSuccessRedirectUrlKey('variation'), variation);
-		}
-
-		this.redirectToUrlByReference(formId, url.href);
-	}
-
-	/**
 	 * Redirect to url by provided path.
 	 *
 	 * @param {string} formId Form Id.
@@ -652,16 +586,14 @@ export class Utils {
 	redirectToUrlByReference(formId, redirectUrl, reload = false) {
 		this.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitSuccessBeforeRedirect'), redirectUrl);
 
-		if (!this.state.getStateSettingsDisableNativeRedirectOnSuccess(formId)) {
-			// Do the actual redirect after some time.
-			setTimeout(() => {
-				window.location = redirectUrl;
+		// Do the actual redirect after some time.
+		setTimeout(() => {
+			window.location = redirectUrl;
 
-				if (reload) {
-					window.location.reload();
-				}
-			}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
-		}
+			if (reload) {
+				window.location.reload();
+			}
+		}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
 	}
 
 	/**
@@ -1314,23 +1246,22 @@ export class Utils {
 		this.resetResultsOutput(formId);
 
 		// Check if we have output items.
-		const outputItems = data?.[this.state.getStateResponseOutputKey('resultOutputItems')] ?? {};
+		const outputItems = data?.[this.state.getStateResponseOutputKey('variation')] ?? {};
 
 		if (Object.keys(outputItems).length) {
 			for(const [key, value] of Object.entries(outputItems)) {
-				const itemElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"][${this.state.getStateAttribute('resultOutputItemValue')}="${value}"]`);
+				const itemElements = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"]`);
 
-				itemElement.forEach((item) => {
-					item.classList.remove(this.state.getStateSelector('isHidden'));
+				itemElements.forEach((item) => {
+					const operator = item.getAttribute(this.state.getStateAttribute('resultOutputItemOperator')) || globalManifest.comparator.IS;
+					const startValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValue'));
+					const endValue = item.getAttribute(this.state.getStateAttribute('resultOutputItemValueEnd'));
+
+					if (this.getComparator()[operator](String(value), String(startValue), String(endValue))) {
+						item.classList.remove(this.state.getStateSelector('isHidden'));
+					}
 				});
-			}
-		}
 
-		// Check if we have output parts.
-		const outputParts = data?.[this.state.getStateResponseOutputKey('resultOutputParts')] ?? {};
-
-		if (Object.keys(outputParts).length) {
-			for(const [key, value] of Object.entries(outputParts)) {
 				const partElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputPart', true)}[${this.state.getStateAttribute('resultOutputPart')}="${key}"]`);
 
 				if (partElement.length && value) {
@@ -1349,8 +1280,24 @@ export class Utils {
 		if (outputElementIsHidden) {
 			outputElement.classList.remove(this.state.getStateSelector('isHidden'));
 		}
+
+		// Show form elements.
+		const showFormElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputShowForm', true)}`);
+
+		if (showFormElement) {
+			showFormElement.forEach((item) => {
+				item.addEventListener('click', this.onFormShowEvent);
+			});
+		}
 	}
 
+	/**
+	 * Reset output results.
+	 *
+	 * @param {string} formId Form Id.
+	 *
+	 * @returns {void}
+	 */
 	resetResultsOutput(formId) {
 		// Check if we have output element - block.
 		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`);
@@ -1379,6 +1326,68 @@ export class Utils {
 			});
 		}
 	}
+
+	/**
+	 * Get comparator object with all available operators.
+	 *
+	 * is  - is                               - if value is exact match.
+	 * isn - is not                           - if value is not exact match.
+	 * gt  - greater than                     - if value is greater than.
+	 * gte - greater/equal than               - if value is greater/equal than.
+	 * lt  - less than                        - if value is less than.
+	 * lte - less/equal than                  - if value is less/equal than.
+	 * c   - contains                         - if value contains value.
+	 * sw  - starts with                      - if value starts with value.
+	 * ew  - ends with                        - if value ends with value.
+	 * b   - between range                    - if value is between two values.
+	 * bs  - between range strict             - if value is between two values strict.
+	 * bn  - not between range                - if value is not between two values.
+	 * bns - not between between range strict - if value is not between two values strict.
+	 *
+	 * @returns {object}
+	 */
+	getComparator() {
+		return {
+			[globalManifest.comparator.IS]: (start, value) => value === start,
+			[globalManifest.comparator.ISN]: (start, value) => value !== start,
+			[globalManifest.comparator.GT]: (start, value) => parseFloat(String(start)) > parseFloat(String(value)),
+			[globalManifest.comparator.GTE]: (start, value) => parseFloat(String(start)) >= parseFloat(String(value)),
+			[globalManifest.comparator.LT]: (start, value) => parseFloat(String(start)) < parseFloat(String(value)),
+			[globalManifest.comparator.LTE]: (start, value) => parseFloat(String(start)) <= parseFloat(String(value)),
+			[globalManifest.comparator.C]: (start, value) => start.includes(value),
+			[globalManifest.comparator.SW]: (start, value) => start.startsWith(value),
+			[globalManifest.comparator.EW]: (start, value) => start.endsWith(value),
+			[globalManifest.comparatorExtended.B]: (start, value, end) => 
+				parseFloat(String(start)) > parseFloat(String(value)) && parseFloat(String(start)) < parseFloat(String(end)),
+			[globalManifest.comparatorExtended.BS]: (start, value, end) => 
+				parseFloat(String(start)) >= parseFloat(String(value)) && parseFloat(String(start)) <= parseFloat(String(end)),
+			[globalManifest.comparatorExtended.BN]: (start, value, end) => 
+				parseFloat(String(start)) < parseFloat(String(value)) || parseFloat(String(start)) > parseFloat(String(end)),
+			[globalManifest.comparatorExtended.BNS]: (start, value, end) => 
+				parseFloat(String(start)) <= parseFloat(String(value)) || parseFloat(String(start)) >= parseFloat(String(end)),
+		};
+	};
+
+	////////////////////////////////////////////////////////////////
+	// Events callback
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Handle form show event.
+	 *
+	 * @param {object} event Event callback.
+	 * @returns {void}
+	 */
+	onFormShowEvent = (e) => {
+		const forms = e?.target?.closest(this.state.getStateSelector('resultOutput', true));
+
+		if (!forms) {
+			return;
+		}
+
+		forms?.classList?.add(this.state.getStateSelector('isHidden'));
+		this.state.getStateFormElement(forms?.getAttribute(this.state.getStateAttribute('formId')))?.classList?.remove(this.state.getStateSelector('isHidden'));
+	};
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.
@@ -1427,14 +1436,14 @@ export class Utils {
 			unsetGlobalMsg: (formId) => {
 				this.unsetGlobalMsg(formId);
 			},
-			setGlobalMsg: (formId, msg, status) => {
-				this.setGlobalMsg(formId, msg, status);
+			setGlobalMsg: (formId, msg, status, responseData = {}) => {
+				this.setGlobalMsg(formId, msg, status, responseData);
 			},
 			getGtmData: (formId) => {
 				this.getGtmData(formId);
 			},
-			gtmSubmit: (formId, status, errors) => {
-				this.gtmSubmit(formId, status, errors);
+			gtmSubmit: (formId, status, responseData = {}) => {
+				this.gtmSubmit(formId, status, responseData);
 			},
 			setFieldFilledState: (formId, name) => {
 				this.setFieldFilledState(formId, name);
@@ -1453,9 +1462,6 @@ export class Utils {
 			},
 			resetForm: (formId) => {
 				this.resetForm(formId);
-			},
-			redirectToUrl: (formId, additionalData = {}) => {
-				this.redirectToUrl(formId, additionalData);
 			},
 			redirectToUrlByReference: (formId, redirectUrl, reload = false) => {
 				this.redirectToUrlByReference(formId, redirectUrl, reload);

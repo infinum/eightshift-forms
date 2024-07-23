@@ -11,7 +11,6 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Form\Form;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -35,37 +34,33 @@ $formAction = Helpers::checkAttr('formAction', $attributes, $manifest);
 $formActionExternal = Helpers::checkAttr('formActionExternal', $attributes, $manifest);
 $formMethod = Helpers::checkAttr('formMethod', $attributes, $manifest);
 $formId = Helpers::checkAttr('formId', $attributes, $manifest);
-$formPostId = Helpers::checkAttr('formPostId', $attributes, $manifest);
 $formContent = Helpers::checkAttr('formContent', $attributes, $manifest);
-$formSuccessRedirect = Helpers::checkAttr('formSuccessRedirect', $attributes, $manifest);
-$formSuccessRedirectVariation = Helpers::checkAttr('formSuccessRedirectVariation', $attributes, $manifest);
-$formTrackingEventName = Helpers::checkAttr('formTrackingEventName', $attributes, $manifest);
-$formTrackingAdditionalData = Helpers::checkAttr('formTrackingAdditionalData', $attributes, $manifest);
 $formPhoneSync = Helpers::checkAttr('formPhoneSync', $attributes, $manifest);
 $formPhoneDisablePicker = Helpers::checkAttr('formPhoneDisablePicker', $attributes, $manifest);
-$formType = Helpers::checkAttr('formType', $attributes, $manifest);
 $formServerSideRender = Helpers::checkAttr('formServerSideRender', $attributes, $manifest);
-$formConditionalTags = Helpers::checkAttr('formConditionalTags', $attributes, $manifest);
-$formDownloads = Helpers::checkAttr('formDownloads', $attributes, $manifest);
-$formSuccessRedirectVariationUrl = Helpers::checkAttr('formSuccessRedirectVariationUrl', $attributes, $manifest);
-$formSuccessRedirectVariationUrlTitle = Helpers::checkAttr('formSuccessRedirectVariationUrlTitle', $attributes, $manifest);
-$formDisabledDefaultStyles = Helpers::checkAttr('formDisabledDefaultStyles', $attributes, $manifest);
 $formHasSteps = Helpers::checkAttr('formHasSteps', $attributes, $manifest);
-$formCustomName = Helpers::checkAttr('formCustomName', $attributes, $manifest);
-$formHideGlobalMsgOnSuccess = Helpers::checkAttr('formHideGlobalMsgOnSuccess', $attributes, $manifest);
 $formUseSingleSubmit = Helpers::checkAttr('formUseSingleSubmit', $attributes, $manifest);
+$formParentSettings = Helpers::checkAttr('formParentSettings', $attributes, $manifest);
+$formSecureData = Helpers::checkAttr('formSecureData', $attributes, $manifest);
+
+$formCustomName = $formParentSettings['customName'] ?? '';
+$formPostId = $formParentSettings['postId'] ?? '';
+$formConditionalTags = $formParentSettings['conditionalTags'] ?? '';
+$formDisabledDefaultStyles = $formParentSettings['disabledDefaultStyles'] ?? false;
+$formType = $formParentSettings['formType'] ?? '';
+$legacy = $formParentSettings['legacy'] ?? [];
 
 $formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
-	Helpers::checkAttr('formDataTypeSelector', $attributes, $manifest),
+	$formParentSettings['dataTypeSelector'] ?? '',
 	$attributes
 );
 
 $formAttrs = Helpers::checkAttr('formAttrs', $attributes, $manifest);
 
 $customClassSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'customClassSelector']);
-$customClassSelector = $formDataTypeSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
+$customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
 $formClass = Helpers::classnames([
 	Helpers::selector($componentClass, $componentClass),
@@ -78,20 +73,8 @@ if ($formDataTypeSelector) {
 	$formAttrs[UtilsHelper::getStateAttribute('typeSelector')] = esc_attr($formDataTypeSelector);
 }
 
-if ($formSuccessRedirect) {
-	$formAttrs[UtilsHelper::getStateAttribute('successRedirect')] = esc_attr($formSuccessRedirect);
-}
-
-if ($formSuccessRedirectVariation) {
-	$formAttrs[UtilsHelper::getStateAttribute('successRedirectVariation')] = UtilsEncryption::encryptor($formSuccessRedirectVariation);
-}
-
-if ($formTrackingEventName) {
-	$formAttrs[UtilsHelper::getStateAttribute('trackingEventName')] = esc_attr($formTrackingEventName);
-}
-
-if ($formTrackingAdditionalData) {
-	$formAttrs[UtilsHelper::getStateAttribute('trackingAdditionalData')] = esc_attr($formTrackingAdditionalData);
+if ($formSecureData) {
+	$formAttrs[UtilsHelper::getStateAttribute('formSecureData')] = $formSecureData; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 }
 
 if ($formPhoneSync) {
@@ -116,10 +99,6 @@ if ($formType) {
 	$formAttrs[UtilsHelper::getStateAttribute('formType')] = esc_html($formType);
 }
 
-if ($formHideGlobalMsgOnSuccess) {
-	$formAttrs[UtilsHelper::getStateAttribute('globalMsgHideOnSuccess')] = 'true';
-}
-
 if ($formUseSingleSubmit) {
 	$formAttrs[UtilsHelper::getStateAttribute('singleSubmit')] = 'true';
 }
@@ -133,49 +112,6 @@ if ($formConditionalTags) {
 	}
 
 	$formAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = esc_html($rawConditionalTagData);
-}
-
-if ($formDownloads || $formSuccessRedirectVariationUrl) {
-	$downloadsOutput = [];
-
-	foreach ($formDownloads as $file) {
-		$condition = isset($file['condition']) && !empty($file['condition']) ? $file['condition'] : 'all';
-		$fileId = $file['id'] ?? '';
-		$fileTitle = $file['fileTitle'] ?? '';
-
-		if (!$fileId) {
-			continue;
-		}
-
-		$downloadsOutput[$condition]['files'][] = [
-			$fileId,
-			$fileTitle,
-		];
-	}
-
-	if (!$downloadsOutput) {
-		if ($formSuccessRedirectVariationUrl) {
-			$downloadsOutput['all'] = UtilsEncryption::encryptor(wp_json_encode([
-				'main' => [
-					$formSuccessRedirectVariationUrl,
-					$formSuccessRedirectVariationUrlTitle,
-				],
-			]));
-		}
-	} else {
-		foreach ($downloadsOutput as $key => $item) {
-			if ($formSuccessRedirectVariationUrl) {
-				$downloadsOutput[$key]['main'] = [
-					$formSuccessRedirectVariationUrl,
-					$formSuccessRedirectVariationUrlTitle,
-				];
-			}
-
-			$downloadsOutput[$key] = UtilsEncryption::encryptor(wp_json_encode($downloadsOutput[$key]));
-		}
-	}
-
-	$formAttrs[UtilsHelper::getStateAttribute('successRedirectDownloads')] = wp_json_encode($downloadsOutput);
 }
 
 if ($formId) {

@@ -91,6 +91,11 @@ class Mailer implements MailerInterface
 		$formId = $response[UtilsConfig::IARD_FORM_ID] ?? '';
 		$isDisabled = $response[UtilsConfig::IARD_IS_DISABLED] ?? false;
 
+		$customDebugData = $customData['debug'] ?? [];
+		if ($customDebugData) {
+			unset($customData['debug']);
+		}
+
 		$output = [
 			UtilsConfig::IARD_STATUS => $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR,
 			UtilsConfig::IARD_MSG => $response[UtilsConfig::IARD_MSG] ?? '',
@@ -103,7 +108,9 @@ class Mailer implements MailerInterface
 			UtilsConfig::IARD_ITEM_ID => $response[UtilsConfig::IARD_ITEM_ID] ?? '',
 			UtilsConfig::IARD_FORM_ID => $formId,
 			UtilsConfig::FD_POST_ID => $formDetails[UtilsConfig::FD_POST_ID] ?? '',
-			'debug' => $this->getDebugOptions(),
+			'customData' => $customData,
+			'debug' => $this->getDebugOptions($customDebugData, $formDetails),
+			'formDetails' => $this->cleanUpFormDetails($formDetails),
 		];
 
 		if ($customData) {
@@ -191,9 +198,14 @@ class Mailer implements MailerInterface
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 		$files = $formDetails[UtilsConfig::FD_FILES] ?? [];
 
+		$customDebugData = $customData['debug'] ?? [];
+		if ($customDebugData) {
+			unset($customData['debug']);
+		}
+
 		$output = [
 			'customData' => $customData,
-			'debug' => $this->getDebugOptions(),
+			'debug' => $this->getDebugOptions($customDebugData, $formDetails),
 			'formDetails' => $this->cleanUpFormDetails($formDetails),
 		];
 
@@ -243,18 +255,28 @@ class Mailer implements MailerInterface
 	/**
 	 * Get debug options.
 	 *
+	 * @param array<string, mixed> $customData Custom data for the email.
+	 * @param array<string, mixed> $formDetails Form details.
+	 *
 	 * @return array<string, mixed>
 	 */
-	private function getDebugOptions(): array
+	private function getDebugOptions(array $customData, array $formDetails): array
 	{
-		return [
-			'forms' => Helpers::getPluginVersion(),
-			'php' => \phpversion(),
-			'wp' => \get_bloginfo('version'),
-			'url' => \get_bloginfo('url'),
-			'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
-			'time' => \wp_date('Y-m-d H:i:s'),
-		];
+		$customDebugData['originalParams'] = $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG] ?? '';
+
+		return \array_merge(
+			[
+				'forms' => Helpers::getPluginVersion(),
+				'php' => \phpversion(),
+				'wp' => \get_bloginfo('version'),
+				'url' => \get_bloginfo('url'),
+				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
+				'time' => \wp_date('Y-m-d H:i:s'),
+				'requestUrl' => Helpers::getCurrentUrl(),
+				'originalParams' => $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG] ?? '',
+			],
+			$customData
+		);
 	}
 
 	/**
@@ -328,7 +350,7 @@ class Mailer implements MailerInterface
 				$value = \implode(', ', $value);
 			}
 
-			$template = \str_replace("{" . $name . "}", $value, $template);
+			$template = \str_replace("{" . $name . "}", (string) $value, $template);
 		}
 
 		if ($type === 'message') {
@@ -419,6 +441,7 @@ class Mailer implements MailerInterface
 			UtilsConfig::FD_FIELDS,
 			UtilsConfig::FD_FIELDS_ONLY,
 			UtilsConfig::FD_ICON,
+			UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG,
 		];
 
 		return \array_diff_key($formDetails, \array_flip($list));

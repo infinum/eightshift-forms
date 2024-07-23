@@ -16,6 +16,7 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Listing\FormListingInterface;
+use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
@@ -743,7 +744,7 @@ class FormAdminMenu extends AbstractAdminMenu
 					$entryValue = $item['entryValue'] ?? [];
 					$createdAt = $item['createdAt'] ?? '';
 
-					$content = '<ul class="is-list">';
+					$content = "<ul class='is-list is-list--break-words' id='entry-{$id}'>";
 					foreach ($entryValue as $entryKey => $entryValue) {
 						if (\gettype($entryValue) === 'array') {
 							if (\array_key_first($entryValue) === 0) {
@@ -760,7 +761,11 @@ class FormAdminMenu extends AbstractAdminMenu
 							}
 						}
 
-						$content .= "<li><strong>{$entryKey}</strong>: {$entryValue}</li>";
+						if (\filter_var($entryValue, \FILTER_VALIDATE_URL)) {
+							$entryValue = "<a href='{$entryValue}' target='_blank' rel='noopener noreferrer'>{$entryValue}</a>";
+						}
+
+						$content .= "<li><strong>{$entryKey}:</strong><span>- {$entryValue}</span></li>";
 					}
 					$content .= '</ul>';
 
@@ -969,6 +974,15 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitValue' => \__('Edit', 'eightshift-forms'),
 					]),
 				];
+
+				if (\apply_filters(SettingsResultOutput::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					$output[] = Helpers::render('submit', [
+						'submitVariant' => 'ghost',
+						'submitButtonAsLink' => true,
+						'submitButtonAsLinkUrl' => \get_permalink($formId),
+						'submitValue' => \__('View', 'eightshift-forms'),
+					]);
+				}
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [];

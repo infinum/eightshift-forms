@@ -451,5 +451,30 @@
 			"rating": "rating",
 			"submit": "submit"
 		}
+	},
+	"comparator": {
+		"IS": "is",
+		"ISN": "isn",
+		"GT": "gt",
+		"GTE": "gte",
+		"LT": "lt",
+		"LTE": "lte",
+		"C": "c",
+		"SW": "sw",
+		"EW": "ew"
+	},
+	"comparatorExtended": {
+		"B": "b",
+		"BS": "bs",
+		"BN": "bn",
+		"BNS": "bns"
+	},
+	"comparatorActions": {
+		"SHOW": "show",
+		"HIDE": "hide"
+	},
+	"comparatorLogic": {
+		"OR": "or",
+		"AND": "and"
 	}
 }

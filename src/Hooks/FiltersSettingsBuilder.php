@@ -60,6 +60,7 @@ use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
+use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
 use EightshiftForms\Validation\Validator;
@@ -110,8 +111,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				],
 			],
 			SettingsGeneral::SETTINGS_TYPE_KEY => [
-				'settingsGlobal' => SettingsGeneral::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsGeneral::FILTER_SETTINGS_NAME,
+				'settingsGlobal' => SettingsGeneral::FILTER_SETTINGS_GLOBAL_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('General', 'eightshift-forms'),
@@ -204,6 +205,15 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'desc' => \__('Collect form entries in your project database.', 'eightshift-forms'),
 				],
 			],
+			SettingsResultOutput::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsResultOutput::FILTER_SETTINGS_GLOBAL_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
+				'use' => SettingsResultOutput::SETTINGS_USE_KEY,
+				'labels' => [
+					'title' => \__('Result outputs', 'eightshift-forms'),
+					'desc' => \__('Output form results to various services like "thank you" pages.', 'eightshift-forms'),
+				],
+			],
 			// ------------------------------
 			// INTEGRATIONS.
 			// ------------------------------
@@ -221,7 +231,10 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
 				'emailTemplateTags' => [
-					'mailerSuccessRedirectUrl' => '', // Empty string as we are not using it to match the value.
+					 // Empty string as we are not using it to match the value.
+					'mailerSuccessRedirectUrl' => '',
+					'mailerEntryId' => '',
+					'mailerEntryUrl' => '',
 				],
 				'labels' => [
 					'title' => \__('Mailer', 'eightshift-forms'),

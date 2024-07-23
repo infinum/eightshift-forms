@@ -64,6 +64,13 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS = 'entries-save-empty-fields';
 
 	/**
+	 * Entries settings send entry in form submit key.
+	 */
+	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY = 'entries-save-additional-values';
+	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY = 'redirect-url';
+	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY = 'variations';
+
+	/**
 	 * Data data key.
 	 */
 	public const SETTINGS_ENTRIES_DATA_KEY = 'entries-data';
@@ -186,6 +193,35 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 											'checkboxHelp' => \__('All empty field values will not be saved to database by default.', 'eightshift-forms'),
 											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId),
 											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										]
+									]
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => \__('Save additional keys to your record entry.', 'eightshift-forms'),
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Success redirect url', 'eightshift-forms'),
+											'checkboxHelp' => \__('Full URL where user will be redirected after successful form submission.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										],
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Variation values', 'eightshift-forms'),
+											'checkboxHelp' => \__('List of all Variation values set by your form.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
 										]

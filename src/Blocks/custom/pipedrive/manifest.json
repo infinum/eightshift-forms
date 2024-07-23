@@ -18,18 +18,12 @@
 	},
 	"hasInnerBlocks": true,
 	"attributes": {
-		"pipedriveAllowedBlocks": {
-			"type": "array",
-			"default": []
-		},
 		"pipedriveIntegrationId": {
 			"type": "string"
 		},
-		"pipedriveFormPostId": {
-			"type": "string"
-		},
-		"pipedriveFormDataTypeSelector": {
-			"type": "string"
+		"pipedriveAllowedBlocks": {
+			"type": "array",
+			"default": []
 		}
 	},
 	"parent": [

@@ -26,7 +26,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
  */
 function esFormsGetFormIdByName(string $formId): string
 {
-	return UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_FORM_CUSTOM_NAME_KEY, $formId);
+	return UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId);
 }
 
 /**
@@ -107,7 +107,6 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 		[
 			'formsFormPostId' => $formId,
 			'formsStyle' => $attributes['style'] ?? [],
-			'formsDownloads' => $attributes['downloads'] ?? [],
 			'formsFormGeolocation' => $attributes['geolocation'] ?? [],
 			'formsFormGeolocationAlternatives' => $attributes['geolocationAlternatives'] ?? [],
 		],

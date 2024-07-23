@@ -85,6 +85,19 @@ class EntriesHelper
 	}
 
 	/**
+	 * Get entry admin URL.
+	 *
+	 * @param string $entryId Entry Id.
+	 * @param string $formId Form Id.
+	 *
+	 * @return string
+	 */
+	public static function getEntryAdminUrl(string $entryId, string $formId): string
+	{
+		return UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId) . "#entry-{$entryId}";
+	}
+
+	/**
 	 * Get entry by ID.
 	 *
 	 * @param string $id Entry Id.
@@ -228,6 +241,43 @@ class EntriesHelper
 		}
 
 		return $wpdb->insert_id; //phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+	}
+
+	/**
+	 * Update entry.
+	 *
+	 * @param array<string, mixed> $data Data to update.
+	 * @param string $id Entry Id.
+	 *
+	 * @return boolean
+	 */
+	public static function updateEntry(array $data, string $id): bool
+	{
+		global $wpdb;
+
+		$output = \wp_json_encode($data);
+
+		$result = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			self::getFullTableName(),
+			[
+				'entry_value' => $output,
+			],
+			[
+				'id' => (int) $id,
+			],
+			[
+				'%s',
+			],
+			[
+				'%d',
+			]
+		);
+
+		if (\is_wp_error($result)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

@@ -16,13 +16,13 @@ import {
 	Notification,
 } from '@eightshift/frontend-libs/scripts';
 import { getConstantsOptions } from '../../utils';
-import { CONDITIONAL_TAGS_ACTIONS, CONDITIONAL_TAGS_OPERATORS } from '../assets/utils';
 import {
 	CONDITIONAL_TAGS_ACTIONS_LABELS,
 	CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS,
 	CONDITIONAL_TAGS_OPERATORS_LABELS,
 } from './conditional-tags-labels';
 import { getRestUrl } from '../../form/assets/state-init';
+import globalManifest from '../../../manifest.json';
 
 export const ConditionalTagsOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('conditional-tags');
@@ -103,7 +103,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				<Button
 					icon={icons.plusCircleFillAlt}
 					onClick={() => {
-						conditionalTagsRules[1].push([[formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, '']]);
+						conditionalTagsRules[1].push([[formFields?.[0]?.value ?? '', globalManifest.comparator.IS, '']]);
 						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 					}}
 					className='es-rounded-1 es-mt-4'
@@ -119,14 +119,14 @@ export const ConditionalTagsOptions = (attributes) => {
 			return null;
 		}
 
-		const operatorValue = conditionalTagsRules?.[1]?.[parent]?.[index]?.[1] ?? CONDITIONAL_TAGS_OPERATORS.IS;
+		const operatorValue = conditionalTagsRules?.[1]?.[parent]?.[index]?.[1] ?? globalManifest.comparator.IS;
 		const fieldValue = conditionalTagsRules?.[1]?.[parent]?.[index]?.[0];
 
 		// Internal state due to rerendering issue.
 		const [inputCheck, setInputCheck] = useState(conditionalTagsRules?.[1]?.[parent]?.[index]?.[2]);
 
 		const formFieldOptions = formFields?.find((item) => item.value === conditionalTagsRules[1][parent][index][0])?.subItems ?? [];
-		const showRuleValuePicker = formFieldOptions?.length > 0 && (operatorValue === CONDITIONAL_TAGS_OPERATORS.IS || operatorValue === CONDITIONAL_TAGS_OPERATORS.ISN);
+		const showRuleValuePicker = formFieldOptions?.length > 0 && (operatorValue === globalManifest.comparator.IS || operatorValue === globalManifest.comparator.ISN);
 
 		return (
 			<div className='es-h-spaced'>
@@ -194,7 +194,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					<Button
 						icon={icons.plusCircleFillAlt}
 						onClick={() => {
-							conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', CONDITIONAL_TAGS_OPERATORS.IS, ''];
+							conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', globalManifest.comparator.IS, ''];
 							setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 						}}
 						className='es-rounded-1'
@@ -243,7 +243,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						checked={conditionalTagsUse}
 						onChange={(value) => {
 							setAttributes({ [conditionalTagsUseKey]: value });
-							setAttributes({ [conditionalTagsRulesKey]: !value ? undefined : [CONDITIONAL_TAGS_ACTIONS.HIDE, []]});
+							setAttributes({ [conditionalTagsRulesKey]: !value ? undefined : [globalManifest.comparatorActions.HIDE, []]});
 						}}
 						noBottomSpacing={!conditionalTagsUse}
 						additionalClasses='es-font-weight-500'

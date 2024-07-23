@@ -44,7 +44,6 @@ class SettingsSettings implements UtilsSettingGlobalInterface, ServiceInterface
 	public const SETTINGS_GENERAL_DISABLE_SCROLL_KEY = 'general-disable-scroll';
 	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR = 'disable-scroll-to-field-on-error';
 	public const SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS = 'disable-scroll-to-global-message-on-success';
-	public const SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS = 'disable-native-redirect-on-success';
 
 	/**
 	 * Register all the hooks
@@ -135,19 +134,6 @@ class SettingsSettings implements UtilsSettingGlobalInterface, ServiceInterface
 										'checkboxLabel' => \__('Don\'t scroll to the top of the form (to reveal the success message)', 'eightshift-forms'),
 										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
 										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-										'checkboxAsToggle' => true,
-										'checkboxSingleSubmit' => true,
-									],
-									[
-										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable native JavaScript for redirects', 'eightshift-forms'),
-										'checkboxHelp' => \__('This option disables all native JavaScript redirects, requiring a custom redirect implementation based on triggered events. Typically used in single-page applications like Barba.js.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS, self::SETTINGS_GENERAL_DISABLE_SCROLL_KEY),
-										'checkboxValue' => self::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
 									],

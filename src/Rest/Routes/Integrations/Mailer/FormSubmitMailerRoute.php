@@ -18,7 +18,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 
 /**
  * Class FormSubmitMailerRoute
@@ -75,20 +75,44 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		// Pre response filter for addon data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterName)) {
-			$filterDetails = \apply_filters($filterName, [], $formDetails);
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
-			if ($filterDetails) {
-				$formDetails[UtilsConfig::FD_ADDON] = $filterDetails;
-			}
+		// Located before the sendEmail mentod so we can utilize common email response tags.
+		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
+
+		// Send email.
+		$mailerResponse = $this->getFormSubmitMailer()->sendEmails(
+			$formDetails,
+			$this->getCommonEmailResponseTags(
+				\array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['private']
+				)
+			)
+		);
+
+		$status = $mailerResponse['status'] ?? UtilsConfig::STATUS_ERROR;
+		$label = $mailerResponse['label'] ?? 'mailerErrorEmailSend';
+		$debug = $mailerResponse['debug'] ?? [];
+
+		if ($status === UtilsConfig::STATUS_SUCCESS) {
+			return \rest_ensure_response(
+				UtilsApiHelper::getApiSuccessPublicOutput(
+					$this->labels->getLabel($label, $formId),
+					\array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['additional']
+					),
+					$debug
+				)
+			);
 		}
 
 		return \rest_ensure_response(
-			$this->getFormSubmitMailer()->sendEmails(
-				$formDetails,
-				true
+			UtilsApiHelper::getApiErrorPublicOutput(
+				$this->labels->getLabel($label, $formId),
+				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
+				$debug
 			)
 		);
 	}

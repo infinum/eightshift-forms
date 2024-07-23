@@ -19,6 +19,12 @@
 		},
 		"resultOutputItemValue": {
 			"type": "string"
+		},
+		"resultOutputItemValueEnd": {
+			"type": "string"
+		},
+		"resultOutputItemOperator": {
+			"type": "string"
 		}
 	}
 }

@@ -409,29 +409,34 @@ export class Form {
 
 		if (this.state.getStateConfigIsAdmin()) {
 			// Set global msg.
-			this.utils.setGlobalMsg(formId, message, status);
+			this.utils.setGlobalMsg(formId, message, status, data);
 
 			if (this.state.getStateFormIsAdminSingleSubmit(formId)) {
 				this.utils.redirectToUrlByReference(formId, window.location.href, true);
 			}
 		} else {
 			// Send GTM.
-			this.utils.gtmSubmit(formId, status);
+			this.utils.gtmSubmit(formId, status, data);
 
-			if (this.state.getStateFormConfigSuccessRedirect(formId)) {
+			if (data?.[this.state.getStateResponseOutputKey('successRedirectUrl')]) {
 				// Remove local storage for prefill.
 				if (this.state.getStateEnrichmentIsUsed()) {
 					this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
 				}
 
 				// Redirect to url and update url params from from data.
-				this.utils.redirectToUrl(formId, data);
+				this.utils.redirectToUrlByReference(formId, data?.[this.state.getStateResponseOutputKey('successRedirectUrl')]);
 			} else {
 				// Clear form values.
 				this.utils.resetForm(formId);
 
 				// Set global msg.
-				this.utils.setGlobalMsg(formId, message, status);
+				this.utils.setGlobalMsg(formId, message, status, data);
+
+				// Hide form on success.
+				if (data?.[this.state.getStateResponseOutputKey('hideFormOnSuccess')]) {
+					this.state.getStateFormElement(formId).classList.add(this.state.getStateSelector('isHidden'));
+				}
 
 				// Remove local storage for prefill.
 				if (this.state.getStateEnrichmentIsUsed()) {
@@ -440,7 +445,7 @@ export class Form {
 
 				// Do normal success without redirect.
 				// Do the actual redirect after some time for custom form processed externally.
-				if (data?.processExternaly) {
+				if (data?.[this.state.getStateResponseOutputKey('processExternally')]) {
 					setTimeout(() => {
 						this.state.getStateFormElement().submit();
 					}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
@@ -475,9 +480,9 @@ export class Form {
 
 		const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 
-		this.utils.setGlobalMsg(formId, message, status);
+		this.utils.setGlobalMsg(formId, message, status, data);
 
-		this.utils.gtmSubmit(formId, status, data?.[validationOutputKey]);
+		this.utils.gtmSubmit(formId, status, data);
 
 		// Dispatch event.
 		if (data?.[validationOutputKey] !== undefined) {
@@ -767,6 +772,8 @@ export class Form {
 				value: skipFieldsOutput,
 				type: 'hidden',
 				typeCustom: 'hidden',
+				custom: '',
+				innerName: '',
 			}));
 		}
 	}
@@ -882,6 +889,10 @@ export class Form {
 			{
 				name: this.state.getStateParam('actionExternal'),
 				value: this.state.getStateFormActionExternal(formId),
+			},
+			{
+				name: this.state.getStateParam('secureData'),
+				value: this.state.getStateFormSecureData(formId),
 			},
 		]);
 	}
