@@ -85,6 +85,7 @@ final class FiltersOuputMock
 	 */
 	public static function getVariationFilterValue(string $type, string $formId, array $formDetails): array
 	{
+		$data = [];
 		$shouldAppend = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId);
 
 		// Find global settings per integration.
@@ -119,7 +120,6 @@ final class FiltersOuputMock
 			$dataFilter = \apply_filters($filterNameLocal, [], $formDetails, $formId);
 
 			if ($dataFilter) {
-				$dataFilter = \array_column($dataFilter, 1, 0);
 				$data = $shouldAppend ? \array_merge($data, $dataFilter) : $dataFilter;
 				$filterUsed = true;
 			}

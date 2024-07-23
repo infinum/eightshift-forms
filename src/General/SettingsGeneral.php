@@ -85,7 +85,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 * Hide global message on success key.
 	 */
 	public const SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY = 'hide-global-msg-on-success';
-	public const SETTINGS_HIDE_FORM_ON_SUCCESS_KEY = 'hide-form-on-success';
 
 	/**
 	 * Hide form on success key.

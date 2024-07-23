@@ -484,9 +484,14 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 			// Replace {field_name} with the actual value.
 			foreach ($formDetails[UtilsConfig::FD_PARAMS_RAW] as $name => $value) {
+				if ($name === UtilsHelper::getStateParam('skippedParams')) {
+					continue;
+				}
+
 				if (\is_array($value)) {
 					$value = \implode(', ', $value);
 				}
+
 				$successRedirectUrl = \str_replace("{" . $name . "}", (string) $value, $successRedirectUrl);
 			}
 
@@ -516,7 +521,10 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				}
 			} else {
 				// Legacy data.
-				$redirectDataOutput['es-legacy']['v'] = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+				$legacyVariationData = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+				if ($legacyVariationData) {
+					$redirectDataOutput['es-legacy']['v'] = $legacyVariationData;
+				}
 			}
 
 			// Redirect base url.
