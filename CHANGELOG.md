@@ -1,12 +1,19 @@
-
 # Change Log for the Eightshift Forms
+
 All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.1]
+
+### Changed
+
+- Updated npm packages to the latest version.
+
 ## [5.0.0]
 
 ### Added
+
 - Result output now supports single view and has link in the admin listing.
 - Result output item now supports fetching data from encrypted URL.
 - New filter `beforeSuccessResponse` for the forms.
@@ -17,9 +24,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Feature to hide form after submission.
 
 ### Removed
+
 - Multiple filter not in use anymore: `successRedirectVariation`, `successRedirectVariationOptions`, `preResponseAddonData`, `preResponseSuccessRedirectData`, `resultOutputItems`, `resultOutputParts`.
 
 ### Changed
+
 - Conditional tags logic is now transferred to utils so it can be used in other features.
 - Forms specific settings that should be available only after form is submitted is not fetched on the form success submission and not hardcoded in the DOM.
 - Result output is now styled with the new design for better UX.
@@ -28,6 +37,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `esFormsROIP` shortcode now supports variation data submission.
 
 ### Fixed
+
 - Entries listing is no longer breaking if the value is to long.
 - Stylelint errors from the new setup.
 - All form fields are now additionally checked for correct data structure on submission.
@@ -35,15 +45,18 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [4.0.7]
 
 ### Fixed
+
 - removed unnecessary email fallback.
 
 ## [4.0.6]
 
 ### Updated
+
 - `Eightshift-forms-utils` to the latest version `2.0.2`.
 - result output item now supports conditional logic with both single and duplicate values.
 
 ### Added
+
 - email fallback now supports request IP sent from the server, the data is anonymized.
 - new form setting that will hide form once it is submitted with success.
 - new `esFormsROISF` shortcode that can be used inside the result output item to show the form again.
@@ -51,83 +64,102 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [4.0.5]
 
 ### Updated
+
 - `Eightshift-forms-utils` to the latest version `2.0.1`.
 
 ### Fixed
+
 - Countries get list pulled the data from the wrong manifest cache file.
 
 ## [4.0.4]
 
 ### Fixed
+
 - Updating .js files for the new eslint rules.
 
 ### Updated
+
 - `@infinum/eightshift-frontend-libs` to the latest version `12.1.5`.
 
 ## [4.0.3]
 
 ### Changed
+
 - Countries list is now loaded from php file and not from the manifest json.
 
 ### Removed
+
 - Countries list from cache.
 
 ### Added
+
 - Translations for the countries list for 14 languages.
 
 ## [4.0.2]
 
 ### Fixed
+
 - Geolocation added additional check for sent headers.
 
 ## [4.0.1]
 
 ### Fixed
+
 - Changing the main Manifest cache function for setting up initial cache.
 
 ## [4.0.0]
 
 ### Updated
+
 - `Eightshift-forms-utils` to the latest version `2.0.0`.
 - `@infinum/eightshift-libs` to the latest version `8.0.0`.
 - `@infinum/eightshift-frontend-libs` to the latest version `12.0.0`.
 
 ### Removed
+
 - All `Data` are not loaded from utils lib.
 - Top bar no longer supports listing all forms items for faster loading.
 - `src/Exception/MissingFilterInfoException.php` because it is not used anymore.
 
 ### Added
+
 - New `Caching` service for manifest data and new options to flush cache from the settings.
 - Input number validation for allowed keys.
 - WP Rocket cache options settings.
 
 ### Fixed
+
 - Custom post type labels are not translatable.
 
 ### Changed
+
 - Filter `script_dependency_theme` is now `script_dependency_theme_captcha`.
 
 ## [3.1.12]
 
 ### Fixed
+
 - Geolocation will now work even if forms is configured but global setting is disabled.
 - HubSpot Client fixes for additional params broken after security fixes on the Chrome browser.
 
 ### Added
+
 - Two new filters for encryption and decryption of the data.
 
 ## [3.1.11]
 
 ### Changed
+
 - Updated the `@infinum/eightshift-forms-utils` to the latest version.
 
 ### Added
+
 - Two new filters for encryption and decryption of the data.
 
 ## [3.1.10]
 
 ### Fixed
+
 - Airtable integration now supports multiple select fields.
 - Moments form validation of input fields limiting the number of characters to 1000.
 - Calculator will no longer break reCaptcha validation.
@@ -135,29 +167,35 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Single submit now supports input type number.
 
 ### Added
+
 - Security feature now supports calculator rate limiting separate setting.
 
 ## [3.1.9]
 
 ### Removed
+
 - Reverted changes for enrichment prefill hidden fields.
 
 ## [3.1.8]
 
 ### Added
+
 - New filer `es_forms_block_form_custom_class_selector` for adding custom class to the form block.
 - New type attribute to the `esFormsROIP` shortcode.
 
 ## [3.1.7]
 
 ### Updated
+
 - Strauss to the latest version.
 
 ### Added
+
 - Ability for checkboxes and radios when used as a "show as" option to select to have placeholder text.
 - Check for the enrichment if locale storage is available.
 
 ### Fixed
+
 - Google reCaptcha will now throw an error if not set up correctly.
 - Multiple JS errors when array or objects are missing.
 - Google reCaptcha will now send a fallback email if there is an issue with the validation only.
@@ -167,23 +205,28 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [3.1.6]
 
 ### Updated
+
 - Eightshift-forms-utils to the latest version `1.3.6`.
 - Updated create entries helper to check if the database table exists.
 - Updated validator to load email tld manifest data from cache.
 
 ### Fixed
+
 - Fix the shortcode for displaying the output of the calculations.
 
 ## [3.1.5]
 
 ### Fixed
+
 - reCaptcha will now output the correct message on the frontend in any case.
 
 ### Added
+
 - reCaptcha will now send fallback email if there is an issue with the validation.
 - Security feature now supports option to ignore IPs.
 
 ### Updated
+
 - Eightshift-forms-utils to the latest version `1.3.5`.
 - License updated.
 - Deploy scripts.
@@ -191,11 +234,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [3.1.4]
 
 ### Fixed
+
 - single submit on calculation forms will no longer reset the form on submit.
 
 ## [3.1.3]
 
 ### Fixed
+
 - single submit on calculation forms will now send all form data on submit.
 - range current state will now update on initial load.
 - issue with not syncing correctly form fields with escape characters.
@@ -203,17 +248,20 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [3.1.2]
 
 ### Fixed
+
 - issue with multiple select fields not being saved correctly in Moments integration.
 - single submit logic for the forms.
 
 ## [3.1.1]
 
 ### Fixed
+
 - issue with multiple select fields not being saved correctly.
 
 ## [3.1.0]
 
 ### Added
+
 - `range` field for the forms.
 - `singleSubmit` attribute on all fields to allow only one submit per form to be used as calculation form.
 - `Result output` custom post type.
@@ -225,58 +273,70 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `esFormsROIP` shortcode to output the result output part.
 
 ### Changed
+
 - `Input` fields now output correct types for e-mail and URL fields, so the experience on mobile devices should be much better.
 - Admin listing URLs can now support additional types.
 - All icons are now used from utils lib.
 
 ### Fixed
+
 - JS errors when missing data.
 - Broken URLs for admin listing when using custom post types.
 
 ### Removed
+
 - Unnecessary options in the `rating` field.
 
 ## [3.0.6]
 
 ### Fixed
+
 - issue with multiple select fields not being saved correctly in Moments integration.
 
 ## [3.0.5]
 
 ### Fixed
+
 - File upload validation will no longer break if API returns invalid type.
 - issue with multiple select fields not being saved correctly.
 
 ## [3.0.4]
 
 ### Added
+
 - New support page in the settings for easier access to server configuration issues.
 - Options to send empty fields to entires.
 
 ### Changed
+
 - Block Editor select option will auto close on selection.
 
 ### Fixed
+
 - File upload validation will no longer break the API returns invalid type.
 - Validation pattern will no longer break if value is array.
 
 ## [3.0.3]
 
 ### Added
+
 - Ability to send fallback email if there has been validation error for `validationMissingMandatoryParams`, `validationFileUploadProcessError` and `validationSecurity`.
 - New fallback processing validation fallback function.
 
 ### Changed
+
 - The security validation feature will no longer trigger count files and step requests.
 - Entries now have ability to save empty fields based on the settings.
 
 ### Fixed
+
 - Typo for fallback function.
 - Custom mailer now supports saving entires.
 
 ## [3.0.2]
 
 ### Added
+
 - New `dynamic` block and component to allow dynamic form fields.
 - Integration form picker now supports clear option.
 - Airtable integration now supports dynamic, connected tables.
@@ -285,11 +345,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Locations use the URL to the settings page and top admin bar.
 
 ### Fixed
+
 - Integration sync fix when you unset attributes set in the manifest as default.
 - Forms JS breaking on the frontend when API response returns JSON but, the response is not an object.
 - SCSS linter errors.
 
 ### Updated
+
 - `@infinum/eightshift-frontend-libs` to the latest version.
 - `@infinum/eightshift-forms-utils` to the latest version.
 - `husky` to the latest version.
@@ -300,6 +362,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [3.0.0]
 
 ### Added
+
 - Extracting for helpers to new library for easier usage across add-ons.
 - Creating new addon options for new potential projects.
 - Forms listing filter will allow you to filter form by type.
@@ -330,6 +393,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Forms are now faster and more secure.
 
 ### Changed
+
 - Visual styling for all settings pages with tabs, better copy, and a lot of UX/UI improvements.
 - Fallback emails are no longer in the troubleshooting class but as a standalone class.
 - Your forms will now show only integrations in the settings set in the Block editor.
@@ -337,33 +401,40 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Forms are now compatible with latest WordPress version and PHP 8+.
 
 ### Fixed
+
 - Optimized loading of all settings pages.
 - Issue with attributes escaping on the PHP8+.
 
 ### Removed
+
 - `ES_DEVELOP_MODE` constant because you can configure everything from the settings page.
 
 ## [2.2.0]
 
 ### Changed
+
 - HubSpot internal logic for api auth. Switching from API Key to Private App.
 
 ## [2.1.0]
 
 ### Fixed
+
 - Issue with the hidden field and legacy items in the integration settings.
 
 ### Changed
+
 - MailerLite default status to active
 
 ## [2.0.1]
 
 ### Fixed
+
 - Hubspot fix so the input hidden is not displayed on the frontend.
 
 ## [2.0.0]
 
 ### Added
+
 - custom form params are now in one place and used as an enum for PHP and JS.
 - server errors will no longer produce a fatal error on the form but will output the message to the user, which is also translatable.
 - option to remove all unnecessary custom params set on the form before the final integration post, so we don't send unnecessary stuff.
@@ -378,6 +449,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - new sortable option to all integration fields.
 
 ### Changed
+
 - all JS global variables for frontend and backend are now using the same name.
 - internal custom field for actions is now called es-form-action.
 - filter for setting http request from `httpRequestArgs ` to `httpRequestTimeout` because it is used only to set timeout.
@@ -389,6 +461,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `ES_GEOLOCAITON` global constant to `ES_GEOLOCAITON_IP`.
 
 ### Fixed
+
 - all wrong text domains are changed from `eightshift-form` to `eightshift-forms`.
 - Active campaign body was set wrong and was not working.
 - Active campaign setting info copy for setting api key and url.
@@ -399,6 +472,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - internal filter naming for functions
 
 ### Removed
+
 - `ES_DEVELOP_MODE_SKIP_VALIDATION ` because it is used from admin now.
 - `ES_LOG_MODE ` because it is used from admin now.
 - `es_forms_geolocation_user_location` filter.
@@ -406,6 +480,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [1.4.0]
 
 ### Fixed
+
 - preselected values for custom select.
 - added additional corrections for localStorage.
 - missing attribute from component to form block manifest.json.
@@ -415,9 +490,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - fixing linting issues.
 
 ### Removed
+
 - removing unnecessary style and scripts.
 
 ### Added
+
 - new field hidden attributes for hiding fields from dom.
 - hidden field for hubspot integration.
 - preselected value field for hubspot integration.
@@ -433,13 +510,16 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [1.3.0]
 
 ### Fixed
+
 - logic for scroll to top and scroll to first error.
 - Mailchimp integration merge fields.
 
 ### Changed
+
 - Logic behind the form Js initialization with the option to avoid domReady.
 
 ### Added
+
 - Method to remove all event listeners on demand.
 - New event when all event listeners are removed.
 - Filter for updating http_request_args.
@@ -448,52 +528,62 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ## [1.2.4]
 
 ### Added
+
 - Option to provide checkbox unchecked value.
 - New filter to allow filtering of the formDataTypeSelector attribute during form component renders.
 
 ### Fixed
+
 - Greenhouse integration checkbox true/false unchecked value.
 
 ## [1.2.3]
 
 ### Fixed
+
 - Geolocation hook condition to be able to disable on filter.
 
 ## [1.2.2]
 
 ### Fixed
+
 - Internal build process for GH actions.
 
 ## [1.2.1]
 
 ### Fixed
+
 - Internal links to support WP multisite.
 
 ## [1.2.0]
 
 ### Added
+
 - passing get parameters to the backend to process and get what we need.
 - New Greenhouse field that gets data from the get parameter and pass it to the api.
 
 ### Fixed
+
 - Broken validation for file type.
 - Validation for input type to detect the type and validate accordingly.
 
 ## [1.1.1]
 
 ### Fixed
+
 - Option to show WP-CLI command.
 - Mailchimp integration total number of list items to show.
 
 ## [1.1.0]
 
 ### Added
+
 - Option to use string templates in mailer subject and other fields.
 
 ## [1.0.0]
 
 - Initial production release.
 
+[5.0.1]: https://github.com/infinum/eightshift-forms/compare/5.0.0...5.0.1
 [5.0.0]: https://github.com/infinum/eightshift-forms/compare/4.0.7...5.0.0
 [4.0.7]: https://github.com/infinum/eightshift-forms/compare/4.0.6...4.0.7
 [4.0.6]: https://github.com/infinum/eightshift-forms/compare/4.0.5...4.0.6
