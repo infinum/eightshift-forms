@@ -289,7 +289,7 @@ final class Filters
 				'twoToThreeGeneral',
 				'twoToThreeForms',
 				'twoToThreeLocale',
-			]
+			],
 		];
 	}
 

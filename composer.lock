@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec55a557f30f906114c9f045d8e1e831",
+    "content-hash": "43113f86715a3e89aeeaeb3e0078ed98",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -58,16 +58,16 @@
         },
         {
             "name": "infinum/eightshift-forms-utils",
-            "version": "dev-feature/gated",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "098c8176de3746342ab1eb9ac0132621ba5d546f"
+                "reference": "91620df6a9d8eeb8cce24da9e8c48699cbf0d54e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/098c8176de3746342ab1eb9ac0132621ba5d546f",
-                "reference": "098c8176de3746342ab1eb9ac0132621ba5d546f",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/91620df6a9d8eeb8cce24da9e8c48699cbf0d54e",
+                "reference": "91620df6a9d8eeb8cce24da9e8c48699cbf0d54e",
                 "shasum": ""
             },
             "require": {
@@ -91,21 +91,7 @@
                     "EightshiftFormsUtils\\": "src/"
                 }
             },
-            "scripts": {
-                "test:types": [
-                    "@php ./vendor/bin/phpstan analyze"
-                ],
-                "test:standards": [
-                    "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.2-"
-                ],
-                "standards:fix": [
-                    "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.2-"
-                ],
-                "test": [
-                    "@test:standards",
-                    "@test:types"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -120,21 +106,21 @@
             "description": "Eightshift Forms Utils library for shared functionality",
             "homepage": "https://eightshift.com/",
             "keywords": [
-                "Gutenberg",
-                "Mailchimp",
-                "WordPress",
+                "Forms",
                 "blocks",
                 "composer",
                 "email",
                 "form",
-                "forms",
-                "plugin"
+                "gutenberg",
+                "mailchimp",
+                "plugin",
+                "wordpress"
             ],
             "support": {
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2024-07-22T09:43:58+00:00"
+            "time": "2024-07-23T05:53:12+00:00"
         },
         {
             "name": "infinum/eightshift-libs",
@@ -4964,7 +4950,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "infinum/eightshift-forms-utils": 20,
         "brain/faker": 20
     },
     "prefer-stable": true,
