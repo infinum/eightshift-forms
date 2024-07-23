@@ -1,6 +1,6 @@
 // stylelint-disable declaration-no-important
 
-@import './checkbox-style.scss';
+@import './checkbox-style';
 
 .es-checkbox-toggle {
 	@include checkbox-toggle-styles;

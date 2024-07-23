@@ -10,18 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Entries\SettingsEntries;
-use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
@@ -71,11 +64,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * Send emails method.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param boolean $useSuccessAction If success action should be used.
+	 * @param array<string, mixed> $responseTags Response tags.
 	 *
 	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendEmails(array $formDetails, bool $useSuccessAction = false): array
+	public function sendEmails(array $formDetails, array $responseTags = []): array
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
@@ -88,29 +81,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('mailerErrorSettingsMissing', $formId),
-				[],
-				$debug
-			);
-		}
-
-		if ($useSuccessAction) {
-			// Save entries.
-			if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-				$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-				$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
-			}
-
-			// Pre response filter for success redirect data.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-			if (\has_filter($filterName)) {
-				$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-				if ($filterDetails) {
-					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
-				}
-			}
+			return [
+				'status' => UtilsConfig::STATUS_ERROR,
+				'label' => 'mailerErrorSettingsMissing',
+				'debug' => $debug,
+			];
 		}
 
 		// This data is set here because $formDetails can me modified in the previous filters.
@@ -125,45 +100,25 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
 			$params,
-			$this->prepareEmailResponseTags($formDetails)
+			$responseTags
 		);
 
 		// If email fails.
 		if (!$response) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('mailerErrorEmailSend', $formId),
-				[],
-				$debug
-			);
+			return [
+				'status' => UtilsConfig::STATUS_ERROR,
+				'label' => 'mailerErrorEmailSend',
+				'debug' => $debug,
+			];
 		}
 
 		$this->sendConfirmationEmail($formId, $params, $files);
 
-		$additionalOutput = [];
-
-		// Output result output items as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
-		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
-
-		// Output result output parts as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
-		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
-
-		$additionalOutput = \array_merge(
-			$additionalOutput,
-			UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails)
-		);
-
-		// Finish.
-		return UtilsApiHelper::getApiSuccessPublicOutput(
-			$this->labels->getLabel('mailerSuccess', $formId),
-			$additionalOutput,
-			$debug
-		);
+		return [
+			'status' => UtilsConfig::STATUS_SUCCESS,
+			'label' => 'mailerSuccess',
+			'debug' => $debug,
+		];
 	}
 
 	/**
@@ -256,57 +211,5 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			$files,
 			$params
 		);
-	}
-
-	/**
-	 * Prepare all email response tags.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function prepareEmailResponseTags(array $formDetails): array
-	{
-		$output = [];
-
-		// Output all the response tags.
-		$responseTags = $formDetails[UtilsConfig::FD_EMAIL_RESPONSE_TAGS] ?? [];
-		if ($responseTags) {
-			$output = $responseTags;
-		}
-
-		$formType = $formDetails[UtilsConfig::FD_TYPE] ?? '';
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-
-		// Success redirect.
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId)['data'] ?? '';
-		if ($successRedirectUrl) {
-			// Add success redirect data, usualy got from the add-on plugin or filters.
-			$successRedirect = $formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] ?? '';
-			if ($successRedirect) {
-				$successRedirectUrl = \add_query_arg(
-					[
-						'es-data' => $successRedirect,
-					],
-					$successRedirectUrl
-				);
-			}
-
-			// Add variation data, this filter will not take in effect if the success redirect variation isn't set in the block editor.
-			$successRedirectVariation = FiltersOuputMock::getSuccessRedirectVariationFilterValue($formType, $formId)['data'] ?? '';
-			if ($successRedirectVariation) {
-				$successRedirectUrl = \add_query_arg(
-					[
-						'es-variation' => UtilsEncryption::encryptor($successRedirectVariation),
-					],
-					$successRedirectUrl
-				);
-			}
-
-			// Output mailer response tag.
-			$output["mailerSuccessRedirectUrl"] = $successRedirectUrl;
-		}
-
-		return $output;
 	}
 }

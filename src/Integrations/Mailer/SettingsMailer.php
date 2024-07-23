@@ -14,16 +14,15 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailer class.
  */
-class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -212,7 +211,6 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 		$fieldNames = $formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS];
 		$fieldNameTags = UtilsSettingsOutputHelper::getPartialFormFieldNames($fieldNames);
 		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails[UtilsConfig::FD_TYPE]);
-		$formResponseTagsGeneral = UtilsSettingsOutputHelper::getPartialFormResponseTags(SettingsMailer::SETTINGS_TYPE_KEY);
 
 		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
 		$isSenderUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
@@ -285,10 +283,10 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 									'component' => 'textarea',
 									'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 									'textareaFieldLabel' => \__('Content', 'eightshift-forms'),
-									// translators: %s will be replaced with forms field name.
+									// translators: %1$s will be replaced with forms field name, %2$s will be replaced with response tags, %3$s will be replaced with field names tags.
 									'textareaFieldHelp' => \sprintf(\__('
 										Specify e-mail body template with this field. You can use plain text or markdown.<br /><br />
-										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags), UtilsSettingsOutputHelper::getPartialResponseTags("{$formResponseTagsGeneral}{$formResponseTags}")),
+										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags), UtilsSettingsOutputHelper::getPartialResponseTags($formResponseTags)),
 									'textareaIsRequired' => true,
 									'textareaValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 								],
@@ -428,8 +426,6 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
-
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
@@ -449,19 +445,7 @@ class SettingsMailer implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 						'component' => 'tab',
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
-								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name and filter output copy.
-								'inputFieldHelp' => \sprintf(\__('
-									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
-									<br />
-									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
-								'inputType' => 'url',
-								'inputIsUrl' => true,
-								'inputValue' => $successRedirectUrl['dataGlobal'],
-							],
+							...$this->getGlobalGeneralSettings(self::SETTINGS_TYPE_KEY),
 						],
 					],
 				],

@@ -1,3 +1,5 @@
+// stylelint-disable scss/load-partial-extension
+
 /**
  * This is the main entry point for Block Editor blocks styles used for the `WordPress admin editor`.
  * File names must follow naming convention to be able to run dynamically.
@@ -12,8 +14,8 @@
 @import './parts/shared';
 
 // Utils helpers
-@import '@eightshift/frontend-libs/styles/es-utility-classes.scss';
-@import '@eightshift/frontend-libs/styles/es-component-styles.scss';
+@import '@eightshift/frontend-libs/styles/es-utility-classes';
+@import '@eightshift/frontend-libs/styles/es-component-styles';
 
 // Find all components and require component_name-style.scss inside it.
 @import './../../components/*/*-editor.scss';

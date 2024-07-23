@@ -7,35 +7,55 @@ import {
 	getAttrKey,
 	icons,
 	IconLabel,
-	Notification,
 	Select,
 } from '@eightshift/frontend-libs/scripts';
 import {
 	CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
 	CONDITIONAL_TAGS_OPERATORS_LABELS,
 } from './../../../components/conditional-tags/components/conditional-tags-labels';
-import { getConstantsOptions } from './../../../components/utils';
+import { getConstantsOptions, NameField } from './../../../components/utils';
 import manifest from '../manifest.json';
-import { CONDITIONAL_TAGS_OPERATORS_EXTENDED } from '../../../components/conditional-tags/assets/utils';
+import globalManifest from '../../../manifest.json';
 
 export const ResultOutputItemOptions = ({
 	attributes,
 	setAttributes,
 }) => {
+	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	const resultOutputItemName = checkAttr('resultOutputItemName', attributes, manifest);
 	const resultOutputItemValue = checkAttr('resultOutputItemValue', attributes, manifest);
 	const resultOutputItemValueEnd = checkAttr('resultOutputItemValueEnd', attributes, manifest);
 	const resultOutputItemOperator = checkAttr('resultOutputItemOperator', attributes, manifest);
 
-	const [showEndValue, setShowEndValue] = useState(resultOutputItemOperator.toUpperCase() in CONDITIONAL_TAGS_OPERATORS_EXTENDED);
+	const [showEndValue, setShowEndValue] = useState(resultOutputItemOperator.toUpperCase() in globalManifest.comparatorExtended);
 
 	return (
 		<PanelBody title={__('Result item', 'eightshift-forms')}>
-			<TextControl
-				label={<IconLabel icon={icons.id} label={__('Variable name', 'eightshift-forms')} />}
+			<NameField
 				value={resultOutputItemName}
-				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemName', attributes, manifest)]: value })}
+				attribute={getAttrKey('resultOutputItemName', attributes, manifest)}
+				setAttributes={setAttributes}
+				type='resultOutputItem'
+				isChanged={isNameChanged}
+				setIsChanged={setIsNameChanged}
+			/>
+
+			<Select
+				label={<IconLabel icon={icons.containerSpacing} label={__('Compare operator', 'eightshift-forms')} />}
+				value={resultOutputItemOperator}
+				options={getConstantsOptions(
+					{
+						...CONDITIONAL_TAGS_OPERATORS_LABELS,
+						...CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
+					}
+				)}
+				onChange={(value) => {
+					setShowEndValue(value.toUpperCase() in globalManifest.comparatorExtended);
+					setAttributes({ [getAttrKey('resultOutputItemOperator', attributes, manifest)]: value });
+				}}
+				simpleValue
+				closeMenuAfterSelect
 			/>
 
 			<TextControl
@@ -53,23 +73,6 @@ export const ResultOutputItemOptions = ({
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputItemValue', attributes, manifest)]: value })}
 			/>
 
-			<Select
-				label={<IconLabel icon={icons.containerSpacing} label={__('Compare operator', 'eightshift-forms')} />}
-				value={resultOutputItemOperator}
-				options={getConstantsOptions(
-					{
-						...CONDITIONAL_TAGS_OPERATORS_LABELS,
-						...CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
-					}
-				)}
-				onChange={(value) => {
-					setShowEndValue(value.toUpperCase() in CONDITIONAL_TAGS_OPERATORS_EXTENDED);
-					setAttributes({ [getAttrKey('resultOutputItemOperator', attributes, manifest)]: value });
-				}}
-				simpleValue
-				closeMenuAfterSelect
-			/>
-
 			{showEndValue && 
 				<TextControl
 					label={<IconLabel icon={icons.positionHEnd} label={__('Variable value end', 'eightshift-forms')} />}
@@ -78,11 +81,6 @@ export const ResultOutputItemOptions = ({
 					help={showEndValue && __('End value must be number.', 'eightshift-forms')}
 				/>
 			}
-
-		<Notification
-			text={__('The block will not show anything if filters are not added through code! If you have the Computed fields add-on, its output is also supported.', 'eightshift-forms')}
-			type='warning'
-		/>
 
 		</PanelBody>
 	);

@@ -16,7 +16,10 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
+use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
+use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -28,6 +31,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
@@ -315,25 +319,15 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * Get integration common submit action
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param mixed $callbackStart Callback start of the function.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getIntegrationCommonSubmitAction(array $formDetails, $callbackStart = null): array
+	protected function getIntegrationCommonSubmitAction(array $formDetails): array
 	{
-		// Pre response filter for addon data.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseAddonData']);
-		if (\has_filter($filterName)) {
-			$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-			if ($filterDetails) {
-				$formDetails[UtilsConfig::FD_ADDON] = $filterDetails;
-			}
-		}
-
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
 		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
+		$status = $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR;
 
 		$disableFallbackEmail = false;
 
@@ -341,11 +335,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if ($validation) {
 			$response[UtilsConfig::IARD_VALIDATION] = $this->validator->getValidationLabelItems($validation, $formId);
 			$disableFallbackEmail = true;
-		}
-
-		// Run any function callback if it is set.
-		if (\is_callable($callbackStart)) {
-			\call_user_func($callbackStart);
 		}
 
 		// Skip fallback email if integration is disabled.
@@ -372,26 +361,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
 
-		return $this->getIntegrationCommonSubmitOutput(
-			$formDetails,
-			$labelsOutput
-		);
-	}
-
-	/**
-	 * Output for getIntegrationCommonSubmitOutput method.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param string $msg Message to output.
-	 *
-	 * @return array<string, array<mixed>|int|string>
-	 */
-	protected function getIntegrationCommonSubmitOutput(array $formDetails, string $msg): array
-	{
-		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
-		$status = $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR;
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-
 		$additionalOutput = [];
 
 		if (isset($response[UtilsConfig::IARD_VALIDATION])) {
@@ -399,56 +368,297 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		if ($status === UtilsConfig::STATUS_SUCCESS) {
-			// Order of this filter is important as you can use filters in the getApiPublicAdditionalDataOutput helper.
-			if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-				$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-				$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
-			}
-
-			// Pre response filter for success redirect data.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'preResponseSuccessRedirectData']);
-			if (\has_filter($filterName)) {
-				$filterDetails = \apply_filters($filterName, [], $formDetails);
-
-				if ($filterDetails) {
-					$formDetails[UtilsConfig::FD_SUCCESS_REDIRECT] = UtilsEncryption::encryptor(\wp_json_encode($filterDetails));
-				}
-			}
+			$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 			// Send email if it is configured in the backend.
 			if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
-				$this->getFormSubmitMailer()->sendEmails($formDetails);
+				$this->getFormSubmitMailer()->sendEmails(
+					$formDetails,
+					$this->getCombinedEmailResponseTags(
+						$formDetails,
+						\array_merge(
+							$successAdditionalData['public'],
+							$successAdditionalData['private'],
+						)
+					)
+				);
 			}
 
-			// Return result output items as a response key.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
-			if (\has_filter($filterName)) {
-				$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-			}
-
-			// Output result output parts as a response key.
-			$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
-			if (\has_filter($filterName)) {
-				$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-			}
-
-			$additionalOutput = \array_merge(
-				$additionalOutput,
-				UtilsApiHelper::getApiPublicAdditionalDataOutput($formDetails)
-			);
+			$this->callIntegrationResponseSuccessCallback($formDetails, $successAdditionalData);
 
 			return UtilsApiHelper::getApiSuccessPublicOutput(
-				$msg,
-				$additionalOutput,
+				$labelsOutput,
+				\array_merge(
+					$additionalOutput,
+					$successAdditionalData['public'],
+					$successAdditionalData['additional']
+				),
 				$response
 			);
 		}
 
 		return UtilsApiHelper::getApiErrorPublicOutput(
-			$msg,
-			$additionalOutput,
+			$labelsOutput,
+			$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 			$response
 		);
+	}
+
+	/**
+	 * Get integration response output additional data on error or success.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getIntegrationResponseAnyOutputAdditionalData(array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+
+		$output = [];
+
+		// Tracking event name.
+		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($type, $formId)['data'];
+		if ($trackingEventName) {
+			$output[UtilsHelper::getStateResponseOutputKey('trackingEventName')] = $trackingEventName;
+		}
+
+		// Provide additional data to tracking attr.
+		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($type, $formId)['data'];
+		if ($trackingAdditionalData) {
+			$output[UtilsHelper::getStateResponseOutputKey('trackingAdditionalData')] = $trackingAdditionalData;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get integration response output additional data on success.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getIntegrationResponseSuccessOutputAdditionalData(array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+
+		$output = [
+			'private' => [],
+			'public' => [],
+		];
+
+		// Set entries.
+		$useEntries = \apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+		if ($useEntries) {
+			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
+			if ($entryId) {
+				$output['private'][UtilsHelper::getStateResponseOutputKey('entry')] = (string) $entryId;
+			}
+		}
+
+		// Hide global message on success.
+		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
+		if ($hideGlobalMsgOnSuccess) {
+			$output['public'][UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
+		}
+
+		// Hide form on success.
+		$hideFormOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId);
+		if ($hideFormOnSuccess) {
+			$output['public'][UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
+		}
+
+		// Add success redirect variation.
+		$variation = FiltersOuputMock::getVariationFilterValue($type, $formId, $formDetails)['data'];
+		if ($variation) {
+			$output['public'][UtilsHelper::getStateResponseOutputKey('variation')] = $variation;
+		}
+
+		// Success redirect url.
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
+		if ($successRedirectUrl) {
+			$redirectDataOutput = [];
+
+			// Replace {field_name} with the actual value.
+			foreach ($formDetails[UtilsConfig::FD_PARAMS_RAW] as $name => $value) {
+				if (\is_array($value)) {
+					$value = \implode(', ', $value);
+				}
+				$successRedirectUrl = \str_replace("{" . $name . "}", (string) $value, $successRedirectUrl);
+			}
+
+			// Redirect variation.
+			if (isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])) {
+				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
+			}
+
+			// Redirect entry id.
+			if (isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
+				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
+			}
+
+			// Redirect secrue data.
+			if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
+				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true);
+
+				// Legacy data.
+				if (isset($secureData['l'])) {
+					$redirectDataOutput['es-legacy'] = $this->processLegacyData($secureData['l'], $formDetails[UtilsConfig::FD_PARAMS_RAW], $formId);
+				}
+
+				// Redirect custom result output feature.
+				$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
+				if (\apply_filters($formsUseCustomResultOutputFeatureFilterName, false)) {
+					$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('customResultOutput')] = $this->processCustomResultOutputData($secureData, $formDetails[UtilsConfig::FD_PARAMS_RAW]);
+				}
+			} else {
+				// Legacy data.
+				$redirectDataOutput['es-legacy']['v'] = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+			}
+
+			// Redirect base url.
+			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectBaseUrl')] = $successRedirectUrl;
+
+			// Redirect full url.
+			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
+				[
+					UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
+				],
+				$successRedirectUrl
+			);
+		}
+
+		// Update created entry with additional values.
+		if ($useEntries && isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
+			$entryData = EntriesHelper::getEntry($output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
+
+			if ($entryData) {
+				$entryNewData = $entryData['entryValue'] ?? [];
+				if (
+					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+					isset($output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')])
+				) {
+					$entryNewData[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = $output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')];
+				}
+
+				if (
+					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+					isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])
+				) {
+					$entryNewData[UtilsHelper::getStateResponseOutputKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
+				}
+
+				EntriesHelper::updateEntry($entryNewData, $output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
+			}
+		}
+
+		// Add form ID to the output.
+		$output['private'][UtilsHelper::getStateResponseOutputKey('formId')] = $formId;
+
+		$finalOutput = [
+			'private' => $output['private'],
+			'public' => $output['public'],
+			'additional' => $this->getIntegrationResponseAnyOutputAdditionalData($formDetails),
+		];
+
+		// Filter params.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', $type, 'beforeSuccessResponse']);
+		if (\has_filter($filterName)) {
+			return \apply_filters($filterName, $finalOutput, $formDetails, $formId);
+		}
+
+		return $finalOutput;
+	}
+
+	/**
+	 * Get integration response output additional data on error.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getIntegrationResponseErrorOutputAdditionalData(array $formDetails): array
+	{
+		return $this->getIntegrationResponseAnyOutputAdditionalData($formDetails);
+	}
+
+	/**
+	 * Call integration response success callback.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 *
+	 * @return void
+	 */
+	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
+	{
+		return;
+	}
+
+	/**
+	 * Prepare email response tags from the API response.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getEmailResponseTags(array $formDetails): array
+	{
+		return [];
+	}
+
+	/**
+	 * Prepare all email response tags.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $data Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getCombinedEmailResponseTags(array $formDetails, array $data): array
+	{
+		return \array_merge(
+			$this->getCommonEmailResponseTags($data),
+			$this->getEmailResponseTags($formDetails)
+		);
+	}
+
+	/**
+	 * Prepare all email response tags.
+	 *
+	 * @param array<string, mixed> $data Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getCommonEmailResponseTags(array $data): array
+	{
+		$output = [];
+
+		$allowedTags = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsMailer::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [];
+
+		foreach ($allowedTags as $key => $value) {
+			switch ($key) {
+				case 'mailerSuccessRedirectUrl':
+					$output[$key] = $data[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] ?? '';
+					break;
+				case 'mailerEntryId':
+					$output[$key] = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
+					break;
+				case 'mailerEntryUrl':
+					$entryId = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
+					$formId = $data[UtilsHelper::getStateResponseOutputKey('formId')] ?? '';
+
+					if ($entryId && $formId) {
+						$output[$key] = EntriesHelper::getEntryAdminUrl($entryId, $formId);
+					}
+					break;
+			}
+		}
+
+		return $output;
 	}
 
 	/**
@@ -529,4 +739,108 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * @return mixed
 	 */
 	abstract protected function submitAction(array $formDetails);
+
+	/**
+	 * Process legacy data.
+	 *
+	 * @param array<string, mixed> $data Data from secure data.
+	 * @param array<string, mixed> $params Raw params.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function processLegacyData(array $data, array $params, string $formId): array
+	{
+		$downloads = $data['d'] ?? [];
+
+		$output = [];
+
+		foreach ($downloads as $download) {
+			$condition = $download['c'] ?? '';
+
+			// If empty use the download.
+			if (!$condition || $condition === 'all') {
+				$output[] = $download;
+				continue;
+			}
+
+			$condition = \explode('=', $condition);
+
+			$fieldName = $condition[0] ?? '';
+			$fieldValue = $condition[1] ?? '';
+
+			// If condition is not valid use the download.
+			if (!$fieldName || !$fieldValue) {
+				$output[] = $download;
+				continue;
+			}
+
+			// If field condition is met use the download.
+			if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
+				$output[] = $download;
+				continue;
+			}
+		}
+
+		if ($output) {
+			$data['d'] = $output;
+		}
+
+		if (!isset($data['v'])) {
+			$data['v'] = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Process custom result output data.
+	 *
+	 * @param array<string, mixed> $data Data from secure data.
+	 * @param array<string, mixed> $params Raw params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function processCustomResultOutputData(array $data, array $params): array
+	{
+		$output = [];
+
+		// Output title.
+		if (isset($data['t'])) {
+			$output['t'] = $data['t'];
+		}
+
+		// Output subtitle.
+		if (isset($data['st'])) {
+			$output['st'] = $data['st'];
+		}
+
+		// Output files.
+		$files = $data['d'] ?? [];
+		if ($files) {
+			$outputFiles = [];
+			foreach ($files as $file) {
+				$fieldName = $file['cfn'] ?? '';
+				$fieldValue = $file['cfv'] ?? '';
+
+				unset($file['cfn'], $file['cfv']);
+
+				// If empty use the file.
+				if (!$fieldName || !$fieldValue) {
+					$outputFiles[] = $file;
+					continue;
+				}
+
+				// If field condition is met use the file.
+				if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
+					$outputFiles[] = $file;
+					continue;
+				}
+			}
+
+			$output['d'] = $outputFiles;
+		}
+
+		return $output;
+	}
 }

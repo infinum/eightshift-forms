@@ -40,26 +40,22 @@
 			},
 			"default": []
 		},
-		"formsDownloads": {
+		"formsVariation": {
 			"type": "array",
-			"items": {
-				"type": "object"
-			},
 			"default": []
 		},
-		"formsSuccessRedirectVariationUrl": {
-			"type": "string"
+		"formsVariationData": {
+			"type": "object",
+			"default": {}
 		},
-		"formsSuccessRedirectVariationUrlTitle": {
-			"type": "string"
+		"formsVariationDataFiles": {
+			"type": "array",
+			"default": []
 		},
 		"formsFormDataTypeSelector": {
 			"type": "string"
 		},
 		"formsCustomName": {
-			"type": "string"
-		},
-		"formsSuccessRedirectVariation": {
 			"type": "string"
 		},
 		"formsServerSideRender": {
@@ -68,6 +64,29 @@
 		},
 		"formsAttrs": {
 			"type": "object"
+		},
+		"formsResultsOutputUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"formsResultsOutputData": {
+			"type": "array"
+		},
+		"formsDownloads": {
+			"type": "array",
+			"items": {
+				"type": "object"
+			},
+			"default": []
+		},
+		"formsSuccessRedirectVariation": {
+			"type": "string"
+		},
+		"formsSuccessRedirectVariationUrl": {
+			"type": "string"
+		},
+		"formsSuccessRedirectVariationUrlTitle": {
+			"type": "string"
 		}
 	},
 	"components": {

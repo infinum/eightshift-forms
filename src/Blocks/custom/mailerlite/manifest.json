@@ -21,12 +21,6 @@
 		"mailerliteIntegrationId": {
 			"type": "string"
 		},
-		"mailerliteFormPostId": {
-			"type": "string"
-		},
-		"mailerliteFormDataTypeSelector": {
-			"type": "string"
-		},
 		"mailerliteAllowedBlocks": {
 			"type": "array",
 			"default": []

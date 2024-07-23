@@ -21,12 +21,6 @@
 		"goodbitsIntegrationId": {
 			"type": "string"
 		},
-		"goodbitsFormPostId": {
-			"type": "string"
-		},
-		"goodbitsFormDataTypeSelector": {
-			"type": "string"
-		},
 		"goodbitsAllowedBlocks": {
 			"type": "array",
 			"default": []

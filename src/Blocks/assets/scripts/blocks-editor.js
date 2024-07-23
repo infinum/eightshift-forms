@@ -17,11 +17,11 @@ import {
 	outputCssVariablesGlobal,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts/editor';
-import globalSettings from '../../manifest.json';
+import globalManifest from '../../manifest.json';
 import './store';
 
 registerBlocks(
-	globalSettings,
+	globalManifest,
 	null,
 	{},
 	require.context('./../../components', true, /manifest.json$/),

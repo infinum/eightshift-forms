@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
@@ -73,73 +75,60 @@ final class FiltersOuputMock
 	}
 
 	/**
-	 * Return success redirect variations options data filter output.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getSuccessRedirectVariationOptionsFilterValue(): array
-	{
-		$settings = '';
-		$data = '';
-		$filterData = [];
-		$filterUsed = false;
-
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'successRedirectVariationOptions']);
-		if (\has_filter($filterName)) {
-			$filterData = \apply_filters($filterName, []);
-
-			if ($filterData) {
-				$settings .= \__('This field has a code filter applied to it, and the following items will be applied to the output:', 'eightshift-forms');
-				$settings .= '<ul>';
-				foreach ($filterData as $value) {
-					$settings .= "<li><code>{$value[0]}</code> : <code>{$value[1]}</code></li>";
-				}
-				$settings .= '</ul>';
-				$filterUsed = true;
-			}
-		}
-
-		$data = [
-			...UtilsSettingsHelper::getOptionValueGroup(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
-			...$filterData,
-		];
-
-		return [
-			'settings' => self::getSettingsDivWrap($settings, $filterUsed, false),
-			'data' => $data,
-			'filterUsed' => $filterUsed,
-		];
-	}
-
-	/**
-	 * Return success redirect variations data filter output.
+	 * Return variations data filter output.
 	 *
 	 * @param string $type Type of integration.
 	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getSuccessRedirectVariationFilterValue(string $type, string $formId): array
+	public static function getVariationFilterValue(string $type, string $formId, array $formDetails): array
 	{
-		$settings = '';
-		$data = '';
+		$shouldAppend = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId);
+
+		// Find global settings per integration.
+		$data = UtilsSettingsHelper::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY);
+		if ($data) {
+			$data = \array_column($data, 1, 0);
+		}
+
 		$filterUsed = false;
 
-		$data = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+		// Find local settings for form.
+		$dataLocal = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_VARIATION_KEY, $formId);
+		if ($dataLocal) {
+			$dataLocal = \array_column($dataLocal, 1, 0);
+			$data = $shouldAppend ? \array_merge($data, $dataLocal) : $dataLocal;
+		}
 
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'successRedirectVariation']);
-		if (\has_filter($filterName)) {
-			$dataFilter = \apply_filters($filterName, $type, $formId);
+		// Get data from forms block.
+		$secureData = $formDetails[UtilsConfig::FD_SECURE_DATA] ?? [];
+		if ($secureData) {
+			$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true)['v'] ?? [];
+
+			if ($secureData) {
+				$secureData = \array_column($secureData, 1, 0);
+				$data = $shouldAppend ? \array_merge($data, $secureData) : $secureData;
+			}
+		}
+
+		// Find local settings per integration or filter data.
+		$filterNameLocal = UtilsHooksHelper::getFilterName(['block', 'form', 'variation']);
+		if (\has_filter($filterNameLocal)) {
+			$dataFilter = \apply_filters($filterNameLocal, [], $formDetails, $formId);
 
 			if ($dataFilter) {
-				$data = $dataFilter;
+				$dataFilter = \array_column($dataFilter, 1, 0);
+				$data = $shouldAppend ? \array_merge($data, $dataFilter) : $dataFilter;
 				$filterUsed = true;
 			}
 		}
 
 		return [
-			'settings' => self::getSettingsDivWrap($settings, $filterUsed),
 			'data' => $data,
+			'settingsGlobal' => self::getSettingsDivWrap(''),
+			'settingsLocal' => self::getSettingsDivWrap('', $filterUsed),
 			'filterUsed' => $filterUsed,
 		];
 	}
@@ -164,7 +153,7 @@ final class FiltersOuputMock
 		$data = $dataGlobal;
 
 		// Find local settings for form.
-		$dataLocal = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_REDIRECT_SUCCESS_KEY, $formId);
+		$dataLocal = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_URL_KEY, $formId);
 
 		if ($dataLocal) {
 			$data = $dataLocal;

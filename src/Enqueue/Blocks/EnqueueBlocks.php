@@ -20,6 +20,7 @@ use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
@@ -164,12 +165,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$additionalBlocksFilterName = UtilsHooksHelper::getFilterName(['blocks', 'additionalBlocks']);
 		$formsStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'styleOptions']);
+		$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
+		$formsUseLegacyTnxPageFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useLegacyTnxPageFeature']);
 		$fieldStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleOptions']);
 		$breakpointsFilterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
 		$formSelectorTemplatesFilterName = UtilsHooksHelper::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
+		$output['formsUseCustomResultOutputFeature'] = \apply_filters($formsUseCustomResultOutputFeatureFilterName, false);
+		$output['formsUseLegacyTnxPageFeature'] = \apply_filters($formsUseLegacyTnxPageFeatureFilterName, false);
 		$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
 		$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
 		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
@@ -180,8 +185,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			'forms' => Forms::POST_TYPE_SLUG,
 		];
 
+		// Legacy.
 		$output['settings'] = [
-			'successRedirectVariations' => FiltersOuputMock::getSuccessRedirectVariationOptionsFilterValue()['data'],
+			'successRedirectVariations' => UtilsSettingsHelper::getOptionValueGroup(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_OPTIONS_KEY),
 		];
 
 		$output['use'] = [
@@ -294,10 +300,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		);
 		$output['formDisableScrollToGlobalMessageOnSuccess'] = UtilsSettingsHelper::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
-			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
-		);
-		$output['formDisableNativeRedirectOnSuccess'] = UtilsSettingsHelper::isOptionCheckboxChecked(
-			SettingsSettings::SETTINGS_GENERAL_DISABLE_NATIVE_REDIRECT_ON_SUCCESS,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
 		$output['formDisableAutoInit'] = UtilsSettingsHelper::isOptionCheckboxChecked(

@@ -15,15 +15,11 @@
 			"formName": "Name",
 			"formAction": "Action",
 			"formMethod": "Method",
-			"formId": "Id",
-			"formSuccessRedirect": "Url"
+			"formId": "Id"
 		}
 	},
 	"attributes": {
 		"formContent": {
-			"type": "string"
-		},
-		"formConditionalTags": {
 			"type": "string"
 		},
 		"formName": {
@@ -47,28 +43,8 @@
 		"formId": {
 			"type": "string"
 		},
-		"formPostId": {
-			"type": "string"
-		},
-		"formHideGlobalMsgOnSuccess": {
-			"type": "boolean",
-			"default": false
-		},
-		"formHideFormOnSuccess": {
-			"type": "boolean",
-			"default": false
-		},
-		"formSuccessRedirect": {
-			"type": "string"
-		},
-		"formSuccessRedirectVariation": {
-			"type": "string"
-		},
-		"formSuccessRedirectVariationUrlTitle": {
-			"type": "string"
-		},
-		"formSuccessRedirectVariationUrl": {
-			"type": "string"
+		"formParentSettings": {
+			"type": "object"
 		},
 		"formPhoneSync": {
 			"type": "boolean",
@@ -78,22 +54,14 @@
 			"type": "boolean",
 			"default": false
 		},
-		"formTrackingEventName": {
-			"type": "string"
-		},
-		"formTrackingAdditionalData": {
-			"type": "string"
-		},
-		"formType": {
-			"type": "string"
-		},
-		"formDataTypeSelector": {
-			"type": "string"
+		"formSecureData": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
 		},
 		"formMeta": {
-			"type": "string"
-		},
-		"formCustomName": {
 			"type": "string"
 		},
 		"formAttrs": {
@@ -103,20 +71,9 @@
 			"type": "boolean",
 			"default": false
 		},
-		"formDisabledDefaultStyles": {
-			"type": "boolean",
-			"default": false
-		},
 		"formUseSingleSubmit": {
 			"type": "boolean",
 			"default": false
-		},
-		"formDownloads": {
-			"type": "array",
-			"items": {
-				"type": "object"
-			},
-			"default": []
 		}
 	},
 	"options": {

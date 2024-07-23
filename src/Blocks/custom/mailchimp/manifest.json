@@ -21,12 +21,6 @@
 		"mailchimpIntegrationId": {
 			"type": "string"
 		},
-		"mailchimpFormPostId": {
-			"type": "string"
-		},
-		"mailchimpFormDataTypeSelector": {
-			"type": "string"
-		},
 		"mailchimpAllowedBlocks": {
 			"type": "array",
 			"default": []

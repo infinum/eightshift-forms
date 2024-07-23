@@ -42,7 +42,7 @@ class ResultOutputItemShowForm implements ServiceInterface
 	{
 		$buttonComponent = '';
 
-		$filterNameComponentNext = UtilsHooksHelper::getFilterName(['block', 'form', 'component_show_form']);
+		$filterNameComponentNext = UtilsHooksHelper::getFilterName(['block', 'form', 'componentShowForm']);
 
 		if (\has_filter($filterNameComponentNext)) {
 			$buttonComponent = \apply_filters($filterNameComponentNext, [

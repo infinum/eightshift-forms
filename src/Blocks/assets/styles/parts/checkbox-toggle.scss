@@ -1,16 +1,16 @@
 @mixin checkbox-toggle-styles() {
 	$this: &;
 
-	&:last-child {
-		--es-checkbox-toggle-scoped-spacing: 0;
-	}
-
 	--es-checkbox-toggle-scoped-height: 1.2rem;
 	--es-checkbox-toggle-scoped-width: calc(var(--es-checkbox-toggle-scoped-height) * 2);
 	--es-checkbox-toggle-scoped-label-spacing: 10px;
 	--es-checkbox-toggle-scoped-dot-spacing: 0.1875rem;
 	--es-checkbox-toggle-scoped-dot-size: calc(var(--es-checkbox-toggle-scoped-height) - 2 * var(--es-checkbox-toggle-scoped-dot-spacing));
 	--es-checkbox-toggle-scoped-dot-hover: 0;
+
+	&:last-child {
+		--es-checkbox-toggle-scoped-spacing: 0;
+	}
 
 	&__input:focus-visible + &__label::before {
 		box-shadow: 0 0 0 3px var(--global-colors-esf-admin-accent-50);

@@ -21,12 +21,6 @@
 		"momentsIntegrationId": {
 			"type": "string"
 		},
-		"momentsFormPostId": {
-			"type": "string"
-		},
-		"momentsFormDataTypeSelector": {
-			"type": "string"
-		},
 		"momentsAllowedBlocks": {
 			"type": "array",
 			"default": []

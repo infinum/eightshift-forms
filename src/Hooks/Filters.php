@@ -68,24 +68,21 @@ final class Filters
 			'block' => [
 				'forms' => [
 					'styleOptions',
+					'useCustomResultOutputFeature',
+					'useLegacyTnxPageFeature',
 				],
 				'form' => [
 					'redirectionTimeout',
 					'hideGlobalMsgTimeout',
 					'successRedirectUrl',
-					'successRedirectVariation',
-					'successRedirectVariationOptions',
+					'variation',
 					'trackingEventName',
 					'trackingAdditionalData',
 					'dataTypeSelector',
 					'phoneSync',
 					'globalMsgHeadings',
 					'additionalContent',
-					'preResponseAddonData',
-					'preResponseSuccessRedirectData',
 					'additionalHiddenFields',
-					'resultOutputItems',
-					'resultOutputParts',
 					'customClassSelector',
 					'componentShowForm',
 				],
@@ -172,18 +169,21 @@ final class Filters
 			'integrations' => [
 				SettingsMailer::SETTINGS_TYPE_KEY => [
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsMailchimp::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsHubspot::SETTINGS_TYPE_KEY => [
 					'filesOptions',
@@ -191,18 +191,21 @@ final class Filters
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsMailerlite::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsGoodbits::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsClearbit::SETTINGS_TYPE_KEY => [
 					'map',
@@ -212,18 +215,21 @@ final class Filters
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsAirtable::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsMoments::SETTINGS_TYPE_KEY => [
 					'data',
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 					'prePostEventParams',
 					'prePostEventParamsAfter',
 				],
@@ -232,15 +238,19 @@ final class Filters
 					'order',
 					'prePostId',
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsJira::SETTINGS_TYPE_KEY => [
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsPipedrive::SETTINGS_TYPE_KEY => [
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 				SettingsCalculator::SETTINGS_TYPE_KEY => [
 					'prePostParams',
+					'beforeSuccessResponse',
 				],
 			],
 			'entries' => [
@@ -279,7 +289,7 @@ final class Filters
 				'twoToThreeGeneral',
 				'twoToThreeForms',
 				'twoToThreeLocale',
-			]
+			],
 		];
 	}
 

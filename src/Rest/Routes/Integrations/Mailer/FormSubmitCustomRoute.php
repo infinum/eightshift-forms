@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Entries\EntriesHelper;
-use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -82,12 +80,6 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		$action = $formDetails[UtilsConfig::FD_ACTION];
 		$actionExternal = $formDetails[UtilsConfig::FD_ACTION_EXTERNAL];
 
-		// Save entries.
-		if (\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-			$formDetails[UtilsConfig::FD_ENTRY_ID] = $entryId ? (string) $entryId : '';
-		}
-
 		$debug = [
 			'formDetails' => $formDetails,
 		];
@@ -108,7 +100,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					[
-						'processExternaly' => true,
+						UtilsHelper::getStateResponseOutputKey('processExternally') => true,
 					],
 					$debug
 				)
@@ -116,10 +108,12 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		}
 
 		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'customPrePostParams']);
 		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
+			$formDetails[UtilsConfig::FD_PARAMS] = \apply_filters($filterName, $params, $formId) ?? [];
 		}
+
+		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Prepare params for output.
 		$params = UtilsGeneralHelper::prepareGenericParamsOutput($params);
@@ -142,31 +136,20 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorPublicOutput(
 					$this->labels->getLabel('customError', $formId),
-					[],
+					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 					$debug
 				)
 			);
-		}
-
-		$additionalOutput = [];
-
-		// Output result output items as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputItems']);
-		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputItems')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
-		}
-
-		// Output result output parts as a response key.
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'resultOutputParts']);
-		if (\has_filter($filterName)) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('resultOutputParts')] = \apply_filters($filterName, [], $formDetails, $formId) ?? [];
 		}
 
 		// Finish.
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				$this->labels->getLabel('customSuccess', $formId),
-				$additionalOutput,
+				\array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['additional']
+				),
 				$debug
 			)
 		);

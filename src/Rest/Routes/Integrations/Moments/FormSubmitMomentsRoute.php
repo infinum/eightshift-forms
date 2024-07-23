@@ -110,9 +110,6 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
 
-		// Send event if needed.
-		$this->sendEvent($formDetails);
-
 		// Finish.
 		return \rest_ensure_response(
 			$this->getIntegrationCommonSubmitAction($formDetails)
@@ -120,13 +117,27 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	}
 
 	/**
-	 * Send event to Moments if needed.
+	 * Call integration response success callback.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
 	 *
 	 * @return void
 	 */
-	private function sendEvent(array $formDetails): void
+	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
+	{
+		$this->sendEvent($formDetails, $successAdditionalData);
+	}
+
+	/**
+	 * Send event to Moments if needed.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 *
+	 * @return void
+	 */
+	private function sendEvent(array $formDetails, array $successAdditionalData): void
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';

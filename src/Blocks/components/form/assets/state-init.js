@@ -2,7 +2,6 @@
 
 import globalManifest from '../../../manifest.json';
 import utilsManifest from '../../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
-import { CONDITIONAL_TAGS_ACTIONS } from '../../conditional-tags/assets/utils';
 
 ////////////////////////////////////////////////////////////////
 // Constants
@@ -24,6 +23,7 @@ export const StateEnum = {
 	METHOD: 'method',
 	ACTION: 'action',
 	ACTION_EXTERNAL: 'actionExternal',
+	SECURE_DATA: 'secureData',
 	FIELD: 'field',
 	RANGE_CURRENT: 'rangeCurrent',
 	VALUE: 'value',
@@ -50,7 +50,6 @@ export const StateEnum = {
 	ELEMENT: 'element',
 	HEADING_SUCCESS: 'headingSuccess',
 	HEADING_ERROR: 'headingError',
-	HIDE_ON_SUCCESS: 'hideOnSuccess',
 	IS_ADMIN_SINGLE_SUBMIT: 'isAdminSingleSubmit',
 	SAVE_AS_JSON: 'saveAsJson',
 	IS_ADMIN: 'isAdmin',
@@ -79,16 +78,12 @@ export const StateEnum = {
 	CONFIG_SELECT_USE_MULTIPLE: 'useMultiple',
 	CONFIG_PHONE_DISABLE_PICKER: 'disablePhoneCountryPicker',
 	CONFIG_PHONE_USE_PHONE_SYNC: 'usePhoneSync',
-	CONFIG_SUCCESS_REDIRECT: 'successRedirect',
-	CONFIG_SUCCESS_REDIRECT_VARIATION: 'successRedirectVariation',
-	CONFIG_SUCCESS_REDIRECT_DOWNLOADS: 'successRedirectDownloads',
 	CONFIG_USE_SINGLE_SUBMIT: 'useSingleSubmit',
 
 	SETTINGS: 'settings',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
 	SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR: 'disableScrollToFieldOnError',
 	SETTINGS_FORM_RESET_ON_SUCCESS: 'formResetOnSuccess',
-	SETTINGS_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS: 'formDisableNativeRedirectOnSuccess',
 	SETTINGS_REDIRECTION_TIMEOUT: 'redirectionTimeout',
 	SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT: 'hideGlobalMessageTimeout',
 	SETTINGS_FILE_REMOVE_LABEL: 'fileRemoveLabel',
@@ -114,8 +109,6 @@ export const StateEnum = {
 	GEOLOCATION: 'geolocation',
 
 	TRACKING: 'tracking',
-	TRACKING_EVENT_NAME: 'eventName',
-	TRACKING_EVENT_ADDITIONAL_DATA: 'eventAdditionalData',
 
 	STEPS: 'steps',
 	STEPS_FLOW: 'flow',
@@ -246,7 +239,6 @@ export function setStateInitial() {
 	setState([StateEnum.SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS], Boolean(esFormsLocalization.formDisableScrollToGlobalMessageOnSuccess), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR], Boolean(esFormsLocalization.formDisableScrollToFieldOnError), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_RESET_ON_SUCCESS], Boolean(esFormsLocalization.formResetOnSuccess), StateEnum.SETTINGS);
-	setState([StateEnum.SETTINGS_FORM_DISABLE_NATIVE_REDIRECT_ON_SUCCESS], Boolean(esFormsLocalization.formDisableNativeRedirectOnSuccess), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_REDIRECTION_TIMEOUT], esFormsLocalization.redirectionTimeout ?? 600, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT], esFormsLocalization.hideGlobalMessageTimeout ?? 6000, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FILE_REMOVE_LABEL], esFormsLocalization.fileRemoveLabel ?? '', StateEnum.SETTINGS);
@@ -324,21 +316,16 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.METHOD], formElement?.getAttribute('method'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION], formElement?.getAttribute('action'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formElement?.getAttribute(getStateAttribute('actionExternal')), formId);
+	setState([StateEnum.FORM, StateEnum.SECURE_DATA], formElement?.getAttribute(getStateAttribute('formSecureData')), formId);
 	setState([StateEnum.FORM, StateEnum.TYPE_SETTINGS], formElement?.getAttribute(getStateAttribute('settingsType')), formId);
 	setState([StateEnum.FORM, StateEnum.LOADER], formElement?.querySelector(getStateSelector('loader', true)), formId);
-	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_NAME], formElement?.getAttribute(getStateAttribute('trackingEventName')), formId);
-	setState([StateEnum.FORM, StateEnum.TRACKING, StateEnum.TRACKING_EVENT_ADDITIONAL_DATA], JSON.parse(formElement?.getAttribute(getStateAttribute('trackingAdditionalData')) ?? '{}'), formId);
 
 	// Form settings
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement?.getAttribute(getStateAttribute('phoneDisablePicker'))), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement?.getAttribute(getStateAttribute('phoneSync'))), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT], formElement?.getAttribute(getStateAttribute('successRedirect')), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_VARIATION], formElement?.getAttribute(getStateAttribute('successRedirectVariation')), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_SUCCESS_REDIRECT_DOWNLOADS], JSON.parse(formElement?.getAttribute(getStateAttribute('successRedirectDownloads')) ?? '{}'), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_USE_SINGLE_SUBMIT], Boolean(formElement?.getAttribute(getStateAttribute('singleSubmit'))), formId);
 
 	const globalMsg = formElement?.querySelector(getStateSelector('globalMsg', true));
-	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HIDE_ON_SUCCESS], Boolean(formElement?.getAttribute(getStateAttribute('globalMsgHideOnSuccess'))), formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.ELEMENT], globalMsg, formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_SUCCESS], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingSuccess')), formId);
 	setState([StateEnum.FORM, StateEnum.GLOBAL_MSG, StateEnum.HEADING_ERROR], globalMsg?.getAttribute(getStateAttribute('globalMsgHeadingError')), formId);
@@ -803,7 +790,7 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 
 	const parentStorage = isNoneFormBlock ? StateEnum.ELEMENTS_FIELDS : StateEnum.ELEMENTS;
 
-	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], CONDITIONAL_TAGS_ACTIONS.SHOW, formId);
+	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_DEFAULTS], globalManifest.comparatorActions.SHOW, formId);
 	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS], [], formId);
 	setState([parentStorage, name, StateEnum.CONDITIONAL_TAGS, StateEnum.TAGS_REF], [], formId);
 
@@ -847,7 +834,7 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 		return;
 	}
 
-	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], CONDITIONAL_TAGS_ACTIONS.SHOW, formId);
+	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_DEFAULTS], globalManifest.comparatorActions.SHOW, formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS], [], formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.CONDITIONAL_TAGS_INNER, innerName, StateEnum.TAGS_REF], [], formId);
 

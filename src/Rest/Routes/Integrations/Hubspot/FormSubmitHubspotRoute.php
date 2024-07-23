@@ -114,11 +114,21 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction(
-				$formDetails,
-				$this->runClearbit($formDetails) // @phpstan-ignore-line
-			)
+			$this->getIntegrationCommonSubmitAction($formDetails)
 		);
+	}
+
+	/**
+	 * Call integration response success callback.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 *
+	 * @return void
+	 */
+	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
+	{
+		$this->runClearbit($formDetails);
 	}
 
 	/**

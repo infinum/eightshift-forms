@@ -30,7 +30,6 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_form_hide_global_msg_timeout' => ['getBlockFormHideGlobalMsgTimeout'],
 			'es_forms_block_form_success_redirect_url' => ['getBlockFormSuccessRedirectUrl', 2],
 			'es_forms_block_form_success_redirect_variation' => ['getBlockFormSuccessRedirectVariation', 2],
-			'es_forms_block_form_success_redirect_variation_options' => ['getBlockFormSuccessRedirectVariationOptions'],
 			'es_forms_block_form_tracking_event_name' => ['getBlockFormTrackingEventName', 2],
 			'es_forms_block_form_tracking_additional_data' => ['getBlockFormTrackingAdditionalData', 2],
 			'es_forms_block_form_data_type_selector' => ['getFormDataTypeSelector', 2],

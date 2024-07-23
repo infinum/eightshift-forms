@@ -4,8 +4,8 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { __, sprintf } from '@wordpress/i18n';
-import { MediaPlaceholder } from '@wordpress/block-editor';
 import { select } from '@wordpress/data';
+import { MediaPlaceholder } from '@wordpress/block-editor';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import {
@@ -16,21 +16,25 @@ import {
 	props,
 	AsyncSelect,
 	MultiSelect,
-	Select,
 	IconToggle,
 	Control,
 	Section,
-	truncateMiddle,
-	Collapsable,
 	STORE_NAME,
+	Collapsable,
+	Select,
+	truncateMiddle,
+	Repeater,
+	RepeaterItem,
+	LinkInput,
+	Toggle,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import {
 	FormEditButton,
 	LocationsButton,
 	SettingsButton,
-	getSettingsJsonOptions,
 	outputFormSelectItemWithIcon,
+	getSettingsJsonOptions,
 } from '../../../components/utils';
 import { getRestUrl } from '../../../components/form/assets/state-init';
 
@@ -59,12 +63,18 @@ export const FormsOptions = ({
 	const formsFormDataTypeSelector = checkAttr('formsFormDataTypeSelector', attributes, manifest);
 	const formsFormGeolocation = checkAttr('formsFormGeolocation', attributes, manifest);
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
+	const formsVariation = checkAttr('formsVariation', attributes, manifest);
+	const formsVariationData = checkAttr('formsVariationData', attributes, manifest);
+	const formsVariationDataFiles = checkAttr('formsVariationDataFiles', attributes, manifest);
+
+	// Legacy.
 	const formsDownloads = checkAttr('formsDownloads', attributes, manifest);
 	const formsSuccessRedirectVariation = checkAttr('formsSuccessRedirectVariation', attributes, manifest);
 	const formsSuccessRedirectVariationUrl = checkAttr('formsSuccessRedirectVariationUrl', attributes, manifest);
 	const formsSuccessRedirectVariationUrlTitle = checkAttr('formsSuccessRedirectVariationUrlTitle', attributes, manifest);
 
 	const [isGeoModalOpen, setIsGeoModalOpen] = useState(false);
+	const [isResultOutputModalOpen, setIsResultOutputModalOpen] = useState(false);
 	const [geoFormFields, setGeoFormFields] = useState([]);
 
 	useEffect(() => {
@@ -79,18 +89,32 @@ export const FormsOptions = ({
 
 	let formsStyleOptions = [];
 	let formsUseGeolocation = false;
+	let formsUseCustomResultOutputFeature = false;
+	let formsUseLegacyTnxPageFeature = false;
 	let geolocationApi = '';
 
-	// Custom block forms style options.
-	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.formsBlockStyleOptions)) {
-		formsStyleOptions = esFormsLocalization.formsBlockStyleOptions;
-	}
+	if (typeof esFormsLocalization !== 'undefined') {
+		// Custom block forms style options.
+		if (isArray(esFormsLocalization?.formsBlockStyleOptions)) {
+			formsStyleOptions = esFormsLocalization.formsBlockStyleOptions;
+		}
 
-	// Is geolocation active.
-	if (typeof esFormsLocalization !== 'undefined' && esFormsLocalization?.use?.geolocation) {
-		formsUseGeolocation = true;
+		// Use custom result output feature.
+		if (esFormsLocalization?.formsUseCustomResultOutputFeature) {
+			formsUseCustomResultOutputFeature = esFormsLocalization.formsUseCustomResultOutputFeature;
+		}
 
-		geolocationApi = getRestUrl('countriesGeolocation');
+		// Use custom result output feature.
+		if (esFormsLocalization?.formsUseLegacyTnxPageFeature) {
+			formsUseLegacyTnxPageFeature = esFormsLocalization.formsUseLegacyTnxPageFeature;
+		}
+
+		// Is geolocation active.
+		if (esFormsLocalization?.use?.geolocation) {
+			formsUseGeolocation = true;
+
+			geolocationApi = getRestUrl('countriesGeolocation');
+		}
 	}
 
 	return (
@@ -145,121 +169,226 @@ export const FormsOptions = ({
 				}
 			</PanelBody>
 
-			<PanelBody title={__('"Thank you" page', 'eightshift-forms')} initialOpen={true}>
-				<Select
+			<PanelBody title={__('Results output', 'eightshift-forms')} initialOpen={true}>
+				<Repeater
+					noReordering
 					icon={icons.paletteColor}
-					label={__('Variant', 'eightshift-forms')}
-					value={formsSuccessRedirectVariation}
-					options={getSettingsJsonOptions(successRedirectVariations)}
-					onChange={(value) => {
-						setAttributes({ [getAttrKey('formsSuccessRedirectVariation', attributes, manifest)]: value });
-					}}
-					additionalSelectClasses='es-w-36'
-					simpleValue
-					inlineLabel
-					clearable
-				/>
-
-				<Collapsable
-					icon={icons.fileDownload}
-					label={__('Enrichment', 'eightshift-forms')}
-					subtitle={formsDownloads?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), formsDownloads?.length)}
-					noBottomSpacing
+					label={__('Variation', 'eightshift-forms')}
+					items={formsVariation}
+					attributeName={getAttrKey('formsVariation', attributes, manifest)}
+					setAttributes={setAttributes}
 				>
+					{formsVariation.map((item, index) => (
+						<RepeaterItem
+							key={index}
+							icon={icons.paletteColor}
+							title={item?.title}
+						>
+							<div className='es-fifty-fifty-h'>
+								<TextControl
+									value={item.title}
+									label={__('Key', 'eightshift-forms')}
+									onChange={(value) => {
+										const newArray = [...formsVariation];
+										newArray[index].title = value;
+
+										setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
+									}}
+								/>
+								<TextControl
+									value={item.slug}
+									label={__('Value', 'eightshift-forms')}
+									onChange={(value) => {
+										const newArray = [...formsVariation];
+										newArray[index].slug = value;
+
+										setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
+									}}
+								/>
+							</div>
+						</RepeaterItem>
+					))}
+				</Repeater>
+
+				{formsUseCustomResultOutputFeature &&
 					<>
-						<TextControl
-							label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
-							help={__('Additional internal/external url that will be passed to the "Thank you" page.', 'eightshift-forms')}
-							value={formsSuccessRedirectVariationUrl}
-							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
-						/>
-						<TextControl
-							label={<IconLabel icon={icons.anchor} label={__('Url title', 'eightshift-forms')} />}
-							help={__('Additional internal/external url title that will be passed to the "Thank you" page.', 'eightshift-forms')}
-							value={formsSuccessRedirectVariationUrlTitle}
-							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrlTitle', attributes, manifest)]: value })}
-						/>
-						<Control reducedBottomSpacing={formsDownloads?.length > 0} noBottomSpacing={formsDownloads?.length < 1}>
-							<MediaPlaceholder
-								icon={icons.image}
-								multiple
-								onSelect={(value) => {
-									const items = value.map((item) => {
-										const mimeType = item?.mime_type ?? item?.mime ?? '';
+						<Button
+							variant='secondary'
+							onClick={() => setIsResultOutputModalOpen(true)}
+							className='es-rounded-1.5 es-font-weight-500'
+						>
+							{__('Edit custom result output', 'eightshift-forms')}
+						</Button>
 
-										return {
-											title: item?.filename ?? item?.slug ?? 'UNKNOWN',
-											id: item.id,
-											isImage: mimeType?.startsWith('image/'),
-											condition: 'all',
-											fileTitle: '',
-										};
-									});
-									setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
-								}}
-							/>
-						</Control>
+						{isResultOutputModalOpen && (
+							<Modal
+								size='large'
+								overlayClassName='es-result-output-modal'
+								className='es-modal-max-width-xxl es-rounded-3!'
+								title={<IconLabel icon={icons.locationSettings} label={__('Results output', 'eightshift-forms')} standalone />}
+								onRequestClose={() => setIsResultOutputModalOpen(false)}
+							>
+								<TextControl
+									value={formsVariationData?.title}
+									label={__('Title', 'eightshift-forms')}
+									onChange={(value) => {
+										const newArray = {...formsVariationData};
+										newArray.title = value;
 
-						{formsDownloads.length > 0 &&
-							<>
-								<div className='es-text-3 es-color-cool-gray-450 es-mb-5'>
-									{__('Add conditional tag to limit the usage of this file. Example: "field_name=field_value".', 'eightshift-forms')}
-								</div>
+										setAttributes({ [getAttrKey('formsVariationData', attributes, manifest)]: newArray });
+									}}
+								/>
 
-								{formsDownloads.map((item, index) => {
-									return (
-										<>
-											<Control
-												key={index}
-												icon={item?.isImage ? icons.image : icons.file}
-												label={truncateMiddle(item.title, 28)}
-												noBottomSpacing
-												additionalClasses={'es-border-t-cool-gray-300 es-mt-4 es-pt-4'}
-												actions={
-													<Button
-														onClick={() => {
-															delete formsDownloads[index];
-															const item = formsDownloads.filter((_, i) => i !== index);
-															setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
-														}}
-														icon={icons.trash}
-														className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
-													/>
-												}
-											>
+								<TextControl
+									value={formsVariationData?.subtitle}
+									label={__('Subtitle', 'eightshift-forms')}
+									onChange={(value) => {
+										const newArray = {...formsVariationData};
+										newArray.subtitle = value;
+
+										setAttributes({ [getAttrKey('formsVariationData', attributes, manifest)]: newArray });
+									}}
+								/>
+
+								<Repeater
+									noReordering
+									icon={icons.emptyCircle}
+									label={__('Add a new item', 'eightshift-forms')}
+									items={formsVariationDataFiles}
+									attributeName={getAttrKey('formsVariationDataFiles', attributes, manifest)}
+									setAttributes={setAttributes}
+									additionalClasses='es-border-t-cool-gray-300 es-mt-4 es-pt-4'
+								>
+									{formsVariationDataFiles.map((item, index) => (
+										<RepeaterItem
+											key={index}
+											icon={icons.emptyCircle}
+											title={item?.title}
+										>
+											<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-fifty-fifty-h'>
 												<TextControl
-													label={__('Conditional fields', 'eightshift-forms')}
-													value={item?.condition}
+													value={item.title}
+													label={__('Title', 'eightshift-forms')}
 													onChange={(value) => {
-														formsDownloads[index].condition = value;
-														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].title = value;
+
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+													}}
+												/>
+
+												<TextControl
+													value={item.label}
+													label={__('Label', 'eightshift-forms')}
+													onChange={(value) => {
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].label = value;
+
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+													}}
+												/>
+											</div>
+
+											<Toggle
+												value={item.url}
+												checked={item.asFile}
+												label={__('Use this item as a file or as a link', 'eightshift-forms')}
+												reducedBottomSpacing
+												onChange={(value) => {
+													const newArray = [...formsVariationDataFiles];
+													newArray[index].asFile = value;
+
+													if (value) {
+														delete newArray[index].url;
+													} else {
+														delete newArray[index].file;
+													}
+
+													setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+												}}
+											/>
+
+											{!formsVariationDataFiles[index].asFile &&
+												<LinkInput
+													value={item.url}
+													hideOpensInNewTab
+													onChange={({ url }) => {
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].url = url;
+
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+													}}
+												/>
+											}
+
+											{formsVariationDataFiles[index].asFile && (
+												<>
+													{!formsVariationDataFiles[index].file && (
+														<MediaPlaceholder
+															icon={icons.image}
+															onSelect={(value) => {
+																const newArray = [...formsVariationDataFiles];
+																newArray[index].file = {
+																	id: value.id,
+																	title: value.title,
+																	url: value.url,
+																};
+
+																setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+															}}
+														/>
+													)}
+
+													{formsVariationDataFiles[index]?.file && (
+														<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-h-between'>
+															<div className='es-h-between'>
+																{icons.file}
+																{formsVariationDataFiles[index]?.file?.title}
+															</div>
+															<Button
+																	onClick={() => {
+																		const newArray = [...formsVariationDataFiles];
+																		delete newArray[index]?.file;
+																		setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+																	}}
+																	icon={icons.trash}
+																	className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
+																/>
+														</div>
+													)}
+												</>
+											)}
+
+											<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-fifty-fifty-h'>
+												<TextControl
+													value={item.fieldName}
+													label={__('Field Name', 'eightshift-forms')}
+													onChange={(value) => {
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].fieldName = value;
+	
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
 													}}
 												/>
 												<TextControl
-													label={__('File title', 'eightshift-forms')}
-													value={item?.fileTitle}
+													value={item.fieldValue}
+													label={__('Field Value', 'eightshift-forms')}
 													onChange={(value) => {
-														formsDownloads[index].fileTitle = value;
-														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].fieldValue = value;
+	
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
 													}}
 												/>
-											</Control>
-										</>
-									);
-								})}
-							</>
-
-						}
+											</div>
+										</RepeaterItem>
+									))}
+								</Repeater>
+							</Modal>
+						)}
 					</>
-				</Collapsable>
+				}
 			</PanelBody>
-
-			<ConditionalTagsFormsOptions
-				{...props('conditionalTags', attributes, {
-					setAttributes,
-					conditionalTagsPostId: formsFormPostId,
-				})}
-			/>
 
 			{formsUseGeolocation &&
 				<PanelBody title={__('Geolocation', 'eightshift-forms')} initialOpen={false}>
@@ -398,6 +527,121 @@ export const FormsOptions = ({
 							</div>
 						</Modal>
 					)}
+				</PanelBody>
+			}
+
+			<ConditionalTagsFormsOptions
+				{...props('conditionalTags', attributes, {
+					setAttributes,
+					conditionalTagsPostId: formsFormPostId,
+				})}
+			/>
+
+			{formsUseLegacyTnxPageFeature &&
+				<PanelBody title={__('"Thank you" page - Legacy', 'eightshift-forms')} initialOpen={true}>
+					<Select
+						icon={icons.paletteColor}
+						label={__('Variant', 'eightshift-forms')}
+						value={formsSuccessRedirectVariation}
+						options={getSettingsJsonOptions(successRedirectVariations)}
+						onChange={(value) => {
+							setAttributes({ [getAttrKey('formsSuccessRedirectVariation', attributes, manifest)]: value });
+						}}
+						additionalSelectClasses='es-w-36'
+						simpleValue
+						inlineLabel
+						clearable
+					/>
+
+					<Collapsable
+						icon={icons.fileDownload}
+						label={__('Enrichment', 'eightshift-forms')}
+						subtitle={formsDownloads?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), formsDownloads?.length)}
+						noBottomSpacing
+					>
+						<TextControl
+							label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
+							help={__('Additional internal/external URL that will be passed to the "Thank you" page.', 'eightshift-forms')}
+							value={formsSuccessRedirectVariationUrl}
+							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
+						/>
+						<TextControl
+							label={<IconLabel icon={icons.anchor} label={__('Url title', 'eightshift-forms')} />}
+							help={__('Additional internal/external URL title that will be passed to the "Thank you" page.', 'eightshift-forms')}
+							value={formsSuccessRedirectVariationUrlTitle}
+							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrlTitle', attributes, manifest)]: value })}
+						/>
+						<Control reducedBottomSpacing={formsDownloads?.length > 0} noBottomSpacing={formsDownloads?.length < 1}>
+							<MediaPlaceholder
+								icon={icons.image}
+								multiple
+								onSelect={(value) => {
+									const items = value.map((item) => {
+										const mimeType = item?.mime_type ?? item?.mime ?? '';
+
+										return {
+											title: item?.filename ?? item?.slug ?? 'UNKNOWN',
+											id: item.id,
+											isImage: mimeType?.startsWith('image/'),
+											condition: 'all',
+											fileTitle: '',
+										};
+									});
+									setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads, ...items] });
+								}}
+							/>
+						</Control>
+
+						{formsDownloads.length > 0 &&
+							<>
+								<div className='es-text-3 es-color-cool-gray-450 es-mb-5'>
+									{__('Add conditional tag to limit the usage of this file. Example: "field_name=field_value".', 'eightshift-forms')}
+								</div>
+
+								{formsDownloads.map((item, index) => {
+									return (
+										<>
+											<Control
+												key={index}
+												icon={item?.isImage ? icons.image : icons.file}
+												label={truncateMiddle(item.title, 28)}
+												noBottomSpacing
+												additionalClasses={'es-border-t-cool-gray-300 es-mt-4 es-pt-4'}
+												actions={
+													<Button
+														onClick={() => {
+															delete formsDownloads[index];
+															const item = formsDownloads.filter((_, i) => i !== index);
+															setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: item });
+														}}
+														icon={icons.trash}
+														className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
+													/>
+												}
+											>
+												<TextControl
+													label={__('Conditional fields', 'eightshift-forms')}
+													value={item?.condition}
+													onChange={(value) => {
+														formsDownloads[index].condition = value;
+														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
+													}}
+												/>
+												<TextControl
+													label={__('File title', 'eightshift-forms')}
+													value={item?.fileTitle}
+													onChange={(value) => {
+														formsDownloads[index].fileTitle = value;
+														setAttributes({ [getAttrKey('formsDownloads', attributes, manifest)]: [...formsDownloads] });
+													}}
+												/>
+											</Control>
+										</>
+									);
+								})}
+							</>
+						}
+					</Collapsable>
 				</PanelBody>
 			}
 		</>

@@ -4,10 +4,38 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.0]
+
+### Added
+- Result output now supports single view and has link in the admin listing.
+- Result output item now supports fetching data from encrypted URL.
+- New filter `beforeSuccessResponse` for the forms.
+- New variations setting and way of handing form data submission.
+- Form fallback debug settings now supports original data and request url in the email.
+- New email response keys `mailerSuccessRedirectUrl`, `mailerEntryId`, `mailerEntryUrl` that can be used in any email.
+- New `esFormsROISF` shortcode that can be used inside the result output item to show the form again.
+- Feature to hide form after submission.
+
+### Removed
+- Multiple filter not in use anymore: `successRedirectVariation`, `successRedirectVariationOptions`, `preResponseAddonData`, `preResponseSuccessRedirectData`, `resultOutputItems`, `resultOutputParts`.
+
+### Changed
+- Conditional tags logic is now transferred to utils so it can be used in other features.
+- Forms specific settings that should be available only after form is submitted is not fetched on the form success submission and not hardcoded in the DOM.
+- Result output is now styled with the new design for better UX.
+- Result output now supports comparator for the conditional logic.
+- Form submission is now handled with new and optimized way of handling data and multiple features.
+- `esFormsROIP` shortcode now supports variation data submission.
+
+### Fixed
+- Entries listing is no longer breaking if the value is to long.
+- Stylelint errors from the new setup.
+- All form fields are now additionally checked for correct data structure on submission.
+
 ## [4.0.7]
 
 ### Fixed
-- removed unnecessary fallback email fallback.
+- removed unnecessary email fallback.
 
 ## [4.0.6]
 
@@ -16,7 +44,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - result output item now supports conditional logic with both single and duplicate values.
 
 ### Added
-- email fallbacks now supports request IP sent from the server, the data is anonymized.
+- email fallback now supports request IP sent from the server, the data is anonymized.
 - new form setting that will hide form once it is submitted with success.
 - new `esFormsROISF` shortcode that can be used inside the result output item to show the form again.
 
@@ -466,6 +494,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.0.0]: https://github.com/infinum/eightshift-forms/compare/4.0.7...5.0.0
 [4.0.7]: https://github.com/infinum/eightshift-forms/compare/4.0.6...4.0.7
 [4.0.6]: https://github.com/infinum/eightshift-forms/compare/4.0.5...4.0.6
 [4.0.5]: https://github.com/infinum/eightshift-forms/compare/4.0.4...4.0.5

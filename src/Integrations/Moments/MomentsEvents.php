@@ -88,8 +88,12 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params, string $eventName, array $map, string $formId): array
-	{
+	private function prepareParams(
+		array $params,
+		string $eventName,
+		array $map,
+		string $formId
+	): array {
 		// Prepare output.
 		$output = [
 			'definitionId' => $eventName,

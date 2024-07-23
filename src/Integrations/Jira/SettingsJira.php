@@ -15,9 +15,8 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -25,7 +24,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsJira class.
  */
-class SettingsJira implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -379,7 +378,6 @@ class SettingsJira implements UtilsSettingGlobalInterface, UtilsSettingInterface
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue(self::SETTINGS_TYPE_KEY, '');
 		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
 
 		return [
@@ -484,19 +482,7 @@ class SettingsJira implements UtilsSettingGlobalInterface, UtilsSettingInterface
 						'component' => 'tab',
 						'tabLabel' => \__('Options', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TYPE_KEY . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
-								'inputFieldLabel' => \__('After submit redirect URL', 'eightshift-forms'),
-								// translators: %s will be replaced with forms field name and filter output copy.
-								'inputFieldHelp' => \sprintf(\__('
-									If URL is provided, after a successful submission the user is redirected to the provided URL and the success message will <strong>not</strong> show.
-									<br />
-									%s', 'eightshift-forms'), $successRedirectUrl['settingsGlobal']),
-								'inputType' => 'url',
-								'inputIsUrl' => true,
-								'inputValue' => $successRedirectUrl['dataGlobal'],
-							],
+							...$this->getGlobalGeneralSettings(self::SETTINGS_TYPE_KEY),
 							[
 								'component' => 'input',
 								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
