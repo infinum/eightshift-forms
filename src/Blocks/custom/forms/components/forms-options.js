@@ -561,7 +561,7 @@ export const FormsOptions = ({
 					>
 						<TextControl
 							label={<IconLabel icon={icons.anchor} label={__('Url', 'eightshift-forms')} />}
-							help={__('Additional internal/external url that will be passed to the "Thank you" page.', 'eightshift-forms')}
+							help={__('Additional internal/external URL that will be passed to the "Thank you" page.', 'eightshift-forms')}
 							value={formsSuccessRedirectVariationUrl}
 							onChange={(value) => setAttributes({ [getAttrKey('formsSuccessRedirectVariationUrl', attributes, manifest)]: value })}
 						/>
