@@ -507,7 +507,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 			// Redirect secrue data.
 			if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
-				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true);
+				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true);
 
 				// Legacy data.
 				if (isset($secureData['l'])) {
@@ -517,7 +517,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				// Redirect custom result output feature.
 				$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
 				if (\apply_filters($formsUseCustomResultOutputFeatureFilterName, false)) {
-					$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('customResultOutput')] = $this->processCustomResultOutputData($secureData, $formDetails[UtilsConfig::FD_PARAMS_RAW]);
+					$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('customResultOutput')] = $this->processCustomResultOutputData($secureData, $formDetails);
 				}
 			} else {
 				// Legacy data.
@@ -805,12 +805,16 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * Process custom result output data.
 	 *
 	 * @param array<string, mixed> $data Data from secure data.
-	 * @param array<string, mixed> $params Raw params.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function processCustomResultOutputData(array $data, array $params): array
+	private function processCustomResultOutputData(array $data, array $formDetails): array
 	{
+		$params = $formDetails[UtilsConfig::FD_PARAMS_RAW] ?? [];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+
 		$output = [];
 
 		// Output title.
@@ -847,6 +851,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			}
 
 			$output['d'] = $outputFiles;
+		}
+
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', $type, 'afterCustomResultOutputProcess']);
+		if (\has_filter($filterName)) {
+			return \apply_filters($filterName, $output, $formDetails, $formId);
 		}
 
 		return $output;

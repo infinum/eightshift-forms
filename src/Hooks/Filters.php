@@ -170,6 +170,7 @@ final class Filters
 				SettingsMailer::SETTINGS_TYPE_KEY => [
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsMailchimp::SETTINGS_TYPE_KEY => [
 					'data',
@@ -177,6 +178,7 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 					'data',
@@ -184,6 +186,7 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsHubspot::SETTINGS_TYPE_KEY => [
 					'filesOptions',
@@ -192,6 +195,7 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsMailerlite::SETTINGS_TYPE_KEY => [
 					'data',
@@ -199,6 +203,7 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsGoodbits::SETTINGS_TYPE_KEY => [
 					'data',
@@ -206,6 +211,7 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsClearbit::SETTINGS_TYPE_KEY => [
 					'map',
@@ -216,6 +222,7 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsAirtable::SETTINGS_TYPE_KEY => [
 					'data',
@@ -223,6 +230,7 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsMoments::SETTINGS_TYPE_KEY => [
 					'data',
@@ -230,6 +238,7 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 					'prePostEventParams',
 					'prePostEventParamsAfter',
 				],
@@ -239,18 +248,22 @@ final class Filters
 					'prePostId',
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsJira::SETTINGS_TYPE_KEY => [
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsPipedrive::SETTINGS_TYPE_KEY => [
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 				SettingsCalculator::SETTINGS_TYPE_KEY => [
 					'prePostParams',
 					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
 				],
 			],
 			'entries' => [

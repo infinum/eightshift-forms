@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.2]
+
+### Added
+
+- new integration filter `afterCustomResultOutputProcess`.
+
+### Changed
+
+- Removing copy for result output setting.
+
+### Fixed
+
+- JSON decode issue with the result output setting.
+
 ## [5.0.1]
 
 ### Changed
@@ -583,6 +597,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.0.1]: https://github.com/infinum/eightshift-forms/compare/5.0.1...5.0.2
 [5.0.1]: https://github.com/infinum/eightshift-forms/compare/5.0.0...5.0.1
 [5.0.0]: https://github.com/infinum/eightshift-forms/compare/4.0.7...5.0.0
 [4.0.7]: https://github.com/infinum/eightshift-forms/compare/4.0.6...4.0.7

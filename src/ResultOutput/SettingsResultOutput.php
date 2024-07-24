@@ -108,7 +108,7 @@ class SettingsResultOutput implements UtilsSettingGlobalInterface, ServiceInterf
 								'component' => 'input',
 								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_GLOBAL_URL_PREFIX_KEY),
 								'inputFieldLabel' => \__('Global URL prefix', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Define a global prefix for all the result output URLs. If you set this value with "/" your result outputs will not have a prefix but be careful as the created outputs can collide with other pages.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define a global prefix for all the result output URLs.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputPlaceholder' => Result::POST_TYPE_URL_SLUG,
 								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_GLOBAL_URL_PREFIX_KEY),

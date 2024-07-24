@@ -105,7 +105,7 @@ final class FormsHelper
 	public static function checkResultOutputSuccess(string $name, string $operator, string $start, string $value, string $end): array
 	{
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? \json_decode(\esFormsDecryptor(\sanitize_text_field(\wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))), true) : [];
+		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? \json_decode(\esFormsDecryptor(\sanitize_text_field(\wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))) ?: '', true) : [];
 
 		if (!$data) {
 			return [

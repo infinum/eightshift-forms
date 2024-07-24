@@ -106,7 +106,7 @@ final class FiltersOuputMock
 		// Get data from forms block.
 		$secureData = $formDetails[UtilsConfig::FD_SECURE_DATA] ?? [];
 		if ($secureData) {
-			$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]), true)['v'] ?? [];
+			$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true)['v'] ?? [];
 
 			if ($secureData) {
 				$secureData = \array_column($secureData, 1, 0);
