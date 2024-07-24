@@ -86,7 +86,7 @@ class ResultOutputItemPart implements ServiceInterface
 	private function getResultOutputSuccessItemPartShortcodeValue(string $name): array
 	{
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? \json_decode(\esFormsDecryptor(\sanitize_text_field(\wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))), true) : [];
+		$data = isset($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]) ? \json_decode(\esFormsDecryptor(\sanitize_text_field(\wp_unslash($_GET[UtilsHelper::getStateSuccessRedirectUrlKey('data')]))) ?: '', true) : [];
 
 		if (!$data) {
 			return [
