@@ -126,18 +126,17 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
 	{
-		$this->sendEvent($formDetails, $successAdditionalData);
+		$this->sendEvent($formDetails);
 	}
 
 	/**
 	 * Send event to Moments if needed.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param array<string, mixed> $successAdditionalData Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
 	 *
 	 * @return void
 	 */
-	private function sendEvent(array $formDetails, array $successAdditionalData): void
+	private function sendEvent(array $formDetails): void
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';

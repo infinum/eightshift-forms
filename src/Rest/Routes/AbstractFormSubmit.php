@@ -361,12 +361,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
 
-		$additionalOutput = [];
-
-		if (isset($response[UtilsConfig::IARD_VALIDATION])) {
-			$additionalOutput[UtilsHelper::getStateResponseOutputKey('validation')] = $response[UtilsConfig::IARD_VALIDATION];
-		}
-
 		if ($status === UtilsConfig::STATUS_SUCCESS) {
 			$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
@@ -389,7 +383,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			return UtilsApiHelper::getApiSuccessPublicOutput(
 				$labelsOutput,
 				\array_merge(
-					$additionalOutput,
 					$successAdditionalData['public'],
 					$successAdditionalData['additional']
 				),
@@ -399,7 +392,12 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 		return UtilsApiHelper::getApiErrorPublicOutput(
 			$labelsOutput,
-			$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
+			\array_merge(
+				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
+				((isset($response[UtilsConfig::IARD_VALIDATION])) ? [
+					UtilsHelper::getStateResponseOutputKey('validation') => $response[UtilsConfig::IARD_VALIDATION],
+				] : []),
+			),
 			$response
 		);
 	}
@@ -510,9 +508,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true);
 
 				// Legacy data.
-				if (isset($secureData['l'])) {
-					$redirectDataOutput['es-legacy'] = $this->processLegacyData($secureData['l'], $formDetails[UtilsConfig::FD_PARAMS_RAW], $formId);
-				}
+				$redirectDataOutput['es-legacy'] = $this->processLegacyData($secureData['l'] ?? [], $formDetails[UtilsConfig::FD_PARAMS_RAW], $formId);
 
 				// Redirect custom result output feature.
 				$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
