@@ -4,9 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.4]
+
+### Fixed
+
+- Result output configuration for missing link URL.
+
 ## [5.0.3]
 
 ### Fixed
+
 - Added field validation to the output of the error msg.
 - Additional fixes for legacy output data.
 
@@ -603,6 +610,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.0.3]: https://github.com/infinum/eightshift-forms/compare/5.0.3...5.0.4
 [5.0.2]: https://github.com/infinum/eightshift-forms/compare/5.0.2...5.0.3
 [5.0.1]: https://github.com/infinum/eightshift-forms/compare/5.0.1...5.0.2
 [5.0.1]: https://github.com/infinum/eightshift-forms/compare/5.0.0...5.0.1

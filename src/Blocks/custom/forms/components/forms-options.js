@@ -25,7 +25,6 @@ import {
 	truncateMiddle,
 	Repeater,
 	RepeaterItem,
-	LinkInput,
 	Toggle,
 } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
@@ -230,7 +229,7 @@ export const FormsOptions = ({
 							>
 								<TextControl
 									value={formsVariationData?.title}
-									label={__('Title', 'eightshift-forms')}
+									placeholder={__('Title', 'eightshift-forms')}
 									onChange={(value) => {
 										const newArray = {...formsVariationData};
 										newArray.title = value;
@@ -241,7 +240,7 @@ export const FormsOptions = ({
 
 								<TextControl
 									value={formsVariationData?.subtitle}
-									label={__('Subtitle', 'eightshift-forms')}
+									placeholder={__('Subtitle', 'eightshift-forms')}
 									onChange={(value) => {
 										const newArray = {...formsVariationData};
 										newArray.subtitle = value;
@@ -267,19 +266,8 @@ export const FormsOptions = ({
 										>
 											<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-fifty-fifty-h'>
 												<TextControl
-													value={item.title}
-													label={__('Title', 'eightshift-forms')}
-													onChange={(value) => {
-														const newArray = [...formsVariationDataFiles];
-														newArray[index].title = value;
-
-														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
-													}}
-												/>
-
-												<TextControl
 													value={item.label}
-													label={__('Label', 'eightshift-forms')}
+													placeholder={__('Label', 'eightshift-forms')}
 													onChange={(value) => {
 														const newArray = [...formsVariationDataFiles];
 														newArray[index].label = value;
@@ -287,10 +275,19 @@ export const FormsOptions = ({
 														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
 													}}
 												/>
+												<TextControl
+													value={item.title}
+													placeholder={__('Title', 'eightshift-forms')}
+													onChange={(value) => {
+														const newArray = [...formsVariationDataFiles];
+														newArray[index].title = value;
+
+														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
+													}}
+												/>
 											</div>
 
 											<Toggle
-												value={item.url}
 												checked={item.asFile}
 												label={__('Use this item as a file or as a link', 'eightshift-forms')}
 												reducedBottomSpacing
@@ -309,12 +306,12 @@ export const FormsOptions = ({
 											/>
 
 											{!formsVariationDataFiles[index].asFile &&
-												<LinkInput
+												<TextControl
+													placeholder={__('Link URL', 'eightshift-forms')}
 													value={item.url}
-													hideOpensInNewTab
-													onChange={({ url }) => {
+													onChange={(value) => {
 														const newArray = [...formsVariationDataFiles];
-														newArray[index].url = url;
+														newArray[index].url = value;
 
 														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
 													}}
@@ -361,8 +358,8 @@ export const FormsOptions = ({
 
 											<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-fifty-fifty-h'>
 												<TextControl
+													placeholder={__('Field Name', 'eightshift-forms')}
 													value={item.fieldName}
-													label={__('Field Name', 'eightshift-forms')}
 													onChange={(value) => {
 														const newArray = [...formsVariationDataFiles];
 														newArray[index].fieldName = value;
@@ -372,7 +369,7 @@ export const FormsOptions = ({
 												/>
 												<TextControl
 													value={item.fieldValue}
-													label={__('Field Value', 'eightshift-forms')}
+													placeholder={__('Field Value', 'eightshift-forms')}
 													onChange={(value) => {
 														const newArray = [...formsVariationDataFiles];
 														newArray[index].fieldValue = value;
