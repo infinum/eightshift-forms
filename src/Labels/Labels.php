@@ -20,6 +20,7 @@ use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
 use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
+use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
@@ -45,6 +46,7 @@ class Labels implements LabelsInterface
 		'airtableSuccess',
 		'momentsSuccess',
 		'workableSuccess',
+		'talentlyftSuccess',
 		'jiraSuccess',
 		'pipedriveSuccess',
 		'calculatorSuccess',
@@ -112,6 +114,11 @@ class Labels implements LabelsInterface
 		// Workable.
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getWorkableLabels());
+		}
+
+		// Talentlyft.
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY)) {
+			$output = \array_merge($output, $this->getTalentlyftLabels());
 		}
 
 		// Jira.
@@ -451,6 +458,21 @@ class Labels implements LabelsInterface
 			'workableArchivedJobError' => \__('We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake.', 'eightshift-forms'),
 			'workableTooLongFileNameError' => \__('One of your uploaded files has a filename that is too long. Please reduce the filename and try again.', 'eightshift-forms'),
 			'workableSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Talentlyft
+	 *
+	 * @return array<string, string>
+	 */
+	private function getTalentlyftLabels(): array
+	{
+		return [
+			'talentlyftBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
+			'talentlyftArchivedJobError' => \__('We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake.', 'eightshift-forms'),
+			'talentlyftTooLongFileNameError' => \__('One of your uploaded files has a filename that is too long. Please reduce the filename and try again.', 'eightshift-forms'),
+			'talentlyftSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 

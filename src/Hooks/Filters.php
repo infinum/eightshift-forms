@@ -25,6 +25,7 @@ use EightshiftForms\Migration\SettingsMigration;
 use EightshiftForms\Enrichment\SettingsEnrichment;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
+use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
@@ -250,6 +251,14 @@ final class Filters
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
+				SettingsTalentlyft::SETTINGS_TYPE_KEY => [
+					'data',
+					'order',
+					'prePostId',
+					'prePostParams',
+					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
+				],
 				SettingsJira::SETTINGS_TYPE_KEY => [
 					'prePostParams',
 					'beforeSuccessResponse',
@@ -361,6 +370,9 @@ final class Filters
 			SettingsWorkable::SETTINGS_WORKABLE_USE_KEY,
 			SettingsWorkable::SETTINGS_WORKABLE_API_KEY_KEY,
 			SettingsWorkable::SETTINGS_WORKABLE_SUBDOMAIN_KEY,
+
+			SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY,
+			SettingsTalentlyft::SETTINGS_TALENTLYFT_API_KEY_KEY,
 
 			SettingsJira::SETTINGS_JIRA_USE_KEY,
 			SettingsJira::SETTINGS_JIRA_API_KEY_KEY,
