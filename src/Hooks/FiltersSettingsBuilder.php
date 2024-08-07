@@ -47,6 +47,9 @@ use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Integrations\Workable\Workable;
 use EightshiftForms\Integrations\Workable\WorkableClient;
+use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
+use EightshiftForms\Integrations\Talentlyft\Talentlyft;
+use EightshiftForms\Integrations\Talentlyft\TalentlyftClient;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Settings\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
@@ -403,6 +406,23 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'desc' => \__('Workable integration settings.', 'eightshift-forms'),
 					'detail' => \__('Sourcing automation tool to help hiring teams find, reach and engage top talent quickly and effectively.', 'eightshift-forms'),
 					'externalLink' => 'https://www.workable.com/',
+				],
+			],
+			SettingsTalentlyft::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsTalentlyft::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsTalentlyft::FILTER_SETTINGS_NAME,
+				'fields' => Talentlyft::FILTER_FORM_FIELDS_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'use' => SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY,
+				'cache' => [
+					TalentlyftClient::CACHE_TALENTLYFT_ITEMS_TRANSIENT_NAME,
+				],
+				'labels' => [
+					'title' => \__('Talentlyft', 'eightshift-forms'),
+					'desc' => \__('Talentlyft integration settings.', 'eightshift-forms'),
+					'detail' => \__('An online recruiting software with both Recruitment Marketing and Applicant Tracking System solutions.', 'eightshift-forms'),
+					'externalLink' => 'https://www.talentlyft.com/',
 				],
 			],
 			SettingsJira::SETTINGS_TYPE_KEY => [

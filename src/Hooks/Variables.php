@@ -206,6 +206,16 @@ class Variables
 	}
 
 	/**
+	 * Get API Key for Talentlyft.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyTalentlyft(): string
+	{
+		return \defined('ES_API_KEY_TALENTLYFT') ? \ES_API_KEY_TALENTLYFT : '';
+	}
+
+	/**
 	 * Get API Key for Jira.
 	 *
 	 * @return string|array<string, mixed>
