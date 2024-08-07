@@ -23,9 +23,6 @@ export const SelectOptionOptions = (attributes) => {
 	const selectOptionIsHidden = checkAttr('selectOptionIsHidden', attributes, manifest);
 	const selectOptionDisabledOptions = checkAttr('selectOptionDisabledOptions', attributes, manifest);
 
-	console.log(typeof selectOptionValue);
-	
-
 	return (
 		<PanelBody title={__('Option', 'eightshift-forms')}>
 			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>

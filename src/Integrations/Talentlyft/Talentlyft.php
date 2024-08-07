@@ -107,8 +107,6 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 			return [];
 		}
 
-		dump($data);
-
 		$output = [];
 
 		foreach ($data['fields'] as $item) {
@@ -121,6 +119,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 			$tracking = $item['Key'] ?? '';
 			$label = $item['DisplayName'] ?? '';
 			$fields = $item['Choices'] ?? [];
+			$internalType = ($item['FieldLocationType'] ?? '') === 'ScreeningQuestions' ? 'answers' : $type;
 			$required = isset($item['Required']) ? (bool) $item['Required'] : false;
 
 			if (!$name) {
@@ -133,6 +132,20 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 
 			switch ($type) {
 				case 'text':
+					$output[] = [
+						'component' => 'input',
+						'inputName' => $name,
+						'inputTracking' => $tracking,
+						'inputFieldLabel' => $label,
+						'inputType' => 'text',
+						'inputIsRequired' => $required,
+						'inputTypeCustom' => $internalType,
+						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
+							$required ? 'inputIsRequired' : '',
+							'inputTypeCustom',
+						]),
+					];
+					break;
 				case 'address':
 					$output[] = [
 						'component' => 'input',
@@ -141,7 +154,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'inputFieldLabel' => $label,
 						'inputType' => 'text',
 						'inputIsRequired' => $required,
-						'inputTypeCustom' => $type,
+						'inputTypeCustom' => $internalType,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
 							'inputTypeCustom',
@@ -156,7 +169,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'inputFieldLabel' => $label,
 						'inputType' => 'email',
 						'inputIsRequired' => $required,
-						'inputTypeCustom' => $type,
+						'inputTypeCustom' => $internalType,
 						'inputIsEmail' => true,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
@@ -174,7 +187,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'phoneFieldLabel' => $label,
 						'phoneIsRequired' => $required,
 						'phoneIsNumber' => true,
-						'phoneTypeCustom' => 'phone',
+						'phoneTypeCustom' => $internalType,
 						'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
 							$required ? 'phoneIsRequired' : '',
 							'phoneIsNumber',
@@ -193,10 +206,10 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'fileTracking' => $tracking,
 						'fileFieldLabel' => $label,
 						'fileIsRequired' => $required,
-						'fileAccept' => $accept ? implode(',', $accept) : 'pdf,doc,docx,rtf',
+						'fileAccept' => $accept ? \implode(',', $accept) : 'pdf,doc,docx,rtf',
 						'fileMinSize' => '1',
 						'fileMaxSize' => \strval((int) $maxFileSize * 1000),
-						'fileTypeCustom' => $type,
+						'fileTypeCustom' => $internalType,
 						'fileDisabledOptions' => $this->prepareDisabledOptions('file', [
 							$required ? 'fileIsRequired' : '',
 							'fileAccept',
@@ -213,7 +226,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 							'textareaTracking' => $tracking,
 							'textareaFieldLabel' => $label,
 							'textareaIsRequired' => $required,
-							'textareaTypeCustom' => $type,
+							'textareaTypeCustom' => $internalType,
 							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
 								$required ? 'textareaIsRequired' : '',
 								'textareaTypeCustom',
@@ -221,13 +234,25 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						];
 					break;
 				case 'select':
-					$output[] = [
-						'component' => 'select',
-						'selectName' => $name,
-						'selectTracking' => $tracking,
-						'selectFieldLabel' => $label,
-						'selectIsRequired' => $required,
-						'selectContent' => \array_values(
+					// Salutation is a special case as it expects a different format.
+					if ($name === 'q_Salutation') {
+						$selectContent = \array_values(
+							\array_map(
+								function ($selectOption) {
+									return [
+										'component' => 'select-option',
+										'selectOptionValue' => $selectOption['Body'],
+										'selectOptionLabel' => $selectOption['DisplayName'] ?? '',
+										'selectOptionDisabledOptions' => $this->prepareDisabledOptions('select-option', [
+											'selectOptionValue',
+										], false),
+									];
+								},
+								$fields
+							),
+						);
+					} else {
+						$selectContent = \array_values(
 							\array_map(
 								function ($selectOption) {
 									return [
@@ -241,8 +266,17 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 								},
 								$fields
 							),
-						),
-						'selectTypeCustom' => $type,
+						);
+					}
+
+					$output[] = [
+						'component' => 'select',
+						'selectName' => $name,
+						'selectTracking' => $tracking,
+						'selectFieldLabel' => $label,
+						'selectIsRequired' => $required,
+						'selectContent' => $selectContent,
+						'selectTypeCustom' => $internalType,
 						'selectDisabledOptions' => $this->prepareDisabledOptions('select', [
 							$required ? 'selectIsRequired' : '',
 							'selectTypeCustom',
@@ -250,16 +284,18 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 					];
 					break;
 				case 'decimal':
-					$item = [
+					$output[] = [
 						'component' => 'input',
 						'inputName' => $name,
 						'inputTracking' => $tracking,
 						'inputFieldLabel' => $label,
 						'inputType' => 'number',
 						'inputIsRequired' => $required,
+						'inputTypeCustom' => $internalType,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
 							'inputType',
+							'inputTypeCustom',
 						]),
 					];
 					break;
@@ -269,6 +305,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'checkboxesFieldHideLabel' => true,
 						'checkboxesName' => $name,
 						'checkboxesIsRequired' => $required,
+						'checkboxesTypeCustom' => $internalType,
 						'checkboxesContent' => \array_map(
 							function ($checkbox) use ($tracking) {
 								return [
@@ -285,6 +322,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						),
 						'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
 							$required ? 'checkboxesIsRequired' : '',
+							'checkboxesTypeCustom',
 						]),
 					];
 					break;
@@ -295,6 +333,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'radiosFieldHideLabel' => true,
 						'radiosName' => $name,
 						'radiosIsRequired' => $required,
+						'radiosTypeCustom' => $internalType,
 						'radiosContent' => \array_map(
 							function ($radio) use ($tracking) {
 								return [
@@ -311,6 +350,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						),
 						'radiosDisabledOptions' => $this->prepareDisabledOptions('radios', [
 							$required ? 'radiosIsRequired' : '',
+							'radiosTypeCustom',
 						]),
 					];
 					break;
@@ -323,10 +363,12 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'inputType' => 'url',
 						'inputIsUrl' => true,
 						'inputIsRequired' => $required,
+						'inputTypeCustom' => $internalType,
 						'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
 							$required ? 'inputIsRequired' : '',
 							'inputType',
 							'inputIsUrl',
+							'inputTypeCustom',
 						]),
 					];
 					break;
@@ -340,10 +382,12 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 						'datePreviewFormat' => 'F j, Y',
 						'dateOutputFormat' => 'Z',
 						'dateIsRequired' => $required,
+						'dateTypeCustom' => $internalType,
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							$required ? 'dateIsRequired' : '',
 							'dateType',
 							'dateOutputFormat',
+							'dateTypeCustom',
 						]),
 					];
 					break;
@@ -362,8 +406,6 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
-
-		dump($output);
 
 		return $output;
 	}

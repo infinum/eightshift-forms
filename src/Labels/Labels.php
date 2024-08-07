@@ -470,8 +470,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'talentlyftBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-			'talentlyftArchivedJobError' => \__('We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake.', 'eightshift-forms'),
-			'talentlyftTooLongFileNameError' => \__('One of your uploaded files has a filename that is too long. Please reduce the filename and try again.', 'eightshift-forms'),
+			'talentlyftValicationError' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
 			'talentlyftSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}

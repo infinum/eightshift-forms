@@ -146,20 +146,22 @@ class TalentlyftClient implements ClientInterface
 		$paramsPrepared = $this->prepareParams($params, $formId);
 		$paramsFiles = $this->prepareFiles($files);
 
-		$body = [
-			'sourced' => false,
-			'candidate' => \array_merge_recursive(
-				$paramsPrepared,
-				$paramsFiles
-			),
-		];
+		$body = \array_merge_recursive(
+			[
+				'JobId' => $itemId,
+				'Applied' => UtilsSettingsHelper::isSettingCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
+				'IsProspect' => UtilsSettingsHelper::isSettingCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
+			],
+			$paramsPrepared,
+			$paramsFiles,
+		);
 
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
 		}
 
-		$url = "{$this->getBaseUrl()}forms/{$itemId}/candidate";
+		$url = "{$this->getBaseUrl()}candidates";
 
 		$response = \wp_remote_post(
 			$url,
@@ -207,15 +209,13 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function getErrorMsg(array $body): string
 	{
-		$msg = $body['error'] ?? '';
+		$msg = $body['Message'] ?? '';
 
 		switch ($msg) {
-			case 'Bad Request':
+			case 'An error has occurred':
 				return 'talentlyftBadRequestError';
-			case 'position is draft or archived':
-				return 'talentlyftArchivedJobError';
-			case 'Filename should contain less characters':
-				return 'talentlyftTooLongFileNameError';
+			case 'Validation Failed':
+				return 'talentlyftValicationError';
 			default:
 				return 'submitWpError';
 		}
@@ -230,40 +230,26 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function getFieldsErrors(array $body): array
 	{
-		$msg = $body['error'] ?? '';
-		$errors = $body['validation_errors'] ?? [];
+		$errors = $body['Errors'] ?? [];
 		$output = [];
 
-		foreach ($errors as $key => $value) {
-			$message = $value[0] ?? '';
+		foreach ($errors as $error) {
+			$field = $error['Field'] ?? '';
+			$message = $error['Message'] ?? '';
 
-			if (!$message) {
+			if (!$message || !$field) {
 				continue;
 			}
 
-			switch ($message) {
-				case 'can\'t be blank':
-					$output[$key] = 'validationRequired';
-					break;
-				case 'is too long (maximum is 127 characters)':
-					$output[$key] = 'validationTalentlyftMaxLength127';
-					break;
-				case 'is too long (maximum is 255 characters)':
-					$output[$key] = 'validationTalentlyftMaxLength255';
-					break;
-				case 'is invalid':
-					if ($key === 'email') {
-						$output[$key] = 'validationEmail';
-					} else {
-						$output[$key] = 'validationInvalid';
-					}
-					break;
-			}
-		}
+			// Validate req fields.
+			\preg_match_all("/(The )(\w*)( field is required.)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
 
-		if ($msg === 'either name or firstname and lastname should be part of the candidate\'s payload') {
-			$output['firstname'] = 'validationRequired';
-			$output['lastname'] = 'validationRequired';
+			if ($matchesReq) {
+				$key = $matchesReq[0][2] ?? '';
+				if ($key) {
+					$output["q_{$key}"] = 'validationRequired';
+				}
+			}
 		}
 
 		return $output;
@@ -394,7 +380,6 @@ class TalentlyftClient implements ClientInterface
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
 		$output = [];
-		$answers = [];
 
 		// Filter params.
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'prePostParams']);
@@ -412,52 +397,38 @@ class TalentlyftClient implements ClientInterface
 			}
 
 			$value = $param['value'] ?? '';
+			$type = $param['type'] ?? '';
 			$typeCustom = $param['typeCustom'] ?? '';
-
-			// Skip empty check if bool.
-			if ($typeCustom !== 'boolean') {
-				if (!$value) {
-					continue;
-				}
-			}
 
 			if (!$value) {
 				continue;
 			}
 
-			switch ($typeCustom) {
-				case 'free_text':
-				case 'short_text':
-					if ($name === 'summary' || $name === 'cover_letter') {
-						$output[$name] = $value;
-						break;
-					}
+			$name = \preg_replace('/^q_/', '', $name);
 
-					$answers[] = [
-						'question_key' => $name,
-						'body' => $value,
+			switch ($typeCustom) {
+				case 'answers':
+					if (\in_array($type, ['radio', 'select', 'checkbox'], true)) {
+						$output['Answers'][] = [
+							'Id' => (int) $name,
+							'Choices' => \explode(UtilsConfig::DELIMITER, $value),
+						];
+					} else {
+						$output['Answers'][] = [
+							'Id' => (int) $name,
+							'Body' => $value,
+						];
+					}
+					break;
+				case 'address':
+					$output[$name] = [
+						'address' => $value,
 					];
 					break;
-				case 'boolean':
-					$answers[] = [
-						'question_key' => $name,
-						'checked' => \filter_var($value, \FILTER_VALIDATE_BOOLEAN),
-					];
-					break;
-				case 'multiple_choice':
-				case 'dropdown':
-					$answers[] = [
-						'question_key' => $name,
-						'choices' => \explode(',', $value),
-					];
+				default:
+					$output[$name] = $value;
 					break;
 			}
-
-			$output[$name] = $value;
-		}
-
-		if ($answers) {
-			$output['answers'] = $answers;
 		}
 
 		return $output;
@@ -473,7 +444,6 @@ class TalentlyftClient implements ClientInterface
 	private function prepareFiles(array $files): array
 	{
 		$output = [];
-		$answers = [];
 
 		foreach ($files as $items) {
 			$name = $items['name'] ?? '';
@@ -486,32 +456,35 @@ class TalentlyftClient implements ClientInterface
 				continue;
 			}
 
+			$typeCustom = $items['typeCustom'] ?? '';
+
+			$name = \preg_replace('/^q_/', '', $name);
+
 			foreach ($value as $file) {
 				$fileName = UtilsUploadHelper::getFileNameFromPath($file);
 
-				if ($name === 'resume') {
-					$output[$name] = [
-						'name' => $fileName,
-						// phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-						'data' => \base64_encode(\file_get_contents($file)),
-						// phpcs:enable
-					];
-				} else {
-					$answers[] = [
-						'question_key' => $name,
-						'file' => [
-							'name' => $fileName,
+				switch ($typeCustom) {
+					case 'answers':
+						$output['Answers'][] = [
+							'Id' => (int) $name,
+							'File' => [
+								'FileName' => $fileName,
+								// phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+								'Content' => \base64_encode(\file_get_contents($file)),
+								// phpcs:enable
+							],
+						];
+						break;
+					default:
+						$output[$name] = [
+							'FileName' => $fileName,
 							// phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-							'data' => \base64_encode(\file_get_contents($file)),
+							'Content' => \base64_encode(\file_get_contents($file)),
 							// phpcs:enable
-						]
-					];
+						];
+						break;
 				}
 			}
-		}
-
-		if ($answers) {
-			$output['answers'] = $answers;
 		}
 
 		return $output;

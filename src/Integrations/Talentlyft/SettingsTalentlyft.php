@@ -16,17 +16,28 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterf
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsTalentlyft class.
  */
-class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
 {
+	/**
+	 * Filter settings key.
+	 */
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_talentlyft';
+
 	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_talentlyft';
+
+	/**
+	 * Filter settings global is Valid key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_talentlyft';
 
 	/**
 	 * Settings key.
@@ -59,6 +70,13 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 	public const SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY = 'talentlyft-skip-integration';
 
 	/**
+	 * Talentlyft use lead key.
+	 */
+	public const SETTINGS_TALENTLYFT_USE_FLAGS_KEY = 'talentlyft-use-lead';
+	public const SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY = 'applied';
+	public const SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY = 'prospect';
+
+	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -82,7 +100,9 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 	 */
 	public function register(): void
 	{
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**
@@ -100,6 +120,61 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get Form settings data array
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getSettingsData(string $formId): array
+	{
+		// Bailout if feature is not active.
+		if (!$this->isSettingsGlobalValid()) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		}
+
+		return [
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Lead', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Is Applied', 'eightshift-forms'),
+										'checkboxHelp' => \__('Candidates are considered as applied and receiving the "thank you for applying" email.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY, self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									],
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Is Prospect', 'eightshift-forms'),
+										'checkboxHelp' => \__('Candidates are considered as sourced and not receiving the "thank you for applying" email.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY, self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+						],
+					],
+				],
+			],
+		];
 	}
 
 	/**
