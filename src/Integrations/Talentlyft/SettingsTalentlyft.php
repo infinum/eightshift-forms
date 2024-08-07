@@ -284,23 +284,6 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
 							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'steps',
-								'stepsTitle' => \__('How to get the Job Board name?', 'eightshift-forms'),
-								'stepsContent' => [
-									// translators: %s will be replaced with the link.
-									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Talentlyft Account</a>.', 'eightshift-forms'), 'https://app.talentlyft.io/'),
-									// translators: %s will be replaced with the link.
-									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Job Boards Settings</a>.', 'eightshift-forms'), 'https://app.talentlyft.io/jobboard'),
-									\__('Copy the <strong>Board Name</strong> you want to use.', 'eightshift-forms'),
-									\__('Make the name all lowercase.', 'eightshift-forms'),
-									\__('Copy the Board Name into the field under the API tab or use the global constant.', 'eightshift-forms'),
-								],
-							],
 						],
 					],
 				],
