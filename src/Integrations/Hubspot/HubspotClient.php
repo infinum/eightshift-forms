@@ -214,6 +214,16 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
+		// Filter override post request.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		if (\has_filter($filterName)) {
+			$filterValue = \apply_filters($filterName, [], $itemId, $params, $files, $formId) ?? [];
+
+			if ($filterValue) {
+				return $filterValue;
+			}
+		}
+
 		$paramsPrepared = $this->prepareParams($params, $formId);
 		$paramsFiles = $this->prepareFiles($files, $formId);
 

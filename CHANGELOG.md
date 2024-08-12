@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.5]
+
+### Added
+
+- new integration filter `overridePostRequest` to override the post request data.
+- new public helper `getFormsGetCountryList` to get the list of countries.
+
 ## [5.0.4]
 
 ### Fixed
@@ -610,9 +617,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[5.0.3]: https://github.com/infinum/eightshift-forms/compare/5.0.3...5.0.4
-[5.0.2]: https://github.com/infinum/eightshift-forms/compare/5.0.2...5.0.3
-[5.0.1]: https://github.com/infinum/eightshift-forms/compare/5.0.1...5.0.2
+[5.0.5]: https://github.com/infinum/eightshift-forms/compare/5.0.4...5.0.5
+[5.0.4]: https://github.com/infinum/eightshift-forms/compare/5.0.3...5.0.4
+[5.0.3]: https://github.com/infinum/eightshift-forms/compare/5.0.2...5.0.3
+[5.0.2]: https://github.com/infinum/eightshift-forms/compare/5.0.1...5.0.2
 [5.0.1]: https://github.com/infinum/eightshift-forms/compare/5.0.0...5.0.1
 [5.0.0]: https://github.com/infinum/eightshift-forms/compare/4.0.7...5.0.0
 [4.0.7]: https://github.com/infinum/eightshift-forms/compare/4.0.6...4.0.7

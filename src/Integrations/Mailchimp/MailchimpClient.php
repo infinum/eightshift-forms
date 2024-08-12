@@ -171,6 +171,16 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
+		// Filter override post request.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		if (\has_filter($filterName)) {
+			$filterValue = \apply_filters($filterName, [], $itemId, $params, $files, $formId) ?? [];
+
+			if ($filterValue) {
+				return $filterValue;
+			}
+		}
+
 		$email = UtilsGeneralHelper::getEmailParamsField($params);
 		$emailHash = \md5(\strtolower($email));
 

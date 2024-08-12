@@ -199,6 +199,16 @@ class PipedriveClient implements PipedriveClientInterface
 	 */
 	public function postApplication(array $params, array $files, string $formId): array
 	{
+		// Filter override post request.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsPipedrive::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		if (\has_filter($filterName)) {
+			$filterValue = \apply_filters($filterName, [], $params, $files, $formId) ?? [];
+
+			if ($filterValue) {
+				return $filterValue;
+			}
+		}
+
 		$organization = [];
 		$lead = [];
 		$person = [];
