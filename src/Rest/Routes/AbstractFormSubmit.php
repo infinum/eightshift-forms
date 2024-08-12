@@ -241,7 +241,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 							!UtilsDeveloperHelper::isDeveloperSkipCaptchaActive(),
 						];
 
-						if (!in_array(false, $shouldValidateCaptcha)) {
+						if (!\in_array(false, $shouldValidateCaptcha, true)) {
 							$captchaParams = $formDetails[UtilsConfig::FD_CAPTCHA] ?? [];
 
 							if (!$captchaParams) {
@@ -253,16 +253,16 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 									]
 								);
 							}
-	
+
 							$captcha = $this->getCaptcha()->check(
 								$captchaParams['token'],
 								$captchaParams['action'],
 								$captchaParams['isEnterprise'] === 'true'
 							);
-	
+
 							if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
 								$isSpam = $captcha['data']['isSpam'] ?? false;
-	
+
 								if (!$isSpam) {
 									// Send fallback email if there is an issue with reCaptcha.
 									$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
@@ -275,7 +275,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 										]
 									);
 								}
-	
+
 								return \rest_ensure_response($captcha);
 							}
 						}
