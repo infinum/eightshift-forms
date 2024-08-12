@@ -235,42 +235,49 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					}
 
 					// Validate captcha.
-					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) && $formDetails[UtilsConfig::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY) {
-						$captchaParams = $formDetails[UtilsConfig::FD_CAPTCHA] ?? [];
+					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+						$shouldValidateCaptcha = [
+							$formDetails[UtilsConfig::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY,
+							!UtilsDeveloperHelper::isDeveloperSkipCaptchaActive(),
+						];
 
-						if (!$captchaParams) {
-							throw new UnverifiedRequestException(
-								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
-								[
-									self::VALIDATION_ERROR_OUTPUT => $captchaParams,
-									self::VALIDATION_ERROR_CODE => 'validationDefaultCaptcha',
-								]
-							);
-						}
+						if (!in_array(false, $shouldValidateCaptcha)) {
+							$captchaParams = $formDetails[UtilsConfig::FD_CAPTCHA] ?? [];
 
-						$captcha = $this->getCaptcha()->check(
-							$captchaParams['token'],
-							$captchaParams['action'],
-							$captchaParams['isEnterprise'] === 'true'
-						);
-
-						if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
-							$isSpam = $captcha['data']['isSpam'] ?? false;
-
-							if (!$isSpam) {
-								// Send fallback email if there is an issue with reCaptcha.
-								$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
-									$formDetails,
-									// translators: %s is the form ID.
-									\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
-									'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the available data for debugging purposes.', 'eightshift-forms') . '</p>',
+							if (!$captchaParams) {
+								throw new UnverifiedRequestException(
+									\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
 									[
-										self::VALIDATION_ERROR_DATA => $captcha,
+										self::VALIDATION_ERROR_OUTPUT => $captchaParams,
+										self::VALIDATION_ERROR_CODE => 'validationDefaultCaptcha',
 									]
 								);
 							}
-
-							return \rest_ensure_response($captcha);
+	
+							$captcha = $this->getCaptcha()->check(
+								$captchaParams['token'],
+								$captchaParams['action'],
+								$captchaParams['isEnterprise'] === 'true'
+							);
+	
+							if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
+								$isSpam = $captcha['data']['isSpam'] ?? false;
+	
+								if (!$isSpam) {
+									// Send fallback email if there is an issue with reCaptcha.
+									$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
+										$formDetails,
+										// translators: %s is the form ID.
+										\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+										'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the available data for debugging purposes.', 'eightshift-forms') . '</p>',
+										[
+											self::VALIDATION_ERROR_DATA => $captcha,
+										]
+									);
+								}
+	
+								return \rest_ensure_response($captcha);
+							}
 						}
 					}
 					break;

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.6]
+
+### Fixed
+
+- Bypass captcha flag now works correctly on all forms.
+
 ## [5.0.5]
 
 ### Added
@@ -617,6 +623,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.0.6]: https://github.com/infinum/eightshift-forms/compare/5.0.5...5.0.6
 [5.0.5]: https://github.com/infinum/eightshift-forms/compare/5.0.4...5.0.5
 [5.0.4]: https://github.com/infinum/eightshift-forms/compare/5.0.3...5.0.4
 [5.0.3]: https://github.com/infinum/eightshift-forms/compare/5.0.2...5.0.3
