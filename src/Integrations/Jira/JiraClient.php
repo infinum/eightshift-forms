@@ -164,6 +164,16 @@ class JiraClient implements JiraClientInterface
 	 */
 	public function postApplication(array $params, array $files, string $formId): array
 	{
+		// Filter override post request.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsJira::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		if (\has_filter($filterName)) {
+			$filterValue = \apply_filters($filterName, [], $params, $files, $formId) ?? [];
+
+			if ($filterValue) {
+				return $filterValue;
+			}
+		}
+
 		$url = $this->getBaseUrl() . "issue";
 
 		$body = [

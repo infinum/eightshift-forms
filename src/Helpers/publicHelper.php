@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Cache\ManifestCache;
+use EightshiftForms\Countries\Countries;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\General\SettingsGeneral;
@@ -125,4 +126,14 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 function esFormGetEntry(string $id): array
 {
 	return EntriesHelper::getEntry($id);
+}
+
+/**
+ * Get countries data set depending on the provided filter and default set.
+ *
+ * @return array<string, mixed>
+ */
+function getFormsGetCountryList(): array
+{
+	return (new Countries())->getCountriesDataSet();
 }
