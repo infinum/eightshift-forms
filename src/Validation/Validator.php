@@ -278,12 +278,16 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for min array items length.
 					case 'minCount':
+						$inputValue = $inputValue ? \explode(UtilsConfig::DELIMITER, $inputValue) : [];
+
 						if ($dataValue > \count($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMinCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for max array items length.
 					case 'maxCount':
+						$inputValue = $inputValue ? \explode(UtilsConfig::DELIMITER, $inputValue) : [];
+
 						if ($dataValue < \count($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMaxCount', $formId), $dataValue);
 						}
