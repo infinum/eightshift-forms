@@ -36,6 +36,7 @@ $countryFieldAttrs = Helpers::checkAttr('countryFieldAttrs', $attributes, $manif
 $countryPlaceholder = Helpers::checkAttr('countryPlaceholder', $attributes, $manifest);
 $countryUseLabelAsPlaceholder = Helpers::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
 $countrySingleSubmit = Helpers::checkAttr('countrySingleSubmit', $attributes, $manifest);
+$countryValueType = Helpers::checkAttr('countryValueType', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $countryHideLabel = false;
@@ -89,7 +90,21 @@ if (has_filter($filterName)) {
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
-		$value = $option[2] ?? '';
+		$value = $option[2] ?? ''; // country phone code
+		$unlocalizedLabel = $option[3] ?? '';
+
+		$optionValue = $label;
+		switch ($countryValueType) {
+			case 'countryCode':
+				$optionValue = $code;
+				break;
+			case 'countryNumber':
+				$optionValue = $value;
+				break;
+			case 'countryUnlocalizedName':
+				$optionValue = $unlocalizedLabel;
+				break;
+		}
 
 		$customProperties = [
 			UtilsHelper::getStateAttribute('selectCountryCode') => $code,
@@ -99,7 +114,7 @@ if (has_filter($filterName)) {
 
 		$options[] = '
 			<option
-				value="' . $label . '"
+				value="' . $optionValue . '"
 				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $settings['country']['preselectedValue'], false) . '
 			>' . $label . '</option>';
