@@ -11,7 +11,7 @@ import {
 	props,
 	Section,
 	IconToggle,
-	STORE_NAME,
+	STORE_NAME, Select,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
@@ -34,6 +34,7 @@ export const CountryOptions = (attributes) => {
 	const countryUseSearch = checkAttr('countryUseSearch', attributes, manifest);
 	const countryPlaceholder = checkAttr('countryPlaceholder', attributes, manifest);
 	const countryUseLabelAsPlaceholder = checkAttr('countryUseLabelAsPlaceholder', attributes, manifest);
+	const countryValueType = checkAttr('countryValueType', attributes, manifest);
 
 	return (
 		<PanelBody title={__('Country', 'eightshift-forms')}>
@@ -87,7 +88,7 @@ export const CountryOptions = (attributes) => {
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={countryIsRequired}
-					onChange={(value) => setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}
+					onChange={(value) => {setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}}
 					disabled={isOptionDisabled(getAttrKey('countryIsRequired', attributes, manifest), countryDisabledOptions)}
 					noBottomSpacing
 				/>
@@ -114,6 +115,21 @@ export const CountryOptions = (attributes) => {
 					checked={countryUseSearch}
 					onChange={(value) => setAttributes({ [getAttrKey('countryUseSearch', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryUseSearch', attributes, manifest), countryDisabledOptions)}
+				/>
+
+				<Select
+					icon={icons.migrationAlt}
+					value={countryValueType}
+					onChange={(value) => setAttributes({[getAttrKey('countryValueType', attributes, manifest)]: value})}
+					label={__('Value type', 'eightshift-forms')}
+					subtitle={__('Determine whether to send the value as a country code, number or (un)localized name to the integration.', 'eightshift-forms')}
+					options={[
+						{ value: 'countryCode', label: __('Country code', 'eightshift-forms')},
+						{ value: 'countryName', label: __('Localized country name (site locale)', 'eightshift-forms')},
+						{ value: 'countryUnlocalizedName', label: __('Country name in English', 'eightshift-forms')},
+						{ value: 'countryNumber', label: __('Country phone number prefix', 'eightshift-forms')},
+					]}
+					simpleValue
 					noBottomSpacing
 				/>
 			</Section>
