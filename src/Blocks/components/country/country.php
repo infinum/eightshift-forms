@@ -90,7 +90,7 @@ if (has_filter($filterName)) {
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
-		$value = $option[2] ?? ''; // country phone code
+		$value = $option[2] ?? ''; // Country phone code.
 		$unlocalizedLabel = $option[3] ?? '';
 
 		$optionValue = $label;
