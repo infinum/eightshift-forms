@@ -11,7 +11,8 @@ import {
 	props,
 	Section,
 	IconToggle,
-	STORE_NAME, Select,
+	STORE_NAME, 
+	Select,
 } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
@@ -88,7 +89,7 @@ export const CountryOptions = (attributes) => {
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={countryIsRequired}
-					onChange={(value) => {setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}}
+					onChange={(value) => setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryIsRequired', attributes, manifest), countryDisabledOptions)}
 					noBottomSpacing
 				/>
