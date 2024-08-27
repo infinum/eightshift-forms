@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.7]
+
+### Added
+
+- Implemented a new "value type" attribute to the country field, allowing for the dynamic definition of option values.
+- Adapted the Countries class to support the new "value type" attribute.
+- Filter to allow adding custom Tailwind classes to all form elements.
+
 ## [5.0.6]
 
 ### Fixed
@@ -623,6 +631,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.0.7]: https://github.com/infinum/eightshift-forms/compare/5.0.6...5.0.7
 [5.0.6]: https://github.com/infinum/eightshift-forms/compare/5.0.5...5.0.6
 [5.0.5]: https://github.com/infinum/eightshift-forms/compare/5.0.4...5.0.5
 [5.0.4]: https://github.com/infinum/eightshift-forms/compare/5.0.3...5.0.4
