@@ -144,6 +144,7 @@ final class Filters
 				'allowedBlocks',
 				'additionalBlocks',
 				'mediaBreakpoints',
+				'tailwindSelectors',
 			],
 			'general' => [
 				'httpRequestTimeout',

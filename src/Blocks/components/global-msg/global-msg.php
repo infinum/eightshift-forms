@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -19,7 +20,7 @@ $globalMsgAttrs = [];
 $globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
 
 $globalMsgClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('globalMsg'),
 ]);

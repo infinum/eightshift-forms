@@ -10,6 +10,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
@@ -42,7 +43,7 @@ $phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
 $phoneClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
@@ -106,11 +107,20 @@ if (has_filter($filterName)) {
 	}
 }
 
+$phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
+
+$phoneAttrsSelectOutput = '';
+if ($phoneAttrsSelect) {
+	foreach ($phoneAttrsSelect as $key => $value) {
+		$phoneAttrsSelectOutput .= wp_kses_post(" {$key}='" . $value . "'");
+	}
+}
+
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
-		' . $phoneSelectUseSearchAttr . '=' . $phoneUseSearch . '
+		' . $phoneAttrsSelectOutput . '
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"

@@ -11,6 +11,7 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Form\Form;
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -63,7 +64,7 @@ $customClassSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form
 $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
 $formClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($customClassSelector, $customClassSelector),
 	UtilsHelper::getStateSelector('form'),
@@ -153,10 +154,10 @@ if ($formAttrs) {
 	onsubmit="event.preventDefault();"
 >
 	<?php if (is_user_logged_in() && !is_admin()) { ?>
-		<div class="<?php echo esc_attr('es-block-edit-options__edit-wrap') ?>">
+		<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-wrap', $attributes)) ?>">
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
 				<a
-					class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
+					class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-link', $attributes)) ?>"
 					href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formPostId)) ?>"
 					title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>"
 				>
@@ -166,7 +167,7 @@ if ($formAttrs) {
 
 			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
 				<a
-					class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
+					class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-link', $attributes)) ?>"
 					href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
 					title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>"
 				>
@@ -176,7 +177,7 @@ if ($formAttrs) {
 
 			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
 				<a
-				class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
+				class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-link', $attributes)) ?>"
 				href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
 				title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>"
 			>
@@ -185,8 +186,8 @@ if ($formAttrs) {
 
 				<?php if ($formHasSteps) { ?>
 					<a
-						class="<?php echo esc_attr('es-block-edit-options__edit-link ' .  UtilsHelper::getStateSelector('stepDebugPreview')); ?>"
-						href="#" class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
+						href="#"
+						class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-link', $attributes, UtilsHelper::getStateSelector('stepDebugPreview'))); ?>"
 						title="<?php esc_html_e('Debug form', 'eightshift-forms'); ?>"
 					>
 						<?php echo UtilsHelper::getUtilsIcons('debug'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
@@ -208,7 +209,7 @@ if ($formAttrs) {
 	);
 	?>
 
-	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
+	<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__fields", $attributes)); ?>">
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 
 		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>

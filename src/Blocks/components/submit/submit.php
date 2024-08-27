@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
@@ -30,7 +31,7 @@ $submitButtonAsLink = Helpers::checkAttr('submitButtonAsLink', $attributes, $man
 $submitButtonAsLinkUrl = Helpers::checkAttr('submitButtonAsLinkUrl', $attributes, $manifest);
 
 $submitClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($submitIcon, $componentClass, '', 'with-icon'),
 	Helpers::selector($submitVariant, $componentClass, '', $submitVariant),
@@ -48,7 +49,7 @@ $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
-	><span class="' . $componentClass . '__inner">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
+	><span class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__inner", $attributes)) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
 	' . $additionalContent . '
 ';
 
@@ -57,7 +58,7 @@ if ($submitButtonAsLink) {
 	<a
 		href="' . esc_url($submitButtonAsLinkUrl) . '"
 		class="' . esc_attr($submitClass) . '"
-	><span class="' . $componentClass . '__inner">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
+	><span class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__inner", $attributes)) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
 	' . $additionalContent . '
 	';
 }

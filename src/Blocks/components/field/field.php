@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -96,8 +97,8 @@ if ($fieldStyle && gettype($fieldStyle) === 'array') {
 }
 
 $fieldClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($componentClass, $componentClass, '', $selectorClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwSelectors("{$componentClass}--{$selectorClass}", $attributes),
 	Helpers::selector($additionalFieldClass, $additionalFieldClass),
 	Helpers::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
@@ -109,7 +110,7 @@ $fieldClass = Helpers::classnames([
 ]);
 
 $labelClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass, 'label'),
+	FiltersOuputMock::getTwSelectors("{$componentClass}__label", $attributes),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
 ]);
 
@@ -176,13 +177,13 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 	);
 
 	?>
-	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
+	<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__inner", $attributes)); ?>">
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
 				for="<?php echo esc_attr($fieldId); ?>"
 			>
-				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+				<span class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__label-inner", $attributes)); ?>">
 					<?php echo wp_kses_post($fieldLabel); ?>
 
 					<?php
@@ -198,23 +199,23 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 				</span>
 			</<?php echo esc_attr($labelTag); ?>>
 		<?php } ?>
-		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+		<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__content", $attributes)); ?>">
 			<?php if ($fieldBeforeContent) { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
+				<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__before-content", $attributes)); ?>">
 					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
-			<div class="<?php echo esc_attr("{$componentClass}__content-wrap"); ?>">
+			<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__content-wrap", $attributes)); ?>">
 				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			</div>
 			<?php if ($fieldAfterContent) { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__after-content"); ?>">
+				<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__after-content", $attributes)); ?>">
 					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
 		</div>
 		<?php if ($fieldHelp) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+			<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__help", $attributes)); ?>">
 				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			</div>
 		<?php } ?>

@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -34,7 +35,7 @@ $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $man
 $ratingHideLabel = false;
 
 $ratingClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 	UtilsHelper::getStateSelector('rating'),
@@ -65,7 +66,7 @@ $stars = '';
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
 		<div
-			class="' . esc_attr("{$componentClass}__star") . '"
+			class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__star", $attributes)) . '"
 			' . UtilsHelper::getStateAttribute('ratingValue') . '="' . $i . '"
 		>
 		' . UtilsHelper::getUtilsIcons('rating') .
@@ -74,7 +75,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 
 $rating = '
 	<input
-		class="' . esc_attr($componentClass) . '__input"
+		class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__input", $attributes)) . '"
 		name="' . esc_attr($ratingName) . '"
 		id="' . esc_attr($ratingName) . '"
 		value="' . esc_attr($ratingValue) . '"

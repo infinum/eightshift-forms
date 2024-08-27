@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -44,7 +45,7 @@ if ($checkboxAsToggle) {
 }
 
 $checkboxClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($checkboxIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
@@ -52,7 +53,7 @@ $checkboxClass = Helpers::classnames([
 ]);
 
 $checkboxInputClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass, 'input'),
+	FiltersOuputMock::getTwSelectors("{$componentClass}__input", $attributes),
 	Helpers::selector($checkboxSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -99,7 +100,7 @@ if ($checkboxFieldAttrs) {
 ?>
 
 <div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
-	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+	<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__content", $attributes)); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"
 			type="checkbox"
@@ -113,14 +114,14 @@ if ($checkboxFieldAttrs) {
 		<?php if (!$checkboxHideLabel) { ?>
 			<label
 				for="<?php echo esc_attr($checkboxName); ?>"
-				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+				class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__label", $attributes)); ?>"
 			>
 				<?php if ($checkboxIcon) { ?>
-					<img  class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
+					<img class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__label-icon", $attributes)); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
 				<?php } ?>
 
 				<?php if (!$checkboxHideLabelText) { ?>
-					<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+					<span class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__label-inner", $attributes)); ?>">
 						<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
 					</span>
 				<?php } ?>
@@ -128,7 +129,7 @@ if ($checkboxFieldAttrs) {
 		<?php } ?>
 	</div>
 	<?php if ($checkboxHelp) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+		<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__help", $attributes)); ?>">
 			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>
