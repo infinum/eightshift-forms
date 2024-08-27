@@ -284,6 +284,34 @@ final class FiltersOuputMock
 		];
 	}
 
+	/**
+	 * Return Tailwind selectors data filter output.
+	 *
+	 * @param string $selector Selector to get data for.
+	 * @param array<string, string> $attributes The block attributes.
+	 * @param string $sufix Sufix to add to the selector.
+	 *
+	 * @return string
+	 */
+	public static function getTwSelectors(string $selector, array $attributes, string $sufix = ''): string
+	{
+		$output = [
+			$selector,
+			$sufix,
+		];
+
+		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'tailwindSelectors']);
+		if (\has_filter($filterName)) {
+			$filterData = \apply_filters($filterName, [], $attributes);
+
+			if (isset($filterData[$selector]) && \is_string($filterData[$selector])) {
+				$output[] = $filterData[$selector];
+			}
+		}
+
+		return \implode(' ', \array_filter($output));
+	}
+
 	// --------------------------------------------------
 	// Private helper methods
 	// --------------------------------------------------

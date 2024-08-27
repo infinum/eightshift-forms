@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -36,7 +37,7 @@ $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
 $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
 $fileClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
@@ -47,15 +48,15 @@ $customFile = '';
 $infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eighitshift-forms');
 $infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eighitshift-forms');
 
-$infoTextContent = '<div class="' . esc_attr("{$componentClass}__info") . '">' . esc_html($infoText) . '</div>';
+$infoTextContent = '<div class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__info", $attributes)) . '">' . esc_html($infoText) . '</div>';
 if (!$fileCustomInfoTextUse) {
 	$infoTextContent = '';
 }
 
-$infoButtonContent = '<a tabindex="-1" href="#" class="' . esc_attr("{$componentClass}__button") . '">' . esc_html($infoButton) . '</a>';
+$infoButtonContent = '<a tabindex="-1" href="#" class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__button", $attributes)) . '">' . esc_html($infoButton) . '</a>';
 
 $customFile = '
-	<div class="' . esc_attr("{$componentClass}__custom-wrap") . '">
+	<div class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__custom-wrap", $attributes)) . '">
 		' . $infoTextContent . '
 		' . $infoButtonContent . '
 	</div>

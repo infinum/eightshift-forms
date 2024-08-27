@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -51,10 +52,10 @@ $inputHideLabel = false;
 $inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
 
 $inputClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
-	Helpers::selector($inputType === 'range', $componentClass, 'range'),
+	$inputType === 'range' ? FiltersOuputMock::getTwSelectors("{$componentClass}__range", $attributes) : '',
 ]);
 
 // Additional content filter.

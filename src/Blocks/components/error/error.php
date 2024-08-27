@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -19,7 +20,7 @@ $errorValue = Helpers::checkAttr('errorValue', $attributes, $manifest);
 $errorId = Helpers::checkAttr('errorId', $attributes, $manifest);
 
 $errorClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($selectorClass, $selectorClass, $componentClass),
 	Helpers::selector($additionalErrorClass, $additionalErrorClass),
 	UtilsHelper::getStateSelector('error'),
