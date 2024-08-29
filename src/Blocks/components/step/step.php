@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -26,7 +27,7 @@ $stepNextLabel = Helpers::checkAttr('stepNextLabel', $attributes, $manifest);
 $stepIsActive = Helpers::checkAttr('stepIsActive', $attributes, $manifest);
 
 $stepClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	UtilsHelper::getStateSelector('step'),
 	Helpers::selector($stepIsActive, UtilsHelper::getStateSelector('isActive')),
 ]);
@@ -62,11 +63,11 @@ $nextButtonComponent = '';
 		?>
 	</div>
 
-	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
+	<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__inner", $attributes)); ?>">
 		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 
-		<div class="<?php echo esc_attr("{$componentFieldClass} {$componentClass}__navigation"); ?>">
-			<div class="<?php echo esc_attr("{$componentFieldClass} {$componentClass}__navigation-inner"); ?>">
+		<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__navigation", $attributes, $componentFieldClass)); ?>">
+			<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__navigation-inner", $attributes)); ?>">
 				<?php
 
 				$filterNameComponentPrev = UtilsHooksHelper::getFilterName(['block', 'step', 'component_prev']);

@@ -86,14 +86,14 @@ if ($inputType === 'range') {
 	if ($inputRangeShowMin) {
 		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMin'),
-			Helpers::selector($componentClass, $componentClass, 'range', 'min'),
+			FiltersOuputMock::getTwSelectors("{$componentClass}__range--min", $attributes),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$inputAttrs['min']}{$inputRangeShowMinSuffix}</span>");
 	}
 
 	if ($inputRangeShowCurrent) {
-		$cssSelector = Helpers::selector($componentClass, $componentClass, 'range', 'current');
+		$cssSelector = FiltersOuputMock::getTwSelectors("{$componentClass}__range--current", $attributes);
 		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
@@ -102,7 +102,7 @@ if ($inputType === 'range') {
 	if ($inputRangeShowMax) {
 		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMax'),
-			Helpers::selector($componentClass, $componentClass, 'range', 'max'),
+			FiltersOuputMock::getTwSelectors("{$componentClass}__range--max", $attributes),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$inputAttrs['max']}{$inputRangeShowMaxSuffix}</span>");

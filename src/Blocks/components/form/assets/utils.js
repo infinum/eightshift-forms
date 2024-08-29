@@ -1218,6 +1218,16 @@ export class Utils {
 	 */
 	setRangeCurrentValue(formId, name) {
 		const current = this.state.getStateElementRangeCurrent(name, formId);
+		const input = this.state.getStateElementInput(name, formId);
+
+		// Set range current value as css variable due to inconsistency in browsers.
+		if (input) {
+			const min = input.min || 0;
+			const max = input.max || 100;
+			const parsedProgress = Number(((input.value - min) * 100) / (max - min));
+	
+			input.style.setProperty('--es-form-range-progress', `${parsedProgress}%`);
+		}
 
 		if (!current) {
 			return;
