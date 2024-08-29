@@ -106,6 +106,7 @@ final class Filters
 				],
 				'file' => [
 					'additionalContent',
+					'infoAdditionalContent',
 					'previewRemoveLabel',
 				],
 				'checkboxes' => [

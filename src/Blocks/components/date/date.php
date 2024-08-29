@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -40,7 +41,7 @@ $dateHideLabel = false;
 $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
 
 $dateClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 

@@ -9,6 +9,7 @@
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifest = Helpers::getManifestByDir(__DIR__);
@@ -48,17 +49,21 @@ $customFile = '';
 $infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eighitshift-forms');
 $infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eighitshift-forms');
 
-$infoTextContent = '<div class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__info", $attributes)) . '">' . esc_html($infoText) . '</div>';
-if (!$fileCustomInfoTextUse) {
-	$infoTextContent = '';
+$infoTextContent = '';
+if ($fileCustomInfoTextUse) {
+	$infoTextContent .= '<div class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__info", $attributes)) . '">' . wp_kses_post($infoText) . '</div>';
 }
 
-$infoButtonContent = '<a tabindex="-1" href="#" class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__button", $attributes)) . '">' . esc_html($infoButton) . '</a>';
+$filter = UtilsHooksHelper::getFilterName(['block', 'file', 'infoAdditionalContent']);
+if (has_filter($filter)) {
+	$infoTextContent .= apply_filters($filter, '', $attributes);
+}
+
+$infoTextContent .= '<a tabindex="-1" href="#" class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__button", $attributes)) . '">' . esc_html($infoButton) . '</a>';
 
 $customFile = '
 	<div class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__custom-wrap", $attributes)) . '">
 		' . $infoTextContent . '
-		' . $infoButtonContent . '
 	</div>
 ';
 

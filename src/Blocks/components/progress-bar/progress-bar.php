@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -29,11 +30,11 @@ if (!$progressBarSteps) {
 $progressBarMultiflowUse = Helpers::checkAttr('progressBarMultiflowUse', $attributes, $manifest);
 
 $progressBarClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	$progressBarMultiflowUse ? FiltersOuputMock::getTwSelectors("{$componentClass}--multiflow", $attributes) : FiltersOuputMock::getTwSelectors("{$componentClass}--multistep", $attributes),
 	Helpers::selector($progressBarMultiflowUse, $componentClass, '', 'multiflow'),
 	Helpers::selector(!$progressBarMultiflowUse, UtilsHelper::getStateSelector('stepProgressBar')),
 	Helpers::selector($progressBarMultiflowUse, UtilsHelper::getStateSelector('stepProgressBarMultiflow')),
-	Helpers::selector(!$progressBarMultiflowUse, $componentClass, '', 'multistep'),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 

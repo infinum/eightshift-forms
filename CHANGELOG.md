@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.0.8]
+
+### Added
+
+- Additional Tailwind selectors for forms fields.
+- Range field not supports progress CSS variable.
+
 ## [5.0.7]
 
 ### Added
@@ -631,6 +638,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.0.8]: https://github.com/infinum/eightshift-forms/compare/5.0.7...5.0.8
 [5.0.7]: https://github.com/infinum/eightshift-forms/compare/5.0.6...5.0.7
 [5.0.6]: https://github.com/infinum/eightshift-forms/compare/5.0.5...5.0.6
 [5.0.5]: https://github.com/infinum/eightshift-forms/compare/5.0.4...5.0.5
