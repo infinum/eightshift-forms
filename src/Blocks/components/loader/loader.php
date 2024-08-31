@@ -17,8 +17,10 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 
 $loaderIsGeolocation = Helpers::checkAttr('loaderIsGeolocation', $attributes, $manifest);
 
+$twClasses = FiltersOuputMock::getTwSelectors(['loader'], $attributes);
+
 $loaderClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'loader', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('loader'),
 	Helpers::selector($loaderIsGeolocation && $componentClass, $componentClass, 'geolocation'),

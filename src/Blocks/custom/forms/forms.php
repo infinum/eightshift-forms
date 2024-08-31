@@ -99,8 +99,10 @@ if ($formAttrs) {
 	}
 }
 
+$twClasses = FiltersOuputMock::getTwSelectors(['forms'], $attributes);
+
 $formsClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($blockClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'forms', $blockClass),
 	UtilsHelper::getStateSelector('forms'),
 	Helpers::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
 	$attributes['className'] ?? '',

@@ -37,8 +37,10 @@ $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FiltersOuputMock::getTwSelectors(['file'], $attributes);
+
 $fileClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'file', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
@@ -51,7 +53,7 @@ $infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __
 
 $infoTextContent = '';
 if ($fileCustomInfoTextUse) {
-	$infoTextContent .= '<div class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__info", $attributes)) . '">' . wp_kses_post($infoText) . '</div>';
+	$infoTextContent .= '<div class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'file', 'info', "{$componentClass}__info")) . '">' . wp_kses_post($infoText) . '</div>';
 }
 
 $filter = UtilsHooksHelper::getFilterName(['block', 'file', 'infoAdditionalContent']);
@@ -59,10 +61,10 @@ if (has_filter($filter)) {
 	$infoTextContent .= apply_filters($filter, '', $attributes);
 }
 
-$infoTextContent .= '<a tabindex="-1" href="#" class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__button", $attributes)) . '">' . esc_html($infoButton) . '</a>';
+$infoTextContent .= '<a tabindex="-1" href="#" class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'file', 'button', "{$componentClass}__button")) . '">' . esc_html($infoButton) . '</a>';
 
 $customFile = '
-	<div class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__custom-wrap", $attributes)) . '">
+	<div class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'file', 'custom-wrap', "{$componentClass}__custom-wrap")) . '">
 		' . $infoTextContent . '
 	</div>
 ';

@@ -60,6 +60,10 @@
 		"submitVariant": {
 			"type": "string",
 			"default": "default"
+		},
+		"submitButtonTwParent": {
+			"type": "string",
+			"default": "submit"
 		}
 	}
 }

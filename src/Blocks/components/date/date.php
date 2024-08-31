@@ -40,8 +40,10 @@ $dateUseLabelAsPlaceholder = Helpers::checkAttr('dateUseLabelAsPlaceholder', $at
 $dateHideLabel = false;
 $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FiltersOuputMock::getTwSelectors(['date'], $attributes);
+
 $dateClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'date', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 

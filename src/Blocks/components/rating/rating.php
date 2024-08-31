@@ -34,8 +34,10 @@ $ratingAmount = Helpers::checkAttr('ratingAmount', $attributes, $manifest);
 $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $manifest);
 $ratingHideLabel = false;
 
+$twClasses = FiltersOuputMock::getTwSelectors(['rating'], $attributes);
+
 $ratingClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'rating', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 	UtilsHelper::getStateSelector('rating'),
@@ -63,10 +65,12 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('rat
 
 $stars = '';
 
+
+
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
 		<div
-			class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__star", $attributes)) . '"
+			class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'rating', 'star', "{$componentClass}__star")) . '"
 			' . UtilsHelper::getStateAttribute('ratingValue') . '="' . $i . '"
 		>
 		' . UtilsHelper::getUtilsIcons('rating') .
@@ -75,7 +79,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 
 $rating = '
 	<input
-		class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__input", $attributes)) . '"
+		class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'rating', 'input', "{$componentClass}__input")) . '"
 		name="' . esc_attr($ratingName) . '"
 		id="' . esc_attr($ratingName) . '"
 		value="' . esc_attr($ratingValue) . '"

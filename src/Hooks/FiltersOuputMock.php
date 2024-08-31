@@ -287,29 +287,74 @@ final class FiltersOuputMock
 	/**
 	 * Return Tailwind selectors data filter output.
 	 *
-	 * @param string $selector Selector to get data for.
+	 * @param array<string> $selectors Selectors to get data for.
 	 * @param array<string, string> $attributes The block attributes.
-	 * @param string $sufix Sufix to add to the selector.
 	 *
-	 * @return string
+	 * @return array<mixed>
 	 */
-	public static function getTwSelectors(string $selector, array $attributes, string $sufix = ''): string
+	public static function getTwSelectors(array $selectors, array $attributes): array
 	{
-		$output = [
-			$selector,
-			$sufix,
-		];
+		$output = [];
 
 		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'tailwindSelectors']);
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, [], $attributes);
 
-			if (isset($filterData[$selector]) && \is_string($filterData[$selector])) {
-				$output[] = $filterData[$selector];
+			foreach ($selectors as $selector) {
+				if (isset($filterData[$selector])) {
+					$output[$selector] = $filterData[$selector];
+				}
 			}
 		}
 
-		return \implode(' ', \array_filter($output));
+		return $output;
+	}
+
+	/**
+	 * Return Tailwind selectors base output.
+	 *
+	 * @param array<string, string> $data Data to get base from.
+	 * @param string $selector Selector to get data for.
+	 * @param string $sufix Sufix to add to the selector.
+	 *
+	 * @return string
+	 */
+	public static function getTwBase(array $data, string $selector, string $sufix = ''): string
+	{
+		$base = $data[$selector]['base'] ?? [];
+
+		if (!$base) {
+			return $sufix;
+		}
+
+		return \implode(' ', !\is_array($base) ? [$base, $sufix] : \array_merge($base, [$sufix]));
+	}
+
+	/**
+	 * Return Tailwind selectors part output.
+	 *
+	 * @param array<string, string> $data Data to get part from.
+	 * @param string $parentSelector Parent selector to get data for.
+	 * @param string $selector Selector to get data for.
+	 * @param string $sufix Sufix to add to the selector.
+	 *
+	 * @return string
+	 */
+	public static function getTwPart(array $data, string $parentSelector, string $selector, string $sufix = ''): string
+	{
+		$parts = $data[$parentSelector]['parts'] ?? [];
+
+		if (!$parts) {
+			return $sufix;
+		}
+
+		$part = $parts[$selector] ?? [];
+
+		if (!$part) {
+			return $sufix;
+		}
+
+		return \implode(' ', !\is_array($part) ? [$part, $sufix] : \array_merge($part, [$sufix]));
 	}
 
 	// --------------------------------------------------

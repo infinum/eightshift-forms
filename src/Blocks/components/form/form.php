@@ -6,11 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Form\Form;
-use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -29,6 +25,8 @@ $attributes = apply_filters(
 	Form::FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS,
 	$attributes
 );
+
+$twClasses = FiltersOuputMock::getTwSelectors(['form'], $attributes);
 
 $formName = Helpers::checkAttr('formName', $attributes, $manifest);
 $formAction = Helpers::checkAttr('formAction', $attributes, $manifest);
@@ -64,7 +62,7 @@ $customClassSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form
 $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
 $formClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'form', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($customClassSelector, $customClassSelector),
 	UtilsHelper::getStateSelector('form'),
@@ -153,51 +151,17 @@ if ($formAttrs) {
 	novalidate
 	onsubmit="event.preventDefault();"
 >
-	<?php if (is_user_logged_in() && !is_admin()) { ?>
-		<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-wrap', $attributes)) ?>">
-			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a
-					class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-link', $attributes)) ?>"
-					href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formPostId)) ?>"
-					title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>"
-				>
-					<?php echo UtilsHelper::getUtilsIcons('edit'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-				</a>
-			<?php } ?>
-
-			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
-				<a
-					class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-link', $attributes)) ?>"
-					href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
-					title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>"
-				>
-				<?php echo UtilsHelper::getUtilsIcons('settings'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-				</a>
-			<?php } ?>
-
-			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a
-				class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-link', $attributes)) ?>"
-				href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
-				title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>"
-			>
-					<?php echo UtilsHelper::getUtilsIcons('dashboard'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-				</a>
-
-				<?php if ($formHasSteps) { ?>
-					<a
-						href="#"
-						class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors('es-block-edit-options__edit-link', $attributes, UtilsHelper::getStateSelector('stepDebugPreview'))); ?>"
-						title="<?php esc_html_e('Debug form', 'eightshift-forms'); ?>"
-					>
-						<?php echo UtilsHelper::getUtilsIcons('debug'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-					</a>
-				<?php } ?>
-			<?php } ?>
-		</div>
-	<?php } ?>
-
 	<?php
+	if (is_user_logged_in() && !is_admin()) {
+		echo Helpers::render(
+			'form-edit-actions',
+			Helpers::props('formEditActions', $attributes, [
+					'formPostId' => $formPostId,
+					'formHasSteps' => $formHasSteps,
+				])
+		);
+	}
+
 	echo Helpers::render(
 		'global-msg',
 		Helpers::props('globalMsg', $attributes)
@@ -209,7 +173,7 @@ if ($formAttrs) {
 	);
 	?>
 
-	<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__fields", $attributes)); ?>">
+	<div class="<?php echo esc_attr(FiltersOuputMock::getTwPart($twClasses, 'form', 'fields', "{$componentClass}__fields")); ?>">
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 
 		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>

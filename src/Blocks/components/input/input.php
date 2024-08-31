@@ -51,11 +51,12 @@ $inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix',
 $inputHideLabel = false;
 $inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FiltersOuputMock::getTwSelectors(['input', 'range'], $attributes);
+
 $inputClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	$inputType === 'range' ? FiltersOuputMock::getTwBase($twClasses, 'range', "{$componentClass}__range") : FiltersOuputMock::getTwBase($twClasses, 'input', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
-	$inputType === 'range' ? FiltersOuputMock::getTwSelectors("{$componentClass}__range", $attributes) : '',
 ]);
 
 // Additional content filter.
@@ -86,14 +87,14 @@ if ($inputType === 'range') {
 	if ($inputRangeShowMin) {
 		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMin'),
-			FiltersOuputMock::getTwSelectors("{$componentClass}__range--min", $attributes),
+			FiltersOuputMock::getTwPart($twClasses, 'range', 'min', "{$componentClass}__range--min"),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$inputAttrs['min']}{$inputRangeShowMinSuffix}</span>");
 	}
 
 	if ($inputRangeShowCurrent) {
-		$cssSelector = FiltersOuputMock::getTwSelectors("{$componentClass}__range--current", $attributes);
+		$cssSelector = FiltersOuputMock::getTwPart($twClasses, 'range', 'current', "{$componentClass}__range--current");
 		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
@@ -102,7 +103,7 @@ if ($inputType === 'range') {
 	if ($inputRangeShowMax) {
 		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMax'),
-			FiltersOuputMock::getTwSelectors("{$componentClass}__range--max", $attributes),
+			FiltersOuputMock::getTwPart($twClasses, 'range', 'max', "{$componentClass}__range--max"),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$inputAttrs['max']}{$inputRangeShowMaxSuffix}</span>");

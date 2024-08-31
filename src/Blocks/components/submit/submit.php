@@ -29,9 +29,12 @@ $submitVariant = Helpers::checkAttr('submitVariant', $attributes, $manifest);
 $submitButtonComponent = Helpers::checkAttr('submitButtonComponent', $attributes, $manifest);
 $submitButtonAsLink = Helpers::checkAttr('submitButtonAsLink', $attributes, $manifest);
 $submitButtonAsLinkUrl = Helpers::checkAttr('submitButtonAsLinkUrl', $attributes, $manifest);
+$submitButtonTwParent = Helpers::checkAttr('submitButtonTwParent', $attributes, $manifest);
+
+$twClasses = FiltersOuputMock::getTwSelectors([$submitButtonTwParent], $attributes);
 
 $submitClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, $submitButtonTwParent, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($submitIcon, $componentClass, '', 'with-icon'),
 	Helpers::selector($submitVariant, $componentClass, '', $submitVariant),
@@ -49,7 +52,7 @@ $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
-	><span class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__inner", $attributes)) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
+	><span class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, $submitButtonTwParent, 'inner', "{$componentClass}__inner")) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
 	' . $additionalContent . '
 ';
 
@@ -58,7 +61,7 @@ if ($submitButtonAsLink) {
 	<a
 		href="' . esc_url($submitButtonAsLinkUrl) . '"
 		class="' . esc_attr($submitClass) . '"
-	><span class="' . esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__inner", $attributes)) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
+	><span class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, $submitButtonTwParent, 'inner', "{$componentClass}__inner")) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
 	' . $additionalContent . '
 	';
 }

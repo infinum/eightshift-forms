@@ -42,8 +42,10 @@ $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlacehold
 $textareaHideLabel = false;
 $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FiltersOuputMock::getTwSelectors(['textarea'], $attributes);
+
 $textareaClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'textarea', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
 	Helpers::selector($textareaSize, $componentClass, 'size', $textareaSize),

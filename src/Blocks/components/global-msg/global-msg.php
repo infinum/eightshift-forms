@@ -19,8 +19,10 @@ $globalMsgAttrs = [];
 
 $globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
 
+$twClasses = FiltersOuputMock::getTwSelectors(['global-msg'], $attributes);
+
 $globalMsgClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'global-msg', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('globalMsg'),
 ]);

@@ -26,8 +26,10 @@ $stepPrevLabel = Helpers::checkAttr('stepPrevLabel', $attributes, $manifest);
 $stepNextLabel = Helpers::checkAttr('stepNextLabel', $attributes, $manifest);
 $stepIsActive = Helpers::checkAttr('stepIsActive', $attributes, $manifest);
 
+$twClasses = FiltersOuputMock::getTwSelectors(['step'], $attributes);
+
 $stepClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'step', $componentClass),
 	UtilsHelper::getStateSelector('step'),
 	Helpers::selector($stepIsActive, UtilsHelper::getStateSelector('isActive')),
 ]);
@@ -56,18 +58,18 @@ $nextButtonComponent = '';
 
 <div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
 
-	<div class="<?php echo esc_attr("{$componentClass}__debug-details"); ?>">
+	<div class="<?php echo esc_attr(FiltersOuputMock::getTwPart($twClasses, 'step', 'debug-details', "{$componentClass}__debug-details")); ?>">
 		<?php
 		// translators: %s is replaced with the step name.
 		echo sprintf(esc_html__('Step name: %s', 'eightshift-forms'), esc_html($stepName));
 		?>
 	</div>
 
-	<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__inner", $attributes)); ?>">
+	<div class="<?php echo esc_attr(FiltersOuputMock::getTwPart($twClasses, 'step', 'inner', "{$componentClass}__inner")); ?>">
 		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 
-		<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__navigation", $attributes, $componentFieldClass)); ?>">
-			<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__navigation-inner", $attributes)); ?>">
+		<div class="<?php echo esc_attr(FiltersOuputMock::getTwPart($twClasses, 'step', 'navigation', "{$componentClass}__navigation {$componentFieldClass}")); ?>">
+			<div class="<?php echo esc_attr(FiltersOuputMock::getTwPart($twClasses, 'step', 'navigation-inner', "{$componentClass}__navigation-inner")); ?>">
 				<?php
 
 				$filterNameComponentPrev = UtilsHooksHelper::getFilterName(['block', 'step', 'component_prev']);
@@ -86,13 +88,14 @@ $nextButtonComponent = '';
 						Helpers::props('submit', $attributes, [
 							'submitValue' => esc_html($stepPrevLabel ?: __('Previous', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $prevButtonComponent,
+							'submitButtonTwParent' => 'step-navigation-prev',
 							'submitAttrs' => [
 								UtilsHelper::getStateAttribute('submitStepDirection') => 'prev',
 							],
 						]),
 						[
 							'additionalFieldClass' => Helpers::classnames([
-								Helpers::selector($componentFieldClass, $componentFieldClass, '', 'submit-prev'),
+								FiltersOuputMock::getTwPart($twClasses, 'step', 'navigation-prev', "{$componentFieldClass}--submit-prev"),
 							]),
 							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
 						]
@@ -115,13 +118,14 @@ $nextButtonComponent = '';
 						Helpers::props('submit', $attributes, [
 							'submitValue' => esc_html($stepNextLabel ?: __('Next', 'eightshift-forms')), // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 							'submitButtonComponent' => $nextButtonComponent,
+							'submitButtonTwParent' => 'step-navigation-next',
 							'submitAttrs' => [
 								UtilsHelper::getStateAttribute('submitStepDirection') => 'next',
 							],
 						]),
 						[
 							'additionalFieldClass' => Helpers::classnames([
-								Helpers::selector($componentFieldClass, $componentFieldClass, '', 'submit-next'),
+								FiltersOuputMock::getTwPart($twClasses, 'step', 'navigation-next', "{$componentFieldClass}--submit-next"),
 							]),
 							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
 						]

@@ -96,9 +96,15 @@ if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	);
 }
 
+$twClasses = FiltersOuputMock::getTwSelectors([
+	'field',
+	$fieldTypeInternal,
+	$selectorClass,
+], $attributes);
+
 $fieldClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
-	FiltersOuputMock::getTwSelectors("{$componentClass}--{$selectorClass}", $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'field', $componentClass),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field', "{$componentClass}--{$selectorClass}"),
 	Helpers::selector($additionalFieldClass, $additionalFieldClass),
 	Helpers::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
@@ -110,8 +116,44 @@ $fieldClass = Helpers::classnames([
 ]);
 
 $labelClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors("{$componentClass}__label", $attributes),
+	FiltersOuputMock::getTwPart($twClasses, 'field', 'label', "{$componentClass}__label"),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
+]);
+
+$labelInnerClass = Helpers::classnames([
+	FiltersOuputMock::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
+]);
+
+$innerClass = Helpers::classnames([
+	FiltersOuputMock::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-inner'),
+]);
+
+$contentClass = Helpers::classnames([
+	FiltersOuputMock::getTwPart($twClasses, 'field', 'content', "{$componentClass}__content"),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-content'),
+]);
+
+$beforeContentClass = Helpers::classnames([
+	FiltersOuputMock::getTwPart($twClasses, 'field', 'before-content', "{$componentClass}__before-content"),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-before-content'),
+]);
+
+$afterContentClass = Helpers::classnames([
+	FiltersOuputMock::getTwPart($twClasses, 'field', 'after-content', "{$componentClass}__after-content"),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-after-content'),
+]);
+
+$helpClass = Helpers::classnames([
+	FiltersOuputMock::getTwPart($twClasses, 'field', 'help', "{$componentClass}__help"),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-help'),
+]);
+
+$contentWrapClass = Helpers::classnames([
+	FiltersOuputMock::getTwPart($twClasses, 'field', 'content-wrap', "{$componentClass}__content-wrap"),
+	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
 ]);
 
 $fieldTag = 'div';
@@ -177,13 +219,13 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 	);
 
 	?>
-	<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__inner", $attributes)); ?>">
+	<div class="<?php echo esc_attr($innerClass); ?>">
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
 				for="<?php echo esc_attr($fieldId); ?>"
 			>
-				<span class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__label-inner", $attributes)); ?>">
+				<span class="<?php echo esc_attr($labelInnerClass); ?>">
 					<?php echo wp_kses_post($fieldLabel); ?>
 
 					<?php
@@ -199,23 +241,23 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 				</span>
 			</<?php echo esc_attr($labelTag); ?>>
 		<?php } ?>
-		<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__content", $attributes)); ?>">
+		<div class="<?php echo esc_attr($contentClass); ?>">
 			<?php if ($fieldBeforeContent) { ?>
-				<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__before-content", $attributes)); ?>">
+				<div class="<?php echo esc_attr($beforeContentClass); ?>">
 					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
-			<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__content-wrap", $attributes)); ?>">
+			<div class="<?php echo esc_attr($contentWrapClass); ?>">
 				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			</div>
 			<?php if ($fieldAfterContent) { ?>
-				<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__after-content", $attributes)); ?>">
+				<div class="<?php echo esc_attr($afterContentClass); ?>">
 					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
 		</div>
 		<?php if ($fieldHelp) { ?>
-			<div class="<?php echo esc_attr(FiltersOuputMock::getTwSelectors("{$componentClass}__help", $attributes)); ?>">
+			<div class="<?php echo esc_attr($helpClass); ?>">
 				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			</div>
 		<?php } ?>
@@ -225,7 +267,11 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 				'error',
 				Helpers::props('error', $attributes, [
 					'errorId' => $fieldId,
-					'selectorClass' => $componentClass
+					'selectorClass' => $componentClass,
+					'additionalClass' => Helpers::classnames([
+						FiltersOuputMock::getTwPart($twClasses, 'field', 'error'),
+						FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-error'),
+					]),
 				]),
 			);
 		}

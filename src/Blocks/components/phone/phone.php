@@ -42,8 +42,10 @@ $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $
 $phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FiltersOuputMock::getTwSelectors(['phone'], $attributes);
+
 $phoneClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'phone', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 

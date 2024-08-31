@@ -29,9 +29,11 @@ if (!$progressBarSteps) {
 
 $progressBarMultiflowUse = Helpers::checkAttr('progressBarMultiflowUse', $attributes, $manifest);
 
+$twClasses = FiltersOuputMock::getTwSelectors(['progress-bar'], $attributes);
+
 $progressBarClass = Helpers::classnames([
-	FiltersOuputMock::getTwSelectors($componentClass, $attributes),
-	$progressBarMultiflowUse ? FiltersOuputMock::getTwSelectors("{$componentClass}--multiflow", $attributes) : FiltersOuputMock::getTwSelectors("{$componentClass}--multistep", $attributes),
+	FiltersOuputMock::getTwBase($twClasses, 'progress-bar', $componentClass),
+	$progressBarMultiflowUse ? FiltersOuputMock::getTwPart($twClasses, 'progress-bar', 'multiflow', "{$componentClass}--multiflow") : FiltersOuputMock::getTwPart($twClasses, 'progress-bar', 'multistep', "{$componentClass}--multistep"),
 	Helpers::selector($progressBarMultiflowUse, $componentClass, '', 'multiflow'),
 	Helpers::selector(!$progressBarMultiflowUse, UtilsHelper::getStateSelector('stepProgressBar')),
 	Helpers::selector($progressBarMultiflowUse, UtilsHelper::getStateSelector('stepProgressBarMultiflow')),
@@ -46,6 +48,7 @@ $progressBarClass = Helpers::classnames([
 			'multistep',
 			[
 				'steps' => $progressBarSteps,
+				'twClasses' => $twClasses,
 				'componentClass' => $componentClass,
 				'jsClass' => UtilsHelper::getStateSelector('stepProgressBar'),
 				'hideLabels' => Helpers::checkAttr('progressBarHideLabels', $attributes, $manifest),
@@ -59,6 +62,7 @@ $progressBarClass = Helpers::classnames([
 			'multiflow',
 			[
 				'count' => Helpers::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest),
+				'twClasses' => $twClasses,
 			],
 			'components',
 			false,
