@@ -135,6 +135,7 @@ final class Filters
 				],
 				'rating' => [
 					'additionalContent',
+					'starIcon',
 				],
 				'dynamic' => [
 					'additionalContent',

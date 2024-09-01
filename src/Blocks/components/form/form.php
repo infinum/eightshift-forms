@@ -26,7 +26,8 @@ $attributes = apply_filters(
 	$attributes
 );
 
-$twClasses = FormsHelper::getTwSelectors(FormsHelper::getTwSelectorsData($attributes), ['form'], $attributes);
+$twClassesData = FormsHelper::getTwSelectorsData($attributes);
+$twClasses = FormsHelper::getTwSelectors($twClassesData, ['form'], $attributes);
 
 $formName = Helpers::checkAttr('formName', $attributes, $manifest);
 $formAction = Helpers::checkAttr('formAction', $attributes, $manifest);
@@ -158,18 +159,23 @@ if ($formAttrs) {
 			Helpers::props('formEditActions', $attributes, [
 					'formPostId' => $formPostId,
 					'formHasSteps' => $formHasSteps,
+					'formEditActionsTwSelectorsData' => $twClassesData,
 				])
 		);
 	}
 
 	echo Helpers::render(
 		'global-msg',
-		Helpers::props('globalMsg', $attributes)
+		Helpers::props('globalMsg', $attributes, [
+			'globalMsgTwSelectorsData' => $twClassesData,
+		])
 	);
 
 	echo Helpers::render(
 		'progress-bar',
-		Helpers::props('progressBar', $attributes)
+		Helpers::props('progressBar', $attributes, [
+			'progressBarTwSelectorsData' => $twClassesData,
+		])
 	);
 	?>
 
@@ -182,7 +188,9 @@ if ($formAttrs) {
 	<?php
 	echo Helpers::render(
 		'loader',
-		Helpers::props('loader', $attributes)
+		Helpers::props('loader', $attributes, [
+			'loaderTwSelectorsData' => $twClassesData,
+		])
 	);
 	?>
 </<?php echo $formServerSideRender ? 'div' : 'form'; ?>>

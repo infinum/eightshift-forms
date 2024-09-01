@@ -256,7 +256,7 @@ export class Utils {
 			return;
 		}
 
-		messageContainer?.classList?.remove(this.state.getStateSelector('isActive'));
+		messageContainer?.classList?.remove(this.state.getStateSelector('isActive'), this.state.getStateSelector('hasError'));
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
 	}
@@ -299,7 +299,7 @@ export class Utils {
 				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
 			}
 		} else {
-			messageContainer?.classList?.add(this.state.getStateSelector('isActive'));
+			messageContainer?.classList?.add(this.state.getStateSelector('isActive'), this.state.getStateSelector('hasError'));
 			messageContainer.dataset.status = status;
 
 			const headingError = this.state.getStateFormGlobalMsgHeadingError(formId);

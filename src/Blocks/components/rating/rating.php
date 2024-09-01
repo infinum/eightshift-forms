@@ -9,6 +9,7 @@
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifest = Helpers::getManifestByDir(__DIR__);
@@ -65,7 +66,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('rat
 
 $stars = '';
 
-
+$iconFilterName = UtilsHooksHelper::getFilterName(['block', 'rating', 'starIcon']);
 
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
@@ -73,7 +74,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'star', "{$componentClass}__star")) . '"
 			' . UtilsHelper::getStateAttribute('ratingValue') . '="' . $i . '"
 		>
-		' . UtilsHelper::getUtilsIcons('rating') .
+		' . apply_filters($iconFilterName, UtilsHelper::getUtilsIcons('rating'), $attributes) .
 		'</div>';
 }
 
