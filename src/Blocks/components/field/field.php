@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -75,6 +75,7 @@ $fieldTypeCustom = Helpers::checkAttr('fieldTypeCustom', $attributes, $manifest)
 $fieldTracking = Helpers::checkAttr('fieldTracking', $attributes, $manifest);
 $fieldTypeInternal = Helpers::checkAttr('fieldTypeInternal', $attributes, $manifest);
 $fieldIsNoneFormBlock = Helpers::checkAttr('fieldIsNoneFormBlock', $attributes, $manifest);
+$fieldTwSelectorsData = Helpers::checkAttr('fieldTwSelectorsData', $attributes, $manifest);
 
 $fieldStyleOutput = [];
 $filterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleClasses']);
@@ -96,15 +97,15 @@ if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	);
 }
 
-$twClasses = FiltersOuputMock::getTwSelectors([
+$twClasses = FormsHelper::getTwSelectors($fieldTwSelectorsData, [
 	'field',
 	$fieldTypeInternal,
 	$selectorClass,
 ], $attributes);
 
 $fieldClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'field', $componentClass),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field', "{$componentClass}--{$selectorClass}"),
+	FormsHelper::getTwBase($twClasses, 'field', $componentClass),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field', "{$componentClass}--{$selectorClass}"),
 	Helpers::selector($additionalFieldClass, $additionalFieldClass),
 	Helpers::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
@@ -116,44 +117,44 @@ $fieldClass = Helpers::classnames([
 ]);
 
 $labelClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'field', 'label', "{$componentClass}__label"),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-label'),
+	FormsHelper::getTwPart($twClasses, 'field', 'label', "{$componentClass}__label"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
 ]);
 
 $labelInnerClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
+	FormsHelper::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
 ]);
 
 $innerClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-inner'),
+	FormsHelper::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-inner'),
 ]);
 
 $contentClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'field', 'content', "{$componentClass}__content"),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-content'),
+	FormsHelper::getTwPart($twClasses, 'field', 'content', "{$componentClass}__content"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content'),
 ]);
 
 $beforeContentClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'field', 'before-content', "{$componentClass}__before-content"),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-before-content'),
+	FormsHelper::getTwPart($twClasses, 'field', 'before-content', "{$componentClass}__before-content"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-before-content'),
 ]);
 
 $afterContentClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'field', 'after-content', "{$componentClass}__after-content"),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-after-content'),
+	FormsHelper::getTwPart($twClasses, 'field', 'after-content', "{$componentClass}__after-content"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-after-content'),
 ]);
 
 $helpClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'field', 'help', "{$componentClass}__help"),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-help'),
+	FormsHelper::getTwPart($twClasses, 'field', 'help', "{$componentClass}__help"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-help'),
 ]);
 
 $contentWrapClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'field', 'content-wrap', "{$componentClass}__content-wrap"),
-	FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
+	FormsHelper::getTwPart($twClasses, 'field', 'content-wrap', "{$componentClass}__content-wrap"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
 ]);
 
 $fieldTag = 'div';
@@ -269,8 +270,8 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 					'errorId' => $fieldId,
 					'selectorClass' => $componentClass,
 					'additionalClass' => Helpers::classnames([
-						FiltersOuputMock::getTwPart($twClasses, 'field', 'error'),
-						FiltersOuputMock::getTwPart($twClasses, $selectorClass, 'field-error'),
+						FormsHelper::getTwPart($twClasses, 'field', 'error'),
+						FormsHelper::getTwPart($twClasses, $selectorClass, 'field-error'),
 					]),
 				]),
 			);

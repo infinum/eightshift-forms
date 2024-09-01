@@ -46,6 +46,9 @@
 		"radiosUseLabelAsPlaceholder": {
 			"type": "boolean",
 			"default": false
+		},
+		"radiosTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }

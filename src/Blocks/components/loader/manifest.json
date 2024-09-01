@@ -7,6 +7,9 @@
 		"loaderIsGeolocation": {
 			"type": "boolean",
 			"default": false
+		},
+		"loaderTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }

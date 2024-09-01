@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -28,12 +28,13 @@ if (!$progressBarSteps) {
 }
 
 $progressBarMultiflowUse = Helpers::checkAttr('progressBarMultiflowUse', $attributes, $manifest);
+$progressBarTwSelectorsData = Helpers::checkAttr('progressBarTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FiltersOuputMock::getTwSelectors(['progress-bar'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($progressBarTwSelectorsData, ['progress-bar'], $attributes);
 
 $progressBarClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'progress-bar', $componentClass),
-	$progressBarMultiflowUse ? FiltersOuputMock::getTwPart($twClasses, 'progress-bar', 'multiflow', "{$componentClass}--multiflow") : FiltersOuputMock::getTwPart($twClasses, 'progress-bar', 'multistep', "{$componentClass}--multistep"),
+	FormsHelper::getTwBase($twClasses, 'progress-bar', $componentClass),
+	$progressBarMultiflowUse ? FormsHelper::getTwPart($twClasses, 'progress-bar', 'multiflow', "{$componentClass}--multiflow") : FormsHelper::getTwPart($twClasses, 'progress-bar', 'multistep', "{$componentClass}--multistep"),
 	Helpers::selector($progressBarMultiflowUse, $componentClass, '', 'multiflow'),
 	Helpers::selector(!$progressBarMultiflowUse, UtilsHelper::getStateSelector('stepProgressBar')),
 	Helpers::selector($progressBarMultiflowUse, UtilsHelper::getStateSelector('stepProgressBarMultiflow')),

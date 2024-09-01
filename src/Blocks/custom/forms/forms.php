@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Form\Form;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -99,10 +99,10 @@ if ($formAttrs) {
 	}
 }
 
-$twClasses = FiltersOuputMock::getTwSelectors(['forms'], $attributes);
+$twClasses = FormsHelper::getTwSelectors(FormsHelper::getTwSelectorsData($attributes), ['forms'], $attributes);
 
 $formsClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'forms', $blockClass),
+	FormsHelper::getTwBase($twClasses, 'forms', $blockClass),
 	UtilsHelper::getStateSelector('forms'),
 	Helpers::selector($hasGeolocation, UtilsHelper::getStateSelector('isGeoLoading')),
 	$attributes['className'] ?? '',

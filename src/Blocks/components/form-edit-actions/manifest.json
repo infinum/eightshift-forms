@@ -10,6 +10,9 @@
 		"formEditActionsFormHasSteps": {
 			"type": "boolean",
 			"default": false
+		},
+		"formEditActionsTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }

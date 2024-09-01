@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -46,15 +45,16 @@ $inputRangeShowMaxSuffix = Helpers::checkAttr('inputRangeShowMaxSuffix', $attrib
 $inputRangeShowCurrent = Helpers::checkAttr('inputRangeShowCurrent', $attributes, $manifest);
 $inputRangeShowCurrentPrefix = Helpers::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
 $inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
+$inputTwSelectorsData = Helpers::checkAttr('inputTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputHideLabel = false;
 $inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FiltersOuputMock::getTwSelectors(['input', 'range'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range'], $attributes);
 
 $inputClass = Helpers::classnames([
-	$inputType === 'range' ? FiltersOuputMock::getTwBase($twClasses, 'range', "{$componentClass}__range") : FiltersOuputMock::getTwBase($twClasses, 'input', $componentClass),
+	$inputType === 'range' ? FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range") : FormsHelper::getTwBase($twClasses, 'input', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
@@ -87,14 +87,14 @@ if ($inputType === 'range') {
 	if ($inputRangeShowMin) {
 		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMin'),
-			FiltersOuputMock::getTwPart($twClasses, 'range', 'min', "{$componentClass}__range--min"),
+			FormsHelper::getTwPart($twClasses, 'range', 'min', "{$componentClass}__range--min"),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$inputAttrs['min']}{$inputRangeShowMinSuffix}</span>");
 	}
 
 	if ($inputRangeShowCurrent) {
-		$cssSelector = FiltersOuputMock::getTwPart($twClasses, 'range', 'current', "{$componentClass}__range--current");
+		$cssSelector = FormsHelper::getTwPart($twClasses, 'range', 'current', "{$componentClass}__range--current");
 		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
@@ -103,7 +103,7 @@ if ($inputType === 'range') {
 	if ($inputRangeShowMax) {
 		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMax'),
-			FiltersOuputMock::getTwPart($twClasses, 'range', 'max', "{$componentClass}__range--max"),
+			FormsHelper::getTwPart($twClasses, 'range', 'max', "{$componentClass}__range--max"),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$inputAttrs['max']}{$inputRangeShowMaxSuffix}</span>");
@@ -137,6 +137,7 @@ echo Helpers::render(
 			'fieldContent' => $input,
 			'fieldId' => $inputName,
 			'fieldName' => $inputName,
+			'fieldTwSelectorsData' => $inputTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('input'),
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),

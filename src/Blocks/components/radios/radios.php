@@ -24,6 +24,7 @@ $radiosFieldAttrs = Helpers::checkAttr('radiosFieldAttrs', $attributes, $manifes
 $radiosTracking = Helpers::checkAttr('radiosTracking', $attributes, $manifest);
 $radiosUseLabelAsPlaceholder = Helpers::checkAttr('radiosUseLabelAsPlaceholder', $attributes, $manifest);
 $radiosPlaceholder = Helpers::checkAttr('radiosPlaceholder', $attributes, $manifest);
+$radiosTwSelectorsData = Helpers::checkAttr('radiosTwSelectorsData', $attributes, $manifest);
 
 // Add internal counter name key.
 $radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
@@ -87,6 +88,7 @@ $fieldOutput = [
 	'fieldIsRequired' => $radiosIsRequired,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
 	'fieldId' => $radiosName,
+	'fieldTwSelectorsData' => $radiosTwSelectorsData,
 	'fieldTracking' => $radiosTracking,
 	'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

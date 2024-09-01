@@ -23,6 +23,7 @@ $checkboxesTypeCustom = Helpers::checkAttr('checkboxesTypeCustom', $attributes, 
 $checkboxesFieldAttrs = Helpers::checkAttr('checkboxesFieldAttrs', $attributes, $manifest);
 $checkboxesUseLabelAsPlaceholder = Helpers::checkAttr('checkboxesUseLabelAsPlaceholder', $attributes, $manifest);
 $checkboxesPlaceholder = Helpers::checkAttr('checkboxesPlaceholder', $attributes, $manifest);
+$checkboxesTwSelectorsData = Helpers::checkAttr('checkboxesTwSelectorsData', $attributes, $manifest);
 
 // Add internal counter name key.
 $checkboxesContent = (string) preg_replace_callback('/name=""/', function () use ($checkboxesName) {
@@ -84,6 +85,7 @@ $fieldOutput = [
 	'fieldId' => $checkboxesName,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 	'fieldName' => $checkboxesName,
+	'fieldTwSelectorsData' => $checkboxesTwSelectorsData,
 	'fieldIsRequired' => $checkboxesIsRequired,
 	'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

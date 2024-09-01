@@ -129,6 +129,9 @@
 		},
 		"inputRangeShowCurrentSuffix": {
 			"type": "string"
+		},
+		"inputTwSelectorsData": {
+			"type": "array"
 		}
 	},
 	"options": {

@@ -15,6 +15,9 @@
 		},
 		"errorId": {
 			"type": "string"
+		},
+		"errorTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }

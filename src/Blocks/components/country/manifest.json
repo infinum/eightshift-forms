@@ -65,6 +65,9 @@
 		"countryValueType": {
 			"type": "string",
 			"default": "countryName"
+		},
+		"countryTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }

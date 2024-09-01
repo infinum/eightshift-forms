@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -32,12 +31,13 @@ $ratingAttrs = Helpers::checkAttr('ratingAttrs', $attributes, $manifest);
 $ratingFieldAttrs = Helpers::checkAttr('ratingFieldAttrs', $attributes, $manifest);
 $ratingAmount = Helpers::checkAttr('ratingAmount', $attributes, $manifest);
 $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $manifest);
+$ratingTwSelectorsData = Helpers::checkAttr('ratingTwSelectorsData', $attributes, $manifest);
 $ratingHideLabel = false;
 
-$twClasses = FiltersOuputMock::getTwSelectors(['rating'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating'], $attributes);
 
 $ratingClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'rating', $componentClass),
+	FormsHelper::getTwBase($twClasses, 'rating', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($ratingSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 	UtilsHelper::getStateSelector('rating'),
@@ -70,7 +70,7 @@ $stars = '';
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
 		<div
-			class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'rating', 'star', "{$componentClass}__star")) . '"
+			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'star', "{$componentClass}__star")) . '"
 			' . UtilsHelper::getStateAttribute('ratingValue') . '="' . $i . '"
 		>
 		' . UtilsHelper::getUtilsIcons('rating') .
@@ -79,7 +79,7 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 
 $rating = '
 	<input
-		class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'rating', 'input', "{$componentClass}__input")) . '"
+		class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'input', "{$componentClass}__input")) . '"
 		name="' . esc_attr($ratingName) . '"
 		id="' . esc_attr($ratingName) . '"
 		value="' . esc_attr($ratingValue) . '"
@@ -103,6 +103,7 @@ echo Helpers::render(
 			'fieldContent' => $rating,
 			'fieldId' => $ratingName,
 			'fieldName' => $ratingName,
+			'fieldTwSelectorsData' => $ratingTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('rating'),
 			'fieldIsRequired' => $ratingIsRequired,
 			'fieldDisabled' => !empty($ratingIsDisabled),

@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -35,15 +34,16 @@ $datePreviewFormat = Helpers::checkAttr('datePreviewFormat', $attributes, $manif
 $dateOutputFormat = Helpers::checkAttr('dateOutputFormat', $attributes, $manifest);
 $dateFieldAttrs = Helpers::checkAttr('dateFieldAttrs', $attributes, $manifest);
 $dateUseLabelAsPlaceholder = Helpers::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
+$dateTwSelectorsData = Helpers::checkAttr('dateTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $dateHideLabel = false;
 $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FiltersOuputMock::getTwSelectors(['date'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($dateTwSelectorsData, ['date'], $attributes);
 
 $dateClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'date', $componentClass),
+	FormsHelper::getTwBase($twClasses, 'date', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
@@ -99,6 +99,7 @@ echo Helpers::render(
 			'fieldId' => $dateName,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType($dateType === 'date' ? 'date' : 'dateTime'),
 			'fieldName' => $dateName,
+			'fieldTwSelectorsData' => $dateTwSelectorsData,
 			'fieldIsRequired' => $dateIsRequired,
 			'fieldDisabled' => !empty($dateIsDisabled),
 			'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

@@ -7,7 +7,7 @@
  */
 
 use EightshiftForms\Form\Form;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -26,7 +26,7 @@ $attributes = apply_filters(
 	$attributes
 );
 
-$twClasses = FiltersOuputMock::getTwSelectors(['form'], $attributes);
+$twClasses = FormsHelper::getTwSelectors(FormsHelper::getTwSelectorsData($attributes), ['form'], $attributes);
 
 $formName = Helpers::checkAttr('formName', $attributes, $manifest);
 $formAction = Helpers::checkAttr('formAction', $attributes, $manifest);
@@ -62,7 +62,7 @@ $customClassSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form
 $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
 $formClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'form', $componentClass),
+	FormsHelper::getTwBase($twClasses, 'form', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($customClassSelector, $customClassSelector),
 	UtilsHelper::getStateSelector('form'),
@@ -173,7 +173,7 @@ if ($formAttrs) {
 	);
 	?>
 
-	<div class="<?php echo esc_attr(FiltersOuputMock::getTwPart($twClasses, 'form', 'fields', "{$componentClass}__fields")); ?>">
+	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form', 'fields', "{$componentClass}__fields")); ?>">
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 
 		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>

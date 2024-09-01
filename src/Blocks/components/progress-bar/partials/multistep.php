@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -25,7 +25,7 @@ $jsClass = $attributes['jsClass'] ?? '';
 $hideLabels = $attributes['hideLabels'] ?? false;
 
 $progressBarItemClass = Helpers::classnames([
-	FiltersOuputMock::getTwPart($twClasses, 'progress-bar', 'item', "{$componentClass}__item"),
+	FormsHelper::getTwPart($twClasses, 'progress-bar', 'item', "{$componentClass}__item"),
 	Helpers::selector($jsClass, $jsClass),
 ]);
 
@@ -45,7 +45,7 @@ foreach ($steps as $step) {
 	}
 	?>
 	<div class="<?php echo esc_attr($progressBarItemClass); ?>" <?php echo $progressBarAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
-		<div class="<?php echo esc_attr(FiltersOuputMock::getTwPart($twClasses, 'progress-bar', 'item-inner', "{$componentClass}__item-inner")); ?>">
+		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'progress-bar', 'item-inner', "{$componentClass}__item-inner")); ?>">
 			<?php
 			if (!$hideLabels) {
 				echo esc_html($label);

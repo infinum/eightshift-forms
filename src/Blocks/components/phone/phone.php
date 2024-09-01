@@ -10,7 +10,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
@@ -37,15 +36,16 @@ $phoneFormPostId = Helpers::checkAttr('phoneFormPostId', $attributes, $manifest)
 $phoneTypeCustom = Helpers::checkAttr('phoneTypeCustom', $attributes, $manifest);
 $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
+$phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FiltersOuputMock::getTwSelectors(['phone'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone'], $attributes);
 
 $phoneClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'phone', $componentClass),
+	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
@@ -144,6 +144,7 @@ echo Helpers::render(
 			'fieldContent' => $phone,
 			'fieldId' => $phoneName,
 			'fieldName' => $phoneName,
+			'fieldTwSelectorsData' => $phoneTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),

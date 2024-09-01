@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -16,11 +16,12 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $loaderIsGeolocation = Helpers::checkAttr('loaderIsGeolocation', $attributes, $manifest);
+$loaderTwSelectorsData = Helpers::checkAttr('loaderTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FiltersOuputMock::getTwSelectors(['loader'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($loaderTwSelectorsData, ['loader'], $attributes);
 
 $loaderClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'loader', $componentClass),
+	FormsHelper::getTwBase($twClasses, 'loader', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('loader'),
 	Helpers::selector($loaderIsGeolocation && $componentClass, $componentClass, 'geolocation'),

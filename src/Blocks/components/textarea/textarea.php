@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -37,15 +36,16 @@ $textareaSize = Helpers::checkAttr('textareaSize', $attributes, $manifest);
 $textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
+$textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaHideLabel = false;
 $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FiltersOuputMock::getTwSelectors(['textarea'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea'], $attributes);
 
 $textareaClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'textarea', $componentClass),
+	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
 	Helpers::selector($textareaSize, $componentClass, 'size', $textareaSize),
@@ -98,6 +98,7 @@ echo Helpers::render(
 			'fieldContent' => $textarea,
 			'fieldId' => $textareaName,
 			'fieldName' => $textareaName,
+			'fieldTwSelectorsData' => $textareaTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),

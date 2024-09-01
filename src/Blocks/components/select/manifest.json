@@ -75,6 +75,9 @@
 		},
 		"selectShowAs": {
 			"type": "string"
+		},
+		"selectTwSelectorsData": {
+			"type": "array"
 		}
 	},
 	"options": {

@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -33,14 +32,15 @@ $fileTypeCustom = Helpers::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Helpers::checkAttr('fileAttrs', $attributes, $manifest);
 $fileFieldAttrs = Helpers::checkAttr('fileFieldAttrs', $attributes, $manifest);
 $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
+$fileTwSelectorsData = Helpers::checkAttr('fileTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FiltersOuputMock::getTwSelectors(['file'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file'], $attributes);
 
 $fileClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'file', $componentClass),
+	FormsHelper::getTwBase($twClasses, 'file', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
@@ -53,7 +53,7 @@ $infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __
 
 $infoTextContent = '';
 if ($fileCustomInfoTextUse) {
-	$infoTextContent .= '<div class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'file', 'info', "{$componentClass}__info")) . '">' . wp_kses_post($infoText) . '</div>';
+	$infoTextContent .= '<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'info', "{$componentClass}__info")) . '">' . wp_kses_post($infoText) . '</div>';
 }
 
 $filter = UtilsHooksHelper::getFilterName(['block', 'file', 'infoAdditionalContent']);
@@ -61,10 +61,10 @@ if (has_filter($filter)) {
 	$infoTextContent .= apply_filters($filter, '', $attributes);
 }
 
-$infoTextContent .= '<a tabindex="-1" href="#" class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'file', 'button', "{$componentClass}__button")) . '">' . esc_html($infoButton) . '</a>';
+$infoTextContent .= '<a tabindex="-1" href="#" class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'button', "{$componentClass}__button")) . '">' . esc_html($infoButton) . '</a>';
 
 $customFile = '
-	<div class="' . esc_attr(FiltersOuputMock::getTwPart($twClasses, 'file', 'custom-wrap', "{$componentClass}__custom-wrap")) . '">
+	<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'custom-wrap', "{$componentClass}__custom-wrap")) . '">
 		' . $infoTextContent . '
 	</div>
 ';
@@ -100,6 +100,7 @@ echo Helpers::render(
 			'fieldContent' => $file,
 			'fieldId' => $fileName,
 			'fieldName' => $fileName,
+			'fieldTwSelectorsData' => $fileTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('file'),
 			'fieldDisabled' => !empty($fileIsDisabled),
 			'fieldIsRequired' => $fileIsRequired,

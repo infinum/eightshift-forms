@@ -6,7 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -18,11 +18,12 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $globalMsgAttrs = [];
 
 $globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
+$globalMsgTwSelectorsData = Helpers::checkAttr('globalMsgTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FiltersOuputMock::getTwSelectors(['global-msg'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg'], $attributes);
 
 $globalMsgClass = Helpers::classnames([
-	FiltersOuputMock::getTwBase($twClasses, 'global-msg', $componentClass),
+	FormsHelper::getTwBase($twClasses, 'global-msg', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('globalMsg'),
 ]);
