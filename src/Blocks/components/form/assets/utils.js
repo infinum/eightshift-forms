@@ -902,6 +902,11 @@ export class Utils {
 			case 'checkbox':
 				setStateValuesCheckbox(target, formId);
 				break;
+			case 'rating':
+				setStateValuesInput(target, formId);
+				// Value must be set after the state change.
+				this.state.getStateElementCustom(name, formId).setAttribute(this.state.getStateAttribute('ratingValue'), this.state.getStateElementValue(name, formId));
+				break;
 			default:
 				setStateValuesInput(target, formId);
 

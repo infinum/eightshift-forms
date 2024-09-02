@@ -20,7 +20,7 @@ $globalMsgAttrs = [];
 $globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
 $globalMsgTwSelectorsData = Helpers::checkAttr('globalMsgTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg']);
 
 $globalMsgClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'global-msg', $componentClass),

@@ -23,7 +23,7 @@ $formEditActionsFormPostId = Helpers::checkAttr('formEditActionsFormPostId', $at
 $formEditActionsFormHasSteps = Helpers::checkAttr('formEditActionsFormHasSteps', $attributes, $manifest);
 $formEditActionsTwSelectorsData = Helpers::checkAttr('formEditActionsTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form-edit-actions'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form-edit-actions']);
 
 ?>
 

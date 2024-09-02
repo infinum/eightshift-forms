@@ -30,7 +30,7 @@ if (!$progressBarSteps) {
 $progressBarMultiflowUse = Helpers::checkAttr('progressBarMultiflowUse', $attributes, $manifest);
 $progressBarTwSelectorsData = Helpers::checkAttr('progressBarTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($progressBarTwSelectorsData, ['progress-bar'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($progressBarTwSelectorsData, ['progress-bar']);
 
 $progressBarClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'progress-bar', $componentClass),

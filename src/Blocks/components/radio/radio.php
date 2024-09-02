@@ -34,7 +34,7 @@ $radioIcon = Helpers::checkAttr('radioIcon', $attributes, $manifest);
 $radioIsHidden = Helpers::checkAttr('radioIsHidden', $attributes, $manifest);
 $radioTwSelectorsData = Helpers::checkAttr('radioTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($radioTwSelectorsData, ['radio'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($radioTwSelectorsData, ['radio']);
 
 $radioClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'radio', $componentClass),

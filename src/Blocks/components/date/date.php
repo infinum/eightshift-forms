@@ -40,7 +40,7 @@ $dateTwSelectorsData = Helpers::checkAttr('dateTwSelectorsData', $attributes, $m
 $dateHideLabel = false;
 $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($dateTwSelectorsData, ['date'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($dateTwSelectorsData, ['date']);
 
 $dateClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'date', $componentClass),

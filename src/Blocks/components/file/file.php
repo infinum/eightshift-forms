@@ -37,7 +37,7 @@ $fileTwSelectorsData = Helpers::checkAttr('fileTwSelectorsData', $attributes, $m
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file']);
 
 $fileClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'file', $componentClass),

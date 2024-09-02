@@ -27,7 +27,7 @@ $attributes = apply_filters(
 );
 
 $twClassesData = FormsHelper::getTwSelectorsData($attributes);
-$twClasses = FormsHelper::getTwSelectors($twClassesData, ['form'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($twClassesData, ['form']);
 
 $formName = Helpers::checkAttr('formName', $attributes, $manifest);
 $formAction = Helpers::checkAttr('formAction', $attributes, $manifest);

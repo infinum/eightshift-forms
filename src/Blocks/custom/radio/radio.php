@@ -9,7 +9,6 @@
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-
 echo Helpers::render(
 	'radio',
 	Helpers::props('radio', $attributes, [

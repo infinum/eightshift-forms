@@ -10,6 +10,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - New way of handling Tailwind classes for forms.
 
+### Fixed
+
+- Rating field is now disabled if the parameter is set to true.
+- Input number is now able to use standard tab navigation.
+- Rating field now supports tab navigation.
+
 ## [5.0.8]
 
 ### Added

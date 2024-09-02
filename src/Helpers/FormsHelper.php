@@ -157,7 +157,6 @@ final class FormsHelper
 	/**
 	 * Return Tailwind selectors data filter output.
 	 *
-	 * @param array<string> $selectors Selectors to get data for.
 	 * @param array<string, string> $attributes The block attributes.
 	 *
 	 * @return array<mixed>
@@ -171,7 +170,7 @@ final class FormsHelper
 
 		return [];
 	}
-	
+
 	/**
 	 * Return Tailwind selectors data filter output.
 	 *

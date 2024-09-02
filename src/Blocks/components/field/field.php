@@ -101,7 +101,7 @@ $twClasses = FormsHelper::getTwSelectors($fieldTwSelectorsData, [
 	'field',
 	$fieldTypeInternal,
 	$selectorClass,
-], $attributes);
+]);
 
 $fieldClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'field', $componentClass),

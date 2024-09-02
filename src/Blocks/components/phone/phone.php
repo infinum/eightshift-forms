@@ -42,7 +42,7 @@ $phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, 
 $phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone']);
 
 $phoneClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),

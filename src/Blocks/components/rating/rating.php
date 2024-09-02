@@ -35,7 +35,7 @@ $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $man
 $ratingTwSelectorsData = Helpers::checkAttr('ratingTwSelectorsData', $attributes, $manifest);
 $ratingHideLabel = false;
 
-$twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating']);
 
 $ratingClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'rating', $componentClass),
@@ -84,7 +84,10 @@ $rating = '
 		name="' . esc_attr($ratingName) . '"
 		id="' . esc_attr($ratingName) . '"
 		value="' . esc_attr($ratingValue) . '"
-		type="text"
+		step="1"
+		min="0"
+		max="' . esc_attr($ratingAmount) . '"
+		type="number"
 		' . disabled($ratingIsDisabled, true, false) . '
 		' . wp_readonly($ratingIsReadOnly, true, false) . '
 	/>

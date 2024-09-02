@@ -51,7 +51,7 @@ $inputTwSelectorsData = Helpers::checkAttr('inputTwSelectorsData', $attributes, 
 $inputHideLabel = false;
 $inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range']);
 
 $inputClass = Helpers::classnames([
 	$inputType === 'range' ? FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range") : FormsHelper::getTwBase($twClasses, 'input', $componentClass),
@@ -153,7 +153,7 @@ echo Helpers::render(
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
-			'selectorClass' => $manifest['componentName'] ?? ''
+			'selectorClass' => $inputType === 'range' ? 'range' : $manifest['componentName'] ?? '',
 		]
 	)
 );

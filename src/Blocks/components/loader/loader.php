@@ -18,7 +18,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $loaderIsGeolocation = Helpers::checkAttr('loaderIsGeolocation', $attributes, $manifest);
 $loaderTwSelectorsData = Helpers::checkAttr('loaderTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($loaderTwSelectorsData, ['loader'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($loaderTwSelectorsData, ['loader']);
 
 $loaderClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'loader', $componentClass),

@@ -42,7 +42,7 @@ $textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attrib
 $textareaHideLabel = false;
 $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea']);
 
 $textareaClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),

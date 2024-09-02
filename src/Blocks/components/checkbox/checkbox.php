@@ -45,7 +45,7 @@ if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
 }
 
-$twClasses = FormsHelper::getTwSelectors($checkboxTwSelectorsData, ['checkbox'], $attributes);
+$twClasses = FormsHelper::getTwSelectors($checkboxTwSelectorsData, ['checkbox']);
 
 $checkboxClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'checkbox', $componentClass),
