@@ -14,9 +14,6 @@
 		"field": "field"
 	},
 	"attributes": {
-		"submitUniqueId": {
-			"type": "string"
-		},
 		"submitName": {
 			"type": "string"
 		},
@@ -43,10 +40,6 @@
 		},
 		"submitAttrs": {
 			"type": "object"
-		},
-		"submitServerSideRender": {
-			"type": "boolean",
-			"default": false
 		},
 		"submitMeta": {
 			"type": "string"

@@ -21,8 +21,6 @@ $submitValue = Helpers::checkAttr('submitValue', $attributes, $manifest);
 $submitIsDisabled = Helpers::checkAttr('submitIsDisabled', $attributes, $manifest);
 $submitTracking = Helpers::checkAttr('submitTracking', $attributes, $manifest);
 $submitAttrs = Helpers::checkAttr('submitAttrs', $attributes, $manifest);
-$submitServerSideRender = Helpers::checkAttr('submitServerSideRender', $attributes, $manifest);
-$submitUniqueId = Helpers::checkAttr('submitUniqueId', $attributes, $manifest);
 $submitIcon = Helpers::checkAttr('submitIcon', $attributes, $manifest);
 $submitVariant = Helpers::checkAttr('submitVariant', $attributes, $manifest);
 $submitButtonComponent = Helpers::checkAttr('submitButtonComponent', $attributes, $manifest);
@@ -82,13 +80,11 @@ echo Helpers::render(
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('submit'),
 			'fieldDisabled' => !empty($submitIsDisabled),
 			'fieldTracking' => $submitTracking,
-			'fieldUniqueId' => $submitUniqueId,
 			'fieldAttrs' => $submitAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',
-			'blockSsr' => $submitServerSideRender,
 		]
 	)
 );

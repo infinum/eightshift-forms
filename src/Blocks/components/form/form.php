@@ -37,7 +37,6 @@ $formId = Helpers::checkAttr('formId', $attributes, $manifest);
 $formContent = Helpers::checkAttr('formContent', $attributes, $manifest);
 $formPhoneSync = Helpers::checkAttr('formPhoneSync', $attributes, $manifest);
 $formPhoneDisablePicker = Helpers::checkAttr('formPhoneDisablePicker', $attributes, $manifest);
-$formServerSideRender = Helpers::checkAttr('formServerSideRender', $attributes, $manifest);
 $formHasSteps = Helpers::checkAttr('formHasSteps', $attributes, $manifest);
 $formUseSingleSubmit = Helpers::checkAttr('formUseSingleSubmit', $attributes, $manifest);
 $formParentSettings = Helpers::checkAttr('formParentSettings', $attributes, $manifest);
@@ -146,7 +145,7 @@ if ($formAttrs) {
 
 ?>
 
-<<?php echo $formServerSideRender ? 'div' : 'form'; ?>
+<form
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 	novalidate
@@ -193,4 +192,4 @@ if ($formAttrs) {
 		])
 	);
 	?>
-</<?php echo $formServerSideRender ? 'div' : 'form'; ?>>
+</form>

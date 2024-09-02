@@ -65,7 +65,6 @@ $fieldHelp = Helpers::checkAttr('fieldHelp', $attributes, $manifest);
 $fieldDisabled = Helpers::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldHidden = Helpers::checkAttr('fieldHidden', $attributes, $manifest);
 $fieldStyle = Helpers::checkAttr('fieldStyle', $attributes, $manifest);
-$fieldUniqueId = Helpers::checkAttr('fieldUniqueId', $attributes, $manifest);
 $fieldAttrs = Helpers::checkAttr('fieldAttrs', $attributes, $manifest);
 $fieldIsRequired = Helpers::checkAttr('fieldIsRequired', $attributes, $manifest);
 $fieldConditionalTags = Helpers::checkAttr('fieldConditionalTags', $attributes, $manifest);
@@ -203,11 +202,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 >
 
 	<?php
-	if ($fieldUniqueId) {
-		echo Helpers::outputCssVariables($attributes, $manifest, $fieldUniqueId, 'wp-block');
-	} else {
-		echo Helpers::outputCssVariables($attributes, $manifest, $unique);
-	}
+	echo Helpers::outputCssVariables($attributes, $manifest, $unique);
 
 	echo Helpers::render(
 		'debug-field-details',

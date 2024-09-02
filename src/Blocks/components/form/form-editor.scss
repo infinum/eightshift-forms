@@ -26,28 +26,7 @@
 		}
 	}
 
-	&[data-block-ssr='true'] {
-		#{$this}__fields {
-			@include form-fields-styles;
-
-			> .es-field,
-			> .es-step > .es-step__inner > .es-field {
-				@include form-fields-children-styles;
-			}
-		}
-	}
-
 	&__editor {
 		@include form-width-limit-styles;
-	}
-
-	&[data-disabled-default-styles='false'] {
-		&[data-block-ssr='true'] {
-			@include form-width-limit-styles;
-		}
-	}
-
-	.es-block-edit-options__edit-wrap {
-		display: none;
 	}
 }

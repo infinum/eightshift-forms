@@ -23,7 +23,6 @@ $blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$
 // Check formPost ID prop.
 $formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
 $formsStyle = Helpers::checkAttr('formsStyle', $attributes, $manifest);
-$formsServerSideRender = Helpers::checkAttr('formsServerSideRender', $attributes, $manifest);
 $formsFormGeolocation = Helpers::checkAttr('formsFormGeolocation', $attributes, $manifest);
 $formsFormGeolocationAlternatives = Helpers::checkAttr('formsFormGeolocationAlternatives', $attributes, $manifest);
 
@@ -37,31 +36,21 @@ if ($formsStyle && gettype($formsStyle) === 'array') {
 	);
 }
 
-// Return nothing if it is on frontend.
-if (!$formsServerSideRender && (!$formsFormPostId || get_post_status($formsFormPostId) !== 'publish')) {
+// Not published or removed at somepoint.
+if ((!$formsFormPostId || get_post_status($formsFormPostId) !== 'publish')) {
+	if (!is_user_logged_in()) {
+		return;
+	}
+
+	echo Helpers::render(
+		'invalid',
+		[
+			'heading' => __('Form cannot be found', 'eightshift-forms'),
+			'text' => __('It might not be published yet or it\'s not available anymore.', 'eightshift-forms'),
+		]
+	);
+
 	return;
-}
-
-
-// Bailout if form post ID is missing.
-if ($formsServerSideRender) {
-	// Missing form ID.
-	if (!$formsFormPostId) {
-		return;
-	}
-
-	// Not published or removed at somepoint.
-	if (get_post_status($formsFormPostId) !== 'publish') {
-		echo Helpers::render(
-			'invalid',
-			[
-				'heading' => __('Form cannot be found', 'eightshift-forms'),
-				'text' => __('It might not be published yet or it\'s not available anymore.', 'eightshift-forms'),
-			]
-		);
-
-		return;
-	}
 }
 
 $allForms = [

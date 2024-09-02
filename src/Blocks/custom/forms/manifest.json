@@ -58,10 +58,6 @@
 		"formsCustomName": {
 			"type": "string"
 		},
-		"formsServerSideRender": {
-			"type": "boolean",
-			"default": false
-		},
 		"formsAttrs": {
 			"type": "object"
 		},

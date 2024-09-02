@@ -32,9 +32,6 @@
 		"fieldName": {
 			"type": "string"
 		},
-		"fieldUniqueId": {
-			"type": "string"
-		},
 		"fieldId": {
 			"type": "string"
 		},

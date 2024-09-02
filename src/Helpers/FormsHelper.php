@@ -163,6 +163,12 @@ final class FormsHelper
 	 */
 	public static function getTwSelectorsData(array $attributes): array
 	{
+		$blockSsr = $attributes['blockSsr'] ?? false;
+
+		if ($blockSsr) {
+			return [];
+		}
+
 		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'tailwindSelectors']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, [], $attributes);
