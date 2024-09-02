@@ -16,6 +16,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Input number is now able to use standard tab navigation.
 - Rating field now supports tab navigation.
 
+### Removed
+
+- Any unnecessary server side renders for the forms.
+
 ## [5.0.8]
 
 ### Added
