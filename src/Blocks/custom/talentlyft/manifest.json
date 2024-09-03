@@ -10,8 +10,6 @@
 	"keywords": [
 		"talentlyft"
 	],
-	"example": {
-	},
 	"components": {
 		"form": "form",
 		"step": "step"

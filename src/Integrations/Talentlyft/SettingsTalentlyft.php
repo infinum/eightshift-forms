@@ -253,7 +253,8 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 								'component' => 'input',
 								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Up to 5MB.', 'eightshift-forms'),
+								// translators: %d will be replaced with the default file upload limit.
+								'inputFieldHelp' => \sprintf(\__('Up to %dMB.', 'eightshift-forms'), self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT),
 								'inputType' => 'number',
 								'inputIsNumber' => true,
 								'inputFieldAfterContent' => 'MB',
