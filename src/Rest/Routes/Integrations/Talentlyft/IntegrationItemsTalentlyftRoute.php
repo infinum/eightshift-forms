@@ -90,7 +90,7 @@ class IntegrationItemsTalentlyftRoute extends AbstractUtilsBaseRoute
 		if (!$isGlobalSettingsValid) {
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorPublicOutput(
-					\esc_html__('Global not configured', 'eightshift-forms'),
+					\esc_html__('Global settings not configured', 'eightshift-forms'),
 					[],
 					$debug
 				)
