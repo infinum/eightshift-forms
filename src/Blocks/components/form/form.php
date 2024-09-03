@@ -6,11 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\AdminMenus\FormSettingsAdminSubMenu;
-use EightshiftForms\CustomPostType\Forms;
-use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\Form\Form;
-use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -29,6 +26,9 @@ $attributes = apply_filters(
 	$attributes
 );
 
+$twClassesData = FormsHelper::getTwSelectorsData($attributes);
+$twClasses = FormsHelper::getTwSelectors($twClassesData, ['form']);
+
 $formName = Helpers::checkAttr('formName', $attributes, $manifest);
 $formAction = Helpers::checkAttr('formAction', $attributes, $manifest);
 $formActionExternal = Helpers::checkAttr('formActionExternal', $attributes, $manifest);
@@ -37,7 +37,6 @@ $formId = Helpers::checkAttr('formId', $attributes, $manifest);
 $formContent = Helpers::checkAttr('formContent', $attributes, $manifest);
 $formPhoneSync = Helpers::checkAttr('formPhoneSync', $attributes, $manifest);
 $formPhoneDisablePicker = Helpers::checkAttr('formPhoneDisablePicker', $attributes, $manifest);
-$formServerSideRender = Helpers::checkAttr('formServerSideRender', $attributes, $manifest);
 $formHasSteps = Helpers::checkAttr('formHasSteps', $attributes, $manifest);
 $formUseSingleSubmit = Helpers::checkAttr('formUseSingleSubmit', $attributes, $manifest);
 $formParentSettings = Helpers::checkAttr('formParentSettings', $attributes, $manifest);
@@ -63,7 +62,7 @@ $customClassSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form
 $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
 $formClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FormsHelper::getTwBase($twClasses, 'form', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($customClassSelector, $customClassSelector),
 	UtilsHelper::getStateSelector('form'),
@@ -146,69 +145,40 @@ if ($formAttrs) {
 
 ?>
 
-<<?php echo $formServerSideRender ? 'div' : 'form'; ?>
+<form
 	class="<?php echo esc_attr($formClass); ?>"
 	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 	novalidate
 	onsubmit="event.preventDefault();"
 >
-	<?php if (is_user_logged_in() && !is_admin()) { ?>
-		<div class="<?php echo esc_attr('es-block-edit-options__edit-wrap') ?>">
-			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a
-					class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
-					href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formPostId)) ?>"
-					title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>"
-				>
-					<?php echo UtilsHelper::getUtilsIcons('edit'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-				</a>
-			<?php } ?>
-
-			<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
-				<a
-					class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
-					href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
-					title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>"
-				>
-				<?php echo UtilsHelper::getUtilsIcons('settings'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-				</a>
-			<?php } ?>
-
-			<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
-				<a
-				class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
-				href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
-				title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>"
-			>
-					<?php echo UtilsHelper::getUtilsIcons('dashboard'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-				</a>
-
-				<?php if ($formHasSteps) { ?>
-					<a
-						class="<?php echo esc_attr('es-block-edit-options__edit-link ' .  UtilsHelper::getStateSelector('stepDebugPreview')); ?>"
-						href="#" class="<?php echo esc_attr('es-block-edit-options__edit-link') ?>"
-						title="<?php esc_html_e('Debug form', 'eightshift-forms'); ?>"
-					>
-						<?php echo UtilsHelper::getUtilsIcons('debug'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-					</a>
-				<?php } ?>
-			<?php } ?>
-		</div>
-	<?php } ?>
-
 	<?php
+	if (is_user_logged_in() && !is_admin()) {
+		echo Helpers::render(
+			'form-edit-actions',
+			Helpers::props('formEditActions', $attributes, [
+					'formPostId' => $formPostId,
+					'formHasSteps' => $formHasSteps,
+					'formEditActionsTwSelectorsData' => $twClassesData,
+				])
+		);
+	}
+
 	echo Helpers::render(
 		'global-msg',
-		Helpers::props('globalMsg', $attributes)
+		Helpers::props('globalMsg', $attributes, [
+			'globalMsgTwSelectorsData' => $twClassesData,
+		])
 	);
 
 	echo Helpers::render(
 		'progress-bar',
-		Helpers::props('progressBar', $attributes)
+		Helpers::props('progressBar', $attributes, [
+			'progressBarTwSelectorsData' => $twClassesData,
+		])
 	);
 	?>
 
-	<div class="<?php echo esc_attr("{$componentClass}__fields"); ?>">
+	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form', 'fields', "{$componentClass}__fields")); ?>">
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 
 		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
@@ -217,7 +187,9 @@ if ($formAttrs) {
 	<?php
 	echo Helpers::render(
 		'loader',
-		Helpers::props('loader', $attributes)
+		Helpers::props('loader', $attributes, [
+			'loaderTwSelectorsData' => $twClassesData,
+		])
 	);
 	?>
-</<?php echo $formServerSideRender ? 'div' : 'form'; ?>>
+</form>

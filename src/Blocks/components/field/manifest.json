@@ -32,9 +32,6 @@
 		"fieldName": {
 			"type": "string"
 		},
-		"fieldUniqueId": {
-			"type": "string"
-		},
 		"fieldId": {
 			"type": "string"
 		},
@@ -129,6 +126,9 @@
 		"fieldIsNoneFormBlock": {
 			"type": "boolean",
 			"default": false
+		},
+		"fieldTwSelectorsData": {
+			"type": "array"
 		}
 	},
 	"responsiveAttributes": {

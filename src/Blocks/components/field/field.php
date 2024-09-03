@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -64,7 +65,6 @@ $fieldHelp = Helpers::checkAttr('fieldHelp', $attributes, $manifest);
 $fieldDisabled = Helpers::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldHidden = Helpers::checkAttr('fieldHidden', $attributes, $manifest);
 $fieldStyle = Helpers::checkAttr('fieldStyle', $attributes, $manifest);
-$fieldUniqueId = Helpers::checkAttr('fieldUniqueId', $attributes, $manifest);
 $fieldAttrs = Helpers::checkAttr('fieldAttrs', $attributes, $manifest);
 $fieldIsRequired = Helpers::checkAttr('fieldIsRequired', $attributes, $manifest);
 $fieldConditionalTags = Helpers::checkAttr('fieldConditionalTags', $attributes, $manifest);
@@ -74,6 +74,7 @@ $fieldTypeCustom = Helpers::checkAttr('fieldTypeCustom', $attributes, $manifest)
 $fieldTracking = Helpers::checkAttr('fieldTracking', $attributes, $manifest);
 $fieldTypeInternal = Helpers::checkAttr('fieldTypeInternal', $attributes, $manifest);
 $fieldIsNoneFormBlock = Helpers::checkAttr('fieldIsNoneFormBlock', $attributes, $manifest);
+$fieldTwSelectorsData = Helpers::checkAttr('fieldTwSelectorsData', $attributes, $manifest);
 
 $fieldStyleOutput = [];
 $filterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleClasses']);
@@ -95,9 +96,15 @@ if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	);
 }
 
+$twClasses = FormsHelper::getTwSelectors($fieldTwSelectorsData, [
+	'field',
+	$fieldTypeInternal,
+	$selectorClass,
+]);
+
 $fieldClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($componentClass, $componentClass, '', $selectorClass),
+	FormsHelper::getTwBase($twClasses, 'field', $componentClass),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field', "{$componentClass}--{$selectorClass}"),
 	Helpers::selector($additionalFieldClass, $additionalFieldClass),
 	Helpers::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
@@ -109,8 +116,44 @@ $fieldClass = Helpers::classnames([
 ]);
 
 $labelClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass, 'label'),
+	FormsHelper::getTwPart($twClasses, 'field', 'label', "{$componentClass}__label"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label'),
 	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, 'label', 'is-required'),
+]);
+
+$labelInnerClass = Helpers::classnames([
+	FormsHelper::getTwPart($twClasses, 'field', 'label-inner', "{$componentClass}__label-inner"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-label-inner'),
+]);
+
+$innerClass = Helpers::classnames([
+	FormsHelper::getTwPart($twClasses, 'field', 'inner', "{$componentClass}__inner"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-inner'),
+]);
+
+$contentClass = Helpers::classnames([
+	FormsHelper::getTwPart($twClasses, 'field', 'content', "{$componentClass}__content"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content'),
+]);
+
+$beforeContentClass = Helpers::classnames([
+	FormsHelper::getTwPart($twClasses, 'field', 'before-content', "{$componentClass}__before-content"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-before-content'),
+]);
+
+$afterContentClass = Helpers::classnames([
+	FormsHelper::getTwPart($twClasses, 'field', 'after-content', "{$componentClass}__after-content"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-after-content'),
+]);
+
+$helpClass = Helpers::classnames([
+	FormsHelper::getTwPart($twClasses, 'field', 'help', "{$componentClass}__help"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-help'),
+]);
+
+$contentWrapClass = Helpers::classnames([
+	FormsHelper::getTwPart($twClasses, 'field', 'content-wrap', "{$componentClass}__content-wrap"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
 ]);
 
 $fieldTag = 'div';
@@ -159,11 +202,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 >
 
 	<?php
-	if ($fieldUniqueId) {
-		echo Helpers::outputCssVariables($attributes, $manifest, $fieldUniqueId, 'wp-block');
-	} else {
-		echo Helpers::outputCssVariables($attributes, $manifest, $unique);
-	}
+	echo Helpers::outputCssVariables($attributes, $manifest, $unique);
 
 	echo Helpers::render(
 		'debug-field-details',
@@ -176,13 +215,13 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 	);
 
 	?>
-	<div class="<?php echo esc_attr("{$componentClass}__inner"); ?>">
+	<div class="<?php echo esc_attr($innerClass); ?>">
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
 				for="<?php echo esc_attr($fieldId); ?>"
 			>
-				<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+				<span class="<?php echo esc_attr($labelInnerClass); ?>">
 					<?php echo wp_kses_post($fieldLabel); ?>
 
 					<?php
@@ -198,23 +237,23 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 				</span>
 			</<?php echo esc_attr($labelTag); ?>>
 		<?php } ?>
-		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+		<div class="<?php echo esc_attr($contentClass); ?>">
 			<?php if ($fieldBeforeContent) { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__before-content"); ?>">
+				<div class="<?php echo esc_attr($beforeContentClass); ?>">
 					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
-			<div class="<?php echo esc_attr("{$componentClass}__content-wrap"); ?>">
+			<div class="<?php echo esc_attr($contentWrapClass); ?>">
 				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			</div>
 			<?php if ($fieldAfterContent) { ?>
-				<div class="<?php echo esc_attr("{$componentClass}__after-content"); ?>">
+				<div class="<?php echo esc_attr($afterContentClass); ?>">
 					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 				</div>
 			<?php } ?>
 		</div>
 		<?php if ($fieldHelp) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+			<div class="<?php echo esc_attr($helpClass); ?>">
 				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 			</div>
 		<?php } ?>
@@ -224,7 +263,11 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 				'error',
 				Helpers::props('error', $attributes, [
 					'errorId' => $fieldId,
-					'selectorClass' => $componentClass
+					'selectorClass' => $componentClass,
+					'additionalClass' => Helpers::classnames([
+						FormsHelper::getTwPart($twClasses, 'field', 'error'),
+						FormsHelper::getTwPart($twClasses, $selectorClass, 'field-error'),
+					]),
 				]),
 			);
 		}

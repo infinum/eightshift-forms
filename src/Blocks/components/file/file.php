@@ -8,6 +8,7 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifest = Helpers::getManifestByDir(__DIR__);
@@ -31,12 +32,15 @@ $fileTypeCustom = Helpers::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Helpers::checkAttr('fileAttrs', $attributes, $manifest);
 $fileFieldAttrs = Helpers::checkAttr('fileFieldAttrs', $attributes, $manifest);
 $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
+$fileTwSelectorsData = Helpers::checkAttr('fileTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file']);
+
 $fileClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FormsHelper::getTwBase($twClasses, 'file', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
@@ -47,17 +51,21 @@ $customFile = '';
 $infoText = !empty($fileCustomInfoText) ? $fileCustomInfoText : __('Drag and drop files here', 'eighitshift-forms');
 $infoButton = !empty($fileCustomInfoButtonText) ? $fileCustomInfoButtonText : __('Add files', 'eighitshift-forms');
 
-$infoTextContent = '<div class="' . esc_attr("{$componentClass}__info") . '">' . esc_html($infoText) . '</div>';
-if (!$fileCustomInfoTextUse) {
-	$infoTextContent = '';
+$infoTextContent = '';
+if ($fileCustomInfoTextUse) {
+	$infoTextContent .= '<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'info', "{$componentClass}__info")) . '">' . wp_kses_post($infoText) . '</div>';
 }
 
-$infoButtonContent = '<a tabindex="-1" href="#" class="' . esc_attr("{$componentClass}__button") . '">' . esc_html($infoButton) . '</a>';
+$filter = UtilsHooksHelper::getFilterName(['block', 'file', 'infoAdditionalContent']);
+if (has_filter($filter)) {
+	$infoTextContent .= apply_filters($filter, '', $attributes);
+}
+
+$infoTextContent .= '<a tabindex="-1" href="#" class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'button', "{$componentClass}__button")) . '">' . esc_html($infoButton) . '</a>';
 
 $customFile = '
-	<div class="' . esc_attr("{$componentClass}__custom-wrap") . '">
+	<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'custom-wrap', "{$componentClass}__custom-wrap")) . '">
 		' . $infoTextContent . '
-		' . $infoButtonContent . '
 	</div>
 ';
 
@@ -92,6 +100,7 @@ echo Helpers::render(
 			'fieldContent' => $file,
 			'fieldId' => $fileName,
 			'fieldName' => $fileName,
+			'fieldTwSelectorsData' => $fileTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('file'),
 			'fieldDisabled' => !empty($fileIsDisabled),
 			'fieldIsRequired' => $fileIsRequired,

@@ -1057,7 +1057,6 @@ export class Form {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
 			input.addEventListener('input', this.onInputEvent);
-
 		}
 	}
 
@@ -1266,6 +1265,8 @@ export class Form {
 			choices?.passedElement?.element.addEventListener('showDropdown', this.onFocusEvent);
 			choices?.passedElement?.element.addEventListener('hideDropdown', this.onBlurEvent);
 			choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
+			choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
+			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
 		});
 	}
 
@@ -1474,6 +1475,8 @@ export class Form {
 				choices?.passedElement?.element?.removeEventListener('showDropdown', this.onFocusEvent);
 				choices?.passedElement?.element?.removeEventListener('hideDropdown', this.onBlurEvent);
 				choices?.passedElement?.element?.removeEventListener('change', this.onSelectChangeEvent);
+				choices?.containerOuter?.element.removeEventListener('focus', this.onFocusEvent);
+				choices?.containerOuter?.element.removeEventListener('blur', this.onBlurEvent);
 				choices?.destroy();
 			});
 
@@ -1718,7 +1721,8 @@ export class Form {
 				'8',
 				'9',
 				'.',
-				'-'
+				'-',
+				'Tab',
 			];
 
 			// Prevent the default action if the key is not allowed
@@ -1814,6 +1818,11 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const value = event.target.getAttribute(this.state.getStateAttribute('ratingValue'));
 		const input = this.state.getStateElementInput(name, formId);
+		const disabled = this.state.getStateElementIsDisabled(name, formId);
+
+		if (disabled) {
+			return;
+		}
 
 		this.utils.setManualRatingValue(formId, name, value);
 

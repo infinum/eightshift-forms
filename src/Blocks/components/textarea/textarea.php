@@ -36,13 +36,16 @@ $textareaSize = Helpers::checkAttr('textareaSize', $attributes, $manifest);
 $textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
+$textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $textareaHideLabel = false;
 $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea']);
+
 $textareaClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($textareaIsMonospace, $componentClass, '', 'monospace'),
 	Helpers::selector($textareaSize, $componentClass, 'size', $textareaSize),
@@ -95,6 +98,7 @@ echo Helpers::render(
 			'fieldContent' => $textarea,
 			'fieldId' => $textareaName,
 			'fieldName' => $textareaName,
+			'fieldTwSelectorsData' => $textareaTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),

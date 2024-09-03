@@ -1,6 +1,6 @@
 @import 'reactflow/dist/style.css';
 
-.es-form:not([data-block-ssr='true']) {
+.es-form {
 	.es-step {
 		text-align: center;
 		transform: translateY(50%);
@@ -25,22 +25,6 @@
 
 		&__missing {
 			transform: translateY(-50%);
-		}
-	}
-}
-
-.es-form {
-	&__fields {
-		.es-step:first-child {
-			display: block;
-		}
-	}
-
-	.es-step {
-		display: none;
-
-		&__navigation {
-			display: none;
 		}
 	}
 }

@@ -75,6 +75,9 @@
 		"dateOutputFormat": {
 			"type": "string",
 			"default": "Y-m-d H:i"
+		},
+		"dateTwSelectorsData": {
+			"type": "array"
 		}
 	},
 	"options": {

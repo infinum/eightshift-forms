@@ -11,6 +11,9 @@
 	"attributes": {
 		"globalMsgValue": {
 			"type": "string"
+		},
+		"globalMsgTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }

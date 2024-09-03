@@ -36,13 +36,16 @@ $phoneFormPostId = Helpers::checkAttr('phoneFormPostId', $attributes, $manifest)
 $phoneTypeCustom = Helpers::checkAttr('phoneTypeCustom', $attributes, $manifest);
 $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
+$phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone']);
+
 $phoneClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
@@ -106,11 +109,20 @@ if (has_filter($filterName)) {
 	}
 }
 
+$phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
+
+$phoneAttrsSelectOutput = '';
+if ($phoneAttrsSelect) {
+	foreach ($phoneAttrsSelect as $key => $value) {
+		$phoneAttrsSelectOutput .= wp_kses_post(" {$key}='" . $value . "'");
+	}
+}
+
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
-		' . $phoneSelectUseSearchAttr . '=' . $phoneUseSearch . '
+		' . $phoneAttrsSelectOutput . '
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
@@ -132,6 +144,7 @@ echo Helpers::render(
 			'fieldContent' => $phone,
 			'fieldId' => $phoneName,
 			'fieldName' => $phoneName,
+			'fieldTwSelectorsData' => $phoneTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),

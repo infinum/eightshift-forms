@@ -6,6 +6,7 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -38,13 +39,16 @@ $checkboxHelp = Helpers::checkAttr('checkboxHelp', $attributes, $manifest);
 $checkboxFieldAttrs = Helpers::checkAttr('checkboxFieldAttrs', $attributes, $manifest);
 $checkboxIcon = Helpers::checkAttr('checkboxIcon', $attributes, $manifest);
 $checkboxIsHidden = Helpers::checkAttr('checkboxIsHidden', $attributes, $manifest);
+$checkboxTwSelectorsData = Helpers::checkAttr('checkboxTwSelectorsData', $attributes, $manifest);
 
 if ($checkboxAsToggle) {
 	$componentClass = "{$componentClass}-toggle";
 }
 
+$twClasses = FormsHelper::getTwSelectors($checkboxTwSelectorsData, ['checkbox']);
+
 $checkboxClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FormsHelper::getTwBase($twClasses, 'checkbox', $componentClass),
 	Helpers::selector($componentClass && $checkboxAsToggleSize, $componentClass, '', $checkboxAsToggleSize),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($checkboxIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
@@ -52,7 +56,7 @@ $checkboxClass = Helpers::classnames([
 ]);
 
 $checkboxInputClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass, 'input'),
+	FormsHelper::getTwPart($twClasses, 'checkbox', 'input', "{$componentClass}__input"),
 	Helpers::selector($checkboxSingleSubmit, UtilsHelper::getStateSelectorAdmin('singleSubmit')),
 ]);
 
@@ -99,7 +103,7 @@ if ($checkboxFieldAttrs) {
 ?>
 
 <div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
-	<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
+	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'content', "{$componentClass}__content")); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"
 			type="checkbox"
@@ -113,14 +117,14 @@ if ($checkboxFieldAttrs) {
 		<?php if (!$checkboxHideLabel) { ?>
 			<label
 				for="<?php echo esc_attr($checkboxName); ?>"
-				class="<?php echo esc_attr("{$componentClass}__label"); ?>"
+				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label', "{$componentClass}__label")); ?>"
 			>
 				<?php if ($checkboxIcon) { ?>
-					<img  class="<?php echo esc_attr("{$componentClass}__label-icon"); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
+					<img class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-icon', "{$componentClass}__label-icon")); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
 				<?php } ?>
 
 				<?php if (!$checkboxHideLabelText) { ?>
-					<span class="<?php echo esc_attr("{$componentClass}__label-inner"); ?>">
+					<span class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-inner', "{$componentClass}__label-inner")); ?>">
 						<?php echo wp_kses_post(apply_filters('the_content', $checkboxLabel)); ?>
 					</span>
 				<?php } ?>
@@ -128,7 +132,7 @@ if ($checkboxFieldAttrs) {
 		<?php } ?>
 	</div>
 	<?php if ($checkboxHelp) { ?>
-		<div class="<?php echo esc_attr("{$componentClass}__help"); ?>">
+		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'help', "{$componentClass}__help")); ?>">
 			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 		</div>
 	<?php } ?>

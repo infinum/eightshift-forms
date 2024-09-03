@@ -8,7 +8,6 @@ export const StepEditor = ({ attributes, setAttributes, clientId }) => {
 			{...props('step', attributes, {
 				setAttributes,
 				stepUniqueId: clientId,
-				stepServerSideRender: true
 			})}
 		/>
 	);

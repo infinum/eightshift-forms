@@ -64,6 +64,9 @@
 		"ratingSingleSubmit": {
 			"type": "boolean",
 			"default": false
+		},
+		"ratingTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }

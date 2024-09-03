@@ -6,9 +6,11 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $props['selectContent'] = $renderContent;
+$props['twSelectorsData'] = FormsHelper::getTwSelectorsData($attributes);
 
 echo Helpers::render(
 	'select',

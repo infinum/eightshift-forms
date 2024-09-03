@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Helpers;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -151,5 +152,100 @@ final class FormsHelper
 			'isRedirectPage' => true,
 			'showOutput' => true,
 		];
+	}
+
+	/**
+	 * Return Tailwind selectors data filter output.
+	 *
+	 * @param array<string, string> $attributes The block attributes.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getTwSelectorsData(array $attributes): array
+	{
+		$blockSsr = $attributes['blockSsr'] ?? false;
+
+		if ($blockSsr) {
+			return [];
+		}
+
+		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'tailwindSelectors']);
+		if (\has_filter($filterName)) {
+			return \apply_filters($filterName, [], $attributes);
+		}
+
+		return [];
+	}
+
+	/**
+	 * Return Tailwind selectors data filter output.
+	 *
+	 * @param array<string> $data Data to get data for.
+	 * @param array<string> $selectors Selectors to get data for.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getTwSelectors(array $data, array $selectors): array
+	{
+		$output = [];
+
+		if (!$data) {
+			return $output;
+		}
+
+		foreach ($selectors as $selector) {
+			if (isset($data[$selector])) {
+				$output[$selector] = $data[$selector];
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return Tailwind selectors base output.
+	 *
+	 * @param array<string, string> $data Data to get base from.
+	 * @param string $selector Selector to get data for.
+	 * @param string $sufix Sufix to add to the selector.
+	 *
+	 * @return string
+	 */
+	public static function getTwBase(array $data, string $selector, string $sufix = ''): string
+	{
+		$base = $data[$selector]['base'] ?? [];
+
+		if (!$base) {
+			return $sufix;
+		}
+
+		return \implode(' ', !\is_array($base) ? [$base, $sufix] : \array_merge($base, [$sufix]));
+	}
+
+	/**
+	 * Return Tailwind selectors part output.
+	 *
+	 * @param array<string, string> $data Data to get part from.
+	 * @param string $parentSelector Parent selector to get data for.
+	 * @param string $selector Selector to get data for.
+	 * @param string $sufix Sufix to add to the selector.
+	 *
+	 * @return string
+	 */
+	public static function getTwPart(array $data, string $parentSelector, string $selector, string $sufix = ''): string
+	{
+		$parts = $data[$parentSelector]['parts'] ?? [];
+
+		if (!$parts) {
+			return $sufix;
+		}
+
+		$part = $parts[$selector] ?? [];
+
+		if (!$part) {
+			return $sufix;
+		}
+
+		return \implode(' ', !\is_array($part) ? [$part, $sufix] : \array_merge($part, [$sufix]));
 	}
 }

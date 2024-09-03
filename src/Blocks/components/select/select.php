@@ -33,6 +33,7 @@ $selectTypeCustom = Helpers::checkAttr('selectTypeCustom', $attributes, $manifes
 $selectFieldAttrs = Helpers::checkAttr('selectFieldAttrs', $attributes, $manifest);
 $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
+$selectTwSelectorsData = Helpers::checkAttr('selectTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $selectHideLabel = false;
@@ -103,6 +104,7 @@ $fieldOutput = [
 	'fieldContent' => $select,
 	'fieldId' => $selectName,
 	'fieldName' => $selectName,
+	'fieldTwSelectorsData' => $selectTwSelectorsData,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),
 	'fieldIsRequired' => $selectIsRequired,
 	'fieldDisabled' => !empty($selectIsDisabled),

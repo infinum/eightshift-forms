@@ -7,8 +7,7 @@ export const SubmitEditor = ({ attributes, setAttributes, clientId }) => {
 		<SubmitEditorComponent
 			{...props('submit', attributes, {
 				setAttributes,
-				submitUniqueId: clientId,
-				submitServerSideRender: true
+				clientId,
 			})}
 		/>
 	);

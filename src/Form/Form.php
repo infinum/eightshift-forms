@@ -117,7 +117,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsVariationData = Helpers::checkAttr('formsVariationData', $attributes, $manifest);
 		$formsVariationDataFiles = Helpers::checkAttr('formsVariationDataFiles', $attributes, $manifest);
 		$formsFormDataTypeSelector = Helpers::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
-		$formsServerSideRender = Helpers::checkAttr('formsServerSideRender', $attributes, $manifest);
 		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Helpers::checkAttr('formsAttrs', $attributes, $manifest);
 		$formsCustomName = Helpers::checkAttr('formsCustomName', $attributes, $manifest);
@@ -175,9 +174,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					],
 				];
 
-				$innerBlock['attrs']["{$blockName}FormServerSideRender"] = $formsServerSideRender;
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
-				$innerBlock['attrs']["blockSsr"] = $formsServerSideRender;
 
 				$inBlockOutput = [];
 				$stepKey = 0;
@@ -212,10 +209,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 					// Do manipulations on specific components.
 					switch ($name) {
-						case 'submit':
-							$inBlock['attrs']["{$name}SubmitServerSideRender"] = $formsServerSideRender;
-							$inBlock['attrs']["blockSsr"] = $formsServerSideRender;
-							break;
 						case 'phone':
 						case 'country':
 						case 'dynamic':

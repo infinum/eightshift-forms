@@ -61,6 +61,13 @@
 		"countrySingleSubmit": {
 			"type": "boolean",
 			"default": false
+		},
+		"countryValueType": {
+			"type": "string",
+			"default": "countryName"
+		},
+		"countryTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }

@@ -10,6 +10,56 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - New TalentLyft integration.
 
+## [5.0.10]
+
+### Fixed
+
+- Broken Mailchimp integration if only email is sent.
+
+## [5.0.9]
+
+### Added
+
+- New way of handling Tailwind classes for forms.
+
+### Fixed
+
+- Rating field is now disabled if the parameter is set to true.
+- Input number is now able to use standard tab navigation.
+- Rating field now supports tab navigation.
+
+### Removed
+
+- Any unnecessary server side renders for the forms.
+
+## [5.0.8]
+
+### Added
+
+- Additional Tailwind selectors for forms fields.
+- Range field not supports progress CSS variable.
+
+## [5.0.7]
+
+### Added
+
+- Implemented a new "value type" attribute to the country field, allowing for the dynamic definition of option values.
+- Adapted the Countries class to support the new "value type" attribute.
+- Filter to allow adding custom Tailwind classes to all form elements.
+
+## [5.0.6]
+
+### Fixed
+
+- Bypass captcha flag now works correctly on all forms.
+
+## [5.0.5]
+
+### Added
+
+- new integration filter `overridePostRequest` to override the post request data.
+- new public helper `getFormsGetCountryList` to get the list of countries.
+
 ## [5.0.4]
 
 ### Fixed
@@ -616,7 +666,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
-[5.1.0]: https://github.com/infinum/eightshift-forms/compare/5.0.4...5.1.0
+[5.1.0]: https://github.com/infinum/eightshift-forms/compare/5.0.10...5.1.0
+[5.0.10]: https://github.com/infinum/eightshift-forms/compare/5.0.9...5.0.10
+[5.0.9]: https://github.com/infinum/eightshift-forms/compare/5.0.8...5.0.9
+[5.0.8]: https://github.com/infinum/eightshift-forms/compare/5.0.7...5.0.8
+[5.0.7]: https://github.com/infinum/eightshift-forms/compare/5.0.6...5.0.7
+[5.0.6]: https://github.com/infinum/eightshift-forms/compare/5.0.5...5.0.6
+[5.0.5]: https://github.com/infinum/eightshift-forms/compare/5.0.4...5.0.5
 [5.0.4]: https://github.com/infinum/eightshift-forms/compare/5.0.3...5.0.4
 [5.0.3]: https://github.com/infinum/eightshift-forms/compare/5.0.2...5.0.3
 [5.0.2]: https://github.com/infinum/eightshift-forms/compare/5.0.1...5.0.2

@@ -14,7 +14,6 @@ echo Helpers::render(
 		Helpers::props('field', $attributes),
 		[
 			'selectorClass' => 'field',
-			'fieldFieldIsNoneFormBlock' => true,
 			'fieldFieldConditionalTags' => Helpers::render(
 				'conditional-tags',
 				Helpers::props('conditionalTags', $attributes)

@@ -6,9 +6,12 @@
  * @package EightshiftForms
  */
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 echo Helpers::render(
 	'file',
-	Helpers::props('file', $attributes)
+	Helpers::props('file', $attributes, [
+		'twSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
+	])
 );

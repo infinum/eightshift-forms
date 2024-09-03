@@ -7,7 +7,8 @@
 		"loader": "loader",
 		"field": "field",
 		"globalMsg": "globalMsg",
-		"progressBar": "progressBar"
+		"progressBar": "progressBar",
+		"formEditActions": "formEditActions"
 	},
 	"example": {
 		"attributes": {
@@ -66,10 +67,6 @@
 		},
 		"formAttrs": {
 			"type": "object"
-		},
-		"formServerSideRender": {
-			"type": "boolean",
-			"default": false
 		},
 		"formUseSingleSubmit": {
 			"type": "boolean",

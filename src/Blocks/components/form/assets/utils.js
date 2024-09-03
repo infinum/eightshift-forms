@@ -256,7 +256,7 @@ export class Utils {
 			return;
 		}
 
-		messageContainer?.classList?.remove(this.state.getStateSelector('isActive'));
+		messageContainer?.classList?.remove(this.state.getStateSelector('isActive'), this.state.getStateSelector('hasError'));
 		messageContainer.dataset.status = '';
 		messageContainer.innerHTML = '';
 	}
@@ -299,7 +299,7 @@ export class Utils {
 				messageContainer.innerHTML = `<div><span>${msg}</span></div>`;
 			}
 		} else {
-			messageContainer?.classList?.add(this.state.getStateSelector('isActive'));
+			messageContainer?.classList?.add(this.state.getStateSelector('isActive'), this.state.getStateSelector('hasError'));
 			messageContainer.dataset.status = status;
 
 			const headingError = this.state.getStateFormGlobalMsgHeadingError(formId);
@@ -902,6 +902,11 @@ export class Utils {
 			case 'checkbox':
 				setStateValuesCheckbox(target, formId);
 				break;
+			case 'rating':
+				setStateValuesInput(target, formId);
+				// Value must be set after the state change.
+				this.state.getStateElementCustom(name, formId).setAttribute(this.state.getStateAttribute('ratingValue'), this.state.getStateElementValue(name, formId));
+				break;
 			default:
 				setStateValuesInput(target, formId);
 
@@ -1218,6 +1223,16 @@ export class Utils {
 	 */
 	setRangeCurrentValue(formId, name) {
 		const current = this.state.getStateElementRangeCurrent(name, formId);
+		const input = this.state.getStateElementInput(name, formId);
+
+		// Set range current value as css variable due to inconsistency in browsers.
+		if (input) {
+			const min = input.min || 0;
+			const max = input.max || 100;
+			const parsedProgress = Number(((input.value - min) * 100) / (max - min));
+	
+			input.style.setProperty('--es-form-range-progress', `${parsedProgress}%`);
+		}
 
 		if (!current) {
 			return;

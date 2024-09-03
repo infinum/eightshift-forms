@@ -123,11 +123,21 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
+		// Filter override post request.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		if (\has_filter($filterName)) {
+			$filterValue = \apply_filters($filterName, [], $itemId, $params, $files, $formId) ?? [];
+
+			if ($filterValue) {
+				return $filterValue;
+			}
+		}
+
 		$body = $this->prepareParams($params, $formId);
 
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
-			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
+			$itemId = \apply_filters($filterName, $itemId, $body, $formId);
 		}
 
 		$url = "{$this->getBaseUrl()}forms/1/forms/{$itemId}/data";

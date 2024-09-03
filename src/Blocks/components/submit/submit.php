@@ -21,16 +21,18 @@ $submitValue = Helpers::checkAttr('submitValue', $attributes, $manifest);
 $submitIsDisabled = Helpers::checkAttr('submitIsDisabled', $attributes, $manifest);
 $submitTracking = Helpers::checkAttr('submitTracking', $attributes, $manifest);
 $submitAttrs = Helpers::checkAttr('submitAttrs', $attributes, $manifest);
-$submitServerSideRender = Helpers::checkAttr('submitServerSideRender', $attributes, $manifest);
-$submitUniqueId = Helpers::checkAttr('submitUniqueId', $attributes, $manifest);
 $submitIcon = Helpers::checkAttr('submitIcon', $attributes, $manifest);
 $submitVariant = Helpers::checkAttr('submitVariant', $attributes, $manifest);
 $submitButtonComponent = Helpers::checkAttr('submitButtonComponent', $attributes, $manifest);
 $submitButtonAsLink = Helpers::checkAttr('submitButtonAsLink', $attributes, $manifest);
 $submitButtonAsLinkUrl = Helpers::checkAttr('submitButtonAsLinkUrl', $attributes, $manifest);
+$submitButtonTwParent = Helpers::checkAttr('submitButtonTwParent', $attributes, $manifest);
+$submitTwSelectorsData = Helpers::checkAttr('submitTwSelectorsData', $attributes, $manifest);
+
+$twClasses = FormsHelper::getTwSelectors($submitTwSelectorsData, [$submitButtonTwParent]);
 
 $submitClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	FormsHelper::getTwBase($twClasses, $submitButtonTwParent, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($submitIcon, $componentClass, '', 'with-icon'),
 	Helpers::selector($submitVariant, $componentClass, '', $submitVariant),
@@ -48,7 +50,7 @@ $button = '
 	<button
 		class="' . esc_attr($submitClass) . '"
 		' . disabled($submitIsDisabled, true, false) . '
-	><span class="' . $componentClass . '__inner">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
+	><span class="' . esc_attr(FormsHelper::getTwPart($twClasses, $submitButtonTwParent, 'inner', "{$componentClass}__inner")) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></button>
 	' . $additionalContent . '
 ';
 
@@ -57,7 +59,7 @@ if ($submitButtonAsLink) {
 	<a
 		href="' . esc_url($submitButtonAsLinkUrl) . '"
 		class="' . esc_attr($submitClass) . '"
-	><span class="' . $componentClass . '__inner">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
+	><span class="' . esc_attr(FormsHelper::getTwPart($twClasses, $submitButtonTwParent, 'inner', "{$componentClass}__inner")) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
 	' . $additionalContent . '
 	';
 }
@@ -73,17 +75,16 @@ echo Helpers::render(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $button,
 			'fieldId' => $submitName,
+			'fieldTwSelectorsData' => $submitTwSelectorsData,
 			'fieldUseError' => false,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('submit'),
 			'fieldDisabled' => !empty($submitIsDisabled),
 			'fieldTracking' => $submitTracking,
-			'fieldUniqueId' => $submitUniqueId,
 			'fieldAttrs' => $submitAttrs,
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',
-			'blockSsr' => $submitServerSideRender,
 		]
 	)
 );

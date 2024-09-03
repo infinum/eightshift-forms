@@ -171,17 +171,36 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
+		// Filter override post request.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		if (\has_filter($filterName)) {
+			$filterValue = \apply_filters($filterName, [], $itemId, $params, $files, $formId) ?? [];
+
+			if ($filterValue) {
+				return $filterValue;
+			}
+		}
+
 		$email = UtilsGeneralHelper::getEmailParamsField($params);
 		$emailHash = \md5(\strtolower($email));
+		$preparedParams = $this->prepareParams($params, $formId);
+		$tags = $this->prepareTags($params);
 
 		$body = [
 			'email_address' => $email,
 			'status_if_new' => 'subscribed',
 			'status' => 'subscribed',
-			'tags' => $this->prepareTags($params),
-			'merge_fields' => $this->prepareParams($params, $formId),
 		];
 
+		// If there are any merge_fields, add them to the body as empty will throw an error.
+		if ($preparedParams) {
+			$body['merge_fields'] = $preparedParams;
+		}
+
+		// If there are any tags, add them to the body as empty will throw an error.
+		if ($tags) {
+			$body['tags'] = $tags;
+		}
 
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {

@@ -45,16 +45,18 @@ $inputRangeShowMaxSuffix = Helpers::checkAttr('inputRangeShowMaxSuffix', $attrib
 $inputRangeShowCurrent = Helpers::checkAttr('inputRangeShowCurrent', $attributes, $manifest);
 $inputRangeShowCurrentPrefix = Helpers::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
 $inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
+$inputTwSelectorsData = Helpers::checkAttr('inputTwSelectorsData', $attributes, $manifest);
 
 // Fix for getting attribute that is part of the child component.
 $inputHideLabel = false;
 $inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
 
+$twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range']);
+
 $inputClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
+	$inputType === 'range' ? FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range") : FormsHelper::getTwBase($twClasses, 'input', $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	Helpers::selector($inputSingleSubmit && $inputType === 'range', UtilsHelper::getStateSelectorAdmin('singleSubmit')),
-	Helpers::selector($inputType === 'range', $componentClass, 'range'),
 ]);
 
 // Additional content filter.
@@ -85,14 +87,14 @@ if ($inputType === 'range') {
 	if ($inputRangeShowMin) {
 		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMin'),
-			Helpers::selector($componentClass, $componentClass, 'range', 'min'),
+			FormsHelper::getTwPart($twClasses, 'range', 'min', "{$componentClass}__range--min"),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMinPrefix}{$inputAttrs['min']}{$inputRangeShowMinSuffix}</span>");
 	}
 
 	if ($inputRangeShowCurrent) {
-		$cssSelector = Helpers::selector($componentClass, $componentClass, 'range', 'current');
+		$cssSelector = FormsHelper::getTwPart($twClasses, 'range', 'current', "{$componentClass}__range--current");
 		$cssJsSelector = UtilsHelper::getStateSelector('inputRangeCurrent');
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowCurrentPrefix}<span class='{$cssJsSelector}'>{$inputAttrs['value']}</span>{$inputRangeShowCurrentSuffix}</span>");
@@ -101,7 +103,7 @@ if ($inputType === 'range') {
 	if ($inputRangeShowMax) {
 		$cssSelector = Helpers::classnames([
 			UtilsHelper::getStateSelector('inputRangeMax'),
-			Helpers::selector($componentClass, $componentClass, 'range', 'max'),
+			FormsHelper::getTwPart($twClasses, 'range', 'max', "{$componentClass}__range--max"),
 		]);
 
 		$additionalContent .= wp_kses_post("<span class='{$cssSelector}'>{$inputRangeShowMaxPrefix}{$inputAttrs['max']}{$inputRangeShowMaxSuffix}</span>");
@@ -135,6 +137,7 @@ echo Helpers::render(
 			'fieldContent' => $input,
 			'fieldId' => $inputName,
 			'fieldName' => $inputName,
+			'fieldTwSelectorsData' => $inputTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('input'),
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
@@ -150,7 +153,7 @@ echo Helpers::render(
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
-			'selectorClass' => $manifest['componentName'] ?? ''
+			'selectorClass' => $inputType === 'range' ? 'range' : $manifest['componentName'] ?? '',
 		]
 	)
 );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { ServerSideRender,
+import {
 	checkAttr,
 	props,
 	icons,
@@ -8,10 +8,10 @@ import { ServerSideRender,
 	getAttrKey,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { ConditionalTagsEditor } from '../../../components/conditional-tags/components/conditional-tags-editor';
-import { getFilteredAttributes, outputFormSelectItemWithIcon } from '../../../components/utils';
+import { FormEditButton, outputFormSelectItemWithIcon } from '../../../components/utils';
 
 export const FormsEditor = ({
 	attributes,
@@ -20,14 +20,6 @@ export const FormsEditor = ({
 	formSelectOptions,
 }) => {
 	const manifest = select(STORE_NAME).getBlock('forms');
-
-	const {
-		blockFullName
-	} = attributes;
-
-	const {
-		attributesSsr,
-	} = manifest;
 
 	const {
 		isGeoPreview,
@@ -69,23 +61,21 @@ export const FormsEditor = ({
 	return (
 		<>
 			{isGeoPreview &&
-				<div className='es-text-7 es-mb-8 es-text-align-center es-font-weight-700'>
+				<div className='es-text-7 es-mb-3 es-text-align-center es-font-weight-700'>
 					{__('Original form', 'eightshift-forms')}
 				</div>
 			}
 
-			<ServerSideRender
-				block={blockFullName}
-				attributes={
-					getFilteredAttributes(
-						attributes,
-						attributesSsr,
-						{
-							formsServerSideRender: true
-						}
-					)
-				}
-			/>
+			<Placeholder
+				icon={icons.form}
+				label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
+				className='es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
+				isColumnLayout={true}
+			>
+				{sprintf(__('Form "%s" with type "%s" will be displayed here.', 'eightshift-forms'), formsFormPostIdRaw?.label, formsFormPostIdRaw?.metadata)}
+				<br />
+				<FormEditButton formId={formsFormPostIdRaw?.id} />
+			</Placeholder>
 
 			<ConditionalTagsEditor
 				{...props('conditionalTags', attributes)}
@@ -94,34 +84,23 @@ export const FormsEditor = ({
 
 			{isGeoPreview &&
 				<>
+					<div className='es-mt-5 es-text-7 es-text-align-center es-font-weight-700'>
+						{__('Geolocation alternatives', 'eightshift-forms')}
+					</div>
 					{formsFormGeolocationAlternatives.map((item, index) => {
 						return (
-							<>
-								<div className='es-mt-20 es-text-7 es-text-align-center es-font-weight-700 es-mb-3'>
-									{__('Geolocation alternative', 'eightshift-forms')}
-								</div>
-								<div className='es-mb-8 es-text-4 es-text-align-center'>
-									{item.geoLocation.join(', ')}
-								</div>
-								<ServerSideRender
-									key={index}
-									block={blockFullName}
-									attributes={
-										getFilteredAttributes(
-											attributes,
-											[
-												...attributesSsr,
-												'formsFormGeolocation',
-												'formsFormGeolocationAlternatives',
-											],
-											{
-												formsFormPostId: item.formId,
-												formsServerSideRender: true
-											}
-										)
-									}
-								/>
-							</>
+							<Placeholder
+								key={index}
+								icon={icons.form}
+								label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
+								className='es-rounded-3! es-mt-5! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
+							>
+								{sprintf(__('Form "%s" with type "%s" will be displayed here.', 'eightshift-forms'), item?.form?.label, item?.form?.metadata)}
+								<br />
+								{sprintf(__('Geolocation used: "%s"', 'eightshift-forms'), item.geoLocation.join(', '))}
+								<br />
+								<FormEditButton formId={item?.form?.id} />
+							</Placeholder>
 						);
 					})}
 				</>

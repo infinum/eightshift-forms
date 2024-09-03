@@ -80,6 +80,9 @@
 		},
 		"phoneTypeCustom": {
 			"type": "string"
+		},
+		"phoneTwSelectorsData": {
+			"type": "array"
 		}
 	}
 }
