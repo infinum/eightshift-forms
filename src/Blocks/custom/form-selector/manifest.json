@@ -25,6 +25,7 @@
 				"eightshift-forms/airtable",
 				"eightshift-forms/moments",
 				"eightshift-forms/workable",
+				"eightshift-forms/talentlyft",
 				"eightshift-forms/jira",
 				"eightshift-forms/pipedrive",
 				"eightshift-forms/calculator"
@@ -123,6 +124,11 @@
 			"label": "Workable",
 			"slug": "workable",
 			"blockName": "eightshift-forms/workable"
+		},
+		{
+			"label": "Talentlyft",
+			"slug": "talentlyft",
+			"blockName": "eightshift-forms/talentlyft"
 		},
 		{
 			"label": "Jira",
