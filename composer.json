@@ -37,12 +37,12 @@
 		"php-stubs/wordpress-stubs": "v6.6.0",
 		"phpunit/phpunit": "^9.6.20",
 		"szepeviktor/phpstan-wordpress": "^v1.3.5",
-		"wp-cli/wp-cli": "^v2.10.0"
+		"wp-cli/wp-cli": "^v2.11.0"
 	},
 	"require": {
 		"php": ">=8.2",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^3.0.2"
+		"infinum/eightshift-forms-utils": "^3.0.3"
 	},
 	"autoload": {
 		"psr-4": {

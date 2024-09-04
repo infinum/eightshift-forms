@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d7fccb1a72b2d869a2dfaf8e54d2aa9",
+    "content-hash": "df1e27dc9fb1962318d60d2284f96f4e",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -58,20 +58,20 @@
         },
         {
             "name": "infinum/eightshift-forms-utils",
-            "version": "3.0.2",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "69c4a7b6dc32aaeb479072b733d4f060b7a55dd9"
+                "reference": "40ea787510778fcdcfc0819c3e910607495c64ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/69c4a7b6dc32aaeb479072b733d4f060b7a55dd9",
-                "reference": "69c4a7b6dc32aaeb479072b733d4f060b7a55dd9",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/40ea787510778fcdcfc0819c3e910607495c64ce",
+                "reference": "40ea787510778fcdcfc0819c3e910607495c64ce",
                 "shasum": ""
             },
             "require": {
-                "infinum/eightshift-libs": "^8.0.7",
+                "infinum/eightshift-libs": "^9.1.1",
                 "php": ">=8.2"
             },
             "require-dev": {
@@ -120,20 +120,20 @@
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2024-09-03T11:24:11+00:00"
+            "time": "2024-09-04T11:50:17+00:00"
         },
         {
             "name": "infinum/eightshift-libs",
-            "version": "8.0.7",
+            "version": "9.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "be156b507e770288e005e4f6569a499d8d92aa39"
+                "reference": "a78c95ab4e479bba34aced15d918ef5f7fb5d890"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/be156b507e770288e005e4f6569a499d8d92aa39",
-                "reference": "be156b507e770288e005e4f6569a499d8d92aa39",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/a78c95ab4e479bba34aced15d918ef5f7fb5d890",
+                "reference": "a78c95ab4e479bba34aced15d918ef5f7fb5d890",
                 "shasum": ""
             },
             "require": {
@@ -186,7 +186,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2024-07-10T09:55:23+00:00"
+            "time": "2024-09-04T11:43:22+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -2159,16 +2159,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.0",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "384af967d35b2162f69526c7276acadce534d0e1"
+                "reference": "d8ed7fffa66de1db0d2972267d8ed1d8fa0fe5a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/384af967d35b2162f69526c7276acadce534d0e1",
-                "reference": "384af967d35b2162f69526c7276acadce534d0e1",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d8ed7fffa66de1db0d2972267d8ed1d8fa0fe5a2",
+                "reference": "d8ed7fffa66de1db0d2972267d8ed1d8fa0fe5a2",
                 "shasum": ""
             },
             "require": {
@@ -2213,7 +2213,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-08-27T09:18:05+00:00"
+            "time": "2024-09-03T19:55:22+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

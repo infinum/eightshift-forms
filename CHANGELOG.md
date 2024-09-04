@@ -10,6 +10,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - New TalentLyft integration.
 
+### Updated
+
+- `@infinum/eightshift-forms-utils` to the latest version `3.0.3`.
+
 ## [5.0.10]
 
 ### Fixed
