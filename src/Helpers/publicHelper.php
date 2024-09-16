@@ -13,6 +13,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Geolocation\Geolocation;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -90,7 +91,12 @@ function esFormsGetSelectOptionsArrayFromString(string $options): array
  */
 function esFormsGetComponentsRender(string $component, array $attributes = []): string
 {
-	return Helpers::render($component, $attributes);
+	return Helpers::render(
+		$component,
+		Helpers::props($component, $attributes, [
+			'twSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
+		])
+	);
 }
 
 /**
