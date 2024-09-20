@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.1.1]
+
+### Changed
+
+- Forms Custom post types will no longer appear in the search results using regular WP search query.
+- Results output will no longer appear in the admin sidebar menu as a top-level item.
+- Forms Custom post types will no longer be registered as a standard rest API endpoints for security reasons.
+
+### Updated
+
+- `@infinum/eightshift-forms-utils` to the latest version `3.0.4`.
+
+### Added
+
+- public helper `esFormsGetComponentsRender` now supports Tailwind classes.
+
 ## [5.1.0]
 
 ### Added
@@ -670,6 +686,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.1.1]: https://github.com/infinum/eightshift-forms/compare/5.1.0...5.1.1
 [5.1.0]: https://github.com/infinum/eightshift-forms/compare/5.0.10...5.1.0
 [5.0.10]: https://github.com/infinum/eightshift-forms/compare/5.0.9...5.0.10
 [5.0.9]: https://github.com/infinum/eightshift-forms/compare/5.0.8...5.0.9

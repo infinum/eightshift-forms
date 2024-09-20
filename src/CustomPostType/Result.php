@@ -108,6 +108,7 @@ class Result extends AbstractPostType
 			'has_archive' => false,
 			'show_in_rest' => true,
 			'publicly_queryable' => false,
+			'exclude_from_search' => true,
 			'show_in_menu' => false,
 			'show_in_nav_menus' => false,
 			'can_export' => true,
@@ -118,7 +119,6 @@ class Result extends AbstractPostType
 		if (\apply_filters(SettingsResultOutput::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output['publicly_queryable'] = true;
 			$output['rewrite']['with_front'] = false;
-			$output['show_in_menu'] = true;
 
 			$prefix = UtilsSettingsHelper::getOptionValue(SettingsResultOutput::SETTINGS_GLOBAL_URL_PREFIX_KEY);
 
