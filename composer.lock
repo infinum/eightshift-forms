@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df1e27dc9fb1962318d60d2284f96f4e",
+    "content-hash": "5bbca1f852f495cc3d31b439b5a62620",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -58,20 +58,20 @@
         },
         {
             "name": "infinum/eightshift-forms-utils",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "40ea787510778fcdcfc0819c3e910607495c64ce"
+                "reference": "e7bf17793b1cdde25ea58c614e7b5c5d3e223e2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/40ea787510778fcdcfc0819c3e910607495c64ce",
-                "reference": "40ea787510778fcdcfc0819c3e910607495c64ce",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/e7bf17793b1cdde25ea58c614e7b5c5d3e223e2b",
+                "reference": "e7bf17793b1cdde25ea58c614e7b5c5d3e223e2b",
                 "shasum": ""
             },
             "require": {
-                "infinum/eightshift-libs": "^9.1.1",
+                "infinum/eightshift-libs": "^9.1.5",
                 "php": ">=8.2"
             },
             "require-dev": {
@@ -120,20 +120,20 @@
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2024-09-04T11:50:17+00:00"
+            "time": "2024-09-20T07:17:00+00:00"
         },
         {
             "name": "infinum/eightshift-libs",
-            "version": "9.1.1",
+            "version": "9.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-libs.git",
-                "reference": "a78c95ab4e479bba34aced15d918ef5f7fb5d890"
+                "reference": "347592b7d3c321ce40c43a5e7497c6ade36eaefe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/a78c95ab4e479bba34aced15d918ef5f7fb5d890",
-                "reference": "a78c95ab4e479bba34aced15d918ef5f7fb5d890",
+                "url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/347592b7d3c321ce40c43a5e7497c6ade36eaefe",
+                "reference": "347592b7d3c321ce40c43a5e7497c6ade36eaefe",
                 "shasum": ""
             },
             "require": {
@@ -186,7 +186,7 @@
                 "issues": "https://github.com/infinum/eightshift-libs/issues",
                 "source": "https://github.com/infinum/eightshift-libs"
             },
-            "time": "2024-09-04T11:43:22+00:00"
+            "time": "2024-09-20T07:00:37+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -2536,16 +2536,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.20",
+            "version": "9.6.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "49d7820565836236411f5dc002d16dd689cde42f"
+                "reference": "de6abf3b6f8dd955fac3caad3af7a9504e8c2ffa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/49d7820565836236411f5dc002d16dd689cde42f",
-                "reference": "49d7820565836236411f5dc002d16dd689cde42f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/de6abf3b6f8dd955fac3caad3af7a9504e8c2ffa",
+                "reference": "de6abf3b6f8dd955fac3caad3af7a9504e8c2ffa",
                 "shasum": ""
             },
             "require": {
@@ -2560,7 +2560,7 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=7.3",
-                "phpunit/php-code-coverage": "^9.2.31",
+                "phpunit/php-code-coverage": "^9.2.32",
                 "phpunit/php-file-iterator": "^3.0.6",
                 "phpunit/php-invoker": "^3.1.1",
                 "phpunit/php-text-template": "^2.0.4",
@@ -2619,7 +2619,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.20"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.21"
             },
             "funding": [
                 {
@@ -2635,7 +2635,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-07-10T11:45:39+00:00"
+            "time": "2024-09-19T10:50:18+00:00"
         },
         {
             "name": "psr/log",
