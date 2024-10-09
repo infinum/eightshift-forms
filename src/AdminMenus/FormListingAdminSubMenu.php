@@ -183,6 +183,10 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	public function addCustomLinkIntoAppearanceMenu(): void
 	{
+		if (!\current_user_can(FormAdminMenu::ADMIN_MENU_CAPABILITY)) {
+			return;
+		}
+
 		global $submenu;
 
 		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
