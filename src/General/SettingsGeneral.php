@@ -264,21 +264,6 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 									)
 								),
 							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Hide form on success', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									]
-								]
-							],
 						],
 					],
 					[
