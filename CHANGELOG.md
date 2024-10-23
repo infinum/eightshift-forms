@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.1.5]
+
+### Fixed
+
+- Wrong function type hint for `getCptLimits` function.
+
 ## [5.1.4]
 
 ### Fixed
@@ -704,6 +710,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.1.5]: https://github.com/infinum/eightshift-forms/compare/5.1.4...5.1.5
 [5.1.4]: https://github.com/infinum/eightshift-forms/compare/5.1.3...5.1.4
 [5.1.3]: https://github.com/infinum/eightshift-forms/compare/5.1.2...5.1.3
 [5.1.2]: https://github.com/infinum/eightshift-forms/compare/5.1.1...5.1.2

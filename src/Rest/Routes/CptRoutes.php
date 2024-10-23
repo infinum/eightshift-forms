@@ -38,9 +38,9 @@ class CptRoutes implements ServiceInterface
 	 * @param WP_REST_Server $server The server object.
 	 * @param WP_REST_Request $request The request object.
 	 *
-	 * @return array<string, mixed>
+	 * @return mixed
 	 */
-	public function getCptLimits($results, WP_REST_Server $server, WP_REST_Request $request): array
+	public function getCptLimits($results, WP_REST_Server $server, WP_REST_Request $request)
 	{
 		$disableRoutes = [
 			'/wp/v2/' . UtilsConfig::SLUG_POST_TYPE,
