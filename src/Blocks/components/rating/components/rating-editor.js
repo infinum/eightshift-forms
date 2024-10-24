@@ -1,6 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import {
 	selector,
 	checkAttr,
@@ -31,10 +31,10 @@ export const RatingEditor = (attributes) => {
 	const ratingAmount = checkAttr('ratingAmount', attributes, manifest);
 	const ratingValue = checkAttr('ratingValue', attributes, manifest);
 
-	const ratingClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+	const ratingClass = clsx(
+		componentClass,
+		additionalClass,
+	);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('ratingName', attributes, manifest), ratingName);
 

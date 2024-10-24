@@ -2,7 +2,8 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { Tooltip } from '@wordpress/components';
-import { STORE_NAME, checkAttr, icons } from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const ConditionalTagsEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('conditional-tags');

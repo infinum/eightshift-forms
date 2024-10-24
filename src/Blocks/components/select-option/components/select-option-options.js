@@ -3,7 +3,8 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextareaControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, IconToggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { checkAttr, getAttrKey, IconToggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 

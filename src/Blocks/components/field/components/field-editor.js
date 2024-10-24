@@ -1,8 +1,8 @@
 /* global esFormsLocalization */
 
 import React from 'react';
-import classnames from 'classnames';
-import { isObject } from 'lodash';
+import { clsx } from '@eightshift/ui-components/utilities';
+import { isObject } from '@eightshift/ui-components/utilities';
 import { __ } from '@wordpress/i18n';
 import { dispatch, select } from '@wordpress/data';
 import {
@@ -27,10 +27,10 @@ export const FieldEditorExternalBlocks = ({
 		componentClass,
 	} = manifest;
 
-	const fieldClass = classnames([
-		selector(componentClass, componentClass),
+	const fieldClass = clsx(
+		componentClass,
 		selector(componentClass, componentClass, '', 'field'),
-	]);
+	);
 
 	return (
 		<div className={fieldClass}>
@@ -102,18 +102,18 @@ export const FieldEditor = (attributes) => {
 	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
 	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
-	const fieldClass = classnames([
-		selector(componentClass, componentClass),
+	const fieldClass = clsx(
+		componentClass,
 		selector(componentClass, componentClass, '', selectorClass),
 		selector(additionalFieldClass, additionalFieldClass),
 		selector(fieldHidden, 'es-form-is-hidden'),
 		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
-	]);
+	);
 
-	const labelClass = classnames([
+	const labelClass = clsx(
 		selector(componentClass, componentClass, 'label'),
 		selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required'),
-	]);
+	);
 
 	const LabelDefault = () => (
 		<>

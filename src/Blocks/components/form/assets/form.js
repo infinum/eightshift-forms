@@ -1,6 +1,7 @@
 /* global grecaptcha */
 
-import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
+import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
+import { debounce } from '@eightshift/ui-components/utilities';
 import selectManifest from './../../select/manifest.json';
 import {
 	StateEnum,

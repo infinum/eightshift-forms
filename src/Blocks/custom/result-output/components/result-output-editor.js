@@ -1,8 +1,9 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { ServerSideRender,
+import { icons } from '@eightshift/ui-components/icons';
+import {
+	ServerSideRender,
 	checkAttr,
-	icons,
 	AsyncSelect,
 	getAttrKey,
 	STORE_NAME,

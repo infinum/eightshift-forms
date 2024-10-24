@@ -3,11 +3,11 @@ import { select } from '@wordpress/data';
 import {
 	checkAttr,
 	props,
-	icons,
 	AsyncSelect,
 	getAttrKey,
 	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
 import { __, sprintf } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { ConditionalTagsEditor } from '../../../components/conditional-tags/components/conditional-tags-editor';

@@ -3,8 +3,8 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { TextControl, PanelBody } from '@wordpress/components';
+import { icons } from '@eightshift/ui-components/icons';
 import {
-	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,

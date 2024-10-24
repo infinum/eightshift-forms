@@ -5,9 +5,9 @@ import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { TextareaControl, TextControl } from '@wordpress/components';
-import { isObject } from 'lodash';
+import { isObject, upperFirst } from '@eightshift/ui-components/utilities';
+import { icons } from '@eightshift/ui-components/icons';
 import {
-	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,
@@ -17,7 +17,6 @@ import {
 	Section,
 	ResponsiveNumberPicker,
 	getDefaultBreakpointNames,
-	ucfirst,
 	MultiSelect,
 	props,
 } from '@eightshift/frontend-libs/scripts';
@@ -144,7 +143,7 @@ export const FieldOptionsLayout = (attributes) => {
 					const newData = Object.entries(value).reduce((all, [breakpoint, currentValue]) => {
 						return {
 							...all,
-							[getAttrKey(`fieldWidth${ucfirst(breakpoint)}`, attributes, manifest)]: currentValue,
+							[getAttrKey(`fieldWidth${upperFirst(breakpoint)}`, attributes, manifest)]: currentValue,
 						};
 					}, {});
 

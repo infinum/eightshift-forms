@@ -1,5 +1,5 @@
 import React from 'react';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { select } from '@wordpress/data';
 import {
 	selector,
@@ -34,15 +34,15 @@ export const PhoneEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
 
-	const phoneClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+	const phoneClass = clsx(
+		componentClass,
+		additionalClass,
+	);
 
-	const selectClass = classnames([
+	const selectClass = clsx(
 		selector(manifestSelect.componentClass, manifestSelect.componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+		additionalClass,
+	);
 
 	const phone = (
 		<>

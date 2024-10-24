@@ -6,19 +6,17 @@ import { select, dispatch } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { Tooltip, Button, TextControl } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
+import { icons } from '@eightshift/ui-components/icons';
 import {
 	AnimatedContentVisibility,
-	camelize,
-	classnames,
 	IconLabel,
-	icons,
 	STORE_NAME,
 	Notification,
 	lockPostEditing,
 	unlockPostEditing,
-	unescapeHTML,
 	getUnique,
 } from '@eightshift/frontend-libs/scripts';
+import { unescapeHTML, camelCase, clsx } from '@eightshift/ui-components/utilities';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType, getUtilsIcons } from '../form/assets/state-init';
 import utilsManifest from '../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
@@ -229,8 +227,8 @@ export const getFormFields = () => {
 				}
 			} = item;
 
-			const value = attributes[camelize(`${blockName}-${blockName}-name`)];
-			let label = attributes[camelize(`${blockName}-${blockName}-field-label`)];
+			const value = attributes[camelCase(`${blockName}-${blockName}-name`)];
+			let label = attributes[camelCase(`${blockName}-${blockName}-field-label`)];
 
 			if (value === 'submit') {
 				return null;
@@ -345,7 +343,7 @@ export const MissingName = ({
 		return null;
 	}
 
-	const style = classnames(
+	const style = clsx(
 		'es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center',
 		isOptional ? 'es-bg-yellow-500' : 'es-bg-red-500',
 		className,
@@ -421,7 +419,7 @@ export const NameField = ({
 
 		return (
 			<div className='es-h-between es-w-full'>
-				<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
+				<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={clsx(!value && 'es-nested-color-red-500!')} standalone />
 
 				<AnimatedContentVisibility showIf={!value}>
 					<Tooltip text={labelTipText}>

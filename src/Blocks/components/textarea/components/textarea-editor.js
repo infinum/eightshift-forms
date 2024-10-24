@@ -1,5 +1,5 @@
 import React from 'react';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { select } from '@wordpress/data';
 import {
 	selector,
@@ -32,10 +32,10 @@ export const TextareaEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
 
-	const textareaClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+	const textareaClass = clsx(
+		componentClass,
+		additionalClass,
+	);
 
 	const textarea = (
 		<>

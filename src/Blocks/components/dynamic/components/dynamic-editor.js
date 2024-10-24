@@ -1,6 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import {
 	selector,
 	checkAttr,
@@ -29,10 +29,10 @@ export const DynamicEditor = (attributes) => {
 	const dynamicName = checkAttr('dynamicName', attributes, manifest);
 	const dynamicCustomLabel = checkAttr('dynamicCustomLabel', attributes, manifest);
 
-	const dynamicClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+	const dynamicClass = clsx(
+		componentClass,
+		additionalClass,
+	);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('dynamicName', attributes, manifest), dynamicName);
 

@@ -2,7 +2,8 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { TextControl } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, Section, IconToggle, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { checkAttr, getAttrKey, IconLabel, Section, IconToggle, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 export const FormOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('form');

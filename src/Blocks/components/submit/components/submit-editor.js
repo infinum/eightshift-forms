@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { select } from '@wordpress/data';
 import {
 	selector,
@@ -25,10 +25,10 @@ export const SubmitEditor = (attributes) => {
 
 	const submitValue = checkAttr('submitValue', attributes, manifest);
 
-	const submitClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
+	const submitClass = clsx(
+		componentClass,
+		additionalClass,
+	);
 
 	const submitComponent = (
 		<button className={submitClass}>

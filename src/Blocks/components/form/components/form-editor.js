@@ -1,6 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { selector, checkAttr, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
 export const FormEditor = (attributes) => {
@@ -18,12 +18,12 @@ export const FormEditor = (attributes) => {
 
 	const formContent = checkAttr('formContent', attributes, manifest);
 
-	const formClass = classnames([
-		selector(componentClass, componentClass),
+	const formClass = clsx(
+		componentClass,
 		selector(componentClass, componentClass, 'editor'),
 		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
-	]);
+		additionalClass,
+	);
 
 	return (
 		<div className={formClass}>

@@ -8,9 +8,9 @@ import { select } from '@wordpress/data';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { icons } from '@eightshift/ui-components/icons';
 import {
 	IconLabel,
-	icons,
 	getAttrKey,
 	checkAttr,
 	props,
@@ -22,11 +22,11 @@ import {
 	STORE_NAME,
 	Collapsable,
 	Select,
-	truncateMiddle,
 	Repeater,
 	RepeaterItem,
 	Toggle,
 } from '@eightshift/frontend-libs/scripts';
+import { truncateMiddle } from '@eightshift/ui-components/utilities';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import {
 	FormEditButton,

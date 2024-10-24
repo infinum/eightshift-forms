@@ -4,8 +4,8 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { PanelBody, Button, Modal } from '@wordpress/components';
+import { icons } from '@eightshift/ui-components/icons';
 import {
-	icons,
 	getAttrKey,
 	checkAttr,
 	IconToggle,

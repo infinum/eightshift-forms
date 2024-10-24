@@ -1,10 +1,11 @@
 import React from 'react';
-import { camelCase } from 'lodash';
+import { camelCase } from '@eightshift/ui-components/utilities';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { STORE_NAME, checkAttr, icons } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
 import { getUtilsIcons } from '../../../components/form/assets/state-init';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { icons } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
 import { getUtilsIcons } from '../../form/assets/state-init';
 
 export const InvalidEditor = ({ icon, heading, text }) => {

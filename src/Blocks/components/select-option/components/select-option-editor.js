@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { select } from '@wordpress/data';
 import {
 	selector,
@@ -33,13 +33,13 @@ export const SelectOptionEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
-	const selectOptionClass = classnames([
-		selector(componentClass, componentClass),
+	const selectOptionClass = clsx(
+		componentClass,
 		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
+		additionalClass,
 		selector(selectOptionIsHidden, 'es-form-is-hidden'),
 		selector(selectOptionLabel === '', componentClass, '', 'placeholder'),
-	]);
+	);
 
 	return (
 		<div className={selectOptionClass}>

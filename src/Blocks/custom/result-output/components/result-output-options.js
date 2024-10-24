@@ -7,8 +7,8 @@ import { checkAttr,
 	AsyncSelect,
 	STORE_NAME,
 	IconToggle,
-	icons,
 } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
 import { outputFormSelectItemWithIcon } from '../../../components/utils';
 
 export const ResultOutputOptions = ({

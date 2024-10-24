@@ -3,8 +3,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select } from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, Button, Modal } from '@wordpress/components';
+import { icons } from '@eightshift/ui-components/icons';
 import {
-	icons,
 	getAttrKey,
 	checkAttr,
 	IconToggle,

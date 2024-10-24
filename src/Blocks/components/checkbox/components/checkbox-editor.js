@@ -1,7 +1,7 @@
 import React  from 'react';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import {
 	selector,
 	checkAttr,
@@ -32,17 +32,17 @@ export const CheckboxEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
 
-	const checkboxClass = classnames([
-		selector(componentClass, componentClass),
+	const checkboxClass = clsx(
+		componentClass,
 		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
+		additionalClass,
 		selector(checkboxIsHidden, 'es-form-is-hidden'),
-	]);
+	);
 
-	const checkboxLabelClass = classnames([
+	const checkboxLabelClass = clsx(
 		selector(componentClass, componentClass, 'label'),
 		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
-	]);
+	);
 
 	return (
 		<div className={checkboxClass}>

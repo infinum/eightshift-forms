@@ -4,10 +4,10 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
+import { icons } from '@eightshift/ui-components/icons';
 import {
 	checkAttr,
 	getAttrKey,
-	icons,
 	IconLabel,
 	IconToggle,
 	props,

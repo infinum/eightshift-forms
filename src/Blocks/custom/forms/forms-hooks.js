@@ -29,7 +29,7 @@ const parentComponentBlock = createHigherOrderComponent((BlockListBlock) => {
 		let updatedProps = {...innerProps};
 
 		if (name === fullBlockName) {
-			const componentClass = classnames(
+			const componentClass = clsx(
 				blockClass,
 				customBlocksName,
 			);

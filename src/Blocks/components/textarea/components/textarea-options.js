@@ -6,8 +6,8 @@ import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { select } from '@wordpress/data';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { icons } from '@eightshift/ui-components/icons';
 import {
-	icons,
 	checkAttr,
 	getAttrKey,
 	IconLabel,

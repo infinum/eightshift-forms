@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import classnames from 'classnames';
+import { clsx } from '@eightshift/ui-components/utilities';
 import {
 	selector,
 	checkAttr,
@@ -32,17 +32,17 @@ export const RadioEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('radioValue', attributes, manifest), radioValue);
 
-	const radioClass = classnames([
-		selector(componentClass, componentClass),
+	const radioClass = clsx(
+		componentClass,
 		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
+		additionalClass,
 		selector(radioIsHidden, 'es-form-is-hidden'),
-	]);
+	);
 
-	const radioLabelClass = classnames([
+	const radioLabelClass = clsx(
 		selector(componentClass, componentClass, 'label'),
 		selector(radioLabel === '', componentClass, 'label', 'placeholder'),
-	]);
+	);
 
 	return (
 		<div className={radioClass}>

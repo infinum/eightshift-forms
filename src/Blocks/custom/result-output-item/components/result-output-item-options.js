@@ -5,10 +5,10 @@ import { PanelBody, TextControl } from '@wordpress/components';
 import {
 	checkAttr,
 	getAttrKey,
-	icons,
 	IconLabel,
 	Select,
 } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
 import {
 	CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
 	CONDITIONAL_TAGS_OPERATORS_LABELS,

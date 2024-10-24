@@ -5,7 +5,8 @@ import apiFetch from '@wordpress/api-fetch';
 import { select, useDispatch, useSelect, dispatch } from "@wordpress/data";
 import { store as noticesStore } from '@wordpress/notices';
 import { Button, PanelBody, Modal } from '@wordpress/components';
-import { icons, Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs/scripts';
 import {
 	updateIntegrationBlocks,
 	resetInnerBlocks,

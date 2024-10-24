@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import ReactFlow, { MarkerType, Controls, Background, MiniMap, Position, Handle } from 'reactflow';
-import { camelize } from '@eightshift/frontend-libs/scripts';
+import { camelCase } from '@eightshift/ui-components/utilities';
 
 // Create custom handle with 4 points.
 const CustomHandle = memo(({data}) => {
@@ -76,9 +76,9 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 		}
 
 		return {
-			id: camelize(`${value}-default-flow`), // Unique ID for the edge.
-			source: camelize(value),
-			target: camelize(target),
+			id: camelCase(`${value}-default-flow`), // Unique ID for the edge.
+			source: camelCase(value),
+			target: camelCase(target),
 			sourceHandle: 'right',
 			targetHandle: 'left',
 			style: {
@@ -94,13 +94,13 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 
 	// Custom flows.
 	const customFlows = stepMultiflowRules.map((item, index) => {
-		const source = camelize(item?.[1].toLowerCase());
-		const target = camelize(item?.[0].toLowerCase());
+		const source = camelCase(item?.[1].toLowerCase());
+		const target = camelCase(item?.[0].toLowerCase());
 
 		const edgeColor = getRandomHexColor();
 
 		return {
-			id: camelize(`${source}-rule-${index}`), // Unique ID for the edge.
+			id: camelCase(`${source}-rule-${index}`), // Unique ID for the edge.
 			source: source,
 			target: target,
 			type: 'smoothstep',
@@ -127,7 +127,7 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 		value,
 	}, index) => {
 		return {
-			id: camelize(value), // Unique ID for the node.
+			id: camelCase(value), // Unique ID for the node.
 			data: {
 				label: `${label.substring(0, 40)}...`, // Limit the label to 40 characters.
 			},
