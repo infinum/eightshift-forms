@@ -109,6 +109,8 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 
 		$output = [];
 
+		dump($data['fields']);
+
 		foreach ($data['fields'] as $item) {
 			if (!$item) {
 				continue;
@@ -302,8 +304,8 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 				case 'checkbox':
 					$output[] = [
 						'component' => 'checkboxes',
-						'checkboxesFieldHideLabel' => true,
 						'checkboxesName' => $name,
+						'checkboxesFieldLabel' => $label,
 						'checkboxesIsRequired' => $required,
 						'checkboxesTypeCustom' => $internalType,
 						'checkboxesContent' => \array_map(
@@ -330,8 +332,8 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 				case 'yesNo':
 					$output[] = [
 						'component' => 'radios',
-						'radiosFieldHideLabel' => true,
 						'radiosName' => $name,
+						'radiosFieldLabel' => $label,
 						'radiosIsRequired' => $required,
 						'radiosTypeCustom' => $internalType,
 						'radiosContent' => \array_map(
