@@ -285,7 +285,7 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function getTalentlyftItems()
 	{
-		$url = "{$this->getBaseUrl()}jobs?perPage=100";
+		$url = "{$this->getBaseUrl()}jobs?perPage=100&status=internal";
 
 		$response = \wp_remote_get(
 			$url,
@@ -407,14 +407,15 @@ class TalentlyftClient implements ClientInterface
 			$name = \preg_replace('/^q_/', '', $name);
 
 			switch ($typeCustom) {
-				case 'answers':
+				case 'Answers':
+				case 'CustomFieldAnswers':
 					if (\in_array($type, ['radio', 'select', 'checkbox'], true)) {
-						$output['Answers'][] = [
+						$output[$typeCustom][] = [
 							'Id' => (int) $name,
 							'Choices' => \explode(UtilsConfig::DELIMITER, $value),
 						];
 					} else {
-						$output['Answers'][] = [
+						$output[$typeCustom][] = [
 							'Id' => (int) $name,
 							'Body' => $value,
 						];

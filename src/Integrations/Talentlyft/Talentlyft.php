@@ -109,23 +109,32 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 
 		$output = [];
 
-		dump($data['fields']);
-
 		foreach ($data['fields'] as $item) {
 			if (!$item) {
 				continue;
 			}
 
+			$customType = $item['FieldLocationType'] ?? '';
+			$key = $item['Key'] ?? '';
+
 			$type = $item['Type'] ?? '';
-			$name = isset($item['Key']) ? "q_{$item['Key']}" : '';
-			$tracking = $item['Key'] ?? '';
+			$name = !empty($key) ? "q_{$key}" : '';
+			$tracking = $key;
 			$label = $item['DisplayName'] ?? '';
 			$fields = $item['Choices'] ?? [];
-			$internalType = ($item['FieldLocationType'] ?? '') === 'ScreeningQuestions' ? 'answers' : $type;
+			$internalType = $type;
 			$required = isset($item['Required']) ? (bool) $item['Required'] : false;
 
 			if (!$name) {
 				$name = isset($item['Id']) ? "q_{$item['Id']}" : '';
+			}
+
+			if ($customType === 'ScreeningQuestions') {
+				$internalType = 'Answers';
+			}
+
+			if (empty($key)) {
+				$internalType = 'CustomFieldAnswers';
 			}
 
 			if (!$name) {
