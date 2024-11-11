@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.1.9]
+
+### Added
+- Mailer now supports few new email response keys: `mailerPostTitle`, `mailerPostUrl`, `mailerPostId`, `mailerFormId` and `mailerFormTitle`.
+
 ## [5.1.8]
 
 ### Fixed

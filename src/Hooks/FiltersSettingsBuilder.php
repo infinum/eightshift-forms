@@ -238,6 +238,11 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'mailerSuccessRedirectUrl' => '',
 					'mailerEntryId' => '',
 					'mailerEntryUrl' => '',
+					'mailerPostTitle' => '',
+					'mailerPostUrl' => '',
+					'mailerPostId' => '',
+					'mailerFormId' => '',
+					'mailerFormTitle' => '',
 				],
 				'labels' => [
 					'title' => \__('Mailer', 'eightshift-forms'),

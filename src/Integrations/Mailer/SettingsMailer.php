@@ -212,6 +212,10 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 		$fieldNameTags = UtilsSettingsOutputHelper::getPartialFormFieldNames($fieldNames);
 		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails[UtilsConfig::FD_TYPE]);
 
+		if ($formDetails[UtilsConfig::FD_TYPE] !== self::SETTINGS_TYPE_KEY) {
+			$formResponseTags .= UtilsSettingsOutputHelper::getPartialFormResponseTags(self::SETTINGS_TYPE_KEY);
+		}
+
 		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
 		$isSenderUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
 		$emailField = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);

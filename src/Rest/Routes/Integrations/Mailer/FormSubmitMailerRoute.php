@@ -87,7 +87,8 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 				\array_merge(
 					$successAdditionalData['public'],
 					$successAdditionalData['private']
-				)
+				),
+				$formDetails
 			)
 		);
 
