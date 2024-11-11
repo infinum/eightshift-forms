@@ -353,6 +353,10 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['isAdmin'] = false;
 
+		if (\is_user_logged_in()) {
+			$output['nonce'] = \wp_create_nonce('wp_rest');
+		}
+
 		$output = \wp_json_encode($output);
 
 		\wp_add_inline_script($this->getBlockFrontendScriptHandle(), "const esFormsLocalization = {$output}", 'before');

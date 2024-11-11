@@ -16,6 +16,11 @@ $manifest = Helpers::getManifestByDir(__DIR__);
 $manifestInvalid = Helpers::getComponent('invalid');
 $manifestSettings = Helpers::getSettings();
 
+// Check is there any reason to not render forms block.
+if (!apply_filters(Form::FILTER_FORMS_BLOCK_SHOULD_RENDER, true, $attributes, $manifest)) {
+	return;
+}
+
 echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
 $blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$manifestSettings['blockClassPrefix']}-{$manifest['blockName']}";
@@ -121,6 +126,7 @@ $formsClass = Helpers::classnames([
 					'formsFormPostId' => $formId,
 				]
 			),
+			$manifest
 		);
 
 		// Render blocks.
