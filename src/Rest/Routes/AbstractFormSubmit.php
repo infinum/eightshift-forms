@@ -632,7 +632,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected function getCombinedEmailResponseTags(array $formDetails, array $data): array
 	{
 		return \array_merge(
-			$this->getCommonEmailResponseTags($data),
+			$this->getCommonEmailResponseTags($data, $formDetails),
 			$this->getEmailResponseTags($formDetails)
 		);
 	}
@@ -641,10 +641,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * Prepare all email response tags.
 	 *
 	 * @param array<string, mixed> $data Data passed from the `getIntegrationResponseSuccessOutputAdditionalData` function.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return array<string, mixed>
 	 */
-	protected function getCommonEmailResponseTags(array $data): array
+	protected function getCommonEmailResponseTags(array $data, array $formDetails): array
 	{
 		$output = [];
 
@@ -657,6 +658,21 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					break;
 				case 'mailerEntryId':
 					$output[$key] = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
+					break;
+				case 'mailerPostUrl':
+					$output[$key] = \get_the_permalink((int) $formDetails['postId']);
+					break;
+				case 'mailerPostTitle':
+					$output[$key] = \get_the_title((int) $formDetails['postId']);
+					break;
+				case 'mailerPostId':
+					$output[$key] = $formDetails['postId'] ?? '';
+					break;
+				case 'mailerFormId':
+					$output[$key] = $formDetails[UtilsHelper::getStateResponseOutputKey('formId')];
+					break;
+				case 'mailerFormTitle':
+					$output[$key] = \get_the_title((int) $data[UtilsHelper::getStateResponseOutputKey('formId')]);
 					break;
 				case 'mailerEntryUrl':
 					$entryId = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
