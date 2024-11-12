@@ -231,8 +231,8 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Use only for logged in users', 'eightshift-forms'),
-										'checkboxHelp' => \__('If form is available only for the logged in users. If the user is not logged in the form will not show.', 'eightshift-forms'),
+										'checkboxLabel' => \__('Show only to logged in users', 'eightshift-forms'),
+										'checkboxHelp' => \__('The form will be accessible only to users who are logged in.', 'eightshift-forms'),
 										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY),
 										'checkboxValue' => self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY,
 										'checkboxSingleSubmit' => true,
@@ -249,7 +249,7 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Use single submit per user', 'eightshift-forms'),
-											'checkboxHelp' => \__('Use only single submit per user.', 'eightshift-forms'),
+											'checkboxHelp' => \__('If enabled, each user can submit the form only once.', 'eightshift-forms'),
 											'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY),
 											'checkboxValue' => self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY,
 											'checkboxSingleSubmit' => true,

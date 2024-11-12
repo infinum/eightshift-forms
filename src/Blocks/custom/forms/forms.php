@@ -16,7 +16,7 @@ $manifest = Helpers::getManifestByDir(__DIR__);
 $manifestInvalid = Helpers::getComponent('invalid');
 $manifestSettings = Helpers::getSettings();
 
-// Check is there any reason to not render forms block.
+// Check if there is any reason not to render forms block.
 if (!apply_filters(Form::FILTER_FORMS_BLOCK_SHOULD_RENDER, true, $attributes, $manifest)) {
 	return;
 }
