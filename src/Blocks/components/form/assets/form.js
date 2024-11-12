@@ -299,7 +299,13 @@ export class Form {
 		// For admin settings use different url and add nonce.
 		if (this.state.getStateConfigIsAdmin()) {
 			url = this.state.getRestUrl('settings');
-			body.headers['X-WP-Nonce'] = this.state.getStateConfigNonce();
+		}
+
+		// Add nonce for frontend and admin.
+		const nonce = this.state.getStateConfigNonce();
+
+		if (nonce) {
+			body.headers['X-WP-Nonce'] = nonce;
 		}
 
 		fetch(url, body)

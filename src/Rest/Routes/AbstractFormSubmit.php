@@ -280,6 +280,15 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 							}
 						}
 					}
+
+					// Validate form submit once.
+					if ($this->validator->isValicationSubmitOnce($formDetails[UtilsConfig::FD_FORM_ID] ?? '')) {
+						return \rest_ensure_response(
+							UtilsApiHelper::getApiErrorPublicOutput(
+								$this->labels->getLabel('validationSubmitOnce', $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+							)
+						);
+					}
 					break;
 			}
 
@@ -385,7 +394,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				);
 			}
 
+			// Callback functions.
 			$this->callIntegrationResponseSuccessCallback($formDetails, $successAdditionalData);
+
+			// Set validation submit once.
+			$this->validator->setValidationSubmitOnce($formId);
 
 			return UtilsApiHelper::getApiSuccessPublicOutput(
 				$labelsOutput,

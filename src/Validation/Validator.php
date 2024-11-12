@@ -98,6 +98,11 @@ class Validator extends AbstractValidation
 	public const CACHE_VALIDATOR_LABELS_TRANSIENT_NAME = 'es_validator_labels_cache';
 
 	/**
+	 * User submit once meta key.
+	 */
+	public const USER_SUBMIT_ONCE_META_KEY = 'es_validator_submit_once';
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
@@ -474,6 +479,63 @@ class Validator extends AbstractValidation
 			},
 			$items
 		);
+	}
+
+	/**
+	 * Set validation submit once.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return bool
+	 */
+	public function setValidationSubmitOnce(string $formId): bool
+	{
+		$onlyLoggedIn = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY);
+		$submitOnce = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY);
+		if (!($onlyLoggedIn && $submitOnce)) {
+			return false;
+		}
+
+		$currentUser = \get_current_user_id();
+
+		if ($currentUser === 0) {
+			return false;
+		}
+
+		$output = \get_user_meta($currentUser, self::USER_SUBMIT_ONCE_META_KEY, true) ?: [];
+
+		$output[$formId] = true;
+
+		\update_user_meta($currentUser, self::USER_SUBMIT_ONCE_META_KEY, $output);
+
+		return true;
+	}
+
+	/**
+	 * Check if validation submit once is active.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return bool
+	 */
+	public function isValicationSubmitOnce(string $formId): bool
+	{
+		$onlyLoggedIn = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY);
+		$submitOnce = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY);
+
+		if (!($onlyLoggedIn && $submitOnce)) {
+			return false;
+		}
+
+		$currentUser = \get_current_user_id();
+
+		if ($currentUser === 0) {
+			return false;
+		}
+
+		$output = \get_user_meta($currentUser, self::USER_SUBMIT_ONCE_META_KEY, true) ?: [];
+
+		return isset($output[$formId]) && $output[$formId] === true;
 	}
 
 	/**

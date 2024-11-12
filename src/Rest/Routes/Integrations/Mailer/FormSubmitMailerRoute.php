@@ -97,6 +97,9 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 		$debug = $mailerResponse['debug'] ?? [];
 
 		if ($status === UtilsConfig::STATUS_SUCCESS) {
+			// Set validation submit once.
+			$this->validator->setValidationSubmitOnce($formId);
+
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel($label, $formId),

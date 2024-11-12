@@ -53,4 +53,22 @@ interface ValidatorInterface
 	 * @return array<string, string>
 	 */
 	public function getValidationLabelItems(array $items, string $formId): array;
+
+	/**
+	 * Set validation submit once.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return bool
+	 */
+	public function setValidationSubmitOnce(string $formId): bool;
+
+	/**
+	 * Check if validation submit once is active.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return bool
+	 */
+	public function isValicationSubmitOnce(string $formId): bool;
 }

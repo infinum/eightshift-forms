@@ -256,6 +256,7 @@ class Labels implements LabelsInterface
 			'validationWorkableMaxLength255' => \__('This field is too long. Max length is 255 characters.', 'eightshift-forms'),
 			'validationSecurity' => \__('You have made too many requests in a short time. Please slow down and try again.', 'eightshift-forms'),
 			'validationMissingMandatoryParams' => \__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'validationSubmitOnce' => \__('This form can be submitted only once.', 'eightshift-forms'),
 		];
 	}
 

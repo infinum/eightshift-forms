@@ -15,6 +15,7 @@ use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Settings\Settings\SettingsSettings;
+use EightshiftForms\Validation\SettingsValidation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -37,6 +38,11 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	public const FILTER_FORMS_BLOCK_MODIFICATIONS = 'es_forms_forms_block_modifications';
 
 	/**
+	 * Filter forms block should render key.
+	 */
+	public const FILTER_FORMS_BLOCK_SHOULD_RENDER = 'es_forms_forms_block_should_render';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -44,7 +50,8 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	public function register(): void
 	{
 		\add_filter(self::FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS, [$this, 'updateFormComponentAttributesOutput']);
-		\add_filter(self::FILTER_FORMS_BLOCK_MODIFICATIONS, [$this, 'updateFormsBlockOutput'], 10, 2);
+		\add_filter(self::FILTER_FORMS_BLOCK_MODIFICATIONS, [$this, 'updateFormsBlockOutput'], 10, 3);
+		\add_filter(self::FILTER_FORMS_BLOCK_SHOULD_RENDER, [$this, 'checkFormsBlockShouldRender'], 10, 3);
 	}
 
 	/**
@@ -103,15 +110,15 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 *
 	 * @param array<string, mixed> $blocks Blocks from the core.
 	 * @param array<string, mixed> $attributes Attributes to update.
+	 * @param array<string, mixed> $manifest Manifest of the block.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function updateFormsBlockOutput(array $blocks, array $attributes): array
+	public function updateFormsBlockOutput(array $blocks, array $attributes, array $manifest): array
 	{
 		$output = [];
 
 		$formsNamespace = Helpers::getSettingsNamespace();
-		$manifest = Helpers::getBlock('forms');
 		$formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
 		$formsVariation = Helpers::checkAttr('formsVariation', $attributes, $manifest);
 		$formsVariationData = Helpers::checkAttr('formsVariationData', $attributes, $manifest);
@@ -351,6 +358,26 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		}
 
 		return \array_values($output);
+	}
+
+	/**
+	 * Check if forms block should render.
+	 *
+	 * @param bool $output Should block render.
+	 * @param array<string, mixed> $attributes Block Attributes.
+	 * @param array<string, mixed> $manifest Manifest of the block.
+	 *
+	 * @return bool
+	 */
+	public function checkFormsBlockShouldRender(bool $output, array $attributes, array $manifest): bool
+	{
+		$loggedInOnlyForm = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY);
+
+		if ($loggedInOnlyForm && !\is_user_logged_in()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
