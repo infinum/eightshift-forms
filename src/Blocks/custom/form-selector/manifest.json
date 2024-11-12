@@ -200,24 +200,27 @@
 				[
 					"eightshift-forms/input",
 					{
-						"inputInputFieldLabel": "Name",
+						"inputInputFieldLabel": "First name",
 						"inputInputIsRequired": true,
-						"inputInputName": "name"
+						"inputInputName": "first_name"
 					}
 				],
 				[
 					"eightshift-forms/input",
 					{
-						"inputInputFieldLabel": "Subject",
+						"inputInputFieldLabel": "Last name",
 						"inputInputIsRequired": true,
-						"inputInputName": "subject"
+						"inputInputName": "last_name"
 					}
 				],
 				[
-					"eightshift-forms/textarea",
+					"eightshift-forms/input",
 					{
-						"textareaTextareaFieldLabel": "Message",
-						"textareaTextareaName": "message"
+						"inputInputFieldLabel": "Amount",
+						"inputInputIsRequired": true,
+						"inputInputType": "number",
+						"inputInputIsNumber": true,
+						"inputInputName": "amount"
 					}
 				],
 				[

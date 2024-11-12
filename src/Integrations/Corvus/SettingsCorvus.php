@@ -66,49 +66,14 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	public const SETTINGS_CORVUS_STORE_IDS_KEY = 'corvus-store-ids';
 
 	/**
-	 * API Board.
-	 */
-	public const SETTINGS_CORVUS_API_BOARD_KEY = 'corvus-api-board';
-
-	/**
-	 * API Board url.
-	 */
-	public const SETTINGS_CORVUS_API_BOARD_URL_KEY = 'corvus-api-board-url';
-
-	/**
-	 * API User.
-	 */
-	public const SETTINGS_CORVUS_API_USER_KEY = 'corvus-api-user';
-
-	/**
 	 * Corvus store ID key.
 	 */
 	public const SETTINGS_CORVUS_STORE_ID = 'corvus-store-id';
 
 	/**
-	 * Corvus issue type key.
-	 */
-	public const SETTINGS_CORVUS_ISSUE_TYPE_KEY = 'corvus-issue-type';
-
-	/**
-	 * Corvus title key.
-	 */
-	public const SETTINGS_CORVUS_TITLE_KEY = 'corvus-title';
-
-	/**
-	 * Corvus description key.
-	 */
-	public const SETTINGS_CORVUS_DESC_KEY = 'corvus-desc';
-
-	/**
 	 * Corvus params map key.
 	 */
 	public const SETTINGS_CORVUS_PARAMS_MAP_KEY = 'corvus-params-map';
-
-	/**
-	 * Corvus params manual map key.
-	 */
-	public const SETTINGS_CORVUS_PARAMS_MANUAL_MAP_KEY = 'corvus-params-manual-map';
 
 	/**
 	 * Corvus lang key.
