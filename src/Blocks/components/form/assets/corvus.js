@@ -16,7 +16,7 @@ export class Corvus {
 		// Populate hidden fields with parameters
 		Object.entries(params).forEach(([key, value]) => {
 			const hiddenField = document.createElement('input');
-			hiddenField.type = 'text';
+			hiddenField.type = 'hidden';
 			hiddenField.name = key;
 			hiddenField.value = String(value);
 			form.appendChild(hiddenField);
