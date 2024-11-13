@@ -100,7 +100,9 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					[
-						UtilsHelper::getStateResponseOutputKey('processExternally') => true,
+						UtilsHelper::getStateResponseOutputKey('processExternally') => [
+							'type' => 'SUBMIT',
+						],
 					],
 					$debug
 				)

@@ -454,14 +454,6 @@ export class Form {
 					this.enrichment.deleteLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId));
 				}
 
-				// Do normal success without redirect.
-				// Do the actual redirect after some time for custom form processed externally.
-				if (data?.[this.state.getStateResponseOutputKey('processExternally')]) {
-					setTimeout(() => {
-						this.state.getStateFormElement().submit();
-					}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
-				}
-
 				// Return to original first step.
 				if (isFinalStep) {
 					this.steps.resetSteps(formId);
@@ -470,9 +462,14 @@ export class Form {
 				// Set output results.
 				this.utils.setResultsOutput(formId, data);
 
-				if (this.state.getStateFormType(formId) === 'corvus') {
-					import('./corvus').then(({ Corvus }) => {
-						new Corvus().init(data?.[this.state.getStateResponseOutputKey('postExternallyData')]);
+				// Process payment gateways and external.
+				if (data?.[this.state.getStateResponseOutputKey('processExternally')]) {
+					import('./payment-gateways').then(({ PaymentGateways }) => {
+						new PaymentGateways({
+							utils: this.utils,
+							state: this.state,
+							response: data?.[this.state.getStateResponseOutputKey('processExternally')],
+						}).init();
 					});
 				}
 			}

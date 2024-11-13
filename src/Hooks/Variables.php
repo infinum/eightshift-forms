@@ -264,4 +264,24 @@ class Variables
 	{
 		return \defined('ES_API_KEY_CORVUS') ? \ES_API_KEY_CORVUS : '';
 	}
+
+	/**
+	 * Get API Key for Paycek.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyPaycek(): string
+	{
+		return \defined('ES_API_KEY_PAYCEK') ? \ES_API_KEY_PAYCEK : '';
+	}
+
+	/**
+	 * Get API Profile Key for Paycek.
+	 *
+	 * @return string
+	 */
+	public static function getApiProfileKeyPaycek(): string
+	{
+		return \defined('ES_PROFILE_KEY_PAYCEK') ? \ES_PROFILE_KEY_PAYCEK : '';
+	}
 }

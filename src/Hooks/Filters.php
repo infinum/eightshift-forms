@@ -33,6 +33,7 @@ use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Misc\SettingsRocketCache;
@@ -279,8 +280,10 @@ final class Filters
 					'afterCustomResultOutputProcess',
 				],
 				SettingsCorvus::SETTINGS_TYPE_KEY => [
-					'overridePostRequest',
-					'prePostParams',
+					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
+				],
+				SettingsPaycek::SETTINGS_TYPE_KEY => [
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
@@ -405,6 +408,9 @@ final class Filters
 			SettingsCorvus::SETTINGS_CORVUS_USE_KEY,
 			SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY,
 			SettingsCorvus::SETTINGS_CORVUS_STORE_IDS_KEY,
+
+			SettingsPaycek::SETTINGS_PAYCEK_USE_KEY,
+			SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY,
 
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY,

@@ -28,6 +28,7 @@
 				"eightshift-forms/talentlyft",
 				"eightshift-forms/jira",
 				"eightshift-forms/corvus",
+				"eightshift-forms/paycek",
 				"eightshift-forms/pipedrive",
 				"eightshift-forms/calculator"
 			]
@@ -182,6 +183,56 @@
 			"label": "Corvus",
 			"slug": "corvus",
 			"blockName": "eightshift-forms/corvus",
+			"innerBlocks": [
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "E-mail",
+						"inputInputType": "email",
+						"inputInputName": "email",
+						"inputInputIsRequired": true,
+						"inputInputIsEmail": true,
+						"inputInputDisabledOptions": [
+							"inputInputIsRequired",
+							"inputInputName"
+						]
+					}
+				],
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "First name",
+						"inputInputIsRequired": true,
+						"inputInputName": "first_name"
+					}
+				],
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "Last name",
+						"inputInputIsRequired": true,
+						"inputInputName": "last_name"
+					}
+				],
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "Amount",
+						"inputInputIsRequired": true,
+						"inputInputType": "number",
+						"inputInputIsNumber": true,
+						"inputInputName": "amount"
+					}
+				],
+				[
+					"eightshift-forms/submit"
+				]
+			]
+		},
+		{
+			"label": "Paycek",
+			"slug": "paycek",
+			"blockName": "eightshift-forms/paycek",
 			"innerBlocks": [
 				[
 					"eightshift-forms/input",

@@ -121,13 +121,13 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 			UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus(), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)['value']
 		);
 
-
 		// Finish.
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				$this->labels->getLabel('corvusSuccess', $formId),
 				[
-					UtilsHelper::getStateResponseOutputKey('postExternallyData') => [
+					UtilsHelper::getStateResponseOutputKey('processExternally') => [
+						'type' => 'GET',
 						'url' => $this->getUrl($formId),
 						'params' => $params,
 					],
