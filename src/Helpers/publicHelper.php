@@ -125,13 +125,13 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 /**
  * Get entry by ID.
  *
- * @param string $id Entry Id.
+ * @param string $entryId Entry Id.
  *
  * @return array<string, mixed>
  */
-function esFormGetEntry(string $id): array
+function esFormGetEntry(string $entryId): array
 {
-	return EntriesHelper::getEntry($id);
+	return EntriesHelper::getEntry($entryId);
 }
 
 /**
@@ -142,4 +142,16 @@ function esFormGetEntry(string $id): array
 function getFormsGetCountryList(): array
 {
 	return (new Countries())->getCountriesDataSet();
+}
+
+/**
+ * Get form usage location.
+ *
+ * @param string $formId Form ID.
+ *
+ * @return array<int, mixed>
+ */
+function getFormUsageLocation(string $formId): array
+{
+	return UtilsGeneralHelper::getBlockLocations($formId);
 }

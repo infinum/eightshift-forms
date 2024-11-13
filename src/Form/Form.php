@@ -371,7 +371,9 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 	 */
 	public function checkFormsBlockShouldRender(bool $output, array $attributes, array $manifest): bool
 	{
-		$loggedInOnlyForm = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY);
+		$formId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
+
+		$loggedInOnlyForm = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId);
 
 		if ($loggedInOnlyForm && !\is_user_logged_in()) {
 			return false;

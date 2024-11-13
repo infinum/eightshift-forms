@@ -42,7 +42,7 @@
 	"require": {
 		"php": ">=8.2",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^3.0.4"
+		"infinum/eightshift-forms-utils": "^3.0.5"
 	},
 	"autoload": {
 		"psr-4": {
@@ -67,11 +67,11 @@
 	},
 	"scripts": {
 		"test:types": "@php ./vendor/bin/phpstan analyze",
-		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.2-",
+		"test:standards": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set testVersion 8.3-",
 		"test:unit": "@php ./vendor/bin/pest --group=unit",
 		"test:unit-report": "@php ./vendor/bin/pest --group=unit --log-junit tests/coverage/report.xml",
 		"test:coverage": "@php ./vendor/bin/pest --group=unit --coverage",
-		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.2-",
+		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --runtime-set testVersion 8.3-",
 		"test": [
 			"@test:standards",
 			"@test:types",

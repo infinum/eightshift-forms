@@ -492,9 +492,9 @@ class Validator extends AbstractValidation
 	 */
 	public function setValidationSubmitOnce(string $formId): bool
 	{
-		$onlyLoggedIn = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY);
-		$submitOnce = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY);
-		if (!($onlyLoggedIn && $submitOnce)) {
+		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$submitOnce = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
+		if (!$onlyLoggedIn || !$submitOnce) {
 			return false;
 		}
 
@@ -514,28 +514,39 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Check if validation submit once is active.
+	 * Check if user is logged in.
 	 *
 	 * @param string $formId Form ID.
 	 *
 	 * @return bool
 	 */
-	public function isValicationSubmitOnce(string $formId): bool
+	public function validateSubmitOnlyLoggedIn(string $formId): bool
 	{
-		$onlyLoggedIn = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY);
-		$submitOnce = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY);
-
-		if (!($onlyLoggedIn && $submitOnce)) {
+		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		if (!$onlyLoggedIn) {
 			return false;
 		}
 
-		$currentUser = \get_current_user_id();
+		return \get_current_user_id() === 0;
+	}
 
-		if ($currentUser === 0) {
+	/**
+	 * Check if user has already submitted the form.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return bool
+	 */
+	public function validateSubmitOnlyOnce(string $formId): bool
+	{
+		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$submitOnce = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
+
+		if (!$onlyLoggedIn || !$submitOnce) {
 			return false;
 		}
 
-		$output = \get_user_meta($currentUser, self::USER_SUBMIT_ONCE_META_KEY, true) ?: [];
+		$output = \get_user_meta(\get_current_user_id(), self::USER_SUBMIT_ONCE_META_KEY, true) ?: [];
 
 		return isset($output[$formId]) && $output[$formId] === true;
 	}

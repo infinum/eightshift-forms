@@ -281,14 +281,25 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						}
 					}
 
-					// Validate form submit once.
-					if ($this->validator->isValicationSubmitOnce($formDetails[UtilsConfig::FD_FORM_ID] ?? '')) {
+					// Validate submit only logged in.
+					if ($this->validator->validateSubmitOnlyLoggedIn($formDetails[UtilsConfig::FD_FORM_ID] ?? '')) {
+						// Validate submit only logged in.
 						return \rest_ensure_response(
 							UtilsApiHelper::getApiErrorPublicOutput(
-								$this->labels->getLabel('validationSubmitOnce', $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+								$this->labels->getLabel('validationSubmitLoggedIn', $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
 							)
 						);
+					} else {
+						// Validate submit only once.
+						if ($this->validator->validateSubmitOnlyOnce($formDetails[UtilsConfig::FD_FORM_ID] ?? '')) {
+							return \rest_ensure_response(
+								UtilsApiHelper::getApiErrorPublicOutput(
+									$this->labels->getLabel('validationSubmitOnce', $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+								)
+							);
+						}
 					}
+
 					break;
 			}
 
