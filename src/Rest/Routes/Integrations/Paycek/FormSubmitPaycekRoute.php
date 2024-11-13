@@ -218,13 +218,10 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		$failUrl = "",
 		$backUrl = "",
 	): string {
-		$formattedItems = [];
-
 		$data = [
 			'p' => $totalAmount,
 			'id' => $paymentId,
 			'e' => $email,
-			'i' => $formattedItems,
 			's' => $successUrl,
 			'f' => $failUrl,
 			'b' => $backUrl,

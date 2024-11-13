@@ -251,22 +251,6 @@
 				[
 					"eightshift-forms/input",
 					{
-						"inputInputFieldLabel": "First name",
-						"inputInputIsRequired": true,
-						"inputInputName": "first_name"
-					}
-				],
-				[
-					"eightshift-forms/input",
-					{
-						"inputInputFieldLabel": "Last name",
-						"inputInputIsRequired": true,
-						"inputInputName": "last_name"
-					}
-				],
-				[
-					"eightshift-forms/input",
-					{
 						"inputInputFieldLabel": "Amount",
 						"inputInputIsRequired": true,
 						"inputInputType": "number",

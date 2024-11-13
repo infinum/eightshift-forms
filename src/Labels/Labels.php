@@ -51,6 +51,7 @@ class Labels implements LabelsInterface
 		'talentlyftSuccess',
 		'jiraSuccess',
 		'corvusSuccess',
+		'paycekSuccess',
 		'pipedriveSuccess',
 		'calculatorSuccess',
 	];
