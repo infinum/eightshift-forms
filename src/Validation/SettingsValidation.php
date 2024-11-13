@@ -156,7 +156,7 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Allow only loagged in users to submit', 'eightshift-forms'),
+										'checkboxLabel' => \__('Allow only logged in users to submit', 'eightshift-forms'),
 										'checkboxHelp' => \__('If enabled, only logged in users can submit the form.', 'eightshift-forms'),
 										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY,
