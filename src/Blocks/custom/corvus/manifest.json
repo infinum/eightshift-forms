@@ -1,0 +1,38 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "corvus",
+	"title": "Corvus form",
+	"description" : "Corvus issues application form",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-corvus"
+	},
+	"keywords": [
+		"corvus"
+	],
+	"example": {
+	},
+	"components": {
+		"form": "form",
+		"step": "step"
+	},
+	"hasInnerBlocks": true,
+	"attributes": {
+		"corvusAllowedBlocks": {
+			"type": "array",
+			"default": []
+		},
+		"corvusIntegrationId": {
+			"type": "string"
+		},
+		"corvusFormPostId": {
+			"type": "string"
+		},
+		"corvusFormDataTypeSelector": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

@@ -469,6 +469,12 @@ export class Form {
 
 				// Set output results.
 				this.utils.setResultsOutput(formId, data);
+
+				if (this.state.getStateFormType(formId) === 'corvus') {
+					import('./corvus').then(({ Corvus }) => {
+						new Corvus().init(data?.[this.state.getStateResponseOutputKey('postExternallyData')]);
+					});
+				}
 			}
 		}
 	}
@@ -848,6 +854,7 @@ export class Form {
 					value: groupInnerItems,
 					type: 'group',
 					typeCustom: 'group',
+					custom: '',
 				}));
 			}
 		}

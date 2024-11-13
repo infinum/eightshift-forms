@@ -32,6 +32,7 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
+use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Misc\SettingsRocketCache;
@@ -277,6 +278,12 @@ final class Filters
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
+				SettingsCorvus::SETTINGS_TYPE_KEY => [
+					'overridePostRequest',
+					'prePostParams',
+					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
+				],
 				SettingsPipedrive::SETTINGS_TYPE_KEY => [
 					'overridePostRequest',
 					'prePostParams',
@@ -394,6 +401,10 @@ final class Filters
 			SettingsJira::SETTINGS_JIRA_API_BOARD_KEY,
 			SettingsJira::SETTINGS_JIRA_API_USER_KEY,
 			SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY,
+
+			SettingsCorvus::SETTINGS_CORVUS_USE_KEY,
+			SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY,
+			SettingsCorvus::SETTINGS_CORVUS_STORE_IDS_KEY,
 
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY,

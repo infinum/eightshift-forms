@@ -58,6 +58,7 @@ use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
+use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -450,6 +451,24 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'desc' => \__('Jira integration settings.', 'eightshift-forms'),
 					'detail' => \__('Jira is a marketing intelligence tool that you can use to effectively get quality B2B data for understanding customers, identifying prospects, and creating personalised marketing and sales exchanges.', 'eightshift-forms'),
 					'externalLink' => 'https://jira.atlassian.com/',
+				],
+			],
+			SettingsCorvus::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsCorvus::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsCorvus::FILTER_SETTINGS_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'use' => SettingsCorvus::SETTINGS_CORVUS_USE_KEY,
+				'emailTemplateTags' => [
+					'corvusIssueId' => 'id',
+					'corvusIssueKey' => 'key',
+					'corvusIssueUrl' => 'self',
+				],
+				'labels' => [
+					'title' => \__('Corvus', 'eightshift-forms'),
+					'desc' => \__('Corvus integration settings.', 'eightshift-forms'),
+					'detail' => \__('Corvus Pay Ltd. enables card payments and payments from account to account in web shops.', 'eightshift-forms'),
+					'externalLink' => 'https://corvuspay.com/',
 				],
 			],
 			SettingsPipedrive::SETTINGS_TYPE_KEY => [

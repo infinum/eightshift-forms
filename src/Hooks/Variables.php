@@ -254,4 +254,14 @@ class Variables
 	{
 		return \defined('ES_API_KEY_PIPEDRIVE') ? \ES_API_KEY_PIPEDRIVE : '';
 	}
+
+	/**
+	 * Get API Key for Corvus.
+	 *
+	 * @return string
+	 */
+	public static function getApiKeyCorvus(): string
+	{
+		return \defined('ES_API_KEY_CORVUS') ? \ES_API_KEY_CORVUS : '';
+	}
 }

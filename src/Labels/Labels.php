@@ -24,6 +24,7 @@ use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
+use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
 /**
@@ -48,6 +49,7 @@ class Labels implements LabelsInterface
 		'workableSuccess',
 		'talentlyftSuccess',
 		'jiraSuccess',
+		'corvusSuccess',
 		'pipedriveSuccess',
 		'calculatorSuccess',
 	];
@@ -124,6 +126,11 @@ class Labels implements LabelsInterface
 		// Jira.
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
 			$output = \array_merge($output, $this->getJiraLabels());
+		}
+
+		// Corvus.
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_USE_KEY)) {
+			$output = \array_merge($output, $this->getCorvusLabels());
 		}
 
 		// Pipedrive.
@@ -489,6 +496,20 @@ class Labels implements LabelsInterface
 			'jiraMissingSummary' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
 			'jiraBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'jiraSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Corvus
+	 *
+	 * @return array<string, string>
+	 */
+	private function getCorvusLabels(): array
+	{
+		return [
+			'corvusMissingReqParams' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'corvusMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'corvusSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 
