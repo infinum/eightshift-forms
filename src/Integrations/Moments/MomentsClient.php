@@ -370,7 +370,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	 */
 	private function getMomentsLists()
 	{
-		$url = "{$this->getBaseUrl()}/forms/1/forms?limit=100";
+		$url = "{$this->getBaseUrl()}/forms/1/forms?limit=1000";
 
 		$response = \wp_remote_get(
 			$url,

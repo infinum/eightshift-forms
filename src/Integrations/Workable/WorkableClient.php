@@ -308,7 +308,7 @@ class WorkableClient implements ClientInterface
 	 */
 	private function getWorkableItems()
 	{
-		$url = "{$this->getBaseUrl()}jobs?limit=100&state=closed,published";
+		$url = "{$this->getBaseUrl()}jobs?limit=1000&state=closed,published";
 
 		$response = \wp_remote_get(
 			$url,

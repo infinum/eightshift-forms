@@ -167,8 +167,8 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 										'checkboxValue' => self::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-									]
-								]
+									],
+								],
 							],
 						],
 					],

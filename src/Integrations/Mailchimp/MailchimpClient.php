@@ -436,7 +436,7 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getMailchimpLists()
 	{
-		$url = "{$this->getBaseUrl()}lists?count=100";
+		$url = "{$this->getBaseUrl()}lists?count=1000";
 
 		$response = \wp_remote_get(
 			$url,
