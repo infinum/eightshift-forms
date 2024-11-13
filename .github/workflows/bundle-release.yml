@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [ 'latest' ]
+        node: [ '23.1' ]
         php: [ '8.2' ]
     steps:
       - name: Bundle release
@@ -25,3 +25,4 @@ jobs:
           REPO_NAME: 'eightshift-forms'
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
           PHP_VERSION: ${{ matrix.php }}
+          NODE_VERSION: ${{ matrix.node }}

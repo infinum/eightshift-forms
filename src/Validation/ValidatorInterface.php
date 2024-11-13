@@ -64,11 +64,20 @@ interface ValidatorInterface
 	public function setValidationSubmitOnce(string $formId): bool;
 
 	/**
-	 * Check if validation submit once is active.
+	 * Check if validation submit only logged in is active.
 	 *
 	 * @param string $formId Form ID.
 	 *
 	 * @return bool
 	 */
-	public function isValicationSubmitOnce(string $formId): bool;
+	public function validateSubmitOnlyLoggedIn(string $formId): bool;
+
+	/**
+	 * Check if user has already submitted the form.
+	 *
+	 * @param string $formId Form ID.
+	 *
+	 * @return bool
+	 */
+	public function validateSubmitOnlyOnce(string $formId): bool;
 }

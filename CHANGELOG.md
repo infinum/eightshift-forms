@@ -9,6 +9,11 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Added
 
 - New Integration for `CorvusPay`.
+- New helper to get forms usage locations - `getFormUsageLocation`.
+
+### Fixed
+
+- Broken conditional tags for none form fields.
 
 ## [5.1.10]
 

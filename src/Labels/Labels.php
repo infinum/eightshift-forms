@@ -264,6 +264,7 @@ class Labels implements LabelsInterface
 			'validationSecurity' => \__('You have made too many requests in a short time. Please slow down and try again.', 'eightshift-forms'),
 			'validationMissingMandatoryParams' => \__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'validationSubmitOnce' => \__('This form can be submitted only once.', 'eightshift-forms'),
+			'validationSubmitLoggedIn' => \__('This form can be submitted only by logged in users.', 'eightshift-forms'),
 		];
 	}
 

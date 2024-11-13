@@ -55,6 +55,11 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 	public const SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY = 'validation-use-submit-once';
 
 	/**
+	 * Validation use submit only logged in key.
+	 */
+	public const SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY = 'validation-use-submit-only-logged-in';
+
+	/**
 	 * Validation use only logged in key.
 	 */
 	public const SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY = 'validation-use-only-logged-in';
@@ -96,14 +101,6 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$output = [
-			[
-				'component' => 'intro',
-				// translators: %s will be replaced with the settings link.
-				'introSubtitle' => \sprintf(\__('In these settings, you can change all validation success messages. Global validation options can be configured in the <a href="%s" target="_blank" rel="noopener noreferrer">global settings.</a>', 'eightshift-forms'), UtilsGeneralHelper::getSettingsGlobalPageUrl(self::SETTINGS_TYPE_KEY)),
-			],
-		];
-
 		$formType = UtilsGeneralHelper::getFormTypeById($formId);
 
 		if (!$formType) {
@@ -111,6 +108,8 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 		}
 
 		$key = "{$formType}Success";
+
+		$loggedInSubmit = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -128,6 +127,62 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 								'inputPlaceholder' => $this->labels->getLabels()[$key],
 								'inputValue' => UtilsSettingsHelper::getSettingValue($key, $formId),
 							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Users', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Show only to logged in users', 'eightshift-forms'),
+										'checkboxHelp' => \__('The form will be accessible only to users who are logged in.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Allow only loagged in users to submit', 'eightshift-forms'),
+										'checkboxHelp' => \__('If enabled, only logged in users can submit the form.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+									]
+								]
+							],
+							...($loggedInSubmit ? [
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Use single submit per user', 'eightshift-forms'),
+											'checkboxHelp' => \__('If enabled, each logged in user can submit the form only once.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										],
+									],
+								],
+							] : []),
 						],
 					],
 				],
@@ -169,8 +224,6 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 				'inputValue' => UtilsSettingsHelper::getOptionValue($key),
 			];
 		}
-
-		$loggedInForm = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY);
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -218,46 +271,6 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
 								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
 							],
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Users', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Show only to logged in users', 'eightshift-forms'),
-										'checkboxHelp' => \__('The form will be accessible only to users who are logged in.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY),
-										'checkboxValue' => self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									]
-								]
-							],
-							...($loggedInForm ? [
-								[
-									'component' => 'checkboxes',
-									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY),
-									'checkboxesContent' => [
-										[
-											'component' => 'checkbox',
-											'checkboxLabel' => \__('Use single submit per user', 'eightshift-forms'),
-											'checkboxHelp' => \__('If enabled, each user can submit the form only once.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY),
-											'checkboxValue' => self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY,
-											'checkboxSingleSubmit' => true,
-											'checkboxAsToggle' => true,
-										]
-									]
-								],
-							] : []),
 						],
 					],
 					[
