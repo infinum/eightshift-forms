@@ -306,7 +306,7 @@ class WorkableClient implements ClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getWorkableItems()
+	private function getWorkableItems(): array
 	{
 		$url = "{$this->getBaseUrl()}jobs?limit=1000&state=closed,published";
 

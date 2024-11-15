@@ -531,7 +531,7 @@ class Labels implements LabelsInterface
 		return [
 			'paycekMissingReqParams' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'paycekMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
-			'paycekSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+			'paycekSuccess' => \__('Payment submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 

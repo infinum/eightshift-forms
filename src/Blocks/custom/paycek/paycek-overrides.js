@@ -4,7 +4,7 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 export const overrides = {
 	...manifest,
-	icon:{
+	icon: {
 		src: getUtilsIcons('paycek') ?? manifest.icon.src,
 	},
 	attributes: {

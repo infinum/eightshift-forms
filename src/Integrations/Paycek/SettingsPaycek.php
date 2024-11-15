@@ -413,8 +413,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 								'stepsContent' => [
 									\__('Log in to your Paycek Merchant Account.', 'eightshift-forms'),
 									\__('Go to your Account.', 'eightshift-forms'),
-									\__('Go to "profile setting" and you will fin your Profile ID under "Code".', 'eightshift-forms'),
-									\__('Go to "profile setting" and you will fin your API Key under "Secret Key".', 'eightshift-forms'),
+									\__('Go to "profile setting" and you will find your Profile ID under "Code".', 'eightshift-forms'),
 								],
 							],
 							[
@@ -424,7 +423,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 									\__('Log in to your Paycek Merchant Account.', 'eightshift-forms'),
 									\__('Go to your Account.', 'eightshift-forms'),
 									\__('Go to "profile setting" and you will fin your Profile ID under "Code".', 'eightshift-forms'),
-									\__('Copy the Store ID into the field under the API tab or use the global constant.', 'eightshift-forms'),
+									\__('Copy the Profile ID into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
 							],
 						],
