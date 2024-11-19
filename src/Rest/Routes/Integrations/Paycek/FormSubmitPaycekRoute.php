@@ -61,7 +61,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 	}
 
 	/**
-	 * Get the base url of the route
+	 * Get the base URL of the route.
 	 *
 	 * @return string The base URL for route you are adding.
 	 */
@@ -195,7 +195,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 	 *
 	 * @param string $profileCode can be found in profile settings (https://paycek.io).
 	 * @param string $secretKey can be found in profile settings (https://paycek.io).
-	 * @param string $paymentId unique payment id (id that you are using on your website to uniquely describe the purchase).
+	 * @param string $paymentId unique payment ID (ID that you are using on your website to uniquely describe the purchase).
 	 * @param string $totalAmount total price (example "100.00").
 	 * @param string $email email of your customer.
 	 * @param string $description payment description (max length 100 characters).

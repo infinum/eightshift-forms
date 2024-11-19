@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- New Integration for `Paycek payment`.
+- New Integration for `PayCek payment`.
 
 ## [5.2.0]
 
