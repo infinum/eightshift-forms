@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.3.2]
+
+### Fixed
+
+- Broken single submit feature on some integrations.
+
 ## [5.3.1]
 
 ### Fixed
@@ -764,6 +770,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.3.2]: https://github.com/infinum/eightshift-forms/compare/5.3.1...5.3.2
 [5.3.1]: https://github.com/infinum/eightshift-forms/compare/5.3.0...5.3.1
 [5.3.0]: https://github.com/infinum/eightshift-forms/compare/5.2.0...5.3.0
 [5.2.0]: https://github.com/infinum/eightshift-forms/compare/5.1.10...5.2.0

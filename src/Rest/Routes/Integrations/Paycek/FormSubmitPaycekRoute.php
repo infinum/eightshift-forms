@@ -111,6 +111,9 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			);
 		}
 
+		// Set validation submit once.
+		$this->validator->setValidationSubmitOnce($formId);
+
 		// Finish.
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(

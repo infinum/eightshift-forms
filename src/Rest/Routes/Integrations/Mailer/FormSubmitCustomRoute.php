@@ -96,6 +96,9 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		}
 
 		if ($actionExternal) {
+			// Set validation submit once.
+			$this->validator->setValidationSubmitOnce($formId);
+
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
@@ -143,6 +146,9 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 				)
 			);
 		}
+
+		// Set validation submit once.
+		$this->validator->setValidationSubmitOnce($formId);
 
 		// Finish.
 		return \rest_ensure_response(

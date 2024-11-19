@@ -121,6 +121,9 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 			UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus(), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)['value']
 		);
 
+		// Set validation submit once.
+		$this->validator->setValidationSubmitOnce($formId);
+
 		// Finish.
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
