@@ -2,7 +2,7 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "corvus",
 	"title": "Corvus form",
-	"description" : "Corvus issues application form",
+	"description" : "Corvus payment form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-corvus"
