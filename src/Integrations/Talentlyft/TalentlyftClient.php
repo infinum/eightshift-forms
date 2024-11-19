@@ -285,7 +285,7 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function getTalentlyftItems(): array
 	{
-		$url = "{$this->getBaseUrl()}jobs?perPage=1000";
+		$url = "{$this->getBaseUrl()}jobs?perPage=200&status=published"; // API limit is 200.
 
 		$response = \wp_remote_get(
 			$url,
