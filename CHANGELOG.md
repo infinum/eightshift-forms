@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.3.0]
+
+### Added
+
+- New Integration for `PayCek payment`.
+
 ## [5.2.0]
 
 ### Added
@@ -752,6 +758,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.3.0]: https://github.com/infinum/eightshift-forms/compare/5.2.0...5.3.0
 [5.2.0]: https://github.com/infinum/eightshift-forms/compare/5.1.10...5.2.0
 [5.1.10]: https://github.com/infinum/eightshift-forms/compare/5.1.9...5.1.10
 [5.1.9]: https://github.com/infinum/eightshift-forms/compare/5.1.8...5.1.9

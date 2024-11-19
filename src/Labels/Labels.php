@@ -25,6 +25,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
 /**
@@ -50,6 +51,7 @@ class Labels implements LabelsInterface
 		'talentlyftSuccess',
 		'jiraSuccess',
 		'corvusSuccess',
+		'paycekSuccess',
 		'pipedriveSuccess',
 		'calculatorSuccess',
 	];
@@ -131,6 +133,11 @@ class Labels implements LabelsInterface
 		// Corvus.
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_USE_KEY)) {
 			$output = \array_merge($output, $this->getCorvusLabels());
+		}
+
+		// Paycek.
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPaycek::SETTINGS_PAYCEK_USE_KEY, SettingsPaycek::SETTINGS_PAYCEK_USE_KEY)) {
+			$output = \array_merge($output, $this->getPaycekLabels());
 		}
 
 		// Pipedrive.
@@ -511,6 +518,20 @@ class Labels implements LabelsInterface
 			'corvusMissingReqParams' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'corvusMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'corvusSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Paycek
+	 *
+	 * @return array<string, string>
+	 */
+	private function getPaycekLabels(): array
+	{
+		return [
+			'paycekMissingReqParams' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'paycekMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'paycekSuccess' => \__('Payment submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 

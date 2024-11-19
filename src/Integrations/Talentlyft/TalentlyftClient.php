@@ -283,9 +283,9 @@ class TalentlyftClient implements ClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getTalentlyftItems()
+	private function getTalentlyftItems(): array
 	{
-		$url = "{$this->getBaseUrl()}jobs?perPage=100";
+		$url = "{$this->getBaseUrl()}jobs?perPage=1000";
 
 		$response = \wp_remote_get(
 			$url,

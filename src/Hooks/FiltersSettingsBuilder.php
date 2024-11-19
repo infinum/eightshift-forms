@@ -59,6 +59,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -459,16 +460,26 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsCorvus::SETTINGS_CORVUS_USE_KEY,
-				'emailTemplateTags' => [
-					'corvusIssueId' => 'id',
-					'corvusIssueKey' => 'key',
-					'corvusIssueUrl' => 'self',
-				],
+				'emailTemplateTags' => [],
 				'labels' => [
 					'title' => \__('Corvus', 'eightshift-forms'),
 					'desc' => \__('Corvus integration settings.', 'eightshift-forms'),
 					'detail' => \__('Corvus Pay Ltd. enables card payments and payments from account to account in web shops.', 'eightshift-forms'),
 					'externalLink' => 'https://corvuspay.com/',
+				],
+			],
+			SettingsPaycek::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsPaycek::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsPaycek::FILTER_SETTINGS_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'use' => SettingsPaycek::SETTINGS_PAYCEK_USE_KEY,
+				'emailTemplateTags' => [],
+				'labels' => [
+					'title' => \__('Paycek', 'eightshift-forms'),
+					'desc' => \__('Paycek integration settings.', 'eightshift-forms'),
+					'detail' => \__('PayCek is a free cryptocurrency payment solution used by over 500 different merchants across more than 3000 locations and websites in Europe.', 'eightshift-forms'),
+					'externalLink' => 'https://paycek.io/',
 				],
 			],
 			SettingsPipedrive::SETTINGS_TYPE_KEY => [

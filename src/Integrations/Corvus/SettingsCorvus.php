@@ -458,6 +458,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 								'inputIsRequired' => true,
 								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_CART_DESC_KEY),
 								'inputFieldLabel' => \__('Cart description', 'eightshift-forms'),
+								'inputMaxLength' => 254,
 								'inputFieldHelp' => \__('Shopping-cart contents description.', 'eightshift-forms'),
 								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId),
 							],

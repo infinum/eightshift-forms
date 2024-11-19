@@ -1,14 +1,14 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
-	"blockName": "corvus",
-	"title": "Corvus form",
-	"description" : "Corvus payment form",
+	"blockName": "paycek",
+	"title": "PayCek form",
+	"description" : "PayCek payment form",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-corvus"
+		"src": "esf-form-paycek"
 	},
 	"keywords": [
-		"corvus"
+		"paycek"
 	],
 	"example": {
 	},
@@ -18,17 +18,17 @@
 	},
 	"hasInnerBlocks": true,
 	"attributes": {
-		"corvusAllowedBlocks": {
+		"paycekAllowedBlocks": {
 			"type": "array",
 			"default": []
 		},
-		"corvusIntegrationId": {
+		"paycekIntegrationId": {
 			"type": "string"
 		},
-		"corvusFormPostId": {
+		"paycekFormPostId": {
 			"type": "string"
 		},
-		"corvusFormDataTypeSelector": {
+		"paycekFormDataTypeSelector": {
 			"type": "string"
 		}
 	},
