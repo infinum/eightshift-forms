@@ -49,17 +49,19 @@ class I18n implements ServiceInterface
 			return $mofile;
 		}
 
-		$externalFile = Helpers::joinPaths([\WP_LANG_DIR, 'plugins', "eightshift-forms-countries-{$locale}.mo"]);
+		$externalFile = Helpers::joinPaths([\WP_LANG_DIR, 'plugins', "eightshift-forms-{$locale}.mo"]);
 
 		if (\file_exists($externalFile)) {
 			return $mofile;
 		}
 
-		$internalFile = Helpers::joinPaths([__DIR__, 'languages', 'countries', "eightshift-forms-countries-{$locale}.mo"]);
+		$internalFile = Helpers::joinPaths([__DIR__, 'languages', "eightshift-forms-{$locale}.mo"]);
 
 		if (!\file_exists($internalFile)) {
 			return $mofile;
 		}
+
+		dump($internalFile);
 
 		return $internalFile;
 	}

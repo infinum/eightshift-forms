@@ -729,3 +729,6 @@ msgstr "Zambija"
 
 msgid "Zimbabwe"
 msgstr "Zimbabve"
+
+msgid "This field is required."
+msgstr "Ovo polje je obavezno."
