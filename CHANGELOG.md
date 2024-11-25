@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.4.0]
+
+### Updated
+
+- `@infinum/eightshift-forms-utils` to the latest version `3.0.6`.
+- `brain/monkey` to the latest version `2.6.2`.
+- `php-parallel-lint/php-parallel-lint` to the latest version `1.4.0`.
+- `php-stubs/wordpress-stubs` to the latest version `6.6.2`.
+- minimal PHP version to `8.3`.
+
 ## [5.3.2]
 
 ### Fixed
@@ -770,6 +780,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.4.0]: https://github.com/infinum/eightshift-forms/compare/5.3.2...5.4.0
 [5.3.2]: https://github.com/infinum/eightshift-forms/compare/5.3.1...5.3.2
 [5.3.1]: https://github.com/infinum/eightshift-forms/compare/5.3.0...5.3.1
 [5.3.0]: https://github.com/infinum/eightshift-forms/compare/5.2.0...5.3.0
