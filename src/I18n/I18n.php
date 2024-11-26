@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\I18n;
 
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -25,42 +24,16 @@ class I18n implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('load_textdomain_mofile', [$this, 'getTranslationFile'], 10, 2);
+		\add_action('init', [$this, 'loadTextdomain']);
 	}
 
 	/**
-	 * Get the translation file for the plugin.
+	 * Load the plugin text domain.
 	 *
-	 * @param string $mofile The path to the translation file.
-	 * @param string $domain The text domain.
-	 *
-	 * @return string
+	 * @return void
 	 */
-	public function getTranslationFile(string $mofile, string $domain): string
+	public function loadTextdomain(): void
 	{
-		if ($domain !== 'eightshift-forms') {
-			return $mofile;
-		}
-
-		$locale = \determine_locale();
-
-		// Default to en_US if the locale so no need for a translation file.
-		if ($locale === 'en_US') {
-			return $mofile;
-		}
-
-		$externalFile = Helpers::joinPaths([\WP_LANG_DIR, 'plugins', "eightshift-forms-countries-{$locale}.mo"]);
-
-		if (\file_exists($externalFile)) {
-			return $mofile;
-		}
-
-		$internalFile = Helpers::joinPaths([__DIR__, 'languages', 'countries', "eightshift-forms-countries-{$locale}.mo"]);
-
-		if (!\file_exists($internalFile)) {
-			return $mofile;
-		}
-
-		return $internalFile;
+		\load_plugin_textdomain('eightshift-forms', false, \plugin_basename(__DIR__) . '/languages');
 	}
 }
