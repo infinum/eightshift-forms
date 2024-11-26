@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.4.1]
+
+### Updated
+
+- Admin JS and CSS scripts are now loaded only on the forms page.
+
 ## [5.4.0]
 
 ### Updated
@@ -780,6 +786,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.4.1]: https://github.com/infinum/eightshift-forms/compare/5.4.0...5.4.1
 [5.4.0]: https://github.com/infinum/eightshift-forms/compare/5.3.2...5.4.0
 [5.3.2]: https://github.com/infinum/eightshift-forms/compare/5.3.1...5.3.2
 [5.3.1]: https://github.com/infinum/eightshift-forms/compare/5.3.0...5.3.1

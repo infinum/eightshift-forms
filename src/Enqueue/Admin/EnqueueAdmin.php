@@ -36,6 +36,10 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function register(): void
 	{
+		if (!UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
+			return;
+		}
+
 		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
 		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
 	}
@@ -73,18 +77,16 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 
 		$output = [];
 
-		if (UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
-			$output = \array_merge(
-				$this->getEnqueueSharedInlineCommonItems(false),
-				[
-					'nonce' => \wp_create_nonce('wp_rest'),
-					'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
-					'importErrorMsg' => \__('There is an error with your data, please try again.', 'eighshift-forms'),
-					'isAdmin' => true,
-					'redirectionTimeout' => 100,
-				],
-			);
-		}
+		$output = \array_merge(
+			$this->getEnqueueSharedInlineCommonItems(false),
+			[
+				'nonce' => \wp_create_nonce('wp_rest'),
+				'uploadConfirmMsg' => \__('Are you sure you want to contine?', 'eighshift-forms'),
+				'importErrorMsg' => \__('There is an error with your data, please try again.', 'eighshift-forms'),
+				'isAdmin' => true,
+				'redirectionTimeout' => 100,
+			],
+		);
 
 		$output = \wp_json_encode($output);
 		\wp_add_inline_script($this->getAdminScriptHandle(), "const esFormsLocalization = {$output}", 'before');
