@@ -281,7 +281,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements UtilsSetti
 									\__('Click on the settings cog icon in the top right, next to your account.', 'eightshift-forms'),
 									\__('In the menu on the left, under <strong>Integrations</strong> click <strong>Private Apps</strong>.', 'eightshift-forms'),
 									\__('Click on <strong>Create a private app</strong>.', 'eightshift-forms'),
-									\__('Provide the app name and these scopes: <strong>forms, files, crm.objects.contacts.write, crm.schemas.custom.read</strong>.', 'eightshift-forms'),
+									\__('Provide the app name and these scopes: <strong>forms, files, crm.objects.contacts.read, crm.objects.contacts.write, crm.schemas.custom.read</strong>.', 'eightshift-forms'),
 									\__('Copy the API key into the field below or use the global constant.', 'eightshift-forms'),
 								],
 							],

@@ -329,10 +329,7 @@ class HubspotClient implements HubspotClientInterface
 					continue;
 				}
 
-				$properties[] = [
-					'property' => $key,
-					'value' => $value,
-				];
+				$properties[$key] = $value;
 			}
 		}
 
@@ -340,11 +337,12 @@ class HubspotClient implements HubspotClientInterface
 			'properties' => $properties,
 		];
 
-		$url = $this->getBaseUrl("contacts/v1/contact/createOrUpdate/email/{$email}", true);
+		$url = $this->getBaseUrl("crm/v3/objects/contacts/{$email}?idProperty=email", true);
 
 		$response = \wp_remote_post(
 			$url,
 			[
+				'method' => 'PATCH',
 				'headers' => $this->getHeaders(),
 				'body' => \wp_json_encode($body),
 			]
@@ -390,8 +388,12 @@ class HubspotClient implements HubspotClientInterface
 			$folder = self::HUBSPOT_FILEMANAGER_DEFAULT_FOLDER_KEY;
 		}
 
+		$fileName = \pathinfo($file, \PATHINFO_FILENAME);
+		$fileExtension = \pathinfo($file, \PATHINFO_EXTENSION);
+
 		$options = [
 			'folderPath' => '/' . $folder,
+			'fileName' => "{$fileName}.{$fileExtension}",
 			'options' => \wp_json_encode([
 				"access" => "PUBLIC_NOT_INDEXABLE",
 				"overwrite" => false,
@@ -414,7 +416,7 @@ class HubspotClient implements HubspotClientInterface
 		\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
 			$curl,
 			[
-				\CURLOPT_URL => $this->getBaseUrl("filemanager/api/v3/files/upload", true),
+				\CURLOPT_URL => $this->getBaseUrl("files/v3/files", true),
 				\CURLOPT_FAILONERROR => true,
 				\CURLOPT_POST => true,
 				\CURLOPT_RETURNTRANSFER => true,
@@ -430,7 +432,7 @@ class HubspotClient implements HubspotClientInterface
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			$response = \json_decode((string) $response, true);
 
-			return $response['objects'][0]['url'] ?? '';
+			return $response['url'] ?? '';
 		}
 
 		return '';
@@ -551,7 +553,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function getHubspotContactProperties()
 	{
-		$url = $this->getBaseUrl('properties/v1/contacts/properties', true);
+		$url = $this->getBaseUrl('crm/v3/properties/contacts', true);
 
 		$response = \wp_remote_get(
 			$url,
@@ -566,6 +568,8 @@ class HubspotClient implements HubspotClientInterface
 			$response,
 			$url,
 		);
+
+		dump($details);
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
