@@ -69,12 +69,10 @@
 			"type": "array"
 		},
 		"datePreviewFormat": {
-			"type": "string",
-			"default": "F j, Y H:i"
+			"type": "string"
 		},
 		"dateOutputFormat": {
-			"type": "string",
-			"default": "Y-m-d H:i"
+			"type": "string"
 		},
 		"dateTwSelectorsData": {
 			"type": "array"
@@ -91,5 +89,15 @@
 				"value": "datetime-local"
 			}
 		]
+	},
+	"formats": {
+		"date": {
+			"preview": "F j, Y",
+			"output": "Y-m-d"
+		},
+		"datetime-local": {
+			"preview": "F j, Y H:i",
+			"output": "Y-m-d H:i"
+		}
 	}
 }

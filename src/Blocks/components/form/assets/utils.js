@@ -1229,8 +1229,8 @@ export class Utils {
 		if (input) {
 			const min = input.min || 0;
 			const max = input.max || 100;
-			const parsedProgress = Number(((input.value - min) * 100) / (max - min));
-	
+			const parsedProgress = (Number(((input.value - min) * 100) / (max - min))).toFixed(2);
+
 			input.style.setProperty('--es-form-range-progress', `${parsedProgress}%`);
 		}
 
