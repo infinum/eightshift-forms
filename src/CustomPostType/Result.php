@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CustomPostType;
 
-use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\CustomPostType\AbstractPostType;
 
 /**
@@ -114,18 +112,10 @@ class Result extends AbstractPostType
 			'can_export' => true,
 			'capability_type' => self::POST_CAPABILITY_TYPE,
 			'rest_base' => static::REST_API_ENDPOINT_SLUG,
+			'rewrite' => [
+				'with_front' => false,
+			],
 		];
-
-		if (\apply_filters(SettingsResultOutput::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			$output['publicly_queryable'] = true;
-			$output['rewrite']['with_front'] = false;
-
-			$prefix = UtilsSettingsHelper::getOptionValue(SettingsResultOutput::SETTINGS_GLOBAL_URL_PREFIX_KEY);
-
-			if ($prefix) {
-				$output['rewrite']['slug'] = $prefix;
-			}
-		}
 
 		return $output;
 	}

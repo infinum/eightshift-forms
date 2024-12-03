@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
+use EightshiftForms\CustomPostType\Result;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
@@ -52,7 +53,12 @@ class SettingsTransfer implements ServiceInterface, UtilsSettingGlobalInterface
 	/**
 	 * Type export forms key.
 	 */
-	public const TYPE_EXPORT_FORMS = 'export-forms';
+	public const TYPE_EXPORT_FORMS = 'export-' . Forms::POST_TYPE_SLUG;
+
+	/**
+	 * Type export result outputs key.
+	 */
+	public const TYPE_EXPORT_RESULT_OUTPUTS = 'export-' . Result::POST_TYPE_SLUG;
 
 	/**
 	 * Type export all key.
@@ -174,7 +180,28 @@ class SettingsTransfer implements ServiceInterface, UtilsSettingGlobalInterface
 											],
 										],
 									],
-									$this->getFormsList(),
+									$this->getCptList(Forms::POST_TYPE_SLUG),
+									[
+										'component' => 'divider',
+									],
+									[
+										'component' => 'card-inline',
+										'cardInlineTitle' => \__('Result Outputs', 'eightshift-forms'),
+										'cardInlineIcon' => UtilsHelper::getUtilsIcons('form'),
+										'cardInlineRightContent' => [
+											[
+												'component' => 'submit',
+												'submitValue' => \__('Export selected', 'eightshift-forms'),
+												'submitVariant' => 'outline',
+												'submitAttrs' => [
+													UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_RESULT_OUTPUTS,
+													UtilsHelper::getStateAttribute('migrationExportItems') => '',
+												],
+												'additionalClass' => UtilsHelper::getStateSelectorAdmin('transfer'),
+											],
+										],
+									],
+									$this->getCptList(Result::POST_TYPE_SLUG),
 								]
 							],
 						],
@@ -292,12 +319,14 @@ class SettingsTransfer implements ServiceInterface, UtilsSettingGlobalInterface
 	/**
 	 * Get form list.
 	 *
+	 * @param string $postType Post type slug.
+	 *
 	 * @return array<string, mixed>
 	 */
-	public function getFormsList(): array
+	private function getCptList($postType): array
 	{
 		$args = [
-			'post_type' => Forms::POST_TYPE_SLUG,
+			'post_type' => $postType,
 			'no_found_rows' => true,
 			'update_post_term_cache' => false,
 			'update_post_meta_cache' => false,
@@ -328,9 +357,11 @@ class SettingsTransfer implements ServiceInterface, UtilsSettingGlobalInterface
 
 		\wp_reset_postdata();
 
+		$name = $postType === Forms::POST_TYPE_SLUG ? self::TYPE_EXPORT_FORMS : self::TYPE_EXPORT_RESULT_OUTPUTS;
+
 		return [
 			'component' => 'checkboxes',
-			'checkboxesName' => 'form',
+			'checkboxesName' => $name,
 			'checkboxesContent' => $output,
 			'checkboxesFieldHideLabel' => true,
 		];

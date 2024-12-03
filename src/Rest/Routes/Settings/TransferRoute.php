@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\CustomPostType\Result;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Transfer\Transfer;
@@ -93,6 +94,7 @@ class TransferRoute extends AbstractUtilsBaseRoute
 		$output = [
 			Transfer::TYPE_GLOBAL_SETTINGS => [],
 			Transfer::TYPE_FORMS => [],
+			Transfer::TYPE_RESULT_OUTPUTS => [],
 		];
 
 		switch ($type) {
@@ -115,12 +117,31 @@ class TransferRoute extends AbstractUtilsBaseRoute
 
 				$items = \explode(',', $items);
 
-				$output[Transfer::TYPE_FORMS] = $this->transfer->getExportForms($items);
+				$output[Transfer::TYPE_FORMS] = $this->transfer->getExportCpts($items);
+				$internalType = 'export';
+				break;
+			case SettingsTransfer::TYPE_EXPORT_RESULT_OUTPUTS:
+				$items = $params['items'] ?? [];
+
+				if (!$items) {
+					return \rest_ensure_response(
+						UtilsApiHelper::getApiErrorPublicOutput(
+							\esc_html__('Please click on the result outputs you want to export.', 'eightshift-forms'),
+							[],
+							$debug
+						)
+					);
+				}
+
+				$items = \explode(',', $items);
+
+				$output[Transfer::TYPE_RESULT_OUTPUTS] = $this->transfer->getExportCpts($items, Result::POST_TYPE_SLUG);
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_EXPORT_ALL:
 				$output[Transfer::TYPE_GLOBAL_SETTINGS] = $this->transfer->getExportGlobalSettings();
-				$output[Transfer::TYPE_FORMS] = $this->transfer->getExportForms();
+				$output[Transfer::TYPE_FORMS] = $this->transfer->getExportCpts();
+				$output[Transfer::TYPE_RESULT_OUTPUTS] = $this->transfer->getExportCpts([], Result::POST_TYPE_SLUG);
 				$internalType = 'export';
 				break;
 			case SettingsTransfer::TYPE_IMPORT:

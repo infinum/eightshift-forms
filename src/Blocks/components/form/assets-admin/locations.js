@@ -26,6 +26,7 @@ export class Locations {
 		const formData = new FormData();
 
 		formData.append('id', field.getAttribute(this.state.getStateAttribute('locationsId')));
+		formData.append('type', field.getAttribute(this.state.getStateAttribute('locationsType')));
 		this.utils.showLoader(this.FORM_ID);
 
 		// Populate body data.
@@ -56,6 +57,7 @@ export class Locations {
 				if (response.status === 'success') {
 					item.classList.add(this.state.getStateSelector('isHidden'));
 					item.closest(this.itemSelector).insertAdjacentHTML('afterend', response.data.output);
+					item.remove();
 				}
 			});
 	};

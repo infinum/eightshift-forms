@@ -88,9 +88,5 @@
 	"components": {
 		"conditionalTags": "conditionalTags",
 		"progressBar": "progressBar"
-	},
-	"attributesSsr": [
-		"formsFormPostId",
-		"formsStyle"
-	]
+	}
 }

@@ -442,13 +442,14 @@ class BulkRoute extends AbstractUtilsBaseRoute
 
 		foreach ($ids as $id) {
 			$title = \get_the_title($id);
+			$type = \get_post_type($id);
 
 			if (!$title) {
 				// translators: %s replaces form id.
 				$title = \sprintf(\esc_html__('Item %s', 'eightshift-forms'), $id);
 			}
 
-			$export = $this->transfer->getExportForm((string) $id);
+			$export = $this->transfer->getExportCpt((string) $id, $type);
 
 			$action  = $this->transfer->getImportByFormArray($export, false);
 

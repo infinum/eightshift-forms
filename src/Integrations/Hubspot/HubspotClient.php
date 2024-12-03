@@ -178,12 +178,11 @@ class HubspotClient implements HubspotClientInterface
 			foreach ($items as $item) {
 				$name = $item['name'] ?? '';
 				$hidden = $item['hidden'] ?? false;
-				$readOnlyValue = $item['readOnlyValue'] ?? false;
 				$formField = $item['formField'] ?? false;
-				$deleted = $item['deleted'] ?: false; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				$archived = $item['archived'] ?? false;
 				$fieldType = $item['fieldType'] ?? '';
 
-				if (!$name || $hidden || $readOnlyValue || !$formField || $deleted) {
+				if (!$name || $hidden || !$formField || $archived) {
 					continue;
 				}
 
@@ -269,7 +268,7 @@ class HubspotClient implements HubspotClientInterface
 			$paramsFiles
 		);
 
-		$url = $this->getBaseUrl("submissions/v3/integration/secure/submit/{$baseId}/{$submitId}");
+		$url = "https://api.hsforms.com/submissions/v3/integration/secure/submit/{$baseId}/{$submitId}"; // Not using getBaseUrl method because of different url only for this legacy endpoint.
 
 		$response = \wp_remote_post(
 			$url,
@@ -337,7 +336,7 @@ class HubspotClient implements HubspotClientInterface
 			'properties' => $properties,
 		];
 
-		$url = $this->getBaseUrl("crm/v3/objects/contacts/{$email}?idProperty=email", true);
+		$url = $this->getBaseUrl("crm/v3/objects/contacts/{$email}?idProperty=email");
 
 		$response = \wp_remote_post(
 			$url,
@@ -416,7 +415,7 @@ class HubspotClient implements HubspotClientInterface
 		\curl_setopt_array( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt_array
 			$curl,
 			[
-				\CURLOPT_URL => $this->getBaseUrl("files/v3/files", true),
+				\CURLOPT_URL => $this->getBaseUrl("files/v3/files"),
 				\CURLOPT_FAILONERROR => true,
 				\CURLOPT_POST => true,
 				\CURLOPT_RETURNTRANSFER => true,
@@ -553,7 +552,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	private function getHubspotContactProperties()
 	{
-		$url = $this->getBaseUrl('crm/v3/properties/contacts', true);
+		$url = $this->getBaseUrl('crm/v3/properties/contacts');
 
 		$response = \wp_remote_get(
 			$url,
@@ -569,8 +568,6 @@ class HubspotClient implements HubspotClientInterface
 			$url,
 		);
 
-		dump($details);
-
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
@@ -578,7 +575,7 @@ class HubspotClient implements HubspotClientInterface
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return $body ?? [];
+			return $body['results'] ?? [];
 		}
 
 		return [];
@@ -591,7 +588,7 @@ class HubspotClient implements HubspotClientInterface
 	 */
 	public function getTestApi(): array
 	{
-		$url = $this->getBaseUrl('forms/v2/forms', true);
+		$url = $this->getBaseUrl('forms/v2/forms');
 
 		$response = \wp_remote_get(
 			$url,
@@ -917,18 +914,11 @@ class HubspotClient implements HubspotClientInterface
 	 * Return HubSpot base url.
 	 *
 	 * @param string $path Path to append.
-	 * @param bool $legacy If legacy use different url.
 	 *
 	 * @return string
 	 */
-	private function getBaseUrl(string $path, bool $legacy = false): string
+	private function getBaseUrl(string $path): string
 	{
-		$url = 'https://api.hsforms.com';
-
-		if ($legacy) {
-			$url = 'https://api.hubapi.com';
-		}
-
-		return "{$url}/{$path}";
+		return "https://api.hubapi.com/{$path}";
 	}
 }

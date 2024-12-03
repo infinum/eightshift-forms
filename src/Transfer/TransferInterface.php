@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Transfer;
 
+use EightshiftForms\CustomPostType\Forms;
+
 /**
  * Interface for TransferInterface
  */
@@ -23,22 +25,24 @@ interface TransferInterface
 	public function getExportGlobalSettings(): array;
 
 	/**
-	 * Export Forms with settings.
+	 * Export Custom post types with settings.
 	 *
 	 * @param array<int, string> $items Specify items to query.
+	 * @param string $postType Specify post type to query.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getExportForms(array $items = []): array;
+	public function getExportCpts(array $items = [], string $postType = Forms::POST_TYPE_SLUG): array;
 
 	/**
-	 * Export one form with settings.
+	 * Export one custom post type with settings.
 	 *
 	 * @param string $item Specify item id to query.
+	 * @param string $postType Specify post type to query.
 	 *
 	 * @return array<int, mixed>
 	 */
-	public function getExportForm(string $item): array;
+	public function getExportCpt(string $item, string $postType = Forms::POST_TYPE_SLUG): array;
 
 	/**
 	 * Import uploaded file.
