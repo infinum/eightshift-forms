@@ -130,7 +130,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 				$this->labels->getLabel('corvusSuccess', $formId),
 				[
 					UtilsHelper::getStateResponseOutputKey('processExternally') => [
-						'type' => 'GET',
+						'type' => 'POST',
 						'url' => $this->getUrl($formId),
 						'params' => $params,
 					],
@@ -170,7 +170,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		$output['store_id'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_STORE_ID, $formId);
 		$output['version'] = '1.4'; // Corvus API version.
 		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_LANG_KEY, $formId);
-		$output['require_complete'] = (string) UtilsSettingsHelper::isSettingCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_REQ_COMPLETE_KEY, SettingsCorvus::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId);
+		$output['require_complete'] = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_REQ_COMPLETE_KEY, SettingsCorvus::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId) ? 'true' : 'false';
 		$output['currency'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
 		$output['order_number'] = 'order_' . \time();
 		$output['cart'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_CART_DESC_KEY, $formId);

@@ -19,6 +19,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Input Range status variable will output max 2 decimals.
 - Input Range settings pickers broken up/down buttons.
+- Corvus Pay integration fix with `Require complete` option.
 
 ### Removed
 
