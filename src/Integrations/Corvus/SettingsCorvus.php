@@ -477,7 +477,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Require complete', 'eightshift-forms'),
-											'checkboxHelp' => \__('Checked indicates an preauthorization. None checked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
+											'checkboxHelp' => \__('Checked indicates an pre-authorization. Unchecked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
 											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_CORVUS_REQ_COMPLETE_KEY,
 											'checkboxAsToggle' => true,
