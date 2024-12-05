@@ -122,6 +122,8 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 				return $this->getMigration2To3Forms();
 			case SettingsMigration::VERSION_2_3_LOCALE:
 				return $this->getMigration2To3Locale();
+			case SettingsMigration::VERSION_CLEARBIT:
+				return $this->getMigrationClearbit();
 			default:
 				return UtilsApiHelper::getApiErrorPublicOutput(
 					\__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
@@ -491,6 +493,92 @@ class MigrationRoute extends AbstractUtilsBaseRoute
 
 		return UtilsApiHelper::getApiSuccessPublicOutput(
 			\__('Migration version 2 to 3 locale finished with success.', 'eightshift-forms'),
+			$output
+		);
+	}
+
+	/**
+	 * Migration version Clearbit
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getMigrationClearbit(): array
+	{
+		global $wpdb;
+
+		$output = [
+			'options' => [],
+			'forms' => [],
+		];
+
+		$theQuery = new WP_Query([
+			'post_type' => Forms::POST_TYPE_SLUG,
+			'no_found_rows' => true,
+			'update_post_term_cache' => false,
+			'post_status' => 'any',
+			'nopaging' => true,
+			'posts_per_page' => 5000, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
+		]);
+
+		$forms = $theQuery->posts;
+		\wp_reset_postdata();
+
+		if ($forms) {
+			foreach ($forms as $key => $form) {
+				$formId = (int) $form->ID;
+
+				if (!$formId) {
+					continue;
+				}
+
+				$settings = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->prepare(
+						"SELECT meta_key name, meta_value as value
+						FROM $wpdb->postmeta
+						WHERE post_id=%d
+						AND meta_key = 'es-forms-hubspot-use-clearbit'", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+						$form->ID
+					)
+				);
+
+				foreach ($settings as $setting) {
+					$name = $setting->name ?? '';
+					$value = $setting->value ?? '';
+
+					\add_post_meta($formId, 'es-forms-clearbit-settings-use', $value);
+					\delete_post_meta($formId, $name);
+
+					$output['forms'][] = $formId;
+				}
+			}
+		}
+
+		$options = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			"SELECT option_name as name, option_value as value
+				FROM $wpdb->options
+				WHERE option_name = 'es-forms-hubspot-clearbit-map-keys'"
+		);
+
+		if ($options) {
+			foreach ($options as $option) {
+				$name = $option->name ?? '';
+				$value = $option->value ?? '';
+
+
+				\add_option('es-forms-clearbit-map-keys-hubspot', $value);
+				\delete_option($name);
+
+				$output['options'][] = $name;
+			}
+		}
+
+		$actionName = UtilsHooksHelper::getActionName(['migration', 'clearbit']);
+		if (\has_action($actionName)) {
+			\do_action($actionName, SettingsMigration::VERSION_CLEARBIT);
+		}
+
+		return UtilsApiHelper::getApiSuccessPublicOutput(
+			\__('Migration version 5.5.1 to 5.6 Clearbit finished with success.', 'eightshift-forms'),
 			$output
 		);
 	}

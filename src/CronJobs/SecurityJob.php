@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds WP Cron job schedule event for - Security.
+ * Class that holds WP Cron job schedule event for - SecurityJob.
  *
  * @package EightshiftForms\CronJobs
  */
@@ -15,9 +15,9 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * Security class.
+ * SecurityJob class.
  */
-class Security implements ServiceInterface
+class SecurityJob implements ServiceInterface
 {
 	/**
 	 * Job name.

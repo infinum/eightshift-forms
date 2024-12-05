@@ -24,11 +24,12 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * HubspotClient integration class.
  */
-class HubspotClient implements HubspotClientInterface
+class HubspotClient implements HubspotClientInterface, ServiceInterface
 {
 	/**
 	 * Transient cache name for items.
@@ -78,6 +79,17 @@ class HubspotClient implements HubspotClientInterface
 	) {
 		$this->enrichment = $enrichment;
 		$this->security = $security;
+	}
+
+	/**
+	 * Register all the hooks
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_filter(UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'getContactProperties']), [$this, 'getContactProperties']);
+		\add_filter(UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'postContactProperty']), [$this, 'postContactProperty'], 10, 3);
 	}
 
 	/**
@@ -310,12 +322,13 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Post contact property to HubSpot.
 	 *
+	 * @param array<string, mixed> $output Output array.
 	 * @param string $email Email to connect data to.
 	 * @param array<string, mixed> $params Params array.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postContactProperty(string $email, array $params): array
+	public function postContactProperty(array $output, string $email, array $params): array
 	{
 		$properties = [];
 

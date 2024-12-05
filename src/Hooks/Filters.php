@@ -205,6 +205,8 @@ final class Filters
 					'prePostParams',
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
+					'getContactProperties',
+					'postContactProperty',
 				],
 				SettingsMailerlite::SETTINGS_TYPE_KEY => [
 					'data',
@@ -226,6 +228,7 @@ final class Filters
 				],
 				SettingsClearbit::SETTINGS_TYPE_KEY => [
 					'map',
+					'setQueue',
 				],
 				SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 					'data',
@@ -336,6 +339,7 @@ final class Filters
 				'twoToThreeGeneral',
 				'twoToThreeForms',
 				'twoToThreeLocale',
+				'clearbit',
 			],
 		];
 	}

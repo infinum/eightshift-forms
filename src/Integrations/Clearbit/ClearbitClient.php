@@ -11,18 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * ClearbitClient integration class.
  */
-class ClearbitClient implements ClearbitClientInterface
+class ClearbitClient implements ClearbitClientInterface, ServiceInterface
 {
 	/**
 	 * Return Clearbit base url.
@@ -32,21 +33,67 @@ class ClearbitClient implements ClearbitClientInterface
 	private const BASE_URL = 'https://person-stream.clearbit.com/v2/';
 
 	/**
+	 * Register all the hooks
+	 *
+	 * @return void
+	 */
+	public function register(): void
+	{
+		\add_filter(UtilsHooksHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'setQueue']), [$this, 'setQueue'], 10, 2);
+	}
+
+	/**
+	 * Set queue for Clearbit.
+	 *
+	 * @param bool $output Output status.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return bool
+	 */
+	public function setQueue(bool $output, array $formDetails): bool
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+
+		// Check if Hubspot is using Clearbit.
+		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
+
+		if (!$use) {
+			return false;
+		}
+
+		$email = UtilsGeneralHelper::getEmailParamsField($params);
+
+		if (!$email) {
+			return false;
+		}
+
+		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY);
+
+		$formJob = $jobs[$type][$formId] ?? [];
+
+		if (isset(\array_flip($formJob)[$email])) {
+			return false;
+		}
+
+		$jobs[$type][$formId][] = $email;
+
+		return \update_option(UtilsSettingsHelper::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY), $jobs);
+	}
+
+	/**
 	 * API request to post application.
 	 *
 	 * @param string $email Email key to map in params.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, string> $mapData Map data from settings.
-	 * @param string $itemId Item id to search.
+	 * @param array<string, mixed> $mapData Params array.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getApplication(string $email, array $params, array $mapData, string $itemId, string $formId): array
+	public function getApplication(string $email, array $mapData, string $formId): array
 	{
 		$url = self::BASE_URL . "combined/find?email={$email}";
-
-		$params = $this->prepareParamsOutput($params);
 
 		$response = \wp_remote_get(
 			$url,
@@ -60,9 +107,9 @@ class ClearbitClient implements ClearbitClientInterface
 			SettingsClearbit::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
-			$params,
 			[],
-			$itemId,
+			[],
+			'',
 			$formId
 		);
 
@@ -112,39 +159,6 @@ class ClearbitClient implements ClearbitClientInterface
 
 		foreach ($this->prepareParams() as $key => $value) {
 			$output[] = $key;
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Prepare params for api.
-	 *
-	 * @param array<string, mixed> $params Params.
-	 *
-	 * @return array<string, string>
-	 */
-	private function prepareParamsOutput(array $params = []): array
-	{
-		$output = [];
-
-		$customFields = \array_flip(Helpers::flattenArray(UtilsHelper::getStateParams()));
-
-		foreach ($params as $key => $param) {
-			// Remove unecesery fields.
-			if (isset($customFields[$key])) {
-				continue;
-			}
-
-			if (!isset($param['value'])) {
-				continue;
-			}
-
-			if (!isset($param['type']) || $param['type'] === 'hidden') {
-				continue;
-			}
-
-			$output[$key] = $param;
 		}
 
 		return $output;
