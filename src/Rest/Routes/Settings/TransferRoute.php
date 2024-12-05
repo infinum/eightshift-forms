@@ -126,7 +126,7 @@ class TransferRoute extends AbstractUtilsBaseRoute
 				if (!$items) {
 					return \rest_ensure_response(
 						UtilsApiHelper::getApiErrorPublicOutput(
-							\esc_html__('Please click on the result outputs you want to export.', 'eightshift-forms'),
+							\esc_html__('Please click on the Result outputs you want to export.', 'eightshift-forms'),
 							[],
 							$debug
 						)
