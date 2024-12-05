@@ -285,33 +285,41 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function getTalentlyftItems(): array
 	{
-		$url = "{$this->getBaseUrl()}jobs?perPage=200&status=published"; // API limit is 200.
+		$statuses = \array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_LIST_TYPE_KEY)));
 
-		$response = \wp_remote_get(
-			$url,
-			[
-				'headers' => $this->getHeaders(),
-			]
-		);
+		\array_unshift($statuses, 'published');
 
-		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsTalentlyft::SETTINGS_TYPE_KEY,
-			$response,
-			$url,
-		);
+		$output = [];
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		foreach ($statuses as $status) {
+			$url = "{$this->getBaseUrl()}jobs?perPage=200&status={$status}"; // API limit is 200.
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
+			$response = \wp_remote_get(
+				$url,
+				[
+					'headers' => $this->getHeaders(),
+				]
+			);
 
-		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return $body['Results'] ?? [];
+			// Structure response details.
+			$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+				SettingsTalentlyft::SETTINGS_TYPE_KEY,
+				$response,
+				$url,
+			);
+
+			$code = $details[UtilsConfig::IARD_CODE];
+			$body = $details[UtilsConfig::IARD_BODY];
+
+			UtilsDeveloperHelper::setQmLogsOutput($details);
+
+			// On success return output.
+			if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+				$output = \array_merge($output, $body['Results'] ?? []);
+			}
 		}
 
-		return [];
+		return $output;
 	}
 
 	/**
