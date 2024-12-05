@@ -16,7 +16,6 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Listing\FormListingInterface;
-use EightshiftForms\ResultOutput\SettingsResultOutput;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
@@ -196,7 +195,7 @@ class FormAdminMenu extends AbstractAdminMenu
 
 		switch ($type) {
 			case UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS:
-				$items = UtilsGeneralHelper::getBlockLocations($formId);
+				$items = UtilsGeneralHelper::getBlockLocations($formId, '');
 				$count = \count($items);
 				$formTitle = \get_the_title((int) $formId);
 
@@ -969,20 +968,20 @@ class FormAdminMenu extends AbstractAdminMenu
 				$output = [
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
+						'submitValue' => \__('Locations', 'eightshift-forms'),
+						'submitAttrs' => [
+							UtilsHelper::getStateAttribute('locationsId') => $formId,
+							UtilsHelper::getStateAttribute('locationsType') => Result::POST_TYPE_SLUG,
+						],
+						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
+					]),
+					Helpers::render('submit', [
+						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $item['editLink'] ?? '',
 						'submitValue' => \__('Edit', 'eightshift-forms'),
 					]),
 				];
-
-				if (\apply_filters(SettingsResultOutput::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-					$output[] = Helpers::render('submit', [
-						'submitVariant' => 'ghost',
-						'submitButtonAsLink' => true,
-						'submitButtonAsLinkUrl' => \get_permalink($formId),
-						'submitValue' => \__('View', 'eightshift-forms'),
-					]);
-				}
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [];
@@ -996,7 +995,8 @@ class FormAdminMenu extends AbstractAdminMenu
 							'submitVariant' => 'ghost',
 							'submitValue' => \__('Locations', 'eightshift-forms'),
 							'submitAttrs' => [
-								UtilsHelper::getStateAttribute('locationsId') => $formId
+								UtilsHelper::getStateAttribute('locationsId') => $formId,
+								UtilsHelper::getStateAttribute('locationsType') => Forms::POST_TYPE_SLUG,
 							],
 							'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 						]),

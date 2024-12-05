@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.5.0]
+
+### Added
+
+- Locations ajax for results output listing.
+- Option to customize Date and Time fields Preview and Output format.
+- Result Outputs can now be exported and imported using settings.
+- Settings entries list now has better UX in settings.
+- `getFormUsageLocation` helper now supports custom post type.
+- HubSpot integration now works using `v3` API for all data except form submission as it is not supported.
+- Corvus Pay integration now supports IBAN payments.
+- TalentLyft integration now supports additional statuses.
+
+### Fixed
+
+- Input Range status variable will output max 2 decimals.
+- Input Range settings pickers broken up/down buttons.
+- Corvus Pay integration fix with `Require complete` option.
+
+### Removed
+
+- Any Server Side Render for the forms and results output.
+- Result Output global settings option to setup custom frontend URL.
+
 ## [5.4.2]
 
 ### Updated
@@ -796,6 +820,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.5.0]: https://github.com/infinum/eightshift-forms/compare/5.4.2...5.5.0
 [5.4.2]: https://github.com/infinum/eightshift-forms/compare/5.4.1...5.4.2
 [5.4.1]: https://github.com/infinum/eightshift-forms/compare/5.4.0...5.4.1
 [5.4.0]: https://github.com/infinum/eightshift-forms/compare/5.3.2...5.4.0

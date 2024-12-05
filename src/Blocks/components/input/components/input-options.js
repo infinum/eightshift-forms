@@ -240,10 +240,11 @@ export const InputOptions = (attributes) => {
 										value={inputMinLength}
 										onChange={(value) => setAttributes({ [getAttrKey('inputMinLength', attributes, manifest)]: value })}
 										min={options.inputMinLength.min}
+										max={options.inputMinLength.max}
 										step={options.inputMinLength.step}
 										disabled={isOptionDisabled(getAttrKey('inputMinLength', attributes, manifest), inputDisabledOptions)}
 										placeholder='–'
-										fixedWidth={4}
+										fixedWidth={5}
 										noBottomSpacing
 									/>
 
@@ -267,10 +268,11 @@ export const InputOptions = (attributes) => {
 										value={inputMaxLength}
 										onChange={(value) => setAttributes({ [getAttrKey('inputMaxLength', attributes, manifest)]: value })}
 										min={options.inputMaxLength.min}
+										max={options.inputMaxLength.max}
 										step={options.inputMaxLength.step}
 										disabled={isOptionDisabled(getAttrKey('inputMaxLength', attributes, manifest), inputDisabledOptions)}
 										placeholder='–'
-										fixedWidth={4}
+										fixedWidth={5}
 										noBottomSpacing
 									/>
 
@@ -400,10 +402,11 @@ export const InputOptions = (attributes) => {
 										value={inputMin}
 										onChange={(value) => setAttributes({ [getAttrKey('inputMin', attributes, manifest)]: formatNumber(value) })}
 										min={options.inputMin.min}
+										max={options.inputMin.max}
 										step={options.inputMin.step}
 										disabled={isOptionDisabled(getAttrKey('inputMin', attributes, manifest), inputDisabledOptions)}
 										placeholder='–'
-										fixedWidth={4}
+										fixedWidth={5}
 										noBottomSpacing
 									/>
 
@@ -426,10 +429,11 @@ export const InputOptions = (attributes) => {
 										value={inputMax}
 										onChange={(value) => setAttributes({ [getAttrKey('inputMax', attributes, manifest)]: formatNumber(value) })}
 										min={options.inputMax.min}
+										max={options.inputMax.max}
 										step={options.inputMax.step}
 										disabled={isOptionDisabled(getAttrKey('inputMax', attributes, manifest), inputDisabledOptions)}
 										placeholder='–'
-										fixedWidth={4}
+										fixedWidth={5}
 										noBottomSpacing
 									/>
 
@@ -453,11 +457,12 @@ export const InputOptions = (attributes) => {
 						<div className='es-display-flex es-items-end es-gap-2'>
 							<NumberPicker
 								value={inputStep}
-								onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: formatNumber(value) })}
+								onChange={(value) => setAttributes({ [getAttrKey('inputStep', attributes, manifest)]: value })}
 								min={options.inputStep.min}
+								max={options.inputStep.max}
 								step={options.inputStep.step}
 								disabled={isOptionDisabled(getAttrKey('inputStep', attributes, manifest), inputDisabledOptions)}
-								fixedWidth={4}
+								fixedWidth={5}
 								noBottomSpacing
 							/>
 

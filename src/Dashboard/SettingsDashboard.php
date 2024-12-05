@@ -96,7 +96,7 @@ class SettingsDashboard implements UtilsSettingGlobalInterface, ServiceInterface
 							],
 						],
 					],
-				]
+				],
 			];
 
 			$filtered[$value['type']][] = $item;

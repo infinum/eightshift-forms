@@ -55,13 +55,8 @@ if ($datePlaceholder) {
 	$dateAttrs['placeholder'] = esc_attr($datePlaceholder);
 }
 
-if ($datePreviewFormat) {
-	$dateAttrs[UtilsHelper::getStateAttribute('datePreviewFormat')] = esc_attr($datePreviewFormat);
-}
-
-if ($dateOutputFormat) {
-	$dateAttrs[UtilsHelper::getStateAttribute('dateOutputFormat')] = esc_attr($dateOutputFormat);
-}
+$dateAttrs[UtilsHelper::getStateAttribute('datePreviewFormat')] = $datePreviewFormat ? esc_attr($datePreviewFormat) : $manifest['formats'][$dateType]['preview'];
+$dateAttrs[UtilsHelper::getStateAttribute('dateOutputFormat')] = $dateOutputFormat ? esc_attr($dateOutputFormat) : $manifest['formats'][$dateType]['output'];
 
 if ($dateUseLabelAsPlaceholder) {
 	$dateAttrs['placeholder'] = esc_attr($dateFieldLabel);

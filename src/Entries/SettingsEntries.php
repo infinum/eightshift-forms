@@ -153,35 +153,46 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
 			[
-				'component' => 'tabs',
-				'tabsFull' => true,
-				'tabsContent' => [
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-clean',
+				'layoutContent' => [
 					[
-						'component' => 'tab',
-						'tabLabel' => \__('Options', 'eightshift-forms'),
-						'tabContent' => [
+						'component' => 'card-inline',
+						'cardInlineTitle' => \__('Store entries in database', 'eightshift-forms'),
+						'cardInlineRightContent' => [
+							$isUsed ? [
+								'component' => 'submit',
+								'submitVariant' => 'ghost',
+								'submitButtonAsLink' => true,
+								'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId),
+								'submitValue' => \__('View', 'eightshift-forms'),
+							] : [],
 							[
 								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
 								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => \__('Store entries in database', 'eightshift-forms'),
-										// translators: %s is replaced with the form entries page URL.
-										'checkboxHelp' => $isUsed ? \sprintf(\__("You can find all form entries <a href='%s' rel='noopener noreferrer' target='_blank'>here</a>.", 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
 										'checkboxIsChecked' => $isUsed,
 										'checkboxValue' => self::SETTINGS_ENTRIES_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
-									]
-								]
-							],
-							...($isUsed ? [
-								[
-									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
+									],
 								],
+							],
+						],
+					],
+				],
+			],
+			...($isUsed ? [
+				[
+					'component' => 'tabs',
+					'tabsFull' => true,
+					'tabsContent' => [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('Options', 'eightshift-forms'),
+							'tabContent' => [
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
@@ -227,11 +238,11 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										]
 									]
 								],
-							] : []),
+							],
 						],
 					],
 				],
-			],
+			] : []),
 		];
 	}
 

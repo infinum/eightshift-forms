@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\CustomPostType\Result;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -60,6 +61,16 @@ class LocationsRoute extends AbstractUtilsBaseRoute
 		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
 
 		$id = $params['id'] ?? '';
+		$usageType = $params['type'] ?? '';
+
+		switch ($usageType) {
+			case Result::POST_TYPE_SLUG:
+				$errorMsg = \esc_html__('Your result output is not used in any location!', 'eightshift-forms');
+				break;
+			default:
+				$errorMsg = \esc_html__('Your form is not used in any location!', 'eightshift-forms');
+				break;
+		}
 
 		$type = UtilsGeneralHelper::getFormTypeById($id);
 
@@ -70,10 +81,10 @@ class LocationsRoute extends AbstractUtilsBaseRoute
 					'output' => Helpers::render(
 						'item-details',
 						[
-							'items' => UtilsGeneralHelper::getBlockLocations($id),
-							'type' => UtilsGeneralHelper::getFormTypeById($id),
+							'items' => UtilsGeneralHelper::getBlockLocations($id, $usageType),
+							'type' => $type,
 							'sectionClass' => Helpers::getComponent('admin-listing')['componentClass'],
-							'emptyContent' => \esc_html__('Your form is not used in any location!', 'eightshift-forms'),
+							'emptyContent' => $errorMsg,
 							'additionalAttributes' => [
 								UtilsHelper::getStateAttribute('adminIntegrationType') => $type,
 							],

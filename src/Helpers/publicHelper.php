@@ -148,10 +148,11 @@ function getFormsGetCountryList(): array
  * Get form usage location.
  *
  * @param string $formId Form ID.
+ * @param string $type Type.
  *
  * @return array<int, mixed>
  */
-function getFormUsageLocation(string $formId): array
+function getFormUsageLocation(string $formId, string $type = ''): array
 {
-	return UtilsGeneralHelper::getBlockLocations($formId);
+	return UtilsGeneralHelper::getBlockLocations($formId, $type);
 }

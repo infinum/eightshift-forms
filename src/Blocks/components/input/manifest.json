@@ -158,23 +158,28 @@
 			}
 		],
 		"inputMinLength": {
-			"min":  0,
+			"min": 0,
+			"max": 999999,
 			"step": 1
 		},
 		"inputMaxLength": {
-			"min":  1,
+			"min": 1,
+			"max": 999999,
 			"step": 1
 		},
 		"inputMin": {
-			"min":  0.01,
+			"min": 0,
+			"max": 999999,
 			"step": 0.01
 		},
 		"inputMax": {
-			"min":  0.01,
+			"min": 0,
+			"max": 999999,
 			"step": 0.01
 		},
 		"inputStep": {
-			"min":  0.01,
+			"min": 0.01,
+			"max": 1,
 			"step": 0.01
 		}
 	}

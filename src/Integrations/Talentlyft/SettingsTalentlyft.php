@@ -16,6 +16,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterf
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -58,6 +59,11 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 	 * File upload limit Key.
 	 */
 	public const SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY = 'talentlyft-file-upload-limit';
+
+	/**
+	 * List type key.
+	 */
+	public const SETTINGS_TALENTLYFT_LIST_TYPE_KEY = 'talentlyft-list-type';
 
 	/**
 	 * File upload limit default. Defined in MB.
@@ -190,6 +196,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 		}
 
 		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY, self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY);
+		$selectedListType = \array_flip(\array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(self::SETTINGS_TALENTLYFT_LIST_TYPE_KEY))));
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -264,6 +271,25 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 								'inputMin' => 1,
 								'inputMax' => 5,
 								'inputStep' => 1,
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'select',
+								'selectIsMultiple' => true,
+								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_TALENTLYFT_LIST_TYPE_KEY),
+								'selectFieldLabel' => \__('Additional statuses list', 'eightshift-forms'),
+								'selectPlaceholder' => \__('Get additional jobs from other statuses. Use with caution!', 'eightshift-forms'),
+								'selectContent' => [
+									[
+										'component' => 'select-option',
+										'selectOptionLabel' => \__('Internal', 'eightshift-forms'),
+										'selectOptionValue' => 'internal',
+										'selectOptionIsSelected' => isset($selectedListType['internal']),
+									],
+								],
 							],
 						],
 					],

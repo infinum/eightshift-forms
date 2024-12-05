@@ -4,8 +4,8 @@ import React from 'react';
 import { isArray } from 'lodash';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
+import { TextControl, PanelBody, Button } from '@wordpress/components';
 import {
 	icons,
 	checkAttr,
@@ -43,6 +43,8 @@ export const DateOptions = (attributes) => {
 	const dateDisabledOptions = checkAttr('dateDisabledOptions', attributes, manifest);
 	const dateType = checkAttr('dateType', attributes, manifest);
 	const dateUseLabelAsPlaceholder = checkAttr('dateUseLabelAsPlaceholder', attributes, manifest);
+	const datePreviewFormat = checkAttr('datePreviewFormat', attributes, manifest);
+	const dateOutputFormat = checkAttr('dateOutputFormat', attributes, manifest);
 
 	let dateValidationPatternOptions = [];
 
@@ -131,6 +133,43 @@ export const DateOptions = (attributes) => {
 					noBottomSpacing
 					inlineLabel
 					clearable
+				/>
+			</Section>
+
+			<Section
+				icon={icons.tools}
+				label={__('Formats', 'eightshift-forms')}
+			>
+				{__('You can use any valid formats by visiting the following button.', 'eightshift-forms')}
+
+				<br/><br/>
+
+				<Button
+					href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format`}
+					className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
+					target='_blank'
+				>
+					{__('View valid formats', 'eightshift-forms')}
+				</Button>
+
+				<br/><br/>
+
+				<TextControl
+					label={<IconLabel icon={icons.dateTime} label={__('Preview format', 'eightshift-forms')} />}
+					value={datePreviewFormat}
+					placeholder={manifest.formats[dateType].preview}
+					help={__('Define format of date/time the user will see', 'eightshift-forms')}
+					onChange={(value) => setAttributes({ [getAttrKey('datePreviewFormat', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('datePreviewFormat', attributes, manifest), dateDisabledOptions)}
+				/>
+
+				<TextControl
+					label={<IconLabel icon={icons.dateTime} label={__('Output format', 'eightshift-forms')} />}
+					value={dateOutputFormat}
+					placeholder={manifest.formats[dateType].output}
+					help={__('Define format of date/time that will be sent when form is processed', 'eightshift-forms')}
+					onChange={(value) => setAttributes({ [getAttrKey('dateOutputFormat', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('dateOutputFormat', attributes, manifest), dateDisabledOptions)}
 				/>
 			</Section>
 

@@ -30,6 +30,11 @@ class Transfer implements TransferInterface
 	public const TYPE_FORMS = 'forms';
 
 	/**
+	 * Type result outputs key.
+	 */
+	public const TYPE_RESULT_OUTPUTS = 'resultOutputs';
+
+	/**
 	 * Export global settings.
 	 *
 	 * @return array<int, array<string, mixed>>
@@ -48,16 +53,17 @@ class Transfer implements TransferInterface
 	}
 
 	/**
-	 * Export forms with settings.
+	 * Export Custom post types with settings.
 	 *
 	 * @param array<int, string> $items Specify items to query.
+	 * @param string $postType Specify post type to query.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	public function getExportForms(array $items = []): array
+	public function getExportCpts(array $items = [], string $postType = Forms::POST_TYPE_SLUG): array
 	{
 		$args = [
-			'post_type' => Forms::POST_TYPE_SLUG,
+			'post_type' => $postType,
 			'no_found_rows' => true,
 			'update_post_term_cache' => false,
 			'post_status' => 'any',
@@ -105,16 +111,17 @@ class Transfer implements TransferInterface
 	}
 
 	/**
-	 * Export one form with settings.
+	 * Export one custom post type with settings.
 	 *
 	 * @param string $item Specify item id to query.
+	 * @param string $postType Specify post type to query.
 	 *
 	 * @return array<int, mixed>
 	 */
-	public function getExportForm(string $item): array
+	public function getExportCpt(string $item, string $postType = Forms::POST_TYPE_SLUG): array
 	{
 		$args = [
-			'post_type' => Forms::POST_TYPE_SLUG,
+			'post_type' => $postType,
 			'no_found_rows' => true,
 			'update_post_term_cache' => false,
 			'posts_per_page' => 1, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
@@ -172,9 +179,10 @@ class Transfer implements TransferInterface
 
 		$globalSettings = $data[self::TYPE_GLOBAL_SETTINGS] ?? [];
 		$forms = $data[self::TYPE_FORMS] ?? [];
+		$resultOutputs = $data[self::TYPE_RESULT_OUTPUTS] ?? [];
 
 		// Bailout if both keys are missing.
-		if (!$globalSettings && !$forms) {
+		if (!$globalSettings && !$forms && !$resultOutputs) {
 			return false;
 		}
 
@@ -221,6 +229,13 @@ class Transfer implements TransferInterface
 		if ($forms) {
 			foreach ($forms as $form) {
 				$this->getImportByFormArray($form, $override);
+			}
+		}
+
+		// Import result outputs.
+		if ($resultOutputs) {
+			foreach ($resultOutputs as $resultOutput) {
+				$this->getImportByFormArray($resultOutput, $override);
 			}
 		}
 

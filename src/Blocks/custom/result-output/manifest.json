@@ -40,9 +40,5 @@
 			"type": "boolean",
 			"default": false
 		}
-	},
-	"attributesSsr": [
-		"resultOutputPostId",
-		"resultOutputFormPostId"
-	]
+	}
 }
