@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.4.3]
+
+### Added
+
+- Req class on the form fields that are required.
+
 ## [5.4.2]
 
 ### Updated
@@ -796,6 +802,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.4.3]: https://github.com/infinum/eightshift-forms/compare/5.4.2...5.4.3
 [5.4.2]: https://github.com/infinum/eightshift-forms/compare/5.4.1...5.4.2
 [5.4.1]: https://github.com/infinum/eightshift-forms/compare/5.4.0...5.4.1
 [5.4.0]: https://github.com/infinum/eightshift-forms/compare/5.3.2...5.4.0
