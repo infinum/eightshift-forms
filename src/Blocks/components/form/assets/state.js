@@ -86,8 +86,6 @@ export class State {
 		return getState([StateEnum.FORM, StateEnum.LOADER], formId);
 	};
 	getStateFormIsProcessing = (formId) => {
-		console.log(formId);
-		
 		return getState([StateEnum.FORM, StateEnum.ISPROCESSING], formId);
 	};
 
