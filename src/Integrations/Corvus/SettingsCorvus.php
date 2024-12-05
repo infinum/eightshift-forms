@@ -56,6 +56,11 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	public const SETTINGS_CORVUS_USE_KEY = 'corvus-use';
 
 	/**
+	 * Corvus IBAN use key.
+	 */
+	public const SETTINGS_CORVUS_IBAN_USE_KEY = 'corvus-iban-use';
+
+	/**
 	 * API Key.
 	 */
 	public const SETTINGS_CORVUS_API_KEY_KEY = 'corvus-api-key';
@@ -216,6 +221,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'select',
 								'selectIsRequired' => true,
+								'selectSingleSubmit' => true,
 								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_STORE_ID),
 								'selectFieldLabel' => \__('Store ID', 'eightshift-forms'),
 								'selectPlaceholder' => \__('Select Store ID', 'eightshift-forms'),
@@ -231,252 +237,275 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 									UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY)
 								),
 							],
-							[
-								'component' => 'select',
-								'selectIsRequired' => true,
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_LANG_KEY),
-								'selectFieldLabel' => \__('Language', 'eightshift-forms'),
-								'selectPlaceholder' => \__('Select language', 'eightshift-forms'),
-								'selectContent' => [
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Croatian', 'eightshift-forms'),
-										'selectOptionValue' => 'hr',
-										'selectOptionIsSelected' => $lang === 'hr',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('English', 'eightshift-forms'),
-										'selectOptionValue' => 'en',
-										'selectOptionIsSelected' => $lang === 'en',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Italian', 'eightshift-forms'),
-										'selectOptionValue' => 'it',
-										'selectOptionIsSelected' => $lang === 'it',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('German', 'eightshift-forms'),
-										'selectOptionValue' => 'de',
-										'selectOptionIsSelected' => $lang === 'de',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Serbian', 'eightshift-forms'),
-										'selectOptionValue' => 'rs',
-										'selectOptionIsSelected' => $lang === 'rs',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Slovenian', 'eightshift-forms'),
-										'selectOptionValue' => 'sl',
-										'selectOptionIsSelected' => $lang === 'sl',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Macedonian', 'eightshift-forms'),
-										'selectOptionValue' => 'mk',
-										'selectOptionIsSelected' => $lang === 'mk',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Albanian', 'eightshift-forms'),
-										'selectOptionValue' => 'sq',
-										'selectOptionIsSelected' => $lang === 'sq',
-									],
-								]
-							],
-							[
-								'component' => 'select',
-								'selectIsRequired' => true,
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_CURRENCY_KEY),
-								'selectFieldLabel' => \__('Currency', 'eightshift-forms'),
-								'selectPlaceholder' => \__('Select currency', 'eightshift-forms'),
-								'selectContent' => [
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Euro', 'eightshift-forms'),
-										'selectOptionValue' => 'EUR',
-										'selectOptionIsSelected' => $currency === 'EUR',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('British Pound', 'eightshift-forms'),
-										'selectOptionValue' => 'GBP',
-										'selectOptionIsSelected' => $currency === 'GBP',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('US Dollar', 'eightshift-forms'),
-										'selectOptionValue' => 'USD',
-										'selectOptionIsSelected' => $currency === 'USD',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Danish Krone', 'eightshift-forms'),
-										'selectOptionValue' => 'DKK',
-										'selectOptionIsSelected' => $currency === 'DKK',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Norwegian Krone', 'eightshift-forms'),
-										'selectOptionValue' => 'NOK',
-										'selectOptionIsSelected' => $currency === 'NOK',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Swedish Krona', 'eightshift-forms'),
-										'selectOptionValue' => 'SEK',
-										'selectOptionIsSelected' => $currency === 'SEK',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Swiss Franc', 'eightshift-forms'),
-										'selectOptionValue' => 'CHF',
-										'selectOptionIsSelected' => $currency === 'CHF',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Canadian Dollar', 'eightshift-forms'),
-										'selectOptionValue' => 'CAD',
-										'selectOptionIsSelected' => $currency === 'CAD',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Hungarian Forint', 'eightshift-forms'),
-										'selectOptionValue' => 'HUF',
-										'selectOptionIsSelected' => $currency === 'HUF',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Bahraini Dinar', 'eightshift-forms'),
-										'selectOptionValue' => 'BHD',
-										'selectOptionIsSelected' => $currency === 'BHD',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Australian Dollar', 'eightshift-forms'),
-										'selectOptionValue' => 'AUD',
-										'selectOptionIsSelected' => $currency === 'AUD',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Russian Ruble', 'eightshift-forms'),
-										'selectOptionValue' => 'RUB',
-										'selectOptionIsSelected' => $currency === 'RUB',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Polish Zloty', 'eightshift-forms'),
-										'selectOptionValue' => 'PLN',
-										'selectOptionIsSelected' => $currency === 'PLN',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Romanian Leu', 'eightshift-forms'),
-										'selectOptionValue' => 'RON',
-										'selectOptionIsSelected' => $currency === 'RON',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Czech Koruna', 'eightshift-forms'),
-										'selectOptionValue' => 'CZK',
-										'selectOptionIsSelected' => $currency === 'CZK',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Icelandic Krona', 'eightshift-forms'),
-										'selectOptionValue' => 'ISK',
-										'selectOptionIsSelected' => $currency === 'ISK',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Bosnia-Herzegovina Convertible Mark', 'eightshift-forms'),
-										'selectOptionValue' => 'BAM',
-										'selectOptionIsSelected' => $currency === 'BAM',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Serbian Dinar', 'eightshift-forms'),
-										'selectOptionValue' => 'RSD',
-										'selectOptionIsSelected' => $currency === 'RSD',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Macedonian Denar', 'eightshift-forms'),
-										'selectOptionValue' => 'MKD',
-										'selectOptionIsSelected' => $currency === 'MKD',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Bulgarian Lev', 'eightshift-forms'),
-										'selectOptionValue' => 'BGN',
-										'selectOptionIsSelected' => $currency === 'BGN',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Albanian Lek', 'eightshift-forms'),
-										'selectOptionValue' => 'ALL',
-										'selectOptionIsSelected' => $currency === 'ALL',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Turkish Lira', 'eightshift-forms'),
-										'selectOptionValue' => 'TRY',
-										'selectOptionIsSelected' => $currency === 'TRY',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Israeli Shekel', 'eightshift-forms'),
-										'selectOptionValue' => 'ILS',
-										'selectOptionIsSelected' => $currency === 'ILS',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('United Arab Emirates Dirham', 'eightshift-forms'),
-										'selectOptionValue' => 'AED',
-										'selectOptionIsSelected' => $currency === 'AED',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Chinese Yuan', 'eightshift-forms'),
-										'selectOptionValue' => 'CNY',
-										'selectOptionIsSelected' => $currency === 'CNY',
-									],
-									[
-										'component' => 'select-option',
-										'selectOptionLabel' => \__('Japanese Yen', 'eightshift-forms'),
-										'selectOptionValue' => 'JPY',
-										'selectOptionIsSelected' => $currency === 'JPY',
+							...($selectedStoreId ? [
+								[
+									'component' => 'select',
+									'selectIsRequired' => true,
+									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_LANG_KEY),
+									'selectFieldLabel' => \__('Language', 'eightshift-forms'),
+									'selectPlaceholder' => \__('Select language', 'eightshift-forms'),
+									'selectContent' => [
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Croatian', 'eightshift-forms'),
+											'selectOptionValue' => 'hr',
+											'selectOptionIsSelected' => $lang === 'hr',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('English', 'eightshift-forms'),
+											'selectOptionValue' => 'en',
+											'selectOptionIsSelected' => $lang === 'en',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Italian', 'eightshift-forms'),
+											'selectOptionValue' => 'it',
+											'selectOptionIsSelected' => $lang === 'it',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('German', 'eightshift-forms'),
+											'selectOptionValue' => 'de',
+											'selectOptionIsSelected' => $lang === 'de',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Serbian', 'eightshift-forms'),
+											'selectOptionValue' => 'rs',
+											'selectOptionIsSelected' => $lang === 'rs',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Slovenian', 'eightshift-forms'),
+											'selectOptionValue' => 'sl',
+											'selectOptionIsSelected' => $lang === 'sl',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Macedonian', 'eightshift-forms'),
+											'selectOptionValue' => 'mk',
+											'selectOptionIsSelected' => $lang === 'mk',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Albanian', 'eightshift-forms'),
+											'selectOptionValue' => 'sq',
+											'selectOptionIsSelected' => $lang === 'sq',
+										],
+									]
+								],
+								[
+									'component' => 'select',
+									'selectIsRequired' => true,
+									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_CURRENCY_KEY),
+									'selectFieldLabel' => \__('Currency', 'eightshift-forms'),
+									'selectPlaceholder' => \__('Select currency', 'eightshift-forms'),
+									'selectContent' => [
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Euro', 'eightshift-forms'),
+											'selectOptionValue' => 'EUR',
+											'selectOptionIsSelected' => $currency === 'EUR',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('British Pound', 'eightshift-forms'),
+											'selectOptionValue' => 'GBP',
+											'selectOptionIsSelected' => $currency === 'GBP',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('US Dollar', 'eightshift-forms'),
+											'selectOptionValue' => 'USD',
+											'selectOptionIsSelected' => $currency === 'USD',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Danish Krone', 'eightshift-forms'),
+											'selectOptionValue' => 'DKK',
+											'selectOptionIsSelected' => $currency === 'DKK',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Norwegian Krone', 'eightshift-forms'),
+											'selectOptionValue' => 'NOK',
+											'selectOptionIsSelected' => $currency === 'NOK',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Swedish Krona', 'eightshift-forms'),
+											'selectOptionValue' => 'SEK',
+											'selectOptionIsSelected' => $currency === 'SEK',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Swiss Franc', 'eightshift-forms'),
+											'selectOptionValue' => 'CHF',
+											'selectOptionIsSelected' => $currency === 'CHF',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Canadian Dollar', 'eightshift-forms'),
+											'selectOptionValue' => 'CAD',
+											'selectOptionIsSelected' => $currency === 'CAD',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Hungarian Forint', 'eightshift-forms'),
+											'selectOptionValue' => 'HUF',
+											'selectOptionIsSelected' => $currency === 'HUF',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Bahraini Dinar', 'eightshift-forms'),
+											'selectOptionValue' => 'BHD',
+											'selectOptionIsSelected' => $currency === 'BHD',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Australian Dollar', 'eightshift-forms'),
+											'selectOptionValue' => 'AUD',
+											'selectOptionIsSelected' => $currency === 'AUD',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Russian Ruble', 'eightshift-forms'),
+											'selectOptionValue' => 'RUB',
+											'selectOptionIsSelected' => $currency === 'RUB',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Polish Zloty', 'eightshift-forms'),
+											'selectOptionValue' => 'PLN',
+											'selectOptionIsSelected' => $currency === 'PLN',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Romanian Leu', 'eightshift-forms'),
+											'selectOptionValue' => 'RON',
+											'selectOptionIsSelected' => $currency === 'RON',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Czech Koruna', 'eightshift-forms'),
+											'selectOptionValue' => 'CZK',
+											'selectOptionIsSelected' => $currency === 'CZK',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Icelandic Krona', 'eightshift-forms'),
+											'selectOptionValue' => 'ISK',
+											'selectOptionIsSelected' => $currency === 'ISK',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Bosnia-Herzegovina Convertible Mark', 'eightshift-forms'),
+											'selectOptionValue' => 'BAM',
+											'selectOptionIsSelected' => $currency === 'BAM',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Serbian Dinar', 'eightshift-forms'),
+											'selectOptionValue' => 'RSD',
+											'selectOptionIsSelected' => $currency === 'RSD',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Macedonian Denar', 'eightshift-forms'),
+											'selectOptionValue' => 'MKD',
+											'selectOptionIsSelected' => $currency === 'MKD',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Bulgarian Lev', 'eightshift-forms'),
+											'selectOptionValue' => 'BGN',
+											'selectOptionIsSelected' => $currency === 'BGN',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Albanian Lek', 'eightshift-forms'),
+											'selectOptionValue' => 'ALL',
+											'selectOptionIsSelected' => $currency === 'ALL',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Turkish Lira', 'eightshift-forms'),
+											'selectOptionValue' => 'TRY',
+											'selectOptionIsSelected' => $currency === 'TRY',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Israeli Shekel', 'eightshift-forms'),
+											'selectOptionValue' => 'ILS',
+											'selectOptionIsSelected' => $currency === 'ILS',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('United Arab Emirates Dirham', 'eightshift-forms'),
+											'selectOptionValue' => 'AED',
+											'selectOptionIsSelected' => $currency === 'AED',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Chinese Yuan', 'eightshift-forms'),
+											'selectOptionValue' => 'CNY',
+											'selectOptionIsSelected' => $currency === 'CNY',
+										],
+										[
+											'component' => 'select-option',
+											'selectOptionLabel' => \__('Japanese Yen', 'eightshift-forms'),
+											'selectOptionValue' => 'JPY',
+											'selectOptionIsSelected' => $currency === 'JPY',
+										],
 									],
 								],
-							],
-							[
-								'component' => 'input',
-								'inputIsRequired' => true,
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_CART_DESC_KEY),
-								'inputFieldLabel' => \__('Cart description', 'eightshift-forms'),
-								'inputMaxLength' => 254,
-								'inputFieldHelp' => \__('Shopping-cart contents description.', 'eightshift-forms'),
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId),
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Require complete', 'eightshift-forms'),
-										'checkboxHelp' => \__('Checked indicates an preauthorization. None checked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_CORVUS_REQ_COMPLETE_KEY,
-										'checkboxAsToggle' => true,
+								[
+									'component' => 'input',
+									'inputIsRequired' => true,
+									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_CART_DESC_KEY),
+									'inputFieldLabel' => \__('Cart description', 'eightshift-forms'),
+									'inputMaxLength' => 254,
+									'inputFieldHelp' => \__('Shopping-cart contents description.', 'eightshift-forms'),
+									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId),
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Require complete', 'eightshift-forms'),
+											'checkboxHelp' => \__('Checked indicates an preauthorization. None checked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_CORVUS_REQ_COMPLETE_KEY,
+											'checkboxAsToggle' => true,
+											'checkboxSingleSubmit' => true,
+										]
 									]
-								]
-							],
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_IBAN_USE_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Use IBAN Payment', 'eightshift-forms'),
+											'checkboxHelp' => \__('To use IBAN Payment you must have this feature enabled in your Corvus account by contacting support.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_IBAN_USE_KEY, self::SETTINGS_CORVUS_IBAN_USE_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_CORVUS_IBAN_USE_KEY,
+											'checkboxAsToggle' => true,
+											'checkboxSingleSubmit' => true,
+										]
+									]
+								],
+							] : []),
 						],
 					],
 					($selectedStoreId && $params) ? [
