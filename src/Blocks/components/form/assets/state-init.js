@@ -13,7 +13,8 @@ export const prefix = 'esForms';
 // Enum object for all state items.
 export const StateEnum = {
 	// State names.
-	ISLOADED: 'isloaded',
+	ISLOADED: 'isLoaded',
+	ISPROCESSING: 'isProcessing',
 	ELEMENTS: 'elements',
 	ELEMENTS_FIELDS: 'elementsFields',
 	FORM: 'form',
@@ -310,6 +311,7 @@ export function setStateFormInitial(formId) {
 
 	setState([StateEnum.FORM, StateEnum.POST_ID],formElement?.getAttribute(getStateAttribute('postId')), formId);
 	setState([StateEnum.FORM, StateEnum.ISLOADED], false, formId);
+	setState([StateEnum.FORM, StateEnum.ISPROCESSING], false, formId);
 	setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], false, formId);
 	setState([StateEnum.FORM, StateEnum.ELEMENT], formElement, formId);
 	setState([StateEnum.FORM, StateEnum.TYPE], formElement?.getAttribute(getStateAttribute('formType')), formId);
