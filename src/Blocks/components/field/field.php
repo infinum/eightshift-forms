@@ -108,6 +108,7 @@ $fieldClass = Helpers::classnames([
 	Helpers::selector($additionalFieldClass, $additionalFieldClass),
 	Helpers::selector($fieldDisabled, UtilsHelper::getStateSelector('isDisabled')),
 	Helpers::selector($fieldHidden, UtilsHelper::getStateSelector('isHidden')),
+	Helpers::selector($fieldIsRequired && $componentClass, $componentClass, '', 'is-required'),
 	UtilsHelper::getStateSelector('field'),
 	Helpers::selector($fieldIsNoneFormBlock, UtilsHelper::getStateSelector('fieldNoFormsBlock')),
 	Helpers::selector($fieldInlineBeforeAfterContent && $componentClass, $componentClass, '', 'inline-before-after-content'),
