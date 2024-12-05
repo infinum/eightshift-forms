@@ -15,6 +15,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `getFormUsageLocation` helper now supports custom post type.
 - HubSpot integration now works using `v3` API for all data except form submission as it is not supported.
 - Corvus Pay integration now supports IBAN payments.
+- TalentLyft integration now supports additional statuses.
 
 ### Fixed
 
