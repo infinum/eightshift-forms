@@ -225,6 +225,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
+				'settingsForceShow' => true,
 				'emailTemplateTags' => [
 					 // Empty string as we are not using it to match the value.
 					'mailerSuccessRedirectUrl' => '',
@@ -248,6 +249,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					MailchimpClient::CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME,
 				],
@@ -264,6 +266,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					GreenhouseClient::CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME,
 				],
@@ -281,6 +284,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					HubspotClient::CACHE_HUBSPOT_ITEMS_TRANSIENT_NAME,
 					HubspotClient::CACHE_HUBSPOT_CONTACT_PROPERTIES_TRANSIENT_NAME,
@@ -298,6 +302,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					MailerliteClient::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME,
 				],
@@ -314,6 +319,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY,
+				'settingsForceShow' => false,
 				'labels' => [
 					'title' => \__('Goodbits', 'eightshift-forms'),
 					'desc' => \__('Goodbits integration settings.', 'eightshift-forms'),
@@ -323,15 +329,11 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsClearbit::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsClearbit::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsClearbit::FILTER_SETTINGS_NAME,
 				'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
-				'integration' => [
-					SettingsHubspot::SETTINGS_TYPE_KEY => [
-						'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_CLEARBIT_KEY,
-						'map' => SettingsHubspot::SETTINGS_HUBSPOT_CLEARBIT_MAP_KEYS_KEY,
-					],
-				],
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsClearbit::SETTINGS_CLEARBIT_USE_KEY,
+				'settingsForceShow' => true,
 				'labels' => [
 					'title' => \__('Clearbit', 'eightshift-forms'),
 					'desc' => \__('Clearbit integration settings.', 'eightshift-forms'),
@@ -345,6 +347,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_COMPLEX,
 				'use' => SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					ActiveCampaignClient::CACHE_ACTIVE_CAMPAIGN_ITEMS_TRANSIENT_NAME,
 				],
@@ -361,6 +364,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					AirtableClient::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME,
 				],
@@ -378,6 +382,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMoments::SETTINGS_MOMENTS_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					MomentsClient::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME,
 					MomentsClient::CACHE_MOMENTS_TOKEN_TRANSIENT_NAME,
@@ -395,6 +400,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsWorkable::SETTINGS_WORKABLE_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					WorkableClient::CACHE_WORKABLE_ITEMS_TRANSIENT_NAME,
 				],
@@ -412,6 +418,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					TalentlyftClient::CACHE_TALENTLYFT_ITEMS_TRANSIENT_NAME,
 				],
@@ -428,6 +435,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsJira::SETTINGS_JIRA_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					JiraClient::CACHE_JIRA_PROJECTS_TRANSIENT_NAME,
 					JiraClient::CACHE_JIRA_ISSUE_TYPE_TRANSIENT_NAME,
@@ -450,6 +458,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsCorvus::SETTINGS_CORVUS_USE_KEY,
+				'settingsForceShow' => false,
 				'emailTemplateTags' => [],
 				'labels' => [
 					'title' => \__('Corvus', 'eightshift-forms'),
@@ -464,6 +473,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsPaycek::SETTINGS_PAYCEK_USE_KEY,
+				'settingsForceShow' => false,
 				'emailTemplateTags' => [],
 				'labels' => [
 					'title' => \__('Paycek', 'eightshift-forms'),
@@ -478,6 +488,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
+				'settingsForceShow' => false,
 				'cache' => [
 					PipedriveClient::CACHE_PIPEDRIVE_PERSON_FIELDS_TRANSIENT_NAME,
 					PipedriveClient::CACHE_PIPEDRIVE_LEADS_FIELDS_TRANSIENT_NAME,
@@ -498,6 +509,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY,
+				'settingsForceShow' => false,
 				'labels' => [
 					'title' => \__('Calculator', 'eightshift-forms'),
 					'desc' => \__('Calculator form type settings.', 'eightshift-forms'),

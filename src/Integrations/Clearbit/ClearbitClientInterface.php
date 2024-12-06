@@ -24,12 +24,10 @@ interface ClearbitClientInterface
 	 * API request to post application.
 	 *
 	 * @param string $email Email key to map in params.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, string> $mapData Map data from settings.
-	 * @param string $itemId Item id to search.
+	 * @param array<string, mixed> $mapData Params array.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function getApplication(string $email, array $params, array $mapData, string $itemId, string $formId): array;
+	public function getApplication(string $email, array $mapData, string $formId): array;
 }

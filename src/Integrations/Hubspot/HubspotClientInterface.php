@@ -25,10 +25,11 @@ interface HubspotClientInterface extends ClientInterface
 	/**
 	 * Post contact property to HubSpot.
 	 *
+	 * @param array<string, mixed> $output Output array.
 	 * @param string $email Email to connect data to.
 	 * @param array<string, mixed> $params Params array.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postContactProperty(string $email, array $params): array;
+	public function postContactProperty(array $output, string $email, array $params): array;
 }

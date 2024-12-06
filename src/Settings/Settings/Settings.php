@@ -12,7 +12,6 @@ namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -47,10 +46,11 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 			}
 
 			$type = $value['type'];
+			$settingsForceShow = $value['settingsForceShow'] ?? false;
 
 			// Skip integration forms if they are not used in the Block editor.
 			// Mailer should be available on all integrations because it can be used as a backup option.
-			if ($key !== SettingsMailer::SETTINGS_TYPE_KEY) {
+			if (!$settingsForceShow) {
 				if ($formId && $type === UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION && $key !== $integrationTypeUsed) {
 					continue;
 				}

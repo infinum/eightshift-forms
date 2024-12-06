@@ -85,9 +85,15 @@ export class State {
 	getStateFormLoader = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.LOADER], formId);
 	};
+	getStateFormIsProcessing = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.ISPROCESSING], formId);
+	};
 
 	setStateFormIsLoaded = (value, formId) => {
 		setState([StateEnum.FORM, StateEnum.ISLOADED], value, formId);
+	};
+	setStateFormIsProcessing = (value, formId) => {
+		setState([StateEnum.FORM, StateEnum.ISPROCESSING], value, formId);
 	};
 	setStateFormIsAdminSingleSubmit = (value, formId) => {
 		setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], value, formId);

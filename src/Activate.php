@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
+use EightshiftForms\Db\CreateEntriesTable;
 use EightshiftForms\Permissions\Permissions;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasActivationInterface;
@@ -35,6 +36,9 @@ class Activate implements HasActivationInterface
 				}
 			}
 		}
+
+		// Create DB table.
+		CreateEntriesTable::createTable();
 
 		// Do a cleanup.
 		\flush_rewrite_rules();

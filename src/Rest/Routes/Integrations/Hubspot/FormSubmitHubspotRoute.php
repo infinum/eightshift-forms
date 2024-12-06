@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
@@ -24,6 +22,7 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Class FormSubmitHubspotRoute
@@ -128,54 +127,10 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 */
 	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
 	{
-		$this->runClearbit($formDetails);
-	}
-
-	/**
-	 * Run Clearbit integration.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return void
-	 */
-	private function runClearbit(array $formDetails): void
-	{
-		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID] ?? '';
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
-		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
-
-		// Check if Hubspot is using Clearbit.
-		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
-
-		if (!$response[UtilsConfig::IARD_IS_DISABLED] && $useClearbit) {
-			$email = UtilsGeneralHelper::getEmailParamsField($params);
-
-			if ($email) {
-				// Get Clearbit data.
-				$clearbitResponse = $this->clearbitClient->getApplication(
-					$email,
-					$params,
-					UtilsSettingsHelper::getOptionValueGroup(\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsClearbit::SETTINGS_TYPE_KEY]['integration'][SettingsHubspot::SETTINGS_TYPE_KEY]['map'] ?? []),
-					$itemId,
-					$formId
-				);
-
-				// If Clearbit data is ok send data to Hubspot.
-				if ($clearbitResponse[UtilsConfig::IARD_CODE] >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $clearbitResponse[UtilsConfig::IARD_CODE] <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-					$this->hubspotClient->postContactProperty(
-						$clearbitResponse['email'] ?? '',
-						$clearbitResponse['data'] ?? []
-					);
-				} else {
-					// Send fallback email if error but ignore for unknown entry.
-					if ($clearbitResponse[UtilsConfig::IARD_CODE] !== UtilsConfig::API_RESPONSE_CODE_ERROR_MISSING) {
-						$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
-
-						$this->getFormSubmitMailer()->sendFallbackIntegrationEmail($formDetails);
-					}
-				}
-			}
-		}
+		\apply_filters(
+			UtilsHooksHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'setQueue']),
+			false,
+			$formDetails
+		);
 	}
 }

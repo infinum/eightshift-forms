@@ -13,15 +13,22 @@ namespace EightshiftForms\Integrations\Clearbit;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsClearbit class.
  */
-class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterface, UtilsSettingGlobalInterface
+class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface, UtilsSettingInterface
 {
+	/**
+	 * Filter settings key.
+	 */
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_clearbit';
+
 	/**
 	 * Filter global settings key.
 	 */
@@ -48,6 +55,11 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	public const SETTINGS_CLEARBIT_USE_KEY = 'clearbit-use';
 
 	/**
+	 * Clearbit Use jobs queue key.
+	 */
+	public const SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY = 'clearbit-use-jobs-queue';
+
+	/**
 	 * API Key.
 	 */
 	public const SETTINGS_CLEARBIT_API_KEY_KEY = 'clearbit-api-key';
@@ -56,6 +68,21 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 * Clearbit available keys key.
 	 */
 	public const SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY = 'clearbit-available-keys';
+
+	/**
+	 * Clearbit map keys key.
+	 */
+	public const SETTINGS_CLEARBIT_MAP_HUBSPOT_KEYS_KEY = 'clearbit-map-keys';
+
+	/**
+	 * Use Clearbit settings key.
+	 */
+	public const SETTINGS_CLEARBIT_SETTINGS_USE_KEY = 'clearbit-settings-use';
+
+	/**
+	 * Use Clearbit jobs key.
+	 */
+	public const SETTINGS_CLEARBIT_JOBS_KEY = 'clearbit-jobs';
 
 	/**
 	 * Instance variable for Clearbit data.
@@ -81,6 +108,7 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 */
 	public function register(): void
 	{
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
@@ -96,25 +124,13 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	 */
 	public function isSettingsValid(string $formId, string $type): bool
 	{
-		if (!$this->isSettingsGlobalValid()) {
+		if (!$this->isSettingsGlobalValid($type)) {
 			return false;
 		}
 
-		$typeItems = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[self::SETTINGS_TYPE_KEY]['integration'];
+		$use = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId);
 
-		if (!isset($typeItems[$type])) {
-			return false;
-		}
-
-		$useClearbit = UtilsSettingsHelper::getSettingValue($typeItems[$type]['use'], $formId);
-
-		if (empty($useClearbit)) {
-			return false;
-		}
-
-		$mapSet = UtilsSettingsHelper::getOptionValueGroup($typeItems[$type]['map']);
-
-		if (empty($mapSet)) {
+		if (!$use) {
 			return false;
 		}
 
@@ -124,18 +140,69 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	/**
 	 * Determine if settings global are valid.
 	 *
+	 * @param string $type Integration type.
+	 *
 	 * @return boolean
 	 */
-	public function isSettingsGlobalValid(): bool
+	public function isSettingsGlobalValid(string $type = ''): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
 		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
+		$map = !empty($type) ? UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_CLEARBIT_MAP_HUBSPOT_KEYS_KEY . '-' . $type) : true;
 
-		if (!$isUsed || empty($apiKey)) {
+		if (!$isUsed || !$apiKey || !$map) {
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get Form settings data array
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getSettingsData(string $formId): array
+	{
+		// Bailout if global config is not valid.
+		if (!$this->isSettingsGlobalValid()) {
+			return UtilsSettingsOutputHelper::getNoValidGlobalConfig(self::SETTINGS_TYPE_KEY);
+		}
+
+		return [
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Options', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY),
+								'checkboxesIsRequired' => false,
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use Clearbit integration', 'eightshift-forms'),
+										'checkboxHelp' => \__('Use Clearbit integration to enrich your data on this form.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_CLEARBIT_SETTINGS_USE_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+										'checkboxAsToggleSize' => 'medium',
+									],
+								]
+							],
+						],
+					],
+				],
+			],
+		];
 	}
 
 	/**
@@ -167,31 +234,90 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 								),
 								\__('API key', 'eightshift-forms'),
 							),
-						],
-					],
-					self::isSettingsGlobalValid() ? [
-						'component' => 'tab',
-						'tabLabel' => \__('Available fields', 'eightshift-forms'),
-						'tabContent' => [
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
 							[
 								'component' => 'checkboxes',
-								'checkboxesFieldHideLabel' => true,
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-								'checkboxesIsRequired' => true,
-								'checkboxesContent' => \array_map(
-									function ($item) {
-										return [
-											'component' => 'checkbox',
-											'checkboxLabel' => $item,
-											'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
-											'checkboxValue' => $item,
-										];
-									},
-									$this->clearbitClient->getParams()
-								),
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY),
+								'checkboxesIsRequired' => false,
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use jobs queue', 'eightshift-forms'),
+										'checkboxHelp' => \__('Turn on your jobs queue to process Clearbit data using CRON.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY),
+										'checkboxValue' => self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY,
+										'checkboxSingleSubmit' => true,
+										'checkboxAsToggle' => true,
+										'checkboxAsToggleSize' => 'medium',
+									],
+								]
 							],
 						],
-					 ] : [],
+					],
+					...($this->isSettingsGlobalValid() ? [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('Available fields', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldHideLabel' => true,
+									'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+									'checkboxesIsRequired' => true,
+									'checkboxesContent' => \array_map(
+										function ($item) {
+											return [
+												'component' => 'checkbox',
+												'checkboxLabel' => $item,
+												'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked($item, self::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY),
+												'checkboxValue' => $item,
+											];
+										},
+										$this->clearbitClient->getParams()
+									),
+								],
+							],
+						],
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('Queue jobs', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'textarea',
+									'textareaFieldLabel' => \__('Queue jobs', 'eightshift-forms'),
+									'textareaFieldHelp' => \__('Emails in queue that are still not processed.', 'eightshift-forms'),
+									'textareaIsReadOnly' => true,
+									'textareaIsPreventSubmit' => true,
+									'textareaName' => 'queue',
+									'textareaValue' => \wp_json_encode(UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
+									'textareaSize' => 'huge',
+									'textareaLimitHeight' => true,
+								],
+							],
+						],
+						(\apply_filters(SettingsHubspot::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false) ? [
+							'component' => 'tab',
+							'tabLabel' => \__('HubSpot', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'intro',
+									'introSubtitle' => \__('Map Clearbit fields to HubSpot properties.', 'eightshift-forms'),
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								$this->getSettingsGlobalMap(
+									\apply_filters(UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'getContactProperties']), []),
+									self::SETTINGS_CLEARBIT_MAP_HUBSPOT_KEYS_KEY . '-' . SettingsHubspot::SETTINGS_TYPE_KEY
+								),
+							],
+						] : []),
+					 ] : []),
 					 [
 						'component' => 'tab',
 						'tabLabel' => \__('Help', 'eightshift-forms'),
@@ -216,62 +342,13 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 	/**
 	 * Output array settings for form.
 	 *
-	 * @param string $formId Form ID.
-	 * @param string $key Key for use toggle.
-	 *
-	 * @return array<string, array<int, array<string, array<int, array<string, mixed>>|bool|string>>|string>
-	 */
-	public function getOutputClearbit(string $formId, string $key): array
-	{
-		$useClearbit = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, $formId);
-
-		if (!$useClearbit) {
-			return [];
-		}
-
-		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked($key, $key, $formId);
-
-		$output = [
-			[
-				'component' => 'checkboxes',
-				'checkboxesFieldLabel' => '',
-				'checkboxesName' => UtilsSettingsHelper::getSettingName($key),
-				'checkboxesIsRequired' => false,
-				'checkboxesContent' => [
-					[
-						'component' => 'checkbox',
-						'checkboxLabel' => \__('Clearbit integration', 'eightshift-forms'),
-						'checkboxIsChecked' => $isUsed,
-						'checkboxValue' => $key,
-						'checkboxSingleSubmit' => true,
-						'checkboxAsToggle' => true,
-						'checkboxAsToggleSize' => 'medium',
-					],
-				]
-			],
-		];
-
-		return [
-			'component' => 'tab',
-			'tabLabel' => \__('Clearbit', 'eightshift-forms'),
-			'tabContent' => [
-				...$output,
-			],
-		];
-	}
-
-	/**
-	 * Output array settings for form.
-	 *
 	 * @param array<string, string> $properties Array of properties from integration.
-	 * @param array<string, string> $keys Array of keys to get data from.
+	 * @param string $key Key for saving the settings.
 	 *
 	 * @return array<string, array<int, array<string, array<int, array<string, array<int, array<string, array<int|string, array<string, bool|string>>|string>>|bool|string>>|string>>|string>
 	 */
-	public function getOutputGlobalClearbit(array $properties, array $keys): array
+	public function getSettingsGlobalMap(array $properties, string $key): array
 	{
-		$mapKey = $keys['map'] ?? '';
-
 		$isValid = $this->isSettingsGlobalValid();
 
 		if (!$isValid) {
@@ -280,61 +357,51 @@ class SettingsClearbit implements SettingsClearbitDataInterface, ServiceInterfac
 
 		$clearbitAvailableKeys = UtilsSettingsHelper::getOptionCheckboxValues(SettingsClearbit::SETTINGS_CLEARBIT_AVAILABLE_KEYS_KEY);
 
-		$clearbitMapValue = UtilsSettingsHelper::getOptionValueGroup($mapKey);
+		$clearbitMapValue = UtilsSettingsHelper::getOptionValueGroup($key);
+
+		if (!$clearbitAvailableKeys) {
+			return [];
+		}
 
 		return [
-			'component' => 'tab',
-				'tabLabel' => \__('Clearbit', 'eightshift-forms'),
-				'tabContent' => [
-					[
-						'component' => 'intro',
-						'introSubtitle' => \__('Map Clearbit fields to HubSpot properties.', 'eightshift-forms'),
-					],
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					],
-					$clearbitAvailableKeys ? [
-						'component' => 'group',
-						'groupName' => UtilsSettingsHelper::getOptionName($mapKey),
-						'groupSaveOneField' => true,
-						'groupStyle' => 'default-listing',
-						'groupContent' => [
-							[
-								'component' => 'field',
-								'fieldLabel' => '<b>' . \__('Clearbit field', 'eightshift-forms') . '</b>',
-								'fieldContent' => '<b>' . \__('HubSpot property', 'eightshift-forms') . '</b>',
-								'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
-								'fieldIsFiftyFiftyHorizontal' => true,
-							],
-							...\array_map(
-								static function ($item) use ($clearbitMapValue, $properties) {
-									$selectedValue = $clearbitMapValue[$item] ?? '';
+			'component' => 'group',
+			'groupName' => UtilsSettingsHelper::getOptionName($key),
+			'groupSaveOneField' => true,
+			'groupStyle' => 'default-listing',
+			'groupContent' => [
+				[
+					'component' => 'field',
+					'fieldLabel' => '<b>' . \__('Clearbit field', 'eightshift-forms') . '</b>',
+					'fieldContent' => '<b>' . \__('HubSpot property', 'eightshift-forms') . '</b>',
+					'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
+					'fieldIsFiftyFiftyHorizontal' => true,
+				],
+				...\array_map(
+					static function ($item) use ($clearbitMapValue, $properties) {
+						$selectedValue = $clearbitMapValue[$item] ?? '';
+						return [
+							'component' => 'select',
+							'selectName' => $item,
+							'selectFieldLabel' => '<code>' . $item . '</code>',
+							'selectFieldBeforeContent' => '&rarr;',
+							'selectFieldIsFiftyFiftyHorizontal' => true,
+							'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
+							'selectContent' => \array_map(
+								static function ($option) use ($selectedValue) {
 									return [
-										'component' => 'select',
-										'selectName' => $item,
-										'selectFieldLabel' => '<code>' . $item . '</code>',
-										'selectFieldBeforeContent' => '&rarr;',
-										'selectFieldIsFiftyFiftyHorizontal' => true,
-										'selectPlaceholder' => \__('Select option', 'eightshift-forms'),
-										'selectContent' => \array_map(
-											static function ($option) use ($selectedValue) {
-												return [
-													'component' => 'select-option',
-													'selectOptionLabel' => $option,
-													'selectOptionValue' => $option,
-													'selectOptionIsSelected' => $selectedValue === $option,
-												];
-											},
-											$properties
-										),
+										'component' => 'select-option',
+										'selectOptionLabel' => $option,
+										'selectOptionValue' => $option,
+										'selectOptionIsSelected' => $selectedValue === $option,
 									];
 								},
-								$clearbitAvailableKeys
+								$properties
 							),
-						],
-					] : [],
-				],
+						];
+					},
+					$clearbitAvailableKeys
+				),
+			],
 		];
 	}
 }
