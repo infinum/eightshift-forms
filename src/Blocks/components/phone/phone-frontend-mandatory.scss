@@ -1,9 +1,3 @@
-@import './../country/country-style';
-
-.es-field--phone {
-	@extend %country-choices-icons;
-}
-
 // Disable phone picker.
 .es-form[data-phone-disable-picker='1'] {
 	.es-field--phone {

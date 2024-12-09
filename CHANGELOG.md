@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.6.0]
+
+### Added
+
+- Prevention of multiple form submissions from the same user until the API response is processed.
+
+### Changed
+
+- Decoupled Clearbit integration from sync submit and moved it to job queue.
+
 ## [5.5.1]
 
 ### Added
@@ -832,6 +842,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.6.0]: https://github.com/infinum/eightshift-forms/compare/5.5.1...5.6.0
 [5.5.1]: https://github.com/infinum/eightshift-forms/compare/5.5.0...5.5.1
 [5.5.0]: https://github.com/infinum/eightshift-forms/compare/5.4.3...5.5.0
 [5.4.3]: https://github.com/infinum/eightshift-forms/compare/5.4.2...5.4.3

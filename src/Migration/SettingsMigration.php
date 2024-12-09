@@ -57,6 +57,11 @@ class SettingsMigration implements UtilsSettingGlobalInterface, ServiceInterface
 	public const VERSION_2_3_LOCALE = '2-3-locale';
 
 	/**
+	 * Version 5.5.1-5.6 Clearbit key.
+	 */
+	public const VERSION_CLEARBIT = 'clearbit';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -106,6 +111,26 @@ class SettingsMigration implements UtilsSettingGlobalInterface, ServiceInterface
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-card',
 				'layoutContent' => [
+					[
+						'component' => 'card-inline',
+						'cardInlineTitle' => \__('Version 5.5.1 &rarr; Version 5.6 - Clearbit', 'eightshift-forms'),
+						'cardInlineSubTitle' => \__('Breaking changes for Clearbit integration.', 'eightshift-forms'),
+						'cardInlineRightContent' => [
+							[
+								'component' => 'submit',
+								'submitValue' => \__('Migrate', 'eightshift-forms'),
+								'submitVariant' => 'ghost',
+								'submitAttrs' => [
+									UtilsHelper::getStateAttribute('migrationType') => self::VERSION_CLEARBIT,
+								],
+								'additionalClass' => UtilsHelper::getStateSelectorAdmin('migration'),
+							],
+						],
+					],
+					[
+						'component' => 'divider',
+						'dividerExtraVSpacing' => true,
+					],
 					[
 						'component' => 'card-inline',
 						'cardInlineTitle' => \__('Version 2 &rarr; Version 3 - locale', 'eightshift-forms'),

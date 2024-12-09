@@ -273,6 +273,8 @@ export class Form {
 	 * @returns {void}
 	 */
 	formSubmit(formId, filter = {}) {
+		this.state.setStateFormIsProcessing(true, formId);
+
 		// Dispatch event.
 		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('beforeFormSubmit'));
 
@@ -327,6 +329,8 @@ export class Form {
 				}
 
 				this.formSubmitAfter(formId, response);
+
+				this.state.setStateFormIsProcessing(false, formId);
 			});
 
 			this.FORM_DATA = new FormData();
@@ -341,6 +345,7 @@ export class Form {
 	 * @returns {void}
 	 */
 	formSubmitStep(formId, filter = {}) {
+		this.state.setStateFormIsProcessing(true, formId);
 		this.setFormData(formId, filter);
 		this.setFormDataStep(formId);
 
@@ -371,6 +376,7 @@ export class Form {
 				this.formSubmitBefore(formId, response);
 				this.steps.formStepSubmit(formId, response);
 				this.steps.formStepSubmitAfter(formId, response);
+				this.state.setStateFormIsProcessing(false, formId);
 			});
 
 			this.FORM_DATA = new FormData();
@@ -1601,6 +1607,11 @@ export class Form {
 		event.preventDefault();
 
 		const formId = this.state.getFormIdByElement(event.target);
+
+		// Prevent multiple submits.
+		if (this.state.getStateFormIsProcessing(formId)) {
+			return;
+		}
 
 		if (this.state.getStateFormStepsIsUsed(formId)) {
 			const button = event?.submitter;
