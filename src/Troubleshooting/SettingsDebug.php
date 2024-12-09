@@ -75,7 +75,7 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
-		\add_filter(self::FILTER_SETTINGS_IS_DEBUG_ACTIVE, [$this, 'isDebugActive']);
+		\add_filter(self::FILTER_SETTINGS_IS_DEBUG_ACTIVE, [$this, 'isDebugActive'], 10, 2);
 	}
 
 	/**
@@ -344,14 +344,15 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 	/**
 	 * Determine if settings global is valid and debug item is active.
 	 *
+	 * @param boolean $default Default value.
 	 * @param string $settingKey Setting key to check.
 	 *
 	 * @return boolean
 	 */
-	public function isDebugActive(string $settingKey): bool
+	public function isDebugActive(bool $default, string $settingKey): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
-			return false;
+			return $default;
 		}
 
 		return UtilsSettingsHelper::isOptionCheckboxChecked($settingKey, self::SETTINGS_DEBUG_DEBUGGING_KEY);
