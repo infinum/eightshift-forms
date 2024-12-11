@@ -387,8 +387,6 @@ class TalentlyftClient implements ClientInterface
 		// Map enrichment data.
 		$params = $this->enrichment->mapEnrichmentFields($params);
 
-		$output = [];
-
 		// Filter params.
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'prePostParams']);
 		if (\has_filter($filterName)) {
@@ -397,6 +395,9 @@ class TalentlyftClient implements ClientInterface
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+
+		$output = [];
+		$outputCustom = [];
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -415,15 +416,14 @@ class TalentlyftClient implements ClientInterface
 			$name = \preg_replace('/^q_/', '', $name);
 
 			switch ($typeCustom) {
-				case 'Answers':
-				case 'CustomFieldAnswers':
+				case 'customField':
 					if (\in_array($type, ['radio', 'select', 'checkbox'], true)) {
-						$output[$typeCustom][] = [
+						$outputCustom[] = [
 							'Id' => (int) $name,
 							'Choices' => \explode(UtilsConfig::DELIMITER, $value),
 						];
 					} else {
-						$output[$typeCustom][] = [
+						$outputCustom[] = [
 							'Id' => (int) $name,
 							'Body' => $value,
 						];
@@ -440,6 +440,12 @@ class TalentlyftClient implements ClientInterface
 			}
 		}
 
+		if ($outputCustom) {
+			// Due to poor API design we need to send custom fields in two different ways.
+			$output['CustomFieldAnswers'] = $outputCustom;
+			$output['Answers'] = $outputCustom;
+		}
+
 		return $output;
 	}
 
@@ -453,6 +459,7 @@ class TalentlyftClient implements ClientInterface
 	private function prepareFiles(array $files): array
 	{
 		$output = [];
+		$outputCustom = [];
 
 		foreach ($files as $items) {
 			$name = $items['name'] ?? '';
@@ -473,8 +480,8 @@ class TalentlyftClient implements ClientInterface
 				$fileName = UtilsUploadHelper::getFileNameFromPath($file);
 
 				switch ($typeCustom) {
-					case 'answers':
-						$output['Answers'][] = [
+					case 'customField':
+						$outputCustom[] = [
 							'Id' => (int) $name,
 							'File' => [
 								'FileName' => $fileName,
@@ -494,6 +501,12 @@ class TalentlyftClient implements ClientInterface
 						break;
 				}
 			}
+		}
+
+		if ($outputCustom) {
+			// Due to poor API design we need to send custom fields in two different ways.
+			$output['CustomFieldAnswers'] = $outputCustom;
+			$output['Answers'] = $outputCustom;
 		}
 
 		return $output;

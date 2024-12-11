@@ -114,7 +114,6 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 				continue;
 			}
 
-			$customType = $item['FieldLocationType'] ?? '';
 			$key = $item['Key'] ?? '';
 
 			$type = $item['Type'] ?? '';
@@ -129,12 +128,8 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 				$name = isset($item['Id']) ? "q_{$item['Id']}" : '';
 			}
 
-			if ($customType === 'ScreeningQuestions') {
-				$internalType = 'Answers';
-			}
-
 			if (empty($key)) {
-				$internalType = 'CustomFieldAnswers';
+				$internalType = 'customField';
 			}
 
 			if (!$name) {
