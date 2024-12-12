@@ -98,10 +98,10 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
-		$subdomain = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
+		$subdomain = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
 
-		if (!$isUsed || empty($apiKey) || empty($subdomain)) {
+		if (!$isUsed || !$apiKey || !$subdomain) {
 			return false;
 		}
 

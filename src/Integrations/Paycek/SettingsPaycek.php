@@ -322,10 +322,10 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_USE_KEY, self::SETTINGS_PAYCEK_USE_KEY);
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPaycek(), self::SETTINGS_PAYCEK_API_KEY_KEY)['value'];
-		$profileKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiProfileKeyPaycek(), self::SETTINGS_PAYCEK_API_PROFILE_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPaycek(), self::SETTINGS_PAYCEK_API_KEY_KEY)['value'];
+		$profileKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiProfileKeyPaycek(), self::SETTINGS_PAYCEK_API_PROFILE_KEY)['value'];
 
-		if (!$isUsed || empty($apiKey) || empty($profileKey)) {
+		if (!$isUsed || !$apiKey || !$profileKey) {
 			return false;
 		}
 

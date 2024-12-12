@@ -147,7 +147,7 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	public function isSettingsGlobalValid(string $type = ''): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
 		$map = !empty($type) ? UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_CLEARBIT_MAP_HUBSPOT_KEYS_KEY . '-' . $type) : true;
 
 		if (!$isUsed || !$apiKey || !$map) {

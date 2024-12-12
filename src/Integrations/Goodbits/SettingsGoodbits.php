@@ -82,9 +82,9 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements UtilsSett
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GOODBITS_USE_KEY, self::SETTINGS_GOODBITS_USE_KEY);
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGoodbits(), self::SETTINGS_GOODBITS_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGoodbits(), self::SETTINGS_GOODBITS_API_KEY_KEY)['value'];
 
-		if (!$isUsed || empty($apiKey)) {
+		if (!$isUsed || !$apiKey) {
 			return false;
 		}
 

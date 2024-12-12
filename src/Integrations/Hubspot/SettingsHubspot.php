@@ -122,9 +122,9 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements UtilsSetti
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
 
-		if (!$isUsed || empty($apiKey)) {
+		if (!$isUsed || !$apiKey) {
 			return false;
 		}
 

@@ -584,9 +584,9 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CORVUS_USE_KEY, self::SETTINGS_CORVUS_USE_KEY);
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus(), self::SETTINGS_CORVUS_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus(), self::SETTINGS_CORVUS_API_KEY_KEY)['value'];
 
-		if (!$isUsed || empty($apiKey)) {
+		if (!$isUsed || !$apiKey) {
 			return false;
 		}
 

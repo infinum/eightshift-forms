@@ -115,10 +115,10 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY);
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
-		$url = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
+		$url = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY)['value'];
 
-		if (!$isUsed || empty($apiKey) || empty($url)) {
+		if (!$isUsed || !$apiKey || !$url) {
 			return false;
 		}
 

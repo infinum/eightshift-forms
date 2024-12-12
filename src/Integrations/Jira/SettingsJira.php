@@ -355,11 +355,11 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY);
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY)['value'];
-		$apiBoard = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY)['value'];
-		$apiUser = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY)['value'];
+		$apiBoard = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY)['value'];
+		$apiUser = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY)['value'];
 
-		if (!$isUsed || empty($apiKey) || empty($apiBoard) || empty($apiUser)) {
+		if (!$isUsed || !$apiKey || !$apiBoard || !$apiUser) {
 			return false;
 		}
 
