@@ -303,7 +303,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									// translators: %s will be replaced with the link.
-									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Talentlyft Account</a>.', 'eightshift-forms'), 'https://app.talentlyft.io/'),
+									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">Talentlyft Account</a>.', 'eightshift-forms'), 'https://app.talentlyft.com/'),
 									// translators: %s will be replaced with the link.
 									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">Integrations Settings</a>.', 'eightshift-forms'), 'https://app.talentlyft.com/infinum/settings/integrations'),
 									\__('Click on <strong>Settings under the TalentLyft card</strong>.', 'eightshift-forms'),
