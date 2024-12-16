@@ -110,7 +110,7 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
@@ -118,13 +118,12 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	 * Determine if settings are valid.
 	 *
 	 * @param string $formId Form ID.
-	 * @param string $type Integration type.
 	 *
 	 * @return boolean
 	 */
-	public function isSettingsValid(string $formId, string $type): bool
+	public function isSettingsValid(string $formId): bool
 	{
-		if (!$this->isSettingsGlobalValid($type)) {
+		if (!$this->isSettingsGlobalValid()) {
 			return false;
 		}
 
@@ -140,17 +139,14 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	/**
 	 * Determine if settings global are valid.
 	 *
-	 * @param string $type Integration type.
-	 *
 	 * @return boolean
 	 */
-	public function isSettingsGlobalValid(string $type = ''): bool
+	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
 		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
-		$map = !empty($type) ? UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_CLEARBIT_MAP_HUBSPOT_KEYS_KEY . '-' . $type) : true;
 
-		if (!$isUsed || !$apiKey || !$map) {
+		if (!$isUsed || !$apiKey) {
 			return false;
 		}
 

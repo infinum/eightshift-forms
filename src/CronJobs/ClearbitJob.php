@@ -66,13 +66,6 @@ class ClearbitJob implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-		$useCron = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY);
-
-		if (!$use || !$useCron) {
-			return;
-		}
-
 		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
 		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
 		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
@@ -118,6 +111,13 @@ class ClearbitJob implements ServiceInterface
 	 */
 	public function getJobCallback()
 	{
+		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+		$useCron = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY);
+
+		if (!$use || !$useCron) {
+			return;
+		}
+
 		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY);
 
 		if (!$jobs) {
