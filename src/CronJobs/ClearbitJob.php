@@ -113,14 +113,9 @@ class ClearbitJob implements ServiceInterface
 	{
 		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		$useCron = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY);
-
-		if (!$use || !$useCron) {
-			return;
-		}
-
 		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY);
 
-		if (!$jobs) {
+		if (!$use || !$useCron || !$jobs) {
 			return;
 		}
 
