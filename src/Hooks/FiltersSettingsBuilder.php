@@ -236,6 +236,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 					'mailerPostId' => '',
 					'mailerFormId' => '',
 					'mailerFormTitle' => '',
+					'mailerTimestamp' => '',
+					'mailerTimestampHuman' => '',
 				],
 				'labels' => [
 					'title' => \__('Mailer', 'eightshift-forms'),
