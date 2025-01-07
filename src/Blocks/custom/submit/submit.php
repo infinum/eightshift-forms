@@ -19,7 +19,7 @@ $filterNameComponent = UtilsHooksHelper::getFilterName(['block', 'submit', 'comp
 if (has_filter($filterNameComponent)) {
 	$button = apply_filters($filterNameComponent, [
 		'value' => $attributes['submitSubmitValue'] ?? '',
-		'isDisabled' => $attributes['submitSubmitFieldDisabled'] ?? '',
+		'isDisabled' => $attributes['submitSubmitIsDisabled'] ?? false,
 		'attributes' => $attributes,
 	]);
 }

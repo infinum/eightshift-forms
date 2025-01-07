@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.6.5]
+
+### Fixed
+
+- Submit filter now uses correct attribute for disabled state.
+
 ## [5.6.4]
 
 ### Fixed
@@ -866,6 +872,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.6.5]: https://github.com/infinum/eightshift-forms/compare/5.6.4...5.6.5
 [5.6.4]: https://github.com/infinum/eightshift-forms/compare/5.6.3...5.6.4
 [5.6.3]: https://github.com/infinum/eightshift-forms/compare/5.6.2...5.6.3
 [5.6.2]: https://github.com/infinum/eightshift-forms/compare/5.6.1...5.6.2
