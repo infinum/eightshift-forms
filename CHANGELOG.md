@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.6.6]
+
+### Added
+
+- 2 new response tags for mailer `mailerTimestamp` and `mailerTimestampHuman`.
+- ability for subject to process response tags.
+
+### Changes
+
+- Moments API will not fetch only 100 items per request.
+
 ## [5.6.5]
 
 ### Fixed
@@ -872,6 +883,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.6.6]: https://github.com/infinum/eightshift-forms/compare/5.6.5...5.6.6
 [5.6.5]: https://github.com/infinum/eightshift-forms/compare/5.6.4...5.6.5
 [5.6.4]: https://github.com/infinum/eightshift-forms/compare/5.6.3...5.6.4
 [5.6.3]: https://github.com/infinum/eightshift-forms/compare/5.6.2...5.6.3

@@ -698,6 +698,12 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				case 'mailerFormTitle':
 					$output[$key] = \get_the_title((int) $data[UtilsHelper::getStateResponseOutputKey('formId')]);
 					break;
+				case 'mailerTimestamp':
+					$output[$key] = \current_datetime()->format('YmdHis');
+					break;
+				case 'mailerTimestampHuman':
+					$output[$key] = \current_datetime()->format('Y-m-d H:i:s');
+					break;
 				case 'mailerEntryUrl':
 					$entryId = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
 					$formId = $data[UtilsHelper::getStateResponseOutputKey('formId')] ?? '';
