@@ -20,6 +20,7 @@ export const StateEnum = {
 	FORM: 'form',
 	FORMS: 'forms',
 
+	FORM_FID: 'formFid',
 	POST_ID: 'postId',
 	METHOD: 'method',
 	ACTION: 'action',
@@ -309,7 +310,8 @@ export function setStateFormInitial(formId) {
 		formElement = document.querySelector(`${getStateSelector('form', true)}[${getStateAttribute('formId')}="${formId}"]`);
 	}
 
-	setState([StateEnum.FORM, StateEnum.POST_ID],formElement?.getAttribute(getStateAttribute('postId')), formId);
+	setState([StateEnum.FORM, StateEnum.POST_ID], formElement?.getAttribute(getStateAttribute('postId')), formId);
+	setState([StateEnum.FORM, StateEnum.FORM_FID], formElement?.getAttribute(getStateAttribute('formFid')), formId);
 	setState([StateEnum.FORM, StateEnum.ISLOADED], false, formId);
 	setState([StateEnum.FORM, StateEnum.ISPROCESSING], false, formId);
 	setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], false, formId);

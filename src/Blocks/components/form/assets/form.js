@@ -142,19 +142,16 @@ export class Form {
 			return response.text();
 		})
 		.then((responseData) => {
-			const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null);
-
-			// Get formId from ajax response.
-			let formId = response?.data?.formId;
+			const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null)?.data;
 
 			// Loop all form elements and remove all except the one we need.
 			[...forms].forEach((form) => {
-				if (form.getAttribute(this.state.getStateAttribute('formId')) !== formId) {
+				if (form.getAttribute(this.state.getStateAttribute('formFid')) !== response?.[this.state.getStateResponseOutputKey('geoId')]) {
 					// Remove all forms except the one we got from ajax.
 					form.remove();
 				} else {
 					// Init form id that we got from ajax.
-					this.initOnlyFormsInner(formId);
+					this.initOnlyFormsInner(form.getAttribute(this.state.getStateAttribute('formId')));
 
 					// Remove geolocation data attribute from forms element.
 					formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
@@ -893,7 +890,7 @@ export class Form {
 		this.buildFormDataItems([
 			{
 				name: this.state.getStateParam('formId'),
-				value: formId,
+				value: this.state.getStateFormFId(formId),
 			},
 			{
 				name: this.state.getStateParam('postId'),
@@ -1389,7 +1386,7 @@ export class Form {
 				this.buildFormDataItems([
 					{
 						name: this.state.getStateParam('formId'),
-						value: formId,
+						value: this.state.getStateFormFId(formId),
 					},
 					{
 						name: this.state.getStateParam('postId'),
