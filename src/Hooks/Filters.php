@@ -124,6 +124,7 @@ final class Filters
 				'country' => [
 					'additionalContent',
 					'alternativeDataSet',
+					'customOrder',
 				],
 				'date' => [
 					'additionalContent',
