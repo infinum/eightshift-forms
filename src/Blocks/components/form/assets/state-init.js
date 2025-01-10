@@ -27,6 +27,7 @@ export const StateEnum = {
 	ACTION_EXTERNAL: 'actionExternal',
 	SECURE_DATA: 'secureData',
 	FIELD: 'field',
+	FIELDSET: 'fieldset',
 	RANGE_CURRENT: 'rangeCurrent',
 	VALUE: 'value',
 	VALUE_COMBINED: 'valueCombined',
@@ -464,7 +465,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], field.querySelector(getStateSelector('inputRangeCurrent', true)), formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], field.querySelectorAll(getStateSelector('inputRangeCurrent', true)), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 			default:
@@ -490,6 +491,7 @@ export function setStateFormInitial(formId) {
 		setState([StateEnum.ELEMENTS, name, StateEnum.LOADED], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.NAME], name, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.FIELD], field, formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.FIELDSET], field?.closest('fieldset'), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.ERROR], field?.querySelector(getStateSelector('error', true)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.IS_ADMIN_SINGLE_SUBMIT], item?.classList?.contains(getStateSelector('submitSingle', true).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);

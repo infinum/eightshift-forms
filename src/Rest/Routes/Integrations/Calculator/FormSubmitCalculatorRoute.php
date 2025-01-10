@@ -89,11 +89,7 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 			$formDetails[UtilsConfig::FD_PARAMS] = \apply_filters($filterName, $formDetails[UtilsConfig::FD_PARAMS], $formId) ?? [];
 		}
 
-		dump($formDetails[UtilsConfig::FD_PARAMS]);
-
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
-
-		dump($successAdditionalData);
 
 		// Set validation submit once.
 		$this->validator->setValidationSubmitOnce($formId);

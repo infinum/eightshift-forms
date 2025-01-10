@@ -1840,7 +1840,37 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const customType = this.state.getStateElementTypeCustom(name, formId);
 
-		this.utils.setOnUserChangeInput(event.target);
+		const {
+			value,
+			checked,
+		 } = event?.target;
+
+		switch (customType) {
+			case 'checkbox':
+				this.utils.setManualCheckboxValue(
+					formId,
+					name,
+					{
+						[value]: checked ? value : '',
+					}
+				);
+				break;
+			case 'radio':
+				this.utils.setManualRadioValue(formId, name, value);
+				break;
+			case 'phone':
+				this.utils.setManualPhoneValue(formId, name, {
+					prefix: '',
+					value,
+				});
+				break;
+			case 'range':
+				this.utils.setManualRangeValue(formId, name, value);
+				break;
+			default:
+				this.utils.setManualInputValue(formId, name, value);
+				break;
+		}
 
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
@@ -1878,7 +1908,6 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const value = event.target.getAttribute(this.state.getStateAttribute('ratingValue'));
-		const input = this.state.getStateElementInput(name, formId);
 		const disabled = this.state.getStateElementIsDisabled(name, formId);
 
 		if (disabled) {
@@ -1886,8 +1915,6 @@ export class Form {
 		}
 
 		this.utils.setManualRatingValue(formId, name, value);
-
-		this.utils.setOnUserChangeInput(input);
 
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {

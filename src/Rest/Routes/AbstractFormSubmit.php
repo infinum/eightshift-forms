@@ -519,8 +519,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if ($successRedirectUrl) {
 			$redirectDataOutput = [];
 
-			dump($formDetails[UtilsConfig::FD_PARAMS]);
-
 			// Replace {field_name} with the actual value.
 			foreach ($formDetails[UtilsConfig::FD_PARAMS] as $param) {
 				$name = $param['name'] ?? '';
