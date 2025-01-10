@@ -89,7 +89,9 @@ if ($formCustomName) {
 }
 
 if ($formPostId) {
-	$formAttrs[UtilsHelper::getStateAttribute('formId')] = esc_attr($formPostId);
+	$formAttrs[UtilsHelper::getStateAttribute('formFid')] = esc_attr($formPostId);
+	// Generate a random form hash for unique form identification.
+	$formAttrs[UtilsHelper::getStateAttribute('formId')] = esc_attr(FormsHelper::getFormUniqueHash());
 }
 
 $formAttrs[UtilsHelper::getStateAttribute('postId')] = esc_attr((string) get_the_ID());

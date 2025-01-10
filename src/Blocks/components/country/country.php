@@ -39,6 +39,8 @@ $countrySingleSubmit = Helpers::checkAttr('countrySingleSubmit', $attributes, $m
 $countryValueType = Helpers::checkAttr('countryValueType', $attributes, $manifest);
 $countryTwSelectorsData = Helpers::checkAttr('countryTwSelectorsData', $attributes, $manifest);
 
+$countryId = $countryName . '-' . Helpers::getUnique();
+
 // Fix for getting attribute that is part of the child component.
 $countryHideLabel = false;
 $countryFieldLabel = $attributes[Helpers::getAttrKey('countryFieldLabel', $attributes, $manifest)] ?? '';
@@ -126,7 +128,7 @@ $country = '
 	<select
 		class="' . esc_attr($countryClass) . '"
 		name="' . esc_attr($countryName) . '"
-		id="' . esc_attr($countryName) . '"
+		id="' . esc_attr($countryId) . '"
 		' . disabled($countryIsDisabled, true, false) . '
 		' . $countryAttrsOutput . '
 	>
@@ -141,7 +143,7 @@ echo Helpers::render(
 	array_merge(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $country,
-			'fieldId' => $countryName,
+			'fieldId' => $countryId,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
 			'fieldName' => $countryName,
 			'fieldTwSelectorsData' => $countryTwSelectorsData,

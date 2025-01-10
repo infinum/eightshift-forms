@@ -38,6 +38,8 @@ $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attrib
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
 $textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attributes, $manifest);
 
+$textareaId = $textareaName . '-' . Helpers::getUnique();
+
 // Fix for getting attribute that is part of the child component.
 $textareaHideLabel = false;
 $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
@@ -83,7 +85,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('tex
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
 		name="' . esc_attr($textareaName) . '"
-		id="' . esc_attr($textareaName) . '"
+		id="' . esc_attr($textareaId) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
 		' . wp_readonly($textareaIsReadOnly, true, false) . '
 		' . $textareaAttrsOutput . '
@@ -96,7 +98,7 @@ echo Helpers::render(
 	array_merge(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $textarea,
-			'fieldId' => $textareaName,
+			'fieldId' => $textareaId,
 			'fieldName' => $textareaName,
 			'fieldTwSelectorsData' => $textareaTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),

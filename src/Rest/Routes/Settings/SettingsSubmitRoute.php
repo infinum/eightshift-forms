@@ -78,6 +78,16 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
