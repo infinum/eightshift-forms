@@ -26,6 +26,8 @@ $radiosUseLabelAsPlaceholder = Helpers::checkAttr('radiosUseLabelAsPlaceholder',
 $radiosPlaceholder = Helpers::checkAttr('radiosPlaceholder', $attributes, $manifest);
 $radiosTwSelectorsData = Helpers::checkAttr('radiosTwSelectorsData', $attributes, $manifest);
 
+$radiosId = $radiosName . '-' . Helpers::getUnique();
+
 // Add internal counter name key.
 $radiosContent = (string) preg_replace_callback('/name=""/', function () use ($radiosName) {
 	return 'name="' . $radiosName . '"';
@@ -33,14 +35,14 @@ $radiosContent = (string) preg_replace_callback('/name=""/', function () use ($r
 
 // Add internal counter id key.
 $indexId = 0;
-$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosName) {
-	return 'id="' . $radiosName . '[' . $indexId++ . ']"';
+$radiosContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $radiosId) {
+	return 'id="' . $radiosId . '[' . $indexId++ . ']"';
 }, $radiosContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosName) {
-	return 'for="' . $radiosName . '[' . $indexLabel++ . ']"';
+$radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $radiosId) {
+	return 'for="' . $radiosId . '[' . $indexLabel++ . ']"';
 }, $radiosContent);
 
 // Additional content filter.
@@ -87,7 +89,7 @@ $fieldOutput = [
 	'fieldName' => $radiosName,
 	'fieldIsRequired' => $radiosIsRequired,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
-	'fieldId' => $radiosName,
+	'fieldId' => $radiosId,
 	'fieldTwSelectorsData' => $radiosTwSelectorsData,
 	'fieldTracking' => $radiosTracking,
 	'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

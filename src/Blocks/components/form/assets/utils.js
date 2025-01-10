@@ -21,10 +21,15 @@ import globalManifest from './../../../manifest.json';
  */
 export class Utils {
 	constructor() {
+		/** @type {import('./state').State} */
 		this.state = new State();
+		/** @type {import('./enrichment').Enrichment} */
 		this.enrichment = new Enrichment(this);
+		/** @type {import('./conditional-tags').ConditionalTags}*/
 		this.conditionalTags = new ConditionalTags(this);
+		/** @type {import('./steps').Steps}*/
 		this.steps = new Steps(this);
+		/** @type {import('./geolocation').Geolocation}*/
 		this.geolocation = new Geolocation(this);
 
 		this.GLOBAL_MSG_TIMEOUT_ID = undefined;
@@ -1273,15 +1278,16 @@ export class Utils {
 	 * @returns {void}
 	 */
 	setResultsOutput(formId, data) {
+		const formFid = this.state.getStateFormFId(formId);
 		// Check if we have output element - block.
-		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formId}"]`);
+		const outputElement = document.querySelector(`${this.state.getStateSelector('resultOutput', true)}[${this.state.getStateAttribute('formId')}="${formFid}"]`);
 
 		// If no output element, bailout.
 		if (!outputElement) {
 			return;
 		}
 
-		this.resetResultsOutput(formId);
+		this.resetResultsOutput(formFid);
 
 		// Check if we have output items.
 		const outputItems = data?.[this.state.getStateResponseOutputKey('variation')] ?? {};

@@ -116,6 +116,14 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		// If route is used for admin only, check if user has permission. (generally used for settings).
+		if ($this->isRouteAdminProtected()) {
+			$premission = $this->checkUserPermission();
+			if ($premission) {
+				return \rest_ensure_response($premission);
+			}
+		}
+
 		// Try catch request.
 		try {
 			// Prepare all data.
@@ -791,6 +799,16 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected function getFormSubmitMailer()
 	{
 		return $this->formSubmitMailer;
+	}
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
 	}
 
 	/**

@@ -38,6 +38,8 @@ $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest)
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
 $phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
 
+$phoneId = $phoneName . '-' . Helpers::getUnique();
+
 // Fix for getting attribute that is part of the child component.
 $phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
@@ -127,7 +129,7 @@ $phone = '
 	<input
 		class="' . esc_attr($phoneClass) . '"
 		name="' . esc_attr($phoneName) . '"
-		id="' . esc_attr($phoneName) . '"
+		id="' . esc_attr($phoneId) . '"
 		type="tel"
 		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
@@ -142,7 +144,7 @@ echo Helpers::render(
 	array_merge(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $phone,
-			'fieldId' => $phoneName,
+			'fieldId' => $phoneId,
 			'fieldName' => $phoneName,
 			'fieldTwSelectorsData' => $phoneTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
