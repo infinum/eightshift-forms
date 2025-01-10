@@ -898,6 +898,15 @@ export class Utils {
 				break;
 			case 'radio':
 				setStateValuesRadio(target, formId);
+
+				const inputField = field.querySelector(this.state.getStateSelector('field', true));
+
+				if (inputField) {
+					console.log(inputField.getAttribute(this.state.getStateAttribute('fieldName')));
+					
+					this.setManualInputValue(formId, inputField.getAttribute(this.state.getStateAttribute('fieldName')), '');
+				}
+
 				break;
 			case 'checkbox':
 				setStateValuesCheckbox(target, formId);
@@ -909,6 +918,12 @@ export class Utils {
 				break;
 			default:
 				setStateValuesInput(target, formId);
+
+				const fieldset = field.closest('fieldset');
+
+				if (fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'radio') {
+					this.setManualRadioValue(formId, fieldset?.getAttribute(this.state.getStateAttribute('fieldName')), '');
+				}
 
 				if (customType === 'range') {
 					this.setRangeCurrentValue(formId, name);
@@ -1172,6 +1187,14 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillItem(formId, name);
 
 		this.conditionalTags.setField(formId, name);
+
+		const fieldset = this.state.getStateElementField(name, formId)?.closest('fieldset');
+		if (fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'radio') {
+			console.log('aa');
+			
+			const parentName = fieldset?.getAttribute(this.state.getStateAttribute('fieldName'));
+			this.setManualRadioValue(formId, parentName, this.state.getStateElementInitial(parentName, formId));
+		}
 	}
 
 	/**

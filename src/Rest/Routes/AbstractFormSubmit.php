@@ -511,8 +511,13 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if ($successRedirectUrl) {
 			$redirectDataOutput = [];
 
+			dump($formDetails[UtilsConfig::FD_PARAMS]);
+
 			// Replace {field_name} with the actual value.
-			foreach ($formDetails[UtilsConfig::FD_PARAMS_RAW] as $name => $value) {
+			foreach ($formDetails[UtilsConfig::FD_PARAMS] as $param) {
+				$name = $param['name'] ?? '';
+				$value = $param['value'] ?? '';
+
 				if ($name === UtilsHelper::getStateParam('skippedParams')) {
 					continue;
 				}
@@ -534,7 +539,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
 			}
 
-			// Redirect secrue data.
+			// Redirect secure data.
 			if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
 				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true);
 
@@ -559,9 +564,9 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 			// Redirect full url.
 			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
-				[
+				$redirectDataOutput ? [
 					UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
-				],
+				] : [],
 				$successRedirectUrl
 			);
 		}

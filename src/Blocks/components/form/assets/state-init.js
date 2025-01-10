@@ -475,10 +475,10 @@ export function setStateFormInitial(formId) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], field.querySelector(getStateSelector('rating', true)), formId);
 				}
 
-				if (field.getAttribute(getStateAttribute('fieldPreventSubmit'))) {
+				if (field?.getAttribute(getStateAttribute('fieldPreventSubmit'))) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], Boolean(field.getAttribute(getStateAttribute('fieldPreventSubmit'))), formId);
 				}
-				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field?.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 		}
 

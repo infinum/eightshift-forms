@@ -22,7 +22,6 @@ if (!UtilsDeveloperHelper::isDeveloperModeActive()) {
 $fieldManifest = Helpers::getComponent('field');
 
 $componentClass = Helpers::classnames([
-	UtilsHelper::getStateSelector('field'),
 	Helpers::selector(true, $fieldManifest['componentClass'], 'debug'),
 ]);
 

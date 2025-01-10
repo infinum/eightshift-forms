@@ -24,7 +24,8 @@
 				"type": "string"
 			},
 			"default": [
-				"eightshift-forms/checkbox"
+				"eightshift-forms/checkbox",
+				"eightshift-forms/input"
 			]
 		}
 	},

@@ -650,6 +650,8 @@ export class Form {
 		// Used for group submit.
 		const skipFields = filter?.[this.FILTER_SKIP_FIELDS] ?? [];
 
+		const fieldsetOtherOutput = [];
+
 		// Iterate all form items.
 		for (const [key] of this.state.getStateElements(formId)) {
 
@@ -770,6 +772,27 @@ export class Form {
 						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
 					}
 					break;
+				case 'input':
+					if (disabled) {
+						break;
+					}
+
+					const fieldset = field.closest('fieldset');
+
+					// If we have input on the checkbox/radio fieldset don't sent the input value but append it to the parent fieldset.
+					if (fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'checkbox' || fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'radio') {
+						if (value !== '') {
+							fieldsetOtherOutput.push({
+								name,
+								parent: fieldset?.getAttribute(this.state.getStateAttribute('fieldName')),
+								value,
+							});
+						}
+						break;
+					}
+
+					this.FORM_DATA.append(name, JSON.stringify(data));
+					break;
 				default:
 					if (disabled) {
 						break;
@@ -795,6 +818,26 @@ export class Form {
 				custom: '',
 				innerName: '',
 			}));
+		}
+
+		// If we have input on the checkbox/radio fieldset don't sent the input value but append it to the parent fieldset.
+		if (fieldsetOtherOutput.length) {
+			fieldsetOtherOutput.forEach((item, index) => {
+				const items = Object.keys(this.state.getStateElementItems(item.parent, formId))?.length;
+				const {
+					parent,
+					value,
+				} = item;
+
+				this.FORM_DATA.append(`${parent}[${items + index}]`, JSON.stringify({
+					name: parent,
+					value: value,
+					type: this.state.getStateElementTypeField(parent, formId),
+					typeCustom: this.state.getStateElementTypeCustom(parent, formId),
+					custom: '',
+					innerName: '',
+				}));
+			});
 		}
 	}
 
