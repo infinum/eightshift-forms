@@ -35,7 +35,6 @@ $formActionExternal = Helpers::checkAttr('formActionExternal', $attributes, $man
 $formMethod = Helpers::checkAttr('formMethod', $attributes, $manifest);
 $formId = Helpers::checkAttr('formId', $attributes, $manifest);
 $formContent = Helpers::checkAttr('formContent', $attributes, $manifest);
-$formPhoneSync = Helpers::checkAttr('formPhoneSync', $attributes, $manifest);
 $formPhoneDisablePicker = Helpers::checkAttr('formPhoneDisablePicker', $attributes, $manifest);
 $formHasSteps = Helpers::checkAttr('formHasSteps', $attributes, $manifest);
 $formUseSingleSubmit = Helpers::checkAttr('formUseSingleSubmit', $attributes, $manifest);
@@ -74,10 +73,6 @@ if ($formDataTypeSelector) {
 
 if ($formSecureData) {
 	$formAttrs[UtilsHelper::getStateAttribute('formSecureData')] = $formSecureData; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-}
-
-if ($formPhoneSync) {
-	$formAttrs[UtilsHelper::getStateAttribute('phoneSync')] = esc_attr($formPhoneSync);
 }
 
 if ($formPhoneDisablePicker) {

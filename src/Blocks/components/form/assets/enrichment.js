@@ -106,27 +106,10 @@ export class Enrichment {
 			return;
 		}
 
-		let value = '';
 		let valueData = this.state.getStateElementValue(name, formId);
 
-		if (typeof valueData === 'undefined') {
-			valueData = '';
-		}
-
-		switch (this.state.getStateElementTypeField(name, formId)) {
-			case 'phone':
-				value = {
-					prefix: this.state.getStateElementValueCountry(name, formId)?.number,
-					value: valueData,
-				};
-				break;
-			default:
-				value = valueData;
-				break;
-		}
-
 		const newStorage = {
-			[name]: value,
+			[name]: typeof valueData === 'undefined' ? '' : valueData,
 		};
 
 		this.setLocalStorage(
@@ -319,6 +302,10 @@ export class Enrichment {
 				return;
 			}
 
+			if (!value) {
+				return;
+			}
+
 			switch (this.state.getStateElementTypeField(name, formId)) {
 				case 'phone':
 					this.utils.setManualPhoneValue(formId, name, value);
@@ -335,10 +322,13 @@ export class Enrichment {
 					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
 				case 'radio':
-					this.utils.setManualRadioValue(formId, name, value);
+					this.utils.setManualRadioValue(formId, name, value, true);
 					break;
 				case 'rating':
 					this.utils.setManualRatingValue(formId, name, value);
+					break;
+				case 'range':
+					this.utils.setManualRangeValue(formId, name, value);
 					break;
 				default:
 					this.utils.setManualInputValue(formId, name, value);
@@ -392,7 +382,7 @@ export class Enrichment {
 		// Find url params.
 		const searchParams = new URLSearchParams(window.location.search);
 
-		const param = searchParams.get(`form-${formId}`);
+		const param = searchParams.get(`form-${this.state.getStateFormFid(formId)}`);
 
 		if(!param) {
 			return;
@@ -410,7 +400,7 @@ export class Enrichment {
 			return;
 		}
 
-		this.prefillByData(formId,data);
+		this.prefillByData(formId, data);
 	};
 
 	/**

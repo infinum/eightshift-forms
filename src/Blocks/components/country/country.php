@@ -38,6 +38,8 @@ $countryUseLabelAsPlaceholder = Helpers::checkAttr('countryUseLabelAsPlaceholder
 $countrySingleSubmit = Helpers::checkAttr('countrySingleSubmit', $attributes, $manifest);
 $countryValueType = Helpers::checkAttr('countryValueType', $attributes, $manifest);
 $countryTwSelectorsData = Helpers::checkAttr('countryTwSelectorsData', $attributes, $manifest);
+$countryIsMultiple = Helpers::checkAttr('countryIsMultiple', $attributes, $manifest);
+$countryValue = Helpers::checkAttr('countryValue', $attributes, $manifest);
 
 $countryId = $countryName . '-' . Helpers::getUnique();
 
@@ -54,6 +56,11 @@ $countryClass = Helpers::classnames([
 
 if ($countryUseSearch) {
 	$countryAttrs[UtilsHelper::getStateAttribute('selectAllowSearch')] = esc_attr($countryUseSearch);
+}
+
+if ($countryIsMultiple) {
+	$countryAttrs[UtilsHelper::getStateAttribute('selectIsMultiple')] = esc_attr($countryIsMultiple);
+	$countryAttrs['multiple'] = 'true';
 }
 
 if ($countryUseLabelAsPlaceholder) {
@@ -90,13 +97,14 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['country']['dataset'];
 	}
 
+	$preselectedValue = $settings['country']['preselectedValue'] ?: $countryValue; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? ''; // Country phone code.
 		$unlocalizedLabel = $option[3] ?? '';
 
-		$optionValue = $label;
 		switch ($countryValueType) {
 			case 'countryCode':
 				$optionValue = $code;
@@ -106,6 +114,9 @@ if (has_filter($filterName)) {
 				break;
 			case 'countryUnlocalizedName':
 				$optionValue = $unlocalizedLabel;
+				break;
+			default:
+				$optionValue = $label;
 				break;
 		}
 
@@ -119,7 +130,7 @@ if (has_filter($filterName)) {
 			<option
 				value="' . $optionValue . '"
 				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
-				' . selected($code, $settings['country']['preselectedValue'], false) . '
+				' . selected($optionValue, $preselectedValue, false) . '
 			>' . $label . '</option>';
 	}
 }

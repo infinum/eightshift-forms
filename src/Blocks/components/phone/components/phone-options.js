@@ -33,6 +33,7 @@ export const PhoneOptions = (attributes) => {
 	const phoneDisabledOptions = checkAttr('phoneDisabledOptions', attributes, manifest);
 	const phoneUseSearch = checkAttr('phoneUseSearch', attributes, manifest);
 	const phoneUseLabelAsPlaceholder = checkAttr('phoneUseLabelAsPlaceholder', attributes, manifest);
+	const phoneSelectValue = checkAttr('phoneSelectValue', attributes, manifest);
 
 	let phoneValidationPatternOptions = [];
 
@@ -93,6 +94,14 @@ export const PhoneOptions = (attributes) => {
 					value={phoneValue}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneValue', attributes, manifest), phoneDisabledOptions)}
+				/>
+
+				<TextControl
+					label={<IconLabel icon={icons.titleGeneric} label={__('Select initial value', 'eightshift-forms')} />}
+					value={phoneSelectValue}
+					onChange={(value) => setAttributes({ [getAttrKey('phoneSelectValue', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('phoneSelectValue', attributes, manifest), phoneDisabledOptions)}
+					help={__('Initial value of the field. This value depends on the value type.', 'eightshift-forms')}
 				/>
 
 				<FieldOptionsVisibility
