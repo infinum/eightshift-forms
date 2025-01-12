@@ -9,15 +9,27 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Changed
 
 - Forms are now supporting multiple instances of the same form on the same page.
+- `enrichment` prefill on URL now has totally new logic and ways or prefilling the fields.
+- `JS` internal logic for setting up values on field.
 
 ### Added
 
 - new country order list filter to provide a custom `priority` order for the countries.
 - additional protection for checking if route is private or public for settings.
+- `country` field now supports multiple values, min/max count validation and ability to prefill the field value.
+- `phone` field now supports initial selected value both for country picker and number.
+- `field` now support additional `suffix` content that will be displayed after the field input.
+- `radio and checkbox` fields now support one `input` field that can be used as `other` option and this value will be sent with the main values.
+
+### Removed
+
+- ability for phone/country field to `sync` changes to the other field.
 
 ### Fixed
 
 - broken checkboxes and radios if there are multiple items with the same name.
+- missing email confirmation for `Corvus`, `Calculator` and `Paycek` integrations.
+- success redirect url will no longer send empty encrypted value.
 
 ## [5.6.6]
 

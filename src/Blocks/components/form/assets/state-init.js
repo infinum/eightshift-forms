@@ -2,7 +2,6 @@
 
 import globalManifest from '../../../manifest.json';
 import utilsManifest from '../../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
-import { set } from 'ol/transform';
 
 ////////////////////////////////////////////////////////////////
 // Constants
