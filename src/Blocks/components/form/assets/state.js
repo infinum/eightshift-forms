@@ -270,8 +270,11 @@ export class State {
 	getStateElementByLoaded = (type, formId) => {
 		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.LOADED, type, formId);
 	};
+	getStateElementsObject = (formId) => {
+		return getState([StateEnum.ELEMENTS], formId);
+	};
 	getStateElements = (formId) => {
-		const items = getState([StateEnum.ELEMENTS], formId);
+		const items = this.getStateElementsObject(formId);
 
 		return items ? Object.entries(items) : [];
 	};

@@ -1,3 +1,5 @@
+import { setStateWindow, prefix } from './state-init';
+
 /**
  * PaymentGateways class.
  */

@@ -429,25 +429,38 @@ export class Utils {
 	 * @returns {void}
 	 */
 	setFieldFilledState(formId, name) {
+		this.unsetActiveState(formId, name);
+
 		const type = this.state.getStateElementTypeField(name, formId);
 		const value = this.state.getStateElementValue(name, formId);
 
-		let condition = false;
-
 		switch (type) {
 			case 'checkbox':
-				condition = Object.values(value).filter((item) => item !== '').length > 0;
+				this.setFieldFilledStateByName(
+					formId,
+					name,
+					Object.values(value).filter((item) => item !== '').length > 0
+				);
 				break;
 			case 'phone':
-				condition = value?.value;
+				this.setFieldFilledStateByName(formId, name, value?.value);
 				break;
 			default:
-				condition = value && value.length;
+				this.setFieldFilledStateByName(formId, name, value && value.length);
 				break;
 		}
+	}
 
-		this.unsetActiveState(formId, name);
-
+	/**
+	 * Prefill inputs active/filled.
+	 * 
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {bool} condition Condition.
+	 * 
+	 * @returns {void}
+	 */
+	setFieldFilledStateByName(formId, name, condition) {
 		if (condition) {
 			this.setFilledState(formId, name);
 		} else {
@@ -874,6 +887,10 @@ export class Utils {
 			return;
 		}
 
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
 		// For manual setting.
 		if (set) {
 			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
@@ -918,6 +935,10 @@ export class Utils {
 			return;
 		}
 
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
 		// For manual setting.
 		if (set) {
 			const custom = this.state.getStateElementCustom(name, formId);
@@ -954,6 +975,10 @@ export class Utils {
 	 */
 	setManualSelectValue(formId, name, value, set = true) {
 		if (!Array.isArray(value)) {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
 			return;
 		}
 
@@ -1020,6 +1045,10 @@ export class Utils {
 			return;
 		}
 
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
 		if (set) {
 			const inner = this.state.getStateElementItems(name, formId);
 
@@ -1056,6 +1085,10 @@ export class Utils {
 	 */
 	setManualRadioValue(formId, name, value, set = true, ignoreCustomRadio = false) {
 		if (typeof value !== 'string') {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
 			return;
 		}
 
@@ -1117,6 +1150,10 @@ export class Utils {
 			return;
 		}
 
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
 		if (set) {
 			const input = this.state.getStateElementInput(name, formId);
 
@@ -1163,6 +1200,10 @@ export class Utils {
 			return;
 		}
 
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
 		this.state.getStateElementCustom(name, formId)?.setAttribute(this.state.getStateAttribute('ratingValue'), value);
 		this.setManualInputValue(formId, name, value, set);
 	}
@@ -1182,6 +1223,10 @@ export class Utils {
 	 */
 	setManualRangeValue(formId, name, value, set = true) {
 		if (typeof value !== 'string') {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
 			return;
 		}
 
@@ -1441,6 +1486,9 @@ export class Utils {
 			},
 			setFieldFilledState: (formId, name) => {
 				this.setFieldFilledState(formId, name);
+			},
+			setFieldFilledStateByName: (formId, name, condition) => {
+				this.setFieldFilledStateByName(formId, name, condition);
 			},
 			setActiveState: (formId, name) => {
 				this.setActiveState(formId, name);

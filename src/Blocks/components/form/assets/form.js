@@ -199,8 +199,6 @@ export class Form {
 	 * @returns {void}
 	 */
 	initOne(formId) {
-		console.log(formId);
-		
 		// Regular submit.
 		this.state.getStateFormElement(formId).addEventListener('submit', this.onFormSubmitEvent);
 
