@@ -860,10 +860,20 @@ export class Utils {
 	 * @param {string} name Field name.
 	 * @param {object} value Field value.
 	 * @param {bool} set Set value.
+	 *
+	 * Expected value format:
+	 * {
+	 *  prefix: '1',
+	 *  value: '1234567890'
+	 * }
 	 * 
 	 * @returns {void}
 	 */
 	setManualPhoneValue(formId, name, value, set = true) {
+		if (typeof value !== 'object') {
+			return;
+		}
+
 		// For manual setting.
 		if (set) {
 			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
@@ -896,10 +906,18 @@ export class Utils {
 	 * @param {string} name Field name.
 	 * @param {string} value Field value.
 	 * @param {bool} set Set value.
+	 *
+	 * Expected value format:
+	 * '2021-01-01'
+	 * '2021-01-01 12:00'
 	 * 
 	 * @returns {void}
 	 */
 	setManualDateValue(formId, name, value, set = true) {
+		if (typeof value !== 'string') {
+			return;
+		}
+
 		// For manual setting.
 		if (set) {
 			const custom = this.state.getStateElementCustom(name, formId);
@@ -926,9 +944,19 @@ export class Utils {
 	 * @param {array} value Field value.
 	 * @param {bool} set Set value.
 	 * 
+	 * Expected value format:
+	 * [
+	 *  { value: '1' },
+	 *  { value: '2' },
+	 * ]
+	 * 
 	 * @returns {void}
 	 */
 	setManualSelectValue(formId, name, value, set = true) {
+		if (!Array.isArray(value)) {
+			return;
+		}
+
 		this.state.getStateElementCustom(name, formId).setChoiceByValue(value);
 
 			// For manual setting.
@@ -937,7 +965,7 @@ export class Utils {
 
 			if (custom) {
 				if (value.length) {
-					custom.setChoiceByValue(value.map((item) => item.value));
+					custom.setChoiceByValue(value?.map((item) => item.value));
 				} else {
 					custom.removeActiveItems();
 				}
@@ -958,7 +986,14 @@ export class Utils {
 	 * 
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
-	 * @param {object} value Field value.
+	 * @param {array} value Field value.
+	 * @param {bool} set Set value.
+	 * 
+	 * Expected value format:
+	 * [
+	 *  { value: 'hr' },
+	 *  { value: 'de' },
+	 * ]
 	 * 
 	 * @returns {void}
 	 */
@@ -971,12 +1006,22 @@ export class Utils {
 	 * 
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
-	 * @param {object} value Field value.
+	 * @param {array} value Field value.
 	 * @param {bool} set Set value.
+	 *
+	 * Expected value format:
+	 * {
+	 *  checkbox-1: checkbox-1,
+	 *  checkbox-2: checkbox-2,
+	 * }
 	 * 
 	 * @returns {void}
 	 */
 	setManualCheckboxValue(formId, name, value, set = true) {
+		if (typeof value !== 'object') {
+			return;
+		}
+
 		if (set) {
 			const inner = this.state.getStateElementItems(name, formId);
 
@@ -1006,21 +1051,29 @@ export class Utils {
 	 * @param {bool} set Set value.
 	 * @param {bool} ignoreCustomRadio Ignore custom radio.
 	 * 
+	 * Expected value format:
+	 * 'radio-1'
+	 * 
 	 * @returns {void}
 	 */
 	setManualRadioValue(formId, name, value, set = true, ignoreCustomRadio = false) {
+		if (typeof value !== 'string') {
+			return;
+		}
+
 		if (set) {
 			const inner = this.state.getStateElementItems(name, formId);
 
 			if (inner) {
 				if (value !== '' && inner?.[value]) {
-					console.log(inner[value]);
-					
 					inner[value].input.checked = true;
 				} else {
 					Object.values(inner).forEach((item) => {
 						item.input.checked = false;
 					});
+
+					// If sent value that doesn't exist in radio group, clear it.
+					value = '';
 				}
 			}
 		}
@@ -1055,10 +1108,17 @@ export class Utils {
 	 * @param {string} value Field value.
 	 * @param {bool} set Set value.
 	 * @param {bool} ignoreCustomRadio Ignore custom radio.
+	 *
+	 * Expected value format:
+	 * 'value'
 	 * 
 	 * @returns {void}
 	 */
 	setManualInputValue(formId, name, value, set = true, ignoreCustomRadio = false) {
+		if (typeof value !== 'string') {
+			return;
+		}
+
 		if (set) {
 			const input = this.state.getStateElementInput(name, formId);
 
@@ -1094,10 +1154,17 @@ export class Utils {
 	 * @param {string} name Field name.
 	 * @param {string} value Field value.
 	 * @param {bool} set Set value.
-	 * 
+	 *
+	 * Expected value format:
+	 * '5'
+	 *
 	 * @returns {void}
 	 */
 	setManualRatingValue(formId, name, value, set = true) {
+		if (typeof value !== 'string') {
+			return;
+		}
+
 		this.state.getStateElementCustom(name, formId)?.setAttribute(this.state.getStateAttribute('ratingValue'), value);
 		this.setManualInputValue(formId, name, value, set);
 	}
@@ -1109,10 +1176,17 @@ export class Utils {
 	 * @param {string} name Field name.
 	 * @param {string} value Field value.
 	 * @param {bool} set Set value.
-	 * 
+	 *
+	 * Expected value format:
+	 * '50'
+	 *
 	 * @returns {void}
 	 */
 	setManualRangeValue(formId, name, value, set = true) {
+		if (typeof value !== 'string') {
+			return;
+		}
+
 		this.setManualInputValue(formId, name, value, set);
 		this.setRangeCurrentValue(formId, name);
 	}

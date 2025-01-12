@@ -2,6 +2,7 @@
 
 import globalManifest from '../../../manifest.json';
 import utilsManifest from '../../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
+import { set } from 'ol/transform';
 
 ////////////////////////////////////////////////////////////////
 // Constants
@@ -359,6 +360,7 @@ export function setStateFormInitial(formId) {
 
 		const field = formElement.querySelector(`${getStateSelector('field', true)}[${getStateAttribute('fieldName')}="${name}"]`);
 		const fieldType = field?.getAttribute(getStateAttribute('fieldType'));
+		const fieldset = field?.closest('fieldset');
 
 		// Make changes depending on the field type.
 		switch (type) {
@@ -451,6 +453,10 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 
+				if (fieldset) {
+					setState([StateEnum.ELEMENTS, fieldset.getAttribute(getStateAttribute('fieldName')), StateEnum.CUSTOM], item, formId);
+				}
+
 				if (fieldType === 'rating') {
 					setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], field.querySelector(getStateSelector('rating', true)), formId);
 				}
@@ -468,7 +474,7 @@ export function setStateFormInitial(formId) {
 		setState([StateEnum.ELEMENTS, name, StateEnum.LOADED], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.NAME], name, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.FIELD], field, formId);
-		setState([StateEnum.ELEMENTS, name, StateEnum.FIELDSET], field?.closest('fieldset'), formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.FIELDSET], fieldset, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.ERROR], field?.querySelector(getStateSelector('error', true)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.IS_ADMIN_SINGLE_SUBMIT], item?.classList?.contains(getStateSelector('submitSingle', true).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);
