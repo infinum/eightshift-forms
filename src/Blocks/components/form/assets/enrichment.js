@@ -460,7 +460,7 @@ export class Enrichment {
 					this.utils.setManualRangeValue(formId, name, value);
 					break;
 				default:
-					this.utils.setManualInputValue(formId, name, value, true, true);
+					this.utils.setManualInputValue(formId, name, value);
 					break;
 			}
 		});
@@ -574,11 +574,11 @@ export class Enrichment {
 			setLocalStorageEnrichment: () => {
 				this.setLocalStorageEnrichment();
 			},
-			setLocalStorageFormPrefill: () => {
-				this.setLocalStorageFormPrefill();
+			setLocalStorageFormPrefill: (formId) => {
+				this.setLocalStorageFormPrefill(formId);
 			},
-			setUrlParamsFormPrefill: () => {
-				this.setUrlParamsFormPrefill();
+			setUrlParamsFormPrefill: (formId) => {
+				this.setUrlParamsFormPrefill(formId);
 			},
 			setLocalStorageFormPrefillItem: (formId, name) => {
 				this.setLocalStorageFormPrefillItem(formId, name);
@@ -595,11 +595,14 @@ export class Enrichment {
 			getUrlAllowedParams: (allowedTags) => {
 				return this.getUrlAllowedParams(allowedTags);
 			},
-			getCookiesAllowedParams: (allowedTags) => {
-				return this.getCookiesAllowedParams(allowedTags);
+			prefillByUrlData: (formId, data) => {
+				this.prefillByUrlData(formId, data);
 			},
 			prefillByLocalstorageData: (formId, data) => {
 				this.prefillByLocalstorageData(formId, data);
+			},
+			getCookiesAllowedParams: (allowedTags) => {
+				return this.getCookiesAllowedParams(allowedTags);
 			},
 			removeEvents: (formId) => {
 				this.removeEvents(formId);

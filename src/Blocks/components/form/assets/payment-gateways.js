@@ -13,6 +13,9 @@ export class PaymentGateways {
 		this.state = state;
 
 		this.response = response;
+
+		// Set all public methods.
+		this.publicMethods();
 	}
 
 	/**
@@ -82,5 +85,38 @@ export class PaymentGateways {
 		document.body.appendChild(form);
 		form.submit();
 		document.body.removeChild(form);
+	}
+
+
+	////////////////////////////////////////////////////////////////
+	// Private methods - not shared to the public window object.
+	////////////////////////////////////////////////////////////////
+
+	/**
+	 * Set all public methods.
+	 *
+	 * @returns {void}
+	 */
+	publicMethods() {
+		setStateWindow();
+
+		if (window[prefix].paymentGateways) {
+			return;
+		}
+
+		window[prefix].paymentGateways = {
+			init: () => {
+				this.init();
+			},
+			initFormActionSubmit: () => {
+				this.initFormActionSubmit();
+			},
+			initUrlRedirect: (url) => {
+				this.initUrlRedirect(url);
+			},
+			initFormSubmitBuilder: (url, params) => {
+				this.initFormSubmitBuilder(url, params);
+			},
+		};
 	}
 }

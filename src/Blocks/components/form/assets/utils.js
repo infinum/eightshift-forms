@@ -886,7 +886,7 @@ export class Utils {
 
 			const input = this.state.getStateElementInput(name, formId);
 
-			if (input) {
+			if (input && value?.value) {
 				input.value = value?.value;
 			}
 		}
@@ -956,8 +956,6 @@ export class Utils {
 		if (!Array.isArray(value)) {
 			return;
 		}
-
-		this.state.getStateElementCustom(name, formId).setChoiceByValue(value);
 
 			// For manual setting.
 		if (set) {
@@ -1480,9 +1478,6 @@ export class Utils {
 			formSubmitErrorFatal: (msg, type, error, formId) => {
 				this.formSubmitErrorFatal(msg, type, error, formId);
 			},
-			getSelectSelectedValueByCustomData: (type, value, choices) => {
-				return this.getSelectSelectedValueByCustomData(type, value, choices);
-			},
 			removeFormsWithMissingFormsBlock: () => {
 				this.removeFormsWithMissingFormsBlock();
 			},
@@ -1501,6 +1496,9 @@ export class Utils {
 			setManualSelectValue: (formId, name, value) => {
 				this.setManualSelectValue(formId, name, value);
 			},
+			setManualCountryValue: (formId, name, value) => {
+				this.setManualCountryValue(formId, name, value);
+			},
 			setManualCheckboxValue: (formId, name, value) => {
 				this.setManualCheckboxValue(formId, name, value);
 			},
@@ -1509,6 +1507,24 @@ export class Utils {
 			},
 			setManualInputValue: (formId, name, value) => {
 				this.setManualInputValue(formId, name, value);
+			},
+			setManualRatingValue: (formId, name, value) => {
+				this.setManualRatingValue(formId, name, value);
+			},
+			setManualRangeValue: (formId, name, value) => {
+				this.setManualRangeValue(formId, name, value);
+			},
+			setRangeCurrentValue: (formId, name) => {
+				this.setRangeCurrentValue(formId, name);
+			},
+			setResultsOutput: (formId, data) => {
+				this.setResultsOutput(formId, data);
+			},
+			resetResultsOutput: (formId) => {
+				this.resetResultsOutput(formId);
+			},
+			getComparator: () => {
+				return this.getComparator();
 			},
 		};
 	}

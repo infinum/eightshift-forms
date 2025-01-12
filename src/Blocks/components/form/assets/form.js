@@ -199,6 +199,8 @@ export class Form {
 	 * @returns {void}
 	 */
 	initOne(formId) {
+		console.log(formId);
+		
 		// Regular submit.
 		this.state.getStateFormElement(formId).addEventListener('submit', this.onFormSubmitEvent);
 
@@ -2104,6 +2106,9 @@ export class Form {
 			},
 			setupInputField: (formId, name) => {
 				this.setupInputField(formId, name);
+			},
+			setupRangeField: (formId, name) => {
+				this.setupRangeField(formId, name);
 			},
 			setupRatingField: (formId, name) => {
 				this.setupRatingField(formId, name);
