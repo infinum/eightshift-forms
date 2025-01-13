@@ -80,16 +80,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 		// Use single submit.
 		$attributes["{$prefix}UseSingleSubmit"] = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, SettingsGeneral::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId);
-
-		// Phone sync with country block.
-		$attributes["{$prefix}PhoneSync"] = '';
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'phoneSync']);
-		if (\has_filter($filterName)) {
-			$attributes["{$prefix}PhoneSync"] = \apply_filters($filterName, $type, $formId);
-		} else {
-			$attributes["{$prefix}PhoneSync"] = !UtilsSettingsHelper::isSettingCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId);
-		}
-
 		$attributes["{$prefix}PhoneDisablePicker"] = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY, SettingsBlocks::SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY);
 
 		// Output secure data.

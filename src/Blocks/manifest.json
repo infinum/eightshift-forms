@@ -446,9 +446,10 @@
 			"file": "file",
 			"country": "country",
 			"date": "date",
-			"dateTime": "datetime",
+			"dateTime": "dateTime",
 			"select": "select",
 			"rating": "rating",
+			"range": "range",
 			"submit": "submit"
 		}
 	},

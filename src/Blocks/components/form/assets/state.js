@@ -61,7 +61,7 @@ export class State {
 	getStateFormPostId = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.POST_ID], formId);
 	};
-	getStateFormFId = (formId) => {
+	getStateFormFid = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.FORM_FID], formId);
 	};
 	getStateFormIsAdminSingleSubmit = (formId) => {
@@ -142,9 +142,6 @@ export class State {
 
 	getStateFormConfigPhoneDisablePicker = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], formId);
-	};
-	getStateFormConfigPhoneUseSync = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_USE_PHONE_SYNC], formId);
 	};
 	getStateFormConfigUseSingleSubmit = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_USE_SINGLE_SUBMIT], formId);
@@ -273,8 +270,11 @@ export class State {
 	getStateElementByLoaded = (type, formId) => {
 		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.LOADED, type, formId);
 	};
+	getStateElementsObject = (formId) => {
+		return getState([StateEnum.ELEMENTS], formId);
+	};
 	getStateElements = (formId) => {
-		const items = getState([StateEnum.ELEMENTS], formId);
+		const items = this.getStateElementsObject(formId);
 
 		return items ? Object.entries(items) : [];
 	};
@@ -316,6 +316,9 @@ export class State {
 	getStateElementField = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.FIELD], formId);
 	};
+	getStateElementFieldset = (name, formId) => {
+		return getState([StateEnum.ELEMENTS, name, StateEnum.FIELDSET], formId);
+	};
 	getStateElementIsDisabled = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], formId);
 	};
@@ -323,7 +326,7 @@ export class State {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.LOADED], formId);
 	};
 	getStateElementTypeField = (name, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_FIELD], formId);
+		return this.getStateFieldType(getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_FIELD], formId));
 	};
 	getStateElementTypeCustom = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], formId);
@@ -336,9 +339,6 @@ export class State {
 	};
 	getStateElementSaveAsJson = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.SAVE_AS_JSON], formId);
-	};
-	getStateElementValueCountry = (name, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId);
 	};
 	getStateElementInitial = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], formId);
@@ -364,9 +364,6 @@ export class State {
 	getStateElementValue = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId);
 	};
-	getStateElementValueCombined = (name, formId) => {
-		return getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], formId);
-	};
 	getStateElementError = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.ERROR], formId);
 	};
@@ -382,12 +379,6 @@ export class State {
 
 	setStateElementValue = (name, value, formId) => {
 		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-	};
-	setStateElementValueCountry = (name, value, formId) => {
-		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], value, formId);
-	};
-	setStateElementValueCombined = (name, value, formId) => {
-		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], value, formId);
 	};
 	setStateElementLoaded = (name, value, formId) => {
 		setState([StateEnum.ELEMENTS, name, StateEnum.LOADED], value, formId);
@@ -468,11 +459,17 @@ export class State {
 	getStateEnrichmentAllowed = () => {
 		return getState([StateEnum.ENRICHMENT_ALLOWED], StateEnum.ENRICHMENT);
 	};
+	getStateEnrichmentAllowedSmart = () => {
+		return getState([StateEnum.ENRICHMENT_ALLOWED_SMART], StateEnum.ENRICHMENT);
+	};
 	getStateEnrichmentStorageName = () => {
 		return getState([StateEnum.NAME], StateEnum.ENRICHMENT);
 	};
+	getStateEnrichmentSmartStorageName = () => {
+		return `${getState([StateEnum.NAME], StateEnum.ENRICHMENT)}-smart`;
+	};
 	getStateEnrichmentFormPrefillStorageName = (formId) => {
-		return `${getState([StateEnum.NAME], StateEnum.ENRICHMENT)}-${formId}`;
+		return `${getState([StateEnum.NAME], StateEnum.ENRICHMENT)}-${this.getStateFormFid(formId)}`;
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -563,6 +560,9 @@ export class State {
 	};
 	getFormIdByElement = (element) => {
 		return this.getFormElementByChild(element)?.getAttribute(this.getStateAttribute('formId'));
+	};
+	getFormFidByElement = (element) => {
+		return this.getFormElementByChild(element)?.getAttribute(this.getStateAttribute('formFid'));
 	};
 	getFieldNameByElement = (element) => {
 		return this.getFormFieldElementByChild(element)?.getAttribute(this.getStateAttribute('fieldName'));

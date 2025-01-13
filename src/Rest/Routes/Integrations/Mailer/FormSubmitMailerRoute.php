@@ -77,7 +77,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
-		// Located before the sendEmail mentod so we can utilize common email response tags.
+		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.

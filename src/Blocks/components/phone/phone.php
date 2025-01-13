@@ -37,6 +37,7 @@ $phoneTypeCustom = Helpers::checkAttr('phoneTypeCustom', $attributes, $manifest)
 $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
 $phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
+$phoneSelectValue = Helpers::checkAttr('phoneSelectValue', $attributes, $manifest);
 
 $phoneId = $phoneName . '-' . Helpers::getUnique();
 
@@ -91,6 +92,8 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['phone']['dataset'];
 	}
 
+	$preselectedValue = $settings['phone']['preselectedValue'] ?: $phoneSelectValue; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
@@ -106,7 +109,7 @@ if (has_filter($filterName)) {
 			<option
 				value="' . $value . '"
 				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
-				' . selected($code, $settings['phone']['preselectedValue'], false) . '
+				' . selected($code, $preselectedValue, false) . '
 			>+' . $value . '</option>';
 	}
 }

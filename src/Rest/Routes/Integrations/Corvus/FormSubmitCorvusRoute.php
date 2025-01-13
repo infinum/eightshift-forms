@@ -124,6 +124,21 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		// Set validation submit once.
 		$this->validator->setValidationSubmitOnce($formId);
 
+		// Located before the sendEmail mentod so we can utilize common email response tags.
+		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
+
+		// Send email.
+		$this->getFormSubmitMailer()->sendEmails(
+			$formDetails,
+			$this->getCommonEmailResponseTags(
+				\array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['private']
+				),
+				$formDetails
+			)
+		);
+
 		// Finish.
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(

@@ -140,7 +140,7 @@ echo Helpers::render(
 			'fieldId' => $inputId,
 			'fieldName' => $inputName,
 			'fieldTwSelectorsData' => $inputTwSelectorsData,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType('input'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType($inputType === 'range' ? 'range' : 'input'),
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldUseError' => $inputType !== 'hidden',

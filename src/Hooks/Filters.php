@@ -82,7 +82,6 @@ final class Filters
 					'trackingEventName',
 					'trackingAdditionalData',
 					'dataTypeSelector',
-					'phoneSync',
 					'globalMsgHeadings',
 					'additionalContent',
 					'additionalHiddenFields',
