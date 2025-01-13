@@ -105,6 +105,7 @@ export const StateEnum = {
 	ENRICHMENT_EXPIRATION: 'expiration',
 	ENRICHMENT_EXPIRATION_PREFILL: 'expirationPrefill',
 	ENRICHMENT_ALLOWED: 'allowed',
+	ENRICHMENT_ALLOWED_SMART: 'allowedSmart',
 
 	GEOLOCATION: 'geolocation',
 
@@ -275,6 +276,7 @@ export function setStateInitial() {
 		setState([StateEnum.ENRICHMENT_EXPIRATION], enrichment.expiration, StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_EXPIRATION_PREFILL], enrichment.expirationPrefill, StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_ALLOWED], Object.values(enrichment.allowed), StateEnum.ENRICHMENT);
+		setState([StateEnum.ENRICHMENT_ALLOWED_SMART], Object.values(enrichment.allowedSmart), StateEnum.ENRICHMENT);
 		setState([StateEnum.NAME], 'es-storage', StateEnum.ENRICHMENT);
 	}
 }

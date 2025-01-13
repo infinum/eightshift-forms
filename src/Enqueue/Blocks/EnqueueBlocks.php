@@ -318,6 +318,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 					'isUsed' => true,
 					'isUsedPrefill' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
 					'isUsedPrefillUrl' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
+					'allowedSmart' => \array_values(\array_filter(\explode(\PHP_EOL, UtilsSettingsHelper::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY, 1)))),
 				],
 				FiltersOuputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
 			);

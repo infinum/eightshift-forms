@@ -68,7 +68,7 @@ export class Enrichment {
 	 */
 	setLocalStorageFormPrefill(formId) {
 		// Check if enrichment is used.
-		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsPrefillUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
 			return;
 		}
 
@@ -100,13 +100,27 @@ export class Enrichment {
 	 *
 	 * @returns {void}
 	 */
-	setLocalStorageFormPrefillItem(formId, name) {
+	setLocalStorageFormPrefillField(formId, name) {
+		this.setLocalStorageFormPrefillFieldItem(formId, name);
+		this.setLocalStorageFormPrefillFieldSmart(formId, name);
+	}
+
+	/**
+	 * Set localStorage value for every field - general.
+	 *
+	 * @returns {void}
+	 */
+	setLocalStorageFormPrefillFieldItem(formId, name) {
 		// Check if enrichment is used.
-		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsPrefillUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
 			return;
 		}
 
-		let valueData = this.state.getStateElementValue(name, formId);
+		if (!this.state.getStateEnrichmentIsPrefillUsed()) {
+			return;
+		}
+
+		const valueData = this.state.getStateElementValue(name, formId);
 
 		const newStorage = {
 			[name]: typeof valueData === 'undefined' ? '' : valueData,
@@ -117,6 +131,36 @@ export class Enrichment {
 			this.state.getStateEnrichmentFormPrefillStorageName(formId),
 			this.state.getStateEnrichmentExpirationPrefill()
 		);
+	}
+
+	/**
+	 * Set localStorage value for every field - smart.
+	 *
+	 * @returns {void}
+	 */
+	setLocalStorageFormPrefillFieldSmart(formId, name) {
+		// Check if enrichment is used.
+		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
+			return;
+		}
+
+		const allowedSmartTags = this.state.getStateEnrichmentAllowedSmart();
+
+		if (!allowedSmartTags) {
+			return;
+		}
+
+		if (!allowedSmartTags.includes(name)) {
+			return;
+		}
+
+		const valueData = this.state.getStateElementValue(name, formId);
+
+		const newStorage = {
+			[name]: typeof valueData === 'undefined' ? '' : valueData,
+		};
+
+		this.setLocalStorage(newStorage, this.state.getStateEnrichmentSmartStorageName());
 	}
 
 	/**
@@ -536,19 +580,25 @@ export class Enrichment {
 	onLocalstoragePrefillEvent = (event) => {
 		const { formId } = event.detail;
 
-		let data = {};
-
 		try {
-			data = JSON.parse(this.getLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId)));
+			if (this.state.getStateEnrichmentAllowedSmart().length) {
+				const smartData = JSON.parse(this.getLocalStorage(this.state.getStateEnrichmentSmartStorageName()));
+
+				if (smartData) {
+					this.prefillByLocalstorageData(formId, smartData);
+				}
+			}
+
+			if (this.state.getStateEnrichmentIsPrefillUsed()) {
+				const formData = JSON.parse(this.getLocalStorage(this.state.getStateEnrichmentFormPrefillStorageName(formId)));
+
+				if (formData) {
+					this.prefillByLocalstorageData(formId, formData);
+				}
+			}
 		} catch {
 			return;
 		}
-
-		if (!data) {
-			return;
-		}
-
-		this.prefillByLocalstorageData(formId, data);
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -580,8 +630,14 @@ export class Enrichment {
 			setUrlParamsFormPrefill: (formId) => {
 				this.setUrlParamsFormPrefill(formId);
 			},
-			setLocalStorageFormPrefillItem: (formId, name) => {
-				this.setLocalStorageFormPrefillItem(formId, name);
+			setLocalStorageFormPrefillField: (formId, name) => {
+				this.setLocalStorageFormPrefillField(formId, name);
+			},
+			setLocalStorageFormPrefillFieldItem: (formId, name) => {
+				this.setLocalStorageFormPrefillFieldItem(formId, name);
+			},
+			setLocalStorageFormPrefillFieldSmart: (formId, name) => {
+				this.setLocalStorageFormPrefillFieldSmart(formId, name);
 			},
 			setLocalStorage: (newStorage, storageName, expiration) => {
 				this.setLocalStorage(newStorage, storageName, expiration);

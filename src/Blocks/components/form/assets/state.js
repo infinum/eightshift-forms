@@ -459,8 +459,14 @@ export class State {
 	getStateEnrichmentAllowed = () => {
 		return getState([StateEnum.ENRICHMENT_ALLOWED], StateEnum.ENRICHMENT);
 	};
+	getStateEnrichmentAllowedSmart = () => {
+		return getState([StateEnum.ENRICHMENT_ALLOWED_SMART], StateEnum.ENRICHMENT);
+	};
 	getStateEnrichmentStorageName = () => {
 		return getState([StateEnum.NAME], StateEnum.ENRICHMENT);
+	};
+	getStateEnrichmentSmartStorageName = () => {
+		return `${getState([StateEnum.NAME], StateEnum.ENRICHMENT)}-smart`;
 	};
 	getStateEnrichmentFormPrefillStorageName = (formId) => {
 		return `${getState([StateEnum.NAME], StateEnum.ENRICHMENT)}-${this.getStateFormFid(formId)}`;

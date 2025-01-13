@@ -57,6 +57,11 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 	public const SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY = 'enrichment-allowed-tags';
 
 	/**
+	 * Allowed smart tags key.
+	 */
+	public const SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY = 'enrichment-allowed-smart-tags';
+
+	/**
 	 * Allowed tags map key.
 	 */
 	public const SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY = 'enrichment-allowed-tags-map';
@@ -166,7 +171,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 								'textareaSaveAsJson' => true,
 								// translators: %s will be replaced with local validation patterns.
 								'textareaFieldHelp' => \sprintf(\__('
-									Enter one URL parameter per line.
+									Enter one parameter per line.
 									<br/><br />
 									Parameters are stored in browser storage for optional additional processing later.<br />
 									Some commonly used parameters are included by default.%s', 'eightshift-forms'), $enrichment['settings']),
@@ -271,7 +276,27 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 							],
 						],
 					],
-				]
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Prefill smart', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'textarea',
+								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY),
+								'textareaFieldLabel' => \__('Add custom enrichment smart parameters', 'eightshift-forms'),
+								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
+								// translators: %s will be replaced with local validation patterns.
+								'textareaFieldHelp' => \sprintf(\__('
+									Enter one parameter per line.
+									<br/><br />
+									Parameters are stored in browser storage for optional additional processing later.<br />
+									These parameters will be automatically set on every form you have.', 'eightshift-forms'), $enrichment['settings']),
+								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY, 1),
+							],
+						],
+					],
+				],
 			],
 		];
 	}

@@ -20,6 +20,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `phone` field now supports initial selected value both for country picker and number.
 - `field` now support additional `suffix` content that will be displayed after the field input.
 - `radio and checkbox` fields now support one `input` field that can be used as `other` option and this value will be sent with the main values.
+- new `enrichment` prefill option to save all fields defined as `smart` and prefilled all forms that have that field.
 
 ### Removed
 
