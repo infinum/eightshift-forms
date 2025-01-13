@@ -22,6 +22,7 @@ use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
@@ -94,6 +95,12 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 
 		$params = $this->prepareParams($mapParams, $formDetails['paramsRaw'], $formId);
 
+		// Filter params.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsCorvus::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params, $formDetails['paramsRaw'], $mapParams, $formId) ?? [];
+		}
+
 		$reqParams = [
 			'store_id',
 			'amount',
@@ -113,6 +120,8 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 				)
 			);
 		}
+
+		unset($params['time']);
 
 		// Add signature.
 		$params['signature'] = \hash_hmac(
@@ -191,6 +200,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		$output['currency'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
 		$output['order_number'] = "order_{$time}";
 		$output['cart'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_CART_DESC_KEY, $formId);
+		$output['time'] = $time;
 
 		if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_IBAN_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_IBAN_USE_KEY, $formId)) {
 			$output['creditor_reference'] = "HR00{$time}";

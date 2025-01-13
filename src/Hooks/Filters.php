@@ -283,10 +283,12 @@ final class Filters
 					'afterCustomResultOutputProcess',
 				],
 				SettingsCorvus::SETTINGS_TYPE_KEY => [
+					'prePostParams',
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
 				SettingsPaycek::SETTINGS_TYPE_KEY => [
+					'prePostParams',
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],

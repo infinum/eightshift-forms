@@ -22,6 +22,7 @@ use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
@@ -94,6 +95,12 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 
 		$params = $this->prepareParams($mapParams, $formDetails['paramsRaw'], $formId);
 
+		// Filter params.
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsPaycek::SETTINGS_TYPE_KEY, 'prePostParams']);
+		if (\has_filter($filterName)) {
+			$params = \apply_filters($filterName, $params, $formDetails['paramsRaw'], $mapParams, $formId) ?? [];
+		}
+
 		$reqParams = [
 			'profileCode',
 			'secretKey',
@@ -110,6 +117,8 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 				)
 			);
 		}
+
+		unset($params['time']);
 
 		// Set validation submit once.
 		$this->validator->setValidationSubmitOnce($formId);
@@ -182,6 +191,8 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			$output[$key] = $param;
 		}
 
+		$time = \time();
+
 		$output['secretKey'] = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY)['value'];
 		$output['profileCode'] = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiProfileKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_PROFILE_KEY)['value'];
 		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_LANG_KEY, $formId);
@@ -190,6 +201,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		$output['urlSuccess'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_SUCCESS, $formId);
 		$output['urlFail'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_FAIL, $formId);
 		$output['urlCancel'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_CANCEL, $formId);
+		$output['time'] = $time;
 
 		\ksort($output);
 

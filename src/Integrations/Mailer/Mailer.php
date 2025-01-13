@@ -262,7 +262,7 @@ class Mailer implements MailerInterface
 	 */
 	private function getDebugOptions(array $customData, array $formDetails): array
 	{
-		$customDebugData['originalParams'] = $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG] ?? '';
+		$customDebugData['originalParams'] = $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL] ?? '';
 
 		return \array_merge(
 			[
@@ -273,7 +273,7 @@ class Mailer implements MailerInterface
 				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
 				'time' => \wp_date('Y-m-d H:i:s'),
 				'requestUrl' => Helpers::getCurrentUrl(),
-				'originalParams' => $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG] ?? '',
+				'originalParams' => $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL] ?? '',
 			],
 			$customData
 		);
@@ -441,7 +441,7 @@ class Mailer implements MailerInterface
 			UtilsConfig::FD_FIELDS,
 			UtilsConfig::FD_FIELDS_ONLY,
 			UtilsConfig::FD_ICON,
-			UtilsConfig::FD_PARAMS_ORIGINAL_DEBUG,
+			UtilsConfig::FD_PARAMS_ORIGINAL,
 		];
 
 		return \array_diff_key($formDetails, \array_flip($list));
