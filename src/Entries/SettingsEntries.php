@@ -12,6 +12,7 @@ namespace EightshiftForms\Entries;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -44,6 +45,13 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_entries';
 
 	/**
+	 * Increment meta key.
+	 *
+	 * @var string
+	 */
+	public const INCREMENT_META_KEY = 'es_forms_increment';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'entries';
@@ -59,9 +67,19 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_ENTRIES_SETTINGS_USE_KEY = 'entries-settings-use';
 
 	/**
-	 * Entries settings save empty fields key.
+	 * Save empty fields key.
 	 */
 	public const SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS = 'entries-save-empty-fields';
+
+	/**
+	 * Increment start key.
+	 */
+	public const SETTINGS_ENTRIES_INCREMENT_START_KEY = 'entries-increment-start';
+
+	/**
+	 * Increment length key.
+	 */
+	public const SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY = 'entries-increment-length';
 
 	/**
 	 * Entries settings send entry in form submit key.
@@ -69,6 +87,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY = 'entries-save-additional-values';
 	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY = 'redirect-url';
 	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY = 'variations';
+	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY = 'increment-id';
 
 	/**
 	 * Data data key.
@@ -152,47 +171,52 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			[
+			($isUsed ? [
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
 					[
 						'component' => 'card-inline',
-						'cardInlineTitle' => \__('Store entries in database', 'eightshift-forms'),
+						'cardInlineTitle' => \__('View all entries in database', 'eightshift-forms'),
 						'cardInlineRightContent' => [
-							$isUsed ? [
+							[
 								'component' => 'submit',
 								'submitVariant' => 'ghost',
 								'submitButtonAsLink' => true,
 								'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId),
 								'submitValue' => \__('View', 'eightshift-forms'),
-							] : [],
+							],
+						],
+					],
+				],
+			] : []),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Entries', 'eightshift-forms'),
+						'tabContent' => [
 							[
 								'component' => 'checkboxes',
 								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
+										'checkboxLabel' => \__('Store entries in database', 'eightshift-forms'),
 										'checkboxIsChecked' => $isUsed,
 										'checkboxValue' => self::SETTINGS_ENTRIES_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									],
 								],
+								'checkboxesFieldHelp' => $isUsed ? sprintf(\__('View all stored entries on <a href="%s">this</a> link.', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
 							],
-						],
-					],
-				],
-			],
-			...($isUsed ? [
-				[
-					'component' => 'tabs',
-					'tabsFull' => true,
-					'tabsContent' => [
-						[
-							'component' => 'tab',
-							'tabLabel' => \__('Options', 'eightshift-forms'),
-							'tabContent' => [
+							...($isUsed ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
@@ -235,14 +259,83 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
-										]
-									]
+										],
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Increment ID', 'eightshift-forms'),
+											'checkboxHelp' => \__('Increment ID set by the form successful submission.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										],
+									],
+								],
+							] : []),
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Increment', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'layout',
+								'layoutType' => 'layout-v-stack',
+								'layoutContent' => [
+									[
+										'component' => 'intro',
+										'introTitle' => \__('Export', 'eightshift-forms'),
+									],
+									[
+										'component' => 'card-inline',
+										'cardInlineTitle' => \__('Increment Id settings'),
+										'cardInlineSubTitle' => sprintf(\__('Current increment Id is: %s', 'eightshift-forms'), EntriesHelper::getIncrement($formId)),
+										'cardInlineRightContent' => [
+											[
+												'component' => 'submit',
+												'submitValue' => \__('Reset', 'eightshift-forms'),
+												'submitVariant' => 'ghost',
+												'submitAttrs' => [
+													// UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_GLOBAL_SETTINGS,
+												],
+												'additionalClass' => UtilsHelper::getStateSelectorAdmin('incrementReset'),
+											],
+										],
+									],
 								],
 							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'input',
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_START_KEY),
+								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_START_KEY),
+								'inputFieldLabel' => \__('Increment start number', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Set the starting increment number of each successful form submission.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 1,
+								'inputStep' => 1,
+								'inputIsNumber' => true,
+								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_ENTRIES_INCREMENT_START_KEY, $formId),
+							],
+							[
+								'component' => 'input',
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY),
+								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY),
+								'inputFieldLabel' => \__('Increment length number', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define minimal increment length you want to use. If the number is less than starting number, increment will have leading zeros.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 1,
+								'inputStep' => 1,
+								'inputIsNumber' => true,
+								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY, $formId),
+							]
 						],
 					],
 				],
-			] : []),
+			],
 		];
 	}
 

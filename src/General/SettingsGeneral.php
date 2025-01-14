@@ -355,7 +355,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								'inputFieldHelp' => \__('Target a form (or a set of forms) and apply changes through filters, in code.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId),
-							]
+							],
 						],
 					],
 					[

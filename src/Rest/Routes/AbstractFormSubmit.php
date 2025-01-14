@@ -487,6 +487,9 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			'public' => [],
 		];
 
+		// Set increment and add it to the output.
+		$output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')] = EntriesHelper::setIncrement($formId);
+
 		// Set entries.
 		$useEntries = \apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 		if ($useEntries) {
@@ -595,6 +598,13 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])
 				) {
 					$entryNewData[UtilsHelper::getStateResponseOutputKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
+				}
+
+				if (
+					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+					isset($output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')])
+				) {
+					$entryNewData[UtilsHelper::getStateResponseOutputKey('incrementId')] = $output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')];
 				}
 
 				EntriesHelper::updateEntry($entryNewData, $output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
@@ -714,6 +724,9 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					break;
 				case 'mailerTimestampHuman':
 					$output[$key] = \current_datetime()->format('Y-m-d H:i:s');
+					break;
+				case 'mailerIncrementId':
+					$output[$key] = $data[UtilsHelper::getStateResponseOutputKey('incrementId')] ?? '';
 					break;
 				case 'mailerEntryUrl':
 					$entryId = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
