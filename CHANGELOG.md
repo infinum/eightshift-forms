@@ -13,7 +13,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Changed
 
-- `entries` listing now has new listing page with better UX and table layout.
+- `entries` listing now has the new listing page with better UX and table layout.
 
 ## [5.7.1]
 
