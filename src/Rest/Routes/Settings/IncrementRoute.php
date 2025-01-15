@@ -56,7 +56,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 	public const ROUTE_SLUG = 'increment';
 
 	/**
-	 * Get the base url of the route
+	 * Get the base url of the route.
 	 *
 	 * @return string The base URL for route you are adding.
 	 */
