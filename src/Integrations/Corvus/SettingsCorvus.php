@@ -61,6 +61,11 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	public const SETTINGS_CORVUS_IBAN_USE_KEY = 'corvus-iban-use';
 
 	/**
+	 * Corvus Entry ID use key.
+	 */
+	public const SETTINGS_CORVUS_ENTRY_ID_USE_KEY = 'corvus-entry-id-use';
+
+	/**
 	 * API Key.
 	 */
 	public const SETTINGS_CORVUS_API_KEY_KEY = 'corvus-api-key';
@@ -104,6 +109,16 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	 * Corvus cart desc key.
 	 */
 	public const SETTINGS_CORVUS_CART_DESC_KEY = 'corvus-cart-desc';
+
+	/**
+	 * Corvus subscription value key.
+	 */
+	public const SETTINGS_CORVUS_SUBSCRIPTION_VALUE_KEY = 'corvus-subscription-value';
+
+	/**
+	 * Corvus iban value key.
+	 */
+	public const SETTINGS_CORVUS_IBAN_VALUE_KEY = 'corvus-iban-value';
 
 	/**
 	 * Skip integration.
@@ -470,22 +485,6 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId),
 								],
 								[
-									'component' => 'checkboxes',
-									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY),
-									'checkboxesContent' => [
-										[
-											'component' => 'checkbox',
-											'checkboxLabel' => \__('Require complete', 'eightshift-forms'),
-											'checkboxHelp' => \__('Checked indicates an pre-authorization. Unchecked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId),
-											'checkboxValue' => self::SETTINGS_CORVUS_REQ_COMPLETE_KEY,
-											'checkboxAsToggle' => true,
-											'checkboxSingleSubmit' => true,
-										]
-									]
-								],
-								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
@@ -500,6 +499,42 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 											'checkboxHelp' => \__('To use IBAN Payment you must have this feature enabled in your Corvus account by contacting support.', 'eightshift-forms'),
 											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_IBAN_USE_KEY, self::SETTINGS_CORVUS_IBAN_USE_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_CORVUS_IBAN_USE_KEY,
+											'checkboxAsToggle' => true,
+											'checkboxSingleSubmit' => true,
+										]
+									]
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Use Entry Id', 'eightshift-forms'),
+											'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Corvus `order_number` value. This is used if you want to refference the entry after the form submission. Make sure you have Entries feature turened `on`.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY,
+											'checkboxAsToggle' => true,
+											'checkboxSingleSubmit' => true,
+										]
+									]
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Require complete', 'eightshift-forms'),
+											'checkboxHelp' => \__('Checked indicates an pre-authorization. Unchecked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_CORVUS_REQ_COMPLETE_KEY,
 											'checkboxAsToggle' => true,
 											'checkboxSingleSubmit' => true,
 										]
@@ -558,6 +593,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 												'component' => 'select',
 												'selectName' => $item['id'],
 												'selectFieldLabel' => $item['title'],
+												'selectFieldHelp' => $item['help'] ?? '',
 												'selectFieldIsFiftyFiftyHorizontal' => true,
 												'selectFieldBeforeContent' => '&rarr;',
 												'selectIsRequired' => $item['required'],
@@ -568,6 +604,22 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 										$this->getCorvusParams()
 									),
 								],
+							],
+							[
+								'component' => 'input',
+								'inputPlaceholder' => 'true',
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_SUBSCRIPTION_VALUE_KEY),
+								'inputFieldLabel' => \__('Subscription field value', 'eightshift-forms'),
+								'inputFieldHelp' => \__('If you want to create a subscription, sent value must be `true` or value defined in this field.', 'eightshift-forms'),
+								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_SUBSCRIPTION_VALUE_KEY, $formId),
+							],
+							[
+								'component' => 'input',
+								'inputPlaceholder' => 'true',
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_IBAN_VALUE_KEY),
+								'inputFieldLabel' => \__('IBAN field value', 'eightshift-forms'),
+								'inputFieldHelp' => \__('If you want to create a IBAN payment, sent value must be `true` or value defined in this field.', 'eightshift-forms'),
+								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_IBAN_VALUE_KEY, $formId),
 							],
 						],
 					] : [],
@@ -767,6 +819,12 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 			[
 				'id' => 'subscription',
 				'title' => \__('Subscription', 'eightshift-forms'),
+				'type' => 'bool',
+				'required' => false,
+			],
+			[
+				'id' => 'iban',
+				'title' => \__('IBAN', 'eightshift-forms'),
 				'type' => 'bool',
 				'required' => false,
 			],

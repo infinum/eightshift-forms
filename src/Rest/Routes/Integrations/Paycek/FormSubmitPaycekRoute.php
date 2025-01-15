@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Paycek;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Labels\LabelsInterface;
@@ -118,8 +119,6 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			);
 		}
 
-		unset($params['time']);
-
 		// Set validation submit once.
 		$this->validator->setValidationSubmitOnce($formId);
 
@@ -137,6 +136,8 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 				$formDetails
 			)
 		);
+
+		$params = $this->setRealOrderNumber($params, $formId);
 
 		// Finish.
 		return \rest_ensure_response(
@@ -191,21 +192,36 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			$output[$key] = $param;
 		}
 
-		$time = \time();
-
 		$output['secretKey'] = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY)['value'];
 		$output['profileCode'] = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiProfileKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_PROFILE_KEY)['value'];
 		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_LANG_KEY, $formId);
-		$output['paymentId'] = 'order_' . \time();
+		$output['paymentId'] = 'temp'; // Temp name, the real one will be set after the increment.
 		$output['description'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);
 		$output['urlSuccess'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_SUCCESS, $formId);
 		$output['urlFail'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_FAIL, $formId);
 		$output['urlCancel'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_CANCEL, $formId);
-		$output['time'] = $time;
-
-		\ksort($output);
 
 		return $output;
+	}
+
+	/**
+	 * Set real order number after the increment.
+	 *
+	 * @param array<string, string> $params Form params.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, string>
+	 */
+	private function setRealOrderNumber(array $params, string $formId): array
+	{
+		$orderId = FormsHelper::getIncrement($formId);
+
+		$params['paymentId'] = $orderId;
+
+		// Set the correct order as it is req by Corvus.
+		\ksort($params);
+
+		return $params;
 	}
 
 	/**

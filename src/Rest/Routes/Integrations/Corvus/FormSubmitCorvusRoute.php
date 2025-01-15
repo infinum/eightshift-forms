@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Corvus;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Labels\LabelsInterface;
@@ -121,15 +122,6 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 			);
 		}
 
-		unset($params['time']);
-
-		// Add signature.
-		$params['signature'] = \hash_hmac(
-			'sha256',
-			\array_reduce(\array_keys($params), fn($carry, $key) => $carry . $key . $params[$key], ''),
-			UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus(), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)['value']
-		);
-
 		// Set validation submit once.
 		$this->validator->setValidationSubmitOnce($formId);
 
@@ -156,7 +148,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 					UtilsHelper::getStateResponseOutputKey('processExternally') => [
 						'type' => 'POST',
 						'url' => $this->getUrl($formId),
-						'params' => $params,
+						'params' => $this->setRealOrderNumber($params, $successAdditionalData, $formId),
 					],
 				]
 			)
@@ -184,31 +176,82 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 
 			switch ($key) {
 				case 'amount':
-					$param = \number_format((float)$param, 2, '.', '');
+					$output['amount'] = \number_format((float)$param, 2, '.', '');
+					break;
+				case 'subscription':
+					$subscriptionValue = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_SUBSCRIPTION_VALUE_KEY, $formId) ?: 'true';
+					$output['subscription'] = ($param === $subscriptionValue) ? 'true' : 'false';
+					break;
+				case 'iban':
+					if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_IBAN_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_IBAN_USE_KEY, $formId)) {
+						$ibanValue = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_IBAN_VALUE_KEY, $formId) ?: 'true';
+						$output['iban'] = $param === $ibanValue ? 'true' : 'false';
+					}
+					break;
+				default:
+					$output[$key] = $param;
 					break;
 			}
-
-			$output[$key] = $param;
 		}
-
-		$time = \time();
 
 		$output['store_id'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_STORE_ID, $formId);
 		$output['version'] = '1.4'; // Corvus API version.
 		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_LANG_KEY, $formId);
 		$output['require_complete'] = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_REQ_COMPLETE_KEY, SettingsCorvus::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId) ? 'true' : 'false';
 		$output['currency'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
-		$output['order_number'] = "order_{$time}";
+		$output['order_number'] = 'temp'; // Temp name, the real one will be set after the increment.
 		$output['cart'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_CART_DESC_KEY, $formId);
-		$output['time'] = $time;
-
-		if (UtilsSettingsHelper::isSettingCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_IBAN_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_IBAN_USE_KEY, $formId)) {
-			$output['creditor_reference'] = "HR00{$time}";
-		}
-
-		\ksort($output);
 
 		return $output;
+	}
+
+	/**
+	 * Set real order number after the increment.
+	 *
+	 * @param array<string, string> $params Form params.
+	 * @param array<string, string> $successAdditionalData Success additional data.
+	 * @param string $formId Form ID.
+	 *
+	 * @return array<string, string>
+	 */
+	private function setRealOrderNumber(array $params, array $successAdditionalData, string $formId): array
+	{
+		$orderId = FormsHelper::getIncrement($formId);
+
+		if (UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId) ?: '') {
+			$entryId = $successAdditionalData['private'][UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
+
+			if ($entryId) {
+				$orderId = $entryId;
+			}
+		}
+
+		$params['order_number'] = $orderId;
+
+		if (isset($params['iban']) && $params['iban'] === 'true') {
+			$params['creditor_reference'] = "HR00{$orderId}";
+			$params['hide_tabs'] = 'checkout';
+
+			if (isset($params['subscription'])) {
+				unset($params['subscription']);
+			}
+		}
+
+		if (isset($params['iban'])) {
+			unset($params['iban']);
+		}
+
+		// Set the correct order as it is req by Corvus.
+		\ksort($params);
+
+		// Add signature.
+		$params['signature'] = \hash_hmac(
+			'sha256',
+			\array_reduce(\array_keys($params), fn($carry, $key) => $carry . $key . $params[$key], ''),
+			UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus(), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)['value']
+		);
+
+		return $params;
 	}
 
 	/**
