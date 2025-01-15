@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Entries\EntriesHelper;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
@@ -98,7 +98,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 			);
 		}
 
-		EntriesHelper::resetIncrement($formId);
+		FormsHelper::resetIncrement($formId);
 
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(

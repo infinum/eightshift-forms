@@ -31,7 +31,7 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Entries\SettingsEntries;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
@@ -439,7 +439,7 @@ final class Filters
 
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY,
 
-			SettingsEntries::INCREMENT_META_KEY,
+			SettingsGeneral::INCREMENT_META_KEY,
 		];
 	}
 }

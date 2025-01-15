@@ -10,12 +10,14 @@ declare(strict_types=1);
 
 namespace EightshiftForms\General;
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -104,6 +106,23 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 * @deprecated 5.0.0 It will be removed in the 6.0.0 release.
 	 */
 	public const SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY = 'general-success-redirect-variation';
+
+	/**
+	 * Increment meta key.
+	 *
+	 * @var string
+	 */
+	public const INCREMENT_META_KEY = 'es_forms_increment';
+
+	/**
+	 * Increment start key.
+	 */
+	public const SETTINGS_INCREMENT_START_KEY = 'increment-start';
+
+	/**
+	 * Increment length key.
+	 */
+	public const SETTINGS_INCREMENT_LENGTH_KEY = 'increment-length';
 
 	/**
 	 * Register all the hooks
@@ -404,6 +423,62 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										<li>Select</li>
 									</ul>
 								', 'eightshift-forms'),
+							],
+						],
+					],
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Increment', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'input',
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_INCREMENT_START_KEY),
+								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_INCREMENT_START_KEY),
+								'inputFieldLabel' => \__('Increment start number', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Set the starting increment number of each successful form submission.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 1,
+								'inputStep' => 1,
+								'inputIsNumber' => true,
+								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_INCREMENT_START_KEY, $formId),
+							],
+							[
+								'component' => 'input',
+								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_INCREMENT_LENGTH_KEY),
+								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_INCREMENT_LENGTH_KEY),
+								'inputFieldLabel' => \__('Increment length number', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Define minimal increment length you want to use. If the number is less than starting number, increment will have leading zeros.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputMin' => 1,
+								'inputStep' => 1,
+								'inputIsNumber' => true,
+								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_INCREMENT_LENGTH_KEY, $formId),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'layout',
+								'layoutType' => 'layout-v-stack',
+								'layoutContent' => [
+									[
+										'component' => 'card-inline',
+										// translators: %s is the current increment number.
+										'cardInlineTitle' => \sprintf(\__('Current increment: %s', 'eightshift-forms'), FormsHelper::getIncrement($formId)),
+										'cardInlineRightContent' => [
+											[
+												'component' => 'submit',
+												'submitValue' => \__('Reset', 'eightshift-forms'),
+												'submitVariant' => 'ghost',
+												'submitAttrs' => [
+													UtilsHelper::getStateAttribute('formId') => $formId,
+												],
+												'additionalClass' => UtilsHelper::getStateSelectorAdmin('incrementReset'),
+											],
+										],
+									],
+								],
 							],
 						],
 					],

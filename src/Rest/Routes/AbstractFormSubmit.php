@@ -17,6 +17,7 @@ use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStan
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
@@ -488,7 +489,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		];
 
 		// Set increment and add it to the output.
-		$output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')] = EntriesHelper::setIncrement($formId);
+		$output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')] = FormsHelper::setIncrement($formId);
 
 		// Set entries.
 		$useEntries = \apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId);

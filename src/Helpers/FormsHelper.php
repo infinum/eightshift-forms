@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Helpers;
 
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -257,5 +259,74 @@ final class FormsHelper
 	public static function getFormUniqueHash(): string
 	{
 		return \str_pad((string) \wp_rand(1, 9999999999), 10, '0', \STR_PAD_LEFT);
+	}
+
+	/**
+	 * Get increment.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return string
+	 */
+	public static function getIncrement(string $formId): string
+	{
+		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
+		if (!$value) {
+			$value = 0;
+		}
+
+		$length = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_LENGTH_KEY, $formId);
+		if ($length) {
+			$value = \str_pad($value, (int) $length, '0', \STR_PAD_LEFT);
+		}
+
+		return (string) $value;
+	}
+
+	/**
+	 * Set increment.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return string
+	 */
+	public static function setIncrement(string $formId): string
+	{
+		$start = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
+		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
+
+		if (!$value) {
+			$value = $start;
+		}
+
+		if ((int) $start > (int) $value) {
+			$value = $start;
+		}
+
+		$value = (int) $value + 1;
+
+		\update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
+
+		return (string) $value;
+	}
+
+	/**
+	 * Reset increment.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return bool
+	 */
+	public static function resetIncrement(string $formId): bool
+	{
+		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
+
+		if (!$value) {
+			$value = 0;
+		}
+
+		$update = \update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
+
+		return (bool) $update;
 	}
 }

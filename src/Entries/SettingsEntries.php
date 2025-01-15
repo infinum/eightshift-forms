@@ -12,7 +12,6 @@ namespace EightshiftForms\Entries;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -45,13 +44,6 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_entries';
 
 	/**
-	 * Increment meta key.
-	 *
-	 * @var string
-	 */
-	public const INCREMENT_META_KEY = 'es_forms_increment';
-
-	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'entries';
@@ -70,16 +62,6 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 * Save empty fields key.
 	 */
 	public const SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS = 'entries-save-empty-fields';
-
-	/**
-	 * Increment start key.
-	 */
-	public const SETTINGS_ENTRIES_INCREMENT_START_KEY = 'entries-increment-start';
-
-	/**
-	 * Increment length key.
-	 */
-	public const SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY = 'entries-increment-length';
 
 	/**
 	 * Entries settings send entry in form submit key.
@@ -273,62 +255,6 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 									],
 								],
 							] : []),
-						],
-					],
-					[
-						'component' => 'tab',
-						'tabLabel' => \__('Increment', 'eightshift-forms'),
-						'tabContent' => [
-							[
-								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_START_KEY),
-								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_START_KEY),
-								'inputFieldLabel' => \__('Increment start number', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Set the starting increment number of each successful form submission.', 'eightshift-forms'),
-								'inputType' => 'number',
-								'inputMin' => 1,
-								'inputStep' => 1,
-								'inputIsNumber' => true,
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_ENTRIES_INCREMENT_START_KEY, $formId),
-							],
-							[
-								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY),
-								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY),
-								'inputFieldLabel' => \__('Increment length number', 'eightshift-forms'),
-								'inputFieldHelp' => \__('Define minimal increment length you want to use. If the number is less than starting number, increment will have leading zeros.', 'eightshift-forms'),
-								'inputType' => 'number',
-								'inputMin' => 1,
-								'inputStep' => 1,
-								'inputIsNumber' => true,
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY, $formId),
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'layout',
-								'layoutType' => 'layout-v-stack',
-								'layoutContent' => [
-									[
-										'component' => 'card-inline',
-										// translators: %s is the current increment number.
-										'cardInlineTitle' => \sprintf(\__('Current increment: %s', 'eightshift-forms'), EntriesHelper::getIncrement($formId)),
-										'cardInlineRightContent' => [
-											[
-												'component' => 'submit',
-												'submitValue' => \__('Reset', 'eightshift-forms'),
-												'submitVariant' => 'ghost',
-												'submitAttrs' => [
-													UtilsHelper::getStateAttribute('formId') => $formId,
-												],
-												'additionalClass' => UtilsHelper::getStateSelectorAdmin('incrementReset'),
-											],
-										],
-									],
-								],
-							],
 						],
 					],
 				],
