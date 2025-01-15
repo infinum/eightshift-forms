@@ -32,6 +32,22 @@ domReady(() => {
 	// Cache
 	////////////////////////////////////////////////////////////////
 
+	const selectorIncrement = state.getStateSelectorAdmin('incrementReset', true);
+
+	if (document.querySelector(selectorIncrement)) {
+		import('./increment').then(({ Increment }) => {
+			new Increment({
+				utils: utils,
+				selector: selectorIncrement,
+				confirmMsg: esFormsLocalization.confirmMsg,
+			}).init();
+		});
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Cache
+	////////////////////////////////////////////////////////////////
+
 	const selectorCache = state.getStateSelectorAdmin('cacheDelete', true);
 
 	if (document.querySelectorAll(selectorCache).length) {
@@ -73,7 +89,7 @@ domReady(() => {
 				itemSelector: state.getStateSelectorAdmin('transferItem', true),
 				uploadSelector: state.getStateSelectorAdmin('transferUpload', true),
 				overrideExistingSelector: state.getStateSelectorAdmin('transferExisting', true),
-				uploadConfirmMsg: esFormsLocalization.uploadConfirmMsg,
+				confirmMsg: esFormsLocalization.confirmMsg,
 			}).init();
 		});
 	}

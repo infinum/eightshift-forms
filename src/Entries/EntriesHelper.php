@@ -330,10 +330,10 @@ class EntriesHelper
 
 		$length = UtilsSettingsHelper::getSettingValue(SettingsEntries::SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY, $formId);
 		if ($length) {
-			$value = \str_pad($value, (int) $length, '0', STR_PAD_LEFT);
+			$value = \str_pad($value, (int) $length, '0', \STR_PAD_LEFT);
 		}
 
-		return $value;
+		return (string) $value;
 	}
 
 	/**
@@ -358,9 +358,29 @@ class EntriesHelper
 
 		$value = (int) $value + 1;
 
-		update_post_meta($formId, UtilsSettingsHelper::getSettingName(SettingsEntries::INCREMENT_META_KEY), $value);
+		\update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsEntries::INCREMENT_META_KEY), $value);
 
 		return (string) $value;
+	}
+
+	/**
+	 * Reset increment.
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return bool
+	 */
+	public static function resetIncrement(string $formId): bool
+	{
+		$value = UtilsSettingsHelper::getSettingValue(SettingsEntries::SETTINGS_ENTRIES_INCREMENT_START_KEY, $formId);
+
+		if (!$value) {
+			$value = 0;
+		}
+
+		$update = \update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsEntries::INCREMENT_META_KEY), $value);
+
+		return (bool) $update;
 	}
 
 	/**

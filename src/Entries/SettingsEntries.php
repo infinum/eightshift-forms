@@ -210,7 +210,8 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										'checkboxAsToggle' => true,
 									],
 								],
-								'checkboxesFieldHelp' => $isUsed ? sprintf(\__('View all stored entries on <a href="%s">this</a> link.', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
+								// translators: %s is the link to the listing page.
+								'checkboxesFieldHelp' => $isUsed ? \sprintf(\__('View all stored entries on <a href="%s">this</a> link.', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
 							],
 							...($isUsed ? [
 								[
@@ -279,36 +280,6 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 						'tabLabel' => \__('Increment', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'layout',
-								'layoutType' => 'layout-v-stack',
-								'layoutContent' => [
-									[
-										'component' => 'intro',
-										'introTitle' => \__('Export', 'eightshift-forms'),
-									],
-									[
-										'component' => 'card-inline',
-										'cardInlineTitle' => \__('Increment Id settings'),
-										'cardInlineSubTitle' => sprintf(\__('Current increment Id is: %s', 'eightshift-forms'), EntriesHelper::getIncrement($formId)),
-										'cardInlineRightContent' => [
-											[
-												'component' => 'submit',
-												'submitValue' => \__('Reset', 'eightshift-forms'),
-												'submitVariant' => 'ghost',
-												'submitAttrs' => [
-													// UtilsHelper::getStateAttribute('migrationType') => self::TYPE_EXPORT_GLOBAL_SETTINGS,
-												],
-												'additionalClass' => UtilsHelper::getStateSelectorAdmin('incrementReset'),
-											],
-										],
-									],
-								],
-							],
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
 								'component' => 'input',
 								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_START_KEY),
 								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_INCREMENT_START_KEY),
@@ -331,7 +302,33 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								'inputStep' => 1,
 								'inputIsNumber' => true,
 								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_ENTRIES_INCREMENT_LENGTH_KEY, $formId),
-							]
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'layout',
+								'layoutType' => 'layout-v-stack',
+								'layoutContent' => [
+									[
+										'component' => 'card-inline',
+										// translators: %s is the current increment number.
+										'cardInlineTitle' => \sprintf(\__('Current increment: %s', 'eightshift-forms'), EntriesHelper::getIncrement($formId)),
+										'cardInlineRightContent' => [
+											[
+												'component' => 'submit',
+												'submitValue' => \__('Reset', 'eightshift-forms'),
+												'submitVariant' => 'ghost',
+												'submitAttrs' => [
+													UtilsHelper::getStateAttribute('formId') => $formId,
+												],
+												'additionalClass' => UtilsHelper::getStateSelectorAdmin('incrementReset'),
+											],
+										],
+									],
+								],
+							],
 						],
 					],
 				],
