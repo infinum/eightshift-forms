@@ -25,6 +25,10 @@ $tableWrapClass = Helpers::classnames([
 
 $tableClass = Helpers::selector($componentClass, $componentClass, 'table');
 
+if (!$tableContent) {
+	return;
+}
+
 ?>
 
 <div class="<?php echo esc_attr($tableWrapClass); ?>">
