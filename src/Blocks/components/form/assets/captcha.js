@@ -97,7 +97,6 @@ export class Captcha {
 				Accept: 'application/json',
 			},
 			body: formData,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};

@@ -9,7 +9,7 @@ export class Transfer {
 		this.itemSelector = options.itemSelector;
 		this.uploadSelector = options.uploadSelector;
 		this.overrideExistingSelector = options.overrideExistingSelector;
-		this.uploadConfirmMsg = options.uploadConfirmMsg;
+		this.confirmMsg = options.confirmMsg;
 	}
 
 	init () {
@@ -44,7 +44,9 @@ export class Transfer {
 			formData.append('upload', this.utils.getFileNameFromFileObject(file));
 			formData.append('override', document.querySelector(`${this.overrideExistingSelector} input`).checked);
 
-			confirm(this.uploadConfirmMsg);
+			if(!confirm(this.confirmMsg)) {
+				return;
+			}
 		} else {
 			formData.append('items', field.getAttribute(this.state.getStateAttribute('migrationExportItems')));
 		}
@@ -58,7 +60,6 @@ export class Transfer {
 				'X-WP-Nonce': this.state.getStateConfigNonce(),
 			},
 			body: formData,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};

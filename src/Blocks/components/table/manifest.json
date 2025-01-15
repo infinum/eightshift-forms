@@ -1,0 +1,14 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "table",
+	"title": "table",
+	"componentClass": "es-table",
+	"attributes": {
+		"tableHead": {
+			"type": "array"
+		},
+		"tableContent": {
+			"type": "array"
+		}
+	}
+}

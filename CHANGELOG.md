@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.8.0]
+
+### Added
+
+- `increment ID` option for entries so you can use them to track successful submissions or use it as an order number.
+- `incrementId` key is now available in the email response tags.
+
+### Changed
+
+- `entries` listing now has the new listing page with better UX and table layout.
+
 ## [5.7.1]
 
 ### Added
@@ -917,6 +928,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.8.0]: https://github.com/infinum/eightshift-forms/compare/5.7.1...5.8.0
 [5.7.1]: https://github.com/infinum/eightshift-forms/compare/5.7.0...5.7.1
 [5.7.0]: https://github.com/infinum/eightshift-forms/compare/5.6.6...5.7.0
 [5.6.6]: https://github.com/infinum/eightshift-forms/compare/5.6.5...5.6.6
