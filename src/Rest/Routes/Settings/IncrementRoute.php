@@ -37,7 +37,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 	protected $manifestCache;
 
 	/**
-	 * Create a new instance that injects classes
+	 * Create a new instance that injects classes.
 	 *
 	 * @param ValidatorInterface $validator Inject validation methods.
 	 * @param ManifestCacheInterface $manifestCache Inject manifest cache interface.
