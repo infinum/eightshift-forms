@@ -66,7 +66,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Method that returns REST response.
 	 *
 	 * @param WP_REST_Request $request Data got from endpoint url.
 	 *
