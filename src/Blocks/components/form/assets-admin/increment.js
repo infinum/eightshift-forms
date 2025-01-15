@@ -10,9 +10,7 @@ export class Increment {
 	}
 
 	init() {
-		[...document.querySelectorAll(this.selector)].forEach((element) => {
-			element.addEventListener('click', this.onClick, true);
-		});
+		document.querySelectorAll(this.selector).forEach((element) => element.addEventListener('click', this.onClick, true));
 	}
 
 	// Handle form submit and all logic.
