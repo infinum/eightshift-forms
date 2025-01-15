@@ -42,16 +42,14 @@ if (!$tableContent) {
 				</tr>
 			</thead>
 		<?php } ?>
-		<?php if ($tableContent) { ?>
-			<tbody>
-				<?php foreach ($tableContent as $row) { ?>
-					<tr>
-						<?php foreach ($tableHead as $headKey => $headValue) { ?>
-							<td><?php echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?></td>
-						<?php } ?>
-					</tr>
-				<?php } ?>
-			</tbody>
-		<?php } ?>
+		<tbody>
+			<?php foreach ($tableContent as $row) { ?>
+				<tr>
+					<?php foreach ($tableHead as $headKey => $headValue) { ?>
+						<td><?php echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?></td>
+					<?php } ?>
+				</tr>
+			<?php } ?>
+		</tbody>
 	</table>
 </div>
