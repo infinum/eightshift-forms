@@ -23,9 +23,7 @@ $tableWrapClass = Helpers::classnames([
 	Helpers::selector($additionalClass, $additionalClass),
 ]);
 
-$tableClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass, 'table'),
-]);
+$tableClass = Helpers::selector($componentClass, $componentClass, 'table');
 
 ?>
 
