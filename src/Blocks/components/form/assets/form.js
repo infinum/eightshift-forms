@@ -129,7 +129,6 @@ export class Form {
 				Accept: 'application/json',
 			},
 			body: formData,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
@@ -292,7 +291,6 @@ export class Form {
 				Accept: 'multipart/form-data',
 			},
 			body: this.FORM_DATA,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
@@ -359,7 +357,6 @@ export class Form {
 				Accept: 'multipart/form-data',
 			},
 			body: this.FORM_DATA,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
