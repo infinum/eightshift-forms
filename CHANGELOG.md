@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.8.0]
+
+### Added
+
+- `increment ID` option for entries so you can us them to track success submissions or use it a order number.
+- `incrementId` key is now available in the email response tags.
+
+### Changed
+
+- `entries` listing now has new listing page with better UX and table layout.
+
 ## [5.7.1]
 
 ### Added
