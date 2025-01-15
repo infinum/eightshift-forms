@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- `increment ID` option for entries so you can us them to track success submissions or use it a order number.
+- `increment ID` option for entries so you can use them to track successful submissions or use it as an order number.
 - `incrementId` key is now available in the email response tags.
 
 ### Changed
