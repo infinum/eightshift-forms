@@ -6,9 +6,21 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [5.8.2]
 
+### Fixed
+
+- form submission for phone bugfix.
+- increment ID bugfix for length.
+
 ### Changed
 
-- location of increment settings and helpers.
+- Corvus integration now supports API key per store ID.
+
+### Added
+
+- Corvus integration setting for setting IBAN and subscription values.
+- Corvus integration order number will now use increment ID or entry ID based on the settings.
+- Paycek integration order number will now use increment ID or entry ID based on the settings.
+- Paycek now sends formId and order number as GET parameters for callback URL.
 
 ## [5.8.1]
 
