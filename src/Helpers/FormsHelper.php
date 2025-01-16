@@ -307,7 +307,7 @@ final class FormsHelper
 
 		\update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
 
-		return (string) $value;
+		return static::getIncrement($formId);
 	}
 
 	/**

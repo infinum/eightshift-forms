@@ -101,6 +101,11 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 	public const SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY = 'paycek-skip-integration';
 
 	/**
+	 * Entry ID use key.
+	 */
+	public const SETTINGS_PAYCEK_ENTRY_ID_USE_KEY = 'paycek-entry-id-use';
+
+	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -215,6 +220,10 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_CART_DESC_KEY, $formId),
 							],
 							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
 								'component' => 'input',
 								'inputIsRequired' => true,
 								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_URL_SUCCESS),
@@ -243,6 +252,26 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 								'inputIsUrl' => true,
 								'inputType' => 'url',
 								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_URL_CANCEL, $formId),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use Entry Id', 'eightshift-forms'),
+										'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Paycek `paymentId` value. This is used if you want to refference the entry after the form submission. Make sure you have Entries feature turened `on`.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+									]
+								]
 							],
 						],
 					],

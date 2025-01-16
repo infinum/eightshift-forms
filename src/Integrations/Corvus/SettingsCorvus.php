@@ -51,17 +51,17 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	public const SETTINGS_TYPE_KEY = 'corvus';
 
 	/**
-	 * Corvus Use key.
+	 * Use key.
 	 */
 	public const SETTINGS_CORVUS_USE_KEY = 'corvus-use';
 
 	/**
-	 * Corvus IBAN use key.
+	 * IBAN use key.
 	 */
 	public const SETTINGS_CORVUS_IBAN_USE_KEY = 'corvus-iban-use';
 
 	/**
-	 * Corvus Entry ID use key.
+	 * Entry ID use key.
 	 */
 	public const SETTINGS_CORVUS_ENTRY_ID_USE_KEY = 'corvus-entry-id-use';
 
@@ -636,9 +636,8 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CORVUS_USE_KEY, self::SETTINGS_CORVUS_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus(), self::SETTINGS_CORVUS_API_KEY_KEY)['value'];
 
-		if (!$isUsed || !$apiKey) {
+		if (!$isUsed) {
 			return false;
 		}
 
@@ -658,6 +657,8 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 		}
 
 		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY, self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY);
+
+		$storeIds = UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY);
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -693,25 +694,10 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 								],
 							] : [
 								[
-									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
-								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyCorvus(),
-										self::SETTINGS_CORVUS_API_KEY_KEY,
-										'ES_API_KEY_CORVUS'
-									),
-									\__('API key', 'eightshift-forms'),
-								),
-								[
-									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
-								],
-								[
 									'component' => 'textarea',
 									'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CORVUS_STORE_IDS_KEY),
 									'textareaIsMonospace' => true,
+									'textareaIsRequired' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldLabel' => \__('Store IDs', 'eightshift-forms'),
 									// translators: %s will be replaced with local validation patterns.
@@ -724,6 +710,13 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 										</ul>", 'eightshift-forms')),
 									'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_CORVUS_STORE_IDS_KEY, 2),
 								],
+								...($storeIds ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								...$this->getApiKeysSettings($storeIds),
+								] : []),
 							]),
 						],
 					],
@@ -829,5 +822,37 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 				'required' => false,
 			],
 		];
+	}
+
+	/**
+	 * Get API keys settings.
+	 *
+	 * @param array<mixed> $storeIds Store IDs.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getApiKeysSettings(array $storeIds): array
+	{
+		$output = [];
+
+		foreach ($storeIds as $storeId) {
+			$id = $storeId[1] ?? '';
+
+			if (!$id) {
+				continue;
+			}
+
+			$output[] = UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+				UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
+					Variables::getApiKeyCorvus($id),
+					self::SETTINGS_CORVUS_API_KEY_KEY . "_{$id}",
+					"ES_API_KEY_CORVUS_{$id}"
+				),
+				// translators: %s will be replaced with the store ID.
+				\sprintf(\__('API key - %s', 'eightshift-forms'), $id),
+			);
+		}
+
+		return $output;
 	}
 }

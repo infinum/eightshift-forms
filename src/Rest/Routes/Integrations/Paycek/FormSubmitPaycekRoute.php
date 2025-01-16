@@ -137,7 +137,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			)
 		);
 
-		$params = $this->setRealOrderNumber($params, $formId);
+		$params = $this->setRealOrderNumber($params, $successAdditionalData, $formId);
 
 		// Finish.
 		return \rest_ensure_response(
@@ -197,9 +197,6 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_LANG_KEY, $formId);
 		$output['paymentId'] = 'temp'; // Temp name, the real one will be set after the increment.
 		$output['description'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);
-		$output['urlSuccess'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_SUCCESS, $formId);
-		$output['urlFail'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_FAIL, $formId);
-		$output['urlCancel'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_CANCEL, $formId);
 
 		return $output;
 	}
@@ -208,15 +205,28 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 	 * Set real order number after the increment.
 	 *
 	 * @param array<string, string> $params Form params.
+	 * @param array<string, string> $successAdditionalData Additional data.
 	 * @param string $formId Form ID.
 	 *
 	 * @return array<string, string>
 	 */
-	private function setRealOrderNumber(array $params, string $formId): array
+	private function setRealOrderNumber(array $params, array $successAdditionalData, string $formId): array
 	{
 		$orderId = FormsHelper::getIncrement($formId);
 
+		if (UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '') {
+			$entryId = $successAdditionalData['private'][UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
+
+			if ($entryId) {
+				$orderId = $entryId;
+			}
+		}
+
 		$params['paymentId'] = $orderId;
+
+		$params['urlSuccess'] = $this->getCallbackUrl($formId, $orderId, UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_SUCCESS, $formId));
+		$params['urlFail'] = $this->getCallbackUrl($formId, $orderId, UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_FAIL, $formId));
+		$params['urlCancel'] = $this->getCallbackUrl($formId, $orderId, UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_CANCEL, $formId));
 
 		// Set the correct order as it is req by Corvus.
 		\ksort($params);
@@ -285,6 +295,30 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 				'h' => $this->base64urlEncode(\hex2bin(\hash("sha256", $dataBase64 . "\x00" . $profileCode . "\x00" . $secretKey)))
 			],
 			'https://paycek.io/processing/checkout/payment_create'
+		);
+	}
+
+	/**
+	 * Get callback URL.
+	 *
+	 * @param string $formId Form ID.
+	 * @param string $orderId Order ID.
+	 * @param string $url URL.
+	 *
+	 * @return string
+	 */
+	private function getCallbackUrl(string $formId, string $orderId, string $url = ''): string
+	{
+		if (!$url) {
+			return '';
+		}
+
+		return \add_query_arg(
+			[
+				'formId' => $formId,
+				'orderId' => $orderId,
+			],
+			$url
 		);
 	}
 }

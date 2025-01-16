@@ -114,7 +114,17 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 
 		$missingOrEmpty = \array_filter($reqParams, fn($param) => empty($params[$param] ?? null));
 
+		// Bail early if the required params are missing.
 		if ($missingOrEmpty) {
+			return \rest_ensure_response(
+				UtilsApiHelper::getApiErrorPublicOutput(
+					$this->labels->getLabel('corvusMissingReqParams', $formId)
+				)
+			);
+		}
+
+		// Bail early if the API key is missing.
+		if (isset($params['store_id']) && empty(Variables::getApiKeyCorvus($params['store_id']))) {
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorPublicOutput(
 					$this->labels->getLabel('corvusMissingReqParams', $formId)
@@ -167,6 +177,11 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 	private function prepareParams(array $mapParams, array $params, string $formId): array
 	{
 		$output = [];
+		$storeId = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_STORE_ID, $formId);
+
+		if (!$storeId) {
+			return $output;
+		}
 
 		foreach ($mapParams as $key => $value) {
 			$param = $params[$value] ?? '';
@@ -194,7 +209,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 			}
 		}
 
-		$output['store_id'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_STORE_ID, $formId);
+		$output['store_id'] = $storeId;
 		$output['version'] = '1.4'; // Corvus API version.
 		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsCorvus::SETTINGS_CORVUS_LANG_KEY, $formId);
 		$output['require_complete'] = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_REQ_COMPLETE_KEY, SettingsCorvus::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId) ? 'true' : 'false';
@@ -248,7 +263,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		$params['signature'] = \hash_hmac(
 			'sha256',
 			\array_reduce(\array_keys($params), fn($carry, $key) => $carry . $key . $params[$key], ''),
-			UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus(), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)['value']
+			UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus($params['store_id']), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)['value']
 		);
 
 		return $params;

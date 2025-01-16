@@ -416,12 +416,10 @@ export function setStateFormInitial(formId) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], { value: value }, formId);
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], { value: value }, formId);
 				} else {
-					const newPhonePrefix = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.value ?? '';
 					const newPhoneValue = {
 						prefix: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.value ?? '',
 						value: value,
 						meta: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.meta ?? {},
-						combined: newPhonePrefix ? `${newPhonePrefix}${value}` : value,
 					};
 
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], newPhoneValue, formId);
@@ -604,20 +602,7 @@ export function setSteps(formElement, formId) {
  */
 export function setStateValues(name, value, formId) {
 	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
-
-	switch (getStateFieldType(name)) {
-		case 'phone':
-			const newValue = {
-				...value,
-				combined: value?.prefix ? `${value?.prefix}${value?.value}` : value?.value,
-			 };
-
-			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], newValue, formId);
-			break;
-		default:
-			setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-			break;
-	}
+	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 }
 
 /**
