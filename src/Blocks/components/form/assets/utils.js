@@ -1411,6 +1411,7 @@ export class Utils {
 	 * Get phone combined value.
 	 *
 	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
 	 *
 	 * @returns {string}
 	 */
