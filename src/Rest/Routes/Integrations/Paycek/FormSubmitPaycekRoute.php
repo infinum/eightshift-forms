@@ -228,7 +228,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		$params['urlFail'] = $this->getCallbackUrl($formId, $orderId, UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_FAIL, $formId));
 		$params['urlCancel'] = $this->getCallbackUrl($formId, $orderId, UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_CANCEL, $formId));
 
-		// Set the correct order as it is req by Corvus.
+		// Set the correct order as it is req by Paycek.
 		\ksort($params);
 
 		return $params;
