@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.8.2]
+
+### Fixed
+
+- form submission for phone bugfix.
+- increment ID bugfix for length.
+
+### Changed
+
+- Corvus integration now supports API key per store ID.
+
+### Added
+
+- Corvus integration setting for setting IBAN and subscription values.
+- Corvus integration order number will now use increment ID or entry ID based on the settings.
+- Paycek integration order number will now use increment ID or entry ID based on the settings.
+- Paycek now sends formId and order number as GET parameters for callback URL.
+
 ## [5.8.1]
 
 ### Changed
@@ -934,6 +952,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.8.2]: https://github.com/infinum/eightshift-forms/compare/5.8.1...5.8.2
 [5.8.1]: https://github.com/infinum/eightshift-forms/compare/5.8.0...5.8.1
 [5.8.0]: https://github.com/infinum/eightshift-forms/compare/5.7.1...5.8.0
 [5.7.1]: https://github.com/infinum/eightshift-forms/compare/5.7.0...5.7.1

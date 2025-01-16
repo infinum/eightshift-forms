@@ -752,7 +752,7 @@ export class Form {
 						break;
 					}
 
-					data.value = data?.value?.combined ?? '';
+					data.value = this.utils.getPhoneCombinedValue(formId, name);
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;

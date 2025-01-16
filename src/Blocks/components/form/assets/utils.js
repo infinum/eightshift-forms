@@ -1407,6 +1407,28 @@ export class Utils {
 		};
 	};
 
+	/**
+	 * Get phone combined value.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {string}
+	 */
+	getPhoneCombinedValue(formId, name) {
+		const data = this.state.getStateElementValue(name, formId);
+
+		if (!data || data?.value === '') {
+			return '';
+		}
+
+		if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
+			return data?.prefix === '' ? '' : `${data?.prefix}${data?.value}`;
+		}
+		
+		return data?.value;
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Events callback
 	////////////////////////////////////////////////////////////////
@@ -1573,6 +1595,9 @@ export class Utils {
 			},
 			getComparator: () => {
 				return this.getComparator();
+			},
+			getPhoneCombinedValue: (formId, name) => {
+				return this.getPhoneCombinedValue(formId, name);
 			},
 		};
 	}
