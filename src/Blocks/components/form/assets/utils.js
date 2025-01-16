@@ -1423,9 +1423,9 @@ export class Utils {
 
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
 			return data?.prefix === '' ? '' : `${data?.prefix}${data?.value}`;
-		} else {
-			return data?.value;
 		}
+		
+		return data?.value;
 	}
 
 	////////////////////////////////////////////////////////////////

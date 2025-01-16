@@ -265,7 +265,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use Entry Id', 'eightshift-forms'),
-										'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Paycek `paymentId` value. This is used if you want to refference the entry after the form submission. Make sure you have Entries feature turened `on`.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Paycek `paymentId` value. This is used if you want to reference the entry after the form submission. Make sure you have Entries feature turned `on`.', 'eightshift-forms'),
 										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY,
 										'checkboxAsToggle' => true,

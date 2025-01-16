@@ -516,7 +516,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Use Entry Id', 'eightshift-forms'),
-											'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Corvus `order_number` value. This is used if you want to refference the entry after the form submission. Make sure you have Entries feature turened `on`.', 'eightshift-forms'),
+											'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Corvus `order_number` value. This is used if you want to reference the entry after the form submission. Make sure you have Entries feature turned `on`.', 'eightshift-forms'),
 											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY,
 											'checkboxAsToggle' => true,
@@ -532,7 +532,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Require complete', 'eightshift-forms'),
-											'checkboxHelp' => \__('Checked indicates an pre-authorization. Unchecked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
+											'checkboxHelp' => \__('Checked indicates a pre-authorization. Unchecked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
 											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_CORVUS_REQ_COMPLETE_KEY,
 											'checkboxAsToggle' => true,
