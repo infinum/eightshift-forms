@@ -112,7 +112,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			];
 		}
 
-		$this->sendConfirmationEmail($formId, $params, $files);
+		$this->sendConfirmationEmail($formId, $params, $files, $responseTags);
 
 		return [
 			'status' => UtilsConfig::STATUS_SUCCESS,
@@ -184,10 +184,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 * @param string $formId Form ID.
 	 * @param array<mixed> $params Params array.
 	 * @param array<mixed> $files Files array.
+	 * @param array<string, mixed> $responseTags Response tags.
 	 *
 	 * @return boolean
 	 */
-	private function sendConfirmationEmail(string $formId, array $params, array $files): bool
+	private function sendConfirmationEmail(string $formId, array $params, array $files, array $responseTags = []): bool
 	{
 		// Check if Mailer data is set and valid.
 		$isConfirmationValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $formId);
@@ -209,7 +210,8 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
 			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 			$files,
-			$params
+			$params,
+			$responseTags
 		);
 	}
 }

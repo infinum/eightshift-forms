@@ -52,7 +52,7 @@ class Mailer implements MailerInterface
 		return \wp_mail(
 			$this->getTemplate('to', $fields, $formId, $to),
 			$this->getTemplate('subject', $fields, $formId, $subject, $responseFields),
-			$this->getTemplate('message', $fields, $formId, $template, $responseFields),
+			'<html><body>' . $this->getTemplate('message', $fields, $formId, $template, $responseFields) . '</body></html>',
 			$this->getHeader(
 				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)

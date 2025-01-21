@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.8.3]
+
+### Fixed
+
+- Mailer `tnx email` will now parse email response tags correctly.
+- Form file field will now reset the value after the form is submitted.
+
 ## [5.8.2]
 
 ### Fixed
@@ -952,6 +959,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.8.3]: https://github.com/infinum/eightshift-forms/compare/5.8.2...5.8.3
 [5.8.2]: https://github.com/infinum/eightshift-forms/compare/5.8.1...5.8.2
 [5.8.1]: https://github.com/infinum/eightshift-forms/compare/5.8.0...5.8.1
 [5.8.0]: https://github.com/infinum/eightshift-forms/compare/5.7.1...5.8.0
