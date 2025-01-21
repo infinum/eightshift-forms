@@ -433,7 +433,10 @@
 			"afterCaptchaInit": "esFormsAfterCaptchaInit",
 			"stepsGoToNextStep": "esFormsGoToNextStep",
 			"stepsGoToPrevStep": "esFormsGoToPrevStep",
-			"enrichmentPrefill": "esFormsEnrichmentPrefill"
+			"beforeEnrichmentUrlPrefill": "esFormsBeforeEnrichmentUrlPrefill",
+			"afterEnrichmentUrlPrefill": "esFormsAfterEnrichmentUrlPrefill",
+			"beforeEnrichmentLocalstoragePrefill": "esFormsBeforeEnrichmentLocalstoragePrefill",
+			"afterEnrichmentLocalstoragePrefill": "esFormsAfterEnrichmentLocalstoragePrefill"
 		},
 		"typeInternal": {
 			"input": "input",

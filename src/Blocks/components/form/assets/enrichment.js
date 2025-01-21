@@ -360,6 +360,8 @@ export class Enrichment {
 	 * @returns {void}
 	 */
 	prefillByUrlData(formId, data) {
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('beforeEnrichmentUrlPrefill'), data);
+
 		data.forEach((param) => {
 			const paramItem = param.split('==');
 
@@ -462,7 +464,7 @@ export class Enrichment {
 			}
 		});
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('enrichmentPrefill'), data);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterEnrichmentUrlPrefill'), data);
 	}
 
 	/**
@@ -474,6 +476,8 @@ export class Enrichment {
 	 * @returns {void}
 	 */
 	prefillByLocalstorageData(formId, data) {
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('beforeEnrichmentLocalstoragePrefill'), data);
+
 		Object.entries(data).forEach(([name, value]) => {
 			if (name === 'timestamp') {
 				return;
@@ -509,7 +513,7 @@ export class Enrichment {
 			}
 		});
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('enrichmentPrefill'), data);
+		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterEnrichmentLocalstoragePrefill'), data);
 	}
 
 	////////////////////////////////////////////////////////////////

@@ -10,20 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Paycek;
 
-use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
-use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Validation\ValidationPatternsInterface;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
@@ -35,32 +28,6 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = SettingsPaycek::SETTINGS_TYPE_KEY;
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
-	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param SecurityInterface $security Inject security methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
-	 */
-	public function __construct(
-		ValidatorInterface $validator,
-		ValidationPatternsInterface $validationPatterns,
-		LabelsInterface $labels,
-		CaptchaInterface $captcha,
-		SecurityInterface $security,
-		FormSubmitMailerInterface $formSubmitMailer
-	) {
-		$this->validator = $validator;
-		$this->validationPatterns = $validationPatterns;
-		$this->labels = $labels;
-		$this->captcha = $captcha;
-		$this->security = $security;
-		$this->formSubmitMailer = $formSubmitMailer;
-	}
 
 	/**
 	 * Get the base URL of the route.
@@ -95,12 +62,6 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsPaycek::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
 
 		$params = $this->prepareParams($mapParams, $formDetails['paramsRaw'], $formId);
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsPaycek::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formDetails['paramsRaw'], $mapParams, $formId) ?? [];
-		}
 
 		$reqParams = [
 			'profileCode',
@@ -143,23 +104,27 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
 				$this->labels->getLabel('paycekSuccess', $formId),
-				[
-					UtilsHelper::getStateResponseOutputKey('processExternally') => [
-						'type' => 'GET',
-						'url' => $this->generatePaymentUrl(
-							$params['profileCode'],
-							$params['secretKey'],
-							$params['paymentId'],
-							$params['amount'],
-							$params['email'],
-							$params['description'],
-							$params['language'],
-							$params['urlSuccess'],
-							$params['urlFail'],
-							$params['urlCancel']
-						),
-					],
-				]
+				\array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['additional'],
+					[
+						UtilsHelper::getStateResponseOutputKey('processExternally') => [
+							'type' => 'GET',
+							'url' => $this->generatePaymentUrl(
+								$params['profileCode'],
+								$params['secretKey'],
+								$params['paymentId'],
+								$params['amount'],
+								$params['email'],
+								$params['description'],
+								$params['language'],
+								$params['urlSuccess'],
+								$params['urlFail'],
+								$params['urlCancel']
+							),
+						],
+					]
+				),
 			)
 		);
 	}
