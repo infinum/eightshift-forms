@@ -1433,8 +1433,6 @@ export class Form {
 
 				field?.classList?.remove(this.state.getStateSelector('isActive'));
 
-				this.state.setStateElementValue(name, 'true', formId);
-
 				// Remove main filed validation error.
 				this.utils.unsetFieldError(formId, name);
 			});
@@ -1447,7 +1445,6 @@ export class Form {
 				}
 
 				field?.classList?.remove(this.state.getStateSelector('isActive'));
-				this.state.setStateElementValue(name, '', formId);
 
 				// Remove main filed validation error.
 				this.utils.unsetFieldError(formId, name);

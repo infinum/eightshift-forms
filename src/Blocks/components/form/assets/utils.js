@@ -565,6 +565,9 @@ export class Utils {
 				case 'range':
 					this.setManualRangeValue(formId, name, initial);
 					break;
+				case 'file':
+					this.state.getStateElementCustom(name, formId)?.removeAllFiles();
+					break;
 				default:
 					this.setManualInputValue(formId, name, initial, true, true);
 					break;
@@ -1178,8 +1181,6 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillField(formId, name);
 
 		this.conditionalTags.setField(formId, name);
-
-		this.setFieldFilledState(formId, name);
 	}
 
 	/**
