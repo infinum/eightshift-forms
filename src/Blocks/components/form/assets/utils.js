@@ -445,13 +445,13 @@ export class Utils {
 		if (window?.dataLayer && gtmData?.event) {
 			window.dataLayer.push({...gtmData, ...additionalDataItems});
 
-			this.dispatchFormEvent(
-				'form',
-				this.state.getStateEvent('afterGtmDataPush'), {
+			this.dispatchFormEventForm(
+				this.state.getStateEvent('afterGtmDataPush'),
+				formId,
+				{
 					gtmData,
 					additionalDataItems,
-				},
-				formId
+				}
 			);
 		}
 	}

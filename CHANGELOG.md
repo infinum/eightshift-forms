@@ -10,10 +10,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - internal simplification of the form php classes for integrations.
 - `prePostParams` filter is now loaded in the abstract method and not in the integration client classes.
+- All JavaScript events are now loaded on window.
 
 ### Added
 
 - 4 new JavaScript events for enrichment.
+- new JavaScript event for field change.
+- new JavaScript event for after result output is processed.
 - Payment forms will now have loading spinner on submit.
 - Enrichment will setup the data in PHP earlier in the process so it can be used in filters and entries.
 - Ability to ignore fallback email for specific key.
