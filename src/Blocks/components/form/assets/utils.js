@@ -101,15 +101,15 @@ export class Utils {
 	}
 
 	/**
-	 * Dispatch custom event.
+	 * Create custom event.
 	 *
+	 * @param {string} eventName Event name.
 	 * @param {string} formId Form Id.
-	 * @param {string} name Event name.
 	 * @param {object} additional Additional data to add to event.
-	 *
-	 * @returns {void}
+	*
+	 * @returns {Event}
 	 */
-	dispatchFormEvent(formId, name, additional) {
+	createCustomEvent(eventName, formId = null, additional = null) {
 		const options = {
 			bubbles: true,
 			detail: {
@@ -117,7 +117,7 @@ export class Utils {
 			}
 		};
 
-		if (!isNaN(formId)) {
+		if (formId) {
 			options.detail.formId = formId;
 		}
 
@@ -125,11 +125,46 @@ export class Utils {
 			options.detail.additional = additional;
 		}
 
-		if (!isNaN(formId)) {
-			this.state.getStateFormElement(formId).dispatchEvent(new CustomEvent(name, options));
-		} else {
-			formId.dispatchEvent(new CustomEvent(name, options));
-		}
+		return new CustomEvent(eventName, options);
+	}
+
+	/**
+	 * Dispatch custom event - window
+	 *
+	 * @param {string} eventName Event name.
+	 * @param {object} additional Additional data to add to event.
+	*
+	 * @returns {void}
+	 */
+	dispatchFormEventWindow(eventName, additional = null) {
+		window.dispatchEvent(this.createCustomEvent(eventName, additional));
+	}
+
+	/**
+	 * Dispatch custom event - form
+	 *
+	 * @param {string} eventName Event name.
+	 * @param {string} formId Form Id.
+	 * @param {object} additional Additional data to add to event.
+	*
+	 * @returns {void}
+	 */
+	dispatchFormEventForm(eventName, formId, additional = null) {
+		window.dispatchEvent(this.createCustomEvent(eventName, formId, additional));
+	}
+
+	/**
+	 * Dispatch custom event - field
+	 *
+	 * @param {string} eventName Event name.
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {object|string|array} value Field value.
+	*
+	 * @returns {void}
+	 */
+	dispatchFormEventField(eventName, formId, name, value) {
+		window.dispatchEvent(this.createCustomEvent(eventName, formId, { name, value }));
 	}
 
 	/**
@@ -411,11 +446,12 @@ export class Utils {
 			window.dataLayer.push({...gtmData, ...additionalDataItems});
 
 			this.dispatchFormEvent(
-				formId,
+				'form',
 				this.state.getStateEvent('afterGtmDataPush'), {
 					gtmData,
 					additionalDataItems,
-				}
+				},
+				formId
 			);
 		}
 	}
@@ -578,7 +614,7 @@ export class Utils {
 		document.activeElement.blur();
 
 		// Dispatch event.
-		this.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitReset'));
+		this.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitReset'), formId);
 	}
 
 	/**
@@ -591,7 +627,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	redirectToUrlByReference(formId, redirectUrl, reload = false) {
-		this.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitSuccessBeforeRedirect'), redirectUrl);
+		this.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitSuccessBeforeRedirect'), formId, redirectUrl);
 
 		// Do the actual redirect after some time.
 		setTimeout(() => {
@@ -623,7 +659,7 @@ export class Utils {
 				this.state.setStateFormIsLoaded(true, formId);
 
 				// Triger event that form is fully loaded.
-				this.dispatchFormEvent(formId, this.state.getStateEvent('formJsLoaded'));
+				this.dispatchFormEventForm(this.state.getStateEvent('formJsLoaded'), formId);
 			}
 			iterations++;
 		}, 100);
@@ -917,6 +953,8 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillField(formId, name);
 
 		this.conditionalTags.setField(formId, name);
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
 	}
 
 	/**
@@ -958,6 +996,8 @@ export class Utils {
 		this.conditionalTags.setField(formId, name);
 
 		this.setFieldFilledState(formId, name);
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
 	}
 
 	/**
@@ -1005,6 +1045,8 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillField(formId, name);
 
 		this.conditionalTags.setField(formId, name);
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
 	}
 
 	/**
@@ -1070,6 +1112,8 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillField(formId, name);
 
 		this.conditionalTags.setField(formId, name);
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, { ...newValue, ...value });
 	}
 
 	/**
@@ -1132,6 +1176,8 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillField(formId, name);
 
 		this.conditionalTags.setField(formId, name);
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
 	}
 
 	/**
@@ -1181,6 +1227,8 @@ export class Utils {
 		this.enrichment.setLocalStorageFormPrefillField(formId, name);
 
 		this.conditionalTags.setField(formId, name);
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
 	}
 
 	/**
@@ -1329,6 +1377,8 @@ export class Utils {
 				item.addEventListener('click', this.onFormShowEvent);
 			});
 		}
+
+		this.dispatchFormEventForm(this.state.getStateEvent('afterResultsOutput'), formId, data);
 	}
 
 	/**
@@ -1471,8 +1521,17 @@ export class Utils {
 			resetErrors: (formId) => {
 				this.resetErrors(formId);
 			},
-			dispatchFormEvent: (formId, name, additional) => {
-				this.dispatchFormEvent(formId, name, additional);
+			createCustomEvent: (eventName, formId = null, additional = null) => {
+				return this.createCustomEvent(eventName, formId = null, additional = null);
+			},
+			dispatchFormEventWindow: (eventName, additional = null) => {
+				this.dispatchFormEventWindow(eventName, additional = null);
+			},
+			dispatchFormEventForm: (eventName, formId, additional = null) => {
+				this.dispatchFormEventForm(eventName, formId, additional = null);
+			},
+			dispatchFormEventField: (eventName, formId, name, value) => {
+				this.dispatchFormEventField(eventName, formId, name, value);
 			},
 			scrollToElement: (formId, name) => {
 				this.scrollToElement(formId, name);

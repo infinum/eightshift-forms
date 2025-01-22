@@ -436,7 +436,9 @@
 			"beforeEnrichmentUrlPrefill": "esFormsBeforeEnrichmentUrlPrefill",
 			"afterEnrichmentUrlPrefill": "esFormsAfterEnrichmentUrlPrefill",
 			"beforeEnrichmentLocalstoragePrefill": "esFormsBeforeEnrichmentLocalstoragePrefill",
-			"afterEnrichmentLocalstoragePrefill": "esFormsAfterEnrichmentLocalstoragePrefill"
+			"afterEnrichmentLocalstoragePrefill": "esFormsAfterEnrichmentLocalstoragePrefill",
+			"onFieldChange": "esFormsOnFieldChange",
+			"afterResultsOutput": "esFormsAfterResultsOutput"
 		},
 		"typeInternal": {
 			"input": "input",

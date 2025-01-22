@@ -45,7 +45,7 @@ export class ConditionalTags {
 		}
 
 		// Listen to every field element change.
-		this.state.getStateFormElement(formId).addEventListener(
+		window.addEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
@@ -743,7 +743,7 @@ export class ConditionalTags {
 	 * @returns {vodi}
 	 */
 	removeEvents(formId) {
-		this.state.getStateFormElement(formId)?.removeEventListener(
+		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);

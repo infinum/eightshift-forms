@@ -277,7 +277,7 @@ export class Form {
 		this.state.setStateFormIsProcessing(true, formId);
 
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('beforeFormSubmit'));
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('beforeFormSubmit'), formId);
 
 		this.setFormData(formId, filter);
 
@@ -391,7 +391,7 @@ export class Form {
 	 */
 	formSubmitBefore(formId, response) {
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmit'), response);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmit'), formId, response);
 
 		// Clear all errors.
 		this.utils.resetErrors(formId);
@@ -416,7 +416,7 @@ export class Form {
 			data,
 		} = response;
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitSuccess'), response);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitSuccess'), formId, response);
 
 		if (this.state.getStateConfigIsAdmin()) {
 			// Set global msg.
@@ -497,6 +497,8 @@ export class Form {
 			data,
 		} = response;
 
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitError'), formId, response);
+
 		const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 
 		this.utils.setGlobalMsg(formId, message, status, data);
@@ -505,15 +507,13 @@ export class Form {
 
 		// Dispatch event.
 		if (data?.[validationOutputKey] !== undefined) {
-			this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitErrorValidation'), response);
+			this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitErrorValidation'), formId, response);
 
 			this.utils.outputErrors(formId, data?.[validationOutputKey]);
 
 			if (isFinalStep) {
 				this.steps.goToStepWithError(formId, data?.[validationOutputKey]);
 			}
-		} else {
-			this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitError'), response);
 		}
 	}
 
@@ -537,7 +537,7 @@ export class Form {
 		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
 
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitEnd'), response);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitEnd'), formId, response);
 	}
 
 	/**

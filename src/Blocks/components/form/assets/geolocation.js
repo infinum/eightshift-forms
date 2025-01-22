@@ -31,7 +31,7 @@ export class Geolocation {
 		}
 
 		// Set select fields based on geolocation.
-		this.state.getStateFormElement(formId).addEventListener(
+		window?.addEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);
@@ -48,7 +48,7 @@ export class Geolocation {
 	 * @returns {vodi}
 	 */
 	removeEvents(formId) {
-		this.state.getStateFormElement(formId)?.removeEventListener(
+		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);
