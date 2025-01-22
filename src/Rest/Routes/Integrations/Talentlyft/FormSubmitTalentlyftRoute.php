@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Talentlyft;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
@@ -41,29 +41,24 @@ class FormSubmitTalentlyftRoute extends AbstractFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
+	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
-	 * @param ClientInterface $talentlyftClient Inject ClientInterface which holds Talentlyft connect data.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
+	 * @param ClientInterface $talentlyftClient Inject talentlyftClient methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
-		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
 		FormSubmitMailerInterface $formSubmitMailer,
+		EnrichmentInterface $enrichment,
 		ClientInterface $talentlyftClient
 	) {
-		$this->validator = $validator;
-		$this->validationPatterns = $validationPatterns;
-		$this->labels = $labels;
-		$this->captcha = $captcha;
-		$this->security = $security;
-		$this->formSubmitMailer = $formSubmitMailer;
+		parent::__construct($validator, $labels, $captcha, $security, $formSubmitMailer, $enrichment);
 		$this->talentlyftClient = $talentlyftClient;
 	}
 

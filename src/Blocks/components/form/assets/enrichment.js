@@ -72,7 +72,7 @@ export class Enrichment {
 			return;
 		}
 
-		this.state.getStateFormElement(formId).addEventListener(
+		window.addEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onLocalstoragePrefillEvent
 		);
@@ -89,7 +89,7 @@ export class Enrichment {
 			return;
 		}
 
-		this.state.getStateFormElement(formId).addEventListener(
+		window.addEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onUrlParamsPrefillEvent
 		);
@@ -360,6 +360,8 @@ export class Enrichment {
 	 * @returns {void}
 	 */
 	prefillByUrlData(formId, data) {
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('beforeEnrichmentUrlPrefill'), formId, data);
+
 		data.forEach((param) => {
 			const paramItem = param.split('==');
 
@@ -462,7 +464,7 @@ export class Enrichment {
 			}
 		});
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('enrichmentPrefill'), data);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterEnrichmentUrlPrefill'), formId, data);
 	}
 
 	/**
@@ -474,6 +476,8 @@ export class Enrichment {
 	 * @returns {void}
 	 */
 	prefillByLocalstorageData(formId, data) {
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('beforeEnrichmentLocalstoragePrefill'), formId, data);
+
 		Object.entries(data).forEach(([name, value]) => {
 			if (name === 'timestamp') {
 				return;
@@ -509,7 +513,7 @@ export class Enrichment {
 			}
 		});
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('enrichmentPrefill'), data);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterEnrichmentLocalstoragePrefill'), formId, data);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -522,12 +526,12 @@ export class Enrichment {
 	 * @returns {vodi}
 	 */
 	removeEvents(formId) {
-		this.state.getStateFormElement(formId)?.removeEventListener(
+		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onLocalstoragePrefillEvent
 		);
 
-		this.state.getStateFormElement(formId)?.removeEventListener(
+		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onUrlParamsPrefillEvent
 		);

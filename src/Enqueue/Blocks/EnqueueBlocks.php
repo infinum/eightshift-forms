@@ -24,7 +24,7 @@ use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
-use EightshiftForms\Validation\ValidationPatternsInterface;
+use EightshiftForms\Validation\ValidationPatterns;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
@@ -41,13 +41,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Use shared helper trait.
 	 */
 	use SharedEnqueue;
-
-	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
 
 	/**
 	 * Instance variable of enrichment data.
@@ -67,16 +60,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 * Create a new admin instance.
 	 *
 	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
-	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
 	public function __construct(
 		ManifestCacheInterface $manifestCache,
-		ValidationPatternsInterface $validationPatterns,
 		EnrichmentInterface $enrichment
 	) {
 		$this->manifestCache = $manifestCache;
-		$this->validationPatterns = $validationPatterns;
 		$this->enrichment = $enrichment;
 	}
 
@@ -176,7 +166,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['formsUseCustomResultOutputFeature'] = \apply_filters($formsUseCustomResultOutputFeatureFilterName, false);
 		$output['formsUseLegacyTnxPageFeature'] = \apply_filters($formsUseLegacyTnxPageFeatureFilterName, false);
 		$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
-		$output['validationPatternsOptions'] = $this->validationPatterns->getValidationPatternsEditor();
+		$output['validationPatternsOptions'] = ValidationPatterns::getValidationPatternsEditor();
 		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
 		$output['currentPostType'] = \get_post_type() ? \get_post_type() : '';

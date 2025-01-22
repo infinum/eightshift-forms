@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Goodbits;
 
-use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -32,23 +31,6 @@ class GoodbitsClient implements ClientInterface
 	 * @var string
 	 */
 	private const BASE_URL = 'https://app.goodbits.io/api/v1/';
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
-	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
-		$this->enrichment = $enrichment;
-	}
 
 	/**
 	 * Return items.
@@ -119,7 +101,7 @@ class GoodbitsClient implements ClientInterface
 		}
 
 		$body = [
-			'subscriber' => $this->prepareParams($params, $formId),
+			'subscriber' => $this->prepareParams($params),
 		];
 
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'prePostId']);
@@ -264,21 +246,11 @@ class GoodbitsClient implements ClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
-	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params, string $formId): array
+	private function prepareParams(array $params): array
 	{
-		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsGoodbits::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
-		}
-
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 

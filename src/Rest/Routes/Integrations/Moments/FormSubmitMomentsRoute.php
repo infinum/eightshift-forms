@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\MomentsEventsInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
@@ -18,7 +19,6 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -50,31 +50,26 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
+	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
-	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
-	 * @param MomentsEventsInterface $momentsEvents Inject Moments which holds Moments events data.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
+	 * @param ClientInterface $momentsClient Inject momentsClient methods.
+	 * @param MomentsEventsInterface $momentsEvents Inject momentsEvents methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
-		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
 		FormSubmitMailerInterface $formSubmitMailer,
+		EnrichmentInterface $enrichment,
 		ClientInterface $momentsClient,
 		MomentsEventsInterface $momentsEvents
 	) {
-		$this->validator = $validator;
-		$this->validationPatterns = $validationPatterns;
-		$this->labels = $labels;
-		$this->captcha = $captcha;
-		$this->security = $security;
-		$this->formSubmitMailer = $formSubmitMailer;
+		parent::__construct($validator, $labels, $captcha, $security, $formSubmitMailer, $enrichment);
 		$this->momentsClient = $momentsClient;
 		$this->momentsEvents = $momentsEvents;
 	}

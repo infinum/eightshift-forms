@@ -24,12 +24,14 @@ export class PaymentGateways {
 	 * Initialize the payment gateway.
 	 * @returns {void}
 	 */
-	init() {
+	init(formId) {
 		const {
 			type,
 			url,
 			params,
 		} = this.response;
+
+		this.utils.showLoader(formId);
 
 		if (type === 'SUBMIT') {
 			this.initFormActionSubmit(url, params);

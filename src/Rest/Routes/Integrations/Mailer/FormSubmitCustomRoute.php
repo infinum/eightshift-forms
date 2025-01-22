@@ -10,18 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Class FormSubmitCustomRoute
@@ -32,29 +25,6 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = 'custom';
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
-	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param SecurityInterface $security Inject security methods.
-	 */
-	public function __construct(
-		ValidatorInterface $validator,
-		ValidationPatternsInterface $validationPatterns,
-		LabelsInterface $labels,
-		CaptchaInterface $captcha,
-		SecurityInterface $security
-	) {
-		$this->validator = $validator;
-		$this->validationPatterns = $validationPatterns;
-		$this->labels = $labels;
-		$this->captcha = $captcha;
-		$this->security = $security;
-	}
 
 	/**
 	 * Get the base url of the route
@@ -95,6 +65,8 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			);
 		}
 
+		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
+
 		if ($actionExternal) {
 			// Set validation submit once.
 			$this->validator->setValidationSubmitOnce($formId);
@@ -102,23 +74,19 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
-					[
-						UtilsHelper::getStateResponseOutputKey('processExternally') => [
-							'type' => 'SUBMIT',
-						],
-					],
+					\array_merge(
+						$successAdditionalData['public'],
+						$successAdditionalData['additional'],
+						[
+							UtilsHelper::getStateResponseOutputKey('processExternally') => [
+								'type' => 'SUBMIT',
+							],
+						]
+					),
 					$debug
 				)
 			);
 		}
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'customPrePostParams']);
-		if (\has_filter($filterName)) {
-			$formDetails[UtilsConfig::FD_PARAMS] = \apply_filters($filterName, $params, $formId) ?? [];
-		}
-
-		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Prepare params for output.
 		$params = UtilsGeneralHelper::prepareGenericParamsOutput($params);

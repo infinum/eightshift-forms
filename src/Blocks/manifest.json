@@ -433,7 +433,12 @@
 			"afterCaptchaInit": "esFormsAfterCaptchaInit",
 			"stepsGoToNextStep": "esFormsGoToNextStep",
 			"stepsGoToPrevStep": "esFormsGoToPrevStep",
-			"enrichmentPrefill": "esFormsEnrichmentPrefill"
+			"beforeEnrichmentUrlPrefill": "esFormsBeforeEnrichmentUrlPrefill",
+			"afterEnrichmentUrlPrefill": "esFormsAfterEnrichmentUrlPrefill",
+			"beforeEnrichmentLocalstoragePrefill": "esFormsBeforeEnrichmentLocalstoragePrefill",
+			"afterEnrichmentLocalstoragePrefill": "esFormsAfterEnrichmentLocalstoragePrefill",
+			"onFieldChange": "esFormsOnFieldChange",
+			"afterResultsOutput": "esFormsAfterResultsOutput"
 		},
 		"typeInternal": {
 			"input": "input",

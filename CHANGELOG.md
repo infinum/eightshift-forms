@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.9.0]
+
+### Changed
+
+- internal simplification of the form php classes for integrations.
+- `prePostParams` filter is now loaded in the abstract method and not in the integration client classes.
+- All JavaScript events are now loaded on window.
+
+### Added
+
+- 4 new JavaScript events for enrichment.
+- new JavaScript event for field change.
+- new JavaScript event for after result output is processed.
+- Payment forms will now have loading spinner on submit.
+- Enrichment will setup the data in PHP earlier in the process so it can be used in filters and entries.
+- Ability to ignore fallback email for specific key.
+
 ## [5.8.3]
 
 ### Fixed
@@ -959,6 +976,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.9.0]: https://github.com/infinum/eightshift-forms/compare/5.8.3...5.9.0
 [5.8.3]: https://github.com/infinum/eightshift-forms/compare/5.8.2...5.8.3
 [5.8.2]: https://github.com/infinum/eightshift-forms/compare/5.8.1...5.8.2
 [5.8.1]: https://github.com/infinum/eightshift-forms/compare/5.8.0...5.8.1

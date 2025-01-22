@@ -46,6 +46,11 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	public const SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY = 'fallback-email';
 
 	/**
+	 * Fallback Ignore key.
+	 */
+	public const SETTINGS_FALLBACK_IGNORE_KEY = 'fallback-ignore';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -108,6 +113,15 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
+							],
+							[
+								'component' => 'textarea',
+								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_FALLBACK_IGNORE_KEY),
+								'textareaIsMonospace' => true,
+								'textareaSaveAsJson' => true,
+								'textareaFieldLabel' => \__('Ignore keys', 'eightshift-forms'),
+								'textareaFieldHelp' => \__("Don't send failback email if any of these keys are present in the submission. One key per line.", 'eightshift-forms'),
+								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_FALLBACK_IGNORE_KEY, 1),
 							],
 						],
 					],

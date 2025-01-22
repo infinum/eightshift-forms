@@ -14,6 +14,7 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\General\SettingsGeneral;
@@ -25,7 +26,6 @@ use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStanda
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
@@ -47,13 +47,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * @var ValidatorInterface
 	 */
 	protected $validator;
-
-	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
 
 	/**
 	 * Instance variable of FormSubmitMailerInterface data.
@@ -84,6 +77,39 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected $security;
 
 	/**
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
+	 */
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new instance that injects classes
+	 *
+	 * @param ValidatorInterface $validator Inject validator methods.
+	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param SecurityInterface $security Inject security methods.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
+	 */
+	public function __construct(
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
+		CaptchaInterface $captcha,
+		SecurityInterface $security,
+		FormSubmitMailerInterface $formSubmitMailer,
+		EnrichmentInterface $enrichment
+	) {
+		$this->validator = $validator;
+		$this->labels = $labels;
+		$this->captcha = $captcha;
+		$this->security = $security;
+		$this->formSubmitMailer = $formSubmitMailer;
+		$this->enrichment = $enrichment;
+	}
+
+	/**
 	 * Route types.
 	 */
 	protected const ROUTE_TYPE_DEFAULT = 'default';
@@ -102,7 +128,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected const VALIDATION_ERROR_MSG = 'validationErrorMsg';
 	protected const VALIDATION_ERROR_OUTPUT = 'validationOutput';
 	protected const VALIDATION_ERROR_IS_SPAM = 'validationIsSpam';
-
 
 	/**
 	 * Method that returns rest response
@@ -309,6 +334,15 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						}
 					}
 
+					// Map enrichment data.
+					$formDetails[UtilsConfig::FD_PARAMS] = $this->enrichment->mapEnrichmentFields($formDetails[UtilsConfig::FD_PARAMS]);
+
+					// Filter params.
+					$filterName = UtilsHooksHelper::getFilterName(['integrations', $formDetails[UtilsConfig::FD_TYPE], 'prePostParams']);
+					if (\has_filter($filterName)) {
+						$formDetails[UtilsConfig::FD_PARAMS] = \apply_filters($filterName, $formDetails[UtilsConfig::FD_PARAMS], $formDetails[UtilsConfig::FD_FORM_ID]) ?? [];
+					}
+
 					break;
 			}
 
@@ -372,6 +406,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$response[UtilsConfig::IARD_VALIDATION] = $this->validator->getValidationLabelItems($validation, $formId);
 			$disableFallbackEmail = true;
 		}
+
+		$response[UtilsConfig::IARD_STATUS] = 'error';
 
 		// Skip fallback email if integration is disabled.
 		if (!$response[UtilsConfig::IARD_IS_DISABLED] && $response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_ERROR) {
@@ -764,16 +800,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Returns validator patterns class.
-	 *
-	 * @return ValidationPatternsInterface
-	 */
-	protected function getValidatorPatterns()
-	{
-		return $this->validationPatterns;
-	}
-
-	/**
 	 * Returns validator labels class.
 	 *
 	 * @return LabelsInterface
@@ -801,6 +827,16 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected function getSecurity()
 	{
 		return $this->security;
+	}
+
+	/**
+	 * Returns enrichment class.
+	 *
+	 * @return EnrichmentInterface
+	 */
+	protected function getEnrichment()
+	{
+		return $this->enrichment;
 	}
 
 	/**

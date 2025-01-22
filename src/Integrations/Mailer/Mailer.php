@@ -16,7 +16,6 @@ use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftForms_Parsedown as Parsedown;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -77,6 +76,12 @@ class Mailer implements MailerInterface
 		$customMsg = '',
 		$customData = []
 	): bool {
+
+		// Check if the email should be ignored.
+		$shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, UtilsSettingsHelper::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
+		if (isset($shouldIgnoreKeys[$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA][UtilsConfig::IARD_MSG]])) {
+			return false;
+		}
 
 		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
 
@@ -341,7 +346,7 @@ class Mailer implements MailerInterface
 	private function getTemplate(string $type, array $items, string $formId, string $template = '', array $responseFields = []): string
 	{
 		$params = \array_merge(
-			$this->prepareParams($items, $formId),
+			$this->prepareParams($items),
 			$responseFields
 		);
 
@@ -366,19 +371,12 @@ class Mailer implements MailerInterface
 	 * Prepare params.
 	 *
 	 * @param array<string, mixed> $params Params to prepare.
-	 * @param string $formId FormId value.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function prepareParams(array $params, string $formId): array
+	private function prepareParams(array $params): array
 	{
 		$output = [];
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
-		}
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
