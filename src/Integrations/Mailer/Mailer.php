@@ -77,6 +77,12 @@ class Mailer implements MailerInterface
 		$customData = []
 	): bool {
 
+		// Check if the email should be ignored.
+		$shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, UtilsSettingsHelper::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
+		if (isset($shouldIgnoreKeys[$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA][UtilsConfig::IARD_MSG]])) {
+			return false;
+		}
+
 		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
 
 		if (!$isSettingsValid) {

@@ -16,6 +16,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - 4 new JavaScript events for enrichment.
 - Payment forms will now have loading spinner on submit.
 - Enrichment will setup the data in PHP earlier in the process so it can be used in filters and entries.
+- Ability to ignore fallback email for specific key.
 
 ## [5.8.3]
 
