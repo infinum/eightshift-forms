@@ -135,6 +135,19 @@ function esFormGetEntry(string $entryId): array
 }
 
 /**
+ * Get entry by ID.
+ *
+ * @param array<string, mixed> $data Data to update.
+ * @param string $entryId Entry Id.
+ *
+ * @return boolean
+ */
+function esFormUpdateEntry(array $data, string $entryId): bool
+{
+	return EntriesHelper::updateEntry($data, $entryId);
+}
+
+/**
  * Get countries data set depending on the provided filter and default set.
  *
  * @return array<string, mixed>
