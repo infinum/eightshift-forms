@@ -394,16 +394,8 @@ export class Utils {
 				case 'phone':
 					output[trackingName] = this.getPhoneCombinedValue(formId, name);
 					break;
-				case 'radio':
-					output[trackingName] = value;
-					break;
 				default:
-					// If we have input on the checkbox/radio fieldset don't sent the input value but append it to the parent fieldset.
-					if (field?.closest('fieldset')?.getAttribute(this.state.getStateAttribute('fieldType')) === 'radio' && value !== '') {
-						output[trackingName] = value;
-					} else {
-						output[trackingName] = value;
-					}
+					output[trackingName] = value;
 					break;
 			}
 		}
