@@ -29,6 +29,7 @@ export const RadioEditor = (attributes) => {
 	const radioLabel = checkAttr('radioLabel', attributes, manifest);
 	const radioValue = checkAttr('radioValue', attributes, manifest);
 	const radioIsHidden = checkAttr('radioIsHidden', attributes, manifest);
+	const radioIsChecked = checkAttr('radioIsChecked', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('radioValue', attributes, manifest), radioValue);
 
@@ -42,6 +43,7 @@ export const RadioEditor = (attributes) => {
 	const radioLabelClass = classnames([
 		selector(componentClass, componentClass, 'label'),
 		selector(radioLabel === '', componentClass, 'label', 'placeholder'),
+		selector(radioIsChecked, componentClass, 'label', 'checked'),
 	]);
 
 	return (

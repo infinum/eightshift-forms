@@ -359,6 +359,7 @@ export class Utils {
 		for (const [name] of this.state.getStateElements(formId)) {
 			const value = this.state.getStateElementValue(name, formId);
 			const trackingName = this.state.getStateElementTracking(name, formId);
+			const field = this.state.getStateElementField(name, formId);
 
 			if (!trackingName) {
 				continue;
@@ -369,20 +370,40 @@ export class Utils {
 					for(const [checkName, checkValue] of Object.entries(value)) {
 						const trackingCheckName = trackingName?.[checkName];
 
+						if (!trackingCheckName) {
+							continue;
+						}
+
 						if(!(trackingCheckName in output)) {
-							output[trackingCheckName] = [];
+							output[trackingCheckName] = '';
 						}
 
 						if (checkValue) {
-							output[trackingCheckName].push(checkValue);
+							output[trackingCheckName] = checkValue;
 						}
 					}
 					break;
+				case 'select':
+				case 'country':
+					output[trackingName] = value?.map((item) => item.value);
+					break;
+				case 'file':
+					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? [];
+					output[trackingName] = fileList?.map((file) => file?.upload?.uuid);
+					break;
 				case 'phone':
-					output[trackingName] = value?.combined ?? '';
+					output[trackingName] = this.getPhoneCombinedValue(formId, name);
+					break;
+				case 'radio':
+					output[trackingName] = value;
 					break;
 				default:
-					output[trackingName] = value ?? '';
+					// If we have input on the checkbox/radio fieldset don't sent the input value but append it to the parent fieldset.
+					if (field?.closest('fieldset')?.getAttribute(this.state.getStateAttribute('fieldType')) === 'radio' && value !== '') {
+						output[trackingName] = value;
+					} else {
+						output[trackingName] = value;
+					}
 					break;
 			}
 		}
