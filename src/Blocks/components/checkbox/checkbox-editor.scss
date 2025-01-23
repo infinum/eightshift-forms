@@ -4,4 +4,16 @@
 	&.es-form-is-hidden &__content {
 		opacity: 0.4;
 	}
+
+	&__label--checked {
+		&::before {
+			--es-checkbox-scoped-border-color: var(--global-colors-esf-admin-accent);
+			--es-checkbox-scoped-background-color: var(--global-colors-esf-admin-accent);
+		}
+
+		&::after {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
 }

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.9.2]
+
+### Fixed
+
+- GTM data layer data is sent correctly now.
+- `radio`, `checkbox` and `select-option` in editor now shows selected state.
+
 ## [5.9.1]
 
 ### Added
@@ -982,6 +989,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.9.2]: https://github.com/infinum/eightshift-forms/compare/5.9.1...5.9.2
 [5.9.1]: https://github.com/infinum/eightshift-forms/compare/5.9.0...5.9.1
 [5.9.0]: https://github.com/infinum/eightshift-forms/compare/5.8.3...5.9.0
 [5.8.3]: https://github.com/infinum/eightshift-forms/compare/5.8.2...5.8.3
