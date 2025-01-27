@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.9.3]
+
+### Fixed
+
+- Broken form submission sending fallback email for success.
+
 ## [5.9.2]
 
 ### Fixed
@@ -989,6 +995,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.9.3]: https://github.com/infinum/eightshift-forms/compare/5.9.2...5.9.3
 [5.9.2]: https://github.com/infinum/eightshift-forms/compare/5.9.1...5.9.2
 [5.9.1]: https://github.com/infinum/eightshift-forms/compare/5.9.0...5.9.1
 [5.9.0]: https://github.com/infinum/eightshift-forms/compare/5.8.3...5.9.0

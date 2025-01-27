@@ -407,8 +407,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$disableFallbackEmail = true;
 		}
 
-		$response[UtilsConfig::IARD_STATUS] = 'error';
-
 		// Skip fallback email if integration is disabled.
 		if (!$response[UtilsConfig::IARD_IS_DISABLED] && $response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_ERROR) {
 			// Prevent fallback email if we have validation errors parsed.
