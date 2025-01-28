@@ -433,6 +433,7 @@
 			"afterCaptchaInit": "esFormsAfterCaptchaInit",
 			"stepsGoToNextStep": "esFormsGoToNextStep",
 			"stepsGoToPrevStep": "esFormsGoToPrevStep",
+			"stepsResetSteps": "esFormsResetSteps",
 			"beforeEnrichmentUrlPrefill": "esFormsBeforeEnrichmentUrlPrefill",
 			"afterEnrichmentUrlPrefill": "esFormsAfterEnrichmentUrlPrefill",
 			"beforeEnrichmentLocalstoragePrefill": "esFormsBeforeEnrichmentLocalstoragePrefill",

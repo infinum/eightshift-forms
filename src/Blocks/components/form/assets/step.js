@@ -185,6 +185,8 @@ export class Steps {
 
 		// Hide prev button.
 		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
+
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('stepsResetSteps'), formId);
 	}
 
 	/**
@@ -321,7 +323,7 @@ export class Steps {
 	 * 
 	 * @returns {vodi}
 	 */
-	removeEvents(formId) {
+	removeEvents() {
 		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
