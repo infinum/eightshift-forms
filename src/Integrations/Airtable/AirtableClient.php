@@ -314,12 +314,17 @@ class AirtableClient implements AirtableClientInterface
 	 *
 	 * @param string $baseId Base id to search.
 	 * @param string $listId List id to search.
+	 * @param string $offset Offset value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getAirtableListRecords(string $baseId, string $listId)
+	private function getAirtableListRecords(string $baseId, string $listId, string $offset = ''): array
 	{
 		$url = self::BASE_URL . "{$baseId}/{$listId}";
+
+		if ($offset) {
+			$url .= "?offset={$offset}";
+		}
 
 		$response = \wp_remote_get(
 			$url,
@@ -342,8 +347,17 @@ class AirtableClient implements AirtableClientInterface
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return $body['records'] ?? [];
+			$data = $body['records'] ?? [];
+			$offset = $body['offset'] ?? '';
+
+			// If we have more that 100 records, we need to fetch them all.
+			if ($offset) {
+				$data = \array_merge($data, $this->getAirtableListRecords($baseId, $listId, $offset));
+			}
+
+			return $data;
 		}
+
 
 		return [];
 	}
