@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [3.1.13]
+
+### Fixed
+
+- `Airtable` integration fix for more than 100 records.
+
 ## [3.1.12]
 
 ### Fixed
@@ -385,6 +391,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[3.1.13]: https://github.com/infinum/eightshift-forms/compare/3.1.12...3.1.13
 [3.1.12]: https://github.com/infinum/eightshift-forms/compare/3.1.11...3.1.12
 [3.1.11]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.1.11
 [3.1.10]: https://github.com/infinum/eightshift-forms/compare/3.1.9...3.1.10
