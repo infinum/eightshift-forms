@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.9.4]
+
+### Fixed
+
+- `Airtable` integration fix for more than 100 records.
+
 ## [5.9.3]
 
 ### Fixed
@@ -547,6 +553,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Filter `script_dependency_theme` is now `script_dependency_theme_captcha`.
 
+## [3.1.13]
+
+### Fixed
+
+- `Airtable` integration fix for more than 100 records.
+
 ## [3.1.12]
 
 ### Fixed
@@ -995,6 +1007,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.9.4]: https://github.com/infinum/eightshift-forms/compare/5.9.3...5.9.4
 [5.9.3]: https://github.com/infinum/eightshift-forms/compare/5.9.2...5.9.3
 [5.9.2]: https://github.com/infinum/eightshift-forms/compare/5.9.1...5.9.2
 [5.9.1]: https://github.com/infinum/eightshift-forms/compare/5.9.0...5.9.1
@@ -1051,7 +1064,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 [4.0.3]: https://github.com/infinum/eightshift-forms/compare/4.0.2...4.0.3
 [4.0.2]: https://github.com/infinum/eightshift-forms/compare/4.0.1...4.0.2
 [4.0.1]: https://github.com/infinum/eightshift-forms/compare/4.0.0...4.0.1
-[4.0.0]: https://github.com/infinum/eightshift-forms/compare/3.1.12...4.0.0
+[4.0.0]: https://github.com/infinum/eightshift-forms/compare/3.1.13...4.0.0
+[3.1.13]: https://github.com/infinum/eightshift-forms/compare/3.1.12...3.1.13
 [3.1.12]: https://github.com/infinum/eightshift-forms/compare/3.1.11...3.1.12
 [3.1.11]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.1.11
 [3.1.10]: https://github.com/infinum/eightshift-forms/compare/3.1.9...3.1.10
