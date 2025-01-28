@@ -64,6 +64,9 @@ export class State {
 	getStateFormFid = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.FORM_FID], formId);
 	};
+	getStateFormCustomName = (formId) => {
+		return getState([StateEnum.FORM, StateEnum.CUSTOM_NAME], formId);
+	};
 	getStateFormIsAdminSingleSubmit = (formId) => {
 		return getState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], formId);
 	};
