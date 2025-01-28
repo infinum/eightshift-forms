@@ -75,7 +75,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		// Custom form name.
 		$customFormName = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId);
 		if ($customFormName) {
-			$attributes["{$prefix}CustomName"] = $customFormName;
+			$attributes["{$prefix}ParentSettings"]['customName'] = $customFormName;
 		}
 
 		// Use single submit.
@@ -116,7 +116,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsFormDataTypeSelector = Helpers::checkAttr('formsFormDataTypeSelector', $attributes, $manifest);
 		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Helpers::checkAttr('formsAttrs', $attributes, $manifest);
-		$formsCustomName = Helpers::checkAttr('formsCustomName', $attributes, $manifest);
 
 		// Legacy attributes.
 		$formsDownloads = Helpers::checkAttr('formsDownloads', $attributes, $manifest);
@@ -157,7 +156,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					'variation' => $formsVariation,
 					'variationData' => $formsVariationData,
 					'variationDataFiles' => $formsVariationDataFiles,
-					'customName' => $formsCustomName,
 					'conditionalTags' => \wp_json_encode($formsConditionalTagsRulesForms),
 					'disabledDefaultStyles' => $checkStyleEnqueue,
 					'dataTypeSelector' => $formsFormDataTypeSelector,

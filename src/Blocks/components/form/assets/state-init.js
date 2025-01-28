@@ -36,6 +36,7 @@ export const StateEnum = {
 	INPUT_SELECT: 'inputSelect',
 	ITEMS: 'items',
 	CUSTOM: 'custom',
+	CUSTOM_NAME: 'customName',
 	IS_DISABLED: 'disabled',
 	TYPE: 'type',
 	TYPE_SETTINGS: 'typeSettings',
@@ -317,6 +318,7 @@ export function setStateFormInitial(formId) {
 	setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], false, formId);
 	setState([StateEnum.FORM, StateEnum.ELEMENT], formElement, formId);
 	setState([StateEnum.FORM, StateEnum.TYPE], formElement?.getAttribute(getStateAttribute('formType')), formId);
+	setState([StateEnum.FORM, StateEnum.CUSTOM_NAME], formElement?.getAttribute(getStateAttribute('formCustomName')), formId);
 	setState([StateEnum.FORM, StateEnum.METHOD], formElement?.getAttribute('method'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION], formElement?.getAttribute('action'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formElement?.getAttribute(getStateAttribute('actionExternal')), formId);
