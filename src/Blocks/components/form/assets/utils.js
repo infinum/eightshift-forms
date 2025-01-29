@@ -1440,6 +1440,7 @@ export class Utils {
 	 * lt  - less than                        - if value is less than.
 	 * lte - less/equal than                  - if value is less/equal than.
 	 * c   - contains                         - if value contains value.
+	 * cn  - contains not                     - if value doesn't contain value.
 	 * sw  - starts with                      - if value starts with value.
 	 * ew  - ends with                        - if value ends with value.
 	 * b   - between range                    - if value is between two values.
@@ -1458,6 +1459,7 @@ export class Utils {
 			[globalManifest.comparator.LT]: (start, value) => parseFloat(String(start)) < parseFloat(String(value)),
 			[globalManifest.comparator.LTE]: (start, value) => parseFloat(String(start)) <= parseFloat(String(value)),
 			[globalManifest.comparator.C]: (start, value) => start.includes(value),
+			[globalManifest.comparator.CN]: (start, value) => !start.includes(value),
 			[globalManifest.comparator.SW]: (start, value) => start.startsWith(value),
 			[globalManifest.comparator.EW]: (start, value) => start.endsWith(value),
 			[globalManifest.comparatorExtended.B]: (start, value, end) => 

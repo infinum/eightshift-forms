@@ -525,7 +525,7 @@ export class Enrichment {
 	 * 
 	 * @returns {vodi}
 	 */
-	removeEvents(formId) {
+	removeEvents() {
 		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onLocalstoragePrefillEvent
