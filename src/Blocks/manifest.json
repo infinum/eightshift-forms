@@ -467,6 +467,7 @@
 		"LT": "lt",
 		"LTE": "lte",
 		"C": "c",
+		"CN": "cn",
 		"SW": "sw",
 		"EW": "ew"
 	},

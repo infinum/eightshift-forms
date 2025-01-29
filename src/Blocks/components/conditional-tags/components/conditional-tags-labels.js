@@ -9,6 +9,7 @@ export const CONDITIONAL_TAGS_OPERATORS_LABELS = {
 	[globalManifest.comparator.LT]: __('less than', 'eightshift-forms'),
 	[globalManifest.comparator.LTE]: __('less than or equal', 'eightshift-forms'),
 	[globalManifest.comparator.C]: __('contains', 'eightshift-forms'),
+	[globalManifest.comparator.CN]: __('not contains', 'eightshift-forms'),
 	[globalManifest.comparator.SW]: __('starts with', 'eightshift-forms'),
 	[globalManifest.comparator.EW]: __('ends with', 'eightshift-forms'),
 };
