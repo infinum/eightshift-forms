@@ -650,6 +650,22 @@ export class ConditionalTags {
 							value = this.state.getStateElementValue(innerName, formId)[innerValue] === innerValue ? innerValue : '';
 						}
 						break;
+					case 'select':
+					case 'country':
+						value = this.state.getStateElementValue(innerName, formId).map((item) => item?.value);
+
+						if (value.length === 0) {
+							value = '';
+						}
+
+						if (innerCondition === this.IS) {
+							innerCondition = this.C;
+						}
+
+						if (innerCondition === this.ISN) {
+							innerCondition = this.CN;
+						}
+						break;
 					default:
 						// Get element value by name.
 						value = this.state.getStateElementValue(innerName, formId);

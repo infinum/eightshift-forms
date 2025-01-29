@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.9.8]
+
+### Fixed
+
+- Conditional tags inner logic.
+
 ## [5.9.7]
 
 ### Fixed
@@ -1029,6 +1035,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.9.8]: https://github.com/infinum/eightshift-forms/compare/5.9.7...5.9.8
 [5.9.7]: https://github.com/infinum/eightshift-forms/compare/5.9.6...5.9.7
 [5.9.6]: https://github.com/infinum/eightshift-forms/compare/5.9.5...5.9.6
 [5.9.5]: https://github.com/infinum/eightshift-forms/compare/5.9.4...5.9.5
