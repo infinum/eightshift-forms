@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Moments;
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
@@ -39,7 +40,7 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		array $map,
 		string $formId
 	): array {
-		$email = \rawurlencode(UtilsGeneralHelper::getFieldDetailsByName($params, $emailKey)['value']);
+		$email = \rawurlencode(FormsHelper::getParamValue($emailKey, $params));
 
 		$url = "{$this->getBaseUrl()}peopleevents/1/persons/{$email}/definitions/{$eventName}/events";
 
@@ -115,13 +116,13 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		// Map params.
 		if ($map) {
 			foreach ($map as $mapKey => $mapItem) {
-				$foundItem = UtilsGeneralHelper::getFieldDetailsByName($params, $mapItem);
+				$foundItem = FormsHelper::getParamValue($mapItem, $params);
 
 				if (!$foundItem) {
 					continue;
 				}
 
-				$properties[$mapKey] = $foundItem['value'];
+				$properties[$mapKey] = $foundItem;
 			}
 		}
 

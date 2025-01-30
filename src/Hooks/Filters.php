@@ -73,7 +73,6 @@ final class Filters
 				'forms' => [
 					'styleOptions',
 					'useCustomResultOutputFeature',
-					'useLegacyTnxPageFeature',
 				],
 				'form' => [
 					'redirectionTimeout',

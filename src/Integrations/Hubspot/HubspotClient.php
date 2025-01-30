@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -229,17 +230,17 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 
 		$body = [];
 
-		$pageUrl = Helpers::cleanUrlParams($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value'] ?? '');
+		$pageUrl = Helpers::cleanUrlParams(FormsHelper::getParamValue(UtilsHelper::getStateParam('hubspotPageUrl'), $params));
 		if ($pageUrl) {
 			$body['context']['pageUri'] = $pageUrl;
 		}
 
-		$pageName = $params[UtilsHelper::getStateParam('hubspotPageName')]['value'] ?? '';
+		$pageName = FormsHelper::getParamValue(UtilsHelper::getStateParam('hubspotPageName'), $params);
 		if ($pageName) {
 			$body['context']['pageName'] = $pageName;
 		}
 
-		$hutk = $params[UtilsHelper::getStateParam('hubspotCookie')]['value'] ?? '';
+		$hutk = FormsHelper::getParamValue(UtilsHelper::getStateParam('hubspotCookie'), $params);
 		if ($hutk) {
 			$body['context']['hutk'] = $hutk;
 		}

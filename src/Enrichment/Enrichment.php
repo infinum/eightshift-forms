@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enrichment;
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -127,7 +128,7 @@ class Enrichment implements EnrichmentInterface
 		$enrichment = $enrichment['map'];
 
 		// Get storage param values.
-		$storage = $params[UtilsHelper::getStateParam('storage')]['value'] ?? [];
+		$storage = FormsHelper::getParamValue(UtilsHelper::getStateParam('storage'), $params);
 
 		// Map param values.
 		return \array_map(

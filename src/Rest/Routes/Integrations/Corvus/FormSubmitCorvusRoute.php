@@ -72,7 +72,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 			'cart',
 		];
 
-		$missingOrEmpty = \array_filter($reqParams, fn($param) => empty($params[$param] ?? null));
+		$missingOrEmpty = \array_intersect_key(\array_flip(\array_filter($reqParams, fn($param) => empty($params[$param] ?? null))), $params);
 
 		// Bail early if the required params are missing.
 		if ($missingOrEmpty) {
@@ -148,7 +148,8 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		}
 
 		foreach ($mapParams as $key => $value) {
-			$param = \array_values(\array_filter($params, fn($paramKey) => $paramKey['name'] === $value))[0]['value'] ?? '';
+			$param = FormsHelper::getParamValue($value, $params);
+
 			if (!$param) {
 				continue;
 			}

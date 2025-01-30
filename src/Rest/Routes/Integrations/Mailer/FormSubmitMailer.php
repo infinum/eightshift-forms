@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
@@ -197,7 +198,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			return false;
 		}
 
-		$senderEmail = $params[UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId)]['value'] ?? '';
+		$senderEmail = FormsHelper::getParamValue(UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId), $params);
 
 		if (!$senderEmail) {
 			return false;

@@ -70,7 +70,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			'amount',
 		];
 
-		$missingOrEmpty = \array_filter($reqParams, fn($param) => empty($params[$param] ?? null));
+		$missingOrEmpty = \array_intersect_key(\array_flip(\array_filter($reqParams, fn($param) => empty($params[$param] ?? null))), $params);
 
 		if ($missingOrEmpty) {
 			return \rest_ensure_response(
@@ -143,7 +143,8 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		$output = [];
 
 		foreach ($mapParams as $key => $value) {
-			$param = \array_values(\array_filter($params, fn($paramKey) => $paramKey['name'] === $value))[0]['value'] ?? '';
+			$param = FormsHelper::getParamValue($value, $params);
+
 			if (!$param) {
 				continue;
 			}

@@ -32,21 +32,6 @@ function esFormsGetFormIdByName(string $formId): string
 }
 
 /**
- * Get field details by name.
- *
- * @example echo getFieldDetailsByName([], 'email');
- *
- * @param array<string, mixed> $params Form fields params.
- * @param string $key Field key.
- *
- * @return array<string, mixed>
- */
-function getFieldDetailsByName(array $params, string $key): array
-{
-	return UtilsGeneralHelper::getFieldDetailsByName($params, $key);
-}
-
-/**
  * Decrypt method.
  *
  * @param string $value Value used.
@@ -168,4 +153,17 @@ function getFormsGetCountryList(): array
 function getFormUsageLocation(string $formId, string $type = ''): array
 {
 	return UtilsGeneralHelper::getBlockLocations($formId, $type);
+}
+
+/**
+ * Get param value.
+ *
+ * @param string $key Key to check.
+ * @param array<mixed> $params Params to check.
+ *
+ * @return string|array<mixed>
+ */
+function getParamValue(string $key, array $params): string|array
+{
+	return FormsHelper::getParamValue($key, $params);
 }

@@ -329,4 +329,17 @@ final class FormsHelper
 
 		return (bool) $update;
 	}
+
+	/**
+	 * Get param value.
+	 *
+	 * @param string $key Key to check.
+	 * @param array<mixed> $params Params to check.
+	 *
+	 * @return string|array<mixed>
+	 */
+	public static function getParamValue(string $key, array $params): string|array
+	{
+		return \array_reduce($params, fn($carry, $paramKey) => $carry ?: ($paramKey['name'] === $key ? $paramKey['value'] : ''), '');
+	}
 }

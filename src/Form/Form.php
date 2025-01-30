@@ -117,12 +117,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 		$formsConditionalTagsRulesForms = Helpers::checkAttr('formsConditionalTagsRulesForms', $attributes, $manifest);
 		$formsAttrs = Helpers::checkAttr('formsAttrs', $attributes, $manifest);
 
-		// Legacy attributes.
-		$formsDownloads = Helpers::checkAttr('formsDownloads', $attributes, $manifest);
-		$formsSuccessRedirectVariation = Helpers::checkAttr('formsSuccessRedirectVariation', $attributes, $manifest);
-		$formsSuccessRedirectVariationUrl = Helpers::checkAttr('formsSuccessRedirectVariationUrl', $attributes, $manifest);
-		$formsSuccessRedirectVariationUrlTitle = Helpers::checkAttr('formsSuccessRedirectVariationUrlTitle', $attributes, $manifest);
-
 		$checkStyleEnqueue = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY);
 
 		// Iterate blocks an children by passing them form ID.
@@ -161,12 +155,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					'dataTypeSelector' => $formsFormDataTypeSelector,
 					'postId' => $formsFormPostId,
 					'formType' => $blockName,
-					'legacy' => [
-						'downloads' => $formsDownloads,
-						'variation' => $formsSuccessRedirectVariation,
-						'variationUrl' => $formsSuccessRedirectVariationUrl,
-						'variationUrlTitle' => $formsSuccessRedirectVariationUrlTitle,
-					],
 				];
 
 				$innerBlock['attrs']["{$blockName}FormAttrs"] = $formsAttrs;
@@ -582,43 +570,6 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			}
 
 			$output['v'] = $variationOutput;
-		}
-
-		// Legacy attributes - this will be removed in the future.
-		$formsUseLegacyTnxPageFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useLegacyTnxPageFeature']);
-		if (\apply_filters($formsUseLegacyTnxPageFeatureFilterName, false)) {
-			$legacy = $parentSettings['legacy'] ?? [];
-			if ($legacy) {
-				if (isset($legacy['downloads'])) {
-					$downloads = [];
-					foreach ($legacy['downloads'] as $download) {
-						$id = $download['id'] ?? '';
-
-						if (!$id) {
-							continue;
-						}
-
-						$downloads[] = \array_filter([
-							'u' => $id,
-							'c' => $download['condition'] ?? '',
-							't' => $download['fileTitle'] ?? '',
-						]);
-					}
-
-					$legacy['downloads'] = $downloads;
-				}
-
-				$items = \array_filter([
-					'v' => $legacy['variation'] ?? '',
-					'u' => $legacy['variationUrl'] ?? '',
-					't' => $legacy['variationUrlTitle'] ?? '',
-					'd' => $legacy['downloads'] ?? [],
-				]);
-
-				if ($items) {
-					$output['l'] = $items;
-				}
-			}
 		}
 
 		// Output custom result output.
