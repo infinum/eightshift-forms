@@ -188,7 +188,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										<br />
 										Tag missing? Make sure its field has a <b>Name</b> set!
 									</details>
-									%2$s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS]), $successRedirectUrl['settingsLocal']),
+									%2$s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES]), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsed'],

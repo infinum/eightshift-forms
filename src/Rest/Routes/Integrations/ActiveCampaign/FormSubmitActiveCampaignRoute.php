@@ -99,11 +99,9 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 		// Make an additional requests to the API.
 		if ($response['status'] === UtilsConfig::STATUS_SUCCESS && $contactId) {
 			// If form has action to save tags.
-			$actionTags = $params['actionTags']['value'] ?? '';
+			$actionTags = $params['actionTags']['value'] ?? [];
 
 			if ($actionTags) {
-				$actionTags = \explode(UtilsConfig::DELIMITER, $actionTags);
-
 				// Create API req for each tag.
 				foreach ($actionTags as $tag) {
 					$this->activeCampaignClient->postTag(
@@ -114,11 +112,9 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			}
 
 			// If form has action to save list.
-			$actionLists = $params['actionLists']['value'] ?? '';
+			$actionLists = $params['actionLists']['value'] ?? [];
 
 			if ($actionLists) {
-				$actionLists = \explode(UtilsConfig::DELIMITER, $actionLists);
-
 				// Create API req for each list.
 				foreach ($actionLists as $list) {
 					$this->activeCampaignClient->postList(

@@ -770,6 +770,7 @@ class FormAdminMenu extends AbstractAdminMenu
 							}
 						}
 
+						// Legacy setup for the delimiter.
 						if (\gettype($entryValue) === 'string' && \str_contains($entryValue, UtilsConfig::DELIMITER)) {
 							$entryValue = \explode(UtilsConfig::DELIMITER, $entryValue);
 							$entryValue = \implode('<br/>', $entryValue);

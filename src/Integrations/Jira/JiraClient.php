@@ -159,7 +159,7 @@ class JiraClient implements JiraClientInterface
 		$url = $this->getBaseUrl() . "issue";
 
 		$body = [
-			'fields' => $this->prepareParams($params, $formId),
+			'fields' => $this->prepareParams($params, $files, $formId),
 		];
 
 		$response = \wp_remote_post(
@@ -452,11 +452,12 @@ class JiraClient implements JiraClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param array<string, mixed> $files Files.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, string>
 	 */
-	private function prepareParams(array $params, string $formId): array
+	private function prepareParams(array $params, array $files, string $formId): array
 	{
 		$output = [];
 
@@ -478,6 +479,8 @@ class JiraClient implements JiraClientInterface
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+
+		$params = \array_merge($params, $files);
 
 		$formTitle = \get_the_title((int) $formId);
 
@@ -507,17 +510,26 @@ class JiraClient implements JiraClientInterface
 				$i = 0;
 				foreach ($params as $param) {
 					$value = $param['value'] ?? '';
-					if (!$value) {
+					$name = $param['name'] ?? '';
+					$type = $param['type'] ?? '';
+
+					if (!$value || !$name || !$type) {
 						continue;
+					}
+
+					if ($type === 'file') {
+						$value = \array_map(
+							static function (string $file) {
+								$filename = \pathinfo($file, \PATHINFO_FILENAME);
+								$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+								return "{$filename}.{$extension}";
+							},
+							$value
+						);
 					}
 
 					if (\is_array($value)) {
 						$value = \implode(', ', $value);
-					}
-
-					$name = $param['name'] ?? '';
-					if (!$name) {
-						continue;
 					}
 
 					$contentOutput[] = [
@@ -656,13 +668,26 @@ class JiraClient implements JiraClientInterface
 				$i = 0;
 				foreach ($params as $param) {
 					$value = $param['value'] ?? '';
-					if (!$value) {
+					$name = $param['name'] ?? '';
+					$type = $param['type'] ?? '';
+
+					if (!$value || !$name || !$type) {
 						continue;
 					}
 
-					$name = $param['name'] ?? '';
-					if (!$name) {
-						continue;
+					if ($type === 'file') {
+						$value = \array_map(
+							static function (string $file) {
+								$filename = \pathinfo($file, \PATHINFO_FILENAME);
+								$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+								return "{$filename}.{$extension}";
+							},
+							$value
+						);
+					}
+
+					if (\is_array($value)) {
+						$value = \implode(', ', $value);
 					}
 
 					$descriptionOutput .= \esc_html($name) . ':' . \PHP_EOL . \esc_html($value) . \PHP_EOL . \PHP_EOL;

@@ -37,7 +37,10 @@ class EntriesHelper
 	 */
 	public static function setEntryByFormDataRef(array $formDetails)
 	{
-		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
+		$params = \array_merge(
+			$formDetails[UtilsConfig::FD_PARAMS] ?? [],
+			$formDetails[UtilsConfig::FD_FILES] ?? []
+		);
 		$formId = $formDetails[UtilsConfig::IARD_FORM_ID] ?? '';
 
 		$output = [];
@@ -58,13 +61,25 @@ class EntriesHelper
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
+			$type = $param['type'] ?? '';
 
-			if (!$name) {
+			if (!$name || !$type) {
 				continue;
 			}
 
 			if (!$value && !$saveEmptyFields) {
 				continue;
+			}
+
+			if ($type === 'file') {
+				$value = \array_map(
+					static function (string $file) {
+						$filename = \pathinfo($file, \PATHINFO_FILENAME);
+						$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+						return "{$filename}.{$extension}";
+					},
+					$value
+				);
 			}
 
 			$output[$name] = $value;

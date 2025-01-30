@@ -76,12 +76,19 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 		// If form ID is not set this is considered an global setting.
 		// Save all fields in the settings.
 		foreach ($params as $key => $value) {
+			$fieldValue = $value['value'] ?? '';
+			$fieldType = $value['type'] ?? '';
+
+			if ($fieldType === 'checkbox' || $fieldType === 'select' || $fieldType === 'country') {
+				$fieldValue = \implode(UtilsConfig::DELIMITER, $fieldValue);
+			}
+
 			// Check if key needs updating or deleting.
-			if ($value['value']) {
+			if ($fieldValue) {
 				if (!$formId) {
-					\update_option($key, $value['value']);
+					\update_option($key, $fieldValue);
 				} else {
-					\update_post_meta((int) $formId, $key, $value['value']);
+					\update_post_meta((int) $formId, $key, $fieldValue);
 				}
 			} else {
 				if (!$formId) {

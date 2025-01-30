@@ -47,11 +47,16 @@ class Mailer implements MailerInterface
 		array $responseFields = []
 	): bool {
 
+		$params = \array_merge(
+			$this->prepareParams(\array_merge($fields, $files)),
+			$responseFields
+		);
+
 		// Send email.
 		return \wp_mail(
-			$this->getTemplate('to', $fields, $formId, $to),
-			$this->getTemplate('subject', $fields, $formId, $subject, $responseFields),
-			'<html><body>' . $this->getTemplate('message', $fields, $formId, $template, $responseFields) . '</body></html>',
+			$this->getTemplate($params, false, $to),
+			$this->getTemplate($params, false, $subject),
+			'<html><body>' . $this->getTemplate($params, true, $template) . '</body></html>',
 			$this->getHeader(
 				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
@@ -335,21 +340,14 @@ class Mailer implements MailerInterface
 	/**
 	 * HTML template for email.
 	 *
-	 * @param string $type Type for the template. Available: to, subject, message.
-	 * @param array<string, mixed> $items All items to output.
-	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $params Params to replace in the template.
+	 * @param boolean $shouldParse Should the template be parsed.
 	 * @param string $template Additional description.
-	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
 	 *
 	 * @return string
 	 */
-	private function getTemplate(string $type, array $items, string $formId, string $template = '', array $responseFields = []): string
+	private function getTemplate(array $params, bool $shouldParse = false, string $template = ''): string
 	{
-		$params = \array_merge(
-			$this->prepareParams($items),
-			$responseFields
-		);
-
 		foreach ($params as $name => $value) {
 			if (\is_array($value)) {
 				$value = \implode(', ', $value);
@@ -358,7 +356,7 @@ class Mailer implements MailerInterface
 			$template = \str_replace("{" . $name . "}", (string) $value, $template);
 		}
 
-		if ($type === 'message') {
+		if ($shouldParse) {
 			$parsedown = new Parsedown();
 
 			return $parsedown->text($template);
@@ -384,9 +382,21 @@ class Mailer implements MailerInterface
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
+			$type = $param['type'] ?? '';
 
-			if (!$name) {
+			if (!$name || !$value || !$type) {
 				continue;
+			}
+
+			if ($type === 'file') {
+				$value = \array_map(
+					static function (string $file) {
+						$filename = \pathinfo($file, \PATHINFO_FILENAME);
+						$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+						return "{$filename}.{$extension}";
+					},
+					$value
+				);
 			}
 
 			$output[$name] = $value;

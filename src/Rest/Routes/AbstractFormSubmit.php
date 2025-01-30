@@ -558,12 +558,24 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$redirectDataOutput = [];
 
 			// Replace {field_name} with the actual value.
-			foreach ($formDetails[UtilsConfig::FD_PARAMS] as $param) {
+			foreach (\array_merge($formDetails[UtilsConfig::FD_PARAMS], $formDetails[UtilsConfig::FD_FILES]) as $param) {
 				$name = $param['name'] ?? '';
 				$value = $param['value'] ?? '';
+				$type = $param['type'] ?? '';
 
 				if ($name === UtilsHelper::getStateParam('skippedParams')) {
 					continue;
+				}
+
+				if ($type === 'file') {
+					$value = \array_map(
+						static function (string $file) {
+							$filename = \pathinfo($file, \PATHINFO_FILENAME);
+							$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+							return "{$filename}.{$extension}";
+						},
+						$value
+					);
 				}
 
 				if (\is_array($value)) {

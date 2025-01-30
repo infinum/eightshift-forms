@@ -234,7 +234,7 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if (\count(\explode(UtilsConfig::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
+						if (\is_array($inputValue) && \count($inputValue) < $dataValue && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
@@ -275,17 +275,13 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for min array items length.
 					case 'minCount':
-						$inputValue = $inputValue ? \explode(UtilsConfig::DELIMITER, $inputValue) : [];
-
-						if ($dataValue > \count($inputValue)) {
+						if (\is_array($inputValue) && $dataValue > \count($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMinCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for max array items length.
 					case 'maxCount':
-						$inputValue = $inputValue ? \explode(UtilsConfig::DELIMITER, $inputValue) : [];
-
-						if ($dataValue < \count($inputValue)) {
+						if (\is_array($inputValue) && $dataValue < \count($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMaxCount', $formId), $dataValue);
 						}
 						break;
