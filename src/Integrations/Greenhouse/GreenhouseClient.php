@@ -406,12 +406,9 @@ class GreenhouseClient implements ClientInterface
 
 		foreach ($files as $items) {
 			$name = $items['name'] ?? '';
-			if (!$name) {
-				continue;
-			}
-
 			$value = $items['value'] ?? [];
-			if (!$value) {
+
+			if (!$name || !$value) {
 				continue;
 			}
 

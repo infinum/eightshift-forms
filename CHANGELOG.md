@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.9.11]
+
+### Fixed
+
+- multiple integrations for new fields types.
+
 ## [5.9.10]
 
 ### Fixed
@@ -1053,6 +1059,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.9.11]: https://github.com/infinum/eightshift-forms/compare/5.9.10...5.9.11
 [5.9.10]: https://github.com/infinum/eightshift-forms/compare/5.9.9...5.9.10
 [5.9.9]: https://github.com/infinum/eightshift-forms/compare/5.9.8...5.9.9
 [5.9.8]: https://github.com/infinum/eightshift-forms/compare/5.9.7...5.9.8

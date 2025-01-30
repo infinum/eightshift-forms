@@ -410,6 +410,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 
 			switch ($type) {
 				case 'select':
+				case 'checkbox':
 					$value = \count($value) > 1 ? $value : $value[0];
 					break;
 				case 'input':

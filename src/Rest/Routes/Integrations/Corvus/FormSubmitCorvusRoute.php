@@ -60,7 +60,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsCorvus::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
 
-		$params = $this->prepareParams($mapParams, $formDetails['paramsRaw'], $formId);
+		$params = $this->prepareParams($mapParams, $formDetails[UtilsConfig::FD_PARAMS], $formId);
 
 		$reqParams = [
 			'store_id',
@@ -148,7 +148,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		}
 
 		foreach ($mapParams as $key => $value) {
-			$param = $params[$value] ?? '';
+			$param = \array_values(\array_filter($params, fn($paramKey) => $paramKey['name'] === $value))[0]['value'] ?? '';
 			if (!$param) {
 				continue;
 			}

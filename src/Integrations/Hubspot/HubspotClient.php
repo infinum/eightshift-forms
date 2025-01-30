@@ -763,7 +763,7 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 				if ($typeCustom === self::HUBSPOT_CONSENT_PROCESSING) {
 					$output['consent'] = [
 						'consentToProcess' => !!$value,
-						'text' => $value,
+						'text' => $value[0] ?? '',
 					];
 				}
 
@@ -828,13 +828,17 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 			}
 
 			if ($type === 'checkbox') {
-				if ($value === 'on') {
+				if (($value[0] ?? '') === 'on') {
 					$value = 'true';
 				}
 
 				if (\is_array($value)) {
 					$value = \implode(';', $value);
 				}
+			}
+
+			if ($type === 'select') {
+				$value = $value[0] ?? '';
 			}
 
 			// Must be in UTC timestamp with milliseconds.

@@ -600,7 +600,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true);
 
 				// Legacy data.
-				$redirectDataOutput['es-legacy'] = $this->processLegacyData($secureData['l'] ?? [], $formDetails[UtilsConfig::FD_PARAMS_RAW], $formId);
+				$redirectDataOutput['es-legacy'] = $this->processLegacyData($secureData['l'] ?? [], $formDetails[UtilsConfig::FD_PARAMS], $formId);
 
 				// Redirect custom result output feature.
 				$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
@@ -914,6 +914,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			}
 
 			// If field condition is met use the download.
+			// TODO fix this
 			if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
 				$output[] = $download;
 				continue;
@@ -941,7 +942,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	private function processCustomResultOutputData(array $data, array $formDetails): array
 	{
-		$params = $formDetails[UtilsConfig::FD_PARAMS_RAW] ?? [];
+		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
@@ -974,6 +975,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				}
 
 				// If field condition is met use the file.
+				// TODO fix this
 				if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
 					$outputFiles[] = $file;
 					continue;
