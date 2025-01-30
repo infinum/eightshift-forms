@@ -165,6 +165,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			$label = $item['label'] ?? '';
 			$fields = $item['choices'] ?? [];
 			$required = isset($item['required']) ? (bool) $item['required'] : false;
+			$isMultiple = isset($item['single_answer']) ? (bool) $item['single_answer'] : false;
 
 			if (!$label) {
 				$label = $item['body'] ?? '';
@@ -248,6 +249,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'selectTracking' => $name,
 						'selectFieldLabel' => $label,
 						'selectIsRequired' => $required,
+						'selectIsMultiple' => !$isMultiple,
 						'selectContent' => \array_values(
 							\array_map(
 								function ($selectOption) {

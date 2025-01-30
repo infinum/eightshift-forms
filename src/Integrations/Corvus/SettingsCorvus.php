@@ -18,6 +18,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -202,7 +203,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 		$currency = UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
 
-		$params = $formDetails['fieldNames'] ?? [];
+		$params = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),

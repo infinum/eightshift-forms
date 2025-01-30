@@ -420,16 +420,18 @@ class WorkableClient implements ClientInterface
 					];
 					break;
 				case 'boolean':
-					$answers[] = [
-						'question_key' => $name,
-						'checked' => \filter_var($value, \FILTER_VALIDATE_BOOLEAN),
-					];
+					if (isset($value[0])) {
+						$answers[] = [
+							'question_key' => $name,
+							'checked' => \filter_var($value[0], \FILTER_VALIDATE_BOOLEAN),
+						];
+					}
 					break;
 				case 'multiple_choice':
 				case 'dropdown':
 					$answers[] = [
 						'question_key' => $name,
-						'choices' => \explode(',', $value),
+						'choices' => $value,
 					];
 					break;
 			}
