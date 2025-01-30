@@ -9,20 +9,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    name: Lint assets JS and CSS using Node version - ${{ matrix.node }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [ '23.1' ]
-    steps:
-      - name: Lint assets
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-assets@main
-        with:
-          NODE_VERSION: ${{ matrix.node }}
-          PROJECT_PATH: '.'
-
   phpstan:
     name: PHP Static code analysis using PHP - ${{ matrix.php }}
     runs-on: ubuntu-latest
@@ -49,4 +35,18 @@ jobs:
         uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php@main
         with:
           PHP_VERSION: ${{ matrix.php }}
+          PROJECT_PATH: '.'
+
+  lint:
+    name: Lint assets JS and CSS using Node version - ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ '23.1' ]
+    steps:
+      - name: Lint assets
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-assets@main
+        with:
+          NODE_VERSION: ${{ matrix.node }}
           PROJECT_PATH: '.'
