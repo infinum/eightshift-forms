@@ -13,6 +13,7 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Entries\EntriesHelper;
+use EightshiftForms\Entries\SettingsEntries;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Listing\FormListingInterface;
@@ -999,8 +1000,6 @@ class FormAdminMenu extends AbstractAdminMenu
 				$output = [];
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
-				$entriesCount = EntriesHelper::getEntriesCount((string) $formId);
-
 				if ($parent === '') {
 					$output = [
 						Helpers::render('submit', [
@@ -1012,13 +1011,12 @@ class FormAdminMenu extends AbstractAdminMenu
 							],
 							'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 						]),
-						($entriesCount > 0) ?
+						(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) ?
 						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
 							'submitButtonAsLink' => true,
 							'submitButtonAsLinkUrl' => $item['entriesLink'] ?? '',
-							// Translators: %s is the number of entries.
-							'submitValue' => \sprintf(\__('Entries (%s)', 'eightshift-forms'), $entriesCount),
+							'submitValue' => \__('Entries', 'eightshift-forms'),
 						]) : null,
 						Helpers::render('submit', [
 							'submitVariant' => 'ghost',
@@ -1030,8 +1028,6 @@ class FormAdminMenu extends AbstractAdminMenu
 				}
 				break;
 			default:
-				$entriesCount = EntriesHelper::getEntriesCount((string) $formId);
-
 				$output = [
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
@@ -1041,13 +1037,12 @@ class FormAdminMenu extends AbstractAdminMenu
 						],
 						'additionalClass' => UtilsHelper::getStateSelectorAdmin('listingLocations'),
 					]),
-					($entriesCount > 0) ?
+					(\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) ?
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
 						'submitButtonAsLink' => true,
 						'submitButtonAsLinkUrl' => $item['entriesLink'] ?? '',
-						// Translators: %s is the number of entries.
-						'submitValue' => \sprintf(\__('Entries (%s)', 'eightshift-forms'), $entriesCount),
+						'submitValue' => \__('Entries', 'eightshift-forms'),
 					]) : null,
 					Helpers::render('submit', [
 						'submitVariant' => 'ghost',
