@@ -832,7 +832,9 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 					$value = 'true';
 				}
 
-				$value = \str_replace(UtilsConfig::DELIMITER, ';', $value);
+				if (\is_array($value)) {
+					$value = \implode(';', $value);
+				}
 			}
 
 			// Must be in UTC timestamp with milliseconds.

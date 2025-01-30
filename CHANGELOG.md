@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.9.9]
+
+### Added
+
+- Ability to output file name to `email`, `redirect_url` and `entries`.
+
+### Changed
+
+- Internal way we handle params that can be an array.
+- `mailer` is now faster due to the new way we process params.
+
 ## [5.9.8]
 
 ### Fixed
@@ -1035,6 +1046,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.9.9]: https://github.com/infinum/eightshift-forms/compare/5.9.8...5.9.9
 [5.9.8]: https://github.com/infinum/eightshift-forms/compare/5.9.7...5.9.8
 [5.9.7]: https://github.com/infinum/eightshift-forms/compare/5.9.6...5.9.7
 [5.9.6]: https://github.com/infinum/eightshift-forms/compare/5.9.5...5.9.6

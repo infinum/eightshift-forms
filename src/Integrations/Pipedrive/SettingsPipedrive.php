@@ -200,7 +200,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements UtilsSet
 
 		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
 
-		$fields = $formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS] ?? [];
+		$fields = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 
 		$personName = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PIPEDRIVE_PERSON_NAME_KEY, $formId);

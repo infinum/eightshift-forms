@@ -392,7 +392,7 @@ class TalentlyftClient implements ClientInterface
 					if (\in_array($type, ['radio', 'select', 'checkbox'], true)) {
 						$outputCustom[] = [
 							'Id' => (int) $name,
-							'Choices' => \explode(UtilsConfig::DELIMITER, $value),
+							'Choices' => $value
 						];
 					} else {
 						$outputCustom[] = [

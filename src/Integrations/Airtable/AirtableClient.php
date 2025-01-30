@@ -440,14 +440,6 @@ class AirtableClient implements AirtableClientInterface
 				case 'number':
 					$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
 					break;
-				case 'multiCheckbox':
-					$value = \explode(UtilsConfig::DELIMITER, $value);
-					break;
-				case 'dynamicSelect':
-					if (!\is_array($value)) {
-						$value = \explode(UtilsConfig::DELIMITER, $value);
-					}
-					break;
 				default:
 					$value = $value;
 					break;

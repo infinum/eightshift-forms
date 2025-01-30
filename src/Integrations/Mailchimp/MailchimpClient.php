@@ -517,12 +517,7 @@ class MailchimpClient implements MailchimpClientInterface
 			return [];
 		}
 
-		// For multi select field.
-		if (\is_array($value)) {
-			return $value;
-		}
-
-		return \explode(UtilsConfig::DELIMITER, $params[$key]['value']);
+		return $value;
 	}
 
 	/**
