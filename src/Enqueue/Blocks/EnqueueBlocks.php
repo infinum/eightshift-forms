@@ -322,7 +322,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 			$output['captcha'] = [
 				'isUsed' => true,
 				'isEnterprise' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
-				'siteKey' => UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'],
+				'siteKey' => UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
 				'submitAction' => UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				'initAction' => UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 				'loadOnInit' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),

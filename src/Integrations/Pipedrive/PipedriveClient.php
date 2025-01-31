@@ -658,6 +658,6 @@ class PipedriveClient implements PipedriveClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY);
 	}
 }

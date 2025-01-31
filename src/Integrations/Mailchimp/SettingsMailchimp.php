@@ -88,7 +88,7 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MAILCHIMP_USE_KEY, self::SETTINGS_MAILCHIMP_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailchimp(), self::SETTINGS_MAILCHIMP_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMailchimp(), self::SETTINGS_MAILCHIMP_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -149,11 +149,9 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyMailchimp(),
-										self::SETTINGS_MAILCHIMP_API_KEY_KEY,
-										'ES_API_KEY_MAILCHIMP'
-									),
+									Variables::getApiKeyMailchimp(),
+									self::SETTINGS_MAILCHIMP_API_KEY_KEY,
+									'ES_API_KEY_MAILCHIMP',
 									\__('API key', 'eightshift-forms'),
 								),
 								[

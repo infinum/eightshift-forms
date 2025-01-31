@@ -14,6 +14,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Legacy variation data passed to the success redirect url.
 - `useLegacyTnxPageFeature` filter.
+- Function to load option value based on the config setting.
 
 ### Added
 

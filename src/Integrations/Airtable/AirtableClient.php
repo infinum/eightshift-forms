@@ -455,6 +455,6 @@ class AirtableClient implements AirtableClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY);
 	}
 }

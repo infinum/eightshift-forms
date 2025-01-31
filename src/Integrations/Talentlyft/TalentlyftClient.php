@@ -491,7 +491,7 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyTalentlyft(), SettingsTalentlyft::SETTINGS_TALENTLYFT_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyTalentlyft(), SettingsTalentlyft::SETTINGS_TALENTLYFT_API_KEY_KEY);
 	}
 
 	/**

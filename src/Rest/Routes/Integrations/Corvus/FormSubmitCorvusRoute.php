@@ -228,7 +228,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		$params['signature'] = \hash_hmac(
 			'sha256',
 			\array_reduce(\array_keys($params), fn($carry, $key) => $carry . $key . $params[$key], ''),
-			UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus($params['store_id']), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)['value']
+			UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyCorvus($params['store_id']), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)
 		);
 
 		return $params;

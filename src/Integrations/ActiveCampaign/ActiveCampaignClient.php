@@ -632,7 +632,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
 	}
 
 	/**
@@ -642,6 +642,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	 */
 	private function getApiUrl(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUrlActiveCampaign(), SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
 	}
 }

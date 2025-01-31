@@ -427,7 +427,7 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getBoardToken(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getBoardTokenGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getBoardTokenGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
 	}
 
 	/**
@@ -437,6 +437,6 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return \base64_encode(UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)['value']); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		return \base64_encode(UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyGreenhouse(), SettingsGreenhouse::SETTINGS_GREENHOUSE_API_KEY_KEY)); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 }

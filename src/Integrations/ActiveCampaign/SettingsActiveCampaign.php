@@ -88,8 +88,8 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY)['value'];
-		$url = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
+		$url = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUrlActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
 
 		if (!$isUsed || !$apiKey || !$url) {
 			return false;
@@ -150,11 +150,9 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyActiveCampaign(),
-										self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY,
-										'ES_API_KEY_ACTIVE_CAMPAIGN'
-									),
+									Variables::getApiKeyActiveCampaign(),
+									self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY,
+									'ES_API_KEY_ACTIVE_CAMPAIGN',
 									\__('API key', 'eightshift-forms'),
 								),
 								[
@@ -162,11 +160,9 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiUrlActiveCampaign(),
-										self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY,
-										'ES_API_URL_ACTIVE_CAMPAIGN'
-									),
+									Variables::getApiUrlActiveCampaign(),
+									self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY,
+									'ES_API_URL_ACTIVE_CAMPAIGN',
 									\__('API URL', 'eightshift-forms'),
 								),
 								[

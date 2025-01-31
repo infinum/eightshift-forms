@@ -906,7 +906,7 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY);
 	}
 
 	/**

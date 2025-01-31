@@ -158,8 +158,8 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			$output[$key] = $param;
 		}
 
-		$output['secretKey'] = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY)['value'];
-		$output['profileCode'] = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiProfileKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_PROFILE_KEY)['value'];
+		$output['secretKey'] = UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY);
+		$output['profileCode'] = UtilsSettingsHelper::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_PROFILE_KEY);
 		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_LANG_KEY, $formId);
 		$output['paymentId'] = 'temp'; // Temp name, the real one will be set after the increment.
 		$output['description'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);

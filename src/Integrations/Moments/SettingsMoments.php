@@ -115,8 +115,8 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
-		$url = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY);
+		$url = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY);
 
 		if (!$isUsed || !$apiKey || !$url) {
 			return false;
@@ -313,11 +313,9 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyMoments(),
-										self::SETTINGS_MOMENTS_API_KEY_KEY,
-										'ES_API_KEY_MOMENTS'
-									),
+									Variables::getApiKeyMoments(),
+									self::SETTINGS_MOMENTS_API_KEY_KEY,
+									'ES_API_KEY_MOMENTS',
 									\__('API key', 'eightshift-forms'),
 								),
 								[
@@ -325,11 +323,9 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiUrlMoments(),
-										self::SETTINGS_MOMENTS_API_URL_KEY,
-										'ES_API_URL_MOMENTS'
-									),
+									Variables::getApiUrlMoments(),
+									self::SETTINGS_MOMENTS_API_URL_KEY,
+									'ES_API_URL_MOMENTS',
 									\__('API url', 'eightshift-forms'),
 								),
 								[

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1e206f4e2d5b209729f475bddc3b95a",
+    "content-hash": "0d868cd17dac66cb8d59c4928c4a6780",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -58,16 +58,16 @@
         },
         {
             "name": "infinum/eightshift-forms-utils",
-            "version": "3.1.2",
+            "version": "3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinum/eightshift-forms-utils.git",
-                "reference": "d80f2d0e1e079f262af40510bff384a74b1d67e7"
+                "reference": "10ea0d3ba775f81fe4acd242ec31659d9a85cbb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/d80f2d0e1e079f262af40510bff384a74b1d67e7",
-                "reference": "d80f2d0e1e079f262af40510bff384a74b1d67e7",
+                "url": "https://api.github.com/repos/infinum/eightshift-forms-utils/zipball/10ea0d3ba775f81fe4acd242ec31659d9a85cbb6",
+                "reference": "10ea0d3ba775f81fe4acd242ec31659d9a85cbb6",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +120,7 @@
                 "issues": "https://github.com/infinum/eightshift-forms/issues",
                 "source": "https://github.com/infinum/eightshift-forms"
             },
-            "time": "2025-01-30T16:47:28+00:00"
+            "time": "2025-01-31T08:07:05+00:00"
         },
         {
             "name": "infinum/eightshift-libs",

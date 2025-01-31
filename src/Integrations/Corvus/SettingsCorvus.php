@@ -844,11 +844,9 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 			}
 
 			$output[] = UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-				UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-					Variables::getApiKeyCorvus($id),
-					self::SETTINGS_CORVUS_API_KEY_KEY . "_{$id}",
-					"ES_API_KEY_CORVUS_{$id}"
-				),
+				Variables::getApiKeyCorvus($id),
+				self::SETTINGS_CORVUS_API_KEY_KEY . "_{$id}",
+				"ES_API_KEY_CORVUS_{$id}",
 				// translators: %s will be replaced with the store ID.
 				\sprintf(\__('API key - %s', 'eightshift-forms'), $id),
 			);

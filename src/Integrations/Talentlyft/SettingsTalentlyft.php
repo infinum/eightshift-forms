@@ -119,7 +119,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_KEY, self::SETTINGS_TALENTLYFT_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyTalentlyft(), self::SETTINGS_TALENTLYFT_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyTalentlyft(), self::SETTINGS_TALENTLYFT_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -236,11 +236,9 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyTalentlyft(),
-										self::SETTINGS_TALENTLYFT_API_KEY_KEY,
-										'ES_API_KEY_TALENTLYFT'
-									),
+									Variables::getApiKeyTalentlyft(),
+									self::SETTINGS_TALENTLYFT_API_KEY_KEY,
+									'ES_API_KEY_TALENTLYFT',
 									\__('API key', 'eightshift-forms'),
 								),
 								[

@@ -82,7 +82,7 @@ class SettingsMailerlite extends AbstractSettingsIntegrations implements UtilsSe
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MAILERLITE_USE_KEY, self::SETTINGS_MAILERLITE_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailerlite(), self::SETTINGS_MAILERLITE_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMailerlite(), self::SETTINGS_MAILERLITE_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -143,11 +143,9 @@ class SettingsMailerlite extends AbstractSettingsIntegrations implements UtilsSe
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyMailerlite(),
-										self::SETTINGS_MAILERLITE_API_KEY_KEY,
-										'ES_API_KEY_MAILERLITE'
-									),
+									Variables::getApiKeyMailerlite(),
+									self::SETTINGS_MAILERLITE_API_KEY_KEY,
+									'ES_API_KEY_MAILERLITE',
 									\__('API key', 'eightshift-forms'),
 								),
 								[

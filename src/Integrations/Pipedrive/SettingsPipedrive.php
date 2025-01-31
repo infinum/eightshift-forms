@@ -523,7 +523,7 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements UtilsSet
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PIPEDRIVE_USE_KEY, self::SETTINGS_PIPEDRIVE_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), self::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPipedrive(), self::SETTINGS_PIPEDRIVE_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -584,11 +584,9 @@ class SettingsPipedrive extends AbstractSettingsIntegrations implements UtilsSet
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyPipedrive(),
-										self::SETTINGS_PIPEDRIVE_API_KEY_KEY,
-										'ES_API_KEY_PIPEDRIVE'
-									),
+									Variables::getApiKeyPipedrive(),
+									self::SETTINGS_PIPEDRIVE_API_KEY_KEY,
+									'ES_API_KEY_PIPEDRIVE',
 									\__('API key', 'eightshift-forms'),
 								),
 								[

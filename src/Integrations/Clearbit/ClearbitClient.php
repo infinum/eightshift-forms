@@ -339,6 +339,6 @@ class ClearbitClient implements ClearbitClientInterface, ServiceInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY);
 	}
 }

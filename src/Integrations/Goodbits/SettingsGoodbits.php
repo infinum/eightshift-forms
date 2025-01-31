@@ -82,7 +82,7 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements UtilsSett
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GOODBITS_USE_KEY, self::SETTINGS_GOODBITS_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGoodbits(), self::SETTINGS_GOODBITS_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyGoodbits(), self::SETTINGS_GOODBITS_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -143,11 +143,9 @@ class SettingsGoodbits extends AbstractSettingsIntegrations implements UtilsSett
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyGoodbits(),
-										self::SETTINGS_GOODBITS_API_KEY_KEY,
-										'ES_API_KEY_GOODBITS'
-									),
+									Variables::getApiKeyGoodbits(),
+									self::SETTINGS_GOODBITS_API_KEY_KEY,
+									'ES_API_KEY_GOODBITS',
 									\__('API key', 'eightshift-forms'),
 								),
 								[

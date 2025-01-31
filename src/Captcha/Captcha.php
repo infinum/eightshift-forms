@@ -106,9 +106,9 @@ class Captcha implements CaptchaInterface
 	 */
 	private function onEnterprise(string $token, string $action)
 	{
-		$siteKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY)['value'];
-		$apiKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY)['value'];
-		$projectIdKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY)['value'];
+		$siteKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		$apiKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
+		$projectIdKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
 
 		return \wp_remote_post(
 			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
@@ -137,7 +137,7 @@ class Captcha implements CaptchaInterface
 	 */
 	private function onFree(string $token)
 	{
-		$secretKey = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY)['value'];
+		$secretKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
 
 		return \wp_remote_post(
 			"https://www.google.com/recaptcha/api/siteverify",

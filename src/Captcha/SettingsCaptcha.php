@@ -134,10 +134,10 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
-		$siteKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSiteKey(), self::SETTINGS_CAPTCHA_SITE_KEY)['value'];
-		$secretKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaSecretKey(), self::SETTINGS_CAPTCHA_SECRET_KEY)['value'];
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaApiKey(), self::SETTINGS_CAPTCHA_API_KEY)['value'];
-		$projectIdKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getGoogleReCaptchaProjectIdKey(), self::SETTINGS_CAPTCHA_PROJECT_ID_KEY)['value'];
+		$siteKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), self::SETTINGS_CAPTCHA_SITE_KEY);
+		$secretKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), self::SETTINGS_CAPTCHA_SECRET_KEY);
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), self::SETTINGS_CAPTCHA_API_KEY);
+		$projectIdKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), self::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
 
 		$isEnterprise = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
 
@@ -203,38 +203,30 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 								'dividerExtraVSpacing' => true,
 							],
 							UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-								UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-									Variables::getGoogleReCaptchaSiteKey(),
-									self::SETTINGS_CAPTCHA_SITE_KEY,
-									'ES_GOOGLE_RECAPTCHA_SITE_KEY'
-								),
+								Variables::getGoogleReCaptchaSiteKey(),
+								self::SETTINGS_CAPTCHA_SITE_KEY,
+								'ES_GOOGLE_RECAPTCHA_SITE_KEY',
 								\__('Site key', 'eightshift-forms'),
 							),
 
 							...(!$isEnterprise ? [
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getGoogleReCaptchaSecretKey(),
-										self::SETTINGS_CAPTCHA_SECRET_KEY,
-										'ES_GOOGLE_RECAPTCHA_SECRET_KEY'
-									),
+									Variables::getGoogleReCaptchaSecretKey(),
+									self::SETTINGS_CAPTCHA_SECRET_KEY,
+									'ES_GOOGLE_RECAPTCHA_SECRET_KEY',
 									\__('Secret key', 'eightshift-forms'),
 								),
 							] : [
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getGoogleReCaptchaProjectIdKey(),
-										self::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
-										'ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY'
-									),
+									Variables::getGoogleReCaptchaProjectIdKey(),
+									self::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
+									'ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY',
 									\__('Project ID', 'eightshift-forms'),
 								),
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getGoogleReCaptchaApiKey(),
-										self::SETTINGS_CAPTCHA_API_KEY,
-										'ES_GOOGLE_RECAPTCHA_API_KEY'
-									),
+									Variables::getGoogleReCaptchaApiKey(),
+									self::SETTINGS_CAPTCHA_API_KEY,
+									'ES_GOOGLE_RECAPTCHA_API_KEY',
 									\__('API key', 'eightshift-forms'),
 								),
 							]),
