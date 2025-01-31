@@ -60,7 +60,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsCorvus::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
 
-		$params = $this->prepareParams($mapParams, $formDetails['paramsRaw'], $formId);
+		$params = $this->prepareParams($mapParams, $formDetails[UtilsConfig::FD_PARAMS], $formId);
 
 		$reqParams = [
 			'store_id',
@@ -72,7 +72,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 			'cart',
 		];
 
-		$missingOrEmpty = \array_filter($reqParams, fn($param) => empty($params[$param] ?? null));
+		$missingOrEmpty = \array_intersect_key(\array_flip(\array_filter($reqParams, fn($param) => empty($params[$param] ?? null))), $params);
 
 		// Bail early if the required params are missing.
 		if ($missingOrEmpty) {
@@ -148,7 +148,8 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		}
 
 		foreach ($mapParams as $key => $value) {
-			$param = $params[$value] ?? '';
+			$param = FormsHelper::getParamValue($value, $params);
+
 			if (!$param) {
 				continue;
 			}
@@ -227,7 +228,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		$params['signature'] = \hash_hmac(
 			'sha256',
 			\array_reduce(\array_keys($params), fn($carry, $key) => $carry . $key . $params[$key], ''),
-			UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyCorvus($params['store_id']), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)['value']
+			UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyCorvus($params['store_id']), SettingsCorvus::SETTINGS_CORVUS_API_KEY_KEY)
 		);
 
 		return $params;

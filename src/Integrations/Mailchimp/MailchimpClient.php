@@ -540,6 +540,6 @@ class MailchimpClient implements MailchimpClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailchimp(), SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMailchimp(), SettingsMailchimp::SETTINGS_MAILCHIMP_API_KEY_KEY);
 	}
 }

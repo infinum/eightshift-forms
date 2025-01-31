@@ -355,9 +355,9 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY)['value'];
-		$apiBoard = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY)['value'];
-		$apiUser = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY);
+		$apiBoard = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY);
+		$apiUser = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY);
 
 		if (!$isUsed || !$apiKey || !$apiBoard || !$apiUser) {
 			return false;
@@ -418,11 +418,9 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyJira(),
-										self::SETTINGS_JIRA_API_KEY_KEY,
-										'ES_API_KEY_JIRA'
-									),
+									Variables::getApiKeyJira(),
+									self::SETTINGS_JIRA_API_KEY_KEY,
+									'ES_API_KEY_JIRA',
 									\__('API key', 'eightshift-forms'),
 								),
 								[
@@ -430,11 +428,9 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiBoardJira(),
-										self::SETTINGS_JIRA_API_BOARD_KEY,
-										'ES_API_BOARD_JIRA'
-									),
+									Variables::getApiBoardJira(),
+									self::SETTINGS_JIRA_API_BOARD_KEY,
+									'ES_API_BOARD_JIRA',
 									\__('Board', 'eightshift-forms'),
 									\__('Provided the Jira board URL. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
 								),
@@ -443,11 +439,9 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiUserJira(),
-										self::SETTINGS_JIRA_API_USER_KEY,
-										'ES_API_USER_JIRA'
-									),
+									Variables::getApiUserJira(),
+									self::SETTINGS_JIRA_API_USER_KEY,
+									'ES_API_USER_JIRA',
 									\__('User', 'eightshift-forms'),
 									\__('E-mail or user name of the user connected to the user token.', 'eightshift-forms'),
 								),

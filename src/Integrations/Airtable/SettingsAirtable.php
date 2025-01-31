@@ -82,7 +82,7 @@ class SettingsAirtable extends AbstractSettingsIntegrations implements UtilsSett
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_AIRTABLE_USE_KEY, self::SETTINGS_AIRTABLE_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyAirtable(), self::SETTINGS_AIRTABLE_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyAirtable(), self::SETTINGS_AIRTABLE_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -143,11 +143,9 @@ class SettingsAirtable extends AbstractSettingsIntegrations implements UtilsSett
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyAirtable(),
-										self::SETTINGS_AIRTABLE_API_KEY_KEY,
-										'ES_API_KEY_AIRTABLE'
-									),
+									Variables::getApiKeyAirtable(),
+									self::SETTINGS_AIRTABLE_API_KEY_KEY,
+									'ES_API_KEY_AIRTABLE',
 									\__('API key', 'eightshift-forms'),
 								),
 								[

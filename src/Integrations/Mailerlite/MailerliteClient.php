@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailerlite;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -133,7 +134,7 @@ class MailerliteClient implements ClientInterface
 			}
 		}
 
-		$email = $params['email']['value'];
+		$email = FormsHelper::getParamValue('email', $params);
 
 		$body = [
 			'email' => $email,
@@ -352,6 +353,6 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMailerlite(), SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMailerlite(), SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY);
 	}
 }

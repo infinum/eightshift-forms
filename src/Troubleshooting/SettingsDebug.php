@@ -59,7 +59,6 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 	public const SETTINGS_DEBUG_SKIP_CACHE_KEY = UtilsConfig::SETTINGS_DEBUG_SKIP_CACHE_KEY;
 	public const SETTINGS_DEBUG_DEVELOPER_MODE_KEY = UtilsConfig::SETTINGS_DEBUG_DEVELOPER_MODE_KEY;
 	public const SETTINGS_DEBUG_QM_LOG = UtilsConfig::SETTINGS_DEBUG_QM_LOG;
-	public const SETTINGS_DEBUG_FORCE_DISABLED_FIELDS = UtilsConfig::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS;
 
 	/**
 	 * Troubleshooting debug encryption key.
@@ -217,19 +216,6 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
 										'checkboxHelp' => \__('You can preview the output logs for internal API responses not handled by JavaScript. To use this feature, the Query Monitor plugin must be installed and active in your project.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Enable disabled fields admin overrides', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-										'checkboxValue' => self::SETTINGS_DEBUG_FORCE_DISABLED_FIELDS,
-										'checkboxAsToggle' => true,
-										'checkboxSingleSubmit' => true,
-										'checkboxHelp' => \__('You can use this toggle to turn off all disabled fields in the global settings. This is used to debug API keys that are stored in the global variables.', 'eightshift-forms'),
 									],
 								]
 							],

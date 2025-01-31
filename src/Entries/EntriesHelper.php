@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -52,7 +53,7 @@ class EntriesHelper
 		}
 
 		// Get skipped params earlier as we are removing them from the main array using removeUneceseryParamFields method.
-		$paramsSkipped = $params[UtilsHelper::getStateParam('skippedParams')]['value'] ?? [];
+		$paramsSkipped = FormsHelper::getParamValue(UtilsHelper::getStateParam('skippedParams'), $params);
 
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 

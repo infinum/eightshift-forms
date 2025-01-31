@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Pipedrive;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -470,7 +471,7 @@ class PipedriveClient implements PipedriveClientInterface
 			return $output;
 		}
 
-		$output['name'] = $params[$personName]['value'] ?? '';
+		$output['name'] = FormsHelper::getParamValue($personName, $params);
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
@@ -539,7 +540,11 @@ class PipedriveClient implements PipedriveClientInterface
 
 		$leadValue = UtilsSettingsHelper::getSettingValue(SettingsPipedrive::SETTINGS_PIPEDRIVE_LEAD_VALUE_KEY, $formId);
 		if ($leadValue) {
-			$value = \array_values(\array_filter($params, fn($item) => $item['name'] === $leadValue))[0]['value'] ?? 0;
+			$value = FormsHelper::getParamValue($leadValue, $params);
+
+			if (!$value) {
+				$value = 0;
+			}
 
 			$output['value'] = [
 				'amount' => \intval($value, 10),
@@ -572,7 +577,7 @@ class PipedriveClient implements PipedriveClientInterface
 			return $output;
 		}
 
-		$output['name'] = \array_values(\array_filter($params, fn($item) => $item['name'] === $organization))[0]['value'] ?? '';
+		$output['name'] = FormsHelper::getParamValue($organization, $params);
 
 		$output['add_time'] = \gmdate("Y-m-d H:i:s");
 
@@ -653,6 +658,6 @@ class PipedriveClient implements PipedriveClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPipedrive(), SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY);
 	}
 }

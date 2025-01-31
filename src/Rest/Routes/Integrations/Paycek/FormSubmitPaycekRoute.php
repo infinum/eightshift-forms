@@ -61,7 +61,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsPaycek::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
 
-		$params = $this->prepareParams($mapParams, $formDetails['paramsRaw'], $formId);
+		$params = $this->prepareParams($mapParams, $formDetails[UtilsConfig::FD_FIELDS], $formId);
 
 		$reqParams = [
 			'profileCode',
@@ -70,7 +70,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			'amount',
 		];
 
-		$missingOrEmpty = \array_filter($reqParams, fn($param) => empty($params[$param] ?? null));
+		$missingOrEmpty = \array_intersect_key(\array_flip(\array_filter($reqParams, fn($param) => empty($params[$param] ?? null))), $params);
 
 		if ($missingOrEmpty) {
 			return \rest_ensure_response(
@@ -143,7 +143,8 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		$output = [];
 
 		foreach ($mapParams as $key => $value) {
-			$param = $params[$value] ?? '';
+			$param = FormsHelper::getParamValue($value, $params);
+
 			if (!$param) {
 				continue;
 			}
@@ -157,8 +158,8 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			$output[$key] = $param;
 		}
 
-		$output['secretKey'] = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY)['value'];
-		$output['profileCode'] = UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiProfileKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_PROFILE_KEY)['value'];
+		$output['secretKey'] = UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY);
+		$output['profileCode'] = UtilsSettingsHelper::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_PROFILE_KEY);
 		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_LANG_KEY, $formId);
 		$output['paymentId'] = 'temp'; // Temp name, the real one will be set after the increment.
 		$output['description'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);

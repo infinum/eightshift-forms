@@ -352,8 +352,8 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_USE_KEY, self::SETTINGS_PAYCEK_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyPaycek(), self::SETTINGS_PAYCEK_API_KEY_KEY)['value'];
-		$profileKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiProfileKeyPaycek(), self::SETTINGS_PAYCEK_API_PROFILE_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPaycek(), self::SETTINGS_PAYCEK_API_KEY_KEY);
+		$profileKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), self::SETTINGS_PAYCEK_API_PROFILE_KEY);
 
 		if (!$isUsed || !$apiKey || !$profileKey) {
 			return false;
@@ -414,19 +414,15 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyPaycek(),
-										self::SETTINGS_PAYCEK_API_KEY_KEY,
-										'ES_API_KEY_PAYCEK'
-									),
+									Variables::getApiKeyPaycek(),
+									self::SETTINGS_PAYCEK_API_KEY_KEY,
+									'ES_API_KEY_PAYCEK',
 									\__('API key', 'eightshift-forms'),
 								),
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiProfileKeyPaycek(),
-										self::SETTINGS_PAYCEK_API_PROFILE_KEY,
-										'ES_PROFILE_KEY_PAYCEK'
-									),
+									Variables::getApiProfileKeyPaycek(),
+									self::SETTINGS_PAYCEK_API_PROFILE_KEY,
+									'ES_PROFILE_KEY_PAYCEK',
 									\__('Profile key', 'eightshift-forms'),
 								),
 							]),

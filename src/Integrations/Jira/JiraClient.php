@@ -806,7 +806,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyJira(), SettingsJira::SETTINGS_JIRA_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyJira(), SettingsJira::SETTINGS_JIRA_API_KEY_KEY);
 	}
 
 	/**
@@ -816,7 +816,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiBoard(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiBoardJira(), SettingsJira::SETTINGS_JIRA_API_BOARD_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiBoardJira(), SettingsJira::SETTINGS_JIRA_API_BOARD_KEY);
 	}
 
 	/**
@@ -826,6 +826,6 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiUser(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUserJira(), SettingsJira::SETTINGS_JIRA_API_USER_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUserJira(), SettingsJira::SETTINGS_JIRA_API_USER_KEY);
 	}
 }

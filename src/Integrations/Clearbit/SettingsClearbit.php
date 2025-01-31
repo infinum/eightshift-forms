@@ -144,7 +144,7 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_KEY, self::SETTINGS_CLEARBIT_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyClearbit(), self::SETTINGS_CLEARBIT_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -223,11 +223,9 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 						'tabLabel' => \__('General', 'eightshift-forms'),
 						'tabContent' => [
 							UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-								UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-									Variables::getApiKeyClearbit(),
-									self::SETTINGS_CLEARBIT_API_KEY_KEY,
-									'ES_API_KEY_CLEARBIT'
-								),
+								Variables::getApiKeyClearbit(),
+								self::SETTINGS_CLEARBIT_API_KEY_KEY,
+								'ES_API_KEY_CLEARBIT',
 								\__('API key', 'eightshift-forms'),
 							),
 							[

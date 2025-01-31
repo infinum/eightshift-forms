@@ -122,7 +122,7 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements UtilsSetti
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyHubspot(), self::SETTINGS_HUBSPOT_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -239,11 +239,9 @@ class SettingsHubspot extends AbstractSettingsIntegrations implements UtilsSetti
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyHubspot(),
-										self::SETTINGS_HUBSPOT_API_KEY_KEY,
-										'ES_API_KEY_HUBSPOT'
-									),
+									Variables::getApiKeyHubspot(),
+									self::SETTINGS_HUBSPOT_API_KEY_KEY,
+									'ES_API_KEY_HUBSPOT',
 									\__('API key', 'eightshift-forms'),
 								),
 								[

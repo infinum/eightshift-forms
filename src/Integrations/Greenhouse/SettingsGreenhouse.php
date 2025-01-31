@@ -105,8 +105,8 @@ class SettingsGreenhouse extends AbstractSettingsIntegrations implements UtilsSe
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_GREENHOUSE_USE_KEY, self::SETTINGS_GREENHOUSE_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyGreenhouse(), self::SETTINGS_GREENHOUSE_API_KEY_KEY)['value'];
-		$boardToken = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getBoardTokenGreenhouse(), self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyGreenhouse(), self::SETTINGS_GREENHOUSE_API_KEY_KEY);
+		$boardToken = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getBoardTokenGreenhouse(), self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY);
 
 		if (!$isUsed || !$apiKey || !$boardToken) {
 			return false;
@@ -167,11 +167,9 @@ class SettingsGreenhouse extends AbstractSettingsIntegrations implements UtilsSe
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyGreenhouse(),
-										self::SETTINGS_GREENHOUSE_API_KEY_KEY,
-										'ES_API_KEY_GREENHOUSE'
-									),
+									Variables::getApiKeyGreenhouse(),
+									self::SETTINGS_GREENHOUSE_API_KEY_KEY,
+									'ES_API_KEY_GREENHOUSE',
 									\__('API key', 'eightshift-forms'),
 								),
 								[
@@ -179,11 +177,9 @@ class SettingsGreenhouse extends AbstractSettingsIntegrations implements UtilsSe
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getBoardTokenGreenhouse(),
-										self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY,
-										'ES_BOARD_TOKEN_GREENHOUSE'
-									),
+									Variables::getBoardTokenGreenhouse(),
+									self::SETTINGS_GREENHOUSE_BOARD_TOKEN_KEY,
+									'ES_BOARD_TOKEN_GREENHOUSE',
 									\__('Job board', 'eightshift-forms'),
 								),
 								[

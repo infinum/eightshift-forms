@@ -46,7 +46,6 @@ $formPostId = $formParentSettings['postId'] ?? '';
 $formConditionalTags = $formParentSettings['conditionalTags'] ?? '';
 $formDisabledDefaultStyles = $formParentSettings['disabledDefaultStyles'] ?? false;
 $formType = $formParentSettings['formType'] ?? '';
-$legacy = $formParentSettings['legacy'] ?? [];
 
 $formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(

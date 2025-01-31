@@ -64,22 +64,6 @@
 		},
 		"formsResultsOutputData": {
 			"type": "array"
-		},
-		"formsDownloads": {
-			"type": "array",
-			"items": {
-				"type": "object"
-			},
-			"default": []
-		},
-		"formsSuccessRedirectVariation": {
-			"type": "string"
-		},
-		"formsSuccessRedirectVariationUrl": {
-			"type": "string"
-		},
-		"formsSuccessRedirectVariationUrlTitle": {
-			"type": "string"
 		}
 	},
 	"components": {

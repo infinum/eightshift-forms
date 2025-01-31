@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Hubspot;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -229,17 +230,17 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 
 		$body = [];
 
-		$pageUrl = Helpers::cleanUrlParams($params[UtilsHelper::getStateParam('hubspotPageUrl')]['value'] ?? '');
+		$pageUrl = Helpers::cleanUrlParams(FormsHelper::getParamValue(UtilsHelper::getStateParam('hubspotPageUrl'), $params));
 		if ($pageUrl) {
 			$body['context']['pageUri'] = $pageUrl;
 		}
 
-		$pageName = $params[UtilsHelper::getStateParam('hubspotPageName')]['value'] ?? '';
+		$pageName = FormsHelper::getParamValue(UtilsHelper::getStateParam('hubspotPageName'), $params);
 		if ($pageName) {
 			$body['context']['pageName'] = $pageName;
 		}
 
-		$hutk = $params[UtilsHelper::getStateParam('hubspotCookie')]['value'] ?? '';
+		$hutk = FormsHelper::getParamValue(UtilsHelper::getStateParam('hubspotCookie'), $params);
 		if ($hutk) {
 			$body['context']['hutk'] = $hutk;
 		}
@@ -763,7 +764,7 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 				if ($typeCustom === self::HUBSPOT_CONSENT_PROCESSING) {
 					$output['consent'] = [
 						'consentToProcess' => !!$value,
-						'text' => $value,
+						'text' => $value[0] ?? '',
 					];
 				}
 
@@ -828,13 +829,17 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 			}
 
 			if ($type === 'checkbox') {
-				if ($value === 'on') {
+				if (($value[0] ?? '') === 'on') {
 					$value = 'true';
 				}
 
 				if (\is_array($value)) {
 					$value = \implode(';', $value);
 				}
+			}
+
+			if ($type === 'select') {
+				$value = $value[0] ?? '';
 			}
 
 			// Must be in UTC timestamp with milliseconds.
@@ -901,7 +906,7 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyHubspot(), SettingsHubspot::SETTINGS_HUBSPOT_API_KEY_KEY);
 	}
 
 	/**

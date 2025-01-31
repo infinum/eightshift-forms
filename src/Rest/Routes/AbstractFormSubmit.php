@@ -518,148 +518,32 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
 		$output = [
-			'private' => [],
+			'private' => [
+				// Set increment and add it to the output.
+				UtilsHelper::getStateResponseOutputKey('incrementId') => FormsHelper::setIncrement($formId),
+
+				// Add form ID to the output.
+				UtilsHelper::getStateResponseOutputKey('formId') => $formId,
+			],
 			'public' => [],
 		];
 
-		// Set increment and add it to the output.
-		$output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')] = FormsHelper::setIncrement($formId);
+		// ORDER OF THE FUNCTIONS ARE IMPORTANT!
 
 		// Set entries.
-		$useEntries = \apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId);
-		if ($useEntries) {
-			$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
-			if ($entryId) {
-				$output['private'][UtilsHelper::getStateResponseOutputKey('entry')] = (string) $entryId;
-			}
-		}
+		$output = $this->setIntegrationResponseEntry($output, $formDetails);
 
-		// Hide global message on success.
-		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
-		if ($hideGlobalMsgOnSuccess) {
-			$output['public'][UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
-		}
-
-		// Hide form on success.
-		$hideFormOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId);
-		if ($hideFormOnSuccess) {
-			$output['public'][UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
-		}
+		// Set hide options.
+		$output = $this->setIntegrationResponseHideOptions($output, $formDetails);
 
 		// Add success redirect variation.
-		$variation = FiltersOuputMock::getVariationFilterValue($type, $formId, $formDetails)['data'];
-		if ($variation) {
-			$output['public'][UtilsHelper::getStateResponseOutputKey('variation')] = $variation;
-		}
+		$output = $this->setIntegrationResponseVariation($output, $formDetails);
 
 		// Success redirect url.
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
-		if ($successRedirectUrl) {
-			$redirectDataOutput = [];
-
-			// Replace {field_name} with the actual value.
-			foreach (\array_merge($formDetails[UtilsConfig::FD_PARAMS], $formDetails[UtilsConfig::FD_FILES]) as $param) {
-				$name = $param['name'] ?? '';
-				$value = $param['value'] ?? '';
-				$type = $param['type'] ?? '';
-
-				if ($name === UtilsHelper::getStateParam('skippedParams')) {
-					continue;
-				}
-
-				if ($type === 'file') {
-					$value = \array_map(
-						static function (string $file) {
-							$filename = \pathinfo($file, \PATHINFO_FILENAME);
-							$extension = \pathinfo($file, \PATHINFO_EXTENSION);
-							return "{$filename}.{$extension}";
-						},
-						$value
-					);
-				}
-
-				if (\is_array($value)) {
-					$value = \implode(', ', $value);
-				}
-
-				$successRedirectUrl = \str_replace("{" . $name . "}", (string) $value, $successRedirectUrl);
-			}
-
-			// Redirect variation.
-			if (isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])) {
-				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
-			}
-
-			// Redirect entry id.
-			if (isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
-				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
-			}
-
-			// Redirect secure data.
-			if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
-				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true);
-
-				// Legacy data.
-				$redirectDataOutput['es-legacy'] = $this->processLegacyData($secureData['l'] ?? [], $formDetails[UtilsConfig::FD_PARAMS_RAW], $formId);
-
-				// Redirect custom result output feature.
-				$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
-				if (\apply_filters($formsUseCustomResultOutputFeatureFilterName, false)) {
-					$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('customResultOutput')] = $this->processCustomResultOutputData($secureData, $formDetails);
-				}
-			} else {
-				// Legacy data.
-				$legacyVariationData = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
-				if ($legacyVariationData) {
-					$redirectDataOutput['es-legacy']['v'] = $legacyVariationData;
-				}
-			}
-
-			// Redirect base url.
-			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectBaseUrl')] = $successRedirectUrl;
-
-			// Redirect full url.
-			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
-				$redirectDataOutput ? [
-					UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
-				] : [],
-				$successRedirectUrl
-			);
-		}
+		$output = $this->setIntegrationResponseSuccessRedirectUrl($output, $formDetails);
 
 		// Update created entry with additional values.
-		if ($useEntries && isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
-			$entryData = EntriesHelper::getEntry($output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
-
-			if ($entryData) {
-				$entryNewData = $entryData['entryValue'] ?? [];
-				if (
-					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
-					isset($output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')])
-				) {
-					$entryNewData[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = $output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')];
-				}
-
-				if (
-					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
-					isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])
-				) {
-					$entryNewData[UtilsHelper::getStateResponseOutputKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
-				}
-
-				if (
-					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
-					isset($output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')])
-				) {
-					$entryNewData[UtilsHelper::getStateResponseOutputKey('incrementId')] = $output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')];
-				}
-
-				EntriesHelper::updateEntry($entryNewData, $output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
-			}
-		}
-
-		// Add form ID to the output.
-		$output['private'][UtilsHelper::getStateResponseOutputKey('formId')] = $formId;
+		$output = $this->setIntegrationResponseEntryUpdate($output, $formDetails);
 
 		$finalOutput = [
 			'private' => $output['private'],
@@ -879,59 +763,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	abstract protected function submitAction(array $formDetails);
 
 	/**
-	 * Process legacy data.
-	 *
-	 * @param array<string, mixed> $data Data from secure data.
-	 * @param array<string, mixed> $params Raw params.
-	 * @param string $formId Form ID.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function processLegacyData(array $data, array $params, string $formId): array
-	{
-		$downloads = $data['d'] ?? [];
-
-		$output = [];
-
-		foreach ($downloads as $download) {
-			$condition = $download['c'] ?? '';
-
-			// If empty use the download.
-			if (!$condition || $condition === 'all') {
-				$output[] = $download;
-				continue;
-			}
-
-			$condition = \explode('=', $condition);
-
-			$fieldName = $condition[0] ?? '';
-			$fieldValue = $condition[1] ?? '';
-
-			// If condition is not valid use the download.
-			if (!$fieldName || !$fieldValue) {
-				$output[] = $download;
-				continue;
-			}
-
-			// If field condition is met use the download.
-			if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
-				$output[] = $download;
-				continue;
-			}
-		}
-
-		if ($output) {
-			$data['d'] = $output;
-		}
-
-		if (!isset($data['v'])) {
-			$data['v'] = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Process custom result output data.
 	 *
 	 * @param array<string, mixed> $data Data from secure data.
@@ -941,7 +772,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	private function processCustomResultOutputData(array $data, array $formDetails): array
 	{
-		$params = $formDetails[UtilsConfig::FD_PARAMS_RAW] ?? [];
+		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
@@ -974,7 +805,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				}
 
 				// If field condition is met use the file.
-				if (isset($params[$fieldName]) && $params[$fieldName] === $fieldValue) {
+				if (FormsHelper::getParamValue($fieldName, $params) === $fieldValue) {
 					$outputFiles[] = $file;
 					continue;
 				}
@@ -987,6 +818,219 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $output, $formDetails, $formId);
 		}
+
+		return $output;
+	}
+
+	/**
+	 * Set integration response - entry.
+	 *
+	 * @param array<string, mixed> $output Output data.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function setIntegrationResponseEntry(array $output, array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+
+		if (!\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+			return $output;
+		}
+
+		$entryId = EntriesHelper::setEntryByFormDataRef($formDetails);
+		if (!$entryId) {
+			return $output;
+		}
+
+		$output['private'][UtilsHelper::getStateResponseOutputKey('entry')] = (string) $entryId;
+
+		return $output;
+	}
+
+	/**
+	 * Set integration response - entry update.
+	 *
+	 * @param array<string, mixed> $output Output data.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function setIntegrationResponseEntryUpdate(array $output, array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+
+		if (!\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+			return $output;
+		}
+
+		if (!isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
+			return $output;
+		}
+
+		$entryData = EntriesHelper::getEntry($output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
+
+		if (!$entryData) {
+			return $output;
+		}
+
+		$entryNewData = $entryData['entryValue'] ?? [];
+
+		if (
+			UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			isset($output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')])
+		) {
+			$entryNewData[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = $output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')];
+		}
+
+		if (
+			UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])
+		) {
+			$entryNewData[UtilsHelper::getStateResponseOutputKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
+		}
+
+		if (
+			UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			isset($output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')])
+		) {
+			$entryNewData[UtilsHelper::getStateResponseOutputKey('incrementId')] = $output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')];
+		}
+
+		EntriesHelper::updateEntry($entryNewData, $output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
+
+		return $output;
+	}
+
+	/**
+	 * Set integration response - hide options.
+	 *
+	 * @param array<string, mixed> $output Output data.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function setIntegrationResponseHideOptions(array $output, array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+
+		// Hide global message on success.
+		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
+		if ($hideGlobalMsgOnSuccess) {
+			$output['public'][UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
+		}
+
+		// Hide form on success.
+		$hideFormOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId);
+		if ($hideFormOnSuccess) {
+			$output['public'][UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Set integration response - variation.
+	 *
+	 * @param array<string, mixed> $output Output data.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function setIntegrationResponseVariation(array $output, array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+
+		$variation = FiltersOuputMock::getVariationFilterValue($type, $formId, $formDetails)['data'];
+		if (!$variation) {
+			return $output;
+		}
+
+		$output['public'][UtilsHelper::getStateResponseOutputKey('variation')] = $variation;
+
+		return $output;
+	}
+
+	/**
+	 * Set integration response - success redirect url.
+	 *
+	 * @param array<string, mixed> $output Output data.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function setIntegrationResponseSuccessRedirectUrl(array $output, array $formDetails): array
+	{
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+
+		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
+		if (!$successRedirectUrl) {
+			return $output;
+		}
+
+		$redirectDataOutput = [];
+
+		// Replace {field_name} with the actual value.
+		foreach (\array_merge($formDetails[UtilsConfig::FD_PARAMS], $formDetails[UtilsConfig::FD_FILES]) as $param) {
+			$fieldName = $param['name'] ?? '';
+			$fieldValue = $param['value'] ?? '';
+			$fieldType = $param['type'] ?? '';
+
+			if ($fieldName === UtilsHelper::getStateParam('skippedParams')) {
+				continue;
+			}
+
+			if ($fieldType === 'file') {
+				$fieldValue = \array_map(
+					static function (string $file) {
+						$filename = \pathinfo($file, \PATHINFO_FILENAME);
+						$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+						return "{$filename}.{$extension}";
+					},
+					$fieldValue
+				);
+			}
+
+			if (\is_array($fieldValue)) {
+				$fieldValue = \implode(', ', $fieldValue);
+			}
+
+			$successRedirectUrl = \str_replace("{" . $fieldName . "}", (string) $fieldValue, $successRedirectUrl);
+		}
+
+		// Redirect variation.
+		if (isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])) {
+			$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
+		}
+
+		// Redirect entry id.
+		if (isset($output['private'][UtilsHelper::getStateResponseOutputKey('entry')])) {
+			$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
+		}
+
+		// Redirect secure data.
+		if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
+			$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true);
+
+			// Redirect custom result output feature.
+			$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
+			if (\apply_filters($formsUseCustomResultOutputFeatureFilterName, false)) {
+				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('customResultOutput')] = $this->processCustomResultOutputData($secureData, $formDetails);
+			}
+		}
+
+		// Redirect base url.
+		$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectBaseUrl')] = $successRedirectUrl;
+
+		// Redirect full url.
+		$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
+			$redirectDataOutput ? [
+				UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
+			] : [],
+			$successRedirectUrl
+		);
 
 		return $output;
 	}

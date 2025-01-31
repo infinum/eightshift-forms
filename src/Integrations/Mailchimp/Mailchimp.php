@@ -321,7 +321,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 		if ($tagsItems) {
 			$output = [
 				...$output,
-				$this->getTagsFields($formId, $tagsItems),
+				$this->getTagsFields($tagsItems),
 			];
 		}
 
@@ -344,12 +344,11 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 	/**
 	 * Get tags field output depending on the settings type.
 	 *
-	 * @param string $formId Form Id.
 	 * @param array<mixed> $items Items from the original build.
 	 *
 	 * @return array<mixed>
 	 */
-	private function getTagsFields(string $formId, array $items): array
+	private function getTagsFields(array $items): array
 	{
 		if (!$items) {
 			return [];

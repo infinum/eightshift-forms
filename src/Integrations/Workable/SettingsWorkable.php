@@ -98,8 +98,8 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 	public function isSettingsGlobalValid(): bool
 	{
 		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
-		$subdomain = (bool) UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
+		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY);
+		$subdomain = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY);
 
 		if (!$isUsed || !$apiKey || !$subdomain) {
 			return false;
@@ -160,11 +160,9 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getApiKeyWorkable(),
-										self::SETTINGS_WORKABLE_API_KEY_KEY,
-										'ES_API_KEY_WORKABLE'
-									),
+									Variables::getApiKeyWorkable(),
+									self::SETTINGS_WORKABLE_API_KEY_KEY,
+									'ES_API_KEY_WORKABLE',
 									\__('API key', 'eightshift-forms'),
 								),
 								[
@@ -172,11 +170,9 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
-									UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(
-										Variables::getSubdomainWorkable(),
-										self::SETTINGS_WORKABLE_SUBDOMAIN_KEY,
-										'ES_SUBDOMAIN_WORKABLE'
-									),
+									Variables::getSubdomainWorkable(),
+									self::SETTINGS_WORKABLE_SUBDOMAIN_KEY,
+									'ES_SUBDOMAIN_WORKABLE',
 									\__('Subdomain', 'eightshift-forms'),
 								),
 								[

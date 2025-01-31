@@ -507,7 +507,7 @@ class WorkableClient implements ClientInterface
 	 */
 	private function getSubdomain(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getSubdomainWorkable(), SettingsWorkable::SETTINGS_WORKABLE_SUBDOMAIN_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getSubdomainWorkable(), SettingsWorkable::SETTINGS_WORKABLE_SUBDOMAIN_KEY);
 	}
 
 	/**
@@ -517,7 +517,7 @@ class WorkableClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyWorkable(), SettingsWorkable::SETTINGS_WORKABLE_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyWorkable(), SettingsWorkable::SETTINGS_WORKABLE_API_KEY_KEY);
 	}
 
 	/**

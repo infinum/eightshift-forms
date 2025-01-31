@@ -51,7 +51,7 @@ abstract class AbstractMoments
 	 */
 	protected function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyMoments(), SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMoments(), SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY);
 	}
 
 	/**
@@ -61,6 +61,6 @@ abstract class AbstractMoments
 	 */
 	private function getApiUrl(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiUrlMoments(), SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUrlMoments(), SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY);
 	}
 }

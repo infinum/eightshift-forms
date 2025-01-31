@@ -424,18 +424,15 @@ class AirtableClient implements AirtableClientInterface
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
-			if (!$value) {
-				continue;
-			}
-
 			$name = $param['name'] ?? '';
-			if (!$name) {
+
+			if (!$value || !$name) {
 				continue;
 			}
 
 			switch ($param['typeCustom'] ?? '') {
 				case 'singleCheckbox':
-					$value = \filter_var($value, \FILTER_VALIDATE_BOOLEAN);
+					$value = \filter_var(($value[0] ?? ''), \FILTER_VALIDATE_BOOLEAN);
 					break;
 				case 'number':
 					$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
@@ -458,6 +455,6 @@ class AirtableClient implements AirtableClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getSettingsDisabledOutputWithDebugFilter(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY)['value'];
+		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY);
 	}
 }
