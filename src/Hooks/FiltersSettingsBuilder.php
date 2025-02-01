@@ -59,6 +59,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
@@ -515,6 +516,23 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'labels' => [
 					'title' => \__('Calculator', 'eightshift-forms'),
 					'desc' => \__('Calculator form type settings.', 'eightshift-forms'),
+				],
+			],
+			SettingsNotionbuilder::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsNotionbuilder::FILTER_SETTINGS_GLOBAL_NAME,
+				'fields' => Workable::FILTER_FORM_FIELDS_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'use' => SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_USE_KEY,
+				'settingsForceShow' => false,
+				'cache' => [
+					// WorkableClient::CACHE_NOTIONBUILDER_ITEMS_TRANSIENT_NAME,
+				],
+				'labels' => [
+					'title' => \__('NotionBuilder', 'eightshift-forms'),
+					'desc' => \__('NotionBuilder integration settings.', 'eightshift-forms'),
+					'detail' => \__('Software designed to grow your community and move it to action. Native advocacy features. Engage your audience in new and innovative ways.', 'eightshift-forms'),
+					'externalLink' => 'https://nationbuilder.com/',
 				],
 			],
 			// ------------------------------

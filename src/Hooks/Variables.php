@@ -287,4 +287,34 @@ class Variables
 	{
 		return \defined('ES_PROFILE_KEY_PAYCEK') ? \ES_PROFILE_KEY_PAYCEK : '';
 	}
+
+	/**
+	 * Get Client Slug for Notion Builder.
+	 *
+	 * @return string
+	 */
+	public static function getClientSlugNotionBuilder(): string
+	{
+		return \defined('ES_CLIENT_SLUG_NOTIONBUILDER') ? \ES_CLIENT_SLUG_NOTIONBUILDER : '';
+	}
+
+	/**
+	 * Get Client ID for Notion Builder.
+	 *
+	 * @return string
+	 */
+	public static function getClientIdNotionBuilder(): string
+	{
+		return \defined('ES_CLIENT_ID_NOTIONBUILDER') ? \ES_CLIENT_ID_NOTIONBUILDER : '';
+	}
+
+	/**
+	 * Get Client Secret for Notion Builder.
+	 *
+	 * @return string
+	 */
+	public static function getClientSecretNotionBuilder(): string
+	{
+		return \defined('ES_CLIENT_SECRET_NOTIONBUILDER') ? \ES_CLIENT_SECRET_NOTIONBUILDER : '';
+	}
 }
