@@ -525,9 +525,6 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_USE_KEY,
 				'settingsForceShow' => false,
-				'cache' => [
-					// WorkableClient::CACHE_NOTIONBUILDER_ITEMS_TRANSIENT_NAME,
-				],
 				'labels' => [
 					'title' => \__('NotionBuilder', 'eightshift-forms'),
 					'desc' => \__('NotionBuilder integration settings.', 'eightshift-forms'),

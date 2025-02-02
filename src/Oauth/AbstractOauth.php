@@ -18,13 +18,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 abstract class AbstractOauth implements OauthInterface
 {
 	/**
-	 * Get authorization URL based on the provider Id.
-	 *
-	 * @return string
-	 */
-	public abstract function getOauthAuthorizeUrl(): string;
-
-	/**
 	 * Get redirect URI based on the provider Id.
 	 *
 	 * @param string $type Type.
@@ -36,6 +29,6 @@ abstract class AbstractOauth implements OauthInterface
 		$namespace = UtilsConfig::ROUTE_NAMESPACE;
 		$version = UtilsConfig::ROUTE_VERSION;
 
-		return rest_url("{$namespace}/{$version}/oauth/{$type}");
+		return \rest_url("{$namespace}/{$version}/oauth/{$type}");
 	}
 }

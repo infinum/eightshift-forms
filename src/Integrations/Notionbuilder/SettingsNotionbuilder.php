@@ -82,7 +82,7 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback methods.
-	 * @param OauthInterface $oautg Inject Oauth methods.
+	 * @param OauthInterface $oauthNotionbuilder Inject Oauth methods.
 	 */
 	public function __construct(
 		SettingsFallbackDataInterface $settingsFallback,
@@ -202,13 +202,7 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								[
-									'component' => 'submit',
-									'submitValue' => \__('Oauth Connect', 'eightshift-forms'),
-									'submitVariant' => 'outline',
-									'submitButtonAsLink' => true,
-									'submitButtonAsLinkUrl' => $this->oauthNotionbuilder->getOauthAuthorizeUrl()
-								],
+								UtilsSettingsOutputHelper::getOauthConnection($this->oauthNotionbuilder->getOauthAuthorizeUrl(), OauthNotionbuilder::OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY),
 							]),
 						],
 					],

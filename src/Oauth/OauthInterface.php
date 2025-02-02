@@ -15,11 +15,19 @@ namespace EightshiftForms\Oauth;
  */
 interface OauthInterface
 {
-
 	/**
 	 * Get authorization URL based on the provider Id.
 	 *
 	 * @return string
 	 */
 	public function getOauthAuthorizeUrl(): string;
+
+	/**
+	 * Get access token data.
+	 *
+	 * @param string $code Code.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getOauthAccessTokenData(string $code): array;
 }

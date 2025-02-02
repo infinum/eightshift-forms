@@ -158,7 +158,7 @@ class SettingsMailchimp extends AbstractSettingsIntegrations implements UtilsSet
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
+								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],

@@ -34,6 +34,8 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Notionbuilder\OauthNotionbuilder;
+use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -420,6 +422,12 @@ final class Filters
 
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY,
+
+			SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_ID,
+			SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_SECRET,
+			SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_SLUG,
+			OauthNotionbuilder::OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY,
+			OauthNotionbuilder::OAUTH_NOTIONBUILDER_REFRESH_TOKEN_KEY,
 
 			SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 
