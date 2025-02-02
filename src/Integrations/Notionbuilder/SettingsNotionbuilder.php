@@ -17,6 +17,8 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Oauth\OauthInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -24,6 +26,11 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
  */
 class SettingsNotionbuilder extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
 {
+	/**
+	 * Filter settings key.
+	 */
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_notionbuilder';
+
 	/**
 	 * Filter global settings key.
 	 */
@@ -55,14 +62,14 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 	public const SETTINGS_NOTIONBUILDER_CLIENT_SLUG = 'notionbuilder-client-slug';
 
 	/**
-	 * File upload limit default. Defined in MB.
-	 */
-	public const SETTINGS_NOTIONBUILDER_FILE_UPLOAD_LIMIT_DEFAULT = 5;
-
-	/**
 	 * Skip integration.
 	 */
 	public const SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY = 'notionbuilder-skip-integration';
+
+	/**
+	 * Params map key.
+	 */
+	public const SETTINGS_NOTIONBUILDER_PARAMS_MAP_KEY = 'notionbuilder-params-map';
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -99,7 +106,83 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 	 */
 	public function register(): void
 	{
+		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+	}
+
+	/**
+	 * Get Form settings data array
+	 *
+	 * @param string $formId Form Id.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function getSettingsData(string $formId): array
+	{
+		// Bailout if feature is not active.
+		if (!$this->isSettingsGlobalValid()) {
+			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		}
+
+		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
+		$params = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
+		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_NOTIONBUILDER_PARAMS_MAP_KEY, $formId);
+
+		dump($formDetails);
+
+		return [
+			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Settings', 'eightshift-forms'),
+						'tabContent' => [
+							[
+								'component' => 'group',
+								'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NOTIONBUILDER_PARAMS_MAP_KEY),
+								'groupSaveOneField' => true,
+								'groupStyle' => 'default-listing',
+								'groupContent' => [
+									[
+										'component' => 'field',
+										'fieldLabel' => '<b>' . \__('Form field', 'eightshift-forms') . '</b>',
+										'fieldContent' => '<b>' . \__('NotionBuilder fields', 'eightshift-forms') . '</b>',
+										'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
+										'fieldIsFiftyFiftyHorizontal' => true,
+									],
+									...\array_map(
+										function ($item) use ($mapParams) {
+											return [
+												'component' => 'select',
+												'selectName' => $item,
+												'selectFieldLabel' => ucfirst($item),
+												'selectValue' => $mapParams[$item] ?? '',
+												'selectFieldIsFiftyFiftyHorizontal' => true,
+												'selectFieldBeforeContent' => '&rarr;',
+												'selectContent' => \array_map(
+													static function ($option) use ($mapParams, $item) {
+														return [
+															'component' => 'select-option',
+															'selectOptionLabel' => $option['title'],
+															'selectOptionValue' => $option['id'],
+															'selectOptionIsSelected' => $option['id'] === ($mapParams[$item] ?? ''),
+														];
+													},
+													$this->getFields()
+												),
+											];
+										},
+										$params
+									),
+								],
+							],
+						],
+					],
+				],
+			],
+		];
 	}
 
 	/**
@@ -235,6 +318,21 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 					],
 				],
 			],
+		];
+	}
+
+	/**
+	 * Get fields for NotionBuilder.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFields(): array
+	{
+		return [
+			[
+				'id' => 'email1',
+				'title' => \__('Email1', 'eightshift-forms'),
+			]
 		];
 	}
 }

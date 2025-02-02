@@ -16,6 +16,15 @@ namespace EightshiftForms\Oauth;
 interface OauthInterface
 {
 	/**
+	 * Get Oauth URL based on the provider Id.
+	 *
+	 * @param string $path Path.
+	 *
+	 * @return string
+	 */
+	public function getApiUrl(string $path): string;
+
+	/**
 	 * Get authorization URL based on the provider Id.
 	 *
 	 * @return string

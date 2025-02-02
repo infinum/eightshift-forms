@@ -306,6 +306,12 @@ final class Filters
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
+				SettingsNotionbuilder::SETTINGS_TYPE_KEY => [
+					'overridePostRequest',
+					'prePostParams',
+					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
+				],
 			],
 			'entries' => [
 				'prePostParams',

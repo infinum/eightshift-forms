@@ -520,11 +520,15 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsNotionbuilder::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsNotionbuilder::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsNotionbuilder::FILTER_SETTINGS_NAME,
 				'fields' => Workable::FILTER_FORM_FIELDS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_USE_KEY,
 				'settingsForceShow' => false,
+				'cache' => [
+					// WorkableClient::CACHE_NOTIONBUILDER_ITEMS_TRANSIENT_NAME,
+				],
 				'labels' => [
 					'title' => \__('NotionBuilder', 'eightshift-forms'),
 					'desc' => \__('NotionBuilder integration settings.', 'eightshift-forms'),

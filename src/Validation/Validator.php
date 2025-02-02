@@ -20,6 +20,7 @@ use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Jira\SettingsJira;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
+use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
@@ -436,6 +437,7 @@ class Validator extends AbstractValidation
 			case SettingsCorvus::SETTINGS_TYPE_KEY:
 			case SettingsPaycek::SETTINGS_TYPE_KEY:
 			case SettingsCalculator::SETTINGS_TYPE_KEY:
+			case SettingsNotionbuilder::SETTINGS_TYPE_KEY:
 				if (!$formId || !$postId) {
 					return false;
 				}

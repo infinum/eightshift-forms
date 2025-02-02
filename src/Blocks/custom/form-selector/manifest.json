@@ -30,7 +30,8 @@
 				"eightshift-forms/corvus",
 				"eightshift-forms/paycek",
 				"eightshift-forms/pipedrive",
-				"eightshift-forms/calculator"
+				"eightshift-forms/calculator",
+				"eightshift-forms/notionbuilder"
 			]
 		}
 	},
@@ -322,6 +323,38 @@
 						"inputInputType": "range",
 						"inputInputName": "range",
 						"inputInputIsNumber": true
+					}
+				],
+				[
+					"eightshift-forms/submit"
+				]
+			]
+		},
+		{
+			"label": "Notionbuilder",
+			"slug": "notionbuilder",
+			"blockName": "eightshift-forms/notionbuilder",
+			"innerBlocks": [
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "E-mail",
+						"inputInputType": "email",
+						"inputInputName": "email",
+						"inputInputIsRequired": true,
+						"inputInputIsEmail": true,
+						"inputInputDisabledOptions": [
+							"inputInputIsRequired",
+							"inputInputName"
+						]
+					}
+				],
+				[
+					"eightshift-forms/input",
+					{
+						"inputInputFieldLabel": "Name",
+						"inputInputIsRequired": true,
+						"inputInputName": "name"
 					}
 				],
 				[

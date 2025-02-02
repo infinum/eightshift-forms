@@ -25,6 +25,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
@@ -54,6 +55,7 @@ class Labels implements LabelsInterface
 		'paycekSuccess',
 		'pipedriveSuccess',
 		'calculatorSuccess',
+		'notionbuilderSuccess',
 	];
 
 	/**
@@ -148,6 +150,11 @@ class Labels implements LabelsInterface
 		// Calculator.
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
 			$output = \array_merge($output, $this->getCalculatorLabels());
+		}
+
+		// Notionbuilder.
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_USE_KEY, SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_USE_KEY)) {
+			$output = \array_merge($output, $this->getNotionbuilderLabels());
 		}
 
 		return $output;
@@ -563,6 +570,20 @@ class Labels implements LabelsInterface
 			'calculatorErrorSettingsMissing' => \__('Calculator integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'calculatorBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'calculatorSuccess' => \__('Calculator result success. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Notionbuilder
+	 *
+	 * @return array<string, string>
+	 */
+	private function getNotionbuilderLabels(): array
+	{
+		return [
+			'notionbuilderErrorSettingsMissing' => \__('Notionbuilder integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'notionbuilderBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'notionbuilderSuccess' => \__('Notionbuilder result success. Thank you!', 'eightshift-forms'),
 		];
 	}
 }
