@@ -58,7 +58,6 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 	public const SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY = UtilsConfig::SETTINGS_DEBUG_SKIP_FORMS_SYNC_KEY;
 	public const SETTINGS_DEBUG_SKIP_CACHE_KEY = UtilsConfig::SETTINGS_DEBUG_SKIP_CACHE_KEY;
 	public const SETTINGS_DEBUG_DEVELOPER_MODE_KEY = UtilsConfig::SETTINGS_DEBUG_DEVELOPER_MODE_KEY;
-	public const SETTINGS_DEBUG_QM_LOG = UtilsConfig::SETTINGS_DEBUG_QM_LOG;
 
 	/**
 	 * Troubleshooting debug encryption key.
@@ -203,19 +202,6 @@ class SettingsDebug implements ServiceInterface, UtilsSettingGlobalInterface
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
 										'checkboxHelp' => \__('Prevents storing integration data to the temporary internal cache to optimize load time and API calls. Turning on this option can cause many API calls in a short time, which may cause a temporary ban from the external integration service. Use with caution.', 'eightshift-forms'),
-									],
-									[
-										'component' => 'divider',
-										'dividerExtraVSpacing' => 'true',
-									],
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Output Query Monitor log', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_DEBUG_QM_LOG, self::SETTINGS_DEBUG_DEBUGGING_KEY),
-										'checkboxValue' => self::SETTINGS_DEBUG_QM_LOG,
-										'checkboxAsToggle' => true,
-										'checkboxSingleSubmit' => true,
-										'checkboxHelp' => \__('You can preview the output logs for internal API responses not handled by JavaScript. To use this feature, the Query Monitor plugin must be installed and active in your project.', 'eightshift-forms'),
 									],
 								]
 							],

@@ -13,7 +13,6 @@ namespace EightshiftForms\Integrations\Moments;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
@@ -67,8 +66,6 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {

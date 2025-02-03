@@ -16,7 +16,6 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -133,8 +132,6 @@ class GoodbitsClient implements ClientInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {

@@ -81,7 +81,6 @@ class FormAdminTopBarMenu implements ServiceInterface
 
 		$prefix = FormAdminMenu::ADMIN_MENU_SLUG;
 		$isDevelopMode = UtilsDeveloperHelper::isDeveloperModeActive();
-		$isDevelopModeQmLog = UtilsDeveloperHelper::isDeveloperQMLogActive();
 
 		$version = Helpers::getPluginVersion();
 
@@ -93,10 +92,10 @@ class FormAdminTopBarMenu implements ServiceInterface
 				'id' => $prefix,
 				'parent' => null,
 				'group' => null,
-				'title' => ($isDevelopMode || $isDevelopModeQmLog) ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
+				'title' => $isDevelopMode ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
 				'href' => UtilsGeneralHelper::getListingPageUrl(),
 				'meta' => [
-					'title' => ($isDevelopMode || $isDevelopModeQmLog) ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
+					'title' => $isDevelopMode ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
 				]
 			],
 		);

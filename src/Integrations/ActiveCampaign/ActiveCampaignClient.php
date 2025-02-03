@@ -146,8 +146,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
-
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return UtilsApiHelper::getIntegrationSuccessInternalOutput(
@@ -221,9 +219,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
@@ -272,9 +267,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
@@ -313,8 +305,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
@@ -375,8 +365,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
@@ -467,8 +455,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
-
 		// Bailout if fields are missing.
 		if (!isset($body['form']['cfields'])) {
 			return [];
@@ -545,8 +531,6 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$details = $this->getTestApi();
 
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		if (!isset($body['forms'])) {
 			return [];

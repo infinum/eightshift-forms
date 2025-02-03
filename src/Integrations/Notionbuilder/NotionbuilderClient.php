@@ -199,8 +199,6 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
-
 		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
 			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
 
@@ -272,8 +270,6 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
 			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
@@ -357,8 +353,6 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
 			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();

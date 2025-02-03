@@ -175,8 +175,6 @@ class WorkableClient implements ClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
-
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
@@ -310,8 +308,6 @@ class WorkableClient implements ClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
-
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body['jobs'] ?? [];
@@ -348,7 +344,7 @@ class WorkableClient implements ClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
+
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
