@@ -59,6 +59,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Notionbuilder\NotionbuilderClient;
 use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
@@ -523,11 +524,15 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settings' => SettingsNotionbuilder::FILTER_SETTINGS_NAME,
 				'fields' => Workable::FILTER_FORM_FIELDS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
-					// WorkableClient::CACHE_NOTIONBUILDER_ITEMS_TRANSIENT_NAME,
+					NotionbuilderClient::CACHE_NOTIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME,
+					NotionbuilderClient::CACHE_NOTIONBUILDER_LISTS_TRANSIENT_NAME,
+				],
+				'emailTemplateTags' => [
+					'notionbuilderSignupId' => 'id',
 				],
 				'labels' => [
 					'title' => \__('NotionBuilder', 'eightshift-forms'),

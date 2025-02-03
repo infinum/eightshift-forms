@@ -10,13 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Notionbuilder;
 
-use EightshiftForms\Integrations\Notionbuilder\OauthNotionbuilder;
 use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
 use EightshiftForms\Oauth\OauthInterface;
 use EightshiftForms\Rest\Routes\AbstractOauth;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
  * Class OauthNotionbuilderRoute
@@ -56,16 +52,6 @@ class OauthNotionbuilderRoute extends AbstractOauth
 	}
 
 	/**
-	 * Returns allowed methods for this route.
-	 *
-	 * @return string
-	 */
-	protected function getMethods(): string
-	{
-		return static::READABLE;
-	}
-
-	/**
 	 * Get the oauth type.
 	 *
 	 * @return string
@@ -73,6 +59,16 @@ class OauthNotionbuilderRoute extends AbstractOauth
 	protected function getOauthType(): string
 	{
 		return SettingsNotionbuilder::SETTINGS_TYPE_KEY;
+	}
+
+	/**
+	 * Get the oauth allow key.
+	 *
+	 * @return string
+	 */
+	protected function getOauthAllowKey(): string
+	{
+		return SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_OAUTH_ALLOW_KEY;
 	}
 
 	/**
@@ -84,36 +80,9 @@ class OauthNotionbuilderRoute extends AbstractOauth
 	 */
 	protected function submitAction(string $code)
 	{
-		// Get token data.
-		$accessTokenData = $this->oauthNotionbuilder->getOauthAccessTokenData($code);
+		$response = $this->oauthNotionbuilder->getAccessToken($code);
 
-		// Get Access token.
-		$accessTokenResponse = \wp_remote_post(
-			$accessTokenData['url'],
-			[
-				'headers' => [
-					'Content-Type' => 'application/json',
-					'Accept' => 'application/json',
-				],
-				'body' => $accessTokenData['args'],
-			]
-		);
-
-		// Structure response details.
-		$accessTokenResponseDetails = UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
-			$accessTokenResponse,
-			$accessTokenData['url'],
-		);
-
-		$accessTokenResponseCode = $accessTokenResponseDetails[UtilsConfig::IARD_CODE];
-		$accessTokenResponseBody = $accessTokenResponseDetails[UtilsConfig::IARD_BODY];
-
-		// On success return output.
-		if ($accessTokenResponseCode >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $accessTokenResponseCode <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			\update_option(UtilsSettingsHelper::getSettingName(OauthNotionbuilder::OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY), $accessTokenResponseBody['access_token']);
-			\update_option(UtilsSettingsHelper::getSettingName(OauthNotionbuilder::OAUTH_NOTIONBUILDER_REFRESH_TOKEN_KEY), $accessTokenResponseBody['refresh_token']);
-
+		if ($response) {
 			$this->redirect(
 				\esc_html__('Oauth connection successful', 'eightshift-forms'),
 			);

@@ -30,4 +30,13 @@ interface ClearbitClientInterface
 	 * @return array<string, mixed>
 	 */
 	public function getApplication(string $email, array $mapData, string $formId): array;
+
+	/**
+	 * Set queue for Clearbit.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return bool
+	 */
+	public function setQueue(array $formDetails): bool;
 }

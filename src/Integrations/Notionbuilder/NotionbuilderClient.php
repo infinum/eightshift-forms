@@ -11,9 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Notionbuilder;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Oauth\OauthInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
@@ -28,9 +26,14 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 class NotionbuilderClient implements NotionbuilderClientInterface
 {
 	/**
-	 * Transient cache name for items.
+	 * Transient cache name for custom fields.
 	 */
-	public const CACHE_NOTIONBUILDER_ITEMS_TRANSIENT_NAME = 'es_notionbuilder_items_cache';
+	public const CACHE_NOTIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME = 'es_notionbuilder_custom_fields_cache';
+
+	/**
+	 * Transient cache name for lists.
+	 */
+	public const CACHE_NOTIONBUILDER_LISTS_TRANSIENT_NAME = 'es_notionbuilder_lists_cache';
 
 	/**
 	 * Instance variable for Oauth.
@@ -50,61 +53,102 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	}
 
 	/**
-	 * Return projects.
+	 * Return custom fields.
+	 *
+	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getCustomFields(bool $hideUpdateTime = true): array
+	{
+
+		$output = \get_transient(self::CACHE_NOTIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		// Prevent cache.
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+			$output = [];
+		}
+
+		// Check if form exists in cache.
+		if (!$output) {
+			$items = $this->getNotionbuilderCustomApiData('custom_fields');
+
+			if ($items) {
+				foreach ($items as $item) {
+					$id = $item['attributes']['slug'] ?? '';
+
+					$output[$id] = [
+						'id' => $id,
+						'title' => $item['attributes']['name'] ?? '',
+					];
+				}
+
+				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
+					'id' => ClientInterface::TRANSIENT_STORED_TIME,
+					'title' => \current_datetime()->format('Y-m-d H:i:s'),
+				];
+
+				\set_transient(self::CACHE_NOTIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+			}
+		}
+
+		if ($hideUpdateTime) {
+			unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return lists.
 	 *
 	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
-	// public function getProjects(bool $hideUpdateTime = true): array
-	// {
+	public function getLists(bool $hideUpdateTime = true): array
+	{
 
-	// 	$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_NOTIONBUILDER_LISTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
-	// 	// Prevent cache.
-	// 	if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
-	// 		$output = [];
-	// 	}
+		// Prevent cache.
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+			$output = [];
+		}
 
-	// 	// Check if form exists in cache.
-	// 	if (!$output) {
-	// 		$items = $this->getJiraProjects();
+		// Check if form exists in cache.
+		if (!$output) {
+			$items = $this->getNotionbuilderCustomApiData('lists');
 
-	// 		if ($items) {
-	// 			$fields = $this->getJiraCustomFields();
+			if ($items) {
+				foreach ($items as $item) {
+					$id = $item['id'] ?? '';
 
-	// 			foreach ($items as $item) {
-	// 				$id = $item['id'] ?? '';
+					$output[$id] = [
+						'id' => $id,
+						'title' => $item['attributes']['name'] ?? '',
+					];
+				}
 
-	// 				$output[$id] = [
-	// 					'id' => $id,
-	// 					'key' => $item['key'] ?? '',
-	// 					'title' => $item['name'] ?? '',
-	// 					'issueTypes' => [],
-	// 					'customFields' => $fields,
-	// 				];
-	// 			}
+				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
+					'id' => ClientInterface::TRANSIENT_STORED_TIME,
+					'title' => \current_datetime()->format('Y-m-d H:i:s'),
+				];
 
-	// 			$output[ClientInterface::TRANSIENT_STORED_TIME] = [
-	// 				'id' => ClientInterface::TRANSIENT_STORED_TIME,
-	// 				'title' => \current_datetime()->format('Y-m-d H:i:s'),
-	// 			];
+				\set_transient(self::CACHE_NOTIONBUILDER_LISTS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+			}
+		}
 
-	// 			\set_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
-	// 		}
-	// 	}
+		if ($hideUpdateTime) {
+			unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
+		}
 
-	// 	if ($hideUpdateTime) {
-	// 		unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
-	// 	}
-
-	// 	return $output;
-	// }
+		return $output;
+	}
 
 	/**
 	 * API request to post application.
 	 *
-	 * @param string $itemId Item id to search.
 	 * @param array<string, mixed> $params Params array.
 	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
 	 * @param string $formId FormId value.
@@ -152,20 +196,97 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY)
 		);
 
-		dump($details);
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
+
+		UtilsDeveloperHelper::setQmLogsOutput($details);
+
+		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
+
+			if ($refreshToken) {
+				return $this->postApplication($params, $files, $formId);
+			}
+		}
+
+		// On success return output.
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			$list = UtilsSettingsHelper::getSettingValue(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_LIST_KEY, $formId);
+
+			if ($list) {
+				$listsJobs = UtilsSettingsHelper::getOptionValueGroup(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CRON_KEY);
+				$listsJobs['list'][$list][] = $body['data']['id'] ?? '';
+				\update_option(UtilsSettingsHelper::getSettingName(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CRON_KEY), $listsJobs);
+			}
+
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		}
+
+		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+
+		// Output error.
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+	}
+
+	/**
+	 * API request to post list.
+	 *
+	 * @param string $listId List id.
+	 * @param string $signupId Signup id.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function postList(string $listId, string $signupId): array
+	{
+		$url = $this->getBaseUrl("lists/{$listId}/add_signups");
+
+		$body = [
+			'data' => [
+				'id' => $listId,
+				'type' => 'lists',
+				'signup_ids' => [
+					$signupId,
+				],
+			]
+		];
+
+		$response = \wp_remote_post(
+			$url,
+			[
+				'method' => 'PATCH',
+				'headers' => $this->getHeaders(),
+				'body' => \wp_json_encode($body),
+			]
+		);
+
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$body,
+			[],
+			'',
+			'',
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY)
+		);
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
 		UtilsDeveloperHelper::setQmLogsOutput($details);
 
+		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
+
+			if ($refreshToken) {
+				return $this->postList($listId, $signupId);
+			}
+		}
+
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
-
-		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
-		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
 		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
@@ -180,41 +301,18 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	 */
 	private function getErrorMsg(array $body): string
 	{
-		$msg = $body['error']['message'] ?? '';
+		$msg = $body['code'] ?? '';
 
 		switch ($msg) {
-			case 'Bad Request':
+			case 'bad_request':
 				return 'mailerliteBadRequestError';
-			case 'Unauthorized':
-				return 'mailerliteErrorSettingsMissing';
+			case 'unauthorized':
+				return 'notionbuilderErrorSettingsMissing';
+			case 'server_error':
+				return 'notionbuilderServerError';
 			default:
 				return 'submitWpError';
 		}
-	}
-
-	/**
-	 * Map service messages for fields with our own.
-	 *
-	 * @param array<mixed> $body API response body.
-	 *
-	 * @return array<string, string>
-	 */
-	private function getFieldsErrors(array $body): array
-	{
-		$msg = $body['error']['message'] ?? '';
-
-		$output = [];
-
-		switch ($msg) {
-			case 'Invalid email address':
-				$output['email'] = 'validationEmail';
-				break;
-			case 'Email temporarily blocked':
-				$output['email'] = 'validationEmail';
-				break;
-		}
-
-		return $output;
 	}
 
 	/**
@@ -233,85 +331,47 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	}
 
 	/**
-	 * API request to get one job by ID from Greenhouse.
+	 * API request to get all custom data from endpoints.
+	 *
+	 * @param string $endpoint Endpoint.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getMailerliteListFields()
+	private function getNotionbuilderCustomApiData($endpoint)
 	{
-		// $url = self::BASE_URL . "fields";
+		$url = $this->getBaseUrl($endpoint);
 
-		// $response = \wp_remote_get(
-		// 	$url,
-		// 	[
-		// 		'headers' => $this->getHeaders(),
-		// 	]
-		// );
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
 
-		// // Structure response details.
-		// $details = UtilsApiHelper::getIntegrationApiReponseDetails(
-		// 	SettingsMailerlite::SETTINGS_TYPE_KEY,
-		// 	$response,
-		// 	$url,
-		// );
+		// Structure response details.
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
 
-		// $code = $details[UtilsConfig::IARD_CODE];
-		// $body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
 
-		// UtilsDeveloperHelper::setQmLogsOutput($details);
+		UtilsDeveloperHelper::setQmLogsOutput($details);
 
-		// // On success return output.
-		// if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-		// 	return $body ?? [];
-		// }
+		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
 
-		return [];
-	}
+			if ($refreshToken) {
+				return $this->getNotionbuilderCustomApiData($endpoint);
+			}
+		}
 
-	/**
-	 * Get test api.
-	 *
-	 * @return array<mixed>
-	 */
-	public function getTestApi(): array
-	{
-		// $url = self::BASE_URL . "groups";
-
-		// $response = \wp_remote_get(
-		// 	$url,
-		// 	[
-		// 		'headers' => $this->getHeaders(),
-		// 	]
-		// );
-
-		// // Structure response details.
-		// return UtilsApiHelper::getIntegrationApiReponseDetails(
-		// 	SettingsMailerlite::SETTINGS_TYPE_KEY,
-		// 	$response,
-		// 	$url,
-		// );
-
-		return [];
-	}
-
-	/**
-	 * API request to get all lists from Mailerlite.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getMailerliteLists()
-	{
-		// $details = $this->getTestApi();
-
-		// $code = $details[UtilsConfig::IARD_CODE];
-		// $body = $details[UtilsConfig::IARD_BODY];
-
-		// UtilsDeveloperHelper::setQmLogsOutput($details);
-
-		// // On success return output.
-		// if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-		// 	return $body ?? [];
-		// }
+		// On success return output.
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return $body['data'] ?? [];
+		}
 
 		return [];
 	}
@@ -361,16 +421,60 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 				$value = \implode(', ', $value);
 			}
 
-			$output[$mapParam] = $value;
+			if (isset($this->getCustomFields()[$mapParam])) {
+				$output['custom_values'][$mapParam] = $value;
+			} else {
+				$output[$mapParam] = $value;
+			}
 		}
-
-		dump($output);
 
 		return $output;
 	}
 
 	/**
+	 * Get test api.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getTestApi(): array
+	{
+		$url = $this->getBaseUrl('lists');
+
+		$response = \wp_remote_get(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+			]
+		);
+
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+
+		$body = $details[UtilsConfig::IARD_BODY];
+
+		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
+
+			if ($refreshToken) {
+				return $this->getTestApi();
+			}
+		}
+
+		// Structure response details.
+		return UtilsApiHelper::getIntegrationApiReponseDetails(
+			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+		);
+	}
+
+	/**
 	 * Return base url.
+	 *
+	 * @param string $path Path.
 	 *
 	 * @return string
 	 */

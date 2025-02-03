@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use WP_REST_Request;
 
@@ -40,6 +41,10 @@ abstract class AbstractOauth extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		if (!$this->checkEnabledConnectionPermission()) {
+			$this->redirect(\esc_html__('You do not have permission to access this page.', 'eightshift-forms'));
+		}
+
 		try {
 			$code = $request->get_param('code');
 
@@ -85,6 +90,23 @@ abstract class AbstractOauth extends AbstractUtilsBaseRoute
 	abstract protected function getOauthType(): string;
 
 	/**
+	 * Get the oauth allow key.
+	 *
+	 * @return string
+	 */
+	abstract protected function getOauthAllowKey(): string;
+
+	/**
+	 * Returns allowed methods for this route.
+	 *
+	 * @return string
+	 */
+	protected function getMethods(): string
+	{
+		return static::READABLE;
+	}
+
+	/**
 	 * Redirect with error message
 	 *
 	 * @param string $message Message to output.
@@ -102,5 +124,15 @@ abstract class AbstractOauth extends AbstractUtilsBaseRoute
 			)
 		);
 		exit;
+	}
+
+	/**
+	 * Check if connection permission is enabled.
+	 *
+	 * @return boolean
+	 */
+	protected function checkEnabledConnectionPermission(): bool
+	{
+		return UtilsSettingsHelper::isOptionCheckboxChecked($this->getOauthAllowKey(), $this->getOauthAllowKey());
 	}
 }

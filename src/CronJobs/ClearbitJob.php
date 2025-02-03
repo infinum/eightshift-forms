@@ -12,10 +12,10 @@ namespace EightshiftForms\CronJobs;
 
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
+use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -40,6 +40,13 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	protected $clearbitClient;
 
 	/**
+	 * Instance variable for HubSpot data.
+	 *
+	 * @var HubspotClientInterface
+	 */
+	protected $hubspotClient;
+
+	/**
 	 * Instance variable of FormSubmitMailerInterface data.
 	 *
 	 * @var FormSubmitMailerInterface
@@ -51,13 +58,16 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	 *
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
+	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds hubspot connect data.
 	 */
 	public function __construct(
 		FormSubmitMailerInterface $formSubmitMailer,
-		ClearbitClientInterface $clearbitClient
+		ClearbitClientInterface $clearbitClient,
+		HubspotClientInterface $hubspotClient
 	) {
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->clearbitClient = $clearbitClient;
+		$this->hubspotClient = $hubspotClient;
 	}
 
 	/**
@@ -114,7 +124,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	{
 		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
 		$useCron = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY);
-		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY);
+		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY);
 
 		if (!$use || !$useCron || !$jobs) {
 			return;
@@ -142,9 +152,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 
 					if ($clearbitResponse[UtilsConfig::IARD_CODE] >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $clearbitResponse[UtilsConfig::IARD_CODE] <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 						if ($type === SettingsHubspot::SETTINGS_TYPE_KEY) {
-							\apply_filters(
-								UtilsHooksHelper::getFilterName(['integrations', $type, 'postContactProperty']),
-								[],
+							$this->hubspotClient->postContactProperty(
 								$clearbitResponse['email'] ?? '',
 								$clearbitResponse['data'] ?? []
 							);
@@ -160,7 +168,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 
 					unset($jobs[$type][$formId][$key]);
 
-					\update_option(UtilsSettingsHelper::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY), $jobs);
+					\update_option(UtilsSettingsHelper::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), $jobs);
 				}
 			}
 		}

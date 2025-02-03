@@ -12,6 +12,8 @@ namespace EightshiftForms\Integrations\Notionbuilder;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Oauth\AbstractOauth;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
@@ -19,6 +21,13 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
  */
 class OauthNotionbuilder extends AbstractOauth
 {
+	/**
+	 * Retry count for refresh token.
+	 *
+	 * @var integer
+	 */
+	private $refreshTokenRetryCounter = 0;
+
 	/**
 	 * Access token key.
 	 */
@@ -32,7 +41,7 @@ class OauthNotionbuilder extends AbstractOauth
 	/**
 	 * Get Oauth URL based on the provider Id.
 	 *
-	 * @param string $type Type.
+	 * @param string $path Path.
 	 *
 	 * @return string
 	 */
@@ -84,5 +93,119 @@ class OauthNotionbuilder extends AbstractOauth
 				'code' => $code,
 			]),
 		];
+	}
+
+	/**
+	 * Get refresh token data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getOauthRefreshTokenData(): array
+	{
+		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNotionBuilder(), SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_ID);
+		$clientSecret = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNotionBuilder(), SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_SECRET);
+		$refreshToken = UtilsSettingsHelper::getOptionValue(OauthNotionbuilder::OAUTH_NOTIONBUILDER_REFRESH_TOKEN_KEY);
+
+		return [
+			'url' => $this->getApiUrl('oauth/token'),
+			'args' => \wp_json_encode([
+				'grant_type' => 'refresh_token',
+				'refresh_token' => $refreshToken,
+				'client_id' => $clientId,
+				'client_secret' => $clientSecret,
+			]),
+		];
+	}
+
+	/**
+	 * Get access token.
+	 *
+	 * @param string $code Code.
+	 *
+	 * @return boolean
+	 */
+	public function getAccessToken(string $code): bool
+	{
+		$data = $this->getOauthAccessTokenData($code);
+
+		return $this->getToken($data);
+	}
+
+	/**
+	 * Get refresh token.
+	 *
+	 * @return boolean
+	 */
+	public function getRefreshToken(): bool
+	{
+		if ($this->refreshTokenRetryCounter >= 5) {
+			return false;
+		}
+
+		$token = $this->getToken($this->getOauthRefreshTokenData());
+
+		if (!$token) {
+			$this->refreshTokenRetryCounter++;
+			return false;
+		}
+
+		$this->refreshTokenRetryCounter = 0;
+		return true;
+	}
+
+	/**
+	 * Check if token has expired.
+	 *
+	 * @param array<string, mixed> $body Body.
+	 *
+	 * @return boolean
+	 */
+	public function hasTokenExpired(array $body): bool
+	{
+		return ($body['data']['code'] ?? '') === 'token_expired';
+	}
+
+	/**
+	 * Get refresh token.
+	 *
+	 * @param array<string, mixed> $data Data.
+	 *
+	 * @return boolean
+	 */
+	private function getToken(array $data): bool
+	{
+		$data = $this->getOauthRefreshTokenData();
+
+		// Get Access token.
+		$response = \wp_remote_post(
+			$data['url'],
+			[
+				'headers' => [
+					'Content-Type' => 'application/json',
+					'Accept' => 'application/json',
+				],
+				'body' => $data['args'],
+			]
+		);
+
+		// Structure response details.
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			$response,
+			$data['url'],
+		);
+
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
+
+		// On success return output.
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			\update_option(UtilsSettingsHelper::getSettingName(OauthNotionbuilder::OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY), $body['access_token']);
+			\update_option(UtilsSettingsHelper::getSettingName(OauthNotionbuilder::OAUTH_NOTIONBUILDER_REFRESH_TOKEN_KEY), $body['refresh_token']);
+
+			return true;
+		}
+
+		return false;
 	}
 }

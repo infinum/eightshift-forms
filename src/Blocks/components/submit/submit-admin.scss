@@ -97,3 +97,10 @@ button {
 		}
 	}
 }
+
+.es-form-is-disabled {
+	.es-submit {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+}

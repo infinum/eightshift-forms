@@ -567,9 +567,9 @@ class Labels implements LabelsInterface
 	private function getCalculatorLabels(): array
 	{
 		return [
-			'calculatorErrorSettingsMissing' => \__('Calculator integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'calculatorErrorSettingsMissing' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'calculatorBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'calculatorSuccess' => \__('Calculator result success. Thank you!', 'eightshift-forms'),
+			'calculatorSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 
@@ -581,9 +581,10 @@ class Labels implements LabelsInterface
 	private function getNotionbuilderLabels(): array
 	{
 		return [
-			'notionbuilderErrorSettingsMissing' => \__('Notionbuilder integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'notionbuilderErrorSettingsMissing' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'notionbuilderServerError' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'notionbuilderBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'notionbuilderSuccess' => \__('Notionbuilder result success. Thank you!', 'eightshift-forms'),
+			'notionbuilderSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 }

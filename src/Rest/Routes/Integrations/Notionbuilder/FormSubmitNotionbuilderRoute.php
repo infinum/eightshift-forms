@@ -107,29 +107,19 @@ class FormSubmitNotionbuilderRoute extends AbstractFormSubmit
 	 *
 	 * @return array<string, string>
 	 */
-	// protected function getEmailResponseTags(array $formDetails): array
-	// {
-	// 	$body = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA]['body'] ?? [];
-	// 	$output = [];
+	protected function getEmailResponseTags(array $formDetails): array
+	{
+		$body = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];
+		$output = [];
 
-	// 	if (!$body) {
-	// 		return $output;
-	// 	}
+		if (!$body) {
+			return $output;
+		}
 
-	// 	foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsNotionbuilder::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
-	// 		$item = $body[$value] ?? '';
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsNotionbuilder::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
+			$output[$key] = $body[$value] ?? '';
+		}
 
-	// 		if ($key === 'jiraIssueUrl') {
-	// 			$jiraKey = $body['key'] ?? '';
-
-	// 			if ($jiraKey) {
-	// 				$output[$key] = $this->jiraClient->getBaseUrlOutputPrefix() . "browse/{$jiraKey}";
-	// 			}
-	// 		} else {
-	// 			$output[$key] = $item;
-	// 		}
-	// 	}
-
-	// 	return $output;
-	// }
+		return $output;
+	}
 }

@@ -13,7 +13,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Hubspot;
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
-use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
@@ -22,7 +21,6 @@ use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
  * Class FormSubmitHubspotRoute
@@ -122,10 +120,8 @@ class FormSubmitHubspotRoute extends AbstractFormSubmit
 	 */
 	protected function callIntegrationResponseSuccessCallback(array $formDetails, array $successAdditionalData): void
 	{
-		\apply_filters(
-			UtilsHooksHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'setQueue']),
-			false,
-			$formDetails
+		$this->clearbitClient->setQueue(
+			$formDetails,
 		);
 	}
 }

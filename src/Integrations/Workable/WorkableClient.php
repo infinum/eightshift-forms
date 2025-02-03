@@ -283,6 +283,7 @@ class WorkableClient implements ClientInterface
 			$url,
 		);
 	}
+
 	/**
 	 * API request to get all jobs from Workable.
 	 *

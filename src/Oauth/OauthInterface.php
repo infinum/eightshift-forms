@@ -39,4 +39,36 @@ interface OauthInterface
 	 * @return array<string, mixed>
 	 */
 	public function getOauthAccessTokenData(string $code): array;
+
+	/**
+	 * Get refresh token data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getOauthRefreshTokenData(): array;
+
+	/**
+	 * Get access token.
+	 *
+	 * @param string $code Code.
+	 *
+	 * @return boolean
+	 */
+	public function getAccessToken(string $code): bool;
+
+	/**
+	 * Get refresh token.
+	 *
+	 * @return boolean
+	 */
+	public function getRefreshToken(): bool;
+
+	/**
+	 * Check if token has expired.
+	 *
+	 * @param array<string, mixed> $body Body.
+	 *
+	 * @return boolean
+	 */
+	public function hasTokenExpired(array $body): bool;
 }
