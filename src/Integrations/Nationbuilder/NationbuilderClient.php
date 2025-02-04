@@ -1,14 +1,14 @@
 <?php
 
 /**
- * NotionbuilderClient integration class.
+ * NationbuilderClient integration class.
  *
- * @package EightshiftForms\Integrations\Notionbuilder
+ * @package EightshiftForms\Integrations\Nationbuilder
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Integrations\Notionbuilder;
+namespace EightshiftForms\Integrations\Nationbuilder;
 
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
@@ -21,35 +21,35 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 
 /**
- * NotionbuilderClient integration class.
+ * NationbuilderClient integration class.
  */
-class NotionbuilderClient implements NotionbuilderClientInterface
+class NationbuilderClient implements NationbuilderClientInterface
 {
 	/**
 	 * Transient cache name for custom fields.
 	 */
-	public const CACHE_NOTIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME = 'es_notionbuilder_custom_fields_cache';
+	public const CACHE_NATIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME = 'es_nationbuilder_custom_fields_cache';
 
 	/**
 	 * Transient cache name for lists.
 	 */
-	public const CACHE_NOTIONBUILDER_LISTS_TRANSIENT_NAME = 'es_notionbuilder_lists_cache';
+	public const CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME = 'es_nationbuilder_lists_cache';
 
 	/**
 	 * Instance variable for Oauth.
 	 *
 	 * @var OauthInterface
 	 */
-	protected $oauthNotionbuilder;
+	protected $oauthNationbuilder;
 
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param OauthInterface $oauthNotionbuilder Inject Oauth methods.
+	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
 	 */
-	public function __construct(OauthInterface $oauthNotionbuilder)
+	public function __construct(OauthInterface $oauthNationbuilder)
 	{
-		$this->oauthNotionbuilder = $oauthNotionbuilder;
+		$this->oauthNationbuilder = $oauthNationbuilder;
 	}
 
 	/**
@@ -62,7 +62,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	public function getCustomFields(bool $hideUpdateTime = true): array
 	{
 
-		$output = \get_transient(self::CACHE_NOTIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_NATIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
@@ -71,7 +71,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 
 		// Check if form exists in cache.
 		if (!$output) {
-			$items = $this->getNotionbuilderCustomApiData('custom_fields');
+			$items = $this->getNationbuilderCustomApiData('custom_fields');
 
 			if ($items) {
 				foreach ($items as $item) {
@@ -88,7 +88,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_NOTIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+				\set_transient(self::CACHE_NATIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -109,7 +109,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	public function getLists(bool $hideUpdateTime = true): array
 	{
 
-		$output = \get_transient(self::CACHE_NOTIONBUILDER_LISTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$output = \get_transient(self::CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
 		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
@@ -118,7 +118,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 
 		// Check if form exists in cache.
 		if (!$output) {
-			$items = $this->getNotionbuilderCustomApiData('lists');
+			$items = $this->getNationbuilderCustomApiData('lists');
 
 			if ($items) {
 				foreach ($items as $item) {
@@ -135,7 +135,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 					'title' => \current_datetime()->format('Y-m-d H:i:s'),
 				];
 
-				\set_transient(self::CACHE_NOTIONBUILDER_LISTS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+				\set_transient(self::CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -158,7 +158,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	public function postApplication(array $params, array $files, string $formId): array
 	{
 		// Filter override post request.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsNotionbuilder::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsNationbuilder::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
 			$filterValue = \apply_filters($filterName, [], $params, $files, $formId) ?? [];
 
@@ -186,21 +186,21 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 		);
 
 		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 			$body,
 			[],
 			'',
 			$formId,
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
-			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
+		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
 
 			if ($refreshToken) {
 				return $this->postApplication($params, $files, $formId);
@@ -209,12 +209,12 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			$list = UtilsSettingsHelper::getSettingValue(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_LIST_KEY, $formId);
+			$list = UtilsSettingsHelper::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
 
 			if ($list) {
-				$listsJobs = UtilsSettingsHelper::getOptionValueGroup(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CRON_KEY);
+				$listsJobs = UtilsSettingsHelper::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
 				$listsJobs['list'][$list][] = $body['data']['id'] ?? '';
-				\update_option(UtilsSettingsHelper::getSettingName(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CRON_KEY), $listsJobs);
+				\update_option(UtilsSettingsHelper::getSettingName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $listsJobs);
 			}
 
 			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
@@ -258,21 +258,21 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 		);
 
 		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 			$body,
 			[],
 			'',
 			'',
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY)
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
 		);
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
-			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
+		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
 
 			if ($refreshToken) {
 				return $this->postList($listId, $signupId);
@@ -303,9 +303,9 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 			case 'bad_request':
 				return 'mailerliteBadRequestError';
 			case 'unauthorized':
-				return 'notionbuilderErrorSettingsMissing';
+				return 'nationbuilderErrorSettingsMissing';
 			case 'server_error':
-				return 'notionbuilderServerError';
+				return 'nationbuilderServerError';
 			default:
 				return 'submitWpError';
 		}
@@ -333,7 +333,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getNotionbuilderCustomApiData($endpoint)
+	private function getNationbuilderCustomApiData($endpoint)
 	{
 		$url = $this->getBaseUrl($endpoint);
 
@@ -346,7 +346,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 
 		// Structure response details.
 		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
@@ -354,11 +354,11 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
-			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
+		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
 
 			if ($refreshToken) {
-				return $this->getNotionbuilderCustomApiData($endpoint);
+				return $this->getNationbuilderCustomApiData($endpoint);
 			}
 		}
 
@@ -382,7 +382,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	{
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_PARAMS_MAP_KEY, $formId);
+		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
 		$output = [];
 
 		if (!$mapParams || !$params) {
@@ -442,15 +442,15 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 		);
 
 		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		if ($this->oauthNotionbuilder->hasTokenExpired($body)) {
-			$refreshToken = $this->oauthNotionbuilder->getRefreshToken();
+		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
 
 			if ($refreshToken) {
 				return $this->getTestApi();
@@ -459,7 +459,7 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 
 		// Structure response details.
 		return UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
@@ -474,8 +474,8 @@ class NotionbuilderClient implements NotionbuilderClientInterface
 	 */
 	private function getBaseUrl(string $path): string
 	{
-		$accessToken = UtilsSettingsHelper::getOptionValue(OauthNotionbuilder::OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY);
+		$accessToken = UtilsSettingsHelper::getOptionValue(OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY);
 
-		return $this->oauthNotionbuilder->getApiUrl("api/v2/{$path}?access_token={$accessToken}");
+		return $this->oauthNationbuilder->getApiUrl("api/v2/{$path}?access_token={$accessToken}");
 	}
 }

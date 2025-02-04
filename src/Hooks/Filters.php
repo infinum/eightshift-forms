@@ -34,8 +34,8 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
-use EightshiftForms\Integrations\Notionbuilder\OauthNotionbuilder;
-use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
+use EightshiftForms\Integrations\Nationbuilder\OauthNationbuilder;
+use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -303,7 +303,7 @@ final class Filters
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
-				SettingsNotionbuilder::SETTINGS_TYPE_KEY => [
+				SettingsNationbuilder::SETTINGS_TYPE_KEY => [
 					'overridePostRequest',
 					'prePostParams',
 					'beforeSuccessResponse',
@@ -426,11 +426,11 @@ final class Filters
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY,
 
-			SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_ID,
-			SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_SECRET,
-			SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_SLUG,
-			OauthNotionbuilder::OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY,
-			OauthNotionbuilder::OAUTH_NOTIONBUILDER_REFRESH_TOKEN_KEY,
+			SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID,
+			SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SECRET,
+			SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SLUG,
+			OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY,
+			OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY,
 
 			SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 

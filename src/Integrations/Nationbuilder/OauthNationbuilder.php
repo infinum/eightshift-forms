@@ -1,14 +1,14 @@
 <?php
 
 /**
- * NotionBuilder Oauth class.
+ * NationBuilder Oauth class.
  *
- * @package EightshiftForms\Integrations\Notionbuilder
+ * @package EightshiftForms\Integrations\Nationbuilder
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Integrations\Notionbuilder;
+namespace EightshiftForms\Integrations\Nationbuilder;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Oauth\AbstractOauth;
@@ -17,9 +17,9 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 
 /**
- * OauthNotionbuilder class.
+ * OauthNationbuilder class.
  */
-class OauthNotionbuilder extends AbstractOauth
+class OauthNationbuilder extends AbstractOauth
 {
 	/**
 	 * Retry count for refresh token.
@@ -31,12 +31,12 @@ class OauthNotionbuilder extends AbstractOauth
 	/**
 	 * Access token key.
 	 */
-	public const OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY = 'notionbuilder-access-token';
+	public const OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY = 'nationbuilder-access-token';
 
 	/**
 	 * Refresh token key.
 	 */
-	public const OAUTH_NOTIONBUILDER_REFRESH_TOKEN_KEY = 'notionbuilder-refresh-token';
+	public const OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY = 'nationbuilder-refresh-token';
 
 	/**
 	 * Get Oauth URL based on the provider Id.
@@ -47,7 +47,7 @@ class OauthNotionbuilder extends AbstractOauth
 	 */
 	public function getApiUrl(string $path): string
 	{
-		$clientSlug = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSlugNotionBuilder(), SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_SLUG);
+		$clientSlug = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSlugNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
 
 		return "https://{$clientSlug}.nationbuilder.com/{$path}";
 	}
@@ -59,13 +59,13 @@ class OauthNotionbuilder extends AbstractOauth
 	 */
 	public function getOauthAuthorizeUrl(): string
 	{
-		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNotionBuilder(), SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_ID);
+		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
 
 		return \add_query_arg(
 			[
 				'response_type' => 'code',
 				'client_id' => $clientId,
-				'redirect_uri' => $this->getRedirectUri(SettingsNotionbuilder::SETTINGS_TYPE_KEY),
+				'redirect_uri' => $this->getRedirectUri(SettingsNationbuilder::SETTINGS_TYPE_KEY),
 			],
 			$this->getApiUrl('oauth/authorize')
 		);
@@ -80,8 +80,8 @@ class OauthNotionbuilder extends AbstractOauth
 	 */
 	public function getOauthAccessTokenData(string $code): array
 	{
-		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNotionBuilder(), SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_ID);
-		$clientSecret = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNotionBuilder(), SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_SECRET);
+		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
+		$clientSecret = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
 
 		return [
 			'url' => $this->getApiUrl('oauth/token'),
@@ -89,7 +89,7 @@ class OauthNotionbuilder extends AbstractOauth
 				'grant_type' => 'authorization_code',
 				'client_id' => $clientId,
 				'client_secret' => $clientSecret,
-				'redirect_uri' => $this->getRedirectUri(SettingsNotionbuilder::SETTINGS_TYPE_KEY),
+				'redirect_uri' => $this->getRedirectUri(SettingsNationbuilder::SETTINGS_TYPE_KEY),
 				'code' => $code,
 			]),
 		];
@@ -102,9 +102,9 @@ class OauthNotionbuilder extends AbstractOauth
 	 */
 	public function getOauthRefreshTokenData(): array
 	{
-		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNotionBuilder(), SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_ID);
-		$clientSecret = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNotionBuilder(), SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CLIENT_SECRET);
-		$refreshToken = UtilsSettingsHelper::getOptionValue(OauthNotionbuilder::OAUTH_NOTIONBUILDER_REFRESH_TOKEN_KEY);
+		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
+		$clientSecret = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
+		$refreshToken = UtilsSettingsHelper::getOptionValue(OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY);
 
 		return [
 			'url' => $this->getApiUrl('oauth/token'),
@@ -174,8 +174,6 @@ class OauthNotionbuilder extends AbstractOauth
 	 */
 	private function getToken(array $data): bool
 	{
-		$data = $this->getOauthRefreshTokenData();
-
 		// Get Access token.
 		$response = \wp_remote_post(
 			$data['url'],
@@ -190,7 +188,7 @@ class OauthNotionbuilder extends AbstractOauth
 
 		// Structure response details.
 		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsNotionbuilder::SETTINGS_TYPE_KEY,
+			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$data['url'],
 		);
@@ -200,8 +198,8 @@ class OauthNotionbuilder extends AbstractOauth
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			\update_option(UtilsSettingsHelper::getSettingName(OauthNotionbuilder::OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY), $body['access_token']);
-			\update_option(UtilsSettingsHelper::getSettingName(OauthNotionbuilder::OAUTH_NOTIONBUILDER_REFRESH_TOKEN_KEY), $body['refresh_token']);
+			\update_option(UtilsSettingsHelper::getSettingName(OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY), $body['access_token']);
+			\update_option(UtilsSettingsHelper::getSettingName(OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY), $body['refresh_token']);
 
 			return true;
 		}

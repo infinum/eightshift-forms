@@ -3,12 +3,12 @@ import { select } from '@wordpress/data';
 import { IntegrationsInternalOptions } from '../../../components/integrations/components/integrations-internal-options';
 import { STORE_NAME } from '@eightshift/frontend-libs/scripts';
 
-export const NotionbuilderOptions = ({
+export const NationbuilderOptions = ({
 	attributes,
 	setAttributes,
 	clientId,
 }) => {
-	const manifest = select(STORE_NAME).getBlock('notionbuilder');
+	const manifest = select(STORE_NAME).getBlock('nationbuilder');
 
 	const {
 		title,

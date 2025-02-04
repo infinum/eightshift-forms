@@ -7,7 +7,7 @@ import { isArray } from 'lodash';
 
 // Provide additional blocks to the forms.
 export const hooks = () => {
-	const { blockName } = select(STORE_NAME).getBlock('notionbuilder');
+	const { blockName } = select(STORE_NAME).getBlock('nationbuilder');
 	const namespace = select(STORE_NAME).getSettingsNamespace();
 
 	// All adding additional blocks to the custom form builder.
@@ -15,15 +15,15 @@ export const hooks = () => {
 		if (name === `${namespace}/${blockName}`) {
 			if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
 				esFormsLocalization.additionalBlocks.forEach((element) => {
-					if (!settings.attributes.notionbuilderAllowedBlocks.default.includes(element)) {
-						settings.attributes.notionbuilderAllowedBlocks.default.push(element);
+					if (!settings.attributes.nationbuilderAllowedBlocks.default.includes(element)) {
+						settings.attributes.nationbuilderAllowedBlocks.default.push(element);
 					}
 				});
 			}
 
 			select(STORE_NAME).getSettings().allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
-				if (!settings.attributes.notionbuilderAllowedBlocks.default.includes(element)) {
-					settings.attributes.notionbuilderAllowedBlocks.default.push(element);
+				if (!settings.attributes.nationbuilderAllowedBlocks.default.includes(element)) {
+					settings.attributes.nationbuilderAllowedBlocks.default.push(element);
 				}
 			});
 		}

@@ -31,7 +31,7 @@
 				"eightshift-forms/paycek",
 				"eightshift-forms/pipedrive",
 				"eightshift-forms/calculator",
-				"eightshift-forms/notionbuilder"
+				"eightshift-forms/nationbuilder"
 			]
 		}
 	},
@@ -331,9 +331,9 @@
 			]
 		},
 		{
-			"label": "Notionbuilder",
-			"slug": "notionbuilder",
-			"blockName": "eightshift-forms/notionbuilder",
+			"label": "Nationbuilder",
+			"slug": "nationbuilder",
+			"blockName": "eightshift-forms/nationbuilder",
 			"innerBlocks": [
 				[
 					"eightshift-forms/input",

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds WP Cron job schedule event for - NotionbuilderJob.
+ * Class that holds WP Cron job schedule event for - NationbuilderJob.
  *
  * @package EightshiftForms\CronJobs
  */
@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CronJobs;
 
-use EightshiftForms\Integrations\Notionbuilder\NotionbuilderClientInterface;
-use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
+use EightshiftForms\Integrations\Nationbuilder\NationbuilderClientInterface;
+use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -19,23 +19,23 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * NotionbuilderJob class.
+ * NationbuilderJob class.
  */
-class NotionbuilderJob implements ServiceInterface, ServiceCliInterface
+class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Job name.
 	 *
 	 * @var string
 	 */
-	public const JOB_NAME = 'es_forms_notionbuilder_queue';
+	public const JOB_NAME = 'es_forms_nationbuilder_queue';
 
 	/**
-	 * Instance variable for NotionbuilderClientInterface data.
+	 * Instance variable for NationbuilderClientInterface data.
 	 *
-	 * @var NotionbuilderClientInterface
+	 * @var NationbuilderClientInterface
 	 */
-	protected $notionbuilderClient;
+	protected $nationbuilderClient;
 
 	/**
 	 * Instance variable of FormSubmitMailerInterface data.
@@ -48,14 +48,14 @@ class NotionbuilderJob implements ServiceInterface, ServiceCliInterface
 	 * Create a new instance that injects classes
 	 *
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
-	 * @param NotionbuilderClientInterface $notionbuilderClient Inject NotionbuilderClientInterface methods.
+	 * @param NationbuilderClientInterface $nationbuilderClient Inject NationbuilderClientInterface methods.
 	 */
 	public function __construct(
 		FormSubmitMailerInterface $formSubmitMailer,
-		NotionbuilderClientInterface $notionbuilderClient
+		NationbuilderClientInterface $nationbuilderClient
 	) {
 		$this->formSubmitMailer = $formSubmitMailer;
-		$this->notionbuilderClient = $notionbuilderClient;
+		$this->nationbuilderClient = $nationbuilderClient;
 	}
 
 	/**
@@ -110,8 +110,8 @@ class NotionbuilderJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function getJobCallback()
 	{
-		$use = \apply_filters(SettingsNotionbuilder::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CRON_KEY);
+		$use = \apply_filters(SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
+		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
 
 		if (!$use || !$jobs) {
 			return;
@@ -121,7 +121,7 @@ class NotionbuilderJob implements ServiceInterface, ServiceCliInterface
 			if ($type === 'list') {
 				foreach ($job as $listId => $signupIds) {
 					foreach ($signupIds as $signupId) {
-						$listResponse = $this->notionbuilderClient->postList((string) $listId, $signupId);
+						$listResponse = $this->nationbuilderClient->postList((string) $listId, $signupId);
 
 						if ($listResponse[UtilsConfig::IARD_CODE] < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $listResponse[UtilsConfig::IARD_CODE] > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 							$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $listResponse;
@@ -132,12 +132,12 @@ class NotionbuilderJob implements ServiceInterface, ServiceCliInterface
 
 					unset($jobs[$type][$listId]);
 
-					\update_option(UtilsSettingsHelper::getOptionName(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_CRON_KEY), $jobs);
+					\update_option(UtilsSettingsHelper::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $jobs);
 				}
 			}
 		}
 
 		// Turn of OAuth after cron job is done.
-		\delete_option(UtilsSettingsHelper::getOptionName(SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_OAUTH_ALLOW_KEY));
+		\delete_option(UtilsSettingsHelper::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY));
 	}
 }

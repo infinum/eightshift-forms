@@ -1,19 +1,19 @@
 <?php
 
 /**
- * File containing Notionbuilder specific interface.
+ * File containing Nationbuilder specific interface.
  *
- * @package EightshiftForms\Integrations\Notionbuilder
+ * @package EightshiftForms\Integrations\Nationbuilder
  */
 
-namespace EightshiftForms\Integrations\Notionbuilder;
+namespace EightshiftForms\Integrations\Nationbuilder;
 
 use EightshiftForms\Integrations\ClientMappingInterface;
 
 /**
  * Interface for a Client
  */
-interface NotionbuilderClientInterface extends ClientMappingInterface
+interface NationbuilderClientInterface extends ClientMappingInterface
 {
 	/**
 	 * Return custom fields.

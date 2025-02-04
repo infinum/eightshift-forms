@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for the NotionBuilder Block view.
+ * Template for the NationBuilder Block view.
  *
  * @package EightshiftForms
  */

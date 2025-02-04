@@ -289,32 +289,32 @@ class Variables
 	}
 
 	/**
-	 * Get Client Slug for Notion Builder.
+	 * Get Client Slug for Nation Builder.
 	 *
 	 * @return string
 	 */
-	public static function getClientSlugNotionBuilder(): string
+	public static function getClientSlugNationBuilder(): string
 	{
-		return \defined('ES_CLIENT_SLUG_NOTIONBUILDER') ? \ES_CLIENT_SLUG_NOTIONBUILDER : '';
+		return \defined('ES_CLIENT_SLUG_NATIONBUILDER') ? \ES_CLIENT_SLUG_NATIONBUILDER : '';
 	}
 
 	/**
-	 * Get Client ID for Notion Builder.
+	 * Get Client ID for Nation Builder.
 	 *
 	 * @return string
 	 */
-	public static function getClientIdNotionBuilder(): string
+	public static function getClientIdNationBuilder(): string
 	{
-		return \defined('ES_CLIENT_ID_NOTIONBUILDER') ? \ES_CLIENT_ID_NOTIONBUILDER : '';
+		return \defined('ES_CLIENT_ID_NATIONBUILDER') ? \ES_CLIENT_ID_NATIONBUILDER : '';
 	}
 
 	/**
-	 * Get Client Secret for Notion Builder.
+	 * Get Client Secret for Nation Builder.
 	 *
 	 * @return string
 	 */
-	public static function getClientSecretNotionBuilder(): string
+	public static function getClientSecretNationBuilder(): string
 	{
-		return \defined('ES_CLIENT_SECRET_NOTIONBUILDER') ? \ES_CLIENT_SECRET_NOTIONBUILDER : '';
+		return \defined('ES_CLIENT_SECRET_NATIONBUILDER') ? \ES_CLIENT_SECRET_NATIONBUILDER : '';
 	}
 }

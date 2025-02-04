@@ -1,14 +1,14 @@
 <?php
 
 /**
- * NotionBuilder Settings class.
+ * NationBuilder Settings class.
  *
- * @package EightshiftForms\Integrations\Notionbuilder
+ * @package EightshiftForms\Integrations\Nationbuilder
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Integrations\Notionbuilder;
+namespace EightshiftForms\Integrations\Nationbuilder;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
@@ -22,74 +22,74 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * SettingsNotionbuilder class.
+ * SettingsNationbuilder class.
  */
-class SettingsNotionbuilder extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsNationbuilder extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
 	 */
-	public const FILTER_SETTINGS_NAME = 'es_forms_settings_notionbuilder';
+	public const FILTER_SETTINGS_NAME = 'es_forms_settings_nationbuilder';
 
 	/**
 	 * Filter global settings key.
 	 */
-	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_notionbuilder';
+	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_nationbuilder';
 
 	/**
 	 * Filter settings global is Valid key.
 	 */
-	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_notionbuilder';
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_nationbuilder';
 
 	/**
 	 * Settings key.
 	 */
-	public const SETTINGS_TYPE_KEY = 'notionbuilder';
+	public const SETTINGS_TYPE_KEY = 'nationbuilder';
 
 	/**
-	 * NotionBuilder Use key.
+	 * NationBuilder Use key.
 	 */
-	public const SETTINGS_NOTIONBUILDER_USE_KEY = 'notionbuilder-use';
+	public const SETTINGS_NATIONBUILDER_USE_KEY = 'nationbuilder-use';
 
 	/**
 	 * Client ID Key.
 	 */
-	public const SETTINGS_NOTIONBUILDER_CLIENT_ID = 'notionbuilder-client-id';
+	public const SETTINGS_NATIONBUILDER_CLIENT_ID = 'nationbuilder-client-id';
 
 	/**
 	 * Client Secret Key.
 	 */
-	public const SETTINGS_NOTIONBUILDER_CLIENT_SECRET = 'notionbuilder-client-secret';
+	public const SETTINGS_NATIONBUILDER_CLIENT_SECRET = 'nationbuilder-client-secret';
 
 	/**
 	 * Client Slug Key.
 	 */
-	public const SETTINGS_NOTIONBUILDER_CLIENT_SLUG = 'notionbuilder-client-slug';
+	public const SETTINGS_NATIONBUILDER_CLIENT_SLUG = 'nationbuilder-client-slug';
 
 	/**
 	 * Skip integration.
 	 */
-	public const SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY = 'notionbuilder-skip-integration';
+	public const SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY = 'nationbuilder-skip-integration';
 
 	/**
 	 * Params map key.
 	 */
-	public const SETTINGS_NOTIONBUILDER_PARAMS_MAP_KEY = 'notionbuilder-params-map';
+	public const SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY = 'nationbuilder-params-map';
 
 	/**
 	 * List key.
 	 */
-	public const SETTINGS_NOTIONBUILDER_LIST_KEY = 'notionbuilder-list';
+	public const SETTINGS_NATIONBUILDER_LIST_KEY = 'nationbuilder-list';
 
 	/**
 	 * Cron key.
 	 */
-	public const SETTINGS_NOTIONBUILDER_CRON_KEY = 'notionbuilder-cron';
+	public const SETTINGS_NATIONBUILDER_CRON_KEY = 'nationbuilder-cron';
 
 	/**
 	 * Oauth allow key.
 	 */
-	public const SETTINGS_NOTIONBUILDER_OAUTH_ALLOW_KEY = 'notionbuilder-oauth-allow';
+	public const SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY = 'nationbuilder-oauth-allow';
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -103,30 +103,30 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 	 *
 	 * @var OauthInterface
 	 */
-	protected $oauthNotionbuilder;
+	protected $oauthNationbuilder;
 
 	/**
 	 * Instance variable for Jira data.
 	 *
-	 * @var NotionbuilderClientInterface
+	 * @var NationbuilderClientInterface
 	 */
-	protected $notionbuilderClient;
+	protected $nationbuilderClient;
 
 	/**
 	 * Create a new instance.
 	 *
 	 * @param SettingsFallbackDataInterface $settingsFallback Inject Fallback methods.
-	 * @param OauthInterface $oauthNotionbuilder Inject Oauth methods.
-	 * @param NotionbuilderClientInterface $notionbuilderClient Inject Jira which holds Jira connect data.
+	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
+	 * @param NationbuilderClientInterface $nationbuilderClient Inject Jira which holds Jira connect data.
 	 */
 	public function __construct(
 		SettingsFallbackDataInterface $settingsFallback,
-		OauthInterface $oauthNotionbuilder,
-		NotionbuilderClientInterface $notionbuilderClient,
+		OauthInterface $oauthNationbuilder,
+		NationbuilderClientInterface $nationbuilderClient,
 	) {
 		$this->settingsFallback = $settingsFallback;
-		$this->oauthNotionbuilder = $oauthNotionbuilder;
-		$this->notionbuilderClient = $notionbuilderClient;
+		$this->oauthNationbuilder = $oauthNationbuilder;
+		$this->nationbuilderClient = $nationbuilderClient;
 	}
 
 	/**
@@ -157,8 +157,8 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 
 		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
 		$params = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_NOTIONBUILDER_PARAMS_MAP_KEY, $formId);
-		$list = UtilsSettingsHelper::getSettingValue(self::SETTINGS_NOTIONBUILDER_LIST_KEY, $formId);
+		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
+		$list = UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -171,14 +171,14 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 						'tabContent' => [
 							[
 								'component' => 'group',
-								'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NOTIONBUILDER_PARAMS_MAP_KEY),
+								'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY),
 								'groupSaveOneField' => true,
 								'groupStyle' => 'default-listing',
 								'groupContent' => [
 									[
 										'component' => 'field',
 										'fieldLabel' => '<b>' . \__('Form field', 'eightshift-forms') . '</b>',
-										'fieldContent' => '<b>' . \__('NotionBuilder fields', 'eightshift-forms') . '</b>',
+										'fieldContent' => '<b>' . \__('NationBuilder fields', 'eightshift-forms') . '</b>',
 										'fieldBeforeContent' => '&emsp;', // "Em space" to pad it out a bit.
 										'fieldIsFiftyFiftyHorizontal' => true,
 									],
@@ -216,9 +216,9 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 						'tabContent' => [
 							[
 								'component' => 'select',
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NOTIONBUILDER_LIST_KEY),
+								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NATIONBUILDER_LIST_KEY),
 								'selectFieldLabel' => \__('Select list', 'eightshift-forms'),
-								'selectValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_NOTIONBUILDER_LIST_KEY, $formId),
+								'selectValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId),
 								'selectContent' => \array_map(
 									static function ($option) use ($list) {
 										return [
@@ -228,7 +228,7 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 											'selectOptionIsSelected' => $option['id'] === $list,
 										];
 									},
-									$this->notionbuilderClient->getLists()
+									$this->nationbuilderClient->getLists()
 								),
 							]
 						],
@@ -245,10 +245,10 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NOTIONBUILDER_USE_KEY, self::SETTINGS_NOTIONBUILDER_USE_KEY);
-		$clientId = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNotionBuilder(), self::SETTINGS_NOTIONBUILDER_CLIENT_ID);
-		$clientSecret = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNotionBuilder(), self::SETTINGS_NOTIONBUILDER_CLIENT_SECRET);
-		$clientSlug = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSlugNotionBuilder(), self::SETTINGS_NOTIONBUILDER_CLIENT_SLUG);
+		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_USE_KEY, self::SETTINGS_NATIONBUILDER_USE_KEY);
+		$clientId = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_ID);
+		$clientSecret = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
+		$clientSlug = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSlugNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
 
 		if (!$isUsed || !$clientId || !$clientSecret || !$clientSlug) {
 			return false;
@@ -265,11 +265,11 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NOTIONBUILDER_USE_KEY, self::SETTINGS_NOTIONBUILDER_USE_KEY)) {
+		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_USE_KEY, self::SETTINGS_NATIONBUILDER_USE_KEY)) {
 			return UtilsSettingsOutputHelper::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY, self::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY);
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -283,14 +283,14 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
 										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
-										'checkboxValue' => self::SETTINGS_NOTIONBUILDER_SKIP_INTEGRATION_KEY,
+										'checkboxValue' => self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									]
@@ -309,9 +309,9 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									Variables::getClientIdNotionBuilder(),
-									self::SETTINGS_NOTIONBUILDER_CLIENT_ID,
-									'ES_CLIENT_ID_NOTIONBUILDER',
+									Variables::getClientIdNationBuilder(),
+									self::SETTINGS_NATIONBUILDER_CLIENT_ID,
+									'ES_CLIENT_ID_NATIONBUILDER',
 									\__('Client ID', 'eightshift-forms'),
 								),
 								[
@@ -319,9 +319,9 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
-									Variables::getClientSecretNotionBuilder(),
-									self::SETTINGS_NOTIONBUILDER_CLIENT_SECRET,
-									'ES_CLIENT_SECRET_NOTIONBUILDER',
+									Variables::getClientSecretNationBuilder(),
+									self::SETTINGS_NATIONBUILDER_CLIENT_SECRET,
+									'ES_CLIENT_SECRET_NATIONBUILDER',
 									\__('Client Secret', 'eightshift-forms'),
 								),
 								[
@@ -329,16 +329,16 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 									'dividerExtraVSpacing' => true,
 								],
 								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
-									Variables::getClientSlugNotionBuilder(),
-									self::SETTINGS_NOTIONBUILDER_CLIENT_SLUG,
-									'ES_CLIENT_SLUG_NOTIONBUILDER',
+									Variables::getClientSlugNationBuilder(),
+									self::SETTINGS_NATIONBUILDER_CLIENT_SLUG,
+									'ES_CLIENT_SLUG_NATIONBUILDER',
 									\__('Client slug', 'eightshift-forms'),
 								),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getOauthConnection($this->oauthNotionbuilder->getOauthAuthorizeUrl(), OauthNotionbuilder::OAUTH_NOTIONBUILDER_ACCESS_TOKEN_KEY, self::SETTINGS_NOTIONBUILDER_OAUTH_ALLOW_KEY),
+								UtilsSettingsOutputHelper::getOauthConnection($this->oauthNationbuilder->getOauthAuthorizeUrl(), OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY, self::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
@@ -365,13 +365,13 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 								'textareaIsReadOnly' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'queue',
-								'textareaValue' => \wp_json_encode(UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_NOTIONBUILDER_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
+								'textareaValue' => \wp_json_encode(UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_NATIONBUILDER_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
 								'textareaSize' => 'huge',
 								'textareaLimitHeight' => true,
 							],
 						],
 					],
-					$this->settingsFallback->getOutputGlobalFallback(SettingsNotionbuilder::SETTINGS_TYPE_KEY),
+					$this->settingsFallback->getOutputGlobalFallback(SettingsNationbuilder::SETTINGS_TYPE_KEY),
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('Help', 'eightshift-forms'),
@@ -381,9 +381,9 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									// translators: %s will be replaced with the link.
-									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">NotionBuilder Account</a>.', 'eightshift-forms'), 'https://app.notionbuilder.io/'),
+									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">NationBuilder Account</a>.', 'eightshift-forms'), 'https://app.nationbuilder.io/'),
 									// translators: %s will be replaced with the link.
-									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.notionbuilder.io/configure/dev_center/credentials'),
+									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.nationbuilder.io/configure/dev_center/credentials'),
 									\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
 									\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
 									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
@@ -397,7 +397,7 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 	}
 
 	/**
-	 * Get fields for NotionBuilder.
+	 * Get fields for NationBuilder.
 	 *
 	 * @return array<mixed>
 	 */
@@ -410,7 +410,7 @@ class SettingsNotionbuilder extends AbstractSettingsIntegrations implements Util
 					'title' => $field['title'],
 				];
 			},
-			$this->notionbuilderClient->getCustomFields()
+			$this->nationbuilderClient->getCustomFields()
 		));
 
 		return \array_merge([

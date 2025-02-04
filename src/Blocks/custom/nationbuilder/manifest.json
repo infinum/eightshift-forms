@@ -1,14 +1,14 @@
 {
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
-	"blockName": "notionbuilder",
-	"title": "NotionBuilder form",
-	"description" : "NotionBuilder form block",
+	"blockName": "nationbuilder",
+	"title": "NationBuilder form",
+	"description" : "NationBuilder form block",
 	"category": "eightshift-forms",
 	"icon": {
-		"src": "esf-form-notionbuilder"
+		"src": "esf-form-nationbuilder"
 	},
 	"keywords": [
-		"notionbuilder"
+		"nationbuilder"
 	],
 	"example": {
 	},
@@ -18,17 +18,17 @@
 	},
 	"hasInnerBlocks": true,
 	"attributes": {
-		"notionbuilderAllowedBlocks": {
+		"nationbuilderAllowedBlocks": {
 			"type": "array",
 			"default": []
 		},
-		"notionbuilderIntegrationId": {
+		"nationbuilderIntegrationId": {
 			"type": "string"
 		},
-		"notionbuilderFormPostId": {
+		"nationbuilderFormPostId": {
 			"type": "string"
 		},
-		"notionbuilderFormDataTypeSelector": {
+		"nationbuilderFormDataTypeSelector": {
 			"type": "string"
 		}
 	},

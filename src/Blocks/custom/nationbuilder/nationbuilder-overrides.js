@@ -5,12 +5,12 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 export const overrides = {
 	...manifest,
 	icon: {
-		src: getUtilsIcons('notionbuilder') ?? manifest.icon.src,
+		src: getUtilsIcons('nationbuilder') ?? manifest.icon.src,
 	},
 	attributes: {
 		...manifest.attributes,
-		notionbuilderAllowedBlocks: {
-			...manifest.attributes.notionbuilderAllowedBlocks,
+		nationbuilderAllowedBlocks: {
+			...manifest.attributes.nationbuilderAllowedBlocks,
 			default: globalManifest.allowedBlocksBuilderBlocksList
 		},
 	},

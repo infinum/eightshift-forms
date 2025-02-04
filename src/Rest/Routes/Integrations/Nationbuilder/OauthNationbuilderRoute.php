@@ -1,44 +1,44 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - OAuth Callback for Notionbuilder.
+ * The class register route for public form submiting endpoint - OAuth Callback for Nationbuilder.
  *
- * @package EightshiftForms\Rest\Routes\Integrations\Notionbuilder
+ * @package EightshiftForms\Rest\Routes\Integrations\Nationbuilder
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\Integrations\Notionbuilder;
+namespace EightshiftForms\Rest\Routes\Integrations\Nationbuilder;
 
-use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
+use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Oauth\OauthInterface;
 use EightshiftForms\Rest\Routes\AbstractOauth;
 
 /**
- * Class OauthNotionbuilderRoute
+ * Class OauthNationbuilderRoute
  */
-class OauthNotionbuilderRoute extends AbstractOauth
+class OauthNationbuilderRoute extends AbstractOauth
 {
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = 'notionbuilder';
+	public const ROUTE_SLUG = 'nationbuilder';
 
 	/**
 	 * Instance variable for Oauth.
 	 *
 	 * @var OauthInterface
 	 */
-	protected $oauthNotionbuilder;
+	protected $oauthNationbuilder;
 
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param OauthInterface $oauthNotionbuilder Inject Oauth methods.
+	 * @param OauthInterface $oauthNationbuilder Inject Oauth methods.
 	 */
-	public function __construct(OauthInterface $oauthNotionbuilder)
+	public function __construct(OauthInterface $oauthNationbuilder)
 	{
-		$this->oauthNotionbuilder = $oauthNotionbuilder;
+		$this->oauthNationbuilder = $oauthNationbuilder;
 	}
 
 	/**
@@ -58,7 +58,7 @@ class OauthNotionbuilderRoute extends AbstractOauth
 	 */
 	protected function getOauthType(): string
 	{
-		return SettingsNotionbuilder::SETTINGS_TYPE_KEY;
+		return SettingsNationbuilder::SETTINGS_TYPE_KEY;
 	}
 
 	/**
@@ -68,7 +68,7 @@ class OauthNotionbuilderRoute extends AbstractOauth
 	 */
 	protected function getOauthAllowKey(): string
 	{
-		return SettingsNotionbuilder::SETTINGS_NOTIONBUILDER_OAUTH_ALLOW_KEY;
+		return SettingsNationbuilder::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY;
 	}
 
 	/**
@@ -80,7 +80,7 @@ class OauthNotionbuilderRoute extends AbstractOauth
 	 */
 	protected function submitAction(string $code)
 	{
-		$response = $this->oauthNotionbuilder->getAccessToken($code);
+		$response = $this->oauthNationbuilder->getAccessToken($code);
 
 		if ($response) {
 			$this->redirect(

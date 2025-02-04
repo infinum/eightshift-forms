@@ -9,9 +9,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Added
 
 - `Success` and `Error` buttons for admin.
-- New `NotionBuilder` integration.
-- `NotionBuilder` cron job.
-- OAuth implementation for `NotionBuilder` integration and future integrations.
+- New `NationBuilder` integration.
+- `NationBuilder` cron job.
+- OAuth implementation for `NationBuilder` integration and future integrations.
 
 ### Changed
 

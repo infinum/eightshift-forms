@@ -1,19 +1,19 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Notionbuilder
+ * The class register route for public form submiting endpoint - Nationbuilder
  *
- * @package EightshiftForms\Rest\Route\Integrations\Notionbuilder
+ * @package EightshiftForms\Rest\Route\Integrations\Nationbuilder
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\Integrations\Notionbuilder;
+namespace EightshiftForms\Rest\Routes\Integrations\Nationbuilder;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Enrichment\EnrichmentInterface;
-use EightshiftForms\Integrations\Notionbuilder\NotionbuilderClientInterface;
-use EightshiftForms\Integrations\Notionbuilder\SettingsNotionbuilder;
+use EightshiftForms\Integrations\Nationbuilder\NationbuilderClientInterface;
+use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
@@ -22,21 +22,21 @@ use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
 /**
- * Class FormSubmitNotionbuilderRoute
+ * Class FormSubmitNationbuilderRoute
  */
-class FormSubmitNotionbuilderRoute extends AbstractFormSubmit
+class FormSubmitNationbuilderRoute extends AbstractFormSubmit
 {
 	/**
 	 * Route slug.
 	 */
-	public const ROUTE_SLUG = SettingsNotionbuilder::SETTINGS_TYPE_KEY;
+	public const ROUTE_SLUG = SettingsNationbuilder::SETTINGS_TYPE_KEY;
 
 	/**
-	 * Instance variable for Notionbuilder data.
+	 * Instance variable for Nationbuilder data.
 	 *
-	 * @var NotionbuilderClientInterface
+	 * @var NationbuilderClientInterface
 	 */
-	protected $notionbuilderClient;
+	protected $nationbuilderClient;
 
 	/**
 	 * Create a new instance that injects classes
@@ -47,7 +47,7 @@ class FormSubmitNotionbuilderRoute extends AbstractFormSubmit
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
-	 * @param NotionbuilderClientInterface $notionbuilderClient Inject notionbuilderClient methods.
+	 * @param NationbuilderClientInterface $nationbuilderClient Inject nationbuilderClient methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
@@ -56,10 +56,10 @@ class FormSubmitNotionbuilderRoute extends AbstractFormSubmit
 		SecurityInterface $security,
 		FormSubmitMailerInterface $formSubmitMailer,
 		EnrichmentInterface $enrichment,
-		NotionbuilderClientInterface $notionbuilderClient
+		NationbuilderClientInterface $nationbuilderClient
 	) {
 		parent::__construct($validator, $labels, $captcha, $security, $formSubmitMailer, $enrichment);
-		$this->notionbuilderClient = $notionbuilderClient;
+		$this->nationbuilderClient = $nationbuilderClient;
 	}
 
 	/**
@@ -86,7 +86,7 @@ class FormSubmitNotionbuilderRoute extends AbstractFormSubmit
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 
 		// Send application to Hubspot.
-		$response = $this->notionbuilderClient->postApplication(
+		$response = $this->nationbuilderClient->postApplication(
 			$formDetails[UtilsConfig::FD_PARAMS],
 			$formDetails[UtilsConfig::FD_FILES],
 			$formId
@@ -116,7 +116,7 @@ class FormSubmitNotionbuilderRoute extends AbstractFormSubmit
 			return $output;
 		}
 
-		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsNotionbuilder::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
+		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsNationbuilder::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
 			$output[$key] = $body[$value] ?? '';
 		}
 
