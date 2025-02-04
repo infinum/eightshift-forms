@@ -179,6 +179,7 @@ final class Filters
 					'prePostParams',
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
+					'bodyTemplate',
 				],
 				SettingsMailchimp::SETTINGS_TYPE_KEY => [
 					'data',

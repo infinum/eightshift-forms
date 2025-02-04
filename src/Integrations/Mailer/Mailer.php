@@ -17,6 +17,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftForms_Parsedown as Parsedown;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -48,15 +49,22 @@ class Mailer implements MailerInterface
 	): bool {
 
 		$params = \array_merge(
-			$this->prepareParams(\array_merge($fields, $files)),
+			$this->prepareParams(\array_merge($fields, $files), $formId),
 			$responseFields
 		);
+
+		$body = '<html><body>' . $this->getTemplate($params, true, $template) . '</body></html>';
+
+		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'bodyTemplate']);
+		if (\has_filter($filterName)) {
+			$body = \apply_filters($filterName, $body, $formId, $template, $params);
+		}
 
 		// Send email.
 		return \wp_mail(
 			$this->getTemplate($params, false, $to),
 			$this->getTemplate($params, false, $subject),
-			'<html><body>' . $this->getTemplate($params, true, $template) . '</body></html>',
+			$body,
 			$this->getHeader(
 				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
@@ -369,22 +377,29 @@ class Mailer implements MailerInterface
 	 * Prepare params.
 	 *
 	 * @param array<string, mixed> $params Params to prepare.
+	 * @param string $formId Form ID.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function prepareParams(array $params): array
+	private function prepareParams(array $params, string $formId): array
 	{
 		$output = [];
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 
+		$shouldSendEmptyFields = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, SettingsMailer::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, $formId);
+
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
 			$value = $param['value'] ?? '';
 			$type = $param['type'] ?? '';
 
-			if (!$name || !$value || !$type) {
+			if (!$name || !$type) {
+				continue;
+			}
+
+			if (!$shouldSendEmptyFields && !$value) {
 				continue;
 			}
 
