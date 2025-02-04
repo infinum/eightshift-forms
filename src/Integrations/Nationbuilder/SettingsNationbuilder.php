@@ -381,12 +381,11 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									// translators: %s will be replaced with the link.
-									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">NationBuilder Account</a>.', 'eightshift-forms'), 'https://app.nationbuilder.io/'),
-									// translators: %s will be replaced with the link.
-									\sprintf(\__('Go to <a target="_blank" rel="noopener noreferrer" href="%s">API Credentials Settings</a>.', 'eightshift-forms'), 'https://app.nationbuilder.io/configure/dev_center/credentials'),
-									\__('Click on <strong>Create New API Key</strong>.', 'eightshift-forms'),
-									\__('Select <strong>Job Board</strong> as your API Type.', 'eightshift-forms'),
-									\__('Copy the API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
+									\sprintf(\__('Log in to your <a target="_blank" rel="noopener noreferrer" href="%s">NationBuilder Account</a>.', 'eightshift-forms'), 'https://nationbuilder.com/nation_login/'),
+									\__('Click on <strong>Institutions</strong> in the sidebar.', 'eightshift-forms'),
+									\__('Click on <strong>Apps</strong> in the top bar.', 'eightshift-forms'),
+									\__('Create a new application and populate the OAuth Callback-url with <br/>`https://<server-url>/wp-json/eightshift-forms/v1/oauth/nationbuilder`', 'eightshift-forms'),
+									\__('Copy the Client Secret, Id and Slug keys into the fields under the General tab or use the global constant.', 'eightshift-forms'),
 								],
 							],
 						],
