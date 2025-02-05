@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.1.2]
+
+### Added
+
+- Ability for range slider to have a custom input value on the side.
+
 ## [6.1.1]
 
 ### Fixed
@@ -1096,6 +1102,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.1.2]: https://github.com/infinum/eightshift-forms/compare/6.1.1...6.1.2
 [6.1.1]: https://github.com/infinum/eightshift-forms/compare/6.1.0...6.1.1
 [6.1.0]: https://github.com/infinum/eightshift-forms/compare/6.0.0...6.1.0
 [6.0.0]: https://github.com/infinum/eightshift-forms/compare/5.9.10...6.0.0

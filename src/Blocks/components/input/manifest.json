@@ -127,6 +127,10 @@
 		"inputRangeShowCurrentPrefix": {
 			"type": "string"
 		},
+		"inputRangeUseCustomField": {
+			"type": "boolean",
+			"default": false
+		},
 		"inputRangeShowCurrentSuffix": {
 			"type": "string"
 		},

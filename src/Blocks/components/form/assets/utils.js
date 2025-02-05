@@ -1307,23 +1307,27 @@ export class Utils {
 	setRangeCurrentValue(formId, name) {
 		const current = this.state.getStateElementRangeCurrent(name, formId);
 		const input = this.state.getStateElementInput(name, formId);
+		const custom = this.state.getStateElementCustom(name, formId);
+		const value = this.state.getStateElementValue(name, formId);
 
 		// Set range current value as css variable due to inconsistency in browsers.
 		if (input) {
 			const min = input.min || 0;
 			const max = input.max || 100;
-			const parsedProgress = (Number(((input.value - min) * 100) / (max - min))).toFixed(2);
+			const parsedProgress = (Number(((value - min) * 100) / (max - min))).toFixed(2);
 
 			input.style.setProperty('--es-form-range-progress', `${parsedProgress}%`);
+
+			if (custom) {
+				custom.value = value;
+			}
 		}
 
-		if (!current.length) {
-			return;
+		if (current.length) {
+			current.forEach((item) => {
+				item.innerHTML = value;
+			});
 		}
-
-		current.forEach((item) => {
-			item.innerHTML = this.state.getStateElementValue(name, formId);
-		});
 	}
 
 	/**
