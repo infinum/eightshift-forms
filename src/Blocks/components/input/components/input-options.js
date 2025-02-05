@@ -84,6 +84,7 @@ export const InputOptions = (attributes) => {
 	const inputRangeShowCurrent = checkAttr('inputRangeShowCurrent', attributes, manifest);
 	const inputRangeShowCurrentPrefix = checkAttr('inputRangeShowCurrentPrefix', attributes, manifest);
 	const inputRangeShowCurrentSuffix = checkAttr('inputRangeShowCurrentSuffix', attributes, manifest);
+	const inputRangeUseCustomField = checkAttr('inputRangeUseCustomField', attributes, manifest);
 
 	let inputValidationPatternOptions = [];
 
@@ -141,6 +142,15 @@ export const InputOptions = (attributes) => {
 						closeMenuAfterSelect
 					/>
 				}
+
+				{inputType === 'range' && (
+					<IconToggle
+						icon={icons.fieldPlaceholder}
+						label={__('Show custom input field', 'eightshift-forms')}
+						checked={inputRangeUseCustomField}
+						onChange={(value) => setAttributes({ [getAttrKey('inputRangeUseCustomField', attributes, manifest)]: value })}
+					/>
+				)}
 			</Section>
 
 			<FieldOptions
