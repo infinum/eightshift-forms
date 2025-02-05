@@ -1602,12 +1602,14 @@ export class Form {
 			// Range.
 			[...this.state.getStateElementByTypeField('range', formId)].forEach((range) => {
 				const input = this.state.getStateElementInput(range.name, formId);
+				const custom = this.state.getStateElementCustom(range.name, formId);
 
 				input?.removeEventListener('keydown', this.onFocusEvent);
 				input?.removeEventListener('focus', this.onFocusEvent);
 				input?.removeEventListener('blur', this.onBlurEvent);
 				input?.removeEventListener('input', this.onInputEvent);
 				input?.removeEventListener('keydown', this.onKeyDownEvent);
+				custom?.addEventListener('input', this.onRangeCustom);
 			});
 
 			// Date.
