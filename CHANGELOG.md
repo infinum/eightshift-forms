@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.1.0]
+
+### Added
+
+- `Success` and `Error` buttons for admin.
+- New `NationBuilder` integration.
+- `NationBuilder` cron job.
+- OAuth implementation for `NationBuilder` integration and future integrations.
+- `Mailer` can now send empty field values based on the admin settings.
+- New filter `esFormsIntegrationsMailerBodyTemplate` for filtering HTML body of the email before sending.
+
+### Changed
+
+- `Clearbit` cron job internal logic.
+
+### Removed
+
+- Clearbit `setQueue` filter.
+- HubSpot `getContactProperties` filter.
+- HubSpot `postContactProperties` filter.
+
 ## [6.0.0]
 
 ### Fixed
@@ -1069,6 +1090,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.1.0]: https://github.com/infinum/eightshift-forms/compare/6.0.0...6.1.0
 [6.0.0]: https://github.com/infinum/eightshift-forms/compare/5.9.10...6.0.0
 [5.9.10]: https://github.com/infinum/eightshift-forms/compare/5.9.9...5.9.10
 [5.9.9]: https://github.com/infinum/eightshift-forms/compare/5.9.8...5.9.9

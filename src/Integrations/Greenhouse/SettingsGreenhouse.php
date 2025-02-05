@@ -186,7 +186,7 @@ class SettingsGreenhouse extends AbstractSettingsIntegrations implements UtilsSe
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestAliConnection(self::SETTINGS_TYPE_KEY),
+								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],

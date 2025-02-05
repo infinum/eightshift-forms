@@ -13,8 +13,8 @@ namespace EightshiftForms\Integrations\Clearbit;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
+use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -80,9 +80,9 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	public const SETTINGS_CLEARBIT_SETTINGS_USE_KEY = 'clearbit-settings-use';
 
 	/**
-	 * Use Clearbit jobs key.
+	 * Use Clearbit cron key.
 	 */
-	public const SETTINGS_CLEARBIT_JOBS_KEY = 'clearbit-jobs';
+	public const SETTINGS_CLEARBIT_CRON_KEY = 'clearbit-cron';
 
 	/**
 	 * Instance variable for Clearbit data.
@@ -92,13 +92,24 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 	protected $clearbitClient;
 
 	/**
+	 * Instance variable for Hubspot data.
+	 *
+	 * @var HubspotClientInterface
+	 */
+	protected $hubspotClient;
+
+	/**
 	 * Create a new instance.
 	 *
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds Clearbit connect data.
+	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds Hubspot connect data.
 	 */
-	public function __construct(ClearbitClientInterface $clearbitClient)
-	{
+	public function __construct(
+		ClearbitClientInterface $clearbitClient,
+		HubspotClientInterface $hubspotClient
+	) {
 		$this->clearbitClient = $clearbitClient;
+		$this->hubspotClient = $hubspotClient;
 	}
 
 	/**
@@ -287,7 +298,7 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 									'textareaIsReadOnly' => true,
 									'textareaIsPreventSubmit' => true,
 									'textareaName' => 'queue',
-									'textareaValue' => \wp_json_encode(UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
+									'textareaValue' => \wp_json_encode(UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
 									'textareaSize' => 'huge',
 									'textareaLimitHeight' => true,
 								],
@@ -306,7 +317,7 @@ class SettingsClearbit implements ServiceInterface, UtilsSettingGlobalInterface,
 									'dividerExtraVSpacing' => true,
 								],
 								$this->getSettingsGlobalMap(
-									\apply_filters(UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'getContactProperties']), []),
+									$this->hubspotClient->getContactProperties(),
 									self::SETTINGS_CLEARBIT_MAP_HUBSPOT_KEYS_KEY . '-' . SettingsHubspot::SETTINGS_TYPE_KEY
 								),
 							],

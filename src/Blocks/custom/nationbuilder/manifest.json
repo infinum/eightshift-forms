@@ -1,0 +1,35 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "nationbuilder",
+	"title": "NationBuilder form",
+	"description" : "NationBuilder form block",
+	"category": "eightshift-forms",
+	"icon": {
+		"src": "esf-form-nationbuilder"
+	},
+	"keywords": [
+		"nationbuilder"
+	],
+	"components": {
+		"form": "form",
+		"step": "step"
+	},
+	"hasInnerBlocks": true,
+	"attributes": {
+		"nationbuilderAllowedBlocks": {
+			"type": "array"
+		},
+		"nationbuilderIntegrationId": {
+			"type": "string"
+		},
+		"nationbuilderFormPostId": {
+			"type": "string"
+		},
+		"nationbuilderFormDataTypeSelector": {
+			"type": "string"
+		}
+	},
+	"parent": [
+		"eightshift-forms/form-selector"
+	]
+}

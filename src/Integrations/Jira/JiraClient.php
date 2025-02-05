@@ -184,8 +184,6 @@ class JiraClient implements JiraClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
-
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
@@ -323,8 +321,6 @@ class JiraClient implements JiraClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
-
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			if ($this->isSelfHosted()) {
@@ -369,8 +365,6 @@ class JiraClient implements JiraClientInterface
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
 
-		UtilsDeveloperHelper::setQmLogsOutput($details);
-
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			if ($this->isSelfHosted()) {
@@ -412,8 +406,6 @@ class JiraClient implements JiraClientInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {

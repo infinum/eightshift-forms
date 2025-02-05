@@ -59,6 +59,8 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Nationbuilder\NationbuilderClient;
+use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
@@ -515,6 +517,28 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'labels' => [
 					'title' => \__('Calculator', 'eightshift-forms'),
 					'desc' => \__('Calculator form type settings.', 'eightshift-forms'),
+				],
+			],
+			SettingsNationbuilder::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_NAME,
+				'settings' => SettingsNationbuilder::FILTER_SETTINGS_NAME,
+				'fields' => Workable::FILTER_FORM_FIELDS_NAME,
+				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'use' => SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY,
+				'settingsForceShow' => false,
+				'cache' => [
+					NationbuilderClient::CACHE_NATIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME,
+					NationbuilderClient::CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME,
+				],
+				'emailTemplateTags' => [
+					'nationbuilderSignupId' => 'id',
+				],
+				'labels' => [
+					'title' => \__('NationBuilder', 'eightshift-forms'),
+					'desc' => \__('NationBuilder integration settings.', 'eightshift-forms'),
+					'detail' => \__('Software designed to grow your community and move it to action. Native advocacy features. Engage your audience in new and innovative ways.', 'eightshift-forms'),
+					'externalLink' => 'https://nationbuilder.com/',
 				],
 			],
 			// ------------------------------

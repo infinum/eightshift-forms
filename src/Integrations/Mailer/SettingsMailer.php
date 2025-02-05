@@ -110,6 +110,11 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 	public const SETTINGS_MAILER_SENDER_TEMPLATE_KEY = 'mailer-sender-template';
 
 	/**
+	 * Send empty fields key.
+	 */
+	public const SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY = 'mailer-send-empty-fields';
+
+	/**
 	 * Register all the hooks
 	 *
 	 * @return void
@@ -323,6 +328,26 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 									'inputIsEmail' => true,
 									'inputIsRequired' => true,
 									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => 'true',
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Send empty fields', 'eightshift-forms'),
+											'checkboxHelp' => \__('If checked, all fields will be sent, even if they are empty.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										]
+									]
 								],
 							],
 						],

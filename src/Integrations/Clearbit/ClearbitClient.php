@@ -14,16 +14,14 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * ClearbitClient integration class.
  */
-class ClearbitClient implements ClearbitClientInterface, ServiceInterface
+class ClearbitClient implements ClearbitClientInterface
 {
 	/**
 	 * Return Clearbit base url.
@@ -33,24 +31,13 @@ class ClearbitClient implements ClearbitClientInterface, ServiceInterface
 	private const BASE_URL = 'https://person-stream.clearbit.com/v2/';
 
 	/**
-	 * Register all the hooks
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		\add_filter(UtilsHooksHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'setQueue']), [$this, 'setQueue'], 10, 2);
-	}
-
-	/**
 	 * Set queue for Clearbit.
 	 *
-	 * @param bool $output Output status.
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return bool
 	 */
-	public function setQueue(bool $output, array $formDetails): bool
+	public function setQueue(array $formDetails): bool
 	{
 		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
 		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
@@ -69,7 +56,7 @@ class ClearbitClient implements ClearbitClientInterface, ServiceInterface
 			return false;
 		}
 
-		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY);
+		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY);
 
 		$formJob = $jobs[$type][$formId] ?? [];
 
@@ -79,7 +66,7 @@ class ClearbitClient implements ClearbitClientInterface, ServiceInterface
 
 		$jobs[$type][$formId][] = $email;
 
-		return \update_option(UtilsSettingsHelper::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_JOBS_KEY), $jobs);
+		return \update_option(UtilsSettingsHelper::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), $jobs);
 	}
 
 	/**
@@ -115,8 +102,6 @@ class ClearbitClient implements ClearbitClientInterface, ServiceInterface
 
 		$code = $details[UtilsConfig::IARD_CODE];
 		$body = $details[UtilsConfig::IARD_BODY];
-
-		UtilsDeveloperHelper::setQmLogsOutput($details);
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {

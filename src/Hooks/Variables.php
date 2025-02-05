@@ -287,4 +287,34 @@ class Variables
 	{
 		return \defined('ES_PROFILE_KEY_PAYCEK') ? \ES_PROFILE_KEY_PAYCEK : '';
 	}
+
+	/**
+	 * Get Client Slug for Nation Builder.
+	 *
+	 * @return string
+	 */
+	public static function getClientSlugNationBuilder(): string
+	{
+		return \defined('ES_CLIENT_SLUG_NATIONBUILDER') ? \ES_CLIENT_SLUG_NATIONBUILDER : '';
+	}
+
+	/**
+	 * Get Client ID for Nation Builder.
+	 *
+	 * @return string
+	 */
+	public static function getClientIdNationBuilder(): string
+	{
+		return \defined('ES_CLIENT_ID_NATIONBUILDER') ? \ES_CLIENT_ID_NATIONBUILDER : '';
+	}
+
+	/**
+	 * Get Client Secret for Nation Builder.
+	 *
+	 * @return string
+	 */
+	public static function getClientSecretNationBuilder(): string
+	{
+		return \defined('ES_CLIENT_SECRET_NATIONBUILDER') ? \ES_CLIENT_SECRET_NATIONBUILDER : '';
+	}
 }

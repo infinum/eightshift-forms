@@ -25,6 +25,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
@@ -54,6 +55,7 @@ class Labels implements LabelsInterface
 		'paycekSuccess',
 		'pipedriveSuccess',
 		'calculatorSuccess',
+		'nationbuilderSuccess',
 	];
 
 	/**
@@ -148,6 +150,11 @@ class Labels implements LabelsInterface
 		// Calculator.
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
 			$output = \array_merge($output, $this->getCalculatorLabels());
+		}
+
+		// Nationbuilder.
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY)) {
+			$output = \array_merge($output, $this->getNationbuilderLabels());
 		}
 
 		return $output;
@@ -560,9 +567,24 @@ class Labels implements LabelsInterface
 	private function getCalculatorLabels(): array
 	{
 		return [
-			'calculatorErrorSettingsMissing' => \__('Calculator integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'calculatorErrorSettingsMissing' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'calculatorBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
-			'calculatorSuccess' => \__('Calculator result success. Thank you!', 'eightshift-forms'),
+			'calculatorSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Nationbuilder
+	 *
+	 * @return array<string, string>
+	 */
+	private function getNationbuilderLabels(): array
+	{
+		return [
+			'nationbuilderErrorSettingsMissing' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'nationbuilderServerError' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'nationbuilderBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
+			'nationbuilderSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
 }

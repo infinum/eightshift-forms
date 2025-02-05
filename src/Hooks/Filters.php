@@ -34,6 +34,8 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
+use EightshiftForms\Integrations\Nationbuilder\OauthNationbuilder;
+use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
@@ -177,6 +179,7 @@ final class Filters
 					'prePostParams',
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
+					'bodyTemplate',
 				],
 				SettingsMailchimp::SETTINGS_TYPE_KEY => [
 					'data',
@@ -205,8 +208,6 @@ final class Filters
 					'prePostParams',
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
-					'getContactProperties',
-					'postContactProperty',
 				],
 				SettingsMailerlite::SETTINGS_TYPE_KEY => [
 					'data',
@@ -228,7 +229,6 @@ final class Filters
 				],
 				SettingsClearbit::SETTINGS_TYPE_KEY => [
 					'map',
-					'setQueue',
 				],
 				SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 					'data',
@@ -299,6 +299,12 @@ final class Filters
 					'afterCustomResultOutputProcess',
 				],
 				SettingsCalculator::SETTINGS_TYPE_KEY => [
+					'overridePostRequest',
+					'prePostParams',
+					'beforeSuccessResponse',
+					'afterCustomResultOutputProcess',
+				],
+				SettingsNationbuilder::SETTINGS_TYPE_KEY => [
 					'overridePostRequest',
 					'prePostParams',
 					'beforeSuccessResponse',
@@ -420,6 +426,12 @@ final class Filters
 
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 			SettingsPipedrive::SETTINGS_PIPEDRIVE_API_KEY_KEY,
+
+			SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID,
+			SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SECRET,
+			SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SLUG,
+			OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY,
+			OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY,
 
 			SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 
