@@ -8,7 +8,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Added
 
-- Ability for range slider to have a custom input value in the side.
+- Ability for range slider to have a custom input value on the side.
 
 ## [6.1.1]
 
