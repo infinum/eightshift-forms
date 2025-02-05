@@ -162,7 +162,7 @@ class OauthNationbuilder extends AbstractOauth
 	 */
 	public function hasTokenExpired(array $body): bool
 	{
-		return ($body['data']['code'] ?? '') === 'token_expired';
+		return ($body['data'] ?? '') === 'token_expired';
 	}
 
 	/**
