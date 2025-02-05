@@ -13,7 +13,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - `NationBuilder` cron job.
 - OAuth implementation for `NationBuilder` integration and future integrations.
 - `Mailer` can now send empty field values based on the admin settings.
-- New filter `esFormsIntegrationsMailerBodyTemplate` for filtering html body of the email before sending.
+- New filter `esFormsIntegrationsMailerBodyTemplate` for filtering HTML body of the email before sending.
 
 ### Changed
 

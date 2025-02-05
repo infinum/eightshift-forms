@@ -10,7 +10,7 @@ export const hooks = () => {
 	const { blockName } = select(STORE_NAME).getBlock('nationbuilder');
 	const namespace = select(STORE_NAME).getSettingsNamespace();
 
-	// All adding additional blocks to the custom form builder.
+	// Adding all additional blocks to the custom form builder.
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
 		if (name === `${namespace}/${blockName}`) {
 			if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {

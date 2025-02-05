@@ -102,7 +102,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	/**
 	 * Return lists.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -333,7 +333,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getNationbuilderCustomApiData($endpoint)
+	private function getNationbuilderCustomApiData($endpoint): array
 	{
 		$url = $this->getBaseUrl($endpoint);
 
