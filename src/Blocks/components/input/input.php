@@ -45,6 +45,7 @@ $inputRangeShowMaxSuffix = Helpers::checkAttr('inputRangeShowMaxSuffix', $attrib
 $inputRangeShowCurrent = Helpers::checkAttr('inputRangeShowCurrent', $attributes, $manifest);
 $inputRangeShowCurrentPrefix = Helpers::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
 $inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
+$inputRangeUseCustomField = Helpers::checkAttr('inputRangeUseCustomField', $attributes, $manifest);
 $inputTwSelectorsData = Helpers::checkAttr('inputTwSelectorsData', $attributes, $manifest);
 
 $inputId = $inputName . '-' . Helpers::getUnique();
@@ -129,8 +130,21 @@ $input = '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
 		' . $inputAttrsOutput . '
 	/>
-	' . $additionalContent . '
 ';
+
+if ($inputRangeUseCustomField) {
+	$input .= '<input
+		class="' . esc_attr(FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range-custom")) . '"
+		type="number"
+		' . disabled($inputIsDisabled, true, false) . '
+		' . wp_readonly($inputIsReadOnly, true, false) . '
+		' . $inputAttrsOutput . '
+	/>';
+}
+
+if ($additionalContent) {
+	$input .= $additionalContent;
+}
 
 echo Helpers::render(
 	'field',

@@ -357,7 +357,7 @@ export function setStateFormInitial(formId) {
 			disabled,
 		} = item;
 
-		if (name === 'search_terms') {
+		if (name === 'search_terms' || !name) {
 			return;
 		}
 
@@ -444,6 +444,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], item?.nextElementSibling, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], field.querySelectorAll(getStateSelector('inputRangeCurrent', true)), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);

@@ -1124,6 +1124,7 @@ export class Form {
 	 */
 	setupRangeField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
+		const custom = this.state.getStateElementCustom(name, formId);
 
 		this.state.setStateElementLoaded(name, true, formId);
 
@@ -1143,6 +1144,10 @@ export class Form {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
 			input.addEventListener('input', this.onInputEvent);
+		}
+
+		if (custom) {
+			custom.addEventListener('input', this.onRangeCustom);
 		}
 	}
 
@@ -1957,6 +1962,43 @@ export class Form {
 		) {
 			debounce(this.formSubmit(formId), 100);
 		}
+	};
+
+	/**
+	 * On range custom event.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onRangeCustom = (event) => {
+		const target = event?.target;
+
+		if (!target) {
+			return;
+		}
+
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		let value = parseInt(target?.value);
+		const min = parseInt(target?.min);
+		const max = parseInt(target?.max);
+
+		if (isNaN(value)) {
+			value = min || 0;
+		}
+
+		if (value < min) {
+			value = min;
+		}
+
+		if (value > max) {
+			value = max;
+		}
+
+		target.value = value;
+		this.utils.setManualRangeValue(formId, name, value.toString());
 	};
 
 	/**
