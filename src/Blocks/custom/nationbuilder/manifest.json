@@ -10,8 +10,6 @@
 	"keywords": [
 		"nationbuilder"
 	],
-	"example": {
-	},
 	"components": {
 		"form": "form",
 		"step": "step"
@@ -19,8 +17,7 @@
 	"hasInnerBlocks": true,
 	"attributes": {
 		"nationbuilderAllowedBlocks": {
-			"type": "array",
-			"default": []
+			"type": "array"
 		},
 		"nationbuilderIntegrationId": {
 			"type": "string"
