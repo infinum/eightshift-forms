@@ -530,6 +530,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'cache' => [
 					NationbuilderClient::CACHE_NATIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME,
 					NationbuilderClient::CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME,
+					NationbuilderClient::CACHE_NATIONBUILDER_TAGS_TRANSIENT_NAME,
 				],
 				'emailTemplateTags' => [
 					'nationbuilderSignupId' => 'id',

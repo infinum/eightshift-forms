@@ -61,11 +61,11 @@ $cardInlineClass = Helpers::classnames([
 			<?php if ($cardInlineIcon) { ?>
 				<?php if ($cardInlineTitleLink) { ?>
 					<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-						<?php echo wp_kses_post($cardInlineIcon); ?>
+						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 					</a>
 				<?php } else { ?>
 					<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-						<?php echo wp_kses_post($cardInlineIcon); ?>
+						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 					</div>
 				<?php } ?>
 			<?php } ?>

@@ -36,6 +36,11 @@ class NationbuilderClient implements NationbuilderClientInterface
 	public const CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME = 'es_nationbuilder_lists_cache';
 
 	/**
+	 * Transient cache name for tags.
+	 */
+	public const CACHE_NATIONBUILDER_TAGS_TRANSIENT_NAME = 'es_nationbuilder_tags_cache';
+
+	/**
 	 * Instance variable for Oauth.
 	 *
 	 * @var OauthInterface
@@ -108,7 +113,6 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 */
 	public function getLists(bool $hideUpdateTime = true): array
 	{
-
 		$output = \get_transient(self::CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
@@ -136,6 +140,52 @@ class NationbuilderClient implements NationbuilderClientInterface
 				];
 
 				\set_transient(self::CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
+			}
+		}
+
+		if ($hideUpdateTime) {
+			unset($output[ClientInterface::TRANSIENT_STORED_TIME]);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Return tags.
+	 *
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getTags(bool $hideUpdateTime = true): array
+	{
+		$output = \get_transient(self::CACHE_NATIONBUILDER_TAGS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+
+		// Prevent cache.
+		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+			$output = [];
+		}
+
+		// Check if form exists in cache.
+		if (!$output) {
+			$items = $this->getNationbuilderCustomApiData('signup_tags');
+
+			if ($items) {
+				foreach ($items as $item) {
+					$id = $item['id'] ?? '';
+
+					$output[$id] = [
+						'id' => $id,
+						'title' => $item['attributes']['name'] ?? '',
+					];
+				}
+
+				$output[ClientInterface::TRANSIENT_STORED_TIME] = [
+					'id' => ClientInterface::TRANSIENT_STORED_TIME,
+					'title' => \current_datetime()->format('Y-m-d H:i:s'),
+				];
+
+				\set_transient(self::CACHE_NATIONBUILDER_TAGS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
 		}
 
@@ -210,11 +260,22 @@ class NationbuilderClient implements NationbuilderClientInterface
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			$list = UtilsSettingsHelper::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
+			$tags = \explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId));
 
-			if ($list) {
-				$listsJobs = UtilsSettingsHelper::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
-				$listsJobs['list'][$list][] = $body['data']['id'] ?? '';
-				\update_option(UtilsSettingsHelper::getSettingName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $listsJobs);
+			if ($list || $tags) {
+				$job = UtilsSettingsHelper::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
+
+				if ($list) {
+					$job['list'][$list][] = $body['data']['id'] ?? '';
+				}
+
+				if ($tags) {
+					foreach ($tags as $tag) {
+						$job['tags'][$tag][] = $body['data']['id'] ?? '';
+					}
+				}
+
+				\update_option(UtilsSettingsHelper::getSettingName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $job);
 			}
 
 			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
@@ -276,6 +337,67 @@ class NationbuilderClient implements NationbuilderClientInterface
 
 			if ($refreshToken) {
 				return $this->postList($listId, $signupId);
+			}
+		}
+
+		// On success return output.
+		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		}
+
+		// Output error.
+		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+	}
+
+	/**
+	 * API request to post tag.
+	 *
+	 * @param string $tagId Tag id.
+	 * @param string $signupId Signup id.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function postTag(string $tagId, string $signupId): array
+	{
+		$url = $this->getBaseUrl('signup_taggings');
+
+		$body = [
+			'data' => [
+				'type' => 'signup_taggings',
+				'attributes' => [
+					'signup_id' => $signupId,
+					'tag_id' => $tagId,
+				],
+			]
+		];
+
+		$response = \wp_remote_post(
+			$url,
+			[
+				'headers' => $this->getHeaders(),
+				'body' => \wp_json_encode($body),
+			]
+		);
+
+		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+			SettingsNationbuilder::SETTINGS_TYPE_KEY,
+			$response,
+			$url,
+			$body,
+			[],
+			'',
+			'',
+			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
+		);
+
+		$code = $details[UtilsConfig::IARD_CODE];
+		$body = $details[UtilsConfig::IARD_BODY];
+
+		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
+			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
+
+			if ($refreshToken) {
+				return $this->postTag($tagId, $signupId);
 			}
 		}
 

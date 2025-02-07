@@ -131,11 +131,27 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 					}
 
 					unset($jobs[$type][$listId]);
+				}
+			}
 
-					\update_option(UtilsSettingsHelper::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $jobs);
+			if ($type === 'tags') {
+				foreach ($job as $tagId => $signupIds) {
+					foreach ($signupIds as $signupId) {
+						$tagResponse = $this->nationbuilderClient->postTag((string) $tagId, $signupId);
+
+						if ($tagResponse[UtilsConfig::IARD_CODE] < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $tagResponse[UtilsConfig::IARD_CODE] > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+							$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $tagResponse;
+
+							$this->formSubmitMailer->sendFallbackIntegrationEmail($formDetails);
+						}
+					}
+
+					unset($jobs[$type][$tagId]);
 				}
 			}
 		}
+
+		\update_option(UtilsSettingsHelper::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $jobs);
 
 		// Turn of OAuth after cron job is done.
 		\delete_option(UtilsSettingsHelper::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY));

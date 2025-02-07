@@ -2001,6 +2001,11 @@ export class Form {
 
 		target.value = value;
 		this.utils.setManualRangeValue(formId, name, value.toString());
+
+		// Used only on frontend for single submit.
+		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
+			debounce(this.formSubmit(formId), 100);
+		}
 	};
 
 	/**
