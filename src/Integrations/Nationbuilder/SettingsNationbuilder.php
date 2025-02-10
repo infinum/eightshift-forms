@@ -466,20 +466,8 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 				'title' => \__('Work phone number', 'eightshift-forms'),
 			],
 			[
-				'id' => 'email1',
-				'title' => \__('Email1', 'eightshift-forms'),
-			],
-			[
-				'id' => 'email2',
-				'title' => \__('Email2', 'eightshift-forms'),
-			],
-			[
-				'id' => 'email3',
-				'title' => \__('Email3', 'eightshift-forms'),
-			],
-			[
-				'id' => 'email4',
-				'title' => \__('Email4', 'eightshift-forms'),
+				'id' => 'email',
+				'title' => \__('Email', 'eightshift-forms'),
 			],
 			[
 				'id' => 'occupation',
