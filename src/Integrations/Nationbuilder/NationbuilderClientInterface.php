@@ -36,7 +36,7 @@ interface NationbuilderClientInterface extends ClientMappingInterface
 	/**
 	 * Return Tags.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
