@@ -9,6 +9,7 @@
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 
 $manifest = Helpers::getManifestByDir(__DIR__);
 
@@ -55,10 +56,14 @@ $button = '
 ';
 
 if ($submitButtonAsLink) {
+	$submitLinkClass = Helpers::classnames([
+		Helpers::selector($submitIsDisabled, UtilsHelper::getStateSelector('isDisabled')),
+	]);
+
 	$button = '
 	<a
 		href="' . esc_url($submitButtonAsLinkUrl) . '"
-		class="' . esc_attr($submitClass) . '"
+		class="' . esc_attr("{$submitClass} {$submitLinkClass}") . '"
 	><span class="' . esc_attr(FormsHelper::getTwPart($twClasses, $submitButtonTwParent, 'inner', "{$componentClass}__inner")) . '">' . $submitIconContent . ' ' . esc_html($submitValue) . '</span></a>
 	' . $additionalContent . '
 	';

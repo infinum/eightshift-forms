@@ -47,7 +47,7 @@ foreach ($items as $key => $innerItems) {
 							title="<?php echo esc_html($desc); ?>"
 						>
 							<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
-								<?php echo wp_kses_post($icon); ?>
+								<?php echo $icon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
 								<?php echo esc_html($label); ?>
 							</span>
 						</a>

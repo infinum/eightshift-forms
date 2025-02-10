@@ -138,7 +138,7 @@ class OauthNationbuilder extends AbstractOauth
 	 */
 	public function getRefreshToken(): bool
 	{
-		if ($this->refreshTokenRetryCounter >= 5) {
+		if ($this->refreshTokenRetryCounter >= 3) {
 			return false;
 		}
 
@@ -162,7 +162,7 @@ class OauthNationbuilder extends AbstractOauth
 	 */
 	public function hasTokenExpired(array $body): bool
 	{
-		return ($body['data'] ?? '') === 'token_expired';
+		return ($body['code'] ?? '') === 'token_expired';
 	}
 
 	/**

@@ -82,6 +82,11 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 	public const SETTINGS_NATIONBUILDER_LIST_KEY = 'nationbuilder-list';
 
 	/**
+	 * Tags key.
+	 */
+	public const SETTINGS_NATIONBUILDER_TAGS_KEY = 'nationbuilder-tags';
+
+	/**
 	 * Cron key.
 	 */
 	public const SETTINGS_NATIONBUILDER_CRON_KEY = 'nationbuilder-cron';
@@ -159,6 +164,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 		$params = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
 		$list = UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
+		$tags = \array_flip(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId)));
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -212,7 +218,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 					],
 					[
 						'component' => 'tab',
-						'tabLabel' => \__('Lists', 'eightshift-forms'),
+						'tabLabel' => \__('Lists & Tags', 'eightshift-forms'),
 						'tabContent' => [
 							[
 								'component' => 'select',
@@ -229,6 +235,24 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 										];
 									},
 									$this->nationbuilderClient->getLists()
+								),
+							],
+							[
+								'component' => 'select',
+								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NATIONBUILDER_TAGS_KEY),
+								'selectFieldLabel' => \__('Select tags', 'eightshift-forms'),
+								'selectIsMultiple' => true,
+								'selectValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId),
+								'selectContent' => \array_map(
+									static function ($option) use ($tags) {
+										return [
+											'component' => 'select-option',
+											'selectOptionLabel' => $option['title'],
+											'selectOptionValue' => $option['id'],
+											'selectOptionIsSelected' => isset($tags[$option['id']]),
+										];
+									},
+									$this->nationbuilderClient->getTags()
 								),
 							]
 						],
