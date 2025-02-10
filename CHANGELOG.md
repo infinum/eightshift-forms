@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.1.6]
+
+### Change
+
+- Broken `NationBuilder` integration will now send error if the email exists.
+
 ## [6.1.5]
 
 ### Fixed
@@ -1125,6 +1131,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.1.6]: https://github.com/infinum/eightshift-forms/compare/6.1.5...6.1.6
 [6.1.5]: https://github.com/infinum/eightshift-forms/compare/6.1.4...6.1.5
 [6.1.4]: https://github.com/infinum/eightshift-forms/compare/6.1.3...6.1.4
 [6.1.3]: https://github.com/infinum/eightshift-forms/compare/6.1.2...6.1.3

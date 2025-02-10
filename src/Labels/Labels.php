@@ -234,6 +234,7 @@ class Labels implements LabelsInterface
 			'validationRequiredCount' => \__('This field is required, with at least %s items selected.', 'eightshift-forms'),
 			'validationInvalid' => \__('This field is not valid.', 'eightshift-forms'),
 			'validationEmail' => \__('This e-mail is not valid.', 'eightshift-forms'),
+			'validationEmailExists' => \__('This e-mail already exists in our system.', 'eightshift-forms'),
 			'validationEmailTld' => \__('This e-mails top level domain is not valid.', 'eightshift-forms'),
 			'validationUrl' => \__('This URL is not valid.', 'eightshift-forms'),
 			// translators: %s used for displaying min number to the user.

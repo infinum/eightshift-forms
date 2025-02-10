@@ -217,7 +217,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			}
 		}
 
-		$url = $this->getBaseUrl('signups/push');
+		$url = $this->getBaseUrl('signups');
 
 		$body = [
 			'data' => [
@@ -229,7 +229,6 @@ class NationbuilderClient implements NationbuilderClientInterface
 		$response = \wp_remote_post(
 			$url,
 			[
-				'method' => 'PATCH',
 				'headers' => $this->getHeaders(),
 				'body' => \wp_json_encode($body),
 			]
@@ -281,6 +280,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
 		}
 
+		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body, $formId);
 		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
@@ -431,6 +431,38 @@ class NationbuilderClient implements NationbuilderClientInterface
 			default:
 				return 'submitWpError';
 		}
+	}
+
+	/**
+	 * Map service messages for fields with our own.
+	 *
+	 * @param array<mixed> $body API response body.
+	 * @param string $formId FormId value.
+	 *
+	 * @return array<string, string>
+	 */
+	private function getFieldsErrors(array $body, string $formId): array
+	{
+		$errors = $body['errors'] ?? [];
+		$output = [];
+
+		$mapParams = \array_flip(UtilsSettingsHelper::getSettingValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId));
+
+		foreach ($errors as $error) {
+			$message = $error['detail'] ?? '';
+			$key = $error['meta']['attribute'] ?? '';
+
+			if (!$message || !$key || !isset($mapParams[$key])) {
+				continue;
+			}
+
+			if (\str_contains($message, 'E-mail email is already taken on signup')) {
+				$output[$mapParams[$key]] = 'validationEmailExists';
+				continue;
+			}
+		}
+
+		return $output;
 	}
 
 	/**
