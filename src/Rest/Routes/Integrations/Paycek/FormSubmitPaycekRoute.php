@@ -39,7 +39,6 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
-
 	/**
 	 * Implement submit action.
 	 *
@@ -61,7 +60,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsPaycek::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
 
-		$params = $this->prepareParams($mapParams, $formDetails[UtilsConfig::FD_FIELDS], $formId);
+		$params = $this->prepareParams($mapParams, $formDetails[UtilsConfig::FD_PARAMS], $formId);
 
 		$reqParams = [
 			'profileCode',
