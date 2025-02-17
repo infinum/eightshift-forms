@@ -6,6 +6,13 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [6.1.6]
 
+### Fixed
+
+- Issue with Result output submit reset shortcode.
+- Forcing hidden mandatory css field to have important tag.
+
+## [6.1.6]
+
 ### Change
 
 - Broken `NationBuilder` integration will now send error if the email exists.
@@ -1131,6 +1138,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.1.6]: https://github.com/infinum/eightshift-forms/compare/6.1.6...6.1.7
 [6.1.6]: https://github.com/infinum/eightshift-forms/compare/6.1.5...6.1.6
 [6.1.5]: https://github.com/infinum/eightshift-forms/compare/6.1.4...6.1.5
 [6.1.4]: https://github.com/infinum/eightshift-forms/compare/6.1.3...6.1.4

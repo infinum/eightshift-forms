@@ -1,6 +1,6 @@
 .es-form-is-hidden {
-	display: none;
-	user-select: none;
+	display: none !important; // stylelint-disable-line declaration-no-important
+	user-select: none !important; // stylelint-disable-line declaration-no-important
 }
 
 .es-field {

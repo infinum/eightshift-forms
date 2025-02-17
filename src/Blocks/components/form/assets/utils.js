@@ -1510,14 +1510,23 @@ export class Utils {
 	 * @returns {void}
 	 */
 	onFormShowEvent = (e) => {
-		const forms = e?.target?.closest(this.state.getStateSelector('resultOutput', true));
+		const outputs = e?.target?.closest(this.state.getStateSelector('resultOutput', true));
 
-		if (!forms) {
+		if (!outputs) {
 			return;
 		}
 
-		forms?.classList?.add(this.state.getStateSelector('isHidden'));
-		this.state.getStateFormElement(forms?.getAttribute(this.state.getStateAttribute('formId')))?.classList?.remove(this.state.getStateSelector('isHidden'));
+		outputs?.classList?.add(this.state.getStateSelector('isHidden'));
+
+		for (const formId of this.state.getStateForms()) {
+			const form = this.state.getStateFormElement(formId);
+
+			if (!form) {
+				continue;
+			}
+
+			form?.classList?.remove(this.state.getStateSelector('isHidden'));
+		};
 	};
 
 	////////////////////////////////////////////////////////////////
