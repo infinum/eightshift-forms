@@ -1061,7 +1061,6 @@ export class Form {
 		input.addEventListener('blur', this.onBlurEvent);
 		input.addEventListener('keydown', this.onKeyDownEvent);
 
-
 		// If field range, set current value to DOM.
 		if (type === 'range') {
 			this.utils.setRangeCurrentValue(formId, name);
@@ -1079,6 +1078,7 @@ export class Form {
 
 		if (custom && type === 'range') {
 			custom.addEventListener('input', this.onRangeCustom);
+			input.addEventListener('input', this.onRangeCustomInput);
 		}
 	}
 
@@ -1533,6 +1533,7 @@ export class Form {
 				input?.removeEventListener('input', this.onInputEvent);
 				input?.removeEventListener('keydown', this.onKeyDownEvent);
 				custom?.addEventListener('input', this.onRangeCustom);
+				input?.addEventListener('input', this.onRangeCustomInput);
 			});
 
 			// Date.
@@ -1874,6 +1875,10 @@ export class Form {
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			debounce(this.formSubmit(formId), 100);
 		}
+	};
+
+	onRangeCustomInput = (event) => {
+		this.utils.setOnUserChangeInput(event.target);
 	};
 
 	/**
