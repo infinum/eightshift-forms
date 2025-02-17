@@ -41,23 +41,29 @@ class ResultOutputItemShowForm implements ServiceInterface
 	public function callback(array $atts, string $content): string
 	{
 		$buttonComponent = '';
+		$attrsOutput = [];
 
-		$filterNameComponentNext = UtilsHooksHelper::getFilterName(['block', 'form', 'componentShowForm']);
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'componentShowForm']);
 
-		if (\has_filter($filterNameComponentNext)) {
-			$buttonComponent = \apply_filters($filterNameComponentNext, [
+		if (\has_filter($filterName)) {
+			$buttonComponent = \apply_filters($filterName, [
 				'value' => $content,
 				'jsSelector' => UtilsHelper::getStateSelector('resultOutputShowForm'),
 			]);
+
+			$attrsOutput = [
+				'submitButtonComponent' => $buttonComponent,
+			];
+		} else {
+			$attrsOutput = [
+				'submitValue' => $content,
+				'additionalClass' => UtilsHelper::getStateSelector('resultOutputShowForm'),
+			];
 		}
 
 		return Helpers::render(
 			'submit',
-			\array_merge(
-				Helpers::props('submit', [], [
-					'submitButtonComponent' => $buttonComponent,
-				]),
-			),
+			Helpers::props('submit', [], $attrsOutput),
 			'components',
 			true
 		);
