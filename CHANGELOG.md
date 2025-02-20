@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.1.8]
+
+### Fixed
+
+- Input custom range field will not be outputted if the field type has been changed.
+
 ## [6.1.7]
 
 ### Fixed
@@ -1138,6 +1144,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.1.8]: https://github.com/infinum/eightshift-forms/compare/6.1.7...6.1.8
 [6.1.7]: https://github.com/infinum/eightshift-forms/compare/6.1.6...6.1.7
 [6.1.6]: https://github.com/infinum/eightshift-forms/compare/6.1.5...6.1.6
 [6.1.5]: https://github.com/infinum/eightshift-forms/compare/6.1.4...6.1.5

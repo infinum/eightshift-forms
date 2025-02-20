@@ -134,6 +134,8 @@ export const InputOptions = (attributes) => {
 							if (value === 'url') {
 								setAttributes({ [getAttrKey('inputIsUrl', attributes, manifest)]: true });
 							}
+
+							setAttributes({ [getAttrKey('inputRangeUseCustomField', attributes, manifest)]: undefined });
 						}}
 						additionalSelectClasses='es-w-32'
 						simpleValue

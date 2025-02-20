@@ -132,7 +132,7 @@ $input = '
 	/>
 ';
 
-if ($inputRangeUseCustomField) {
+if ($inputRangeUseCustomField && $inputType === 'range') {
 	$input .= '<input
 		class="' . esc_attr(FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range-custom")) . '"
 		type="number"
