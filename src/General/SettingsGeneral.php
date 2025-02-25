@@ -112,7 +112,7 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 * Granular rate limit for a particular form.
 	 */
 	public const SETTINGS_RATE_LIMIT_KEY = 'rate-limit';
-	 
+
 	/** Increment meta key.
 	 *
 	 * @var string
