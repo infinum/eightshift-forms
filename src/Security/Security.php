@@ -35,6 +35,14 @@ class Security implements SecurityInterface
 	public const RATE_LIMIT_WINDOW = 60;
 
 	/**
+	 * A table containing rate limiting data.
+	 * 
+	 * @var string
+	 */
+
+	public const RATE_LIMITING_TABLE = 'es_forms_rate_limiting';
+
+	/**
 	 * Detect if the request is valid using rate limiting.
 	 *
 	 * @param string $formType Form type.
