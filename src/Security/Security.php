@@ -43,21 +43,25 @@ class Security implements SecurityInterface
 	public const RATE_LIMITING_TABLE = 'es_forms_rate_limiting';
 
 	/**
+	 * A settings key for granular rate limiting on different forms.
+	 */
+	public const RATE_LIMIT_SETTING_NAME = 'granular-rate-limit';
+
+	/**
 	 * Detect if the request is valid using rate limiting.
 	 *
 	 * @param string $formType Form type.
+	 * @param int $formId Form ID.
 	 *
 	 * @return boolean
 	 */
-	public function isRequestValid(string $formType): bool
+	public function isRequestValid(string $formType, int $formId): bool
 	{
 		// Bailout if this feature is not enabled.
 		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_IS_VALID_NAME, [])) {
 			return true;
 		}
 
-		$keyName = UtilsSettingsHelper::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
-		$data = UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
 		$time = \time();
 
 		// Bailout if the IP is in the ignore list.
@@ -67,51 +71,58 @@ class Security implements SecurityInterface
 			return true;
 		}
 
-		$ip = $this->getIpAddress('hash');
+		$userToken = $this->getIpAddress('hash');
+		$activityType = "submit-$formType";
 
-		// If this is the first iteration of this user just add it to the list.
-		if (!isset($data[$ip])) {
-			$data[$ip] = [
-				'count' => 1,
-				'time' => $time,
-			];
+		$rateLimitingEntry = new RateLimitingLogEntry(
+			formId: $formId,
+			userToken: $userToken,
+			activityType: $activityType,
+			createdAt: $time,
+		);
 
-			\update_option($keyName, $data); // No need for unserilize because we are storing array.
-			return true;
-		}
+		$rateLimitingEntry->write();
 
-		// Extract user's data.
-		$user = $data[$ip];
-		$timestamp = $user['time'] ?? '';
-		$count = $user['count'] ?? 0;
-
-		// Reset the count if the time window has passed.
-		if (($time - $timestamp) > \intval(UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
-			unset($data[$ip]);
-			\update_option($keyName, $data);
-			return true;
-		}
+		$window = \intval(UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW));
 
 		// Check if the request count exceeds the rate limit.
-		$rateLimitGeneral = UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
+		$rateLimit = UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
 		$rateLimitCalculator = UtilsSettingsHelper::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
 
-		// Different rate limit for calculator.
-		if ($rateLimitCalculator && $formType === SettingsCalculator::SETTINGS_TYPE_KEY) {
-			$rateLimitGeneral = $rateLimitCalculator;
+		$calculatorTypeKey = SettingsCalculator::SETTINGS_TYPE_KEY;
+
+		$rateLimitForActivityType = match ($activityType) {
+			"submit-{$calculatorTypeKey}" => $rateLimitCalculator,
+			default => $rateLimit,
+		};
+
+		$aggregatedActivityByType = RateLimitingLogEntry::findAggregatedByActivityType($userToken, $window);
+		
+		$sum = 0;
+		foreach ($aggregatedActivityByType as $aggregate) {
+			$sum += $aggregate['count'];
+
+			if ($aggregate['activity_type'] === $activityType && $aggregate['count'] > $rateLimitForActivityType) {
+					return false;
+			}
 		}
 
-		if ($count >= \intval($rateLimitGeneral)) {
+		if ($sum > $rateLimit) {
 			return false;
 		}
+	
+		$granularRateLimit = \intval(UtilsSettingsHelper::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, (string)$formId));
 
-		// Finaly update the count and time.
-		$data[$ip] = [
-			'count' => $count + 1,
-			'time' => $time,
-		];
+		if ($granularRateLimit <= 0) {
+			return true;
+		}
 
-		\update_option($keyName, $data);
+		$activityCountByFormId = RateLimitingLogEntry::countByFormId($userToken, $formId, $window);
+
+		if ($activityCountByFormId > $granularRateLimit) {
+			return false;
+		}
+		
 		return true;
 	}
 
