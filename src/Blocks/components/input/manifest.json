@@ -130,6 +130,10 @@
 		"inputRangeShowCurrentSuffix": {
 			"type": "string"
 		},
+		"inputRangeUseCustomField": {
+			"type": "boolean",
+			"default": false
+		},
 		"inputTwSelectorsData": {
 			"type": "array"
 		}

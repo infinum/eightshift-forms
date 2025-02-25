@@ -1094,6 +1094,8 @@ export class Form {
 	 */
 	setupInputField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
+		const custom = this.state.getStateElementCustom(name, formId);
+		const type = this.state.getStateElementTypeCustom(name, formId);
 
 		this.state.setStateElementLoaded(name, true, formId);
 
@@ -1104,6 +1106,11 @@ export class Form {
 		input.addEventListener('blur', this.onBlurEvent);
 		input.addEventListener('keydown', this.onKeyDownEvent);
 
+		// If field range, set current value to DOM.
+		if (type === 'range') {
+			this.utils.setRangeCurrentValue(formId, name);
+		}
+		
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
 			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'number'))
@@ -1138,11 +1145,17 @@ export class Form {
 
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			this.state.getStateFormConfigUseSingleSubmit(formId)
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (type === 'range')) ||
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (type === 'number'))
 		) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
 			input.addEventListener('input', this.onInputEvent);
+		}
+
+		if (custom && type === 'range') {
+			custom.addEventListener('input', this.onRangeCustom);
+			input.addEventListener('input', this.onRangeCustomInput);
 		}
 	}
 
@@ -1586,12 +1599,15 @@ export class Form {
 			// Text.
 			[...this.state.getStateElementByTypeField('input', formId)].forEach((text) => {
 				const input = this.state.getStateElementInput(text.name, formId);
+				const custom = this.state.getStateElementCustom(text.name, formId);
 
 				input?.removeEventListener('keydown', this.onFocusEvent);
 				input?.removeEventListener('focus', this.onFocusEvent);
 				input?.removeEventListener('blur', this.onBlurEvent);
 				input?.removeEventListener('input', this.onInputEvent);
 				input?.removeEventListener('keydown', this.onKeyDownEvent);
+				custom?.addEventListener('input', this.onRangeCustom);
+				input?.addEventListener('input', this.onRangeCustomInput);
 			});
 
 			// Range.
@@ -1957,6 +1973,52 @@ export class Form {
 		) {
 			debounce(this.formSubmit(formId), 100);
 		}
+	};
+
+	/**
+	 * On range custom event.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onRangeCustom = (event) => {
+		const target = event?.target;
+
+		if (!target) {
+			return;
+		}
+
+		const formId = this.state.getFormIdByElement(target);
+		const field = this.state.getFormFieldElementByChild(target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		let value = parseInt(target?.value);
+		const min = parseInt(target?.min);
+		const max = parseInt(target?.max);
+
+		if (isNaN(value)) {
+			value = min || 0;
+		}
+
+		if (value < min) {
+			value = min;
+		}
+
+		if (value > max) {
+			value = max;
+		}
+
+		target.value = value;
+		this.utils.setManualInputValue(formId, name, value.toString());
+
+		// Used only on frontend for single submit.
+		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
+			debounce(this.formSubmit(formId), 100);
+		}
+	};
+
+	onRangeCustomInput = (event) => {
+		this.utils.setOnUserChangeInput(event.target);
 	};
 
 	/**

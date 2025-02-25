@@ -16,6 +16,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Security\Security;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
@@ -108,7 +109,11 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY = 'general-success-redirect-variation';
 
 	/**
-	 * Increment meta key.
+	 * Granular rate limit for a particular form.
+	 */
+	public const SETTINGS_RATE_LIMIT_KEY = 'rate-limit';
+
+	/** Increment meta key.
 	 *
 	 * @var string
 	 */
@@ -161,6 +166,9 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($formType, $formId);
 
 		$successRedirectVariation = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_SUCCESS_REDIRECT_VARIATION_KEY, $formId);
+
+		$rateLimit = \intval(UtilsSettingsHelper::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, $formId));
+		$rateLimit = ($rateLimit > 0) ? $rateLimit : '';
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -222,6 +230,20 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										'checkboxAsToggle' => true,
 									],
 								],
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'input',
+								'inputName' => UtilsSettingsHelper::getSettingName(Security::RATE_LIMIT_SETTING_NAME),
+								'inputFieldLabel' => \__('Rate limit (submission attempts / seconds)', 'eightshift-forms'),
+								// translators: %s will be replaced with forms field name and filter output copy.
+								'inputFieldHelp' => \__('If set, the form will be rate limited based on the provided value, in addition to global rate limits.', 'eightshift-forms'),
+								'inputType' => 'number',
+								'inputIsDisabled' => false,
+								'inputValue' => $rateLimit,
 							],
 							[
 								'component' => 'divider',
