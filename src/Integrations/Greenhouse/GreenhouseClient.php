@@ -12,7 +12,6 @@ namespace EightshiftForms\Integrations\Greenhouse;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\General\General;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -39,23 +38,6 @@ class GreenhouseClient implements ClientInterface
 	 * Transient cache name for items.
 	 */
 	public const CACHE_GREENHOUSE_ITEMS_TRANSIENT_NAME = 'es_greenhouse_items_cache';
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
-	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
-		$this->enrichment = $enrichment;
-	}
 
 	/**
 	 * Return items.
@@ -159,7 +141,7 @@ class GreenhouseClient implements ClientInterface
 			}
 		}
 
-		$paramsPrepared = $this->prepareParams($params, $formId);
+		$paramsPrepared = $this->prepareParams($params);
 		$paramsFiles = $this->prepareFiles($files);
 
 		$body = \array_merge(
@@ -400,21 +382,11 @@ class GreenhouseClient implements ClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
-	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params, string $formId): array
+	private function prepareParams(array $params): array
 	{
-		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
-		}
-
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 

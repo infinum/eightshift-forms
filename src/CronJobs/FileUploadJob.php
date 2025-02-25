@@ -11,12 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\CronJobs;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * FileUploadJob class.
  */
-class FileUploadJob implements ServiceInterface
+class FileUploadJob implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Job name.

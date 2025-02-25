@@ -187,6 +187,7 @@ export const FieldOptionsMore = (attributes) => {
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
 	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
+	const fieldSuffixContent = checkAttr('fieldSuffixContent', attributes, manifest);
 
 	return (
 		<Section
@@ -211,6 +212,13 @@ export const FieldOptionsMore = (attributes) => {
 					label={<IconLabel icon={icons.fieldAfterText} label={__('Above the help text', 'eightshift-forms')} />}
 					value={fieldAfterContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
+					className='es-no-field-spacing'
+				/>
+
+				<TextControl
+					label={<IconLabel icon={icons.fieldAfterText} label={__('After field text', 'eightshift-forms')} />}
+					value={fieldSuffixContent}
+					onChange={(value) => setAttributes({ [getAttrKey('fieldSuffixContent', attributes, manifest)]: value })}
 					className='es-no-field-spacing'
 				/>
 			</>

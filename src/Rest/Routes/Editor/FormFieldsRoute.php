@@ -12,6 +12,7 @@ namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -98,13 +99,13 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 			);
 		}
 
-		$data = UtilsGeneralHelper::getFormDetails($formId);
-		$fieldsOnly = $data['fieldsOnly'] ?? [];
+		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
+		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY] ?? [];
 
 		$debug = \array_merge(
 			$debug,
 			[
-				'data' => $data,
+				'data' => $formDetails,
 			]
 		);
 
@@ -120,7 +121,7 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 
 		$fieldsOutput = $this->getItems($fieldsOnly);
 
-		$steps = $data['stepsSetup'] ?? [];
+		$steps = $formDetails[UtilsConfig::FD_STEPS_SETUP] ?? [];
 
 		return \rest_ensure_response(
 			UtilsApiHelper::getApiSuccessPublicOutput(
@@ -129,7 +130,7 @@ class FormFieldsRoute extends AbstractUtilsBaseRoute
 					'fields' => \array_values($fieldsOutput),
 					'steps' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], false)) : [],
 					'stepsFull' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], true)) : [],
-					'names' => $data['fieldNamesFull'],
+					'names' => $formDetails[UtilsConfig::FD_FIELD_NAMES_FULL],
 				],
 				$debug
 			)

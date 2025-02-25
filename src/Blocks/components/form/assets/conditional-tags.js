@@ -20,6 +20,10 @@ export class ConditionalTags {
 		this.HIDE = globalManifest.comparatorActions.HIDE;
 		this.OR = globalManifest.comparatorLogic.OR;
 		this.AND = globalManifest.comparatorLogic.AND;
+		this.IS = globalManifest.comparator.IS;
+		this.ISN = globalManifest.comparator.ISN;
+		this.C = globalManifest.comparator.C;
+		this.CN = globalManifest.comparator.CN;
 
 		// Map all conditional logic as a object.
 		this.OPERATORS = this.utils.getComparator();
@@ -45,7 +49,7 @@ export class ConditionalTags {
 		}
 
 		// Listen to every field element change.
-		this.state.getStateFormElement(formId).addEventListener(
+		window.addEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
@@ -646,6 +650,22 @@ export class ConditionalTags {
 							value = this.state.getStateElementValue(innerName, formId)[innerValue] === innerValue ? innerValue : '';
 						}
 						break;
+					case 'select':
+					case 'country':
+						value = this.state.getStateElementValue(innerName, formId).map((item) => item?.value);
+
+						if (value.length === 0) {
+							value = '';
+						}
+
+						if (innerCondition === this.IS) {
+							innerCondition = this.C;
+						}
+
+						if (innerCondition === this.ISN) {
+							innerCondition = this.CN;
+						}
+						break;
 					default:
 						// Get element value by name.
 						value = this.state.getStateElementValue(innerName, formId);
@@ -707,6 +727,25 @@ export class ConditionalTags {
 							value = this.state.getStateElementValue(inner[0], formId)[inner[2]] === inner[2] ? inner[2] : '';
 						}
 						break;
+					case 'select':
+					case 'country':
+						value = this.state.getStateElementValue(inner[0], formId).map((item) => item?.value);
+
+						if (value.length === 0) {
+							value = '';
+						}
+
+						if (inner[1] === this.IS) {
+							inner[1] = this.C;
+						}
+
+						if (inner[1] === this.ISN) {
+							inner[1] = this.CN;
+						}
+						break;
+					case 'phone':
+						value = this.utils.getPhoneCombinedValue(formId, inner[0]);
+						break;
 					default:
 						// Get element value by name.
 						value = this.state.getStateElementValue(inner[0], formId);
@@ -742,8 +781,8 @@ export class ConditionalTags {
 	 * 
 	 * @returns {vodi}
 	 */
-	removeEvents(formId) {
-		this.state.getStateFormElement(formId)?.removeEventListener(
+	removeEvents() {
+		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);

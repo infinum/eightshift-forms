@@ -31,7 +31,7 @@ export class Geolocation {
 		}
 
 		// Set select fields based on geolocation.
-		this.state.getStateFormElement(formId).addEventListener(
+		window?.addEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);
@@ -47,8 +47,8 @@ export class Geolocation {
 	 * 
 	 * @returns {vodi}
 	 */
-	removeEvents(formId) {
-		this.state.getStateFormElement(formId)?.removeEventListener(
+	removeEvents() {
+		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onSetSelectField
 		);
@@ -79,38 +79,49 @@ export class Geolocation {
 		].forEach((select) => {
 			const name = select.name;
 
-			const typeInternal = this.state.getStateElementTypeField(name, formId);
 			const custom = this.state.getStateElementCustom(name, formId);
 
-			const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, custom);
+			const selectValue = this.getSelectSelectedValueByCustomData(countryCookie, custom);
 
 			if (selectValue) {
-				this.utils.setManualSelectValue(formId, name, selectValue);
+				this.utils.setManualSelectValue(formId, name, [
+					{
+						value: selectValue?.value ?? '',
+						meta: selectValue?.customProperties ?? {},
+					}
+				]);
 			}
 		});
 
-		if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && this.state.getStateFormConfigPhoneUseSync(formId)) {
-			[...this.state.getStateElementByTypeField('phone', formId)].forEach((phone) => {
-				const name = phone.name;
+		[...this.state.getStateElementByTypeField('phone', formId)].forEach((phone) => {
+			const name = phone.name;
 
-				const typeInternal = this.state.getStateElementTypeField(name, formId);
-				const custom = this.state.getStateElementCustom(name, formId);
+			const custom = this.state.getStateElementCustom(name, formId);
 
-				const selectValue = this.utils.getSelectSelectedValueByCustomData(typeInternal, countryCookie, custom);
+			const selectValue = this.getSelectSelectedValueByCustomData(countryCookie, custom);
 
-				if (selectValue) {
-					this.utils.setManualPhoneValue(
-						formId,
-						name,
-						{
-							prefix: selectValue,
-							value: this.state.getStateElementValue(name, formId),
-						}
-					);
-				}
-			});
-		}
+			if (selectValue) {
+				this.utils.setManualPhoneValue(formId, name, {
+					prefix: selectValue?.value ?? '',
+					value: '',
+					meta: selectValue?.customProperties ?? {},
+				});
+			}
+		});
 	};
+
+	/**
+	 * Get selected value by custom data of select for country and phone.
+	 *
+	 * @param {string} type Type for field.
+	 * @param {string} value Value to check.
+	 * @param {object} choices Choices object.
+	 *
+	 * @returns {string}
+	 */
+	getSelectSelectedValueByCustomData(value, choices) {
+		return choices?.config?.choices?.find((item) => item?.customProperties?.[this.state.getStateAttribute('selectCountryCode')] === value);
+	}
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.

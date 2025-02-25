@@ -14,6 +14,7 @@ use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use Throwable;
@@ -130,7 +131,7 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 				UtilsApiHelper::getApiSuccessPublicOutput(
 					\esc_html__('Success geolocation', 'eightshift-forms'),
 					[
-						'formId' => $geolocation,
+						UtilsHelper::getStateResponseOutputKey('geoId') => $geolocation,
 					],
 					$debug
 				)

@@ -35,6 +35,8 @@ $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder',
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
 $selectTwSelectorsData = Helpers::checkAttr('selectTwSelectorsData', $attributes, $manifest);
 
+$selectId = $selectName . '-' . Helpers::getUnique();
+
 // Fix for getting attribute that is part of the child component.
 $selectHideLabel = false;
 $selectFieldLabel = $attributes[Helpers::getAttrKey('selectFieldLabel', $attributes, $manifest)] ?? '';
@@ -90,7 +92,7 @@ $select = '
 	<select
 		class="' . esc_attr($selectClass) . '"
 		name="' . esc_attr($selectName) . '"
-		id="' . esc_attr($selectName) . '"
+		id="' . esc_attr($selectId) . '"
 		' . disabled($selectIsDisabled, true, false) . '
 		' . $selectAttrsOutput . '
 	>
@@ -102,7 +104,7 @@ $select = '
 
 $fieldOutput = [
 	'fieldContent' => $select,
-	'fieldId' => $selectName,
+	'fieldId' => $selectId,
 	'fieldName' => $selectName,
 	'fieldTwSelectorsData' => $selectTwSelectorsData,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),

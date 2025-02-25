@@ -36,6 +36,8 @@ $dateFieldAttrs = Helpers::checkAttr('dateFieldAttrs', $attributes, $manifest);
 $dateUseLabelAsPlaceholder = Helpers::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
 $dateTwSelectorsData = Helpers::checkAttr('dateTwSelectorsData', $attributes, $manifest);
 
+$dateId = $dateName . '-' . Helpers::getUnique();
+
 // Fix for getting attribute that is part of the child component.
 $dateHideLabel = false;
 $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
@@ -77,7 +79,7 @@ $date = '
 	<input
 		class="' . esc_attr($dateClass) . '"
 		name="' . esc_attr($dateName) . '"
-		id="' . esc_attr($dateName) . '"
+		id="' . esc_attr($dateId) . '"
 		type="' . esc_attr($dateType) . '"
 		' . disabled($dateIsDisabled, true, false) . '
 		' . wp_readonly($dateIsReadOnly, true, false) . '
@@ -91,7 +93,7 @@ echo Helpers::render(
 	array_merge(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $date,
-			'fieldId' => $dateName,
+			'fieldId' => $dateId,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType($dateType === 'date' ? 'date' : 'dateTime'),
 			'fieldName' => $dateName,
 			'fieldTwSelectorsData' => $dateTwSelectorsData,

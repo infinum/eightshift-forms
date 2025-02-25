@@ -33,7 +33,6 @@ class Testfilters implements ServiceInterface
 			'es_forms_block_form_tracking_event_name' => ['getBlockFormTrackingEventName', 2],
 			'es_forms_block_form_tracking_additional_data' => ['getBlockFormTrackingAdditionalData', 2],
 			'es_forms_block_form_data_type_selector' => ['getFormDataTypeSelector', 2],
-			'es_forms_block_form_phone_sync' => ['getFormPhoneSync', 2],
 			'es_forms_block_form_global_msg_headings' => ['getGlobalMsgHeadings'],
 
 			'es_forms_block_form_selector_additional_content' => ['getBlockFormSelectorAdditionalContent'],
@@ -324,25 +323,6 @@ class Testfilters implements ServiceInterface
 		}
 
 		return 'my-new-selector';
-	}
-
-	/**
-	 * Set phone sync settings.
-	 *
-	 * This filter will override global settings for phone sync.
-	 *
-	 * @param string $formType Type of form used like greenhouse, hubspot, etc.
-	 * @param string $formId Form ID.
-	 *
-	 * @return bool
-	 */
-	public function getFormPhoneSync(string $formType, string $formId): bool
-	{
-		if ($formType === 'hubspot') {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**

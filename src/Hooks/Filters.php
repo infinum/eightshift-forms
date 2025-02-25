@@ -31,6 +31,7 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
+use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
@@ -82,7 +83,6 @@ final class Filters
 					'trackingEventName',
 					'trackingAdditionalData',
 					'dataTypeSelector',
-					'phoneSync',
 					'globalMsgHeadings',
 					'additionalContent',
 					'additionalHiddenFields',
@@ -124,6 +124,7 @@ final class Filters
 				'country' => [
 					'additionalContent',
 					'alternativeDataSet',
+					'customOrder',
 				],
 				'date' => [
 					'additionalContent',
@@ -283,10 +284,12 @@ final class Filters
 					'afterCustomResultOutputProcess',
 				],
 				SettingsCorvus::SETTINGS_TYPE_KEY => [
+					'prePostParams',
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
 				SettingsPaycek::SETTINGS_TYPE_KEY => [
+					'prePostParams',
 					'beforeSuccessResponse',
 					'afterCustomResultOutputProcess',
 				],
@@ -435,6 +438,8 @@ final class Filters
 			SettingsDebug::SETTINGS_DEBUG_DEBUGGING_KEY,
 
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY,
+
+			SettingsGeneral::INCREMENT_META_KEY,
 		];
 	}
 }

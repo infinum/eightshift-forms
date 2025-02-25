@@ -737,17 +737,27 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$i = 0;
-				$count = \count($items);
+
+				$tableHead = [];
+				$tableContent = [];
+
 				foreach (\array_reverse($items) as $item) {
 					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-					$entryValue = $item['entryValue'] ?? [];
+					$entryValues = $item['entryValue'] ?? [];
 					$createdAt = $item['createdAt'] ?? '';
 
-					$content = "<ul class='is-list is-list--break-words' id='entry-{$id}'>";
-					foreach ($entryValue as $entryKey => $entryValue) {
+					// Prefixes are here to ensure that the columns are sorted correctly.
+					$tableHead['___bulk'] = \__('Bulk', 'eightshift-forms');
+					$tableContent[$id]['___bulk'] = Helpers::ensureString($this->getLeftContent($item));
+					$tableHead['__id'] = \__('ID', 'eightshift-forms');
+					$tableContent[$id]['__id'] = $id;
+					$tableHead['_createdAt'] = \__('Created', 'eightshift-forms');
+					$tableContent[$id]['_createdAt'] = $createdAt;
+
+					foreach ($entryValues as $entryKey => $entryValue) {
 						if (\gettype($entryValue) === 'array') {
 							if (\array_key_first($entryValue) === 0) {
-								$entryValue = \implode(UtilsConfig::DELIMITER, $entryValue);
+								$entryValue = \implode('<br/>', $entryValue);
 							} else {
 								$entryValue = \array_map(
 									function ($value, $key) {
@@ -756,37 +766,39 @@ class FormAdminMenu extends AbstractAdminMenu
 									$entryValue,
 									\array_keys($entryValue)
 								);
-								$entryValue = \implode(UtilsConfig::DELIMITER, $entryValue);
+								$entryValue = \implode('<br/>', $entryValue);
 							}
+						}
+
+						// Legacy setup for the delimiter.
+						if (\gettype($entryValue) === 'string' && \str_contains($entryValue, UtilsConfig::DELIMITER)) {
+							$entryValue = \explode(UtilsConfig::DELIMITER, $entryValue);
+							$entryValue = \implode('<br/>', $entryValue);
 						}
 
 						if (\filter_var($entryValue, \FILTER_VALIDATE_URL)) {
 							$entryValue = "<a href='{$entryValue}' target='_blank' rel='noopener noreferrer'>{$entryValue}</a>";
 						}
 
-						$content .= "<li><strong>{$entryKey}:</strong><span>- {$entryValue}</span></li>";
+						if (!isset($tableHead[$entryKey])) {
+							$tableHead[$entryKey] = \ucfirst($entryKey);
+						}
+						$tableContent[$id][$entryKey] = $entryValue;
 					}
-					$content .= '</ul>';
 
-					$output[] = Helpers::render('card-inline', [
-						// Translators: %s is the entry ID.
-						'cardInlineTitle' => \sprintf(\__('Entry %s', 'eightshift-forms'), $id),
-						'cardInlineSubTitle' => $createdAt,
-						'cardInlineIcon' => UtilsHelper::getUtilsIcons('post'),
-						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
-						'cardInlineContent' => $content,
-						'cardInlineUseDivider' => true,
-						'cardInlineLastItem' => $i === $count - 1,
-						'additionalAttributes' => [
-							UtilsHelper::getStateAttribute('bulkId') => $id,
-						],
-						'additionalClass' => Helpers::classnames([
-							UtilsHelper::getStateSelectorAdmin('listingItem'),
-						]),
-					]);
+					\ksort($tableHead);
 
 					$i++;
 				}
+
+				$output[] = Helpers::render('table', [
+					'tableContent' => $tableContent,
+					'tableHead' => $tableHead,
+					'additionalClass' => Helpers::classnames([
+						UtilsHelper::getStateSelectorAdmin('listingItem'),
+					]),
+					'selectorClass' => Helpers::getComponent('admin-listing')['componentClass'],
+				]);
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
 				foreach ($items as $item) {

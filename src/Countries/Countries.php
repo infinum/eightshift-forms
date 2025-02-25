@@ -96,6 +96,8 @@ class Countries implements CountriesInterface
 			$output,
 		);
 
+		$output = $this->customOrder($output);
+
 		if ($useFullOutput) {
 			return $output;
 		}
@@ -114,6 +116,60 @@ class Countries implements CountriesInterface
 			)),
 			'codes' => $output['default']['codes'],
 		];
+	}
+
+	/**
+	 * Custom order countries.
+	 *
+	 * @param array<string, mixed> $output Output array.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function customOrder(array $output): array
+	{
+		$data = [];
+		$filterName = UtilsHooksHelper::getFilterName(['block', 'country', 'customOrder']);
+		if (\has_filter($filterName)) {
+			$data = \apply_filters($filterName, []);
+		}
+
+		if (!$data) {
+			return $output;
+		}
+
+		foreach ($data as $key => $value) {
+			if (!isset($output[$key])) {
+				continue;
+			}
+
+			$items = $output[$key]['items'] ?? [];
+
+			if (!$items) {
+				continue;
+			}
+
+			$ordered = [];
+			$remaining = [];
+
+			foreach ($items as $item) {
+				$code = $item[1] ?? '';
+
+				if (!$code) {
+					continue;
+				}
+
+				// Check if the second element matches any key in the provided keys.
+				if (\in_array($item[1], $value, true)) {
+					$ordered[] = $item;
+				} else {
+					$remaining[] = $item;
+				}
+			}
+
+			$output[$key]['items'] = \array_merge($ordered, $remaining);
+		}
+
+		return $output;
 	}
 
 	/**

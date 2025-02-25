@@ -34,7 +34,7 @@ domReady(() => {
 		import('./form').then(({ Form }) => {
 			new Form(utils);
 
-			utils.dispatchFormEvent(window, state.getStateEvent('formManualInitLoaded'));
+			utils.dispatchFormEventWindow(state.getStateEvent('formManualInitLoaded'));
 		});
 	}
 });

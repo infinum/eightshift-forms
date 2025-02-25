@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Settings\Settings;
 
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -108,7 +109,8 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		$data = \apply_filters($filter, $formId);
 
 		$formAdditionalProps['formAttrs'] = [
-			UtilsHelper::getStateAttribute('formId') => $formId,
+			UtilsHelper::getStateAttribute('formFid') => $formId,
+			UtilsHelper::getStateAttribute('formId') => FormsHelper::getFormUniqueHash(),
 			UtilsHelper::getStateAttribute('formType') => $internalType,
 			UtilsHelper::getStateAttribute('settingsType') => $type,
 		];

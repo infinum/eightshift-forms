@@ -1,0 +1,28 @@
+.es-table {
+	position: relative;
+	overflow: auto;
+
+	table {
+		width: 100%;
+		border-spacing: 0;
+	}
+
+	thead {
+		background-color: var(--global-colors-esf-gray-100);
+	}
+
+	th {
+		column-span: none;
+		padding: 0.5rem;
+		text-align: left;
+		border-right: 1px solid var(--global-colors-esf-gray-200);
+		border-bottom: 1px solid var(--global-colors-esf-gray-200);
+	}
+
+	td {
+		padding: 0.5rem;
+		text-align: left;
+		border-right: 1px solid var(--global-colors-esf-gray-200);
+		border-bottom: 1px solid var(--global-colors-esf-gray-200);
+	}
+}

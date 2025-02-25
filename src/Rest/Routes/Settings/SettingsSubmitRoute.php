@@ -10,14 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Validation\ValidationPatternsInterface;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 
@@ -26,32 +20,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
  */
 class SettingsSubmitRoute extends AbstractFormSubmit
 {
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
-	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param SecurityInterface $security Inject security methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
-	 */
-	public function __construct(
-		ValidatorInterface $validator,
-		ValidationPatternsInterface $validationPatterns,
-		LabelsInterface $labels,
-		CaptchaInterface $captcha,
-		SecurityInterface $security,
-		FormSubmitMailerInterface $formSubmitMailer
-	) {
-		$this->validator = $validator;
-		$this->validationPatterns = $validationPatterns;
-		$this->labels = $labels;
-		$this->captcha = $captcha;
-		$this->security = $security;
-		$this->formSubmitMailer = $formSubmitMailer;
-	}
-
 	/**
 	 * Route slug.
 	 */
@@ -78,6 +46,16 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	}
 
 	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -98,12 +76,19 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 		// If form ID is not set this is considered an global setting.
 		// Save all fields in the settings.
 		foreach ($params as $key => $value) {
+			$fieldValue = $value['value'] ?? '';
+			$fieldType = $value['type'] ?? '';
+
+			if ($fieldType === 'checkbox' || $fieldType === 'select' || $fieldType === 'country') {
+				$fieldValue = \implode(UtilsConfig::DELIMITER, $fieldValue);
+			}
+
 			// Check if key needs updating or deleting.
-			if ($value['value']) {
+			if ($fieldValue) {
 				if (!$formId) {
-					\update_option($key, $value['value']);
+					\update_option($key, $fieldValue);
 				} else {
-					\update_post_meta((int) $formId, $key, $value['value']);
+					\update_post_meta((int) $formId, $key, $fieldValue);
 				}
 			} else {
 				if (!$formId) {

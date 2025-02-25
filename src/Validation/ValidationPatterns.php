@@ -15,7 +15,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 /**
  * Class ValidationPatterns
  */
-class ValidationPatterns implements ValidationPatternsInterface
+class ValidationPatterns
 {
 	/**
 	 * Custom validation patterns - public.
@@ -59,7 +59,7 @@ class ValidationPatterns implements ValidationPatternsInterface
 	 *
 	 * @return array<int, array<string, string>>
 	 */
-	public function getValidationPatternsEditor(): array
+	public static function getValidationPatternsEditor(): array
 	{
 		return \array_map(
 			static function ($item) {
@@ -71,7 +71,7 @@ class ValidationPatterns implements ValidationPatternsInterface
 					'value' => $label,
 				];
 			},
-			$this->getValidationPatterns()
+			static::getValidationPatterns()
 		);
 	}
 
@@ -82,10 +82,10 @@ class ValidationPatterns implements ValidationPatternsInterface
 	 *
 	 * @return array<string, string>
 	 */
-	public function getValidationPatternOutput(string $pattern): array
+	public static function getValidationPatternOutput(string $pattern): array
 	{
 		$patterns = \array_filter(
-			$this->getValidationPatterns(),
+			static::getValidationPatterns(),
 			static function ($item) use ($pattern) {
 				return $item['label'] === $pattern;
 			}
@@ -109,7 +109,7 @@ class ValidationPatterns implements ValidationPatternsInterface
 	 *
 	 * @return array<int, array<string, string>>
 	 */
-	private function getValidationPatterns(): array
+	public static function getValidationPatterns(): array
 	{
 		$output = [
 			...self::VALIDATION_PATTERNS,

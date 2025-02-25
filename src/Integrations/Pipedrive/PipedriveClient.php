@@ -12,7 +12,6 @@ namespace EightshiftForms\Integrations\Pipedrive;
 
 use CURLFile;
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -48,23 +47,6 @@ class PipedriveClient implements PipedriveClientInterface
 	 * Issue type epic.
 	 */
 	public const ISSUE_TYPE_EPIC = '10000';
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
-	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
-		$this->enrichment = $enrichment;
-	}
 
 	/**
 	 * Return person fields.
@@ -489,15 +471,6 @@ class PipedriveClient implements PipedriveClientInterface
 		}
 
 		$output['name'] = $params[$personName]['value'] ?? '';
-
-		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsPipedrive::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
-		}
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);

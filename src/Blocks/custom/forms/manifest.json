@@ -55,9 +55,6 @@
 		"formsFormDataTypeSelector": {
 			"type": "string"
 		},
-		"formsCustomName": {
-			"type": "string"
-		},
 		"formsAttrs": {
 			"type": "object"
 		},

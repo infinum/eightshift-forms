@@ -35,7 +35,6 @@ $formActionExternal = Helpers::checkAttr('formActionExternal', $attributes, $man
 $formMethod = Helpers::checkAttr('formMethod', $attributes, $manifest);
 $formId = Helpers::checkAttr('formId', $attributes, $manifest);
 $formContent = Helpers::checkAttr('formContent', $attributes, $manifest);
-$formPhoneSync = Helpers::checkAttr('formPhoneSync', $attributes, $manifest);
 $formPhoneDisablePicker = Helpers::checkAttr('formPhoneDisablePicker', $attributes, $manifest);
 $formHasSteps = Helpers::checkAttr('formHasSteps', $attributes, $manifest);
 $formUseSingleSubmit = Helpers::checkAttr('formUseSingleSubmit', $attributes, $manifest);
@@ -76,10 +75,6 @@ if ($formSecureData) {
 	$formAttrs[UtilsHelper::getStateAttribute('formSecureData')] = $formSecureData; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 }
 
-if ($formPhoneSync) {
-	$formAttrs[UtilsHelper::getStateAttribute('phoneSync')] = esc_attr($formPhoneSync);
-}
-
 if ($formPhoneDisablePicker) {
 	$formAttrs[UtilsHelper::getStateAttribute('phoneDisablePicker')] = esc_attr($formPhoneDisablePicker);
 }
@@ -89,7 +84,9 @@ if ($formCustomName) {
 }
 
 if ($formPostId) {
-	$formAttrs[UtilsHelper::getStateAttribute('formId')] = esc_attr($formPostId);
+	$formAttrs[UtilsHelper::getStateAttribute('formFid')] = esc_attr($formPostId);
+	// Generate a random form hash for unique form identification.
+	$formAttrs[UtilsHelper::getStateAttribute('formId')] = esc_attr(FormsHelper::getFormUniqueHash());
 }
 
 $formAttrs[UtilsHelper::getStateAttribute('postId')] = esc_attr((string) get_the_ID());

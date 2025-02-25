@@ -29,6 +29,9 @@
 		"fieldAfterContent": {
 			"type": "string"
 		},
+		"fieldSuffixContent": {
+			"type": "string"
+		},
 		"fieldName": {
 			"type": "string"
 		},

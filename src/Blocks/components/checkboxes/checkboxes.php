@@ -25,6 +25,8 @@ $checkboxesUseLabelAsPlaceholder = Helpers::checkAttr('checkboxesUseLabelAsPlace
 $checkboxesPlaceholder = Helpers::checkAttr('checkboxesPlaceholder', $attributes, $manifest);
 $checkboxesTwSelectorsData = Helpers::checkAttr('checkboxesTwSelectorsData', $attributes, $manifest);
 
+$checkboxesId = $checkboxesName . '-' . Helpers::getUnique();
+
 // Add internal counter name key.
 $checkboxesContent = (string) preg_replace_callback('/name=""/', function () use ($checkboxesName) {
 	return 'name="' . $checkboxesName . '"';
@@ -32,14 +34,14 @@ $checkboxesContent = (string) preg_replace_callback('/name=""/', function () use
 
 // Add internal counter id key.
 $indexId = 0;
-$checkboxesContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $checkboxesName) {
-	return 'id="' . $checkboxesName . '[' . $indexId++ . ']"';
+$checkboxesContent = (string) preg_replace_callback('/id=""/', function () use (&$indexId, $checkboxesId) {
+	return 'id="' . $checkboxesId . '[' . $indexId++ . ']"';
 }, $checkboxesContent);
 
 // Add internal counter for key.
 $indexLabel = 0;
-$checkboxesContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $checkboxesName) {
-	return 'for="' . $checkboxesName . '[' . $indexLabel++ . ']"';
+$checkboxesContent = (string) preg_replace_callback('/for=""/', function () use (&$indexLabel, $checkboxesId) {
+	return 'for="' . $checkboxesId . '[' . $indexLabel++ . ']"';
 }, $checkboxesContent);
 
 // Additional content filter.
@@ -82,7 +84,7 @@ $checkboxes = "
 
 $fieldOutput = [
 	'fieldContent' => $checkboxes,
-	'fieldId' => $checkboxesName,
+	'fieldId' => $checkboxesId,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 	'fieldName' => $checkboxesName,
 	'fieldTwSelectorsData' => $checkboxesTwSelectorsData,

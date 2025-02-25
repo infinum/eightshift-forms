@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -31,23 +30,6 @@ class MailchimpClient implements MailchimpClientInterface
 	 * Transient cache name for items.
 	 */
 	public const CACHE_MAILCHIMP_ITEMS_TRANSIENT_NAME = 'es_mailchimp_items_cache';
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
-	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
-		$this->enrichment = $enrichment;
-	}
 
 	/**
 	 * Return items.
@@ -183,7 +165,7 @@ class MailchimpClient implements MailchimpClientInterface
 
 		$email = UtilsGeneralHelper::getEmailParamsField($params);
 		$emailHash = \md5(\strtolower($email));
-		$preparedParams = $this->prepareParams($params, $formId);
+		$preparedParams = $this->prepareParams($params);
 		$tags = $this->prepareTags($params);
 
 		$body = [
@@ -469,22 +451,12 @@ class MailchimpClient implements MailchimpClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
-	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params, string $formId): array
+	private function prepareParams(array $params): array
 	{
 		$output = [];
-
-		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
-		}
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
@@ -545,12 +517,7 @@ class MailchimpClient implements MailchimpClientInterface
 			return [];
 		}
 
-		// For multi select field.
-		if (\is_array($value)) {
-			return $value;
-		}
-
-		return \explode(UtilsConfig::DELIMITER, $params[$key]['value']);
+		return $value;
 	}
 
 	/**

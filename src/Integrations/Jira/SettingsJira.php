@@ -281,7 +281,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 							[
 								'component' => 'intro',
 								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
-								'introHelp' => UtilsSettingsOutputHelper::getPartialFieldTags(UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS])),
+								'introHelp' => UtilsSettingsOutputHelper::getPartialFieldTags(UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES])),
 							],
 							[
 								'component' => 'divider',

@@ -2,4 +2,8 @@
 	&.es-form-is-hidden {
 		opacity: 0.4;
 	}
+
+	&--checked {
+		color: var(--global-colors-esf-admin-accent);
+	}
 }

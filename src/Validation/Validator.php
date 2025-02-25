@@ -42,13 +42,6 @@ class Validator extends AbstractValidation
 	protected $labels;
 
 	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
-
-	/**
 	 * Instance variable for manifest cache.
 	 *
 	 * @var ManifestCacheInterface
@@ -108,16 +101,13 @@ class Validator extends AbstractValidation
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
-	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
 	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 */
 	public function __construct(
 		LabelsInterface $labels,
-		ValidationPatternsInterface $validationPatterns,
 		ManifestCacheInterface $manifestCache
 	) {
 		$this->labels = $labels;
-		$this->validationPatterns = $validationPatterns;
 		$this->manifestCache = $manifestCache;
 	}
 
@@ -244,7 +234,7 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
-						if (\count(\explode(UtilsConfig::DELIMITER, $inputValue)) < $dataValue && !empty($inputValue)) {
+						if (\is_array($inputValue) && \count($inputValue) < $dataValue && !empty($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
@@ -285,17 +275,13 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for min array items length.
 					case 'minCount':
-						$inputValue = $inputValue ? \explode(UtilsConfig::DELIMITER, $inputValue) : [];
-
-						if ($dataValue > \count($inputValue)) {
+						if (\is_array($inputValue) && $dataValue > \count($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMinCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for max array items length.
 					case 'maxCount':
-						$inputValue = $inputValue ? \explode(UtilsConfig::DELIMITER, $inputValue) : [];
-
-						if ($dataValue < \count($inputValue)) {
+						if (\is_array($inputValue) && $dataValue < \count($inputValue)) {
 							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMaxCount', $formId), $dataValue);
 						}
 						break;
@@ -316,7 +302,7 @@ class Validator extends AbstractValidation
 							break;
 						}
 
-						$pattern = $this->validationPatterns->getValidationPatternOutput($dataValue);
+						$pattern = ValidationPatterns::getValidationPatternOutput($dataValue);
 
 						$patternValue = $pattern['value'] ?? '';
 						$patternLabel = $pattern['label'] ?? '';

@@ -35,6 +35,8 @@ $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $man
 $ratingTwSelectorsData = Helpers::checkAttr('ratingTwSelectorsData', $attributes, $manifest);
 $ratingHideLabel = false;
 
+$ratingId = $ratingName . '-' . Helpers::getUnique();
+
 $twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating']);
 
 $ratingClass = Helpers::classnames([
@@ -82,7 +84,7 @@ $rating = '
 	<input
 		class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'input', "{$componentClass}__input")) . '"
 		name="' . esc_attr($ratingName) . '"
-		id="' . esc_attr($ratingName) . '"
+		id="' . esc_attr($ratingId) . '"
 		value="' . esc_attr($ratingValue) . '"
 		step="1"
 		min="0"
@@ -105,7 +107,7 @@ echo Helpers::render(
 	array_merge(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $rating,
-			'fieldId' => $ratingName,
+			'fieldId' => $ratingId,
 			'fieldName' => $ratingName,
 			'fieldTwSelectorsData' => $ratingTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('rating'),

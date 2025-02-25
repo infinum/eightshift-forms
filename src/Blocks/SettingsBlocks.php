@@ -57,7 +57,6 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 	public const SETTINGS_BLOCK_PHONE_OVERRIDE_GLOBAL_SETTINGS_KEY = 'block-phone-override-global-settings';
 	public const SETTINGS_BLOCK_PHONE_DATA_SET_KEY = 'block-phone-data-set';
 	public const SETTINGS_BLOCK_PHONE_DATA_SET_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_DATA_SET_KEY . '-global';
-	public const SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY = 'block-phone-disable-sync';
 	public const SETTINGS_BLOCK_PHONE_DISABLE_PICKER_KEY = 'block-phone-disable-picker';
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY = 'block-phone-use-country-data';
 	public const SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_GLOBAL_KEY = self::SETTINGS_BLOCK_PHONE_USE_COUNTRY_DATA_KEY . '-global';
@@ -187,26 +186,6 @@ class SettingsBlocks implements UtilsSettingGlobalInterface, UtilsSettingInterfa
 									),
 								],
 							] : []),
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => 'true',
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Disable phone/country sync on change', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY, $formId),
-										'checkboxValue' => self::SETTINGS_BLOCK_PHONE_DISABLE_SYNC_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
-									],
-								],
-							],
 						],
 					],
 				],

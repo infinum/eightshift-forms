@@ -139,7 +139,7 @@ export const SelectOptions = (attributes) => {
 
 								{selectMinCount > 0 && !isOptionDisabled(getAttrKey('selectMinCount', attributes, manifest), selectDisabledOptions) &&
 									<Button
-										label={__('Disable', 'eightshift-forms')}
+										label={__('Clear', 'eightshift-forms')}
 										icon={icons.clear}
 										onClick={() => setAttributes({ [getAttrKey('selectMinCount', attributes, manifest)]: undefined })}
 										className='es-button-square-32 es-button-icon-24'
@@ -163,7 +163,7 @@ export const SelectOptions = (attributes) => {
 
 								{selectMaxCount > 0 && !isOptionDisabled(getAttrKey('selectMaxCount', attributes, manifest), selectDisabledOptions) &&
 									<Button
-										label={__('Disable', 'eightshift-forms')}
+										label={__('Clear', 'eightshift-forms')}
 										icon={icons.clear}
 										onClick={() => setAttributes({ [getAttrKey('selectMaxCount', attributes, manifest)]: undefined })}
 										className='es-button-square-32 es-button-icon-24'

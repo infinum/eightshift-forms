@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Jira;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -40,23 +39,6 @@ class JiraClient implements JiraClientInterface
 	 * Issue type epic.
 	 */
 	public const ISSUE_TYPE_EPIC = '10000';
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
-	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
-		$this->enrichment = $enrichment;
-	}
 
 	/**
 	 * Return projects.
@@ -177,7 +159,7 @@ class JiraClient implements JiraClientInterface
 		$url = $this->getBaseUrl() . "issue";
 
 		$body = [
-			'fields' => $this->prepareParams($params, $formId),
+			'fields' => $this->prepareParams($params, $files, $formId),
 		];
 
 		$response = \wp_remote_post(
@@ -470,11 +452,12 @@ class JiraClient implements JiraClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
+	 * @param array<string, mixed> $files Files.
 	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, string>
 	 */
-	private function prepareParams(array $params, string $formId): array
+	private function prepareParams(array $params, array $files, string $formId): array
 	{
 		$output = [];
 
@@ -494,17 +477,10 @@ class JiraClient implements JiraClientInterface
 			return $output;
 		}
 
-		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsJira::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
-		}
-
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+
+		$params = \array_merge($params, $files);
 
 		$formTitle = \get_the_title((int) $formId);
 
@@ -534,17 +510,26 @@ class JiraClient implements JiraClientInterface
 				$i = 0;
 				foreach ($params as $param) {
 					$value = $param['value'] ?? '';
-					if (!$value) {
+					$name = $param['name'] ?? '';
+					$type = $param['type'] ?? '';
+
+					if (!$value || !$name || !$type) {
 						continue;
+					}
+
+					if ($type === 'file') {
+						$value = \array_map(
+							static function (string $file) {
+								$filename = \pathinfo($file, \PATHINFO_FILENAME);
+								$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+								return "{$filename}.{$extension}";
+							},
+							$value
+						);
 					}
 
 					if (\is_array($value)) {
 						$value = \implode(', ', $value);
-					}
-
-					$name = $param['name'] ?? '';
-					if (!$name) {
-						continue;
 					}
 
 					$contentOutput[] = [
@@ -683,13 +668,26 @@ class JiraClient implements JiraClientInterface
 				$i = 0;
 				foreach ($params as $param) {
 					$value = $param['value'] ?? '';
-					if (!$value) {
+					$name = $param['name'] ?? '';
+					$type = $param['type'] ?? '';
+
+					if (!$value || !$name || !$type) {
 						continue;
 					}
 
-					$name = $param['name'] ?? '';
-					if (!$name) {
-						continue;
+					if ($type === 'file') {
+						$value = \array_map(
+							static function (string $file) {
+								$filename = \pathinfo($file, \PATHINFO_FILENAME);
+								$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+								return "{$filename}.{$extension}";
+							},
+							$value
+						);
+					}
+
+					if (\is_array($value)) {
+						$value = \implode(', ', $value);
 					}
 
 					$descriptionOutput .= \esc_html($name) . ':' . \PHP_EOL . \esc_html($value) . \PHP_EOL . \PHP_EOL;

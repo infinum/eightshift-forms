@@ -47,10 +47,6 @@
 		"formParentSettings": {
 			"type": "object"
 		},
-		"formPhoneSync": {
-			"type": "boolean",
-			"default": false
-		},
 		"formPhoneDisablePicker": {
 			"type": "boolean",
 			"default": false

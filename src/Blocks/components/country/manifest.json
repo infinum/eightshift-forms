@@ -62,12 +62,35 @@
 			"type": "boolean",
 			"default": false
 		},
+		"countryValue": {
+			"type": "string"
+		},
 		"countryValueType": {
 			"type": "string",
 			"default": "countryName"
 		},
 		"countryTwSelectorsData": {
 			"type": "array"
+		},
+		"countryIsMultiple": {
+			"type": "boolean",
+			"default": false
+		},
+		"countryMinCount": {
+			"type": "integer"
+		},
+		"countryMaxCount": {
+			"type": "integer"
+		}
+	},
+	"options": {
+		"countryMinCount": {
+			"min":  0,
+			"step": 1
+		},
+		"countryMaxCount": {
+			"min":  1,
+			"step": 1
 		}
 	}
 }

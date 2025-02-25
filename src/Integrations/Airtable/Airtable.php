@@ -12,6 +12,7 @@ namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\MapperInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
@@ -345,7 +346,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	public function getDynamicBlockOutput(array $attributes, string $formId): string
 	{
 		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
-		$type = $formDetails['type'] ?? '';
+		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
 
 		if ($type !== SettingsAirtable::SETTINGS_TYPE_KEY) {
 			return '';

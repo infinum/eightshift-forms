@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\ActiveCampaign;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftForms\Validation\ValidationPatternsInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 
@@ -41,29 +41,24 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ValidationPatternsInterface $validationPatterns Inject validation patterns methods.
+	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 * @param SecurityInterface $security Inject security methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
-	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign which holds ActiveCampaign connect data.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
+	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
-		ValidationPatternsInterface $validationPatterns,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
 		SecurityInterface $security,
 		FormSubmitMailerInterface $formSubmitMailer,
+		EnrichmentInterface $enrichment,
 		ActiveCampaignClientInterface $activeCampaignClient
 	) {
-		$this->validator = $validator;
-		$this->validationPatterns = $validationPatterns;
-		$this->labels = $labels;
-		$this->captcha = $captcha;
-		$this->security = $security;
-		$this->formSubmitMailer = $formSubmitMailer;
+		parent::__construct($validator, $labels, $captcha, $security, $formSubmitMailer, $enrichment);
 		$this->activeCampaignClient = $activeCampaignClient;
 	}
 
@@ -104,11 +99,9 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 		// Make an additional requests to the API.
 		if ($response['status'] === UtilsConfig::STATUS_SUCCESS && $contactId) {
 			// If form has action to save tags.
-			$actionTags = $params['actionTags']['value'] ?? '';
+			$actionTags = $params['actionTags']['value'] ?? [];
 
 			if ($actionTags) {
-				$actionTags = \explode(UtilsConfig::DELIMITER, $actionTags);
-
 				// Create API req for each tag.
 				foreach ($actionTags as $tag) {
 					$this->activeCampaignClient->postTag(
@@ -119,11 +112,9 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 			}
 
 			// If form has action to save list.
-			$actionLists = $params['actionLists']['value'] ?? '';
+			$actionLists = $params['actionLists']['value'] ?? [];
 
 			if ($actionLists) {
-				$actionLists = \explode(UtilsConfig::DELIMITER, $actionLists);
-
 				// Create API req for each list.
 				foreach ($actionLists as $list) {
 					$this->activeCampaignClient->postList(

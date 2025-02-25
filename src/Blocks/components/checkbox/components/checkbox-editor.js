@@ -29,6 +29,7 @@ export const CheckboxEditor = (attributes) => {
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
 	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
 	const checkboxIsHidden = checkAttr('checkboxIsHidden', attributes, manifest);
+	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
 
@@ -42,6 +43,7 @@ export const CheckboxEditor = (attributes) => {
 	const checkboxLabelClass = classnames([
 		selector(componentClass, componentClass, 'label'),
 		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
+		selector(checkboxIsChecked, componentClass, 'label', 'checked'),
 	]);
 
 	return (

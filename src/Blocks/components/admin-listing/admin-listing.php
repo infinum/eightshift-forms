@@ -93,7 +93,11 @@ $formClasses = Helpers::classnames([
 	Helpers::selector($componentClass, $componentClass, 'form'),
 ]);
 ?>
-<form class="<?php echo esc_attr($formClasses); ?>" <?php echo esc_attr(UtilsHelper::getStateAttribute('formId')); ?>="0" novalidate>
+<form
+	class="<?php echo esc_attr($formClasses); ?>"
+	<?php echo esc_attr(UtilsHelper::getStateAttribute('formId')); ?>="0"
+	novalidate
+>
 	<?php echo Helpers::render('global-msg', Helpers::props('globalMsg', $attributes)); ?>
 	<?php echo Helpers::render('loader', Helpers::props('loader', $attributes)); ?>
 </form>

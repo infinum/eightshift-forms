@@ -12,12 +12,13 @@ namespace EightshiftForms\CronJobs;
 
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SecurityJob class.
  */
-class SecurityJob implements ServiceInterface
+class SecurityJob implements ServiceInterface, ServiceCliInterface
 {
 	/**
 	 * Job name.

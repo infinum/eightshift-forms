@@ -8,7 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 if (UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
@@ -22,7 +21,6 @@ if (!UtilsDeveloperHelper::isDeveloperModeActive()) {
 $fieldManifest = Helpers::getComponent('field');
 
 $componentClass = Helpers::classnames([
-	UtilsHelper::getStateSelector('field'),
 	Helpers::selector(true, $fieldManifest['componentClass'], 'debug'),
 ]);
 
