@@ -36,7 +36,7 @@ class Security implements SecurityInterface
 
 	/**
 	 * A table containing rate limiting data.
-	 * 
+	 *
 	 * @var string
 	 */
 
@@ -97,7 +97,7 @@ class Security implements SecurityInterface
 		};
 
 		$aggregatedActivityByType = RateLimitingLogEntry::findAggregatedByActivityType($userToken, $window);
-		
+
 		$sum = 0;
 		foreach ($aggregatedActivityByType as $aggregate) {
 			$sum += $aggregate['count'];
@@ -110,7 +110,7 @@ class Security implements SecurityInterface
 		if ($sum > $rateLimit) {
 			return false;
 		}
-	
+
 		$granularRateLimit = \intval(UtilsSettingsHelper::getSettingValue(Security::RATE_LIMIT_SETTING_NAME, (string)$formId));
 
 		if ($granularRateLimit <= 0) {
@@ -122,7 +122,7 @@ class Security implements SecurityInterface
 		if ($activityCountByFormId > $granularRateLimit) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

@@ -111,6 +111,22 @@ class SettingsGeneral implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 */
 	public const SETTINGS_RATE_LIMIT_KEY = 'rate-limit';
 
+	/** Increment meta key.
+	 *
+	 * @var string
+	 */
+	public const INCREMENT_META_KEY = 'es_forms_increment';
+
+	/**
+	 * Increment start key.
+	 */
+	public const SETTINGS_INCREMENT_START_KEY = 'increment-start';
+
+	/**
+	 * Increment length key.
+	 */
+	public const SETTINGS_INCREMENT_LENGTH_KEY = 'increment-length';
+
 	/**
 	 * Register all the hooks
 	 *
