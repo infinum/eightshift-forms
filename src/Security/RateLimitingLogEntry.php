@@ -73,6 +73,19 @@ class RateLimitingLogEntry {
         }, $results);
     }
 
+    public static function countByFormId(
+        string $userToken,
+        int $formId,
+        int $windowDuration
+    ): int {
+        $windowStart = time() - $windowDuration;
+        $tableName = Security::RATE_LIMITING_TABLE;
+
+        global $wpdb;
+        $query = "SELECT COUNT(*) FROM {$wpdb->prefix}{$tableName} WHERE user_token = %s AND form_id = %d AND created_at >= %d";
+        return (int)($wpdb->get_var($wpdb->prepare($query, $userToken, $formId, $windowStart)));
+    }
+
     public static function findAggregatedByActivityType(
         string $userToken,
         int $windowDuration
