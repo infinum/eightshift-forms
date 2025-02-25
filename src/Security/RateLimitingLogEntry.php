@@ -16,10 +16,10 @@ use RuntimeException;
 class RateLimitingLogEntry
 {
 	public function __construct(
-		public readonly ?int $logId = null,
-		public readonly ?int $formId = null,
 		public readonly string $userToken,
 		public readonly string $activityType,
+		public readonly ?int $logId = null,
+		public readonly ?int $formId = null,
 		public readonly ?int $createdAt = null,
 	) {}
 
