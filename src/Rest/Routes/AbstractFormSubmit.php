@@ -209,7 +209,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 					// Validate allowed number of requests.
 					// We don't want to limit any custom requests like files, settings, steps, etc.
-					if (!$this->getSecurity()->isRequestValid($formDetails[UtilsConfig::FD_TYPE], $formDetails[UtilsConfig::FD_FORM_ID])) {
+					if (!$this->getSecurity()->isRequestValid($formDetails[UtilsConfig::FD_TYPE], (int)$formDetails[UtilsConfig::FD_FORM_ID])) {
 						throw new UnverifiedRequestException(
 							$this->getValidatorLabels()->getLabel('validationSecurity'),
 							[
