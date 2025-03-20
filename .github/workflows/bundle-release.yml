@@ -26,3 +26,4 @@ jobs:
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
           PHP_VERSION: ${{ matrix.php }}
           NODE_VERSION: ${{ matrix.node }}
+          USE_BUN: true
