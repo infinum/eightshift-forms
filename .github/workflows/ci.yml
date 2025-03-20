@@ -51,3 +51,4 @@ jobs:
         with:
           NODE_VERSION: ${{ matrix.node }}
           PROJECT_PATH: '.'
+          USE_BUN: true

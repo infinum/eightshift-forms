@@ -24,3 +24,4 @@ jobs:
           REPO_NAME: 'eightshift-forms'
           PHP_VERSION: ${{ matrix.php }}
           NODE_VERSION: ${{ matrix.node }}
+          USE_BUN: true

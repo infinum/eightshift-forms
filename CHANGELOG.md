@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.2.0]
+
+### Changed
+
+- Assets builder is now using Bun.
+
 ## [6.1.8]
 
 ### Fixed
@@ -1144,6 +1150,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.2.0]: https://github.com/infinum/eightshift-forms/compare/6.1.8...6.2.0
 [6.1.8]: https://github.com/infinum/eightshift-forms/compare/6.1.7...6.1.8
 [6.1.7]: https://github.com/infinum/eightshift-forms/compare/6.1.6...6.1.7
 [6.1.6]: https://github.com/infinum/eightshift-forms/compare/6.1.5...6.1.6

@@ -14,6 +14,7 @@ To get started, you'll need:
 
 * [Node LTS](https://nodejs.org/)
 * [Composer](https://getcomposer.org/)
+* [Bun](https://bun.sh/)
 * [git](https://git-scm.com/)
 * [WP-CLI](https://wp-cli.org/)
 
@@ -23,8 +24,8 @@ Clone the project + build to get started:
 
 1. `git clone git@github.com:infinum/eightshift-forms.git`
 2. `composer install`
-3. `npm install`
-4. `npm start`
+3. `bun install`
+4. `bun start`
 
 ## 📚 Documentation
 
