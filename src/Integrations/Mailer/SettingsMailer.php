@@ -85,6 +85,16 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 	public const SETTINGS_MAILER_TO_KEY = 'mailer-to';
 
 	/**
+	 * Mail To advanced append key.
+	 */
+	public const SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY = 'mailer-to-advanced-append';
+
+	/**
+	 * Mail To advanced key.
+	 */
+	public const SETTINGS_MAILER_TO_ADVANCED_KEY = 'mailer-to-advanced';
+
+	/**
 	 * Subject key.
 	 */
 	public const SETTINGS_MAILER_SUBJECT_KEY = 'mailer-subject';
@@ -266,6 +276,42 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 									'inputPlaceholder' => 'info@infinum.com',
 									'inputIsRequired' => true,
 									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId),
+								],
+								[
+									'component' => 'textarea',
+									'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_KEY),
+									'textareaFieldLabel' => \__('Recipient e-mail advanced', 'eightshift-forms'),
+									'textareaIsMonospace' => true,
+									'textareaSaveAsJson' => true,
+									'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\__("
+										Specify additional emails based on field values.<br />
+										Provide one key-value pair per line, following this format: <code>email : conditions</code><br/>
+										Conditions can be separated by <code>|</code> for OR and <code>&</code> for AND operators.<br/>
+										If you are using multiple filed values they are separated by <code>---</code> and behave like OR condition.<br/>
+
+										Example:
+										<ul>
+										<li>test1@infinum.com : rating=3&checkboxes=check-1---check-2</li>
+										<li>test2@infinum.com : rating=3|select=option-1</li>
+										<li>test3@infinum.com : rating=3</li>
+										</ul>", 'eightshift-forms')),
+									'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_MAILER_TO_ADVANCED_KEY, $formId),
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesFieldLabel' => '',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Append to recipient e-mail', 'eightshift-forms'),
+											'checkboxHelp' => \__('If checked, the advanced recipient e-mail will be appended to the default recipient email otherwise it will replace it.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										]
+									]
 								],
 								[
 									'component' => 'divider',

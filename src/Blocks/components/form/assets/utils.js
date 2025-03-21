@@ -955,7 +955,7 @@ export class Utils {
 
 			const input = this.state.getStateElementInput(name, formId);
 
-			if (input && value?.value) {
+			if (input) {
 				input.value = value?.value;
 			}
 		}

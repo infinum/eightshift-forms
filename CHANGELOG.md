@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.3.0]
+
+### Added
+
+- Option to have multiple recipients for the email based on the field value and conditional logic.
+
+### Fixed
+
+- Phone filed will now reset to the initial value once submitted.
+
 ## [6.2.0]
 
 ### Changed

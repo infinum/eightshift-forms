@@ -25,6 +25,7 @@ interface MailerInterface
 	 * @param array<string, mixed> $files Email files.
 	 * @param array<string, mixed> $fields Email fields.
 	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
+	 * @param array<string, mixed> $toAdvanced Advanced conditions for the email to.
 	 *
 	 * @return bool
 	 */
@@ -35,7 +36,8 @@ interface MailerInterface
 		string $template = '',
 		array $files = [],
 		array $fields = [],
-		array $responseFields = []
+		array $responseFields = [],
+		array $toAdvanced = [],
 	): bool;
 
 	/**
