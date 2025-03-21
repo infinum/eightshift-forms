@@ -101,7 +101,11 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
 			$params,
-			$responseTags
+			$responseTags,
+			[
+				'settings' => UtilsSettingsHelper::getSettingValueGroup(SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_KEY, $formId),
+				'shouldAppend' => UtilsSettingsHelper::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, $formId),
+			]
 		);
 
 		// If email fails.

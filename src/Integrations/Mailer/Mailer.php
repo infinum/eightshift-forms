@@ -35,6 +35,7 @@ class Mailer implements MailerInterface
 	 * @param array<string, mixed> $files Email files.
 	 * @param array<string, mixed> $fields Email fields.
 	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
+	 * @param array<string, mixed> $toAdvanced Advanced conditions for the email to.
 	 *
 	 * @return bool
 	 */
@@ -45,7 +46,8 @@ class Mailer implements MailerInterface
 		string $template = '',
 		array $files = [],
 		array $fields = [],
-		array $responseFields = []
+		array $responseFields = [],
+		array $toAdvanced = []
 	): bool {
 
 		$params = \array_merge(
@@ -62,7 +64,7 @@ class Mailer implements MailerInterface
 
 		// Send email.
 		return \wp_mail(
-			$this->getTemplate($params, false, $to),
+			$this->getTemplate($params, false, $this->getAdvancedConditions($to, $toAdvanced, $params)),
 			$this->getTemplate($params, false, $subject),
 			$body,
 			$this->getHeader(
@@ -468,5 +470,111 @@ class Mailer implements MailerInterface
 		];
 
 		return \array_diff_key($formDetails, \array_flip($list));
+	}
+
+	/**
+	 * Get advanced conditions.
+	 *
+	 * @param string $default Default email.
+	 * @param array<string, mixed> $advanced Advanced conditions.
+	 * @param array<string, mixed> $params Params.
+	 *
+	 * @return string
+	 */
+	private function getAdvancedConditions(string $default, array $advanced, array $params): string
+	{
+		if (!$advanced) {
+			return $default;
+		}
+
+		$settings = $advanced['settings'] ?? [];
+
+		if (!$settings) {
+			return $default;
+		}
+
+		$output = [];
+
+		foreach ($settings as $item) {
+			$email = $item[0] ?? '';
+			$conditions = $item[1] ?? '';
+
+			if (!$email || !$conditions) {
+				continue;
+			}
+
+			if (!$this->evaluateAdvancedConditionLogic($conditions, $params)) {
+				continue;
+			}
+
+			$output[] = $email;
+		}
+
+		if (!$output) {
+			return $default;
+		}
+
+		if ($advanced['shouldAppend'] ?? false) {
+			$output[] = $default;
+		}
+
+		return \implode(',', $output);
+	}
+
+	/**
+	 * Evaluate logic.
+	 *
+	 * Condition logic examples:
+	 * rating=3&checkboxes=check-1---check-2
+	 *
+	 * Operators between conditions can be "&" (AND) or "|" (OR).
+	 * Operators between values can be "---" and that means OR.
+	 *
+	 * @param string $logic Logic string.
+	 * @param array<string, mixed> $params Params.
+	 *
+	 * @return bool
+	 */
+	private function evaluateAdvancedConditionLogic(string $logic, array $params): bool
+	{
+		// Tokenize the logic string.
+		$tokens = \preg_split('/([&|])/', $logic, -1, \PREG_SPLIT_DELIM_CAPTURE);
+
+		// Convert conditions into boolean values.
+		$processedTokens = [];
+
+		foreach ($tokens as $token) {
+			$token = \trim($token);
+			if ($token === '&' || $token === '|') {
+					$processedTokens[] = $token;
+					continue;
+			}
+
+			[$key, $value] = \explode('=', $token, 2);
+			$key = \trim($key);
+			$values = \explode('---', \trim($value)); // Split values by ---.
+
+			$conditionResult = isset($params[$key]) && \array_intersect((array)$params[$key], $values);
+			$processedTokens[] = !empty($conditionResult);
+		}
+
+		// Evaluate with correct precedence (AND before OR).
+		$stack = [];
+		$currentOp = null;
+
+		foreach ($processedTokens as $token) {
+			if ($token === '&' || $token === '|') {
+				$currentOp = $token;
+			} else {
+				if ($currentOp === '&') {
+					$last = \array_pop($stack);
+					$stack[] = $last && $token;
+				} else {
+					$stack[] = $token;
+				}
+			}
+		}
+
+		return \in_array(true, $stack, true);
 	}
 }
