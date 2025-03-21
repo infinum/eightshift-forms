@@ -12,7 +12,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Fixed
 
-- Phone filed will now reset to the initial value once submitted.
+- Phone field will now reset to the initial value once submitted.
 
 ## [6.2.0]
 
