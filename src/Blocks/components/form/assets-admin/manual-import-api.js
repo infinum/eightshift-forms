@@ -125,7 +125,6 @@ export class ManualImportApi {
 						'X-WP-Nonce': this.state.getStateConfigNonce(),
 					},
 					body: formData,
-					credentials: 'same-origin',
 					redirect: 'follow',
 					referrer: 'no-referrer',
 				};

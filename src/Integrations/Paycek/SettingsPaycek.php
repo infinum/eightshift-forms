@@ -18,6 +18,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -101,6 +102,11 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 	public const SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY = 'paycek-skip-integration';
 
 	/**
+	 * Entry ID use key.
+	 */
+	public const SETTINGS_PAYCEK_ENTRY_ID_USE_KEY = 'paycek-entry-id-use';
+
+	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -173,7 +179,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 		$lang = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_LANG_KEY, $formId);
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
 
-		$params = $formDetails['fieldNames'] ?? [];
+		$params = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -215,6 +221,10 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_CART_DESC_KEY, $formId),
 							],
 							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
 								'component' => 'input',
 								'inputIsRequired' => true,
 								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_URL_SUCCESS),
@@ -243,6 +253,26 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 								'inputIsUrl' => true,
 								'inputType' => 'url',
 								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_URL_CANCEL, $formId),
+							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'checkboxes',
+								'checkboxesFieldLabel' => '',
+								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY),
+								'checkboxesContent' => [
+									[
+										'component' => 'checkbox',
+										'checkboxLabel' => \__('Use Entry Id', 'eightshift-forms'),
+										'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Paycek `paymentId` value. This is used if you want to reference the entry after the form submission. Make sure you have Entries feature turned `on`.', 'eightshift-forms'),
+										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId),
+										'checkboxValue' => self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY,
+										'checkboxAsToggle' => true,
+										'checkboxSingleSubmit' => true,
+									]
+								]
 							],
 						],
 					],

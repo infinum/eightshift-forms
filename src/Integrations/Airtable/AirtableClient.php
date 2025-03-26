@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
@@ -37,23 +36,6 @@ class AirtableClient implements AirtableClientInterface
 	 * Transient cache name for items.
 	 */
 	public const CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME = 'es_airtable_items_cache';
-
-	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
-	 * Create a new admin instance.
-	 *
-	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
-	 */
-	public function __construct(EnrichmentInterface $enrichment)
-	{
-		$this->enrichment = $enrichment;
-	}
 
 	/**
 	 * Return items.
@@ -196,7 +178,7 @@ class AirtableClient implements AirtableClientInterface
 		}
 
 		$body = [
-			'fields' => $this->prepareParams($params, $formId),
+			'fields' => $this->prepareParams($params),
 		];
 
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostId']);
@@ -332,12 +314,17 @@ class AirtableClient implements AirtableClientInterface
 	 *
 	 * @param string $baseId Base id to search.
 	 * @param string $listId List id to search.
+	 * @param string $offset Offset value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getAirtableListRecords(string $baseId, string $listId)
+	private function getAirtableListRecords(string $baseId, string $listId, string $offset = ''): array
 	{
 		$url = self::BASE_URL . "{$baseId}/{$listId}";
+
+		if ($offset) {
+			$url .= "?offset={$offset}";
+		}
 
 		$response = \wp_remote_get(
 			$url,
@@ -360,8 +347,17 @@ class AirtableClient implements AirtableClientInterface
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return $body['records'] ?? [];
+			$data = $body['records'] ?? [];
+			$offset = $body['offset'] ?? '';
+
+			// If we have more that 100 records, we need to fetch them all.
+			if ($offset) {
+				$data = \array_merge($data, $this->getAirtableListRecords($baseId, $listId, $offset));
+			}
+
+			return $data;
 		}
+
 
 		return [];
 	}
@@ -416,22 +412,12 @@ class AirtableClient implements AirtableClientInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
-	 * @param string $formId FormId value.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function prepareParams(array $params, string $formId): array
+	private function prepareParams(array $params): array
 	{
 		$output = [];
-
-		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
-		}
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
@@ -453,14 +439,6 @@ class AirtableClient implements AirtableClientInterface
 					break;
 				case 'number':
 					$value = \filter_var($value, \FILTER_VALIDATE_FLOAT);
-					break;
-				case 'multiCheckbox':
-					$value = \explode(UtilsConfig::DELIMITER, $value);
-					break;
-				case 'dynamicSelect':
-					if (!\is_array($value)) {
-						$value = \explode(UtilsConfig::DELIMITER, $value);
-					}
 					break;
 				default:
 					$value = $value;

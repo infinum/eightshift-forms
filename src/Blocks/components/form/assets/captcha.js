@@ -97,7 +97,6 @@ export class Captcha {
 				Accept: 'application/json',
 			},
 			body: formData,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
@@ -115,7 +114,7 @@ export class Captcha {
 				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response.message} Action: ${action}`);
 			}
 
-			this.utils.dispatchFormEvent(window, this.state.getStateEvent('afterCaptchaInit'), response);
+			this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), response);
 		});
 	}
 

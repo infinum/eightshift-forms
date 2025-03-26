@@ -48,6 +48,8 @@ $inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix',
 $inputRangeUseCustomField = Helpers::checkAttr('inputRangeUseCustomField', $attributes, $manifest);
 $inputTwSelectorsData = Helpers::checkAttr('inputTwSelectorsData', $attributes, $manifest);
 
+$inputId = $inputName . '-' . Helpers::getUnique();
+
 // Fix for getting attribute that is part of the child component.
 $inputHideLabel = false;
 $inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
@@ -122,7 +124,7 @@ $input = '
 	<input
 		class="' . esc_attr($inputClass) . '"
 		name="' . esc_attr($inputName) . '"
-		id="' . esc_attr($inputName) . '"
+		id="' . esc_attr($inputId) . '"
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
@@ -149,10 +151,10 @@ echo Helpers::render(
 	array_merge(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $input,
-			'fieldId' => $inputName,
+			'fieldId' => $inputId,
 			'fieldName' => $inputName,
 			'fieldTwSelectorsData' => $inputTwSelectorsData,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType('input'),
+			'fieldTypeInternal' => FormsHelper::getStateFieldType($inputType === 'range' ? 'range' : 'input'),
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),
 			'fieldUseError' => $inputType !== 'hidden',

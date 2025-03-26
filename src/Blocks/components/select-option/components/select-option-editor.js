@@ -30,6 +30,7 @@ export const SelectOptionEditor = (attributes) => {
 	const selectOptionValue = checkAttr('selectOptionValue', attributes, manifest);
 	const selectOptionAsPlaceholder = checkAttr('selectOptionAsPlaceholder', attributes, manifest);
 	const selectOptionIsHidden = checkAttr('selectOptionIsHidden', attributes, manifest);
+	const selectOptionIsSelected = checkAttr('selectOptionIsSelected', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
@@ -39,6 +40,7 @@ export const SelectOptionEditor = (attributes) => {
 		selector(additionalClass, additionalClass),
 		selector(selectOptionIsHidden, 'es-form-is-hidden'),
 		selector(selectOptionLabel === '', componentClass, '', 'placeholder'),
+		selector(selectOptionIsSelected, componentClass, '', 'checked'),
 	]);
 
 	return (

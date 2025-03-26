@@ -34,6 +34,8 @@ $fileFieldAttrs = Helpers::checkAttr('fileFieldAttrs', $attributes, $manifest);
 $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
 $fileTwSelectorsData = Helpers::checkAttr('fileTwSelectorsData', $attributes, $manifest);
 
+$fileId = $fileName . '-' . Helpers::getUnique();
+
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
@@ -83,7 +85,7 @@ $file = '
 	<input
 		class="' . esc_attr($fileClass) . '"
 		name="' . esc_attr($fileName) . '"
-		id="' . esc_attr($fileName) . '"
+		id="' . esc_attr($fileId) . '"
 		' . disabled($fileIsDisabled, true, false) . '
 		type="file"
 		' . $fileIsMultiple . '
@@ -98,7 +100,7 @@ echo Helpers::render(
 	array_merge(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $file,
-			'fieldId' => $fileName,
+			'fieldId' => $fileId,
 			'fieldName' => $fileName,
 			'fieldTwSelectorsData' => $fileTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('file'),

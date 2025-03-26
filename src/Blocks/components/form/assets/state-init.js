@@ -20,22 +20,23 @@ export const StateEnum = {
 	FORM: 'form',
 	FORMS: 'forms',
 
+	FORM_FID: 'formFid',
 	POST_ID: 'postId',
 	METHOD: 'method',
 	ACTION: 'action',
 	ACTION_EXTERNAL: 'actionExternal',
 	SECURE_DATA: 'secureData',
 	FIELD: 'field',
+	FIELDSET: 'fieldset',
 	RANGE_CURRENT: 'rangeCurrent',
 	VALUE: 'value',
-	VALUE_COMBINED: 'valueCombined',
 	INITIAL: 'initial',
 	VALUES: 'values',
-	VALUE_COUNTRY: 'valueCountry',
 	INPUT: 'input',
 	INPUT_SELECT: 'inputSelect',
 	ITEMS: 'items',
 	CUSTOM: 'custom',
+	CUSTOM_NAME: 'customName',
 	IS_DISABLED: 'disabled',
 	TYPE: 'type',
 	TYPE_SETTINGS: 'typeSettings',
@@ -78,7 +79,6 @@ export const StateEnum = {
 	CONFIG_SELECT_USE_SEARCH: 'useSearch',
 	CONFIG_SELECT_USE_MULTIPLE: 'useMultiple',
 	CONFIG_PHONE_DISABLE_PICKER: 'disablePhoneCountryPicker',
-	CONFIG_PHONE_USE_PHONE_SYNC: 'usePhoneSync',
 	CONFIG_USE_SINGLE_SUBMIT: 'useSingleSubmit',
 
 	SETTINGS: 'settings',
@@ -106,6 +106,7 @@ export const StateEnum = {
 	ENRICHMENT_EXPIRATION: 'expiration',
 	ENRICHMENT_EXPIRATION_PREFILL: 'expirationPrefill',
 	ENRICHMENT_ALLOWED: 'allowed',
+	ENRICHMENT_ALLOWED_SMART: 'allowedSmart',
 
 	GEOLOCATION: 'geolocation',
 
@@ -276,6 +277,7 @@ export function setStateInitial() {
 		setState([StateEnum.ENRICHMENT_EXPIRATION], enrichment.expiration, StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_EXPIRATION_PREFILL], enrichment.expirationPrefill, StateEnum.ENRICHMENT);
 		setState([StateEnum.ENRICHMENT_ALLOWED], Object.values(enrichment.allowed), StateEnum.ENRICHMENT);
+		setState([StateEnum.ENRICHMENT_ALLOWED_SMART], Object.values(enrichment.allowedSmart), StateEnum.ENRICHMENT);
 		setState([StateEnum.NAME], 'es-storage', StateEnum.ENRICHMENT);
 	}
 }
@@ -309,12 +311,14 @@ export function setStateFormInitial(formId) {
 		formElement = document.querySelector(`${getStateSelector('form', true)}[${getStateAttribute('formId')}="${formId}"]`);
 	}
 
-	setState([StateEnum.FORM, StateEnum.POST_ID],formElement?.getAttribute(getStateAttribute('postId')), formId);
+	setState([StateEnum.FORM, StateEnum.POST_ID], formElement?.getAttribute(getStateAttribute('postId')), formId);
+	setState([StateEnum.FORM, StateEnum.FORM_FID], formElement?.getAttribute(getStateAttribute('formFid')), formId);
 	setState([StateEnum.FORM, StateEnum.ISLOADED], false, formId);
 	setState([StateEnum.FORM, StateEnum.ISPROCESSING], false, formId);
 	setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], false, formId);
 	setState([StateEnum.FORM, StateEnum.ELEMENT], formElement, formId);
 	setState([StateEnum.FORM, StateEnum.TYPE], formElement?.getAttribute(getStateAttribute('formType')), formId);
+	setState([StateEnum.FORM, StateEnum.CUSTOM_NAME], formElement?.getAttribute(getStateAttribute('formCustomName')), formId);
 	setState([StateEnum.FORM, StateEnum.METHOD], formElement?.getAttribute('method'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION], formElement?.getAttribute('action'), formId);
 	setState([StateEnum.FORM, StateEnum.ACTION_EXTERNAL], formElement?.getAttribute(getStateAttribute('actionExternal')), formId);
@@ -324,7 +328,6 @@ export function setStateFormInitial(formId) {
 
 	// Form settings
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], Boolean(formElement?.getAttribute(getStateAttribute('phoneDisablePicker'))), formId);
-	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_USE_PHONE_SYNC], Boolean(formElement?.getAttribute(getStateAttribute('phoneSync'))), formId);
 	setState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_USE_SINGLE_SUBMIT], Boolean(formElement?.getAttribute(getStateAttribute('singleSubmit'))), formId);
 
 	const globalMsg = formElement?.querySelector(getStateSelector('globalMsg', true));
@@ -360,6 +363,7 @@ export function setStateFormInitial(formId) {
 
 		const field = formElement.querySelector(`${getStateSelector('field', true)}[${getStateAttribute('fieldName')}="${name}"]`);
 		const fieldType = field?.getAttribute(getStateAttribute('fieldType'));
+		const fieldset = field?.closest('fieldset');
 
 		// Make changes depending on the field type.
 		switch (type) {
@@ -393,61 +397,40 @@ export function setStateFormInitial(formId) {
 				break;
 			case 'select-one':
 			case 'select-multiple':
-				// Combined fields like phone can have field null.
-				const isMultiple = Boolean(item.getAttribute(getStateAttribute('selectIsMultiple')));
+				const selectedValues = [...item.options].filter((option) => option?.selected).map((option) => {
+					return {
+						value: option?.value,
+						meta: JSON.parse(option?.getAttribute(getStateAttribute('selectCustomProperties')))
+					};
+				}).filter((option) => option.value);
 
-				if (item.options.length && (fieldType === 'phone' || fieldType === 'country')) {
-					let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
-
-					if (typeof customData === 'string') {
-						customData = JSON.parse(customData);
-					}
-
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData[getStateAttribute('selectCountryCode')], formId);
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData[getStateAttribute('selectCountryLabel')], formId);
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData[getStateAttribute('selectCountryNumber')], formId);
-				}
-
-				if (fieldType !== 'phone') {
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
-
-					[...item.children].forEach((option) => {
-						const value = option?.value;
-
-						if (value) {
-							setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, name, StateEnum.NAME], value, formId);
-						}
-					});
-
-					if (isMultiple) {
-						const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
-
-						setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
-						setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], multipleValues, formId);
-					}
-				}
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], selectedValues, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], selectedValues, formId);
 
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_SEARCH], Boolean(item.getAttribute(getStateAttribute('selectAllowSearch'))), formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], isMultiple, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], Boolean(item.getAttribute(getStateAttribute('selectIsMultiple'))), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 			case 'tel':
-				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+				if (getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], formId)) {
+					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], { value: value }, formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], { value: value }, formId);
+				} else {
+					const newPhoneValue = {
+						prefix: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.value ?? '',
+						value: value,
+						meta: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.meta ?? {},
+					};
+
+					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], newPhoneValue, formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], newPhoneValue, formId);
+				}
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], field.querySelector('select'), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
-
-				if (!value) {
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
-				} else {
-					const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${value}`, formId);
-				}
 				break;
 			case 'date':
 			case 'datetime-local':
@@ -463,7 +446,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], item?.nextElementSibling, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
-				setState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], field.querySelector(getStateSelector('inputRangeCurrent', true)), formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], field.querySelectorAll(getStateSelector('inputRangeCurrent', true)), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 			default:
@@ -471,6 +454,10 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
+
+				if (fieldset) {
+					setState([StateEnum.ELEMENTS, fieldset.getAttribute(getStateAttribute('fieldName')), StateEnum.CUSTOM], item, formId);
+				}
 
 				if (fieldType === 'rating') {
 					setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], field.querySelector(getStateSelector('rating', true)), formId);
@@ -489,6 +476,7 @@ export function setStateFormInitial(formId) {
 		setState([StateEnum.ELEMENTS, name, StateEnum.LOADED], false, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.NAME], name, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.FIELD], field, formId);
+		setState([StateEnum.ELEMENTS, name, StateEnum.FIELDSET], fieldset, formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.ERROR], field?.querySelector(getStateSelector('error', true)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.IS_ADMIN_SINGLE_SUBMIT], item?.classList?.contains(getStateSelector('submitSingle', true).substring(1)), formId);
 		setState([StateEnum.ELEMENTS, name, StateEnum.TYPE_CUSTOM], field?.getAttribute(getStateAttribute('fieldTypeCustom')), formId);
@@ -608,175 +596,17 @@ export function setSteps(formElement, formId) {
 }
 
 /**
- * Set state values when the field changes - Input.
+ * Set state values when the field changes.
  *
  * @param {object} item Item/field to check.
  * @param {string} formId Form ID.
  *
  * @returns {void}
  */
-export function setStateValuesInput(item, formId) {
-	const {
-		name,
-		value,
-	} = item;
-
-	// Datepicker and dropzone are set using native lib events.
+export function setStateValues(name, value, formId) {
 	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
 	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 }
-
-/**
- * Set state values when the field changes - Radio.
- *
- * @param {object} item Item/field to check.
- * @param {string} formId Form ID.
- *
- * @returns {void}
- */
-export function setStateValuesRadio(item, formId) {
-	const {
-		name,
-		value,
-		checked,
-	} = item;
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], checked ? value : '', formId);
-}
-
-/**
- * Set state values when the field changes - Checkbox.
- *
- * @param {object} item Item/field to check.
- * @param {string} formId Form ID.
- *
- * @returns {void}
- */
-export function setStateValuesCheckbox(item, formId) {
-	const {
-		name,
-		value,
-		checked,
-	} = item;
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE, value], checked ? value : '', formId);
-}
-
-/**
- * Set state values when the field changes - Phone input.
- *
- * @param {object} item Item/field to check.
- * @param {string} formId Form ID.
- *
- * @returns {void}
- */
-export function setStateValuesPhoneInput(item, formId) {
-	const {
-		name,
-		value,
-	} = item;
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
-
-	if (value) {
-		const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
-		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${value}`, formId);
-	}
-}
-
-/**
- * Set state values when the field changes - Select.
- *
- * @param {object} item Item/field to check.
- * @param {string} formId Form ID.
- *
- * @returns {void}
- */
-export function setStateValuesSelect(item, formId) {
-	const {
-		name,
-		value,
-	} = item;
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-
-	if (getState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], formId)) {
-		const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
-		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
-	}
-}
-
-/**
- * Set state values when the field changes - Country.
- *
- * @param {object} item Item/field to check.
- * @param {string} formId Form ID.
- *
- * @returns {void}
- */
-export function setStateValuesCountry(item, formId) {
-	const {
-		name,
-		value,
-	} = item;
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
-
-	let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
-
-	if (typeof customData === 'string') {
-		customData = JSON.parse(customData);
-	}
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData?.[getStateAttribute('selectCountryCode')], formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData?.[getStateAttribute('selectCountryLabel')], formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData?.[getStateAttribute('selectCountryNumber')], formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
-
-	if (getState([StateEnum.ELEMENTS, name, StateEnum.CONFIG, StateEnum.CONFIG_SELECT_USE_MULTIPLE], formId)) {
-		const multipleValues = [...item.options].filter((option) => option?.selected).map((option) => option?.value);
-		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], multipleValues, formId);
-	}
-}
-
-/**
- * Set state values when the field changes - Phone select.
- *
- * @param {object} item Item/field to check.
- * @param {string} formId Form ID.
- *
- * @returns {void}
- */
-export function setStateValuesPhoneSelect(item, formId) {
-	const {
-		name,
-	} = item;
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], true, formId);
-
-	let customData = item?.options[item?.options?.selectedIndex]?.getAttribute(getStateAttribute('selectCustomProperties'));
-
-	if (typeof customData === 'string') {
-		customData = JSON.parse(customData);
-	}
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'code'], customData?.[getStateAttribute('selectCountryCode')], formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'label'], customData?.[getStateAttribute('selectCountryLabel')], formId);
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY, 'number'], customData?.[getStateAttribute('selectCountryNumber')], formId);
-
-	setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], '', formId);
-
-	if (getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)) {
-		const countryValue = getState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COUNTRY], formId)?.number ?? '';
-		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE_COMBINED], `${countryValue}${getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)}`, formId);
-	}
-}
-
 
 /**
  * Set state conditional tags on one field.

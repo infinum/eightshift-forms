@@ -27,6 +27,9 @@
 		"phonePlaceholder": {
 			"type": "string"
 		},
+		"phoneSelectValue": {
+			"type": "string"
+		},
 		"phoneUseLabelAsPlaceholder": {
 			"type": "boolean",
 			"default": false

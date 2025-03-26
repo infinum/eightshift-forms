@@ -258,11 +258,14 @@ class Variables
 	/**
 	 * Get API Key for Corvus.
 	 *
+	 * @param string $storeId Store ID.
+	 *
 	 * @return string
 	 */
-	public static function getApiKeyCorvus(): string
+	public static function getApiKeyCorvus(string $storeId): string
 	{
-		return \defined('ES_API_KEY_CORVUS') ? \ES_API_KEY_CORVUS : '';
+		$key = "ES_API_KEY_CORVUS_{$storeId}";
+		return \defined($key) ? \constant($key) : '';
 	}
 
 	/**

@@ -129,7 +129,6 @@ export class Form {
 				Accept: 'application/json',
 			},
 			body: formData,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
@@ -142,19 +141,16 @@ export class Form {
 			return response.text();
 		})
 		.then((responseData) => {
-			const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null);
-
-			// Get formId from ajax response.
-			let formId = response?.data?.formId;
+			const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null)?.data;
 
 			// Loop all form elements and remove all except the one we need.
 			[...forms].forEach((form) => {
-				if (form.getAttribute(this.state.getStateAttribute('formId')) !== formId) {
+				if (form.getAttribute(this.state.getStateAttribute('formFid')) !== response?.[this.state.getStateResponseOutputKey('geoId')]) {
 					// Remove all forms except the one we got from ajax.
 					form.remove();
 				} else {
 					// Init form id that we got from ajax.
-					this.initOnlyFormsInner(formId);
+					this.initOnlyFormsInner(form.getAttribute(this.state.getStateAttribute('formId')));
 
 					// Remove geolocation data attribute from forms element.
 					formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
@@ -228,6 +224,11 @@ export class Form {
 			this.setupInputField(formId, input.name);
 		});
 
+		// Range.
+		[...this.state.getStateElementByTypeField('range', formId)].forEach((range) => {
+			this.setupRangeField(formId, range.name);
+		});
+
 		// Date.
 		[
 			...this.state.getStateElementByTypeField('date', formId),
@@ -276,7 +277,7 @@ export class Form {
 		this.state.setStateFormIsProcessing(true, formId);
 
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('beforeFormSubmit'));
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('beforeFormSubmit'), formId);
 
 		this.setFormData(formId, filter);
 
@@ -290,7 +291,6 @@ export class Form {
 				Accept: 'multipart/form-data',
 			},
 			body: this.FORM_DATA,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
@@ -357,7 +357,6 @@ export class Form {
 				Accept: 'multipart/form-data',
 			},
 			body: this.FORM_DATA,
-			credentials: 'same-origin',
 			redirect: 'follow',
 			referrer: 'no-referrer',
 		};
@@ -392,7 +391,7 @@ export class Form {
 	 */
 	formSubmitBefore(formId, response) {
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmit'), response);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmit'), formId, response);
 
 		// Clear all errors.
 		this.utils.resetErrors(formId);
@@ -417,7 +416,7 @@ export class Form {
 			data,
 		} = response;
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitSuccess'), response);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitSuccess'), formId, response);
 
 		if (this.state.getStateConfigIsAdmin()) {
 			// Set global msg.
@@ -475,7 +474,7 @@ export class Form {
 							utils: this.utils,
 							state: this.state,
 							response: data?.[this.state.getStateResponseOutputKey('processExternally')],
-						}).init();
+						}).init(formId);
 					});
 				}
 			}
@@ -498,6 +497,8 @@ export class Form {
 			data,
 		} = response;
 
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitError'), formId, response);
+
 		const validationOutputKey = this.state.getStateResponseOutputKey('validation');
 
 		this.utils.setGlobalMsg(formId, message, status, data);
@@ -506,15 +507,13 @@ export class Form {
 
 		// Dispatch event.
 		if (data?.[validationOutputKey] !== undefined) {
-			this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitErrorValidation'), response);
+			this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitErrorValidation'), formId, response);
 
 			this.utils.outputErrors(formId, data?.[validationOutputKey]);
 
 			if (isFinalStep) {
 				this.steps.goToStepWithError(formId, data?.[validationOutputKey]);
 			}
-		} else {
-			this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitError'), response);
 		}
 	}
 
@@ -538,7 +537,7 @@ export class Form {
 		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
 
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitEnd'), response);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitEnd'), formId, response);
 	}
 
 	/**
@@ -650,6 +649,8 @@ export class Form {
 		// Used for group submit.
 		const skipFields = filter?.[this.FILTER_SKIP_FIELDS] ?? [];
 
+		const fieldsetOtherOutput = [];
+
 		// Iterate all form items.
 		for (const [key] of this.state.getStateElements(formId)) {
 
@@ -660,7 +661,6 @@ export class Form {
 			const saveAsJson = this.state.getStateElementSaveAsJson(key, formId);
 			const items = this.state.getStateElementItems(key, formId);
 			const field = this.state.getStateElementField(key, formId);
-			const valueCountry = this.state.getStateElementValueCountry(key, formId);
 			const disabled = this.state.getStateElementIsDisabled(key, formId);
 
 			// Skip select search field.
@@ -737,18 +737,22 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
+				case 'select':
+				case 'country':
+					if (disabled) {
+						break;
+					}
+
+					data.value = data.value.map((item) => item.value);
+
+					this.FORM_DATA.append(name, JSON.stringify(data));
+					break;
 				case 'phone':
 					if (disabled) {
 						break;
 					}
 
-					if (!this.state.getStateFormConfigPhoneDisablePicker(formId) && value) {
-						if (typeof valueCountry.number !== 'undefined') {
-							data.value = `${valueCountry.number}${value}`;
-						} else {
-							data.value = '';
-						}
-					}
+					data.value = this.utils.getPhoneCombinedValue(formId, name);
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
@@ -769,6 +773,27 @@ export class Form {
 					} else {
 						this.FORM_DATA.append(`${name}[0]`, JSON.stringify(data));
 					}
+					break;
+				case 'input':
+					if (disabled) {
+						break;
+					}
+
+					const fieldset = field.closest('fieldset');
+
+					// If we have input on the checkbox/radio fieldset don't sent the input value but append it to the parent fieldset.
+					if (fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'checkbox' || fieldset?.getAttribute(this.state.getStateAttribute('fieldType')) === 'radio') {
+						if (value !== '') {
+							fieldsetOtherOutput.push({
+								name,
+								parent: fieldset?.getAttribute(this.state.getStateAttribute('fieldName')),
+								value,
+							});
+						}
+						break;
+					}
+
+					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
 				default:
 					if (disabled) {
@@ -795,6 +820,26 @@ export class Form {
 				custom: '',
 				innerName: '',
 			}));
+		}
+
+		// If we have input on the checkbox/radio fieldset don't sent the input value but append it to the parent fieldset.
+		if (fieldsetOtherOutput.length) {
+			fieldsetOtherOutput.forEach((item, index) => {
+				const items = Object.keys(this.state.getStateElementItems(item.parent, formId))?.length;
+				const {
+					parent,
+					value,
+				} = item;
+
+				this.FORM_DATA.append(`${parent}[${items + index}]`, JSON.stringify({
+					name: parent,
+					value: value,
+					type: this.state.getStateElementTypeField(parent, formId),
+					typeCustom: this.state.getStateElementTypeCustom(parent, formId),
+					custom: '',
+					innerName: '',
+				}));
+			});
 		}
 	}
 
@@ -893,7 +938,7 @@ export class Form {
 		this.buildFormDataItems([
 			{
 				name: this.state.getStateParam('formId'),
-				value: formId,
+				value: this.state.getStateFormFid(formId),
 			},
 			{
 				name: this.state.getStateParam('postId'),
@@ -1061,15 +1106,41 @@ export class Form {
 		input.addEventListener('blur', this.onBlurEvent);
 		input.addEventListener('keydown', this.onKeyDownEvent);
 
-		// If field range, set current value to DOM.
-		if (type === 'range') {
-			this.utils.setRangeCurrentValue(formId, name);
+		if (
+			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'number'))
+		) {
+			input.addEventListener('input', debounce(this.onInputEvent, 300));
+		} else {
+			input.addEventListener('input', this.onInputEvent);
 		}
+	}
+
+	/**
+	 * Setup range field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	setupRangeField(formId, name) {
+		const input = this.state.getStateElementInput(name, formId);
+
+		this.state.setStateElementLoaded(name, true, formId);
+
+		this.utils.setFieldFilledState(formId, name);
+
+		input.addEventListener('keydown', this.onFocusEvent);
+		input.addEventListener('focus', this.onFocusEvent);
+		input.addEventListener('blur', this.onBlurEvent);
+		input.addEventListener('keydown', this.onKeyDownEvent);
+
+		this.utils.setRangeCurrentValue(formId, name);
 
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			(this.state.getStateFormConfigUseSingleSubmit(formId) && (type === 'range')) ||
-			(this.state.getStateFormConfigUseSingleSubmit(formId) && (type === 'number'))
+			this.state.getStateFormConfigUseSingleSubmit(formId)
 		) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
@@ -1167,13 +1238,13 @@ export class Form {
 					utils.setFieldFilledState(formId, name);
 				},
 				onOpen: function () {
-					utils.setFieldActiveState(formId, name);
+					utils.setActiveState(formId, name);
 				},
 				onClose: function () {
 					utils.unsetActiveState(formId, name);
 				},
-				onChange: function () {
-					utils.setOnUserChangeDate(input);
+				onChange: function (selectedDates, dateStr) {
+					utils.setManualDateValue(formId, name, dateStr, false);
 				},
 			});
 		});
@@ -1369,8 +1440,6 @@ export class Form {
 
 				field?.classList?.remove(this.state.getStateSelector('isActive'));
 
-				this.state.setStateElementValue(name, 'true', formId);
-
 				// Remove main filed validation error.
 				this.utils.unsetFieldError(formId, name);
 			});
@@ -1383,7 +1452,6 @@ export class Form {
 				}
 
 				field?.classList?.remove(this.state.getStateSelector('isActive'));
-				this.state.setStateElementValue(name, '', formId);
 
 				// Remove main filed validation error.
 				this.utils.unsetFieldError(formId, name);
@@ -1395,7 +1463,7 @@ export class Form {
 				this.buildFormDataItems([
 					{
 						name: this.state.getStateParam('formId'),
-						value: formId,
+						value: this.state.getStateFormFid(formId),
 					},
 					{
 						name: this.state.getStateParam('postId'),
@@ -1534,6 +1602,17 @@ export class Form {
 				input?.removeEventListener('keydown', this.onKeyDownEvent);
 				custom?.addEventListener('input', this.onRangeCustom);
 				input?.addEventListener('input', this.onRangeCustomInput);
+			});
+
+			// Range.
+			[...this.state.getStateElementByTypeField('range', formId)].forEach((range) => {
+				const input = this.state.getStateElementInput(range.name, formId);
+
+				input?.removeEventListener('keydown', this.onFocusEvent);
+				input?.removeEventListener('focus', this.onFocusEvent);
+				input?.removeEventListener('blur', this.onBlurEvent);
+				input?.removeEventListener('input', this.onInputEvent);
+				input?.removeEventListener('keydown', this.onKeyDownEvent);
 			});
 
 			// Date.
@@ -1774,10 +1853,31 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
-		this.utils.setOnUserChangeSelect(event.target);
+		this.state.setState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], event.target, formId);
 
-		if (!this.state.getStateElementValue(name, formId) || !this.state.getStateElementValue(name, formId)?.length) {
-			this.utils.unsetFilledState(formId, name);
+		const options = event.detail.value !== '' ? [...event.target.options].map((option) => {
+				return {
+					value: option?.value,
+					meta: JSON.parse(option?.getAttribute(this.state.getStateAttribute('selectCustomProperties')) || '{}'),
+				};
+		}) : [];
+
+		switch (this.state.getStateElementTypeField(name, formId)) {
+			case 'phone':
+				const phoneValue = this.state.getStateElementValue(name, formId);
+
+				this.utils.setManualPhoneValue(formId, name, {
+					prefix: options?.[0]?.value || '',
+					meta: options?.[0]?.meta || {},
+					value: phoneValue?.value || '',
+				}, false);
+				break;
+			case 'country':
+				this.utils.setManualCountryValue(formId, name, options, false);
+				break;
+			case 'select':
+				this.utils.setManualSelectValue(formId, name, options, false);
+				break;
 		}
 
 		// Used only for admin single submit.
@@ -1807,9 +1907,43 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
-		const customType = this.state.getStateElementTypeCustom(name, formId);
+		const type = this.state.getStateElementTypeField(name, formId);
 
-		this.utils.setOnUserChangeInput(event.target);
+		const {
+			value,
+			checked,
+		 } = event?.target;
+
+		switch (type) {
+			case 'checkbox':
+				this.utils.setManualCheckboxValue(
+					formId,
+					name,
+					{
+						[value]: checked ? value : '',
+					},
+					false
+				);
+				break;
+			case 'radio':
+				this.utils.setManualRadioValue(formId, name, value, false);
+				break;
+			case 'phone':
+				const phoneValue = this.state.getStateElementValue(name, formId);
+
+				this.utils.setManualPhoneValue(formId, name, {
+					prefix: phoneValue?.prefix || '',
+					meta: phoneValue?.meta || {},
+					value: value || '',
+				}, false);
+				break;
+			case 'range':
+				this.utils.setManualRangeValue(formId, name, value, false);
+				break;
+			default:
+				this.utils.setManualInputValue(formId, name, value, false);
+				break;
+		}
 
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
@@ -1825,10 +1959,10 @@ export class Form {
 		if (
 			!this.state.getStateConfigIsAdmin() &&
 			this.state.getStateFormConfigUseSingleSubmit(formId) && (
-				customType === 'range' ||
-				customType === 'number' ||
-				customType === 'checkbox' ||
-				customType === 'radio'
+				type === 'range' ||
+				type === 'number' ||
+				type === 'checkbox' ||
+				type === 'radio'
 			)
 		) {
 			debounce(this.formSubmit(formId), 100);
@@ -1893,16 +2027,13 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const value = event.target.getAttribute(this.state.getStateAttribute('ratingValue'));
-		const input = this.state.getStateElementInput(name, formId);
 		const disabled = this.state.getStateElementIsDisabled(name, formId);
 
 		if (disabled) {
 			return;
 		}
 
-		this.utils.setManualRatingValue(formId, name, value);
-
-		this.utils.setOnUserChangeInput(input);
+		this.utils.setManualRatingValue(formId, name, value, false);
 
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
@@ -2024,6 +2155,9 @@ export class Form {
 			setupInputField: (formId, name) => {
 				this.setupInputField(formId, name);
 			},
+			setupRangeField: (formId, name) => {
+				this.setupRangeField(formId, name);
+			},
 			setupRatingField: (formId, name) => {
 				this.setupRatingField(formId, name);
 			},
@@ -2062,6 +2196,9 @@ export class Form {
 			},
 			onSelectChangeEvent: (event) => {
 				this.onSelectChangeEvent(event);
+			},
+			onSelectRemoveEvent: (event) => {
+				this.onSelectRemoveEvent(event);
 			},
 			onInputEvent: (event) => {
 				this.onInputEvent(event);

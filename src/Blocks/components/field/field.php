@@ -58,6 +58,7 @@ $fieldId = Helpers::checkAttr('fieldId', $attributes, $manifest);
 $fieldName = Helpers::checkAttr('fieldName', $attributes, $manifest);
 $fieldBeforeContent = Helpers::checkAttr('fieldBeforeContent', $attributes, $manifest);
 $fieldAfterContent = Helpers::checkAttr('fieldAfterContent', $attributes, $manifest);
+$fieldSuffixContent = Helpers::checkAttr('fieldSuffixContent', $attributes, $manifest);
 $fieldType = Helpers::checkAttr('fieldType', $attributes, $manifest);
 $fieldUseError = Helpers::checkAttr('fieldUseError', $attributes, $manifest);
 $fieldUseTooltip = Helpers::checkAttr('fieldUseTooltip', $attributes, $manifest);
@@ -140,6 +141,11 @@ $contentClass = Helpers::classnames([
 $beforeContentClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, 'field', 'before-content', "{$componentClass}__before-content"),
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-before-content'),
+]);
+
+$suffixContentClass = Helpers::classnames([
+	FormsHelper::getTwPart($twClasses, 'field', 'suffix-content', "{$componentClass}__suffix-content"),
+	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-suffix-content'),
 ]);
 
 $afterContentClass = Helpers::classnames([
@@ -246,6 +252,12 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 			<?php } ?>
 			<div class="<?php echo esc_attr($contentWrapClass); ?>">
 				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+
+				<?php if ($fieldSuffixContent) { ?>
+					<div class="<?php echo esc_attr($suffixContentClass); ?>">
+						<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+					</div>
+				<?php } ?>
 			</div>
 			<?php if ($fieldAfterContent) { ?>
 				<div class="<?php echo esc_attr($afterContentClass); ?>">

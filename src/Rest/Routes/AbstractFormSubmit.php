@@ -14,9 +14,11 @@ use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\General\SettingsGeneral;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
@@ -24,7 +26,6 @@ use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStanda
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftForms\Validation\ValidationPatternsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
@@ -46,13 +47,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 * @var ValidatorInterface
 	 */
 	protected $validator;
-
-	/**
-	 * Instance variable of ValidationPatternsInterface data.
-	 *
-	 * @var ValidationPatternsInterface
-	 */
-	protected $validationPatterns;
 
 	/**
 	 * Instance variable of FormSubmitMailerInterface data.
@@ -83,6 +77,39 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected $security;
 
 	/**
+	 * Instance variable of enrichment data.
+	 *
+	 * @var EnrichmentInterface
+	 */
+	protected EnrichmentInterface $enrichment;
+
+	/**
+	 * Create a new instance that injects classes
+	 *
+	 * @param ValidatorInterface $validator Inject validator methods.
+	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param CaptchaInterface $captcha Inject captcha methods.
+	 * @param SecurityInterface $security Inject security methods.
+	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
+	 */
+	public function __construct(
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
+		CaptchaInterface $captcha,
+		SecurityInterface $security,
+		FormSubmitMailerInterface $formSubmitMailer,
+		EnrichmentInterface $enrichment
+	) {
+		$this->validator = $validator;
+		$this->labels = $labels;
+		$this->captcha = $captcha;
+		$this->security = $security;
+		$this->formSubmitMailer = $formSubmitMailer;
+		$this->enrichment = $enrichment;
+	}
+
+	/**
 	 * Route types.
 	 */
 	protected const ROUTE_TYPE_DEFAULT = 'default';
@@ -102,7 +129,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected const VALIDATION_ERROR_OUTPUT = 'validationOutput';
 	protected const VALIDATION_ERROR_IS_SPAM = 'validationIsSpam';
 
-
 	/**
 	 * Method that returns rest response
 	 *
@@ -116,6 +142,14 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
+		// If route is used for admin only, check if user has permission. (generally used for settings).
+		if ($this->isRouteAdminProtected()) {
+			$premission = $this->checkUserPermission();
+			if ($premission) {
+				return \rest_ensure_response($premission);
+			}
+		}
+
 		// Try catch request.
 		try {
 			// Prepare all data.
@@ -300,6 +334,15 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						}
 					}
 
+					// Map enrichment data.
+					$formDetails[UtilsConfig::FD_PARAMS] = $this->enrichment->mapEnrichmentFields($formDetails[UtilsConfig::FD_PARAMS]);
+
+					// Filter params.
+					$filterName = UtilsHooksHelper::getFilterName(['integrations', $formDetails[UtilsConfig::FD_TYPE], 'prePostParams']);
+					if (\has_filter($filterName)) {
+						$formDetails[UtilsConfig::FD_PARAMS] = \apply_filters($filterName, $formDetails[UtilsConfig::FD_PARAMS], $formDetails[UtilsConfig::FD_FORM_ID]) ?? [];
+					}
+
 					break;
 			}
 
@@ -479,6 +522,9 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			'public' => [],
 		];
 
+		// Set increment and add it to the output.
+		$output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')] = FormsHelper::setIncrement($formId);
+
 		// Set entries.
 		$useEntries = \apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId);
 		if ($useEntries) {
@@ -512,9 +558,24 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$redirectDataOutput = [];
 
 			// Replace {field_name} with the actual value.
-			foreach ($formDetails[UtilsConfig::FD_PARAMS_RAW] as $name => $value) {
+			foreach (\array_merge($formDetails[UtilsConfig::FD_PARAMS], $formDetails[UtilsConfig::FD_FILES]) as $param) {
+				$name = $param['name'] ?? '';
+				$value = $param['value'] ?? '';
+				$type = $param['type'] ?? '';
+
 				if ($name === UtilsHelper::getStateParam('skippedParams')) {
 					continue;
+				}
+
+				if ($type === 'file') {
+					$value = \array_map(
+						static function (string $file) {
+							$filename = \pathinfo($file, \PATHINFO_FILENAME);
+							$extension = \pathinfo($file, \PATHINFO_EXTENSION);
+							return "{$filename}.{$extension}";
+						},
+						$value
+					);
 				}
 
 				if (\is_array($value)) {
@@ -534,7 +595,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('entry')] = $output['private'][UtilsHelper::getStateResponseOutputKey('entry')];
 			}
 
-			// Redirect secrue data.
+			// Redirect secure data.
 			if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
 				$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true);
 
@@ -559,9 +620,9 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 			// Redirect full url.
 			$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
-				[
+				$redirectDataOutput ? [
 					UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
-				],
+				] : [],
 				$successRedirectUrl
 			);
 		}
@@ -584,6 +645,13 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])
 				) {
 					$entryNewData[UtilsHelper::getStateResponseOutputKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
+				}
+
+				if (
+					UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+					isset($output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')])
+				) {
+					$entryNewData[UtilsHelper::getStateResponseOutputKey('incrementId')] = $output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')];
 				}
 
 				EntriesHelper::updateEntry($entryNewData, $output['private'][UtilsHelper::getStateResponseOutputKey('entry')]);
@@ -704,6 +772,9 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 				case 'mailerTimestampHuman':
 					$output[$key] = \current_datetime()->format('Y-m-d H:i:s');
 					break;
+				case 'mailerIncrementId':
+					$output[$key] = $data[UtilsHelper::getStateResponseOutputKey('incrementId')] ?? '';
+					break;
 				case 'mailerEntryUrl':
 					$entryId = $data[UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
 					$formId = $data[UtilsHelper::getStateResponseOutputKey('formId')] ?? '';
@@ -739,16 +810,6 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Returns validator patterns class.
-	 *
-	 * @return ValidationPatternsInterface
-	 */
-	protected function getValidatorPatterns()
-	{
-		return $this->validationPatterns;
-	}
-
-	/**
 	 * Returns validator labels class.
 	 *
 	 * @return LabelsInterface
@@ -779,6 +840,16 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	}
 
 	/**
+	 * Returns enrichment class.
+	 *
+	 * @return EnrichmentInterface
+	 */
+	protected function getEnrichment()
+	{
+		return $this->enrichment;
+	}
+
+	/**
 	 * Returns securicty class.
 	 *
 	 * @return FormSubmitMailerInterface
@@ -786,6 +857,16 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	protected function getFormSubmitMailer()
 	{
 		return $this->formSubmitMailer;
+	}
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
 	}
 
 	/**

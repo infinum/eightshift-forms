@@ -30,6 +30,7 @@ export const ProgressBarOptions = (attributes) => {
 			<IconToggle
 				icon={icons.tag}
 				label={__('Hide progress bar labels', 'eightshift-forms')}
+				help={__('This will hide the labels on the progress bar.', 'eightshift-forms')}
 				checked={progressBarHideLabels}
 				onChange={(value) => {
 					setAttributes({ [getAttrKey('progressBarHideLabels', attributes, manifest)]: value });

@@ -207,8 +207,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 		}
 
 		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
-
-		$fieldNames = $formDetails[UtilsConfig::FD_FIELD_NAMES_TAGS];
+		$fieldNames = $formDetails[UtilsConfig::FD_FIELD_NAMES];
 		$fieldNameTags = UtilsSettingsOutputHelper::getPartialFormFieldNames($fieldNames);
 		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails[UtilsConfig::FD_TYPE]);
 

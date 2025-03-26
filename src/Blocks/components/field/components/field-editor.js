@@ -97,6 +97,7 @@ export const FieldEditor = (attributes) => {
 	const fieldHideLabel = checkAttr('fieldHideLabel', attributes, manifest);
 	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
 	const fieldAfterContent = checkAttr('fieldAfterContent', attributes, manifest);
+	const fieldSuffixContent = checkAttr('fieldSuffixContent', attributes, manifest);
 	const fieldType = checkAttr('fieldType', attributes, manifest);
 	const fieldHelp = checkAttr('fieldHelp', attributes, manifest);
 	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
@@ -144,6 +145,12 @@ export const FieldEditor = (attributes) => {
 			}
 			<div className={`${componentClass}__content-wrap`}>
 				{fieldContent}
+
+				{fieldSuffixContent &&
+					<div className={`${componentClass}__suffix-content`}>
+						{fieldSuffixContent}
+					</div>
+				}
 			</div>
 			{fieldAfterContent &&
 				<div className={`${componentClass}__after-content`}>

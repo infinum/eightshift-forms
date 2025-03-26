@@ -4,6 +4,170 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.9.10]
+
+### Fixed
+
+- `Workable` integration fix for broken checkbox field
+- Fixed sync for integration diff.
+
+## [5.9.9]
+
+### Added
+
+- Ability to output file name to `email`, `redirect_url` and `entries`.
+
+### Changed
+
+- Internal way we handle params that can be an array.
+- `mailer` is now faster due to the new way we process params.
+
+## [5.9.8]
+
+### Fixed
+
+- Conditional tags inner logic.
+
+## [5.9.7]
+
+### Fixed
+
+- Conditional tags for `select`, `select multiple`, `country` and `country multiple` fields.
+
+## [5.9.6]
+
+### Added
+
+- `esFormsResetSteps` JS event.
+
+## [5.9.5]
+
+### Added
+
+- Added Custom Name key to JS state.
+
+### Fixed
+
+- Custom name key will now be set correctly in the state.
+
+## [5.9.4]
+
+### Fixed
+
+- `Airtable` integration fix for more than 100 records.
+
+## [5.9.3]
+
+### Fixed
+
+- Broken form submission sending fallback email for success.
+
+## [5.9.2]
+
+### Fixed
+
+- GTM data layer data is sent correctly now.
+- `radio`, `checkbox` and `select-option` in editor now shows selected state.
+
+## [5.9.1]
+
+### Added
+
+- public helper to update entry.
+
+## [5.9.0]
+
+### Changed
+
+- internal simplification of the form php classes for integrations.
+- `prePostParams` filter is now loaded in the abstract method and not in the integration client classes.
+- All JavaScript events are now loaded on window.
+
+### Added
+
+- 4 new JavaScript events for enrichment.
+- new JavaScript event for field change.
+- new JavaScript event for after result output is processed.
+- Payment forms will now have loading spinner on submit.
+- Enrichment will setup the data in PHP earlier in the process so it can be used in filters and entries.
+- Ability to ignore fallback email for specific key.
+
+## [5.8.3]
+
+### Fixed
+
+- Mailer `tnx email` will now parse email response tags correctly.
+- Form file field will now reset the value after the form is submitted.
+
+## [5.8.2]
+
+### Fixed
+
+- form submission for phone bugfix.
+- increment ID bugfix for length.
+
+### Changed
+
+- Corvus integration now supports API key per store ID.
+
+### Added
+
+- Corvus integration setting for setting IBAN and subscription values.
+- Corvus integration order number will now use increment ID or entry ID based on the settings.
+- Paycek integration order number will now use increment ID or entry ID based on the settings.
+- Paycek now sends formId and order number as GET parameters for callback URL.
+
+## [5.8.1]
+
+### Changed
+
+- location of increment settings and helpers.
+
+## [5.8.0]
+
+### Added
+
+- `increment ID` option for entries so you can use them to track successful submissions or use it as an order number.
+- `incrementId` key is now available in the email response tags.
+
+### Changed
+
+- `entries` listing now has the new listing page with better UX and table layout.
+
+## [5.7.1]
+
+### Added
+
+- `prePostParams` filter on Corvus and Paycek integrations.
+
+## [5.7.0]
+
+### Changed
+
+- Forms are now supporting multiple instances of the same form on the same page.
+- `enrichment` prefill on URL now has totally new logic and ways or prefilling the fields.
+- `JS` internal logic for setting up values on field.
+
+### Added
+
+- new country order list filter to provide a custom `priority` order for the countries.
+- additional protection for checking if route is private or public for settings.
+- `country` field now supports multiple values, min/max count validation and ability to prefill the field value.
+- `phone` field now supports initial selected value both for country picker and number.
+- `field` now support additional `suffix` content that will be displayed after the field input.
+- `radio and checkbox` fields now support one `input` field that can be used as `other` option and this value will be sent with the main values.
+- new `enrichment` prefill option to save all fields defined as `smart` and prefilled all forms that have that field.
+
+### Removed
+
+- ability for phone/country field to `sync` changes to the other field.
+
+### Fixed
+
+- broken checkboxes and radios if there are multiple items with the same name.
+- missing email confirmation for `Corvus`, `Calculator` and `Paycek` integrations.
+- success redirect url will no longer send empty encrypted value.
+
 ## [5.6.6]
 
 ### Added
@@ -434,6 +598,12 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Changed
 
 - Filter `script_dependency_theme` is now `script_dependency_theme_captcha`.
+
+## [3.1.13]
+
+### Fixed
+
+- `Airtable` integration fix for more than 100 records.
 
 ## [3.1.12]
 
@@ -883,6 +1053,23 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.9.10]: https://github.com/infinum/eightshift-forms/compare/5.9.9...5.9.10
+[5.9.9]: https://github.com/infinum/eightshift-forms/compare/5.9.8...5.9.9
+[5.9.8]: https://github.com/infinum/eightshift-forms/compare/5.9.7...5.9.8
+[5.9.7]: https://github.com/infinum/eightshift-forms/compare/5.9.6...5.9.7
+[5.9.6]: https://github.com/infinum/eightshift-forms/compare/5.9.5...5.9.6
+[5.9.5]: https://github.com/infinum/eightshift-forms/compare/5.9.4...5.9.5
+[5.9.4]: https://github.com/infinum/eightshift-forms/compare/5.9.3...5.9.4
+[5.9.3]: https://github.com/infinum/eightshift-forms/compare/5.9.2...5.9.3
+[5.9.2]: https://github.com/infinum/eightshift-forms/compare/5.9.1...5.9.2
+[5.9.1]: https://github.com/infinum/eightshift-forms/compare/5.9.0...5.9.1
+[5.9.0]: https://github.com/infinum/eightshift-forms/compare/5.8.3...5.9.0
+[5.8.3]: https://github.com/infinum/eightshift-forms/compare/5.8.2...5.8.3
+[5.8.2]: https://github.com/infinum/eightshift-forms/compare/5.8.1...5.8.2
+[5.8.1]: https://github.com/infinum/eightshift-forms/compare/5.8.0...5.8.1
+[5.8.0]: https://github.com/infinum/eightshift-forms/compare/5.7.1...5.8.0
+[5.7.1]: https://github.com/infinum/eightshift-forms/compare/5.7.0...5.7.1
+[5.7.0]: https://github.com/infinum/eightshift-forms/compare/5.6.6...5.7.0
 [5.6.6]: https://github.com/infinum/eightshift-forms/compare/5.6.5...5.6.6
 [5.6.5]: https://github.com/infinum/eightshift-forms/compare/5.6.4...5.6.5
 [5.6.4]: https://github.com/infinum/eightshift-forms/compare/5.6.3...5.6.4
@@ -929,7 +1116,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 [4.0.3]: https://github.com/infinum/eightshift-forms/compare/4.0.2...4.0.3
 [4.0.2]: https://github.com/infinum/eightshift-forms/compare/4.0.1...4.0.2
 [4.0.1]: https://github.com/infinum/eightshift-forms/compare/4.0.0...4.0.1
-[4.0.0]: https://github.com/infinum/eightshift-forms/compare/3.1.12...4.0.0
+[4.0.0]: https://github.com/infinum/eightshift-forms/compare/3.1.13...4.0.0
+[3.1.13]: https://github.com/infinum/eightshift-forms/compare/3.1.12...3.1.13
 [3.1.12]: https://github.com/infinum/eightshift-forms/compare/3.1.11...3.1.12
 [3.1.11]: https://github.com/infinum/eightshift-forms/compare/3.1.10...3.1.11
 [3.1.10]: https://github.com/infinum/eightshift-forms/compare/3.1.9...3.1.10

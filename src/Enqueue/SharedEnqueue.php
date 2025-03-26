@@ -17,6 +17,7 @@ use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
 use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
 use EightshiftForms\Rest\Routes\Settings\BulkRoute;
 use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
+use EightshiftForms\Rest\Routes\Settings\IncrementRoute;
 use EightshiftForms\Rest\Routes\Settings\DebugEncryptRoute;
 use EightshiftForms\Rest\Routes\Settings\ExportRoute;
 use EightshiftForms\Rest\Routes\Settings\LocationsRoute;
@@ -75,6 +76,7 @@ trait SharedEnqueue
 			$outputPrivate = [
 				// Admin.
 				'settings' => SettingsSubmitRoute::ROUTE_SLUG,
+				'increment' => IncrementRoute::ROUTE_SLUG,
 				'cacheClear' => CacheDeleteRoute::ROUTE_SLUG,
 				'migration' => MigrationRoute::ROUTE_SLUG,
 				'transfer' => TransferRoute::ROUTE_SLUG,

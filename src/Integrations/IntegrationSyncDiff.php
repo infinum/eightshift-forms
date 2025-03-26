@@ -296,10 +296,10 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		}
 
 		// Prepare content variables.
-		$contentType = $content['type'] ?? '';
-		$contentItemId = $content['itemId'] ?? '';
-		$contentInnerId = $content['innerId'] ?? '';
-		$contentFields = $content['fields'] ?? [];
+		$contentType = $content[UtilsConfig::FD_TYPE] ?? '';
+		$contentItemId = $content[UtilsConfig::FD_ITEM_ID] ?? '';
+		$contentInnerId = $content[UtilsConfig::FD_INNER_ID] ?? '';
+		$contentFields = $content[UtilsConfig::FD_FIELDS] ?? [];
 
 		// Bailout if content type is missing.
 		if (!$contentType) {
@@ -346,10 +346,10 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		$integration = \apply_filters($integrationFilterName, $formId, $contentItemId, $contentInnerId);
 
 		// Prepare integration variables.
-		$integrationType = $integration['type'] ?? '';
-		$integrationItemId = $integration['itemId'] ?? '';
-		$integrationInnerId = $integration['innerId'] ?? '';
-		$integrationFields = $integration['fields'] ?? [];
+		$integrationType = $integration[UtilsConfig::FD_TYPE] ?? '';
+		$integrationItemId = $integration[UtilsConfig::FD_ITEM_ID] ?? '';
+		$integrationInnerId = $integration[UtilsConfig::FD_INNER_ID] ?? '';
+		$integrationFields = $integration[UtilsConfig::FD_FIELDS] ?? [];
 
 		// Bailout if integration type is missing.
 		if (!$integrationType) {
@@ -490,18 +490,18 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	private function diffChanges(array $integration, array $content, bool $editorOutput = false): array
 	{
 		// Prepare arrays for diff.
-		$diff = $this->prepareContentBlocksForCheck($content['fields']['innerBlocks'][0]['innerBlocks'] ?? [], $this->prepareIntegrationBlocksForCheck($integration['fields']));
+		$diff = $this->prepareContentBlocksForCheck($content[UtilsConfig::FD_FIELDS]['innerBlocks'][0]['innerBlocks'] ?? [], $this->prepareIntegrationBlocksForCheck($integration[UtilsConfig::FD_FIELDS]));
 
-		$integrationType = $integration['type'] ?? '';
+		$integrationType = $integration[UtilsConfig::FD_TYPE] ?? '';
 		$diffOrder = $diff['order'] ?? [];
 		$diffOrderInner = $diff['orderInner'] ?? [];
 
 		// Prepare standard output.
 		$output = [
 			'type' => $integrationType,
-			'itemId' => $integration['itemId'] ?? '',
-			'innerId' => $integration['innerId'] ?? '',
-			'typeAttrs' => $content['fields']['innerBlocks'][0]['attrs'] ?? [],
+			'itemId' => $integration[UtilsConfig::FD_ITEM_ID] ?? '',
+			'innerId' => $integration[UtilsConfig::FD_INNER_ID] ?? '',
+			'typeAttrs' => $content[UtilsConfig::FD_FIELDS]['innerBlocks'][0]['attrs'] ?? [],
 			'update' => false,
 			'removed' => [],
 			'added' => [],

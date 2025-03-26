@@ -16,7 +16,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
@@ -54,13 +53,6 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 	public const HUBSPOT_CONSENT_LEGITIMATE = 'legitimateInterest';
 
 	/**
-	 * Instance variable of enrichment data.
-	 *
-	 * @var EnrichmentInterface
-	 */
-	protected EnrichmentInterface $enrichment;
-
-	/**
 	 * Instance variable of SecurityInterface data.
 	 *
 	 * @var SecurityInterface
@@ -70,14 +62,11 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 	/**
 	 * Create a new admin instance.
 	 *
-	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to localStorage.
 	 * @param SecurityInterface $security Inject security methods.
 	 */
 	public function __construct(
-		EnrichmentInterface $enrichment,
 		SecurityInterface $security
 	) {
-		$this->enrichment = $enrichment;
 		$this->security = $security;
 	}
 
@@ -235,7 +224,7 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 			}
 		}
 
-		$paramsPrepared = $this->prepareParams($params, $formId);
+		$paramsPrepared = $this->prepareParams($params);
 		$paramsFiles = $this->prepareFiles($files, $formId);
 
 		$body = [];
@@ -804,22 +793,12 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 	 * Prepare params
 	 *
 	 * @param array<string, mixed> $params Params.
-	 * @param string $formId FormId value.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
-	private function prepareParams(array $params, string $formId): array
+	private function prepareParams(array $params): array
 	{
 		$output = [];
-
-		// Map enrichment data.
-		$params = $this->enrichment->mapEnrichmentFields($params);
-
-		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'prePostParams']);
-		if (\has_filter($filterName)) {
-			$params = \apply_filters($filterName, $params, $formId) ?? [];
-		}
 
 		// Remove unecesery params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
@@ -853,7 +832,9 @@ class HubspotClient implements HubspotClientInterface, ServiceInterface
 					$value = 'true';
 				}
 
-				$value = \str_replace(UtilsConfig::DELIMITER, ';', $value);
+				if (\is_array($value)) {
+					$value = \implode(';', $value);
+				}
 			}
 
 			// Must be in UTC timestamp with milliseconds.

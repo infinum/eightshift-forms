@@ -59,7 +59,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_ENTRIES_SETTINGS_USE_KEY = 'entries-settings-use';
 
 	/**
-	 * Entries settings save empty fields key.
+	 * Save empty fields key.
 	 */
 	public const SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS = 'entries-save-empty-fields';
 
@@ -69,6 +69,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY = 'entries-save-additional-values';
 	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY = 'redirect-url';
 	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY = 'variations';
+	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY = 'increment-id';
 
 	/**
 	 * Data data key.
@@ -152,47 +153,53 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			[
+			($isUsed ? [
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',
 				'layoutContent' => [
 					[
 						'component' => 'card-inline',
-						'cardInlineTitle' => \__('Store entries in database', 'eightshift-forms'),
+						'cardInlineTitle' => \__('View all entries in database', 'eightshift-forms'),
 						'cardInlineRightContent' => [
-							$isUsed ? [
+							[
 								'component' => 'submit',
 								'submitVariant' => 'ghost',
 								'submitButtonAsLink' => true,
 								'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId),
 								'submitValue' => \__('View', 'eightshift-forms'),
-							] : [],
+							],
+						],
+					],
+				],
+			] : []),
+			[
+				'component' => 'tabs',
+				'tabsContent' => [
+					[
+						'component' => 'tab',
+						'tabLabel' => \__('Entries', 'eightshift-forms'),
+						'tabContent' => [
 							[
 								'component' => 'checkboxes',
 								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
+										'checkboxLabel' => \__('Store entries in database', 'eightshift-forms'),
 										'checkboxIsChecked' => $isUsed,
 										'checkboxValue' => self::SETTINGS_ENTRIES_SETTINGS_USE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
 									],
 								],
+								// translators: %s is the link to the listing page.
+								'checkboxesFieldHelp' => $isUsed ? \sprintf(\__('View all stored entries on <a href="%s">this</a> link.', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
 							],
-						],
-					],
-				],
-			],
-			...($isUsed ? [
-				[
-					'component' => 'tabs',
-					'tabsFull' => true,
-					'tabsContent' => [
-						[
-							'component' => 'tab',
-							'tabLabel' => \__('Options', 'eightshift-forms'),
-							'tabContent' => [
+							...($isUsed ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
@@ -235,14 +242,23 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
-										]
-									]
+										],
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Increment ID', 'eightshift-forms'),
+											'checkboxHelp' => \__('Increment ID set by the form successful submission.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										],
+									],
 								],
-							],
+							] : []),
 						],
 					],
 				],
-			] : []),
+			],
 		];
 	}
 

@@ -433,7 +433,13 @@
 			"afterCaptchaInit": "esFormsAfterCaptchaInit",
 			"stepsGoToNextStep": "esFormsGoToNextStep",
 			"stepsGoToPrevStep": "esFormsGoToPrevStep",
-			"enrichmentPrefill": "esFormsEnrichmentPrefill"
+			"stepsResetSteps": "esFormsResetSteps",
+			"beforeEnrichmentUrlPrefill": "esFormsBeforeEnrichmentUrlPrefill",
+			"afterEnrichmentUrlPrefill": "esFormsAfterEnrichmentUrlPrefill",
+			"beforeEnrichmentLocalstoragePrefill": "esFormsBeforeEnrichmentLocalstoragePrefill",
+			"afterEnrichmentLocalstoragePrefill": "esFormsAfterEnrichmentLocalstoragePrefill",
+			"onFieldChange": "esFormsOnFieldChange",
+			"afterResultsOutput": "esFormsAfterResultsOutput"
 		},
 		"typeInternal": {
 			"input": "input",
@@ -446,9 +452,10 @@
 			"file": "file",
 			"country": "country",
 			"date": "date",
-			"dateTime": "datetime",
+			"dateTime": "dateTime",
 			"select": "select",
 			"rating": "rating",
+			"range": "range",
 			"submit": "submit"
 		}
 	},
@@ -460,6 +467,7 @@
 		"LT": "lt",
 		"LTE": "lte",
 		"C": "c",
+		"CN": "cn",
 		"SW": "sw",
 		"EW": "ew"
 	},

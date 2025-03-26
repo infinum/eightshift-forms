@@ -32,7 +32,7 @@ final class FiltersOuputMock
 	{
 		$settings = '';
 		$filterUsed = false;
-		$settingsFields = [];
+		$settingsFields = $config['allowed'] ?? [];
 
 		$filterName = UtilsHooksHelper::getFilterName(['enrichment', 'manualMap']);
 
@@ -52,6 +52,8 @@ final class FiltersOuputMock
 						$settingsFields[] = $value;
 					}
 				}
+
+				$settingsFields = \array_unique($settingsFields);
 
 				$settings .= \__('Additional parameters were provided through code', 'eightshift-forms');
 				$settings .= '<ul>';

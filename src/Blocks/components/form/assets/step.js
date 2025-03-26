@@ -33,7 +33,7 @@ export class Steps {
 			return;
 		}
 
-		this.state.getStateFormElement(formId).addEventListener(
+		window.addEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
@@ -86,7 +86,7 @@ export class Steps {
 		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
 
 		// Dispatch event.
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('afterFormSubmitEnd'), response);
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitEnd'), formId, response);
 	}
 
 	/**
@@ -119,7 +119,7 @@ export class Steps {
 			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
 		}
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('stepsGoToNextStep'));
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('stepsGoToNextStep'), formId);
 	}
 
 	/**
@@ -139,7 +139,7 @@ export class Steps {
 
 		this.setChangeStep(formId, nextStep, newFlow);
 
-		this.utils.dispatchFormEvent(formId, this.state.getStateEvent('stepsGoToPrevStep'));
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('stepsGoToPrevStep'), formId);
 	}
 
 	/**
@@ -185,6 +185,8 @@ export class Steps {
 
 		// Hide prev button.
 		this.state.getStateFormStepsElement(firstStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_PREV}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
+
+		this.utils.dispatchFormEventForm(this.state.getStateEvent('stepsResetSteps'), formId);
 	}
 
 	/**
@@ -321,8 +323,8 @@ export class Steps {
 	 * 
 	 * @returns {vodi}
 	 */
-	removeEvents(formId) {
-		this.state.getStateFormElement(formId)?.removeEventListener(
+	removeEvents() {
+		window?.removeEventListener(
 			this.state.getStateEvent('formJsLoaded'),
 			this.onInitEvent
 		);
