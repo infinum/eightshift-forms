@@ -114,6 +114,9 @@
 		"fieldDisabledOptions": {
 			"type": "array"
 		},
+		"fieldSyncAttrsSkip": {
+			"type": "array"
+		},
 		"fieldNoInnerSpace": {
 			"type": "boolean",
 			"default": false

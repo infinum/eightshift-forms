@@ -51,6 +51,9 @@
 		"countryDisabledOptions": {
 			"type": "array"
 		},
+		"countrySyncAttrsSkip": {
+			"type": "array"
+		},
 		"countryUseSearch": {
 			"type": "boolean",
 			"default": true

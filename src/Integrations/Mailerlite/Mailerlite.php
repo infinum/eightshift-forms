@@ -129,8 +129,11 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 								'phoneFieldHidden' => true,
 								'phoneFieldLabel' => $label,
 								'phoneDisabledOptions' => $this->prepareDisabledOptions('phone', [
-									'phoneIsNumber'
+									'phoneIsNumber',
 								]),
+								'phoneSyncAttrsSkip' => [
+									'phoneFieldHidden',
+								],
 							];
 							break;
 						case 'zip':
@@ -142,8 +145,11 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 								'inputFieldLabel' => $label,
 								'inputType' => 'number',
 								'inputDisabledOptions' => $this->prepareDisabledOptions('input', [
-									'inputType'
+									'inputType',
 								]),
+								'inputSyncAttrsSkip' => [
+									'inputFieldHidden',
+								],
 							];
 							break;
 						default:
@@ -160,6 +166,9 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 									$name === 'email' ? 'inputIsRequired' : '',
 									$name === 'email' ? 'inputIsEmail' : '',
 								]),
+								'inputSyncAttrsSkip' => [
+									'inputFieldHidden',
+								],
 							];
 							break;
 					}
@@ -178,6 +187,9 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 							'dateType',
 							'dateOutputFormat',
 						]),
+						'dateSyncAttrsSkip' => [
+							'dateFieldHidden',
+						],
 					];
 					break;
 				case 'number':
@@ -193,6 +205,9 @@ class Mailerlite extends AbstractFormBuilder implements MapperInterface, Service
 							'inputType',
 							'inputIsNumber',
 						]),
+						'inputSyncAttrsSkip' => [
+							'inputFieldHidden',
+						],
 					];
 					break;
 			}

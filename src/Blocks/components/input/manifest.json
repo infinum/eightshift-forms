@@ -96,6 +96,9 @@
 		"inputDisabledOptions": {
 			"type": "array"
 		},
+		"inputSyncAttrsSkip": {
+			"type": "array"
+		},
 		"inputSingleSubmit": {
 			"type": "boolean",
 			"default": false

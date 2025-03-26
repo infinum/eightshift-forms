@@ -50,6 +50,9 @@
 		"submitDisabledOptions": {
 			"type": "array"
 		},
+		"submitSyncAttrsSkip": {
+			"type": "array"
+		},
 		"submitVariant": {
 			"type": "string",
 			"default": "default"

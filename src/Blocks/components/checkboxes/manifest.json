@@ -32,6 +32,9 @@
 		"checkboxesDisabledOptions": {
 			"type": "array"
 		},
+		"checkboxesSyncAttrsSkip": {
+			"type": "array"
+		},
 		"checkboxesIsToggles": {
 			"type": "boolean",
 			"default": false

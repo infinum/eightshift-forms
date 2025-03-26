@@ -79,6 +79,9 @@
 		"textareaDisabledOptions": {
 			"type": "array"
 		},
+		"textareaSyncAttrsSkip": {
+			"type": "array"
+		},
 		"textareaTypeCustom": {
 			"type": "string"
 		},
