@@ -40,6 +40,9 @@
 		"selectOptionDisabledOptions": {
 			"type": "array"
 		},
+		"selectOptionSyncAttrsSkip": {
+			"type": "array"
+		},
 		"selectOptionAttrs": {
 			"type": "object"
 		}

@@ -703,14 +703,21 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 		// Populate output data.
 		$output['output'] = $innerOutput;
 
-		$disabledOptionsKeys = \array_flip($output['output']['attrs']["{$prefix}DisabledOptions"]);
-
 		// Add missing content attributes from integration.
 		$missingAttributes = \array_diff_key($integration['attrs'], $content['attrs']);
+
+		// Skip attrs sync are used if some attrs are set via code and are missing from integration but should be able to be changed in the content like "hidden" state.
+		$syncAttrsSkipKeys = \array_flip($output['output']['attrs']["{$prefix}SyncAttrsSkip"] ?? []);
+
 		if ($missingAttributes) {
 			foreach ($missingAttributes as $missingAttributesKey => $missingAttributesValue) {
 				// No need to add default values.
 				if ($missingAttributesKey === 'inputInputType' && $missingAttributesValue === 'text') {
+					continue;
+				}
+
+				// Skip sync if key is in the skip array.
+				if (isset($syncAttrsSkipKeys[$missingAttributesKey])) {
 					continue;
 				}
 
@@ -720,6 +727,8 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				$output['output']['attrs'][$missingAttributesKey] = $missingAttributesValue;
 			}
 		}
+
+		$disabledOptionsKeys = \array_flip($output['output']['attrs']["{$prefix}DisabledOptions"]);
 
 		// Remove attributes removed from integration but it is still in the content.
 		$removedAttributes = \array_diff_key($content['attrs'], $integration['attrs']);
@@ -1055,7 +1064,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				continue;
 			}
 
-			if ($key === "{$component}DisabledOptions") {
+			if ($key === "{$component}DisabledOptions" || $key === "{$component}SyncAttrsSkip") {
 				$value = \array_values(\array_map(
 					static function ($item) use ($component) {
 						return $component . \ucfirst($item);

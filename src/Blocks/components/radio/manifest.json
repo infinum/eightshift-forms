@@ -69,6 +69,9 @@
 		"radioDisabledOptions": {
 			"type": "array"
 		},
+		"radioSyncAttrsSkip": {
+			"type": "array"
+		},
 		"radioIsHidden": {
 			"type": "boolean",
 			"default": false

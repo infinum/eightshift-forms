@@ -66,6 +66,9 @@
 		"selectDisabledOptions": {
 			"type": "array"
 		},
+		"selectSyncAttrsSkip": {
+			"type": "array"
+		},
 		"selectUseSearch": {
 			"type": "boolean",
 			"default": true
