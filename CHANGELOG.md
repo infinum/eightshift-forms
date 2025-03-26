@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.3.1]
+
+### Fixed
+
+- Sync issue when initially manually setting field state that should be able to change from the editor.
+- Mailerlite sync issue with hidden field.
+
 ## [6.3.0]
 
 ### Added
@@ -1160,6 +1167,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.3.0]: https://github.com/infinum/eightshift-forms/compare/6.2.0...6.3.0
 [6.2.0]: https://github.com/infinum/eightshift-forms/compare/6.1.8...6.2.0
 [6.1.8]: https://github.com/infinum/eightshift-forms/compare/6.1.7...6.1.8
 [6.1.7]: https://github.com/infinum/eightshift-forms/compare/6.1.6...6.1.7
