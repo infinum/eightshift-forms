@@ -28,6 +28,11 @@ class Countries implements CountriesInterface
 	{
 		$countries = $this->getCountriesList();
 
+		$countriesFilterName = UtilsHooksHelper::getFilterName(['block', 'country', 'alternativeCountryNamesDataSet']);
+		if (\has_filter($countriesFilterName)) {
+			$countries = \apply_filters($countriesFilterName, $countries);
+		}
+
 		$output = [
 			'default' => [
 				'label' => \__('Default', 'eightshift-forms'),
