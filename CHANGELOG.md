@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.3.3]
+
+### Updated
+
+- GitHub actions to the latest version.
+
 ## [6.3.2]
 
 ### Added
@@ -1173,6 +1179,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.3.3]: https://github.com/infinum/eightshift-forms/compare/6.3.2...6.3.3
 [6.3.2]: https://github.com/infinum/eightshift-forms/compare/6.3.1...6.3.2
 [6.3.1]: https://github.com/infinum/eightshift-forms/compare/6.3.0...6.3.1
 [6.3.0]: https://github.com/infinum/eightshift-forms/compare/6.2.0...6.3.0
