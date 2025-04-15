@@ -123,6 +123,7 @@ final class Filters
 				],
 				'country' => [
 					'additionalContent',
+					'modifyDataSet',
 					'alternativeDataSet',
 				],
 				'date' => [

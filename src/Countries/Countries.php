@@ -26,7 +26,10 @@ class Countries implements CountriesInterface
 	 */
 	public function getCountriesDataSet(bool $useFullOutput = true): array
 	{
-		$countries = $this->getCountriesList();
+		$countries = \apply_filters(
+			UtilsHooksHelper::getFilterName(['block', 'country', 'modifyDataSet']),
+			$this->getCountriesList()
+		);
 
 		$output = [
 			'default' => [

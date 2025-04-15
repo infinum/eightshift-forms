@@ -18,7 +18,7 @@ jobs:
         php: [ '8.3' ]
     steps:
       - name: Bundle artifact
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle-artifact@main
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle/artifact@main
         with:
           PROJECT_PATH: '.'
           REPO_NAME: 'eightshift-forms'

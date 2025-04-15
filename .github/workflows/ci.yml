@@ -18,7 +18,7 @@ jobs:
         node: [ '23.1' ]
     steps:
       - name: Lint assets
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-assets@main
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint/assets@main
         with:
           NODE_VERSION: ${{ matrix.node }}
           PROJECT_PATH: '.'
@@ -32,7 +32,7 @@ jobs:
         php: [ '8.3' ]
     steps:
       - name: PHP Static code analysis
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php-static@main
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint/php-stan@main
         with:
           PHP_VERSION: ${{ matrix.php }}
           PROJECT_PATH: '.'
@@ -46,7 +46,7 @@ jobs:
         php: [ '8.3' ]
     steps:
       - name: PHP check coding standards
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint-php@main
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/lint/php-cs@main
         with:
           PHP_VERSION: ${{ matrix.php }}
           PROJECT_PATH: '.'
