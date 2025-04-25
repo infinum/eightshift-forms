@@ -1,7 +1,6 @@
 import React  from 'react';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
@@ -9,6 +8,7 @@ import {
 	STORE_NAME,
 	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import { MissingName, VisibilityHidden, preventSaveOnMissingProps } from './../../utils';
 
@@ -33,18 +33,18 @@ export const CheckboxEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
 
-	const checkboxClass = classnames([
+	const checkboxClass = clsx(
 		selector(componentClass, componentClass),
 		selector(blockClass, blockClass, selectorClass),
 		selector(additionalClass, additionalClass),
 		selector(checkboxIsHidden, 'es-form-is-hidden'),
-	]);
+	);
 
-	const checkboxLabelClass = classnames([
+	const checkboxLabelClass = clsx(
 		selector(componentClass, componentClass, 'label'),
 		selector(checkboxLabel === '', componentClass, 'label', 'placeholder'),
 		selector(checkboxIsChecked, componentClass, 'label', 'checked'),
-	]);
+	);
 
 	return (
 		<div className={checkboxClass}>

@@ -10,13 +10,8 @@
 	"locationsPageUrl": "admin.php?page=es-forms&type=locations",
 	"editFormUrl": "post.php?action=edit",
 	"config": {
-		"outputCssGlobally": true,
-		"outputCssOptimize": true,
 		"outputCssSelectorName": "esFormsCssVariables",
-		"outputCssGloballyAdditionalStyles": [],
 		"useWrapper": false,
-		"useBlocks": true,
-		"useComponents": true,
 		"useVariations": false
 	},
 	"allowedBlocksNoneBuilderBlocksList": [

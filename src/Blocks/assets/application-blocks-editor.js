@@ -5,11 +5,17 @@
  * Usage: `WordPress admin editor`.
  */
 
+import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+
 // Images.
 import './images/blocks-editor';
 
 // Styles.
 import './styles/blocks-editor.scss';
 
+dynamicImport(require.context('./../components', true, /-editor\.scss$/));
+dynamicImport(require.context('./../custom', true, /-editor\.scss$/));
+
 // Scripts.
 import './scripts/blocks-editor';
+

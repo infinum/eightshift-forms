@@ -1,7 +1,6 @@
 /* global esFormsLocalization */
 
 import React from 'react';
-import classnames from 'classnames';
 import { isObject } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { dispatch, select } from '@wordpress/data';
@@ -12,6 +11,7 @@ import {
 	STORE_NAME,
 	props,
 } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { MissingName, VisibilityHidden } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
@@ -27,10 +27,10 @@ export const FieldEditorExternalBlocks = ({
 		componentClass,
 	} = manifest;
 
-	const fieldClass = classnames([
+	const fieldClass = clsx(
 		selector(componentClass, componentClass),
 		selector(componentClass, componentClass, '', 'field'),
-	]);
+	);
 
 	return (
 		<div className={fieldClass}>

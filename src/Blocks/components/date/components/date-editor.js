@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
 import {
 	selector,
@@ -8,6 +7,7 @@ import {
 	STORE_NAME,
 	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -28,10 +28,10 @@ export const DateEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('dateName', attributes, manifest), dateName);
 
-	const dateClass = classnames([
+	const dateClass = clsx(
 		selector(manifest.componentClass, manifest.componentClass),
 		selector(additionalClass, additionalClass),
-	]);
+	);
 
 	const date = (
 		<>

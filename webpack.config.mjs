@@ -1,6 +1,9 @@
-/* eslint-disable import/no-dynamic-require, global-require */
+import { eightshiftConfig } from '@eightshift/frontend-libs/webpack/index.mjs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const path = require('path');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * This is a main entrypoint for Webpack config.
@@ -8,36 +11,29 @@ const path = require('path');
  * We are loading mostly used configuration but you can always override or turn off the default setup and provide your own.
  * Please referer to Eightshift-libs wiki for details.
  */
-module.exports = (env, argv) => {
-
+export default (_, argv) => {
 	const projectConfig = {
 		config: {
 			projectDir: __dirname, // Current project directory absolute path.
 			projectPath: 'wp-content/plugins/eightshift-forms', // Project path relative to project root.
 		},
-		overrides: [
-			'application',
-			'applicationAdmin',
-			'applicationBlocks',
-		],
 	};
 
-	// Generate Webpack config for this project using options object.
-	const project = require('./node_modules/@eightshift/frontend-libs/webpack')(argv.mode, projectConfig);
+	// Generate webpack config for this project using options object.
+	const config = eightshiftConfig(argv.mode, projectConfig);
 
 	return {
 		// Load all projects config from eightshift-frontend-libs.
-		...project,
+		...config,
 
 		output: {
 			// Load all output config from eightshift-frontend-libs.
-			...project.output,
+			...config.output,
 			library: 'EightshiftForms',
 		},
 
 		entry: {
-			...project.entry,
-			applicationAdmin: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-admin.js'),
+			...config.entry,
 			applicationBlocksFrontendMandatory: path.join(projectConfig.config.projectDir, '/src/Blocks/assets/application-blocks-frontend-mandatory.js'),
 		},
 	};

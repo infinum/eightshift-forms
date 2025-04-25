@@ -1,6 +1,5 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
 import {
 	selector,
@@ -8,6 +7,7 @@ import {
 	STORE_NAME,
 	checkAttr,
 } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 
 export const SubmitEditor = (attributes) => {
@@ -25,10 +25,10 @@ export const SubmitEditor = (attributes) => {
 
 	const submitValue = checkAttr('submitValue', attributes, manifest);
 
-	const submitClass = classnames([
+	const submitClass = clsx(
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
-	]);
+	);
 
 	const submitComponent = (
 		<button className={submitClass}>

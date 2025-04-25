@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
 import {
 	selector,
@@ -7,6 +6,7 @@ import {
 	STORE_NAME,
 	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 
 export const StepEditor = (attributes) => {
@@ -26,10 +26,10 @@ export const StepEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('stepName', attributes, manifest), stepName);
 
-	const stepClass = classnames([
+	const stepClass = clsx(
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
-	]);
+	);
 
 	return (
 		<div className={stepClass}>

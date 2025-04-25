@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
 import {
 	selector,
@@ -8,6 +7,7 @@ import {
 	STORE_NAME,
 	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -34,15 +34,15 @@ export const PhoneEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
 
-	const phoneClass = classnames([
+	const phoneClass = clsx(
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
-	]);
+	);
 
-	const selectClass = classnames([
+	const selectClass = clsx(
 		selector(manifestSelect.componentClass, manifestSelect.componentClass),
 		selector(additionalClass, additionalClass),
-	]);
+	);
 
 	const phone = (
 		<>

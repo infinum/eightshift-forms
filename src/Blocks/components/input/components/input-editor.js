@@ -1,9 +1,9 @@
 import React from 'react';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
 import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const InputEditor = (attributes) => {
@@ -30,10 +30,10 @@ export const InputEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
 
-	const inputClass = classnames([
+	const inputClass = clsx(
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
-	]);
+	);
 
 	let additionalProps = {};
 

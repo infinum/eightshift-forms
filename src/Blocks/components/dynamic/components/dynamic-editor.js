@@ -1,6 +1,5 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
@@ -8,6 +7,7 @@ import {
 	STORE_NAME,
 	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -29,10 +29,10 @@ export const DynamicEditor = (attributes) => {
 	const dynamicName = checkAttr('dynamicName', attributes, manifest);
 	const dynamicCustomLabel = checkAttr('dynamicCustomLabel', attributes, manifest);
 
-	const dynamicClass = classnames([
+	const dynamicClass = clsx(
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
-	]);
+	);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('dynamicName', attributes, manifest), dynamicName);
 

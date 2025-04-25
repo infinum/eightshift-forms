@@ -17,8 +17,3 @@
 @import '@eightshift/frontend-libs/styles/es-utility-classes';
 @import '@eightshift/frontend-libs/styles/es-component-styles';
 
-// Find all components and require component_name-style.scss inside it.
-@import './../../components/*/*-editor.scss';
-
-// Find all blocks and require block_name-editor.scss inside it.
-@import './../../custom/*/*-editor.scss';

@@ -1,6 +1,5 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import classnames from 'classnames';
 import {
 	selector,
 	checkAttr,
@@ -8,6 +7,7 @@ import {
 	STORE_NAME,
 	getAttrKey,
 } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -31,10 +31,10 @@ export const RatingEditor = (attributes) => {
 	const ratingAmount = checkAttr('ratingAmount', attributes, manifest);
 	const ratingValue = checkAttr('ratingValue', attributes, manifest);
 
-	const ratingClass = classnames([
+	const ratingClass = clsx(
 		selector(componentClass, componentClass),
 		selector(additionalClass, additionalClass),
-	]);
+	);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('ratingName', attributes, manifest), ratingName);
 
