@@ -147,6 +147,9 @@ final class Filters
 					'additionalContent',
 					'dataOutput',
 				],
+				'loader' => [
+					'additionalContent',
+				],
 			],
 			'blocks' => [
 				'allowedBlocks',
