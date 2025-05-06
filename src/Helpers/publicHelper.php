@@ -85,7 +85,7 @@ function esFormsGetComponentsRender(string $component, array $attributes = []): 
 }
 
 /**
- * Renders a block forms manualy using provided form ID.
+ * Renders a block forms manually using provided form ID.
  *
  * @param string $formId Form Id.
  * @param array<string, mixed> $attributes Array of attributes that's implicitly passed to component.
@@ -102,8 +102,7 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 			'formsFormGeolocation' => $attributes['geolocation'] ?? [],
 			'formsFormGeolocationAlternatives' => $attributes['geolocationAlternatives'] ?? [],
 		],
-		'blocks',
-		true
+		'blocks'
 	);
 }
 
