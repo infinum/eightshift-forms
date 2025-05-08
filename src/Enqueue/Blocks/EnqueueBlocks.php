@@ -141,7 +141,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$formsStyleOptionsFilterName = HooksHelpers::getFilterName(['block', 'forms', 'styleOptions']);
 		$formsUseCustomResultOutputFeatureFilterName = HooksHelpers::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
 		$fieldStyleOptionsFilterName = HooksHelpers::getFilterName(['block', 'field', 'styleOptions']);
-		$breakpointsFilterName = HooksHelpers::getFilterName(['blocks', 'mediaBreakpoints']);
 		$formSelectorTemplatesFilterName = HooksHelpers::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
@@ -149,7 +148,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['formsUseCustomResultOutputFeature'] = \apply_filters($formsUseCustomResultOutputFeatureFilterName, false);
 		$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
 		$output['validationPatternsOptions'] = ValidationPatterns::getValidationPatternsEditor();
-		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
 		$output['currentPostType'] = \get_post_type() ? \get_post_type() : '';
 		$output['postTypes'] = [

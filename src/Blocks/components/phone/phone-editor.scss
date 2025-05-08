@@ -1,6 +1,14 @@
 @use '../../assets/styles/bootstrap-scss.scss' as theme;
-@use './phone-style';
 
 input.es-phone {
+	@include theme.input-styles;
 	@include theme.input-styles-editor;
+}
+
+.es-field--phone {
+	.es-field__content-wrap {
+		display: grid;
+		column-gap: 0.625rem;
+		grid-template-columns: min(120px) 1fr;
+	}
 }

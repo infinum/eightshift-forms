@@ -99,7 +99,7 @@ export const FieldOptions = (attributes) => {
 						<IconLabel
 							label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
 							icon={icons.a11yWarning}
-							additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5'
+							additionalClasses='es:nested-color-yellow-500! es:line-h-1 es:color-cool-gray-500 es:mb-5'
 							standalone
 						/>
 					</AnimatedVisibility>
@@ -167,7 +167,7 @@ export const FieldOptionsLayout = (attributes) => {
 					options={fieldStyleOptions}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
 					simpleValue
-					additionalSelectClasses='es-w-50'
+					additionalSelectClasses='es:w-50'
 					inlineLabel
 				/>
 			)}
@@ -223,7 +223,7 @@ export const FieldOptionsMore = (attributes) => {
 					}
 					value={fieldAfterContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
-					className='es-no-field-spacing'
+					className='es:no-field-spacing'
 				/>
 
 				<TextControl
@@ -235,7 +235,7 @@ export const FieldOptionsMore = (attributes) => {
 					}
 					value={fieldSuffixContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldSuffixContent', attributes, manifest)]: value })}
-					className='es-no-field-spacing'
+					className='es:no-field-spacing'
 				/>
 			</>
 		</Section>

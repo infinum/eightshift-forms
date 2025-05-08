@@ -58,12 +58,12 @@ export const ConditionalTagsOptions = (attributes) => {
 					}}
 					simpleValue
 					noSearch
-					additionalSelectClasses='es-w-40'
+					additionalSelectClasses='es:w-40'
 				/>
 
-				<div className='es-font-weight-700 es-mt-5'>{__('Set field exception rules', 'eightshift-forms')}</div>
+				<div className='es:font-weight-700 es:mt-5'>{__('Set field exception rules', 'eightshift-forms')}</div>
 
-				<div className='es-mb-2'>
+				<div className='es:mb-2'>
 					{sprintf(__('%s "%s" field if:', 'eightshift-forms'), CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS[conditionalTagsRules[0]], conditionalTagsBlockName)}
 				</div>
 
@@ -83,7 +83,7 @@ export const ConditionalTagsOptions = (attributes) => {
 								);
 							})}
 
-							{conditionalTagsRules?.[1]?.length > 1 && index + 1 < total && <div className='es-font-weight-700'>{__('OR', 'eightshift-forms')}</div>}
+							{conditionalTagsRules?.[1]?.length > 1 && index + 1 < total && <div className='es:font-weight-700'>{__('OR', 'eightshift-forms')}</div>}
 						</>
 					);
 				})}
@@ -94,7 +94,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						conditionalTagsRules[1].push([[formFields?.[0]?.value ?? '', globalManifest.comparator.IS, '']]);
 						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 					}}
-					className='es-rounded-1 es-mt-4'
+					className='es:rounded-1 es:mt-4'
 				>
 					{__('Add exception rule', 'eightshift-forms')}
 				</Button>
@@ -117,7 +117,7 @@ export const ConditionalTagsOptions = (attributes) => {
 		const showRuleValuePicker = formFieldOptions?.length > 0 && (operatorValue === globalManifest.comparator.IS || operatorValue === globalManifest.comparator.ISN);
 
 		return (
-			<div className='es-h-spaced'>
+			<div className='es:h-spaced'>
 				<Select
 					value={fieldValue}
 					options={formFields.filter((item) => {
@@ -135,7 +135,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					}}
 					simpleValue
 					noSearch
-					additionalSelectClasses='es-w-40'
+					additionalSelectClasses='es:w-40'
 				/>
 
 				<Select
@@ -147,7 +147,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					}}
 					simpleValue
 					noSearch
-					additionalSelectClasses='es-w-40'
+					additionalSelectClasses='es:w-40'
 				/>
 
 				<span>{'='}</span>
@@ -159,7 +159,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							conditionalTagsRules[1][parent][index][2] = value;
 							setInputCheck(value);
 						}}
-						className='es-w-40 es-m-0-bcf!'
+						className='es:w-40 es:m-0-bcf!'
 					/>
 				) : (
 					<Select
@@ -171,7 +171,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						}}
 						simpleValue
 						noSearch
-						additionalSelectClasses='es-w-40'
+						additionalSelectClasses='es:w-40'
 					/>
 				)}
 
@@ -182,7 +182,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							conditionalTagsRules[1][parent][index + 1] = [formFields?.[0]?.value ?? '', globalManifest.comparator.IS, ''];
 							setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 						}}
-						className='es-rounded-1'
+						className='es:rounded-1'
 					>
 						{__('AND', 'eightshift-forms')}
 					</Button>
@@ -199,7 +199,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] });
 					}}
 					label={__('Remove', 'eightshift-forms')}
-					className='es-ml-auto es-rounded-1!'
+					className='es:ml-auto es:rounded-1!'
 				/>
 			</div>
 		);
@@ -218,7 +218,7 @@ export const ConditionalTagsOptions = (attributes) => {
 						icon={icons.warningFillTransparent}
 						label={__('Feature unavailable', 'eightshift-forms')}
 						subtitle={__('It looks like your field has a missing name.', 'eightshift-forms')}
-						additionalClasses='es-nested-color-yellow-500!'
+						additionalClasses='es:nested-color-yellow-500!'
 						addSubtitleGap
 						standalone
 					/>
@@ -231,7 +231,7 @@ export const ConditionalTagsOptions = (attributes) => {
 								setAttributes({ [conditionalTagsUseKey]: value });
 								setAttributes({ [conditionalTagsRulesKey]: !value ? undefined : [globalManifest.comparatorActions.HIDE, []] });
 							}}
-							additionalClasses='es-font-weight-500'
+							additionalClasses='es:font-weight-500'
 						/>
 
 						<Section showIf={conditionalTagsUse}>
@@ -252,7 +252,7 @@ export const ConditionalTagsOptions = (attributes) => {
 								<Button
 									variant='tertiary'
 									onClick={() => setIsModalOpen(true)}
-									className='es-rounded-1.5 es-w-9 es-h-center es-font-weight-500'
+									className='es:rounded-1.5 es:w-9 es:h-center es:font-weight-500'
 								>
 									{rulesCount > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
 								</Button>
@@ -261,7 +261,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							{isModalOpen && (
 								<Modal
 									overlayClassName='es-conditional-tags-modal es-geolocation-modal'
-									className='es-modal-max-width-5xl es-rounded-3!'
+									className='es-modal-max-width-5xl es:rounded-3!'
 									title={
 										<IconLabel
 											icon={icons.conditionalVisibility}
@@ -271,22 +271,22 @@ export const ConditionalTagsOptions = (attributes) => {
 									}
 									onRequestClose={() => setIsModalOpen(false)}
 								>
-									<div className='es-v-spaced'>
+									<div className='es:v-spaced'>
 										<ConditionalTagsType />
 									</div>
 
-									<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
+									<div className='es:mt-8 -es:mx-8 es:px-8 es:pt-8 es:border-t-cool-gray-100 es:h-between es:gap-8!'>
 										<IconLabel
 											icon={icons.lightBulb}
 											label={__("If you can't find a field, make sure the form is saved, and all fields have a name set.", 'eightshift-forms')}
-											additionalClasses='es-nested-color-yellow-500!'
+											additionalClasses='es:nested-color-yellow-500!'
 											standalone
 										/>
 
 										<Button
 											variant='primary'
 											onClick={() => setIsModalOpen(false)}
-											className='es-rounded-1.5!'
+											className='es:rounded-1.5!'
 										>
 											{__('Save', 'eightshift-forms')}
 										</Button>

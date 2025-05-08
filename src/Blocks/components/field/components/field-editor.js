@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { dispatch, select } from '@wordpress/data';
-import { selector, checkAttr, outputCssVariables, STORE_NAME, props } from '@eightshift/frontend-libs/scripts';
-import { clsx, isObject } from '@eightshift/ui-components/utilities';
+import { select } from '@wordpress/data';
+import { selector, checkAttr, outputCssVariables, STORE_NAME, props, bem } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { MissingName, VisibilityHidden } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
@@ -13,7 +13,7 @@ export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fiel
 
 	const { componentClass } = manifest;
 
-	const fieldClass = clsx(selector(componentClass, componentClass), selector(componentClass, componentClass, '', 'field'));
+	const fieldClass = clsx(componentClass, bem(componentClass, '', 'field'));
 
 	return (
 		<div className={fieldClass}>
@@ -58,18 +58,6 @@ export const FieldEditor = (attributes) => {
 		return fieldContent;
 	}
 
-	// Update media breakpoints from the filter.
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		isObject(esFormsLocalization?.mediaBreakpoints) &&
-		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, 'mobile') &&
-		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, 'tablet') &&
-		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, 'desktop') &&
-		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, 'large')
-	) {
-		dispatch(STORE_NAME).setSettingsGlobalVariablesBreakpoints(esFormsLocalization.mediaBreakpoints);
-	}
-
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
 	const fieldHideLabel = checkAttr('fieldHideLabel', attributes, manifest);
 	const fieldBeforeContent = checkAttr('fieldBeforeContent', attributes, manifest);
@@ -80,15 +68,15 @@ export const FieldEditor = (attributes) => {
 	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
 	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
-	const fieldClass = clsx([
-		selector(componentClass, componentClass),
-		selector(componentClass, componentClass, '', selectorClass),
-		selector(additionalFieldClass, additionalFieldClass),
+	const fieldClass = clsx(
+		componentClass,
+		bem(componentClass, '', selectorClass),
+		additionalFieldClass,
 		selector(fieldHidden, 'es-form-is-hidden'),
 		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
-	]);
+	);
 
-	const labelClass = clsx([selector(componentClass, componentClass, 'label'), selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required')]);
+	const labelClass = clsx(bem(componentClass, 'label'), selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required'));
 
 	const LabelDefault = () => (
 		<>
