@@ -10,21 +10,21 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Corvus;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\SettingInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCorvus class.
  */
-class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -169,11 +169,11 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 			return false;
 		}
 
-		$selectedStoreId = UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_STORE_ID, $formId);
-		$lang = UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_LANG_KEY, $formId);
-		$currency = UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
-		$cartDesc = UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId);
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
+		$selectedStoreId = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_STORE_ID, $formId);
+		$lang = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_LANG_KEY, $formId);
+		$currency = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
+		$cartDesc = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
 
 		if (!$selectedStoreId || !$lang || !$currency || !$mapParams || !$cartDesc) {
 			return false;
@@ -193,20 +193,20 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
+		$formDetails = GeneralHelpers::getFormDetails($formId);
 
-		$selectedStoreId = UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_STORE_ID, $formId);
-		$lang = UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_LANG_KEY, $formId);
-		$currency = UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
+		$selectedStoreId = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_STORE_ID, $formId);
+		$lang = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_LANG_KEY, $formId);
+		$currency = SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_CURRENCY_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
 
-		$params = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
+		$params = $formDetails[Config::FD_FIELD_NAMES] ?? [];
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -217,13 +217,13 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_IS_TEST),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_IS_TEST),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Is test mode enabled?', 'eightshift-forms'),
 										'checkboxHelp' => \__('In test mode all playments will go to the test payment gateway.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_IS_TEST, self::SETTINGS_CORVUS_IS_TEST, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CORVUS_IS_TEST, self::SETTINGS_CORVUS_IS_TEST, $formId),
 										'checkboxValue' => self::SETTINGS_CORVUS_IS_TEST,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
@@ -238,7 +238,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 								'component' => 'select',
 								'selectIsRequired' => true,
 								'selectSingleSubmit' => true,
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_STORE_ID),
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_STORE_ID),
 								'selectFieldLabel' => \__('Store ID', 'eightshift-forms'),
 								'selectPlaceholder' => \__('Select Store ID', 'eightshift-forms'),
 								'selectContent' => \array_map(
@@ -250,14 +250,14 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 											'selectOptionIsSelected' => $selectedStoreId === $option[1],
 										];
 									},
-									UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY)
+									SettingsHelpers::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY)
 								),
 							],
 							...($selectedStoreId ? [
 								[
 									'component' => 'select',
 									'selectIsRequired' => true,
-									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_LANG_KEY),
+									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_LANG_KEY),
 									'selectFieldLabel' => \__('Language', 'eightshift-forms'),
 									'selectPlaceholder' => \__('Select language', 'eightshift-forms'),
 									'selectContent' => [
@@ -314,7 +314,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 								[
 									'component' => 'select',
 									'selectIsRequired' => true,
-									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_CURRENCY_KEY),
+									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_CURRENCY_KEY),
 									'selectFieldLabel' => \__('Currency', 'eightshift-forms'),
 									'selectPlaceholder' => \__('Select currency', 'eightshift-forms'),
 									'selectContent' => [
@@ -479,11 +479,11 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 								[
 									'component' => 'input',
 									'inputIsRequired' => true,
-									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_CART_DESC_KEY),
+									'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_CART_DESC_KEY),
 									'inputFieldLabel' => \__('Cart description', 'eightshift-forms'),
 									'inputMaxLength' => 254,
 									'inputFieldHelp' => \__('Shopping-cart contents description.', 'eightshift-forms'),
-									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId),
+									'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_CART_DESC_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -492,13 +492,13 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_IBAN_USE_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_IBAN_USE_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Use IBAN Payment', 'eightshift-forms'),
 											'checkboxHelp' => \__('To use IBAN Payment you must have this feature enabled in your Corvus account by contacting support.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_IBAN_USE_KEY, self::SETTINGS_CORVUS_IBAN_USE_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CORVUS_IBAN_USE_KEY, self::SETTINGS_CORVUS_IBAN_USE_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_CORVUS_IBAN_USE_KEY,
 											'checkboxAsToggle' => true,
 											'checkboxSingleSubmit' => true,
@@ -512,13 +512,13 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Use Entry Id', 'eightshift-forms'),
 											'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Corvus `order_number` value. This is used if you want to reference the entry after the form submission. Make sure you have Entries feature turned `on`.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_CORVUS_ENTRY_ID_USE_KEY,
 											'checkboxAsToggle' => true,
 											'checkboxSingleSubmit' => true,
@@ -528,13 +528,13 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Require complete', 'eightshift-forms'),
 											'checkboxHelp' => \__('Checked indicates a pre-authorization. Unchecked indicates a sale. Note: applicable only for card transactions.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, self::SETTINGS_CORVUS_REQ_COMPLETE_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_CORVUS_REQ_COMPLETE_KEY,
 											'checkboxAsToggle' => true,
 											'checkboxSingleSubmit' => true,
@@ -550,7 +550,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 						'tabContent' => [
 							[
 								'component' => 'group',
-								'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_PARAMS_MAP_KEY),
+								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_PARAMS_MAP_KEY),
 								'groupSaveOneField' => true,
 								'groupStyle' => 'default-listing',
 								'groupContent' => [
@@ -609,18 +609,18 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'input',
 								'inputPlaceholder' => 'true',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_SUBSCRIPTION_VALUE_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_SUBSCRIPTION_VALUE_KEY),
 								'inputFieldLabel' => \__('Subscription field value', 'eightshift-forms'),
 								'inputFieldHelp' => \__('If you want to create a subscription, sent value must be `true` or value defined in this field.', 'eightshift-forms'),
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_SUBSCRIPTION_VALUE_KEY, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_SUBSCRIPTION_VALUE_KEY, $formId),
 							],
 							[
 								'component' => 'input',
 								'inputPlaceholder' => 'true',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_CORVUS_IBAN_VALUE_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_CORVUS_IBAN_VALUE_KEY),
 								'inputFieldLabel' => \__('IBAN field value', 'eightshift-forms'),
 								'inputFieldHelp' => \__('If you want to create a IBAN payment, sent value must be `true` or value defined in this field.', 'eightshift-forms'),
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_CORVUS_IBAN_VALUE_KEY, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_CORVUS_IBAN_VALUE_KEY, $formId),
 							],
 						],
 					] : [],
@@ -636,7 +636,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CORVUS_USE_KEY, self::SETTINGS_CORVUS_USE_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CORVUS_USE_KEY, self::SETTINGS_CORVUS_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -653,16 +653,16 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CORVUS_USE_KEY, self::SETTINGS_CORVUS_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CORVUS_USE_KEY, self::SETTINGS_CORVUS_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY, self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY, self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY);
 
-		$storeIds = UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY);
+		$storeIds = SettingsHelpers::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -673,12 +673,12 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -689,34 +689,34 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
 							] : [
 								[
 									'component' => 'textarea',
-									'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CORVUS_STORE_IDS_KEY),
+									'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_CORVUS_STORE_IDS_KEY),
 									'textareaIsMonospace' => true,
 									'textareaIsRequired' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldLabel' => \__('Store IDs', 'eightshift-forms'),
 									// translators: %s will be replaced with local validation patterns.
-									'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\__("
+									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
 										Enter one Store ID per line, in the following format:<br />
 										Example:
 										<ul>
 										<li>Name : 133144</li>
 										<li>Store New :454331</li>
 										</ul>", 'eightshift-forms')),
-									'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_CORVUS_STORE_IDS_KEY, 2),
+									'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_CORVUS_STORE_IDS_KEY, 2),
 								],
 								...($storeIds ? [
-								[
-									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
-								],
-								...$this->getApiKeysSettings($storeIds),
+									[
+										'component' => 'divider',
+										'dividerExtraVSpacing' => true,
+									],
+									...$this->getApiKeysSettings($storeIds),
 								] : []),
 							]),
 						],
@@ -843,7 +843,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements UtilsSettin
 				continue;
 			}
 
-			$output[] = UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+			$output[] = SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 				Variables::getApiKeyCorvus($id),
 				self::SETTINGS_CORVUS_API_KEY_KEY . "_{$id}",
 				"ES_API_KEY_CORVUS_{$id}",

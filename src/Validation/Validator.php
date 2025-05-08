@@ -13,8 +13,8 @@ namespace EightshiftForms\Validation;
 use EightshiftForms\Cache\ManifestCache;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -24,9 +24,9 @@ use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -123,17 +123,17 @@ class Validator extends AbstractValidation
 	public function validateParams(array $formDetails, bool $strictValidation = true): array
 	{
 		$output = [];
-		$formType = $formDetails[UtilsConfig::FD_TYPE];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY];
-		$stepFields = isset($formDetails[UtilsConfig::FD_API_STEPS]['fields']) ? \array_flip($formDetails[UtilsConfig::FD_API_STEPS]['fields']) : [];
+		$formType = $formDetails[Config::FD_TYPE];
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$fieldsOnly = $formDetails[Config::FD_FIELDS_ONLY];
+		$stepFields = isset($formDetails[Config::FD_API_STEPS]['fields']) ? \array_flip($formDetails[Config::FD_API_STEPS]['fields']) : [];
 		$params = \array_merge(
-			$formDetails[UtilsConfig::FD_PARAMS],
-			$formDetails[UtilsConfig::FD_FILES]
+			$formDetails[Config::FD_PARAMS],
+			$formDetails[Config::FD_FILES]
 		);
 
 		// Manualy build fields from settings components.
-		if ($formType === UtilsConfig::SETTINGS_TYPE_NAME || $formType === UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME) {
+		if ($formType === Config::SETTINGS_TYPE_NAME || $formType === Config::SETTINGS_GLOBAL_TYPE_NAME) {
 			$fieldsOnly = $this->getValidationReferenceManual($fieldsOnly);
 		}
 
@@ -187,7 +187,7 @@ class Validator extends AbstractValidation
 
 					// Check if wrong upload path.
 					foreach ($inputValue as $value) {
-						if (UtilsUploadHelper::isUploadError($value)) {
+						if (UploadHelpers::isUploadError($value)) {
 							$output[$paramKey] = $this->getValidationLabel('validationFileNotLocated', $formId);
 							$isFilesError = true;
 							break;
@@ -202,7 +202,7 @@ class Validator extends AbstractValidation
 						$fileName = \array_flip($fileName);
 
 						// Bailout if file is ok.
-						if (isset($fileName[UtilsConfig::TEMP_UPLOAD_DIR])) {
+						if (isset($fileName[Config::TEMP_UPLOAD_DIR])) {
 							continue;
 						}
 
@@ -241,11 +241,18 @@ class Validator extends AbstractValidation
 						break;
 					// Check validation for email params.
 					case 'isEmail':
+						// dump($inputValue);
 						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
+							// dump($inputValue);
 							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
 						} else {
-							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
-								if (!$this->isEmailTldValid($inputValue, \array_values($this->manifestCache->getManifestCacheTopItem(ManifestCache::TLD_KEY, ManifestCache::TYPE_FORMS)))) {
+							// dump(SettingsHelpers::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY));
+							if (SettingsHelpers::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
+								$tldList = Helpers::getCache()[ManifestCache::TYPE_FORMS][ManifestCache::TLD_KEY];
+
+								// dump($tldList);
+
+								if (!$this->isEmailTldValid($inputValue, \array_values($tldList))) {
 									$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
 								}
 							}
@@ -357,9 +364,9 @@ class Validator extends AbstractValidation
 	public function validateFiles(array $formDetails): array
 	{
 		$output = [];
-		$file = $formDetails[UtilsConfig::FD_FILES_UPLOAD];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY];
+		$file = $formDetails[Config::FD_FILES_UPLOAD];
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$fieldsOnly = $formDetails[Config::FD_FIELDS_ONLY];
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
 		$fieldName = $file['fieldName'];
@@ -412,21 +419,21 @@ class Validator extends AbstractValidation
 	 */
 	public function validateFormManadatoryProperies(array $formDetails): bool
 	{
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$postId = $formDetails[UtilsConfig::FD_POST_ID] ?? '';
-		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID] ?? '';
-		$innerId = $formDetails[UtilsConfig::FD_INNER_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$postId = $formDetails[Config::FD_POST_ID] ?? '';
+		$itemId = $formDetails[Config::FD_ITEM_ID] ?? '';
+		$innerId = $formDetails[Config::FD_INNER_ID] ?? '';
 
 		if (!$type) {
 			return false;
 		}
 
 		switch ($type) {
-			case UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME:
-			case UtilsConfig::FILE_UPLOAD_ADMIN_TYPE_NAME:
+			case Config::SETTINGS_GLOBAL_TYPE_NAME:
+			case Config::FILE_UPLOAD_ADMIN_TYPE_NAME:
 				return true;
-			case UtilsConfig::SETTINGS_TYPE_NAME:
+			case Config::SETTINGS_TYPE_NAME:
 				if (!$formId) {
 					return false;
 				}
@@ -482,8 +489,8 @@ class Validator extends AbstractValidation
 	 */
 	public function setValidationSubmitOnce(string $formId): bool
 	{
-		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
-		$submitOnce = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
+		$onlyLoggedIn = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$submitOnce = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
 		if (!$onlyLoggedIn || !$submitOnce) {
 			return false;
 		}
@@ -512,7 +519,7 @@ class Validator extends AbstractValidation
 	 */
 	public function validateSubmitOnlyLoggedIn(string $formId): bool
 	{
-		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$onlyLoggedIn = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
 		if (!$onlyLoggedIn) {
 			return false;
 		}
@@ -529,8 +536,8 @@ class Validator extends AbstractValidation
 	 */
 	public function validateSubmitOnlyOnce(string $formId): bool
 	{
-		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
-		$submitOnce = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
+		$onlyLoggedIn = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$submitOnce = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
 
 		if (!$onlyLoggedIn || !$submitOnce) {
 			return false;
@@ -554,7 +561,7 @@ class Validator extends AbstractValidation
 		$output = \get_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -601,7 +608,7 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
-		$blockDetails = UtilsGeneralHelper::getBlockNameDetails($block['blockName']);
+		$blockDetails = GeneralHelpers::getBlockNameDetails($block['blockName']);
 
 		$name = $blockDetails['name'];
 		$namespace = $blockDetails['namespace'];

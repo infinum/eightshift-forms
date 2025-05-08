@@ -2,21 +2,11 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
-import { checkAttr,
-	getAttrKey,
-	AsyncSelect,
-	STORE_NAME,
-	IconToggle,
-	icons,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, AsyncSelect, STORE_NAME, IconToggle } from '@eightshift/frontend-libs/scripts';
 import { outputFormSelectItemWithIcon } from '../../../components/utils';
+import { icons } from '@eightshift/ui-components/icons';
 
-export const ResultOutputOptions = ({
-	attributes,
-	setAttributes,
-	formSelectOptions,
-	resultSelectOptions,
-}) => {
+export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptions, resultSelectOptions }) => {
 	const manifest = select(STORE_NAME).getBlock('result-output');
 
 	const resultOutputFormPostId = checkAttr('resultOutputFormPostId', attributes, manifest);
@@ -29,8 +19,8 @@ export const ResultOutputOptions = ({
 		<PanelBody title={__('Result Output', 'eightshift-forms')}>
 			<AsyncSelect
 				label={__('Result Output', 'eightshift-forms')}
-				help={__('If you can\'t find your output item, try typing its name while the dropdown is open.', 'eightshift-forms')}
-				value={outputFormSelectItemWithIcon(Object.keys(resultOutputPostIdRaw ?? {}).length ? resultOutputPostIdRaw : {id: resultOutputPostId})}
+				help={__("If you can't find your output item, try typing its name while the dropdown is open.", 'eightshift-forms')}
+				value={outputFormSelectItemWithIcon(Object.keys(resultOutputPostIdRaw ?? {}).length ? resultOutputPostIdRaw : { id: resultOutputPostId })}
 				loadOptions={resultSelectOptions}
 				onChange={(value) => {
 					setAttributes({
@@ -47,8 +37,8 @@ export const ResultOutputOptions = ({
 
 			<AsyncSelect
 				label={__('Connected Form', 'eightshift-forms')}
-				help={__('If you can\'t find your connected form, try typing its name while the dropdown is open.', 'eightshift-forms')}
-				value={outputFormSelectItemWithIcon(Object.keys(resultOutputFormPostIdRaw ?? {}).length ? resultOutputFormPostIdRaw : {id: resultOutputFormPostId})}
+				help={__("If you can't find your connected form, try typing its name while the dropdown is open.", 'eightshift-forms')}
+				value={outputFormSelectItemWithIcon(Object.keys(resultOutputFormPostIdRaw ?? {}).length ? resultOutputFormPostIdRaw : { id: resultOutputFormPostId })}
 				loadOptions={formSelectOptions}
 				onChange={(value) => {
 					setAttributes({
@@ -69,7 +59,6 @@ export const ResultOutputOptions = ({
 				help={__('Hide result output block by default. It will be shown only on form success.', 'eightshift-forms')}
 				checked={resultOutputHide}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputHide', attributes, manifest)]: value })}
-				noBottomSpacing
 			/>
 		</PanelBody>
 	);

@@ -12,11 +12,11 @@ namespace EightshiftForms\Integrations\Clearbit;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * ClearbitClient integration class.
@@ -39,9 +39,9 @@ class ClearbitClient implements ClearbitClientInterface
 	 */
 	public function setQueue(array $formDetails): bool
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$params = $formDetails[Config::FD_PARAMS] ?? [];
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
 		// Check if Hubspot is using Clearbit.
 		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_IS_VALID_NAME, $formId, SettingsHubspot::SETTINGS_TYPE_KEY);
@@ -50,13 +50,13 @@ class ClearbitClient implements ClearbitClientInterface
 			return false;
 		}
 
-		$email = UtilsGeneralHelper::getEmailParamsField($params);
+		$email = GeneralHelpers::getEmailParamsField($params);
 
 		if (!$email) {
 			return false;
 		}
 
-		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY);
+		$jobs = SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY);
 
 		$formJob = $jobs[$type][$formId] ?? [];
 
@@ -66,7 +66,7 @@ class ClearbitClient implements ClearbitClientInterface
 
 		$jobs[$type][$formId][] = $email;
 
-		return \update_option(UtilsSettingsHelper::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), $jobs);
+		return \update_option(SettingsHelpers::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), $jobs);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class ClearbitClient implements ClearbitClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiReponseDetails(
 			SettingsClearbit::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -100,11 +100,11 @@ class ClearbitClient implements ClearbitClientInterface
 			$formId
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			$dataOutput = [];
 
 			foreach ($this->prepareParams($body) as $key => $value) {
@@ -113,7 +113,7 @@ class ClearbitClient implements ClearbitClientInterface
 				}
 			}
 
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput(
+			return ApiHelpers::getIntegrationSuccessInternalOutput(
 				$details,
 				[
 					'email' => $email,
@@ -122,10 +122,10 @@ class ClearbitClient implements ClearbitClientInterface
 			);
 		}
 
-		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+		$details[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput(
+		return ApiHelpers::getIntegrationErrorInternalOutput(
 			$details,
 			[
 				'email' => $email,
@@ -275,7 +275,7 @@ class ClearbitClient implements ClearbitClientInterface
 			'company-ultimate-parent-domain' => $company['ultimateParent']['domain'] ?? '',
 		];
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsClearbit::SETTINGS_TYPE_KEY, 'map']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $output) ?? [];
 		}
@@ -324,6 +324,6 @@ class ClearbitClient implements ClearbitClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiKeyClearbit(), SettingsClearbit::SETTINGS_CLEARBIT_API_KEY_KEY);
 	}
 }

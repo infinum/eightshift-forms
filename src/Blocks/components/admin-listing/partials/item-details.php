@@ -6,14 +6,14 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifest = Helpers::getComponent('admin-listing');
 $selectorJsItem = UtilsHelper::getStateSelectorAdmin('listingItem');
 
-$isDevMode = UtilsDeveloperHelper::isDeveloperModeActive();
+$isDevMode = DeveloperHelpers::isDeveloperModeActive();
 
 $items = $attributes['items'] ?? [];
 $emptyContent = $attributes['emptyContent'] ?? '';
@@ -30,8 +30,7 @@ $sectionClass = $attributes['sectionClass'] ?? '';
 			echo wp_kses_post(" {$key}='" . $value . "'");
 		}
 	}
-	?>
->
+	?>>
 	<?php
 	if ($items) {
 		foreach ($items as $item) {

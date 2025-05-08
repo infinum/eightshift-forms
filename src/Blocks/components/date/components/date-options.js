@@ -6,29 +6,16 @@ import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
-import {
-	icons,
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	props,
-	Section,
-	Select,
-	IconToggle,
-	getOption,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Section, Select, IconToggle, getOption, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const DateOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('date');
 
-	const {
-		setAttributes,
-		title = __('Date', 'eightshift-forms'),
-	} = attributes;
+	const { setAttributes, title = __('Date', 'eightshift-forms') } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -54,7 +41,10 @@ export const DateOptions = (attributes) => {
 
 	return (
 		<PanelBody title={title}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+			<Section
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={dateName}
 					attribute={getAttrKey('dateName', attributes, manifest)}
@@ -85,8 +75,11 @@ export const DateOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
-				{!dateUseLabelAsPlaceholder &&
+			<Section
+				icon={icons.fieldPlaceholder}
+				label={__('Placeholder', 'eightshift-forms')}
+			>
+				{!dateUseLabelAsPlaceholder && (
 					<TextControl
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={datePlaceholder}
@@ -94,7 +87,7 @@ export const DateOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('datePlaceholder', attributes, manifest), dateDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
-				}
+				)}
 				<IconToggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
@@ -112,7 +105,10 @@ export const DateOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+			<Section
+				icon={icons.checks}
+				label={__('Validation', 'eightshift-forms')}
+			>
 				<IconToggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
@@ -130,7 +126,6 @@ export const DateOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('dateValidationPattern', attributes, manifest), dateDisabledOptions)}
 					placeholder='–'
 					additionalSelectClasses='es-w-32'
-					noBottomSpacing
 					inlineLabel
 					clearable
 				/>
@@ -142,7 +137,8 @@ export const DateOptions = (attributes) => {
 			>
 				{__('You can use any valid formats by visiting the following button.', 'eightshift-forms')}
 
-				<br/><br/>
+				<br />
+				<br />
 
 				<Button
 					href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format`}
@@ -152,10 +148,16 @@ export const DateOptions = (attributes) => {
 					{__('View valid formats', 'eightshift-forms')}
 				</Button>
 
-				<br/><br/>
+				<br />
+				<br />
 
 				<TextControl
-					label={<IconLabel icon={icons.dateTime} label={__('Preview format', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.dateTime}
+							label={__('Preview format', 'eightshift-forms')}
+						/>
+					}
 					value={datePreviewFormat}
 					placeholder={manifest.formats[dateType].preview}
 					help={__('Define format of date/time the user will see', 'eightshift-forms')}
@@ -164,7 +166,12 @@ export const DateOptions = (attributes) => {
 				/>
 
 				<TextControl
-					label={<IconLabel icon={icons.dateTime} label={__('Output format', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.dateTime}
+							label={__('Output format', 'eightshift-forms')}
+						/>
+					}
 					value={dateOutputFormat}
 					placeholder={manifest.formats[dateType].output}
 					help={__('Define format of date/time that will be sent when form is processed', 'eightshift-forms')}
@@ -173,9 +180,17 @@ export const DateOptions = (attributes) => {
 				/>
 			</Section>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<Section
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<TextControl
-					label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.fieldValue}
+							label={__('Initial value', 'eightshift-forms')}
+						/>
+					}
 					value={dateValue}
 					onChange={(value) => setAttributes({ [getAttrKey('dateValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('dateValue', attributes, manifest), dateDisabledOptions)}
@@ -201,13 +216,21 @@ export const DateOptions = (attributes) => {
 					checked={dateIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('dateIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('dateIsDisabled', attributes, manifest), dateDisabledOptions)}
-					noBottomSpacing
 				/>
 			</Section>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
+			<Section
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
 				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.googleTagManager}
+							label={__('GTM tracking code', 'eightshift-forms')}
+						/>
+					}
 					value={dateTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('dateTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('dateTracking', attributes, manifest), dateDisabledOptions)}

@@ -1,5 +1,7 @@
+@use './field.scss' as field;
+
 :root {
-	--es-checkbox-spacing: var(--es-grid-spacing);
+	--es-checkbox-spacing: 0.625rem;
 }
 
 @mixin checkbox-styles() {
@@ -95,7 +97,7 @@
 		inset-inline-start: -99999px;
 	}
 
-	@include field-styles('false');
+	@include field.field-styles('false');
 
 	&__help {
 		padding-inline-start: calc(var(--es-checkbox-scoped-icon-size) + 10px);

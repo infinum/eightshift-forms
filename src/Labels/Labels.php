@@ -21,7 +21,7 @@ use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -73,87 +73,87 @@ class Labels implements LabelsInterface
 		);
 
 		// Google reCaptcha.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
 			$output = \array_merge($output, $this->getCaptchaLabels());
 		}
 
 		// Greenhouse.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
 			$output = \array_merge($output, $this->getGreenhouseLabels());
 		}
 
 		// Mailchimp.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
 			$output = \array_merge($output, $this->getMailchimpLabels());
 		}
 
 		// Hubspot.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
 			$output = \array_merge($output, $this->getHubspotLabels());
 		}
 
 		// Mailerlite.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
 			$output = \array_merge($output, $this->getMailerliteLabels());
 		}
 
 		// Goodbits.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
 			$output = \array_merge($output, $this->getGoodbitsLabels());
 		}
 
 		// ActiveCampaign.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
 			$output = \array_merge($output, $this->getActiveCampaignLabels());
 		}
 
 		// Airtable.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getAirtableLabels());
 		}
 
 		// Moments.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
 			$output = \array_merge($output, $this->getMomentsLabels());
 		}
 
 		// Workable.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getWorkableLabels());
 		}
 
 		// Talentlyft.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY)) {
 			$output = \array_merge($output, $this->getTalentlyftLabels());
 		}
 
 		// Jira.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
 			$output = \array_merge($output, $this->getJiraLabels());
 		}
 
 		// Corvus.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_USE_KEY)) {
 			$output = \array_merge($output, $this->getCorvusLabels());
 		}
 
 		// Paycek.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPaycek::SETTINGS_PAYCEK_USE_KEY, SettingsPaycek::SETTINGS_PAYCEK_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPaycek::SETTINGS_PAYCEK_USE_KEY, SettingsPaycek::SETTINGS_PAYCEK_USE_KEY)) {
 			$output = \array_merge($output, $this->getPaycekLabels());
 		}
 
 		// Pipedrive.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
 			$output = \array_merge($output, $this->getPipedriveLabels());
 		}
 
 		// Calculator.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
 			$output = \array_merge($output, $this->getCalculatorLabels());
 		}
 
 		// Nationbuilder.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY)) {
 			$output = \array_merge($output, $this->getNationbuilderLabels());
 		}
 
@@ -175,9 +175,9 @@ class Labels implements LabelsInterface
 			$local = \array_flip(self::ALL_LOCAL_LABELS);
 
 			if (isset($local[$key])) {
-				$dbLabel = UtilsSettingsHelper::getSettingValue($key, $formId);
+				$dbLabel = SettingsHelpers::getSettingValue($key, $formId);
 			} else {
-				$dbLabel = UtilsSettingsHelper::getOptionValue($key);
+				$dbLabel = SettingsHelpers::getOptionValue($key);
 			}
 
 			// If there is an override in the DB use that.

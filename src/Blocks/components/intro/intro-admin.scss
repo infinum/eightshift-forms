@@ -1,3 +1,5 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-intro {
 	$this: &;
 
@@ -115,7 +117,7 @@
 		}
 	}
 
-	@include field-styles;
+	@include theme.field-styles;
 
 	a {
 		color: var(--global-colors-esf-admin-accent);

@@ -8,8 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
@@ -37,7 +35,8 @@ if (!$tableContent) {
 			<thead>
 				<tr>
 					<?php foreach ($tableHead as $head) { ?>
-						<th><?php echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?></th>
+						<th><?php echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+								?></th>
 					<?php } ?>
 				</tr>
 			</thead>
@@ -46,7 +45,8 @@ if (!$tableContent) {
 			<?php foreach ($tableContent as $row) { ?>
 				<tr>
 					<?php foreach ($tableHead as $headKey => $headValue) { ?>
-						<td><?php echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?></td>
+						<td><?php echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+								?></td>
 					<?php } ?>
 				</tr>
 			<?php } ?>

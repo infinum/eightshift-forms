@@ -13,12 +13,12 @@ namespace EightshiftForms\AdminMenus;
 use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Troubleshooting\SettingsDebug;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Admin_Bar;
@@ -70,7 +70,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 		}
 
 		// Bail early if it is used in block editor.
-		if (UtilsGeneralHelper::isBlockEditor()) {
+		if (GeneralHelpers::isBlockEditor()) {
 			return;
 		}
 
@@ -80,7 +80,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 		}
 
 		$prefix = FormAdminMenu::ADMIN_MENU_SLUG;
-		$isDevelopMode = UtilsDeveloperHelper::isDeveloperModeActive();
+		$isDevelopMode = DeveloperHelpers::isDeveloperModeActive();
 
 		$version = Helpers::getPluginVersion();
 
@@ -93,7 +93,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 				'parent' => null,
 				'group' => null,
 				'title' => $isDevelopMode ? $mainLabel . UtilsHelper::getUtilsIcons('warning') : $mainLabel,
-				'href' => UtilsGeneralHelper::getListingPageUrl(),
+				'href' => GeneralHelpers::getListingPageUrl(),
 				'meta' => [
 					'title' => $isDevelopMode ? \esc_html__('Debug tools are active!', 'eightshift-forms') : $mainLabel,
 				]
@@ -106,7 +106,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 				'id' => $listingPrefix,
 				'parent' => $prefix,
 				'title' => \esc_html__('View all forms', 'eightshift-forms'),
-				'href' => UtilsGeneralHelper::getListingPageUrl(),
+				'href' => GeneralHelpers::getListingPageUrl(),
 			],
 		);
 
@@ -115,7 +115,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 				'id' => "{$prefix}-new-form",
 				'parent' => $prefix,
 				'title' => \esc_html__('Add new form', 'eightshift-forms'),
-				'href' => UtilsGeneralHelper::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
+				'href' => GeneralHelpers::getNewFormPageUrl(Forms::POST_TYPE_SLUG),
 			],
 		);
 
@@ -125,7 +125,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 					'id' => "{$prefix}-global-settings",
 					'parent' => $prefix,
 					'title' => \esc_html__('Global settings', 'eightshift-forms'),
-					'href' => UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY),
+					'href' => GeneralHelpers::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY),
 				],
 			);
 
@@ -144,7 +144,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 					'id' => "{$troubleshootingPrefix}-cache",
 					'parent' => $troubleshootingPrefix,
 					'title' => \esc_html__('Clear cache', 'eightshift-forms'),
-					'href' => UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsCache::SETTINGS_TYPE_KEY),
+					'href' => GeneralHelpers::getSettingsGlobalPageUrl(SettingsCache::SETTINGS_TYPE_KEY),
 				],
 			);
 
@@ -153,7 +153,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 					'id' => "{$troubleshootingPrefix}-debug",
 					'parent' => $troubleshootingPrefix,
 					'title' => \esc_html__('Debug', 'eightshift-forms'),
-					'href' => UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDebug::SETTINGS_TYPE_KEY),
+					'href' => GeneralHelpers::getSettingsGlobalPageUrl(SettingsDebug::SETTINGS_TYPE_KEY),
 				],
 			);
 
@@ -168,7 +168,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 			);
 
 			// Merge addon blocks to the list.
-			$filterName = UtilsHooksHelper::getFilterName(['admin', 'topBarMenu', 'items']);
+			$filterName = HooksHelpers::getFilterName(['admin', 'topBarMenu', 'items']);
 			if (\has_filter($filterName)) {
 				$addonsPrefix = "{$prefix}-addons";
 

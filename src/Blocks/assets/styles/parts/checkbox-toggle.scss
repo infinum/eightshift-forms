@@ -1,3 +1,5 @@
+@use './field.scss' as field;
+
 @mixin checkbox-toggle-styles() {
 	$this: &;
 
@@ -18,7 +20,9 @@
 	}
 
 	&__input:checked:focus-visible + &__label::before {
-		box-shadow: 0 0 0 1px var(--global-colors-esf-white), 0 0 0 4px var(--global-colors-esf-admin-accent-50);
+		box-shadow:
+			0 0 0 1px var(--global-colors-esf-white),
+			0 0 0 4px var(--global-colors-esf-admin-accent-50);
 	}
 
 	&__label {
@@ -105,7 +109,7 @@
 		inset-inline-start: -99999px;
 	}
 
-	@include field-styles('false');
+	@include field.field-styles('false');
 
 	&__help {
 		margin-inline-end: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);

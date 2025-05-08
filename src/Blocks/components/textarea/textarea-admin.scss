@@ -1,4 +1,4 @@
-@import './textarea-style';
+@use './textarea-style';
 
 textarea.es-textarea {
 	$this: &;
@@ -9,7 +9,7 @@ textarea.es-textarea {
 	max-block-size: calc(var(--esf-input-height) * var(--textarea-size-max)) !important; // stylelint-disable-line declaration-no-important
 	min-block-size: calc(var(--esf-input-height) * var(--textarea-size));
 	block-size: calc(var(--esf-input-height) * var(--textarea-size));
-	border-radius: var(--global-es-radius-8);
+	border-radius: 0.5rem;
 
 	&--monospace {
 		font-family: monospace;

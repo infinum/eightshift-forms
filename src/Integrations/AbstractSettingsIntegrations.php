@@ -12,7 +12,7 @@ namespace EightshiftForms\Integrations;
 
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Hooks\FiltersOuputMock;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * Abstract class for shared functionality for all integrations.
@@ -34,7 +34,7 @@ abstract class AbstractSettingsIntegrations
 		return [
 			[
 				'component' => 'input',
-				'inputName' => UtilsSettingsHelper::getOptionName($integrationType . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
+				'inputName' => SettingsHelpers::getOptionName($integrationType . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY),
 				'inputFieldLabel' => \__('Redirect to URL', 'eightshift-forms'),
 				'inputFieldHelp' => \sprintf(
 					/* translators: %s is the integration type */
@@ -51,7 +51,7 @@ abstract class AbstractSettingsIntegrations
 				'textareaFieldLabel' => \__('Variation', 'eightshift-forms'),
 				'textareaIsMonospace' => true,
 				'textareaSaveAsJson' => true,
-				'textareaName' => UtilsSettingsHelper::getSettingName($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY),
+				'textareaName' => SettingsHelpers::getSettingName($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY),
 				'textareaFieldHelp' => \sprintf(
 					/* translators: %1$s is the integration type, %2$s is the global settings */
 					\__('Define redirection values that can be used in Result output items.<br />
@@ -61,7 +61,7 @@ abstract class AbstractSettingsIntegrations
 					\ucfirst($integrationType),
 					$variation['settingsGlobal'],
 				),
-				'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY, 2),
+				'textareaValue' => SettingsHelpers::getOptionValueAsJson($integrationType . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY, 2),
 			],
 		];
 	}

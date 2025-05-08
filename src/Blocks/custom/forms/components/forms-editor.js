@@ -1,29 +1,16 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import {
-	checkAttr,
-	props,
-	icons,
-	AsyncSelect,
-	getAttrKey,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, AsyncSelect, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { __, sprintf } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { ConditionalTagsEditor } from '../../../components/conditional-tags/components/conditional-tags-editor';
 import { FormEditButton, outputFormSelectItemWithIcon } from '../../../components/utils';
+import { icons } from '@eightshift/ui-components/icons';
 
-export const FormsEditor = ({
-	attributes,
-	setAttributes,
-	preview,
-	formSelectOptions,
-}) => {
+export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOptions }) => {
 	const manifest = select(STORE_NAME).getBlock('forms');
 
-	const {
-		isGeoPreview,
-	} = preview;
+	const { isGeoPreview } = preview;
 
 	const formsFormGeolocationAlternatives = checkAttr('formsFormGeolocationAlternatives', attributes, manifest);
 	const formsFormPostIdRaw = checkAttr('formsFormPostIdRaw', attributes, manifest);
@@ -38,8 +25,8 @@ export const FormsEditor = ({
 			>
 				<AsyncSelect
 					label={<span className='es-mb-0! es-mx-0! es-mt-1! es-text-3.5 es-font-weight-500'>To get started, select a form:</span>}
-					help={__('If you can\'t find a form, start typing its name while the dropdown is open.', 'eightshift-forms')}
-					value={outputFormSelectItemWithIcon(Object.keys(formsFormPostIdRaw).length ? formsFormPostIdRaw : {id: formsFormPostId})}
+					help={__("If you can't find a form, start typing its name while the dropdown is open.", 'eightshift-forms')}
+					value={outputFormSelectItemWithIcon(Object.keys(formsFormPostIdRaw).length ? formsFormPostIdRaw : { id: formsFormPostId })}
 					loadOptions={formSelectOptions}
 					onChange={(value) => {
 						setAttributes({
@@ -52,7 +39,6 @@ export const FormsEditor = ({
 							[getAttrKey('formsFormPostId', attributes, manifest)]: `${value?.value}`,
 						});
 					}}
-					noBottomSpacing
 				/>
 			</Placeholder>
 		);
@@ -60,11 +46,7 @@ export const FormsEditor = ({
 
 	return (
 		<>
-			{isGeoPreview &&
-				<div className='es-text-7 es-mb-3 es-text-align-center es-font-weight-700'>
-					{__('Original form', 'eightshift-forms')}
-				</div>
-			}
+			{isGeoPreview && <div className='es-text-7 es-mb-3 es-text-align-center es-font-weight-700'>{__('Original form', 'eightshift-forms')}</div>}
 
 			<Placeholder
 				icon={icons.form}
@@ -82,11 +64,9 @@ export const FormsEditor = ({
 				isFormPicker
 			/>
 
-			{isGeoPreview &&
+			{isGeoPreview && (
 				<>
-					<div className='es-mt-5 es-text-7 es-text-align-center es-font-weight-700'>
-						{__('Geolocation alternatives', 'eightshift-forms')}
-					</div>
+					<div className='es-mt-5 es-text-7 es-text-align-center es-font-weight-700'>{__('Geolocation alternatives', 'eightshift-forms')}</div>
 					{formsFormGeolocationAlternatives.map((item, index) => {
 						return (
 							<Placeholder
@@ -104,7 +84,7 @@ export const FormsEditor = ({
 						);
 					})}
 				</>
-			}
+			)}
 		</>
 	);
 };

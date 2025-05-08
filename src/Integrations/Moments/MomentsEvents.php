@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Moments;
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * MomentsEvents integration class.
@@ -54,7 +54,7 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiReponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -64,16 +64,16 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 			$formId,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -102,13 +102,13 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		$properties = [];
 
 		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParams']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $eventName, $map, $formId) ?? [];
 		}
 
 		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		$params = GeneralHelpers::removeUneceseryParamFields($params);
 
 		// Map params.
 		if ($map) {
@@ -124,7 +124,7 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		}
 
 		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParamsAfter']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostEventParamsAfter']);
 		if (\has_filter($filterName)) {
 			$properties = \apply_filters($filterName, $properties, $params, $eventName, $formId) ?? [];
 		}

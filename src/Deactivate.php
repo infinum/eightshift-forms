@@ -12,7 +12,7 @@ namespace EightshiftForms;
 
 use EightshiftForms\CronJobs\FileUploadJob;
 use EightshiftForms\Permissions\Permissions;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasDeactivationInterface;
 use WP_Role;
 
@@ -31,14 +31,14 @@ class Deactivate implements HasDeactivationInterface
 			$role = \get_role($roleName);
 
 			if ($role instanceof WP_Role) {
-				foreach (UtilsConfig::CAPS as $item) {
+				foreach (Config::CAPS as $item) {
 					$role->remove_cap($item);
 				}
 			}
 		}
 
 		// Delete transients.
-		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []) as $items) {
+		foreach (\apply_filters(Config::FILTER_SETTINGS_DATA, []) as $items) {
 			$cache = $items['cache'] ?? [];
 
 			if (!$cache) {

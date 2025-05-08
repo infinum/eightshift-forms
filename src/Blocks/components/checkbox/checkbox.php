@@ -7,10 +7,8 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
@@ -102,23 +100,23 @@ if ($checkboxFieldAttrs) {
 
 ?>
 
-<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
+<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+																											?>>
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'content', "{$componentClass}__content")); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxName); ?>"
-			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>
-			<?php wp_readonly($checkboxIsReadOnly); ?>
-		/>
+			<?php wp_readonly($checkboxIsReadOnly); ?> />
 		<?php if (!$checkboxHideLabel) { ?>
 			<label
 				for="<?php echo esc_attr($checkboxName); ?>"
-				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label', "{$componentClass}__label")); ?>"
-			>
+				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label', "{$componentClass}__label")); ?>">
 				<?php if ($checkboxIcon) { ?>
 					<img class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'label-icon', "{$componentClass}__label-icon")); ?>" src="<?php echo esc_url($checkboxIcon); ?>" alt="<?php echo esc_attr($checkboxLabel); ?>" />
 				<?php } ?>
@@ -133,7 +131,8 @@ if ($checkboxFieldAttrs) {
 	</div>
 	<?php if ($checkboxHelp) { ?>
 		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'help', "{$componentClass}__help")); ?>">
-			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+			<?php echo $checkboxHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			?>
 		</div>
 	<?php } ?>
 </div>

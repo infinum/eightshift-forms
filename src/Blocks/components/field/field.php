@@ -7,12 +7,10 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $fieldUse = Helpers::checkAttr('fieldUse', $attributes, $manifest);
 if (!$fieldUse) {
@@ -34,7 +32,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockName = $attributes['blockName'] ?? '';
 
 // Update media breakpoints from the filter.
-$filterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
+$filterName = HooksHelpers::getFilterName(['blocks', 'mediaBreakpoints']);
 
 if (has_filter($filterName)) {
 	$customMediaBreakpoints = apply_filters($filterName, []);
@@ -46,7 +44,7 @@ if (has_filter($filterName)) {
 		isset($customMediaBreakpoints['desktop']) &&
 		isset($customMediaBreakpoints['large'])
 	) {
-			Helpers::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
+		Helpers::getSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
 	}
 }
 
@@ -78,7 +76,7 @@ $fieldIsNoneFormBlock = Helpers::checkAttr('fieldIsNoneFormBlock', $attributes, 
 $fieldTwSelectorsData = Helpers::checkAttr('fieldTwSelectorsData', $attributes, $manifest);
 
 $fieldStyleOutput = [];
-$filterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleClasses']);
+$filterName = HooksHelpers::getFilterName(['block', 'field', 'styleClasses']);
 
 if (has_filter($filterName)) {
 	$fieldStyleOutputFilter = apply_filters($filterName, $attributes) ?? [];
@@ -199,14 +197,14 @@ if ($fieldAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('field', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field', $attributes);
 ?>
 
 <<?php echo esc_attr($fieldTag); ?>
 	class="<?php echo esc_attr($fieldClass); ?>"
 	data-id="<?php echo esc_attr($unique); ?>"
-	<?php echo $fieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
->
+	<?php echo $fieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 
 	<?php
 	echo Helpers::outputCssVariables($attributes, $manifest, $unique);
@@ -226,8 +224,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
-				for="<?php echo esc_attr($fieldId); ?>"
-			>
+				for="<?php echo esc_attr($fieldId); ?>">
 				<span class="<?php echo esc_attr($labelInnerClass); ?>">
 					<?php echo wp_kses_post($fieldLabel); ?>
 
@@ -247,27 +244,32 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		<div class="<?php echo esc_attr($contentClass); ?>">
 			<?php if ($fieldBeforeContent) { ?>
 				<div class="<?php echo esc_attr($beforeContentClass); ?>">
-					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+					?>
 				</div>
 			<?php } ?>
 			<div class="<?php echo esc_attr($contentWrapClass); ?>">
-				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				?>
 
 				<?php if ($fieldSuffixContent) { ?>
 					<div class="<?php echo esc_attr($suffixContentClass); ?>">
-						<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+						<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+						?>
 					</div>
 				<?php } ?>
 			</div>
 			<?php if ($fieldAfterContent) { ?>
 				<div class="<?php echo esc_attr($afterContentClass); ?>">
-					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+					?>
 				</div>
 			<?php } ?>
 		</div>
 		<?php if ($fieldHelp) { ?>
 			<div class="<?php echo esc_attr($helpClass); ?>">
-				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				?>
 			</div>
 		<?php } ?>
 		<?php
@@ -287,5 +289,6 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		?>
 	</div>
 
-	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>
 </<?php echo esc_attr($fieldTag); ?>>

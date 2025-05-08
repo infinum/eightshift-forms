@@ -10,18 +10,8 @@
  *
  */
 
-// Globals.
-@import './parts/admin-theme-colors';
-@import './parts/shared';
-
-// Additional variables.
-:root {
-	--global-es-radius-24: 1.5rem;
-	--global-es-radius-20: 1.25rem;
-	--global-es-radius-16: 1rem;
-	--global-es-radius-12: 0.75rem;
-	--global-es-radius-8: 0.5rem;
-}
+@use 'sass:meta';
+@include meta.load-css('@eightshift/ui-components/dist/assets/style-admin.css');
 
 .es-form-is-hidden {
 	display: none;

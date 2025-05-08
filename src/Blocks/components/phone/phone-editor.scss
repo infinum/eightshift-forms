@@ -1,5 +1,6 @@
-@import './phone-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+@use './phone-style';
 
 input.es-phone {
-	@include input-styles-editor;
+	@include theme.input-styles-editor;
 }

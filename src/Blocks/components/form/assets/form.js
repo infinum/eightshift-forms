@@ -1,15 +1,9 @@
 /* global grecaptcha */
 
-import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
+import { cookies } from '@eightshift/frontend-libs/scripts/helpers';
 import selectManifest from './../../select/manifest.json';
-import {
-	StateEnum,
-	prefix,
-	setStateFormInitial,
-	setStateWindow,
-	removeStateForm,
-	setStateConditionalTagsItems,
-} from './state-init';
+import { StateEnum, prefix, setStateFormInitial, setStateWindow, removeStateForm, setStateConditionalTagsItems } from './state-init';
+import { debounce } from '@eightshift/ui-components/utilities';
 
 /**
  * Main Forms class.
@@ -46,7 +40,7 @@ export class Form {
 
 	/**
 	 * Init all actions.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	init() {
@@ -59,7 +53,7 @@ export class Form {
 
 	/**
 	 * Init only forms.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	initOnlyForms() {
@@ -86,7 +80,9 @@ export class Form {
 
 					// Bailout if 0 as formId === 0 can only be used in admin.
 					if (formId === '0') {
-						throw new Error(`It looks like we can't find formId for your form, please check if you have set the attribute "${this.state.getStateAttribute('formId')}" on the form element.`);
+						throw new Error(
+							`It looks like we can't find formId for your form, please check if you have set the attribute "${this.state.getStateAttribute('formId')}" on the form element.`,
+						);
 					}
 
 					// If forms element don't have geolocation data attribute, init forms the regular way.
@@ -135,38 +131,38 @@ export class Form {
 
 		// Get geolocation data from ajax to detect what we will remove from DOM.
 		fetch(this.state.getRestUrl('geolocation'), body)
-		.then((response) => {
-			this.utils.formSubmitErrorContentType(response, 'geolocation', null);
+			.then((response) => {
+				this.utils.formSubmitErrorContentType(response, 'geolocation', null);
 
-			return response.text();
-		})
-		.then((responseData) => {
-			const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null)?.data;
+				return response.text();
+			})
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'geolocation', null)?.data;
 
-			// Loop all form elements and remove all except the one we need.
-			[...forms].forEach((form) => {
-				if (form.getAttribute(this.state.getStateAttribute('formFid')) !== response?.[this.state.getStateResponseOutputKey('geoId')]) {
-					// Remove all forms except the one we got from ajax.
-					form.remove();
-				} else {
-					// Init form id that we got from ajax.
-					this.initOnlyFormsInner(form.getAttribute(this.state.getStateAttribute('formId')));
+				// Loop all form elements and remove all except the one we need.
+				[...forms].forEach((form) => {
+					if (form.getAttribute(this.state.getStateAttribute('formFid')) !== response?.[this.state.getStateResponseOutputKey('geoId')]) {
+						// Remove all forms except the one we got from ajax.
+						form.remove();
+					} else {
+						// Init form id that we got from ajax.
+						this.initOnlyFormsInner(form.getAttribute(this.state.getStateAttribute('formId')));
 
-					// Remove geolocation data attribute from forms element.
-					formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
-				}
+						// Remove geolocation data attribute from forms element.
+						formsElement.removeAttribute(this.state.getStateAttribute('formGeolocation'));
+					}
+				});
+
+				// Remove loading class from forms element.
+				formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
 			});
-
-			// Remove loading class from forms element.
-			formsElement?.classList?.remove(this.state.getStateSelector('isGeoLoading'));
-		});
 	}
 
 	/**
 	 * Init only forms - inner items.
 	 *
 	 * @param {string} formId Form Id.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	initOnlyFormsInner(formId) {
@@ -192,7 +188,7 @@ export class Form {
 
 	/**
 	 * Init one form by form Id.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns {void}
@@ -202,10 +198,7 @@ export class Form {
 		this.state.getStateFormElement(formId).addEventListener('submit', this.onFormSubmitEvent);
 
 		// Select.
-		[
-			...this.state.getStateElementByTypeField('select', formId),
-			...this.state.getStateElementByTypeField('country', formId),
-		].forEach((select) => {
+		[...this.state.getStateElementByTypeField('select', formId), ...this.state.getStateElementByTypeField('country', formId)].forEach((select) => {
 			this.setupSelectField(formId, select.name);
 		});
 
@@ -230,10 +223,7 @@ export class Form {
 		});
 
 		// Date.
-		[
-			...this.state.getStateElementByTypeField('date', formId),
-			...this.state.getStateElementByTypeField('dateTime', formId),
-		].forEach((date) => {
+		[...this.state.getStateElementByTypeField('date', formId), ...this.state.getStateElementByTypeField('dateTime', formId)].forEach((date) => {
 			this.setupDateField(formId, date.name);
 		});
 
@@ -267,7 +257,7 @@ export class Form {
 
 	/**
 	 * Handle form submit and all logic.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {object} filter Additional filter to pass.
 	 *
@@ -333,12 +323,12 @@ export class Form {
 				this.state.setStateFormIsProcessing(false, formId);
 			});
 
-			this.FORM_DATA = new FormData();
+		this.FORM_DATA = new FormData();
 	}
 
 	/**
 	 * Handle form submit and all logic for steps form.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {object} filter Additional filter to pass.
 	 *
@@ -378,7 +368,7 @@ export class Form {
 				this.state.setStateFormIsProcessing(false, formId);
 			});
 
-			this.FORM_DATA = new FormData();
+		this.FORM_DATA = new FormData();
 	}
 
 	/**
@@ -410,11 +400,7 @@ export class Form {
 	 * @returns {void}
 	 */
 	formSubmitSuccess(formId, response, isFinalStep = false) {
-		const {
-			status,
-			message,
-			data,
-		} = response;
+		const { status, message, data } = response;
 
 		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitSuccess'), formId, response);
 
@@ -491,11 +477,7 @@ export class Form {
 	 * @returns {void}
 	 */
 	formSubmitError(formId, response, isFinalStep = false) {
-		const {
-			status,
-			message,
-			data,
-		} = response;
+		const { status, message, data } = response;
 
 		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitError'), formId, response);
 
@@ -527,14 +509,17 @@ export class Form {
 	 */
 	formSubmitAfter(formId, response) {
 		// Reset timeout for after each submit.
-		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
 			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 		}
 
 		// Hide global msg in any case after some time.
-		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
-			this.utils.unsetGlobalMsg(formId);
-		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
+			() => {
+				this.utils.unsetGlobalMsg(formId);
+			},
+			parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
+		);
 
 		// Dispatch event.
 		this.utils.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitEnd'), formId, response);
@@ -542,7 +527,7 @@ export class Form {
 
 	/**
 	 * Handle form submit on captcha.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {object} filter Additional filter to pass.
 	 *
@@ -559,7 +544,7 @@ export class Form {
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha?.enterprise?.ready(async () => {
 				try {
-					const token = await grecaptcha?.enterprise?.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
 
 					this.setFormDataCaptcha({
 						token,
@@ -569,18 +554,13 @@ export class Form {
 
 					this.formSubmit(formId, filter);
 				} catch (error) {
-					this.utils.formSubmitErrorFatal(
-						this.state.getStateSettingsFormCaptchaErrorMsg(),
-						'runFormCaptcha',
-						error,
-						formId
-					);
+					this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
 				}
 			});
 		} else {
 			grecaptcha?.ready(async () => {
 				try {
-					const token = await grecaptcha?.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.execute(siteKey, { action: actionName });
 
 					this.setFormDataCaptcha({
 						token,
@@ -590,12 +570,7 @@ export class Form {
 
 					this.formSubmit(formId, filter);
 				} catch (error) {
-					this.utils.formSubmitErrorFatal(
-						this.state.getStateSettingsFormCaptchaErrorMsg(),
-						'runFormCaptcha',
-						error,
-						formId
-					);
+					this.utils.formSubmitErrorFatal(this.state.getStateSettingsFormCaptchaErrorMsg(), 'runFormCaptcha', error, formId);
 				}
 			});
 		}
@@ -607,7 +582,7 @@ export class Form {
 
 	/**
 	 * Set form data object for all forms.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {object} filter Additional filter to pass.
 	 *
@@ -633,7 +608,7 @@ export class Form {
 
 	/**
 	 * Set form data object for all forms - fields.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {object} filter Additional filter to pass.
 	 *
@@ -653,7 +628,6 @@ export class Form {
 
 		// Iterate all form items.
 		for (const [key] of this.state.getStateElements(formId)) {
-
 			const name = key;
 			const internalType = this.state.getStateElementTypeField(key, formId);
 			const value = this.state.getStateElementValue(key, formId);
@@ -690,7 +664,7 @@ export class Form {
 
 			switch (formType) {
 				case 'hubspot':
-						data.custom = field.getAttribute(this.state.getStateAttribute('hubspotTypeId')) ?? '';
+					data.custom = field.getAttribute(this.state.getStateAttribute('hubspotTypeId')) ?? '';
 					break;
 			}
 
@@ -698,7 +672,7 @@ export class Form {
 				case 'checkbox':
 					let indexCheck = 0;
 
-					for(const [checkName, checkValue] of Object.entries(value)) {
+					for (const [checkName, checkValue] of Object.entries(value)) {
 						if (disabled[checkName]) {
 							continue;
 						}
@@ -713,7 +687,7 @@ export class Form {
 				case 'radio':
 					let indexRadio = 0;
 
-					for(const [radioName, radioValue] of Object.entries(items)) {
+					for (const [radioName, radioValue] of Object.entries(items)) {
 						if (disabled[radioName]) {
 							continue;
 						}
@@ -812,40 +786,43 @@ export class Form {
 				skipFieldsOutput[skipField] = this.state.getStateElementValue(skipField, formId);
 			});
 
-			this.FORM_DATA.append(this.state.getStateParam('skippedParams'), JSON.stringify({
-				name: this.state.getStateParam('skippedParams'),
-				value: skipFieldsOutput,
-				type: 'hidden',
-				typeCustom: 'hidden',
-				custom: '',
-				innerName: '',
-			}));
+			this.FORM_DATA.append(
+				this.state.getStateParam('skippedParams'),
+				JSON.stringify({
+					name: this.state.getStateParam('skippedParams'),
+					value: skipFieldsOutput,
+					type: 'hidden',
+					typeCustom: 'hidden',
+					custom: '',
+					innerName: '',
+				}),
+			);
 		}
 
 		// If we have input on the checkbox/radio fieldset don't sent the input value but append it to the parent fieldset.
 		if (fieldsetOtherOutput.length) {
 			fieldsetOtherOutput.forEach((item, index) => {
 				const items = Object.keys(this.state.getStateElementItems(item.parent, formId))?.length;
-				const {
-					parent,
-					value,
-				} = item;
+				const { parent, value } = item;
 
-				this.FORM_DATA.append(`${parent}[${items + index}]`, JSON.stringify({
-					name: parent,
-					value: value,
-					type: this.state.getStateElementTypeField(parent, formId),
-					typeCustom: this.state.getStateElementTypeCustom(parent, formId),
-					custom: '',
-					innerName: '',
-				}));
+				this.FORM_DATA.append(
+					`${parent}[${items + index}]`,
+					JSON.stringify({
+						name: parent,
+						value: value,
+						type: this.state.getStateElementTypeField(parent, formId),
+						typeCustom: this.state.getStateElementTypeCustom(parent, formId),
+						custom: '',
+						innerName: '',
+					}),
+				);
 			});
 		}
 	}
 
 	/**
 	 * Set form data object for all forms - group.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns {void}
@@ -875,11 +852,7 @@ export class Form {
 			const groupInnerItems = {};
 
 			for (const [key, groupInnerItem] of Object.entries(groupInner)) {
-				const {
-					name,
-					value,
-					disabled,
-				} = groupInnerItem;
+				const { name, value, disabled } = groupInnerItem;
 
 				// Skip select search field.
 				if (name === 'search_terms') {
@@ -897,13 +870,16 @@ export class Form {
 			const groupId = group.getAttribute(this.state.getStateAttribute('fieldId'));
 
 			if (groupId) {
-				this.FORM_DATA.append(groupId, JSON.stringify({
-					name: groupId,
-					value: groupInnerItems,
-					type: 'group',
-					typeCustom: 'group',
-					custom: '',
-				}));
+				this.FORM_DATA.append(
+					groupId,
+					JSON.stringify({
+						name: groupId,
+						value: groupInnerItems,
+						type: 'group',
+						typeCustom: 'group',
+						custom: '',
+					}),
+				);
 			}
 		}
 
@@ -912,7 +888,7 @@ export class Form {
 
 	/**
 	 * Set form data object for all forms - steps.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns {void}
@@ -929,7 +905,7 @@ export class Form {
 
 	/**
 	 * Set form data object for all forms - common.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns {void}
@@ -965,7 +941,7 @@ export class Form {
 
 	/**
 	 * Set form data object for all forms - enrichment.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns {void}
@@ -989,7 +965,7 @@ export class Form {
 
 	/**
 	 * Set form data object for all forms - admin.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns {void}
@@ -1005,7 +981,7 @@ export class Form {
 
 	/**
 	 * Set form data object for all forms - per form type.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns {void}
@@ -1038,7 +1014,7 @@ export class Form {
 
 	/**
 	 * Set form data object for all forms - captcha.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 *
 	 * @returns {void}
@@ -1054,7 +1030,7 @@ export class Form {
 
 	/**
 	 * Build helper for form data object.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {object} dataSet Object to build.
 	 *
@@ -1062,21 +1038,18 @@ export class Form {
 	 */
 	buildFormDataItems(data, dataSet = this.FORM_DATA) {
 		data.forEach((item) => {
-			const {
-				name,
-				value,
-				type = 'hidden',
-				typeCustom = 'hidden',
-				custom = '',
-			} = item;
+			const { name, value, type = 'hidden', typeCustom = 'hidden', custom = '' } = item;
 
-			dataSet.append(name, JSON.stringify({
+			dataSet.append(
 				name,
-				value,
-				type,
-				typeCustom,
-				custom,
-			}));
+				JSON.stringify({
+					name,
+					value,
+					type,
+					typeCustom,
+					custom,
+				}),
+			);
 		});
 	}
 
@@ -1106,7 +1079,7 @@ export class Form {
 
 		if (
 			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			(this.state.getStateFormConfigUseSingleSubmit(formId) && (this.state.getStateElementTypeCustom(name, formId) === 'number'))
+			(this.state.getStateFormConfigUseSingleSubmit(formId) && this.state.getStateElementTypeCustom(name, formId) === 'number')
 		) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
@@ -1137,10 +1110,7 @@ export class Form {
 
 		this.utils.setRangeCurrentValue(formId, name);
 
-		if (
-			(this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) ||
-			this.state.getStateFormConfigUseSingleSubmit(formId)
-		) {
+		if ((this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) || this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			input.addEventListener('input', debounce(this.onInputEvent, 300));
 		} else {
 			input.addEventListener('input', this.onInputEvent);
@@ -1227,7 +1197,7 @@ export class Form {
 				dateFormat: input.getAttribute(state.getStateAttribute('dateOutputFormat')),
 				altFormat: input.getAttribute(state.getStateAttribute('datePreviewFormat')),
 				altInput: true,
-				onReady: function(selectedDates, value) {
+				onReady: function (selectedDates, value) {
 					state.setStateElementInitial(name, value, formId);
 					state.setStateElementLoaded(name, true, formId);
 					state.setStateElementValue(name, value, formId);
@@ -1260,9 +1230,9 @@ export class Form {
 		let input = this.state.getStateElementInput(name, formId);
 		const typeInternal = this.state.getStateElementTypeField(name, formId);
 
-		 if (typeInternal === 'phone') {
-			 input = this.state.getStateElementInputSelect(name, formId);
-		 }
+		if (typeInternal === 'phone') {
+			input = this.state.getStateElementInputSelect(name, formId);
+		}
 
 		import('choices.js').then((Choices) => {
 			const state = this.state;
@@ -1274,7 +1244,7 @@ export class Form {
 				this.state.getStateAttribute('conditionalTags'),
 				this.state.getStateAttribute('selectOptionIsHidden'),
 			];
- 
+
 			const choices = new Choices.default(input, {
 				searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
 				shouldSort: false,
@@ -1293,7 +1263,7 @@ export class Form {
 				classNames: {
 					containerOuter: `choices ${selectManifest.componentClass}`,
 				},
-				callbackOnCreateTemplates: function() {
+				callbackOnCreateTemplates: function () {
 					return {
 						// Fake select option.
 						option: (...args) => {
@@ -1409,25 +1379,22 @@ export class Form {
 				return;
 			}
 
-			const dropzone = new Dropzone.default(
-				field,
-				{
-					url: this.state.getRestUrl('files'),
-					addRemoveLinks: true,
-					autoDiscover: false,
-					parallelUploads: 1,
-					maxFiles: !input.multiple ? 1 : null,
-					dictMaxFilesExceeded: '',
-					dictRemoveFile: this.state.getStateSettingsFileRemoveLabel(formId),
-				}
-			);
+			const dropzone = new Dropzone.default(field, {
+				url: this.state.getRestUrl('files'),
+				addRemoveLinks: true,
+				autoDiscover: false,
+				parallelUploads: 1,
+				maxFiles: !input.multiple ? 1 : null,
+				dictMaxFilesExceeded: '',
+				dictRemoveFile: this.state.getStateSettingsFileRemoveLabel(formId),
+			});
 
 			// Set data to internal state.
 			this.state.setStateElementLoaded(name, true, formId);
 			this.state.setStateElementCustom(name, dropzone, formId);
 
 			// On add one file add selectors for UX.
-			dropzone.on("addedfile", (file) => {
+			dropzone.on('addedfile', (file) => {
 				setTimeout(() => {
 					file?.previewTemplate?.classList?.add(this.state.getStateSelector('isActive'));
 				}, 200);
@@ -1456,36 +1423,39 @@ export class Form {
 			});
 
 			// Add data formData to the api call for the file upload.
-			dropzone.on("sending", (file, xhr, formData) => {
+			dropzone.on('sending', (file, xhr, formData) => {
 				// Add common items like formID and type.
-				this.buildFormDataItems([
-					{
-						name: this.state.getStateParam('formId'),
-						value: this.state.getStateFormFid(formId),
-					},
-					{
-						name: this.state.getStateParam('postId'),
-						value: this.state.getStateFormPostId(formId),
-					},
-					{
-						name: this.state.getStateParam('type'),
-						value: this.state.getStateConfigIsAdmin() ? 'fileUploadAdmin' : 'fileUpload',
-					},
-					{
-						// Add field name to know where whas this file upload to.
-						name: this.state.getStateParam('name'),
-						value: name,
-					},
-					{
-						// Add file ID to know the file.
-						name: this.state.getStateParam('fileId'),
-						value: file?.upload?.uuid,
-					},
-				], formData);
+				this.buildFormDataItems(
+					[
+						{
+							name: this.state.getStateParam('formId'),
+							value: this.state.getStateFormFid(formId),
+						},
+						{
+							name: this.state.getStateParam('postId'),
+							value: this.state.getStateFormPostId(formId),
+						},
+						{
+							name: this.state.getStateParam('type'),
+							value: this.state.getStateConfigIsAdmin() ? 'fileUploadAdmin' : 'fileUpload',
+						},
+						{
+							// Add field name to know where whas this file upload to.
+							name: this.state.getStateParam('name'),
+							value: name,
+						},
+						{
+							// Add file ID to know the file.
+							name: this.state.getStateParam('fileId'),
+							value: file?.upload?.uuid,
+						},
+					],
+					formData,
+				);
 			});
 
 			// Once data is outputed from uplaod.
-			dropzone.on("success", (file) => {
+			dropzone.on('success', (file) => {
 				try {
 					const response = JSON.parse(file.xhr.response);
 
@@ -1504,19 +1474,16 @@ export class Form {
 				}
 			});
 
-			dropzone.on("error", (file) => {
-				const {
-					response,
-					status,
-				} = file.xhr;
+			dropzone.on('error', (file) => {
+				const { response, status } = file.xhr;
 
 				let msg = 'serverError';
 
-				if (response.includes("wordfence") || response.includes("Wordfence")) {
+				if (response.includes('wordfence') || response.includes('Wordfence')) {
 					msg = 'wordfenceFirewall';
 				}
 
-				if (response.includes("cloudflare") || response.includes("Cloudflare")) {
+				if (response.includes('cloudflare') || response.includes('Cloudflare')) {
 					msg = 'cloudflareFirewall';
 				}
 
@@ -1538,7 +1505,7 @@ export class Form {
 
 	/**
 	 * Remove all event listeners from elements.
-	 * 
+	 *
 	 * @returns {vodi}
 	 */
 	removeEvents() {
@@ -1554,10 +1521,7 @@ export class Form {
 			this.state.getStateFormElement(formId)?.removeEventListener('submit', this.onFormSubmitEvent);
 
 			// Select.
-			[
-				...this.state.getStateElementByTypeField('select', formId),
-				...this.state.getStateElementByTypeField('country', formId),
-			].forEach((select) => {
+			[...this.state.getStateElementByTypeField('select', formId), ...this.state.getStateElementByTypeField('country', formId)].forEach((select) => {
 				const choices = this.state.getStateElementCustom(select.name, formId);
 
 				choices?.passedElement?.element?.removeEventListener('showDropdown', this.onFocusEvent);
@@ -1613,10 +1577,7 @@ export class Form {
 			});
 
 			// Date.
-			[
-				...this.state.getStateElementByTypeField('date', formId),
-				...this.state.getStateElementByTypeField('dateTime', formId),
-			].forEach((date) => {
+			[...this.state.getStateElementByTypeField('date', formId), ...this.state.getStateElementByTypeField('dateTime', formId)].forEach((date) => {
 				this.state.getStateElementCustom(date.name, formId)?.destroy();
 			});
 
@@ -1635,7 +1596,6 @@ export class Form {
 			// Checkbox.
 			[...this.state.getStateElementByTypeField('checkbox', formId)].forEach((checkbox) => {
 				[...Object.values(checkbox.items)].forEach((checkboxItem) => {
-
 					const input = this.state.getStateElementItemsInput(checkboxItem.name, checkboxItem.value, formId);
 
 					input?.removeEventListener('keydown', this.onFocusEvent);
@@ -1645,7 +1605,7 @@ export class Form {
 				});
 			});
 
-				// Radio.
+			// Radio.
 			[...this.state.getStateElementByTypeField('radio', formId)].forEach((radio) => {
 				[...Object.values(radio.items)].forEach((radioItem) => {
 					const input = this.state.getStateElementItemsInput(radioItem.name, radioItem.value, formId);
@@ -1683,7 +1643,7 @@ export class Form {
 
 	/**
 	 * Handle form submit and all logic.
-	 * 
+	 *
 	 * @param {object} event Event callback.
 	 *
 	 * @returns {void}
@@ -1715,9 +1675,7 @@ export class Form {
 					this.utils.showLoader(formId);
 
 					const filterNext = {
-						[this.FILTER_SKIP_FIELDS]: [
-							...this.conditionalTags.getIgnoreFields(formId),
-						],
+						[this.FILTER_SKIP_FIELDS]: [...this.conditionalTags.getIgnoreFields(formId)],
 					};
 
 					debounce(this.formSubmitStep(formId, filterNext), 100);
@@ -1729,10 +1687,7 @@ export class Form {
 					this.utils.showLoader(formId);
 
 					const filterFinal = {
-						[this.FILTER_SKIP_FIELDS]: [
-							...this.steps.getIgnoreFields(formId),
-							...this.conditionalTags.getIgnoreFields(formId),
-						],
+						[this.FILTER_SKIP_FIELDS]: [...this.steps.getIgnoreFields(formId), ...this.conditionalTags.getIgnoreFields(formId)],
 						[this.FILTER_IS_STEPS_FINAL_SUBMIT]: true,
 					};
 
@@ -1748,9 +1703,7 @@ export class Form {
 			this.utils.showLoader(formId);
 
 			const filterNormal = {
-				[this.FILTER_SKIP_FIELDS]: [
-					...this.conditionalTags.getIgnoreFields(formId),
-				],
+				[this.FILTER_SKIP_FIELDS]: [...this.conditionalTags.getIgnoreFields(formId)],
 			};
 
 			if (this.state.getStateCaptchaIsUsed()) {
@@ -1809,27 +1762,7 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
 		if (this.state.getStateElementTypeCustom(name, formId) === 'number') {
-			const allowedKeys = [
-				'Backspace',
-				'Enter',
-				'ArrowUp',
-				'ArrowDown',
-				'ArrowLeft',
-				'ArrowRight',
-				'0',
-				'1',
-				'2',
-				'3',
-				'4',
-				'5',
-				'6',
-				'7',
-				'8',
-				'9',
-				'.',
-				'-',
-				'Tab',
-			];
+			const allowedKeys = ['Backspace', 'Enter', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-', 'Tab'];
 
 			// Prevent the default action if the key is not allowed
 			if (!allowedKeys.includes(event.key)) {
@@ -1852,22 +1785,30 @@ export class Form {
 
 		this.state.setState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], event.target, formId);
 
-		const options = event.detail.value !== '' ? [...event.target.options].map((option) => {
-				return {
-					value: option?.value,
-					meta: JSON.parse(option?.getAttribute(this.state.getStateAttribute('selectCustomProperties')) || '{}'),
-				};
-		}) : [];
+		const options =
+			event.detail.value !== ''
+				? [...event.target.options].map((option) => {
+						return {
+							value: option?.value,
+							meta: JSON.parse(option?.getAttribute(this.state.getStateAttribute('selectCustomProperties')) || '{}'),
+						};
+					})
+				: [];
 
 		switch (this.state.getStateElementTypeField(name, formId)) {
 			case 'phone':
 				const phoneValue = this.state.getStateElementValue(name, formId);
 
-				this.utils.setManualPhoneValue(formId, name, {
-					prefix: options?.[0]?.value || '',
-					meta: options?.[0]?.meta || {},
-					value: phoneValue?.value || '',
-				}, false);
+				this.utils.setManualPhoneValue(
+					formId,
+					name,
+					{
+						prefix: options?.[0]?.value || '',
+						meta: options?.[0]?.meta || {},
+						value: phoneValue?.value || '',
+					},
+					false,
+				);
 				break;
 			case 'country':
 				this.utils.setManualCountryValue(formId, name, options, false);
@@ -1880,11 +1821,11 @@ export class Form {
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
-				this.formSubmit(
-					formId, {
-						[this.FILTER_USE_ONLY_FIELDS]: [name]
-					}
-			), 100);
+				this.formSubmit(formId, {
+					[this.FILTER_USE_ONLY_FIELDS]: [name],
+				}),
+				100,
+			);
 		}
 
 		// Used only on frontend for single submit.
@@ -1906,10 +1847,7 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 		const type = this.state.getStateElementTypeField(name, formId);
 
-		const {
-			value,
-			checked,
-		 } = event?.target;
+		const { value, checked } = event?.target;
 
 		switch (type) {
 			case 'checkbox':
@@ -1919,7 +1857,7 @@ export class Form {
 					{
 						[value]: checked ? value : '',
 					},
-					false
+					false,
 				);
 				break;
 			case 'radio':
@@ -1928,11 +1866,16 @@ export class Form {
 			case 'phone':
 				const phoneValue = this.state.getStateElementValue(name, formId);
 
-				this.utils.setManualPhoneValue(formId, name, {
-					prefix: phoneValue?.prefix || '',
-					meta: phoneValue?.meta || {},
-					value: value || '',
-				}, false);
+				this.utils.setManualPhoneValue(
+					formId,
+					name,
+					{
+						prefix: phoneValue?.prefix || '',
+						meta: phoneValue?.meta || {},
+						value: value || '',
+					},
+					false,
+				);
 				break;
 			case 'range':
 				this.utils.setManualRangeValue(formId, name, value, false);
@@ -1945,22 +1888,18 @@ export class Form {
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
-				this.formSubmit(
-					formId, {
-						[this.FILTER_USE_ONLY_FIELDS]: [name]
-					}
-			), 100);
+				this.formSubmit(formId, {
+					[this.FILTER_USE_ONLY_FIELDS]: [name],
+				}),
+				100,
+			);
 		}
 
 		// Used only on frontend for single submit.
 		if (
 			!this.state.getStateConfigIsAdmin() &&
-			this.state.getStateFormConfigUseSingleSubmit(formId) && (
-				type === 'range' ||
-				type === 'number' ||
-				type === 'checkbox' ||
-				type === 'radio'
-			)
+			this.state.getStateFormConfigUseSingleSubmit(formId) &&
+			(type === 'range' || type === 'number' || type === 'checkbox' || type === 'radio')
 		) {
 			debounce(this.formSubmit(formId), 100);
 		}
@@ -2031,11 +1970,11 @@ export class Form {
 		// Used only for admin single submit.
 		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
 			debounce(
-				this.formSubmit(
-					formId, {
-						[this.FILTER_USE_ONLY_FIELDS]: [name]
-					}
-			), 100);
+				this.formSubmit(formId, {
+					[this.FILTER_USE_ONLY_FIELDS]: [name],
+				}),
+				100,
+			);
 		}
 
 		// Used only on frontend for single submit.
@@ -2061,7 +2000,7 @@ export class Form {
 
 	/**
 	 * Set all public methods.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	publicMethods() {

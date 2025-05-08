@@ -10,18 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Entries;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingInterface;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsEntries class.
  */
-class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsEntries implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -112,7 +112,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 			return false;
 		}
 
-		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
+		$isUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 
 		if (!$isUsed) {
 			return false;
@@ -128,7 +128,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
 			return false;
 		}
 
@@ -146,13 +146,13 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
+		$isUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			($isUsed ? [
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',
@@ -165,7 +165,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								'component' => 'submit',
 								'submitVariant' => 'ghost',
 								'submitButtonAsLink' => true,
-								'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId),
+								'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES, $formId),
 								'submitValue' => \__('View', 'eightshift-forms'),
 							],
 						],
@@ -181,7 +181,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 						'tabContent' => [
 							[
 								'component' => 'checkboxes',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -193,7 +193,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 									],
 								],
 								// translators: %s is the link to the listing page.
-								'checkboxesFieldHelp' => $isUsed ? \sprintf(\__('View all stored entries on <a href="%s">this</a> link.', 'eightshift-forms'), UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
+								'checkboxesFieldHelp' => $isUsed ? \sprintf(\__('View all stored entries on <a href="%s">this</a> link.', 'eightshift-forms'), GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES, $formId)) : '',
 							],
 							...($isUsed ? [
 								[
@@ -203,13 +203,13 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Save empty fields to database', 'eightshift-forms'),
 											'checkboxHelp' => \__('All empty field values will not be saved to database by default.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId),
 											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
@@ -223,13 +223,13 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => \__('Save additional keys to your record entry.', 'eightshift-forms'),
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Success redirect url', 'eightshift-forms'),
 											'checkboxHelp' => \__('Full URL where user will be redirected after successful form submission.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
@@ -238,7 +238,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Variation values', 'eightshift-forms'),
 											'checkboxHelp' => \__('List of all Variation values set by your form.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
@@ -247,7 +247,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Increment ID', 'eightshift-forms'),
 											'checkboxHelp' => \__('Increment ID set by the form successful submission.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
@@ -269,12 +269,12 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENTRIES_USE_KEY, self::SETTINGS_ENTRIES_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [

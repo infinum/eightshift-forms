@@ -12,9 +12,9 @@ namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -58,7 +58,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		\add_filter(static::FILTER_FORM_FIELDS_NAME, [$this, 'getFormFields'], 10, 3);
 
 		// Recreate dynamic block data for frontend.
-		\add_filter(UtilsHooksHelper::getFilterName(['block', 'dynamic', 'dataOutput']), [$this, 'getDynamicBlockOutput'], 10, 2);
+		\add_filter(HooksHelpers::getFilterName(['block', 'dynamic', 'dataOutput']), [$this, 'getDynamicBlockOutput'], 10, 2);
 	}
 
 	/**
@@ -327,7 +327,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 		];
 
 		// Change the final output if necesery.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
@@ -345,8 +345,8 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 	 */
 	public function getDynamicBlockOutput(array $attributes, string $formId): string
 	{
-		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formDetails = GeneralHelpers::getFormDetails($formId);
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
 		if ($type !== SettingsAirtable::SETTINGS_TYPE_KEY) {
 			return '';

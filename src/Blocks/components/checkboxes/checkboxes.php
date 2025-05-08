@@ -7,10 +7,8 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $checkboxesName = Helpers::checkAttr('checkboxesName', $attributes, $manifest);
 if (!$checkboxesName) {
@@ -45,7 +43,7 @@ $checkboxesContent = (string) preg_replace_callback('/for=""/', function () use 
 }, $checkboxesContent);
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('checkboxes', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('checkboxes', $attributes);
 
 $placeholderLabel = '';
 $placeholder = '';

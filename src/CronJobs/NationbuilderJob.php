@@ -13,8 +13,8 @@ namespace EightshiftForms\CronJobs;
 use EightshiftForms\Integrations\Nationbuilder\NationbuilderClientInterface;
 use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -111,7 +111,7 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 	public function getJobCallback()
 	{
 		$use = \apply_filters(SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
+		$jobs = SettingsHelpers::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
 
 		if (!$use || !$jobs) {
 			return;
@@ -123,8 +123,8 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 					foreach ($signupIds as $signupId) {
 						$listResponse = $this->nationbuilderClient->postList((string) $listId, $signupId);
 
-						if ($listResponse[UtilsConfig::IARD_CODE] < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $listResponse[UtilsConfig::IARD_CODE] > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-							$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $listResponse;
+						if ($listResponse[Config::IARD_CODE] < Config::API_RESPONSE_CODE_SUCCESS && $listResponse[Config::IARD_CODE] > Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $listResponse;
 
 							$this->formSubmitMailer->sendFallbackIntegrationEmail($formDetails);
 						}
@@ -139,8 +139,8 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 					foreach ($signupIds as $signupId) {
 						$tagResponse = $this->nationbuilderClient->postTag((string) $tagId, $signupId);
 
-						if ($tagResponse[UtilsConfig::IARD_CODE] < UtilsConfig::API_RESPONSE_CODE_SUCCESS && $tagResponse[UtilsConfig::IARD_CODE] > UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-							$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $tagResponse;
+						if ($tagResponse[Config::IARD_CODE] < Config::API_RESPONSE_CODE_SUCCESS && $tagResponse[Config::IARD_CODE] > Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $tagResponse;
 
 							$this->formSubmitMailer->sendFallbackIntegrationEmail($formDetails);
 						}
@@ -151,9 +151,9 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 			}
 		}
 
-		\update_option(UtilsSettingsHelper::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $jobs);
+		\update_option(SettingsHelpers::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $jobs);
 
 		// Turn of OAuth after cron job is done.
-		\delete_option(UtilsSettingsHelper::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY));
+		\delete_option(SettingsHelpers::getOptionName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY));
 	}
 }

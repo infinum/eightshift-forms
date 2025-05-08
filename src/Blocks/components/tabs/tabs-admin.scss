@@ -1,7 +1,9 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-tabs {
 	position: relative;
 
-	@include media(desktop up) {
+	@include theme.media(desktop up) {
 		display: flex;
 		flex-wrap: wrap;
 		max-inline-size: var(--global-esf-max-width);

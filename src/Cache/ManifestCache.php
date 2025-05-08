@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -42,7 +42,7 @@ class ManifestCache extends AbstractManifestCache
 	 */
 	public function getCacheName(): string
 	{
-		return UtilsConfig::MAIN_PLUGIN_MANIFEST_CACHE_NAME;
+		return Config::MAIN_PLUGIN_MANIFEST_CACHE_NAME;
 	}
 
 	/**
@@ -53,6 +53,16 @@ class ManifestCache extends AbstractManifestCache
 	public function getVersion(): string
 	{
 		return Helpers::getPluginVersion();
+	}
+
+	/**
+	 * Get cache for geolocation
+	 *
+	 * @return bool
+	 */
+	public function useGeolocation(): bool
+	{
+		return true;
 	}
 
 	/**
@@ -67,7 +77,7 @@ class ManifestCache extends AbstractManifestCache
 		$this->setAllCache($ignoreCache);
 
 		if (!isset($ignoreCache[self::TYPE_FORMS])) {
-			$this->setCache(self::TYPE_FORMS);
+			// $this->setCache(self::TYPE_FORMS);
 		}
 	}
 
@@ -85,8 +95,8 @@ class ManifestCache extends AbstractManifestCache
 			[
 				self::TYPE_FORMS => [
 					self::TLD_KEY => [
+						'path' => 'src',
 						'fileName' => "Validation{$sep}manifest.json",
-						'path' => 'srcDestination',
 					]
 				],
 			]

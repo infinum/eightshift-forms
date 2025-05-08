@@ -13,9 +13,9 @@ namespace EightshiftForms\Listing;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\IntegrationsHelpers;
 use WP_Query;
 
 /**
@@ -37,11 +37,11 @@ class FormsListing implements FormListingInterface
 		$showTrash = false;
 
 		switch ($type) {
-			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
-				$postType = ($parent === UtilsConfig::SLUG_ADMIN_LISTING_RESULTS) ? Result::POST_TYPE_SLUG : Forms::POST_TYPE_SLUG;
+			case Config::SLUG_ADMIN_LISTING_TRASH:
+				$postType = ($parent === Config::SLUG_ADMIN_LISTING_RESULTS) ? Result::POST_TYPE_SLUG : Forms::POST_TYPE_SLUG;
 				$showTrash = true;
 				break;
-			case UtilsConfig::SLUG_ADMIN_LISTING_RESULTS:
+			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				$postType = Result::POST_TYPE_SLUG;
 				break;
 			default:
@@ -73,12 +73,12 @@ class FormsListing implements FormListingInterface
 				'id' => $id,
 				'title' => \get_the_title($id),
 				'status' => \get_post_status($id),
-				'settingsLink' => UtilsGeneralHelper::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY),
-				'editLink' => !$showTrash ? UtilsGeneralHelper::getFormEditPageUrl((string) $id) : '',
-				'trashLink' => UtilsGeneralHelper::getFormTrashActionUrl((string) $id, $showTrash),
-				'entriesLink' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, (string) $id),
-				'trashRestoreLink' => UtilsGeneralHelper::getFormTrashRestoreActionUrl((string) $id),
-				'activeIntegration' => UtilsIntegrationsHelper::getIntegrationDetailsById((string) $id),
+				'settingsLink' => GeneralHelpers::getSettingsPageUrl((string) $id, SettingsGeneral::SETTINGS_TYPE_KEY),
+				'editLink' => !$showTrash ? GeneralHelpers::getFormEditPageUrl((string) $id) : '',
+				'trashLink' => GeneralHelpers::getFormTrashActionUrl((string) $id, $showTrash),
+				'entriesLink' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES, (string) $id),
+				'trashRestoreLink' => GeneralHelpers::getFormTrashRestoreActionUrl((string) $id),
+				'activeIntegration' => IntegrationsHelpers::getIntegrationDetailsById((string) $id),
 				'useSync' => true,
 			];
 		}

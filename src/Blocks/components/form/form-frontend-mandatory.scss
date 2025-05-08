@@ -1,13 +1,13 @@
-@import './form-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
 
 .es-form {
 	$this: &;
 
 	&__fields {
-		@include form-fields-mandatory-styles;
+		@include theme.form-fields-mandatory-styles;
 
 		> .es-field {
-			@include form-fields-children-mandatory-styles;
+			@include theme.form-fields-children-mandatory-styles;
 		}
 	}
 

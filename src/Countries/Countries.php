@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Countries;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * Countries class.
@@ -27,7 +27,7 @@ class Countries implements CountriesInterface
 	public function getCountriesDataSet(bool $useFullOutput = true): array
 	{
 		$countries = \apply_filters(
-			UtilsHooksHelper::getFilterName(['block', 'country', 'modifyDataSet']),
+			HooksHelpers::getFilterName(['block', 'country', 'modifyDataSet']),
 			$this->getCountriesList()
 		);
 
@@ -52,7 +52,7 @@ class Countries implements CountriesInterface
 		];
 
 		$alternative = [];
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'country', 'alternativeDataSet']);
+		$filterName = HooksHelpers::getFilterName(['block', 'country', 'alternativeDataSet']);
 		if (\has_filter($filterName)) {
 			$alternative = \apply_filters($filterName, []);
 		}
@@ -131,7 +131,7 @@ class Countries implements CountriesInterface
 	private function customOrder(array $output): array
 	{
 		$data = [];
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'country', 'customOrder']);
+		$filterName = HooksHelpers::getFilterName(['block', 'country', 'customOrder']);
 		if (\has_filter($filterName)) {
 			$data = \apply_filters($filterName, []);
 		}

@@ -10,21 +10,21 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Nationbuilder;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Oauth\OauthInterface;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsNationbuilder class.
  */
-class SettingsNationbuilder extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsNationbuilder extends AbstractSettingsIntegrations implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -157,17 +157,17 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
-		$params = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
-		$list = UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
-		$tags = \array_flip(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId)));
+		$formDetails = GeneralHelpers::getFormDetails($formId);
+		$params = $formDetails[Config::FD_FIELD_NAMES] ?? [];
+		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
+		$list = SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
+		$tags = \array_flip(\explode(Config::DELIMITER, SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId)));
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -177,7 +177,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 						'tabContent' => [
 							[
 								'component' => 'group',
-								'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY),
+								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY),
 								'groupSaveOneField' => true,
 								'groupStyle' => 'default-listing',
 								'groupContent' => [
@@ -222,9 +222,9 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 						'tabContent' => [
 							[
 								'component' => 'select',
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NATIONBUILDER_LIST_KEY),
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_NATIONBUILDER_LIST_KEY),
 								'selectFieldLabel' => \__('Select list', 'eightshift-forms'),
-								'selectValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId),
+								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_LIST_KEY, $formId),
 								'selectContent' => \array_map(
 									static function ($option) use ($list) {
 										return [
@@ -239,10 +239,10 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 							],
 							[
 								'component' => 'select',
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_NATIONBUILDER_TAGS_KEY),
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_NATIONBUILDER_TAGS_KEY),
 								'selectFieldLabel' => \__('Select tags', 'eightshift-forms'),
 								'selectIsMultiple' => true,
-								'selectValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId),
+								'selectValue' => SettingsHelpers::getSettingValue(self::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId),
 								'selectContent' => \array_map(
 									static function ($option) use ($tags) {
 										return [
@@ -269,10 +269,10 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_USE_KEY, self::SETTINGS_NATIONBUILDER_USE_KEY);
-		$clientId = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_ID);
-		$clientSecret = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
-		$clientSlug = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSlugNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_USE_KEY, self::SETTINGS_NATIONBUILDER_USE_KEY);
+		$clientId = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientIdNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_ID);
+		$clientSecret = (bool) SettingsHelpers::getOptionWithConstant(Variables::getClientSecretNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
+		$clientSlug = SettingsHelpers::getOptionWithConstant(Variables::getClientSlugNationBuilder(), self::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
 
 		if (!$isUsed || !$clientId || !$clientSecret || !$clientSlug) {
 			return false;
@@ -289,14 +289,14 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_USE_KEY, self::SETTINGS_NATIONBUILDER_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_USE_KEY, self::SETTINGS_NATIONBUILDER_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -307,12 +307,12 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -323,7 +323,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -332,7 +332,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getClientIdNationBuilder(),
 									self::SETTINGS_NATIONBUILDER_CLIENT_ID,
 									'ES_CLIENT_ID_NATIONBUILDER',
@@ -342,7 +342,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getClientSecretNationBuilder(),
 									self::SETTINGS_NATIONBUILDER_CLIENT_SECRET,
 									'ES_CLIENT_SECRET_NATIONBUILDER',
@@ -352,7 +352,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getClientSlugNationBuilder(),
 									self::SETTINGS_NATIONBUILDER_CLIENT_SLUG,
 									'ES_CLIENT_SLUG_NATIONBUILDER',
@@ -362,12 +362,12 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getOauthConnection($this->oauthNationbuilder->getOauthAuthorizeUrl(), OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY, self::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY),
+								SettingsOutputHelpers::getOauthConnection($this->oauthNationbuilder->getOauthAuthorizeUrl(), OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY, self::SETTINGS_NATIONBUILDER_OAUTH_ALLOW_KEY),
 								[
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
+								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -389,7 +389,7 @@ class SettingsNationbuilder extends AbstractSettingsIntegrations implements Util
 								'textareaIsReadOnly' => true,
 								'textareaIsPreventSubmit' => true,
 								'textareaName' => 'queue',
-								'textareaValue' => \wp_json_encode(UtilsSettingsHelper::getOptionValueGroup(self::SETTINGS_NATIONBUILDER_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
+								'textareaValue' => \wp_json_encode(SettingsHelpers::getOptionValueGroup(self::SETTINGS_NATIONBUILDER_CRON_KEY), \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE),
 								'textareaSize' => 'huge',
 								'textareaLimitHeight' => true,
 							],

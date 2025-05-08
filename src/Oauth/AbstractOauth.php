@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Oauth;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 
 /**
  * Oauth class.
@@ -26,8 +26,8 @@ abstract class AbstractOauth implements OauthInterface
 	 */
 	public function getRedirectUri(string $type): string
 	{
-		$namespace = UtilsConfig::ROUTE_NAMESPACE;
-		$version = UtilsConfig::ROUTE_VERSION;
+		$namespace = Config::ROUTE_NAMESPACE;
+		$version = Config::ROUTE_VERSION;
 
 		return \rest_url("{$namespace}/{$version}/oauth/{$type}");
 	}

@@ -29,11 +29,12 @@
 	},
 	"devDependencies": {
 		"husky": "^9.1.7",
-		"webpack": "^5.99.6",
+		"webpack": "^5.99.8",
 		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs": "^15.0.0",
+		"@eightshift/frontend-libs": "^15.0.1",
+		"@eightshift/ui-components": "^5.0.1",
 		"autosize": "^6.0.1",
 		"choices.js": "^10.2.0",
 		"dropzone": "^6.0.0-beta.2",

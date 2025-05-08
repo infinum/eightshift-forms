@@ -10,21 +10,21 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Paycek;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\SettingInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsPaycek class.
  */
-class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -149,9 +149,9 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 			return false;
 		}
 
-		$lang = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_LANG_KEY, $formId);
-		$cartDesc = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
+		$lang = SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_LANG_KEY, $formId);
+		$cartDesc = SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
 
 		if (!$lang || !$mapParams || !$cartDesc) {
 			return false;
@@ -171,18 +171,18 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
+		$formDetails = GeneralHelpers::getFormDetails($formId);
 
-		$lang = UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_LANG_KEY, $formId);
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
+		$lang = SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_LANG_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
 
-		$params = $formDetails[UtilsConfig::FD_FIELD_NAMES] ?? [];
+		$params = $formDetails[Config::FD_FIELD_NAMES] ?? [];
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -193,7 +193,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'select',
 								'selectIsRequired' => true,
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_LANG_KEY),
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_LANG_KEY),
 								'selectFieldLabel' => \__('Language', 'eightshift-forms'),
 								'selectPlaceholder' => \__('Select language', 'eightshift-forms'),
 								'selectContent' => [
@@ -214,11 +214,11 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'input',
 								'inputIsRequired' => true,
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_CART_DESC_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_CART_DESC_KEY),
 								'inputFieldLabel' => \__('Cart description', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Shopping-cart contents description.', 'eightshift-forms'),
 								'inputMaxLength' => 99,
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_CART_DESC_KEY, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_CART_DESC_KEY, $formId),
 							],
 							[
 								'component' => 'divider',
@@ -227,32 +227,32 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'input',
 								'inputIsRequired' => true,
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_URL_SUCCESS),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_URL_SUCCESS),
 								'inputFieldLabel' => \__('Success redirect URL', 'eightshift-forms'),
 								'inputFieldHelp' => \__('URL to redirect to after successful payment.', 'eightshift-forms'),
 								'inputIsUrl' => true,
 								'inputType' => 'url',
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_URL_SUCCESS, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_URL_SUCCESS, $formId),
 							],
 							[
 								'component' => 'input',
 								'inputIsRequired' => true,
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_URL_FAIL),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_URL_FAIL),
 								'inputFieldLabel' => \__('Fail redirect URL', 'eightshift-forms'),
 								'inputFieldHelp' => \__('URL to redirect to after failed payment.', 'eightshift-forms'),
 								'inputIsUrl' => true,
 								'inputType' => 'url',
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_URL_FAIL, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_URL_FAIL, $formId),
 							],
 							[
 								'component' => 'input',
 								'inputIsRequired' => true,
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_URL_CANCEL),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_URL_CANCEL),
 								'inputFieldLabel' => \__('Cancel redirect URL', 'eightshift-forms'),
 								'inputFieldHelp' => \__('URL to redirect to after payment is canceled.', 'eightshift-forms'),
 								'inputIsUrl' => true,
 								'inputType' => 'url',
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_PAYCEK_URL_CANCEL, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_PAYCEK_URL_CANCEL, $formId),
 							],
 							[
 								'component' => 'divider',
@@ -261,13 +261,13 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use Entry Id', 'eightshift-forms'),
 										'checkboxHelp' => \__('Use Entry Id instead of `increment ID` as Paycek `paymentId` value. This is used if you want to reference the entry after the form submission. Make sure you have Entries feature turned `on`.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY,
 										'checkboxAsToggle' => true,
 										'checkboxSingleSubmit' => true,
@@ -282,7 +282,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 						'tabContent' => [
 							[
 								'component' => 'group',
-								'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY),
+								'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_PAYCEK_PARAMS_MAP_KEY),
 								'groupSaveOneField' => true,
 								'groupStyle' => 'default-listing',
 								'groupContent' => [
@@ -351,9 +351,9 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_USE_KEY, self::SETTINGS_PAYCEK_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPaycek(), self::SETTINGS_PAYCEK_API_KEY_KEY);
-		$profileKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), self::SETTINGS_PAYCEK_API_PROFILE_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_USE_KEY, self::SETTINGS_PAYCEK_USE_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyPaycek(), self::SETTINGS_PAYCEK_API_KEY_KEY);
+		$profileKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), self::SETTINGS_PAYCEK_API_PROFILE_KEY);
 
 		if (!$isUsed || !$apiKey || !$profileKey) {
 			return false;
@@ -370,14 +370,14 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_USE_KEY, self::SETTINGS_PAYCEK_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_USE_KEY, self::SETTINGS_PAYCEK_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY, self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY, self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -388,12 +388,12 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -404,7 +404,7 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -413,13 +413,13 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements UtilsSettin
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyPaycek(),
 									self::SETTINGS_PAYCEK_API_KEY_KEY,
 									'ES_API_KEY_PAYCEK',
 									\__('API key', 'eightshift-forms'),
 								),
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiProfileKeyPaycek(),
 									self::SETTINGS_PAYCEK_API_PROFILE_KEY,
 									'ES_PROFILE_KEY_PAYCEK',

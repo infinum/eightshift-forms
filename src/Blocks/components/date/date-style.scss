@@ -1,3 +1,5 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 input.es-date {
-	@include input-styles($loadReadonly: 'false');
+	@include theme.input-styles($loadReadonly: 'false');
 }

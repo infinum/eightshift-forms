@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Moments;
 
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * AbstractMoments  class.
@@ -51,7 +51,7 @@ abstract class AbstractMoments
 	 */
 	protected function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMoments(), SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiKeyMoments(), SettingsMoments::SETTINGS_MOMENTS_API_KEY_KEY);
 	}
 
 	/**
@@ -61,6 +61,6 @@ abstract class AbstractMoments
 	 */
 	private function getApiUrl(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUrlMoments(), SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiUrlMoments(), SettingsMoments::SETTINGS_MOMENTS_API_URL_KEY);
 	}
 }

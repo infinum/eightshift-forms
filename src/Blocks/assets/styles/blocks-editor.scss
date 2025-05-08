@@ -10,10 +10,7 @@
  *
  */
 
-// Global.
-@import './parts/shared';
-
-// Utils helpers
-@import '@eightshift/frontend-libs/styles/es-utility-classes';
-@import '@eightshift/frontend-libs/styles/es-component-styles';
-
+@use 'sass:meta';
+@include meta.load-css('@eightshift/ui-components/dist/assets/wp-font-enhancements.css');
+@include meta.load-css('@eightshift/ui-components/dist/assets/wp-ui-enhancements.css');
+@include meta.load-css('@eightshift/ui-components/dist/assets/style-editor.css');

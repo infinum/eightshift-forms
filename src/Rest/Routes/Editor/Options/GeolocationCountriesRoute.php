@@ -12,14 +12,14 @@ namespace EightshiftForms\Rest\Routes\Editor\Options;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class GeolocationCountriesRoute
  */
-class GeolocationCountriesRoute extends AbstractUtilsBaseRoute
+class GeolocationCountriesRoute extends AbstractBaseRoute
 {
 	/**
 	 * Route slug
@@ -82,7 +82,7 @@ class GeolocationCountriesRoute extends AbstractUtilsBaseRoute
 
 		try {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
+				ApiHelpers::getApiSuccessPublicOutput(
 					\esc_html__('Success.', 'eightshift-forms'),
 					$this->geolocation->getCountriesList(),
 					$debug
@@ -91,7 +91,7 @@ class GeolocationCountriesRoute extends AbstractUtilsBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$e->getMessage(),
 					\array_merge(
 						$debug,

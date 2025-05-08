@@ -7,11 +7,10 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestField = Helpers::getComponent('field');
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -57,7 +56,8 @@ $nextButtonComponent = '';
 
 ?>
 
-<div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
+<div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+																									?>>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'debug-details', "{$componentClass}__debug-details")); ?>">
 		<?php
@@ -67,13 +67,14 @@ $nextButtonComponent = '';
 	</div>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'inner', "{$componentClass}__inner")); ?>">
-		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		?>
 
 		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'navigation', "{$componentClass}__navigation {$componentFieldClass}")); ?>">
 			<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'navigation-inner', "{$componentClass}__navigation-inner")); ?>">
 				<?php
 
-				$filterNameComponentPrev = UtilsHooksHelper::getFilterName(['block', 'step', 'component_prev']);
+				$filterNameComponentPrev = HooksHelpers::getFilterName(['block', 'step', 'component_prev']);
 
 				if (has_filter($filterNameComponentPrev)) {
 					$prevButtonComponent = apply_filters($filterNameComponentPrev, [
@@ -103,7 +104,7 @@ $nextButtonComponent = '';
 					)
 				);
 
-				$filterNameComponentNext = UtilsHooksHelper::getFilterName(['block', 'step', 'component_next']);
+				$filterNameComponentNext = HooksHelpers::getFilterName(['block', 'step', 'component_next']);
 
 				if (has_filter($filterNameComponentNext)) {
 					$nextButtonComponent = apply_filters($filterNameComponentNext, [

@@ -6,14 +6,13 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestSelect = Helpers::getComponent('select');
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -78,11 +77,11 @@ if ($phoneAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('phone', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('phone', $attributes);
 $phoneSelectUseSearchAttr = UtilsHelper::getStateAttribute('selectAllowSearch');
 
 $options = [];
-$filterName = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
+$filterName = apply_filters(Config::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $phoneFormPostId);

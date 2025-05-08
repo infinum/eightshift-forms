@@ -1,3 +1,5 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-radio {
-	@include checkbox-styles;
+	@include theme.checkbox-styles;
 }

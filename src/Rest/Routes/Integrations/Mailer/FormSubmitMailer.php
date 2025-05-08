@@ -15,8 +15,8 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Security\SecurityInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * Class FormSubmitMailer
@@ -71,7 +71,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 */
 	public function sendEmails(array $formDetails, array $responseTags = []): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		$debug = [
 			'formDetails' => $formDetails,
@@ -83,35 +83,35 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		// Bailout if settings are not ok.
 		if (!$isSettingsValid) {
 			return [
-				'status' => UtilsConfig::STATUS_ERROR,
+				'status' => Config::STATUS_ERROR,
 				'label' => 'mailerErrorSettingsMissing',
 				'debug' => $debug,
 			];
 		}
 
 		// This data is set here because $formDetails can me modified in the previous filters.
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
-		$files = $formDetails[UtilsConfig::FD_FILES];
+		$params = $formDetails[Config::FD_PARAMS];
+		$files = $formDetails[Config::FD_FILES];
 
 		// Send email.
 		$response = $this->mailer->sendFormEmail(
 			$formId,
-			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
-			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
-			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 			$files,
 			$params,
 			$responseTags,
 			[
-				'settings' => UtilsSettingsHelper::getSettingValueGroup(SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_KEY, $formId),
-				'shouldAppend' => UtilsSettingsHelper::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, $formId),
+				'settings' => SettingsHelpers::getSettingValueGroup(SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_KEY, $formId),
+				'shouldAppend' => SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, $formId),
 			]
 		);
 
 		// If email fails.
 		if (!$response) {
 			return [
-				'status' => UtilsConfig::STATUS_ERROR,
+				'status' => Config::STATUS_ERROR,
 				'label' => 'mailerErrorEmailSend',
 				'debug' => $debug,
 			];
@@ -120,7 +120,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		$this->sendConfirmationEmail($formId, $params, $files, $responseTags);
 
 		return [
-			'status' => UtilsConfig::STATUS_SUCCESS,
+			'status' => Config::STATUS_SUCCESS,
 			'label' => 'mailerSuccess',
 			'debug' => $debug,
 		];
@@ -202,7 +202,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 			return false;
 		}
 
-		$senderEmail = FormsHelper::getParamValue(UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId), $params);
+		$senderEmail = FormsHelper::getParamValue(SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId), $params);
 
 		if (!$senderEmail) {
 			return false;
@@ -212,8 +212,8 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 		return $this->mailer->sendFormEmail(
 			$formId,
 			$senderEmail,
-			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
-			UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 			$files,
 			$params,
 			$responseTags

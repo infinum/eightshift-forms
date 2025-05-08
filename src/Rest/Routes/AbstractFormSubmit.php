@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
+use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Enrichment\EnrichmentInterface;
@@ -23,23 +23,22 @@ use EightshiftForms\Hooks\FiltersOuputMock;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\EncryptionHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use WP_REST_Request;
 
 /**
  * Class AbstractFormSubmit
  */
-abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
+abstract class AbstractFormSubmit extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -169,7 +168,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			switch ($this->routeGetType()) {
 				case self::ROUTE_TYPE_FILE:
 					// Validate files.
-					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
+					if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateFiles($formDetails);
 
 						if ($validate) {
@@ -183,14 +182,14 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 						}
 					}
 
-					$uploadFile = UtilsUploadHelper::uploadFile($formDetails[UtilsConfig::FD_FILES_UPLOAD]);
+					$uploadFile = UploadHelpers::uploadFile($formDetails[Config::FD_FILES_UPLOAD]);
 					$uploadError = $uploadFile['errorOutput'] ?? '';
-					$uploadFileId = $formDetails[UtilsConfig::FD_FILES_UPLOAD]['id'] ?? '';
+					$uploadFileId = $formDetails[Config::FD_FILES_UPLOAD]['id'] ?? '';
 
 					// Upload files to temp folder.
-					$formDetails[UtilsConfig::FD_FILES_UPLOAD] = $uploadFile;
+					$formDetails[Config::FD_FILES_UPLOAD] = $uploadFile;
 
-					$isUploadError = UtilsUploadHelper::isUploadError($uploadError);
+					$isUploadError = UploadHelpers::isUploadError($uploadError);
 
 					if ($isUploadError) {
 						throw new UnverifiedRequestException(
@@ -221,7 +220,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					break;
 				case self::ROUTE_TYPE_STEP_VALIDATION:
 					// Validate params.
-					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
+					if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateParams($formDetails, false);
 
 						if ($validate) {
@@ -237,13 +236,13 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					break;
 				default:
 					// Skip any validation if direct import.
-					if (isset($formDetails[UtilsConfig::FD_DIRECT_IMPORT])) {
+					if (isset($formDetails[Config::FD_DIRECT_IMPORT])) {
 						break;
 					}
 
 					// Validate allowed number of requests.
 					// We don't want to limit any custom requests like files, settings, steps, etc.
-					if (!$this->getSecurity()->isRequestValid($formDetails[UtilsConfig::FD_TYPE])) {
+					if (!$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE])) {
 						throw new UnverifiedRequestException(
 							$this->getValidatorLabels()->getLabel('validationSecurity'),
 							[
@@ -254,7 +253,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					}
 
 					// Validate params.
-					if (!UtilsDeveloperHelper::isDeveloperSkipFormValidationActive()) {
+					if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
 						$validate = $this->getValidator()->validateParams($formDetails);
 
 						if ($validate) {
@@ -271,12 +270,12 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					// Validate captcha.
 					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 						$shouldValidateCaptcha = [
-							$formDetails[UtilsConfig::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY,
-							!UtilsDeveloperHelper::isDeveloperSkipCaptchaActive(),
+							$formDetails[Config::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY,
+							!DeveloperHelpers::isDeveloperSkipCaptchaActive(),
 						];
 
 						if (!\in_array(false, $shouldValidateCaptcha, true)) {
-							$captchaParams = $formDetails[UtilsConfig::FD_CAPTCHA] ?? [];
+							$captchaParams = $formDetails[Config::FD_CAPTCHA] ?? [];
 
 							if (!$captchaParams) {
 								throw new UnverifiedRequestException(
@@ -294,7 +293,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 								$captchaParams['isEnterprise'] === 'true'
 							);
 
-							if ($captcha['status'] === UtilsConfig::STATUS_ERROR) {
+							if ($captcha['status'] === Config::STATUS_ERROR) {
 								$isSpam = $captcha['data']['isSpam'] ?? false;
 
 								if (!$isSpam) {
@@ -302,7 +301,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 									$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
 										$formDetails,
 										// translators: %s is the form ID.
-										\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+										\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[Config::FD_FORM_ID] ?? ''),
 										'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the available data for debugging purposes.', 'eightshift-forms') . '</p>',
 										[
 											self::VALIDATION_ERROR_DATA => $captcha,
@@ -316,31 +315,31 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					}
 
 					// Validate submit only logged in.
-					if ($this->validator->validateSubmitOnlyLoggedIn($formDetails[UtilsConfig::FD_FORM_ID] ?? '')) {
+					if ($this->validator->validateSubmitOnlyLoggedIn($formDetails[Config::FD_FORM_ID] ?? '')) {
 						// Validate submit only logged in.
 						return \rest_ensure_response(
-							UtilsApiHelper::getApiErrorPublicOutput(
-								$this->labels->getLabel('validationSubmitLoggedIn', $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+							ApiHelpers::getApiErrorPublicOutput(
+								$this->labels->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
 							)
 						);
 					} else {
 						// Validate submit only once.
-						if ($this->validator->validateSubmitOnlyOnce($formDetails[UtilsConfig::FD_FORM_ID] ?? '')) {
+						if ($this->validator->validateSubmitOnlyOnce($formDetails[Config::FD_FORM_ID] ?? '')) {
 							return \rest_ensure_response(
-								UtilsApiHelper::getApiErrorPublicOutput(
-									$this->labels->getLabel('validationSubmitOnce', $formDetails[UtilsConfig::FD_FORM_ID] ?? ''),
+								ApiHelpers::getApiErrorPublicOutput(
+									$this->labels->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
 								)
 							);
 						}
 					}
 
 					// Map enrichment data.
-					$formDetails[UtilsConfig::FD_PARAMS] = $this->enrichment->mapEnrichmentFields($formDetails[UtilsConfig::FD_PARAMS]);
+					$formDetails[Config::FD_PARAMS] = $this->enrichment->mapEnrichmentFields($formDetails[Config::FD_PARAMS]);
 
 					// Filter params.
-					$filterName = UtilsHooksHelper::getFilterName(['integrations', $formDetails[UtilsConfig::FD_TYPE], 'prePostParams']);
+					$filterName = HooksHelpers::getFilterName(['integrations', $formDetails[Config::FD_TYPE], 'prePostParams']);
 					if (\has_filter($filterName)) {
-						$formDetails[UtilsConfig::FD_PARAMS] = \apply_filters($filterName, $formDetails[UtilsConfig::FD_PARAMS], $formDetails[UtilsConfig::FD_FORM_ID]) ?? [];
+						$formDetails[Config::FD_PARAMS] = \apply_filters($filterName, $formDetails[Config::FD_PARAMS], $formDetails[Config::FD_FORM_ID]) ?? [];
 					}
 
 					break;
@@ -366,7 +365,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$e->getMessage(),
 					[
 						UtilsHelper::getStateResponseOutputKey('validation') => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? [],
@@ -394,21 +393,21 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	protected function getIntegrationCommonSubmitAction(array $formDetails): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
-		$validation = $response[UtilsConfig::IARD_VALIDATION] ?? [];
-		$status = $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR;
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$response = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA] ?? [];
+		$validation = $response[Config::IARD_VALIDATION] ?? [];
+		$status = $response[Config::IARD_STATUS] ?? Config::STATUS_ERROR;
 
 		$disableFallbackEmail = false;
 
 		// Output integrations validation issues.
 		if ($validation) {
-			$response[UtilsConfig::IARD_VALIDATION] = $this->validator->getValidationLabelItems($validation, $formId);
+			$response[Config::IARD_VALIDATION] = $this->validator->getValidationLabelItems($validation, $formId);
 			$disableFallbackEmail = true;
 		}
 
 		// Skip fallback email if integration is disabled.
-		if (!$response[UtilsConfig::IARD_IS_DISABLED] && $response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_ERROR) {
+		if (!$response[Config::IARD_IS_DISABLED] && $response[Config::IARD_STATUS] === Config::STATUS_ERROR) {
 			// Prevent fallback email if we have validation errors parsed.
 			if (!$disableFallbackEmail) {
 				// Send fallback email.
@@ -416,26 +415,26 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			}
 		}
 
-		$labelsOutput = $this->labels->getLabel($response[UtilsConfig::IARD_MSG], $formId);
+		$labelsOutput = $this->labels->getLabel($response[Config::IARD_MSG], $formId);
 		$responseOutput = $response;
 
 		// Output fake success and send fallback email.
-		if ($response[UtilsConfig::IARD_IS_DISABLED] && !$validation) {
+		if ($response[Config::IARD_IS_DISABLED] && !$validation) {
 			$this->getFormSubmitMailer()->sendFallbackIntegrationEmail($formDetails);
 
-			$fakeResponse = UtilsApiHelper::getIntegrationSuccessInternalOutput($response);
+			$fakeResponse = ApiHelpers::getIntegrationSuccessInternalOutput($response);
 
-			$labelsOutput = $this->labels->getLabel($fakeResponse[UtilsConfig::IARD_MSG], $formId);
+			$labelsOutput = $this->labels->getLabel($fakeResponse[Config::IARD_MSG], $formId);
 			$responseOutput = $fakeResponse;
 		}
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
 
-		if ($status === UtilsConfig::STATUS_SUCCESS) {
+		if ($status === Config::STATUS_SUCCESS) {
 			$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 			// Send email if it is configured in the backend.
-			if ($response[UtilsConfig::IARD_STATUS] === UtilsConfig::STATUS_SUCCESS) {
+			if ($response[Config::IARD_STATUS] === Config::STATUS_SUCCESS) {
 				$this->getFormSubmitMailer()->sendEmails(
 					$formDetails,
 					$this->getCombinedEmailResponseTags(
@@ -454,7 +453,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			// Set validation submit once.
 			$this->validator->setValidationSubmitOnce($formId);
 
-			return UtilsApiHelper::getApiSuccessPublicOutput(
+			return ApiHelpers::getApiSuccessPublicOutput(
 				$labelsOutput,
 				\array_merge(
 					$successAdditionalData['public'],
@@ -464,12 +463,12 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			);
 		}
 
-		return UtilsApiHelper::getApiErrorPublicOutput(
+		return ApiHelpers::getApiErrorPublicOutput(
 			$labelsOutput,
 			\array_merge(
 				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
-				((isset($response[UtilsConfig::IARD_VALIDATION])) ? [
-					UtilsHelper::getStateResponseOutputKey('validation') => $response[UtilsConfig::IARD_VALIDATION],
+				((isset($response[Config::IARD_VALIDATION])) ? [
+					UtilsHelper::getStateResponseOutputKey('validation') => $response[Config::IARD_VALIDATION],
 				] : []),
 			),
 			$response
@@ -485,8 +484,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	protected function getIntegrationResponseAnyOutputAdditionalData(array $formDetails): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
 		$output = [];
 
@@ -514,8 +513,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	protected function getIntegrationResponseSuccessOutputAdditionalData(array $formDetails): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
 		$output = [
 			'private' => [
@@ -552,7 +551,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		];
 
 		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', $type, 'beforeSuccessResponse']);
+		$filterName = HooksHelpers::getFilterName(['integrations', $type, 'beforeSuccessResponse']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $finalOutput, $formDetails, $formId);
 		}
@@ -625,7 +624,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	{
 		$output = [];
 
-		$allowedTags = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsMailer::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [];
+		$allowedTags = \apply_filters(Config::FILTER_SETTINGS_DATA, [])[SettingsMailer::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [];
 
 		foreach ($allowedTags as $key => $value) {
 			switch ($key) {
@@ -772,9 +771,9 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	private function processCustomResultOutputData(array $data, array $formDetails): array
 	{
-		$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$params = $formDetails[Config::FD_PARAMS] ?? [];
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
 		$output = [];
 
@@ -814,7 +813,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			$output['d'] = $outputFiles;
 		}
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', $type, 'afterCustomResultOutputProcess']);
+		$filterName = HooksHelpers::getFilterName(['integrations', $type, 'afterCustomResultOutputProcess']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $output, $formDetails, $formId);
 		}
@@ -832,7 +831,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	private function setIntegrationResponseEntry(array $output, array $formDetails): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 
 		if (!\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			return $output;
@@ -858,7 +857,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	private function setIntegrationResponseEntryUpdate(array $output, array $formDetails): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 
 		if (!\apply_filters(SettingsEntries::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			return $output;
@@ -877,21 +876,21 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		$entryNewData = $entryData['entryValue'] ?? [];
 
 		if (
-			UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
 			isset($output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')])
 		) {
 			$entryNewData[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = $output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')];
 		}
 
 		if (
-			UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
 			isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])
 		) {
 			$entryNewData[UtilsHelper::getStateResponseOutputKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
 		}
 
 		if (
-			UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
 			isset($output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')])
 		) {
 			$entryNewData[UtilsHelper::getStateResponseOutputKey('incrementId')] = $output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')];
@@ -912,16 +911,16 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	private function setIntegrationResponseHideOptions(array $output, array $formDetails): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 
 		// Hide global message on success.
-		$hideGlobalMsgOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
+		$hideGlobalMsgOnSuccess = SettingsHelpers::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId);
 		if ($hideGlobalMsgOnSuccess) {
 			$output['public'][UtilsHelper::getStateResponseOutputKey('hideGlobalMsgOnSuccess')] = $hideGlobalMsgOnSuccess;
 		}
 
 		// Hide form on success.
-		$hideFormOnSuccess = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId);
+		$hideFormOnSuccess = SettingsHelpers::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, SettingsGeneral::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId);
 		if ($hideFormOnSuccess) {
 			$output['public'][UtilsHelper::getStateResponseOutputKey('hideFormOnSuccess')] = $hideFormOnSuccess;
 		}
@@ -939,8 +938,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	private function setIntegrationResponseVariation(array $output, array $formDetails): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
 		$variation = FiltersOuputMock::getVariationFilterValue($type, $formId, $formDetails)['data'];
 		if (!$variation) {
@@ -962,8 +961,8 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 	 */
 	private function setIntegrationResponseSuccessRedirectUrl(array $output, array $formDetails): array
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
 		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
 		if (!$successRedirectUrl) {
@@ -973,7 +972,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		$redirectDataOutput = [];
 
 		// Replace {field_name} with the actual value.
-		foreach (\array_merge($formDetails[UtilsConfig::FD_PARAMS], $formDetails[UtilsConfig::FD_FILES]) as $param) {
+		foreach (\array_merge($formDetails[Config::FD_PARAMS], $formDetails[Config::FD_FILES]) as $param) {
 			$fieldName = $param['name'] ?? '';
 			$fieldValue = $param['value'] ?? '';
 			$fieldType = $param['type'] ?? '';
@@ -1011,11 +1010,11 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		}
 
 		// Redirect secure data.
-		if ($formDetails[UtilsConfig::FD_SECURE_DATA]) {
-			$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true);
+		if ($formDetails[Config::FD_SECURE_DATA]) {
+			$secureData = \json_decode(EncryptionHelpers::decryptor($formDetails[Config::FD_SECURE_DATA]) ?: '', true);
 
 			// Redirect custom result output feature.
-			$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
+			$formsUseCustomResultOutputFeatureFilterName = HooksHelpers::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
 			if (\apply_filters($formsUseCustomResultOutputFeatureFilterName, false)) {
 				$redirectDataOutput[UtilsHelper::getStateSuccessRedirectUrlKey('customResultOutput')] = $this->processCustomResultOutputData($secureData, $formDetails);
 			}
@@ -1027,7 +1026,7 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		// Redirect full url.
 		$output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = \add_query_arg(
 			$redirectDataOutput ? [
-				UtilsHelper::getStateSuccessRedirectUrlKey('data') => UtilsEncryption::encryptor(\wp_json_encode($redirectDataOutput)),
+				UtilsHelper::getStateSuccessRedirectUrlKey('data') => EncryptionHelpers::encryptor(\wp_json_encode($redirectDataOutput)),
 			] : [],
 			$successRedirectUrl
 		);

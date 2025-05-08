@@ -3,16 +3,15 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextareaControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, icons, IconToggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconToggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const SelectOptionOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('select-option');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -25,7 +24,10 @@ export const SelectOptionOptions = (attributes) => {
 
 	return (
 		<PanelBody title={__('Option', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+			<Section
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={selectOptionValue}
 					attribute={getAttrKey('selectOptionValue', attributes, manifest)}
@@ -38,7 +40,10 @@ export const SelectOptionOptions = (attributes) => {
 				/>
 			</Section>
 
-			<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
+			<Section
+				icon={icons.tag}
+				label={__('Label', 'eightshift-forms')}
+			>
 				<TextareaControl
 					value={selectOptionLabel}
 					onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
@@ -46,7 +51,10 @@ export const SelectOptionOptions = (attributes) => {
 				/>
 			</Section>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<Section
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<IconToggle
 					icon={icons.checkSquare}
 					label={__('Selected', 'eightshift-forms')}
@@ -69,7 +77,6 @@ export const SelectOptionOptions = (attributes) => {
 					checked={selectOptionIsHidden}
 					onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsHidden', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('selectOptionIsHidden', attributes, manifest), selectOptionDisabledOptions)}
-					noBottomSpacing
 				/>
 			</Section>
 

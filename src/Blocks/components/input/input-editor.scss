@@ -1,7 +1,8 @@
-@import './input-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+@use './input-style';
 
 input.es-input {
-	@include input-styles-editor;
+	@include theme.input-styles-editor;
 
 	&[type='range'] {
 		padding: 0 !important; // stylelint-disable-line declaration-no-important

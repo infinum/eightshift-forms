@@ -12,9 +12,9 @@ namespace EightshiftForms\Integrations\Nationbuilder;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Oauth\AbstractOauth;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * OauthNationbuilder class.
@@ -47,7 +47,7 @@ class OauthNationbuilder extends AbstractOauth
 	 */
 	public function getApiUrl(string $path): string
 	{
-		$clientSlug = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSlugNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
+		$clientSlug = SettingsHelpers::getOptionWithConstant(Variables::getClientSlugNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SLUG);
 
 		return "https://{$clientSlug}.nationbuilder.com/{$path}";
 	}
@@ -59,7 +59,7 @@ class OauthNationbuilder extends AbstractOauth
 	 */
 	public function getOauthAuthorizeUrl(): string
 	{
-		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
+		$clientId = SettingsHelpers::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
 
 		return \add_query_arg(
 			[
@@ -80,8 +80,8 @@ class OauthNationbuilder extends AbstractOauth
 	 */
 	public function getOauthAccessTokenData(string $code): array
 	{
-		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
-		$clientSecret = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
+		$clientId = SettingsHelpers::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
+		$clientSecret = SettingsHelpers::getOptionWithConstant(Variables::getClientSecretNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
 
 		return [
 			'url' => $this->getApiUrl('oauth/token'),
@@ -102,9 +102,9 @@ class OauthNationbuilder extends AbstractOauth
 	 */
 	public function getOauthRefreshTokenData(): array
 	{
-		$clientId = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
-		$clientSecret = UtilsSettingsHelper::getOptionWithConstant(Variables::getClientSecretNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
-		$refreshToken = UtilsSettingsHelper::getOptionValue(OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY);
+		$clientId = SettingsHelpers::getOptionWithConstant(Variables::getClientIdNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_ID);
+		$clientSecret = SettingsHelpers::getOptionWithConstant(Variables::getClientSecretNationBuilder(), SettingsNationbuilder::SETTINGS_NATIONBUILDER_CLIENT_SECRET);
+		$refreshToken = SettingsHelpers::getOptionValue(OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY);
 
 		return [
 			'url' => $this->getApiUrl('oauth/token'),
@@ -187,19 +187,19 @@ class OauthNationbuilder extends AbstractOauth
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiReponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$data['url'],
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			\update_option(UtilsSettingsHelper::getSettingName(OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY), $body['access_token']);
-			\update_option(UtilsSettingsHelper::getSettingName(OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY), $body['refresh_token']);
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			\update_option(SettingsHelpers::getSettingName(OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY), $body['access_token']);
+			\update_option(SettingsHelpers::getSettingName(OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY), $body['refresh_token']);
 
 			return true;
 		}

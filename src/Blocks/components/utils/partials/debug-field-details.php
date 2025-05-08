@@ -6,15 +6,15 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-if (UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
+if (GeneralHelpers::isEightshiftFormsAdminPages()) {
 	return;
 }
 
-if (!UtilsDeveloperHelper::isDeveloperModeActive()) {
+if (!DeveloperHelpers::isDeveloperModeActive()) {
 	return;
 }
 

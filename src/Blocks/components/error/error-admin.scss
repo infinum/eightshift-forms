@@ -1,4 +1,4 @@
-@import './error-style';
+@use './error-style';
 
 .es-error:empty {
 	display: none;

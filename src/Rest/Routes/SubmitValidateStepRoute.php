@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 
 /**
  * Class SubmitValidateStepRoute
@@ -57,10 +57,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			'formDetails' => $formDetails,
 		];
 
-		$currentStep = $formDetails[UtilsConfig::FD_API_STEPS]['current'] ?? '';
+		$currentStep = $formDetails[Config::FD_API_STEPS]['current'] ?? '';
 		if (!$currentStep) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -68,10 +68,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$submittedNames = $formDetails[UtilsConfig::FD_API_STEPS]['fields'] ?? [];
+		$submittedNames = $formDetails[Config::FD_API_STEPS]['fields'] ?? [];
 		if (!$submittedNames) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -79,10 +79,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$steps = $formDetails[UtilsConfig::FD_STEPS_SETUP]['steps'] ?? [];
+		$steps = $formDetails[Config::FD_STEPS_SETUP]['steps'] ?? [];
 		if (!$steps) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
 					[],
 					$debug
@@ -90,7 +90,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$multiflow = $formDetails[UtilsConfig::FD_STEPS_SETUP]['multiflow'] ?? [];
+		$multiflow = $formDetails[Config::FD_STEPS_SETUP]['multiflow'] ?? [];
 
 		$nextStep = '';
 		$progressBarItems = 0;
@@ -99,11 +99,11 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		if ($multiflow) {
 			$type = 'multiflow';
 
-			$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
+			$params = $formDetails[Config::FD_PARAMS] ?? [];
 
 			if (!$params) {
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorPublicOutput(
+					ApiHelpers::getApiErrorPublicOutput(
 						\esc_html__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
 						[],
 						$debug
@@ -143,7 +143,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		}
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				\esc_html__('Step validation is successful, you may continue.', 'eightshift-forms'),
 				[
 					UtilsHelper::getStateResponseOutputKey('stepType') => $type,
@@ -213,7 +213,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 
 		return \array_reduce($output, function ($carry, $validItem) {
 			return $carry || (bool) \array_reduce($validItem, function ($subcarry, $item) {
-					return $subcarry && (bool) $item;
+				return $subcarry && (bool) $item;
 			}, true);
 		}, false);
 	}

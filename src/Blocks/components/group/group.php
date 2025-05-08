@@ -6,10 +6,8 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalGroupClass = $attributes['additionalGroupClass'] ?? '';
@@ -35,8 +33,7 @@ $groupClass = Helpers::classnames([
 <div
 	class="<?php echo esc_attr($groupClass); ?>"
 	data-field-id="<?php echo esc_attr($groupName); ?>"
-	data-group-save-as-one-field="<?php echo esc_attr($groupSaveOneField); ?>"
->
+	data-group-save-as-one-field="<?php echo esc_attr($groupSaveOneField); ?>">
 
 	<?php if ($groupLabel) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__label"); ?>">
@@ -60,7 +57,8 @@ $groupClass = Helpers::classnames([
 
 	<?php if ($groupContent) { ?>
 		<div class="<?php echo esc_attr("{$componentClass}__content"); ?>">
-			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+			<?php echo $groupContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			?>
 		</div>
 	<?php } ?>
 

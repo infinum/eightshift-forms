@@ -1,19 +1,14 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { select } from "@wordpress/data";
+import { select } from '@wordpress/data';
 import { PanelBody, Button } from '@wordpress/components';
-import { props, Section, Control, icons } from '@eightshift/frontend-libs/scripts';
+import { props, Section, Control } from '@eightshift/frontend-libs/scripts';
 import { LocationsButton, SettingsButton, resetInnerBlocks } from '../../utils';
 import { FormOptions } from '../../../components/form/components/form-options';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
+import { icons } from '@eightshift/ui-components/icons';
 
-export const IntegrationsInternalOptions = ({
-	title,
-	attributes,
-	setAttributes,
-	clientId,
-}) => {
-
+export const IntegrationsInternalOptions = ({ title, attributes, setAttributes, clientId }) => {
 	const postId = select('core/editor').getCurrentPostId();
 
 	return (
@@ -26,8 +21,13 @@ export const IntegrationsInternalOptions = ({
 					</div>
 				</Control>
 
-				<Section icon={icons.warning} label={__('Danger zone', 'eightshift-forms')}>
-					<Control help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')} noBottomSpacing>
+				<Section
+					icon={icons.warning}
+					label={__('Danger zone', 'eightshift-forms')}
+				>
+					<Control
+						help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')}
+					>
 						<Button
 							icon={icons.reset}
 							onClick={() => {
@@ -46,7 +46,6 @@ export const IntegrationsInternalOptions = ({
 						setAttributes,
 					})}
 				/>
-
 			</PanelBody>
 
 			<StepMultiflowOptions

@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Enqueue\SharedEnqueue;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -36,12 +36,12 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function register(): void
 	{
-		if (!UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
+		if (!GeneralHelpers::isEightshiftFormsAdminPages()) {
 			return;
 		}
 
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminStyles'], 50);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
 	}
 
 	/**
@@ -51,7 +51,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
+		return Config::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**
@@ -67,13 +67,11 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only admin.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueScripts(string $hook): void
+	public function enqueueAdminStyles(): void
 	{
-		parent::enqueueScripts($hook);
+		parent::enqueueAdminStyles();
 
 		$output = [];
 
@@ -99,7 +97,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	protected function getAdminScriptDependencies(): array
 	{
-		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'admin']);
+		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'admin']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {

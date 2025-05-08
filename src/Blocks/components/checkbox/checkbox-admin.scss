@@ -1,7 +1,9 @@
 // stylelint-disable declaration-no-important
 
-@import './checkbox-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
+@use './checkbox-style';
 
 .es-checkbox-toggle {
-	@include checkbox-toggle-styles;
+	@include theme.checkbox-toggle-styles;
 }

@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Hubspot;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -115,7 +115,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		}
 
 		// Find local but fallback to global settings.
-		$allowedFileTypes = UtilsSettingsHelper::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: UtilsSettingsHelper::getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$allowedFileTypes = SettingsHelpers::getSettingValue(SettingsHubspot::SETTINGS_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY, $formId) ?: SettingsHelpers::getOptionValue(SettingsHubspot::SETTINGS_GLOBAL_HUBSPOT_UPLOAD_ALLOWED_TYPES_KEY);  // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		if ($allowedFileTypes) {
 			$allowedFileTypes = \str_replace('.', '', $allowedFileTypes);
@@ -209,7 +209,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 							'datePlaceholder' => $placeholder,
 							'dateIsRequired' => $isRequired,
 							'dateValue' => $value,
-							'datePreviewFormat' => UtilsGeneralHelper::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
+							'datePreviewFormat' => GeneralHelpers::getCorrectLibDateFormats($metaData[0]['value'], $metaData[1]['value']),
 							'dateFieldAttrs' => [
 								UtilsHelper::getStateAttribute('hubspotTypeId') => $objectTypeId,
 							],
@@ -503,7 +503,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 						'component' => 'checkboxes',
 						'checkboxesFieldBeforeContent' => $communicationIndex === 0 && !$communicationIsHidden ? $communicationText : '',
 						'checkboxesFieldHideLabel' => true,
-						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION . UtilsConfig::DELIMITER . $communicationId,
+						'checkboxesName' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION . Config::DELIMITER . $communicationId,
 						'checkboxesIsRequired' => $communicationIsRequired,
 						'checkboxesTypeCustom' => HubspotClient::HUBSPOT_CONSENT_COMMUNICATION,
 						'checkboxesContent' => [
@@ -614,7 +614,7 @@ class Hubspot extends AbstractFormBuilder implements MapperInterface, ServiceInt
 		];
 
 		// Change the final output if necesery.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsHubspot::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

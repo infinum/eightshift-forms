@@ -1,5 +1,7 @@
 // stylelint-disable number-max-precision
 
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-field,
 .es-group {
 	$this: &;
@@ -23,7 +25,7 @@
 		margin-block-end: var(--global-esf-spacing-s);
 	}
 
-	@include field-styles;
+	@include theme.field-styles;
 
 	&__before-content {
 		max-inline-size: var(--global-esf-max-width);
@@ -119,15 +121,15 @@
 		}
 
 		#{$this}__before-content {
-			border-start-start-radius: var(--global-es-radius-8);
-			border-end-start-radius: var(--global-es-radius-8);
+			border-start-start-radius: 0.5rem;
+			border-end-start-radius: 0.5rem;
 
 			margin-inline-end: -2px; // To align it with the input field.
 		}
 
 		#{$this}__after-content {
-			border-start-end-radius: var(--global-es-radius-8);
-			border-end-end-radius: var(--global-es-radius-8);
+			border-start-end-radius: 0.5rem;
+			border-end-end-radius: 0.5rem;
 		}
 
 		@supports selector(:has(*)) {
@@ -162,7 +164,7 @@
 
 			#{$this}__before-content,
 			#{$this}__after-content {
-				border-radius: var(--global-es-radius-8);
+				border-radius: 0.5rem;
 				border-color: var(--global-colors-esf-gray-50);
 			}
 		}

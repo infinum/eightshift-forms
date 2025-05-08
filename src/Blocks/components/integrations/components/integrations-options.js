@@ -2,36 +2,20 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { select, useDispatch, useSelect, dispatch } from "@wordpress/data";
+import { select, useDispatch, useSelect, dispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Button, PanelBody, Modal } from '@wordpress/components';
-import { icons, Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs/scripts';
-import {
-	updateIntegrationBlocks,
-	resetInnerBlocks,
-	syncIntegrationBlocks,
-	clearTransientCache,
-	SettingsButton,
-	LocationsButton,
-} from '../../utils';
+import { Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { updateIntegrationBlocks, resetInnerBlocks, syncIntegrationBlocks, clearTransientCache, SettingsButton, LocationsButton } from '../../utils';
 import { getRestUrlByType } from '../../form/assets/state-init';
 import { FORMS_STORE_NAME } from './../../../assets/scripts/store';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
 
-export const IntegrationsOptions = ({
-	title,
-	block,
-	attributes,
-	setAttributes,
-	clientId,
-	itemId,
-	itemIdKey,
-	innerId,
-	innerIdKey,
-}) => {
+export const IntegrationsOptions = ({ title, block, attributes, setAttributes, clientId, itemId, itemIdKey, innerId, innerIdKey }) => {
 	const postId = select('core/editor').getCurrentPostId();
 
-		// Check if form selector has inner blocks.
+	// Check if form selector has inner blocks.
 	const hasInnerBlocks = useSelect((select) => {
 		const blocks = select('core/block-editor').getBlock(clientId);
 
@@ -74,7 +58,13 @@ export const IntegrationsOptions = ({
 		return (
 			<Modal
 				className='es-modal-max-width-xxl es-rounded-3!'
-				title={<IconLabel icon={icons.clipboard} label={__('Sync report', 'eightshift-forms')} standalone />}
+				title={
+					<IconLabel
+						icon={icons.clipboard}
+						label={__('Sync report', 'eightshift-forms')}
+						standalone
+					/>
+				}
 				onRequestClose={() => {
 					setModalOpen(false);
 					dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(false);
@@ -85,21 +75,34 @@ export const IntegrationsOptions = ({
 					icon={icons.add}
 					label={__('Added fields', 'eightshift-forms')}
 					additionalLabelClasses='es-nested-bg-green-500!'
-					noBottomSpacing={changed.length < 1 && replaced.length < 1 && removed?.length < 1}
 				>
 					<div className='es-v-spaced'>
-						{added.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
+						{added.map((item, i) => (
+							<IconLabel
+								icon={icons.dummySpacer}
+								label={item}
+								key={i}
+								standalone
+							/>
+						))}
 					</div>
 				</Section>
 
 				<Section
-					showIf={removed.length > 0} icon={icons.trash}
+					showIf={removed.length > 0}
+					icon={icons.trash}
 					label={__('Removed fields', 'eightshift-forms')}
 					additionalLabelClasses='es-nested-bg-red-500!'
-					noBottomSpacing={changed.length < 1 && replaced.length < 1}
 				>
 					<div className='es-v-spaced'>
-						{removed.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
+						{removed.map((item, i) => (
+							<IconLabel
+								icon={icons.dummySpacer}
+								label={item}
+								key={i}
+								standalone
+							/>
+						))}
 					</div>
 				</Section>
 
@@ -108,10 +111,16 @@ export const IntegrationsOptions = ({
 					icon={icons.swap}
 					label={__('Replaced fields', 'eightshift-forms')}
 					additionalLabelClasses='es-nested-bg-yellow-500!'
-					noBottomSpacing={changed.length < 1}
 				>
 					<div className='es-v-spaced'>
-						{replaced.map((item, i) => <IconLabel icon={icons.dummySpacer} label={item} key={i} standalone />)}
+						{replaced.map((item, i) => (
+							<IconLabel
+								icon={icons.dummySpacer}
+								label={item}
+								key={i}
+								standalone
+							/>
+						))}
 					</div>
 				</Section>
 
@@ -120,10 +129,9 @@ export const IntegrationsOptions = ({
 					icon={icons.edit}
 					label={__('Updated field attributes', 'eightshift-forms')}
 					additionalLabelClasses='es-nested-bg-blue-500!'
-					noBottomSpacing
 				>
 					<div className='es-v-spaced'>
-						{changed.map((item, i) =>
+						{changed.map((item, i) => (
 							<IconLabel
 								icon={icons.dummySpacer}
 								label={
@@ -133,8 +141,8 @@ export const IntegrationsOptions = ({
 								}
 								key={i}
 								standalone
-							/>)
-						}
+							/>
+						))}
 					</div>
 				</Section>
 			</Modal>
@@ -151,11 +159,14 @@ export const IntegrationsOptions = ({
 					</div>
 				</Control>
 
-				<Section icon={icons.tools} label={__('Integration options', 'eightshift-forms')}>
+				<Section
+					icon={icons.tools}
+					label={__('Integration options', 'eightshift-forms')}
+				>
 					<Select
 						icon={icons.formAlt}
 						label={__('Select a form to display', 'eightshift-forms')}
-						help={!(innerIdKey && itemId) && __('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
+						help={!(innerIdKey && itemId) && __("If you don't see a form in the list, start typing its name while the dropdown is open.", 'eightshift-forms')}
 						value={itemId}
 						options={formItems}
 						onChange={(value) => {
@@ -181,9 +192,9 @@ export const IntegrationsOptions = ({
 						clearable
 					/>
 
-					{(innerIdKey && itemId) &&
+					{innerIdKey && itemId && (
 						<Select
-							help={__('If you don\'t see a form in the list, start typing its name while the dropdown is open.', 'eightshift-forms')}
+							help={__("If you don't see a form in the list, start typing its name while the dropdown is open.", 'eightshift-forms')}
 							value={innerId}
 							options={formInnerItems}
 							onChange={(value) => {
@@ -199,9 +210,9 @@ export const IntegrationsOptions = ({
 							simpleValue
 							clearable
 						/>
-					}
+					)}
 
-					{hasInnerBlocks &&
+					{hasInnerBlocks && (
 						<div className={'es-border-t-gray-300 es-mt-5 es-pt-5'}>
 							<Control
 								help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}
@@ -213,14 +224,10 @@ export const IntegrationsOptions = ({
 										// Sync integration blocks.
 										syncIntegrationBlocks(clientId, postId).then((val) => {
 											if (val?.status === 'error') {
-												createNotice(
-													'error',
-													val?.message,
-													{
-														type: 'snackbar',
-														icon: '❌',
-													}
-												);
+												createNotice('error', val?.message, {
+													type: 'snackbar',
+													icon: '❌',
+												});
 											} else {
 												createNotice(
 													val?.update ? 'success' : 'info',
@@ -228,7 +235,7 @@ export const IntegrationsOptions = ({
 													{
 														type: 'snackbar',
 														icon: '✅',
-													}
+													},
 												);
 											}
 										});
@@ -238,7 +245,7 @@ export const IntegrationsOptions = ({
 									{__('Sync integration', 'eightshift-forms')}
 								</Button>
 
-								{Object.keys(modalContent).length > 0 &&
+								{Object.keys(modalContent).length > 0 && (
 									<Button
 										onClick={() => {
 											setModalOpen(true);
@@ -248,17 +255,21 @@ export const IntegrationsOptions = ({
 									>
 										{__('View changes', 'eightshift-forms')}
 									</Button>
-								}
+								)}
 							</Control>
 
-							<Control help={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}>
+							<Control
+								help={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}
+							>
 								<Button
 									icon={icons.data}
 									onClick={() => {
 										// Sync integration blocks.
-										clearTransientCache(block).then((msg) => createNotice('success', msg, {
-											type: 'snackbar',
-										}));
+										clearTransientCache(block).then((msg) =>
+											createNotice('success', msg, {
+												type: 'snackbar',
+											}),
+										);
 									}}
 									className='es-rounded-1 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 								>
@@ -266,11 +277,16 @@ export const IntegrationsOptions = ({
 								</Button>
 							</Control>
 						</div>
-					}
+					)}
 				</Section>
 
-				<Section icon={icons.warning} label={__('Danger zone', 'eightshift-forms')} noBottomSpacing>
-					<Control help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')} noBottomSpacing>
+				<Section
+					icon={icons.warning}
+					label={__('Danger zone', 'eightshift-forms')}
+				>
+					<Control
+						help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')}
+					>
 						<Button
 							icon={icons.reset}
 							onClick={() => {
@@ -284,10 +300,7 @@ export const IntegrationsOptions = ({
 					</Control>
 				</Section>
 
-				{isModalOpen &&
-					<SyncModal />
-				}
-
+				{isModalOpen && <SyncModal />}
 			</PanelBody>
 
 			<StepMultiflowOptions

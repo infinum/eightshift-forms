@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailchimp;
 
 use EightshiftForms\Integrations\Mailchimp\MailchimpClientInterface;
 use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsMailchimpRoute
  */
-class IntegrationItemsMailchimpRoute extends AbstractUtilsBaseRoute
+class IntegrationItemsMailchimpRoute extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable for Mailchimp data.
@@ -41,7 +41,7 @@ class IntegrationItemsMailchimpRoute extends AbstractUtilsBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -89,7 +89,7 @@ class IntegrationItemsMailchimpRoute extends AbstractUtilsBaseRoute
 
 		if (!$isGlobalSettingsValid) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Global not configured', 'eightshift-forms'),
 					[],
 					$debug
@@ -101,7 +101,7 @@ class IntegrationItemsMailchimpRoute extends AbstractUtilsBaseRoute
 
 		if (!$items) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Items missing', 'eightshift-forms'),
 					[],
 					$debug
@@ -125,7 +125,7 @@ class IntegrationItemsMailchimpRoute extends AbstractUtilsBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				$items,
 				$debug

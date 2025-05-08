@@ -3,17 +3,16 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, Control, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, Control, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const FileOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('file');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -31,7 +30,10 @@ export const FileOptions = (attributes) => {
 
 	return (
 		<PanelBody title={__('File', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+			<Section
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={fileName}
 					attribute={getAttrKey('fileName', attributes, manifest)}
@@ -55,7 +57,10 @@ export const FileOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+			<Section
+				icon={icons.checks}
+				label={__('Validation', 'eightshift-forms')}
+			>
 				<IconToggle
 					icon={icons.fieldRequired}
 					label={__('Required', 'eightshift-forms')}
@@ -65,7 +70,12 @@ export const FileOptions = (attributes) => {
 				/>
 
 				<TextControl
-					label={<IconLabel icon={icons.fileType} label={__('Accepted file types', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.fileType}
+							label={__('Accepted file types', 'eightshift-forms')}
+						/>
+					}
 					value={fileAccept}
 					help={__('Separate items with a comma.', 'eightshift-forms')}
 					placeholder={__('e.g. .jpg,.png,.pdf', 'eightshift-forms')}
@@ -73,7 +83,11 @@ export const FileOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('fileAccept', attributes, manifest), fileDisabledOptions)}
 				/>
 
-				<Control icon={icons.fileSize} label={__('File size limits', 'eightshift-forms')} additionalLabelClasses='es-mb-0!' noBottomSpacing>
+				<Control
+					icon={icons.fileSize}
+					label={__('File size limits', 'eightshift-forms')}
+					additionalLabelClasses='es-mb-0!'
+				>
 					<div className='es-fifty-fifty-h'>
 						<TextControl
 							label={__('Min (KB)', 'eightshift-forms')}
@@ -97,7 +111,10 @@ export const FileOptions = (attributes) => {
 				</Control>
 			</Section>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<Section
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<FieldOptionsVisibility
 					{...props('field', attributes, {
 						fieldDisabledOptions: fileDisabledOptions,
@@ -118,27 +135,42 @@ export const FileOptions = (attributes) => {
 					checked={fileIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('fileIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileIsDisabled', attributes, manifest), fileDisabledOptions)}
-					noBottomSpacing
 				/>
 			</Section>
 
-			<Section icon={icons.upload} label={__('Custom uploader', 'eightshift-forms')} collapsable>
+			<Section
+				icon={icons.upload}
+				label={__('Custom uploader', 'eightshift-forms')}
+				collapsable
+			>
 				<TextControl
 					value={fileCustomInfoText}
-					label={<IconLabel icon={icons.infoCircle} label={__('Prompt text', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.infoCircle}
+							label={__('Prompt text', 'eightshift-forms')}
+						/>
+					}
 					placeholder={__('Drag and drop files here', 'eightshift-forms')}
-					onChange={(value) => setAttributes({
-						[getAttrKey('fileCustomInfoText', attributes, manifest)]: value,
-						[getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: value?.length > 0,
-					})}
+					onChange={(value) =>
+						setAttributes({
+							[getAttrKey('fileCustomInfoText', attributes, manifest)]: value,
+							[getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: value?.length > 0,
+						})
+					}
 					disabled={
-						isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions)
-						|| isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)
+						isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions) ||
+						isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)
 					}
 				/>
 
 				<TextControl
-					label={<IconLabel icon={icons.buttonOutline} label={__('Upload button text', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.buttonOutline}
+							label={__('Upload button text', 'eightshift-forms')}
+						/>
+					}
 					value={fileCustomInfoButtonText}
 					placeholder={__('Add files', 'eightshift-forms')}
 					onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
@@ -147,9 +179,18 @@ export const FileOptions = (attributes) => {
 				/>
 			</Section>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
+			<Section
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
 				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.googleTagManager}
+							label={__('GTM tracking code', 'eightshift-forms')}
+						/>
+					}
 					value={fileTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileTracking', attributes, manifest), fileDisabledOptions)}

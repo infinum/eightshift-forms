@@ -12,9 +12,10 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Listing\FormListingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * FormListingAdminSubMenu class.
@@ -139,24 +140,13 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Get the view component that will render correct view.
 	 *
+	 * @param array<string, mixed> $attributes Array of attributes passed to the view.
+	 *
 	 * @return string View uri.
 	 */
-	protected function getViewComponent(): string
+	protected function getViewComponent(array $attributes): string
 	{
-		return 'admin-listing';
-	}
-
-	/**
-	 * Render the current view.
-	 *
-	 * @param array<string, mixed> $attributes Array of attributes passed to the view.
-	 * @param string $innerBlockContent Not used here.
-	 *
-	 * @return string Rendered HTML.
-	 */
-	public function render(array $attributes = [], string $innerBlockContent = ''): string
-	{
-		return '';
+		return Helpers::render('admin-listing', $attributes);
 	}
 
 	/**
@@ -193,13 +183,13 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
 			\esc_html__('Add new form', 'eightshift-forms'),
 			FormAdminMenu::ADMIN_MENU_CAPABILITY,
-			UtilsGeneralHelper::getNewFormPageUrl(Forms::URL_SLUG)
+			GeneralHelpers::getNewFormPageUrl(Forms::URL_SLUG)
 		];
 
 		$submenu[FormAdminMenu::ADMIN_MENU_SLUG][] = [
 			\esc_html__('Result outputs', 'eightshift-forms'),
-			UtilsConfig::CAP_RESULTS,
-			UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_RESULTS)
+			Config::CAP_RESULTS,
+			GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_RESULTS)
 		];
 		// phpcs:enable
 	}

@@ -1,7 +1,7 @@
-@import './form-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
 
 .es-form {
-	@include form-reset;
+	@include theme.form-reset;
 
 	&__fields {
 		display: grid;

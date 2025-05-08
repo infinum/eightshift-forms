@@ -1,4 +1,4 @@
-@import './../form/form-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
 
 .es-step {
 	inline-size: 100%;
@@ -22,11 +22,12 @@
 	}
 
 	&__inner {
-		@include form-fields-mandatory-styles;
 		inline-size: 100%;
 
+		@include theme.form-fields-mandatory-styles;
+
 		> .es-field {
-			@include form-fields-children-mandatory-styles;
+			@include theme.form-fields-children-mandatory-styles;
 		}
 
 		.es-field--submit.es-form-is-hidden {

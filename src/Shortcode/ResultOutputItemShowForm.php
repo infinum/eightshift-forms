@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Shortcode;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -43,7 +43,7 @@ class ResultOutputItemShowForm implements ServiceInterface
 		$buttonComponent = '';
 		$attrsOutput = [];
 
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'componentShowForm']);
+		$filterName = HooksHelpers::getFilterName(['block', 'form', 'componentShowForm']);
 
 		if (\has_filter($filterName)) {
 			$buttonComponent = \apply_filters($filterName, [

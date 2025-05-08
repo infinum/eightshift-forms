@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Talentlyft;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -202,7 +202,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 					];
 					break;
 				case 'file':
-					$maxFileSize = UtilsSettingsHelper::getOptionValueWithFallback(SettingsTalentlyft::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY, (string) SettingsTalentlyft::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT);
+					$maxFileSize = SettingsHelpers::getOptionValueWithFallback(SettingsTalentlyft::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY, (string) SettingsTalentlyft::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT);
 
 					$accept = $item['SupportedTypes'] ?? [];
 
@@ -226,18 +226,18 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 					];
 					break;
 				case 'textarea':
-						$output[] = [
-							'component' => 'textarea',
-							'textareaName' => $name,
-							'textareaTracking' => $tracking,
-							'textareaFieldLabel' => $label,
-							'textareaIsRequired' => $required,
-							'textareaTypeCustom' => $internalType,
-							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
-								$required ? 'textareaIsRequired' : '',
-								'textareaTypeCustom',
-							]),
-						];
+					$output[] = [
+						'component' => 'textarea',
+						'textareaName' => $name,
+						'textareaTracking' => $tracking,
+						'textareaFieldLabel' => $label,
+						'textareaIsRequired' => $required,
+						'textareaTypeCustom' => $internalType,
+						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
+							$required ? 'textareaIsRequired' : '',
+							'textareaTypeCustom',
+						]),
+					];
 					break;
 				case 'select':
 					// Salutation is a special case as it expects a different format.
@@ -408,7 +408,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 		];
 
 		// Change the final output if necesery.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'data']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

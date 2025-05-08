@@ -19,7 +19,7 @@ use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 
 /**
  * Class FormSubmitNationbuilderRoute
@@ -69,7 +69,7 @@ class FormSubmitNationbuilderRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 
@@ -83,16 +83,16 @@ class FormSubmitNationbuilderRoute extends AbstractFormSubmit
 	protected function submitAction(array $formDetails)
 	{
 
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		// Send application to Hubspot.
 		$response = $this->nationbuilderClient->postApplication(
-			$formDetails[UtilsConfig::FD_PARAMS],
-			$formDetails[UtilsConfig::FD_FILES],
+			$formDetails[Config::FD_PARAMS],
+			$formDetails[Config::FD_FILES],
 			$formId
 		);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
 		return \rest_ensure_response(
@@ -109,14 +109,14 @@ class FormSubmitNationbuilderRoute extends AbstractFormSubmit
 	 */
 	protected function getEmailResponseTags(array $formDetails): array
 	{
-		$body = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];
+		$body = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['body']['data'] ?? [];
 		$output = [];
 
 		if (!$body) {
 			return $output;
 		}
 
-		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsNationbuilder::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
+		foreach (\apply_filters(Config::FILTER_SETTINGS_DATA, [])[SettingsNationbuilder::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
 			$output[$key] = $body[$value] ?? '';
 		}
 

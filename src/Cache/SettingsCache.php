@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCache class.
  */
-class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsCache implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -59,7 +59,7 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
+		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 		$outputIntegrations = \array_values(\array_filter(\array_map(
 			function ($key, $value) {
@@ -68,7 +68,7 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 				$isUsedKey = $value['use'] ?? '';
 				$type = $value['type'] ?? '';
 
-				if ($cache && $type === UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION && $isUsedKey && UtilsSettingsHelper::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
+				if ($cache && $type === Config::SETTINGS_INTERNAL_TYPE_INTEGRATION && $isUsedKey && SettingsHelpers::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
 					return [
 						'component' => 'card-inline',
 						'cardInlineTitle' => $value['labels']['title'] ?? '',
@@ -98,7 +98,7 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 
 				$type = $value['type'] ?? '';
 
-				if ($cache && $type !== UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
+				if ($cache && $type !== Config::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 					return [
 						'component' => 'card-inline',
 						'cardInlineTitle' => $value['labels']['title'] ?? '',
@@ -123,7 +123,7 @@ class SettingsCache implements UtilsSettingGlobalInterface, ServiceInterface
 		)));
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-clean',

@@ -10,21 +10,21 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Jira;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Settings\SettingInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsJira class.
  */
-class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -171,13 +171,13 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 			return false;
 		}
 
-		$selectedProject = UtilsSettingsHelper::getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
+		$selectedProject = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
 		if (!$selectedProject) {
 			return false;
 		}
 
-		$selectedIssueType = UtilsSettingsHelper::getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
+		$selectedIssueType = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
 
 		if (!$selectedIssueType) {
 			return false;
@@ -197,19 +197,19 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
+		$formDetails = GeneralHelpers::getFormDetails($formId);
 
-		$selectedProject = UtilsSettingsHelper::getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
-		$selectedIssueType = UtilsSettingsHelper::getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
-		$manualMapParams = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId);
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
+		$selectedProject = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_PROJECT_KEY, $formId);
+		$selectedIssueType = SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
+		$manualMapParams = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(self::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
 		$customFields = $this->jiraClient->getProjectsCustomFields($selectedProject);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -219,7 +219,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 						'tabContent' => [
 							[
 								'component' => 'select',
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_JIRA_PROJECT_KEY),
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_PROJECT_KEY),
 								'selectFieldLabel' => \__('Project', 'eightshift-forms'),
 								'selectSingleSubmit' => true,
 								'selectPlaceholder' => \__('Select project', 'eightshift-forms'),
@@ -238,7 +238,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 							$selectedProject ? [
 								'component' => 'select',
 								'selectSingleSubmit' => true,
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_ISSUE_TYPE_KEY),
 								'selectFieldLabel' => \__('Issue type', 'eightshift-forms'),
 								'selectPlaceholder' => \__('Select issue type', 'eightshift-forms'),
 								'selectContent' => \array_map(
@@ -261,18 +261,18 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_JIRA_TITLE_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_TITLE_KEY),
 								'inputFieldLabel' => \__('Issue title', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => true,
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_JIRA_TITLE_KEY, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_TITLE_KEY, $formId),
 							],
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_JIRA_DESC_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_DESC_KEY),
 								'inputFieldLabel' => \__('Additional description', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_JIRA_DESC_KEY, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_JIRA_DESC_KEY, $formId),
 							],
 							[
 								'component' => 'divider',
@@ -281,7 +281,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 							[
 								'component' => 'intro',
 								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
-								'introHelp' => UtilsSettingsOutputHelper::getPartialFieldTags(UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES])),
+								'introHelp' => SettingsOutputHelpers::getPartialFieldTags(SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES])),
 							],
 							[
 								'component' => 'divider',
@@ -290,7 +290,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -316,7 +316,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 								],
 								[
 									'component' => 'group',
-									'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
+									'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_JIRA_PARAMS_MAP_KEY),
 									'groupSaveOneField' => true,
 									'groupStyle' => 'default-listing',
 									'groupContent' => [
@@ -354,10 +354,10 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY);
-		$apiBoard = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY);
-		$apiUser = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyJira(), self::SETTINGS_JIRA_API_KEY_KEY);
+		$apiBoard = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiBoardJira(), self::SETTINGS_JIRA_API_BOARD_KEY);
+		$apiUser = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUserJira(), self::SETTINGS_JIRA_API_USER_KEY);
 
 		if (!$isUsed || !$apiKey || !$apiBoard || !$apiUser) {
 			return false;
@@ -374,14 +374,14 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_JIRA_USE_KEY, self::SETTINGS_JIRA_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -392,12 +392,12 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_JIRA_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -408,7 +408,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -417,7 +417,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyJira(),
 									self::SETTINGS_JIRA_API_KEY_KEY,
 									'ES_API_KEY_JIRA',
@@ -427,7 +427,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiBoardJira(),
 									self::SETTINGS_JIRA_API_BOARD_KEY,
 									'ES_API_BOARD_JIRA',
@@ -438,7 +438,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUserJira(),
 									self::SETTINGS_JIRA_API_USER_KEY,
 									'ES_API_USER_JIRA',
@@ -452,12 +452,12 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+									'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_JIRA_SELF_HOSTED_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Use self-hosted version', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
+											'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_JIRA_SELF_HOSTED_KEY, self::SETTINGS_JIRA_SELF_HOSTED_KEY),
 											'checkboxValue' => self::SETTINGS_JIRA_SELF_HOSTED_KEY,
 											'checkboxAsToggle' => true,
 											'checkboxAsToggleSize' => 'medium',
@@ -468,7 +468,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
+								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -479,12 +479,12 @@ class SettingsJira extends AbstractSettingsIntegrations implements UtilsSettingG
 							...$this->getGlobalGeneralSettings(self::SETTINGS_TYPE_KEY),
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
 								'inputFieldLabel' => \__('Alternative board url', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => false,
 								'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a defference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
 							],
 						],
 					],

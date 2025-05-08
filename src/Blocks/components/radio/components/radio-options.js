@@ -4,26 +4,15 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import {
-	checkAttr,
-	getAttrKey,
-	icons,
-	IconLabel,
-	IconToggle,
-	props,
-	Section,
-	AnimatedContentVisibility,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { checkAttr, getAttrKey, IconLabel, IconToggle, props, Section, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameField } from './../../utils';
 
 export const RadioOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('radio');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -38,7 +27,10 @@ export const RadioOptions = (attributes) => {
 
 	return (
 		<PanelBody title={__('Radio button', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+			<Section
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={radioValue}
 					attribute={getAttrKey('radioValue', attributes, manifest)}
@@ -51,7 +43,10 @@ export const RadioOptions = (attributes) => {
 				/>
 			</Section>
 
-			<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
+			<Section
+				icon={icons.tag}
+				label={__('Label', 'eightshift-forms')}
+			>
 				<IconToggle
 					label={__('Use label', 'eightshift-forms')}
 					checked={!radioHideLabelText}
@@ -59,20 +54,28 @@ export const RadioOptions = (attributes) => {
 					reducedBottomSpacing
 				/>
 
-				{!radioHideLabelText &&
+				{!radioHideLabelText && (
 					<TextareaControl
 						value={radioLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}
 					/>
-				}
+				)}
 
 				<AnimatedContentVisibility showIf={radioHideLabelText}>
-					<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
+					<IconLabel
+						label={__('Might impact accessibility', 'eightshift-forms')}
+						icon={icons.a11yWarning}
+						additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5'
+						standalone
+					/>
 				</AnimatedContentVisibility>
 			</Section>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<Section
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<IconToggle
 					icon={icons.checkCircle}
 					label={__('Selected', 'eightshift-forms')}
@@ -95,7 +98,6 @@ export const RadioOptions = (attributes) => {
 					checked={radioIsHidden}
 					onChange={(value) => setAttributes({ [getAttrKey('radioIsHidden', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('radioIsHidden', attributes, manifest), radioDisabledOptions)}
-					noBottomSpacing
 				/>
 			</Section>
 
@@ -104,9 +106,12 @@ export const RadioOptions = (attributes) => {
 				label={__('Field icon', 'eightshift-forms')}
 				collapsable
 			>
-				{radioIcon ? 
+				{radioIcon ? (
 					<>
-						<img src={radioIcon} alt='' />
+						<img
+							src={radioIcon}
+							alt=''
+						/>
 						<Button
 							onClick={() => {
 								setAttributes({ [getAttrKey('radioIcon', attributes, manifest)]: undefined });
@@ -114,14 +119,15 @@ export const RadioOptions = (attributes) => {
 							icon={icons.trash}
 							className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
 						/>
-					</> :
+					</>
+				) : (
 					<MediaPlaceholder
 						accept='image/*'
-						multiple = {false}
+						multiple={false}
 						allowedTypes={['image']}
 						onSelect={({ url }) => setAttributes({ [getAttrKey('radioIcon', attributes, manifest)]: url })}
 					/>
-				}
+				)}
 			</Section>
 
 			<ConditionalTagsOptions

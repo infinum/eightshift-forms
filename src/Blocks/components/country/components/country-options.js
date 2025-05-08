@@ -3,33 +3,18 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
-import {
-	icons,
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	props,
-	Section,
-	IconToggle,
-	STORE_NAME, 
-	Select,
-	Control,
-	NumberPicker,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, STORE_NAME, Select, Control, NumberPicker } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const CountryOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('country');
 
-	const {
-		options,
-	} = manifest;
+	const { options } = manifest;
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -49,7 +34,10 @@ export const CountryOptions = (attributes) => {
 
 	return (
 		<PanelBody title={__('Country', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+			<Section
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={countryName}
 					attribute={getAttrKey('countryName', attributes, manifest)}
@@ -67,8 +55,11 @@ export const CountryOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
-				{!countryUseLabelAsPlaceholder &&
+			<Section
+				icon={icons.fieldPlaceholder}
+				label={__('Placeholder', 'eightshift-forms')}
+			>
+				{!countryUseLabelAsPlaceholder && (
 					<TextControl
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={countryPlaceholder}
@@ -76,7 +67,7 @@ export const CountryOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('countryPlaceholder', attributes, manifest), countryDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
-				}
+				)}
 				<IconToggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
@@ -94,18 +85,19 @@ export const CountryOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+			<Section
+				icon={icons.checks}
+				label={__('Validation', 'eightshift-forms')}
+			>
 				<IconToggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={countryIsRequired}
 					onChange={(value) => setAttributes({ [getAttrKey('countryIsRequired', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryIsRequired', attributes, manifest), countryDisabledOptions)}
-					noBottomSpacing
 				/>
 
-
-				{countryIsMultiple &&
+				{countryIsMultiple && (
 					<Control
 						icon={icons.range}
 						label={__('Number of items', 'eightshift-forms')}
@@ -122,10 +114,9 @@ export const CountryOptions = (attributes) => {
 									disabled={isOptionDisabled(getAttrKey('countryMinCount', attributes, manifest), countryDisabledOptions)}
 									placeholder='–'
 									fixedWidth={4}
-									noBottomSpacing
 								/>
 
-								{countryMinCount > 0 && !isOptionDisabled(getAttrKey('countryMinCount', attributes, manifest), countryDisabledOptions) &&
+								{countryMinCount > 0 && !isOptionDisabled(getAttrKey('countryMinCount', attributes, manifest), countryDisabledOptions) && (
 									<Button
 										label={__('Clear', 'eightshift-forms')}
 										icon={icons.clear}
@@ -133,7 +124,7 @@ export const CountryOptions = (attributes) => {
 										className='es-button-square-32 es-button-icon-24'
 										showTooltip
 									/>
-								}
+								)}
 							</div>
 
 							<div className='es-display-flex es-items-end es-gap-2'>
@@ -146,10 +137,9 @@ export const CountryOptions = (attributes) => {
 									disabled={isOptionDisabled(getAttrKey('countryMaxCount', attributes, manifest), countryDisabledOptions)}
 									placeholder='–'
 									fixedWidth={4}
-									noBottomSpacing
 								/>
 
-								{countryMaxCount > 0 && !isOptionDisabled(getAttrKey('countryMaxCount', attributes, manifest), countryDisabledOptions) &&
+								{countryMaxCount > 0 && !isOptionDisabled(getAttrKey('countryMaxCount', attributes, manifest), countryDisabledOptions) && (
 									<Button
 										label={__('Clear', 'eightshift-forms')}
 										icon={icons.clear}
@@ -157,16 +147,24 @@ export const CountryOptions = (attributes) => {
 										className='es-button-square-32 es-button-icon-24'
 										showTooltip
 									/>
-								}
+								)}
 							</div>
 						</div>
 					</Control>
-				}
+				)}
 			</Section>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<Section
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<TextControl
-					label={<IconLabel icon={icons.titleGeneric} label={__('Initial value', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.titleGeneric}
+							label={__('Initial value', 'eightshift-forms')}
+						/>
+					}
 					value={countryValue}
 					onChange={(value) => setAttributes({ [getAttrKey('countryValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryValue', attributes, manifest), countryDisabledOptions)}
@@ -176,17 +174,16 @@ export const CountryOptions = (attributes) => {
 				<Select
 					icon={icons.migrationAlt}
 					value={countryValueType}
-					onChange={(value) => setAttributes({[getAttrKey('countryValueType', attributes, manifest)]: value})}
+					onChange={(value) => setAttributes({ [getAttrKey('countryValueType', attributes, manifest)]: value })}
 					label={__('Value type', 'eightshift-forms')}
 					subtitle={__('Determine whether to send the value as a country code, number or (un)localized name to the integration.', 'eightshift-forms')}
 					options={[
-						{ value: 'countryCode', label: __('Country code', 'eightshift-forms')},
-						{ value: 'countryName', label: __('Localized country name (site locale)', 'eightshift-forms')},
-						{ value: 'countryUnlocalizedName', label: __('Country name in English', 'eightshift-forms')},
-						{ value: 'countryNumber', label: __('Country phone number prefix', 'eightshift-forms')},
+						{ value: 'countryCode', label: __('Country code', 'eightshift-forms') },
+						{ value: 'countryName', label: __('Localized country name (site locale)', 'eightshift-forms') },
+						{ value: 'countryUnlocalizedName', label: __('Country name in English', 'eightshift-forms') },
+						{ value: 'countryNumber', label: __('Country phone number prefix', 'eightshift-forms') },
 					]}
 					simpleValue
-					noBottomSpacing
 				/>
 
 				<FieldOptionsVisibility
@@ -222,9 +219,18 @@ export const CountryOptions = (attributes) => {
 				/>
 			</Section>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
+			<Section
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
 				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.googleTagManager}
+							label={__('GTM tracking code', 'eightshift-forms')}
+						/>
+					}
 					value={countryTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('countryTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryTracking', attributes, manifest), countryDisabledOptions)}

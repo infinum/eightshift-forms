@@ -11,15 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Editor;
 
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationEditorCreateRoute
  */
-class IntegrationEditorCreateRoute extends AbstractUtilsBaseRoute
+class IntegrationEditorCreateRoute extends AbstractBaseRoute
 {
 	/**
 	 * Route slug.
@@ -50,7 +50,7 @@ class IntegrationEditorCreateRoute extends AbstractUtilsBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_INTEGRATION_EDITOR . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_INTEGRATION_EDITOR . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -101,9 +101,9 @@ class IntegrationEditorCreateRoute extends AbstractUtilsBaseRoute
 			'syncForm' => $syncForm,
 		];
 
-		if ($status === UtilsConfig::STATUS_ERROR) {
+		if ($status === Config::STATUS_ERROR) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$message,
 					$syncForm,
 					$debug
@@ -112,7 +112,7 @@ class IntegrationEditorCreateRoute extends AbstractUtilsBaseRoute
 		}
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				$message,
 				$syncForm,
 				$debug

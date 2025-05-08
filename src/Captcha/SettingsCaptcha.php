@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Captcha;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftForms\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCaptcha class.
  */
-class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsCaptcha implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -133,13 +133,13 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
-		$siteKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), self::SETTINGS_CAPTCHA_SITE_KEY);
-		$secretKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), self::SETTINGS_CAPTCHA_SECRET_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), self::SETTINGS_CAPTCHA_API_KEY);
-		$projectIdKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), self::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY);
+		$siteKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), self::SETTINGS_CAPTCHA_SITE_KEY);
+		$secretKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), self::SETTINGS_CAPTCHA_SECRET_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), self::SETTINGS_CAPTCHA_API_KEY);
+		$projectIdKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), self::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
 
-		$isEnterprise = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+		$isEnterprise = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
 
 		if ($isEnterprise) {
 			if (!$isUsed || !$siteKey || !$apiKey || !$projectIdKey) {
@@ -162,15 +162,15 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_USE_KEY, self::SETTINGS_CAPTCHA_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$isEnterprise = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
-		$isInit = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY);
+		$isEnterprise = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY, self::SETTINGS_CAPTCHA_ENTERPRISE_KEY);
+		$isInit = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
@@ -186,7 +186,7 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldHideLabel' => true,
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -202,7 +202,7 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 								'component' => 'divider',
 								'dividerExtraVSpacing' => true,
 							],
-							UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+							SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 								Variables::getGoogleReCaptchaSiteKey(),
 								self::SETTINGS_CAPTCHA_SITE_KEY,
 								'ES_GOOGLE_RECAPTCHA_SITE_KEY',
@@ -210,20 +210,20 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 							),
 
 							...(!$isEnterprise ? [
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getGoogleReCaptchaSecretKey(),
 									self::SETTINGS_CAPTCHA_SECRET_KEY,
 									'ES_GOOGLE_RECAPTCHA_SECRET_KEY',
 									\__('Secret key', 'eightshift-forms'),
 								),
 							] : [
-								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getGoogleReCaptchaProjectIdKey(),
 									self::SETTINGS_CAPTCHA_PROJECT_ID_KEY,
 									'ES_GOOGLE_RECAPTCHA_PROJECT_ID_KEY',
 									\__('Project ID', 'eightshift-forms'),
 								),
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getGoogleReCaptchaApiKey(),
 									self::SETTINGS_CAPTCHA_API_KEY,
 									'ES_GOOGLE_RECAPTCHA_API_KEY',
@@ -239,12 +239,12 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldHideLabel' => true,
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Hide badge', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
 										'checkboxValue' => self::SETTINGS_CAPTCHA_HIDE_BADGE_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -258,11 +258,11 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CAPTCHA_SCORE_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_SCORE_KEY),
 								'inputFieldLabel' => \__('"Spam unlikely" threshold', 'eightshift-forms'),
 								'inputFieldHelp' => \__('The level above which a submission is <strong>not</strong> considered spam. Should be between 0.1 and 1.0.<br />In most cases, a user will receive as core between 0.8 and 0.9.', 'eightshift-forms'),
 								'inputType' => 'number',
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_CAPTCHA_SCORE_KEY),
 								'inputMin' => 0.1,
 								'inputMax' => 1,
 								'inputStep' => 0.1,
@@ -275,11 +275,11 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 							],
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
 								'inputFieldLabel' => \__('"On submit" action name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Name of the action sent to reCAPTCHA on form submission.', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY),
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY,
 							],
 							[
@@ -289,12 +289,12 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldHideLabel' => true,
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Load Captcha on website load', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
 										'checkboxValue' => self::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY,
 										'checkboxHelp' => \__('By default, Captcha is only loaded on pages that contain forms. However, with this option, you can load Captcha on every page.', 'eightshift-forms'),
 										'checkboxSingleSubmit' => true,
@@ -305,11 +305,11 @@ class SettingsCaptcha implements UtilsSettingGlobalInterface, ServiceInterface
 							],
 							$isInit ? [
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
 								'inputFieldLabel' => \__('Action name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Name of the action sent to reCAPTCHA when Captcha is loaded on every page.', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_CAPTCHA_INIT_ACTION_KEY),
 								'inputPlaceholder' => self::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY,
 							] : [],
 						],

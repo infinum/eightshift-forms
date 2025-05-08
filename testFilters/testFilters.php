@@ -3,19 +3,19 @@
 /**
  * Class that holds class for admin sub menu - Form Listing.
  *
- * @package EightshiftForms\Testfilters
+ * @package EightshiftForms\TestFilters
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Testfilters;
+namespace EightshiftForms\TestFilters;
 
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * Test class used for mocking filters.
  */
-class Testfilters implements ServiceInterface
+class TestFilters implements ServiceInterface
 {
 	/**
 	 * Register all the hooks

@@ -11,15 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
 use WP_REST_Request;
 
 /**
  * Class AbstractTestApi
  */
-abstract class AbstractTestApi extends AbstractUtilsBaseRoute
+abstract class AbstractTestApi extends AbstractBaseRoute
 {
 	/**
 	 * Dynamic name route prefix for test api.
@@ -63,11 +62,11 @@ abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 				]
 			);
 
-			$code = $response['code'] ?? UtilsConfig::API_RESPONSE_CODE_ERROR;
+			$code = $response['code'] ?? Config::API_RESPONSE_CODE_ERROR;
 
-			if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiSuccessPublicOutput(
+					ApiHelpers::getApiSuccessPublicOutput(
 						\esc_html__('The API test was successful.', 'eightshift-forms'),
 						$additionalOutput,
 						$debug
@@ -76,7 +75,7 @@ abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 			}
 
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
 					$additionalOutput,
 					$debug
@@ -85,7 +84,7 @@ abstract class AbstractTestApi extends AbstractUtilsBaseRoute
 		} catch (UnverifiedRequestException $e) {
 			// Die if any of the validation fails.
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$e->getMessage(),
 					[],
 					\array_merge(

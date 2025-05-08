@@ -1,3 +1,5 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-layout {
 	$this: &;
 
@@ -11,19 +13,20 @@
 	&__col > * {
 		margin-block-end: 3rem;
 
-		@include media(desktop up) {
+		@include theme.media(desktop up) {
 			margin-block-end: 4rem;
 		}
 	}
 
 	&[data-layout-type='layout-grid-2'] {
 		> #{$this}__wrap {
-			@include media(desktop up) {
+			@include theme.media(desktop up) {
 				grid-template-columns: repeat(12, 1fr);
 			}
 
 			> * {
-				@include media(desktop up) { // stylelint-disable-line max-nesting-depth
+				@include theme.media(desktop up) {
+					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 6;
 				}
 			}
@@ -32,16 +35,18 @@
 
 	&[data-layout-type='layout-grid-3'] {
 		> #{$this}__wrap {
-			@include media(desktop up) {
+			@include theme.media(desktop up) {
 				grid-template-columns: repeat(12, 1fr);
 			}
 
 			> * {
-				@include media(desktop) { // stylelint-disable-line max-nesting-depth
+				@include theme.media(desktop) {
+					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 6;
 				}
 
-				@include media(large up) { // stylelint-disable-line max-nesting-depth
+				@include theme.media(large up) {
+					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 4;
 				}
 			}
@@ -50,16 +55,18 @@
 
 	&[data-layout-type='layout-grid-4'] {
 		> #{$this}__wrap {
-			@include media(desktop up) {
+			@include theme.media(desktop up) {
 				grid-template-columns: repeat(12, 1fr);
 			}
 
 			> * {
-				@include media(desktop) { // stylelint-disable-line max-nesting-depth
+				@include theme.media(desktop) {
+					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 6;
 				}
 
-				@include media(large up) { // stylelint-disable-line max-nesting-depth
+				@include theme.media(large up) {
+					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 3;
 				}
 			}
@@ -124,13 +131,15 @@
 				box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
 				padding: 1.5rem;
 
-				@include media(large up) { // stylelint-disable-line max-nesting-depth
+				@include theme.media(large up) {
+					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 9;
 				}
 			}
 
 			> *:nth-child(2) {
-				> * { // stylelint-disable-line max-nesting-depth
+				> * {
+					// stylelint-disable-line max-nesting-depth
 					background-color: var(--global-colors-esf-white);
 					border-radius: 0.5rem;
 					border: 1px solid var(--global-colors-esf-border);
@@ -138,7 +147,8 @@
 					padding: 1.5rem;
 				}
 
-				@include media(large up) { // stylelint-disable-line max-nesting-depth
+				@include theme.media(large up) {
+					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 3;
 				}
 			}

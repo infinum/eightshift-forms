@@ -1,6 +1,8 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-field--dynamic {
 	.es-dynamic {
-		@include input-styles-disabled;
+		@include theme.input-styles-disabled;
 		border: 1px solid var(--es-input-border-color);
 		border-radius: var(--global-esf-spacing-s);
 		padding: var(--es-input-spacing);

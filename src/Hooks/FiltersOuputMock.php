@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Hooks;
 
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\EncryptionHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * FiltersOuputMock class.
@@ -34,7 +34,7 @@ final class FiltersOuputMock
 		$filterUsed = false;
 		$settingsFields = $config['allowed'] ?? [];
 
-		$filterName = UtilsHooksHelper::getFilterName(['enrichment', 'manualMap']);
+		$filterName = HooksHelpers::getFilterName(['enrichment', 'manualMap']);
 
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, '');
@@ -88,10 +88,10 @@ final class FiltersOuputMock
 	public static function getVariationFilterValue(string $type, string $formId, array $formDetails): array
 	{
 		$data = [];
-		$shouldAppend = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId);
+		$shouldAppend = SettingsHelpers::isSettingCheckboxChecked(SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, SettingsGeneral::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId);
 
 		// Find global settings per integration.
-		$data = UtilsSettingsHelper::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY);
+		$data = SettingsHelpers::getOptionValueGroup($type . '-' . SettingsGeneral::SETTINGS_VARIATION_KEY);
 		if ($data) {
 			$data = \array_column($data, 1, 0);
 		}
@@ -99,16 +99,16 @@ final class FiltersOuputMock
 		$filterUsed = false;
 
 		// Find local settings for form.
-		$dataLocal = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_VARIATION_KEY, $formId);
+		$dataLocal = SettingsHelpers::getSettingValueGroup(SettingsGeneral::SETTINGS_VARIATION_KEY, $formId);
 		if ($dataLocal) {
 			$dataLocal = \array_column($dataLocal, 1, 0);
 			$data = $shouldAppend ? \array_merge($data, $dataLocal) : $dataLocal;
 		}
 
 		// Get data from forms block.
-		$secureData = $formDetails[UtilsConfig::FD_SECURE_DATA] ?? [];
+		$secureData = $formDetails[Config::FD_SECURE_DATA] ?? [];
 		if ($secureData) {
-			$secureData = \json_decode(UtilsEncryption::decryptor($formDetails[UtilsConfig::FD_SECURE_DATA]) ?: '', true)['v'] ?? [];
+			$secureData = \json_decode(EncryptionHelpers::decryptor($formDetails[Config::FD_SECURE_DATA]) ?: '', true)['v'] ?? [];
 
 			if ($secureData) {
 				$secureData = \array_column($secureData, 1, 0);
@@ -117,7 +117,7 @@ final class FiltersOuputMock
 		}
 
 		// Find local settings per integration or filter data.
-		$filterNameLocal = UtilsHooksHelper::getFilterName(['block', 'form', 'variation']);
+		$filterNameLocal = HooksHelpers::getFilterName(['block', 'form', 'variation']);
 		if (\has_filter($filterNameLocal)) {
 			$dataFilter = \apply_filters($filterNameLocal, [], $formDetails, $formId);
 
@@ -149,20 +149,20 @@ final class FiltersOuputMock
 		$filterUsed = false;
 
 		// Find global settings per integration.
-		$dataGlobal = UtilsSettingsHelper::getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
+		$dataGlobal = SettingsHelpers::getOptionValue($type . '-' . SettingsGeneral::SETTINGS_GLOBAL_REDIRECT_SUCCESS_KEY);
 
 		// Populate final output.
 		$data = $dataGlobal;
 
 		// Find local settings for form.
-		$dataLocal = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_URL_KEY, $formId);
+		$dataLocal = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_SUCCESS_REDIRECT_URL_KEY, $formId);
 
 		if ($dataLocal) {
 			$data = $dataLocal;
 		}
 
 		// Find local settings per integration or filter data.
-		$filterNameLocal = UtilsHooksHelper::getFilterName(['block', 'form', 'successRedirectUrl']);
+		$filterNameLocal = HooksHelpers::getFilterName(['block', 'form', 'successRedirectUrl']);
 		if (\has_filter($filterNameLocal)) {
 			$dataFilter = \apply_filters($filterNameLocal, $type, $formId) ?? '';
 
@@ -197,9 +197,9 @@ final class FiltersOuputMock
 	{
 		$filterUsed = false;
 
-		$data = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
+		$data = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY, $formId);
 
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'trackingEventName']);
+		$filterName = HooksHelpers::getFilterName(['block', 'form', 'trackingEventName']);
 		if (\has_filter($filterName)) {
 			$filterData = \apply_filters($filterName, $type, $formId);
 
@@ -231,10 +231,10 @@ final class FiltersOuputMock
 		$settingsDetails = [];
 		$filterUsed = false;
 
-		$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'trackingAdditionalData']);
-		$trackingAdditionalData = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
-		$trackingAdditionalDataSuccess = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
-		$trackingAdditionalDataError = UtilsSettingsHelper::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
+		$filterName = HooksHelpers::getFilterName(['block', 'form', 'trackingAdditionalData']);
+		$trackingAdditionalData = SettingsHelpers::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId);
+		$trackingAdditionalDataSuccess = SettingsHelpers::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId);
+		$trackingAdditionalDataError = SettingsHelpers::getSettingValueGroup(SettingsGeneral::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId);
 		$trackingAdditionalDataFilterValue = \has_filter($filterName) ? \apply_filters($filterName, $type, $formId) : [];
 
 		if ($trackingAdditionalData || $trackingAdditionalDataFilterValue || $trackingAdditionalDataSuccess || $trackingAdditionalDataError) {

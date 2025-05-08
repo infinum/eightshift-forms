@@ -6,10 +6,9 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestSection = Helpers::getComponent('admin-settings-section');
 
 echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
@@ -45,14 +44,14 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 	<?php if ($adminSettingsNotice) { ?>
 		<div class="<?php echo esc_attr("{$sectionClass}__notice"); ?>">
 			<?php
-				echo Helpers::render(
-					'notice',
-					[
-						'noticeContent' => $adminSettingsNotice,
-					],
-					'components',
-					true
-				);
+			echo Helpers::render(
+				'notice',
+				[
+					'noticeContent' => $adminSettingsNotice,
+				],
+				'components',
+				true
+			);
 			?>
 		</div>
 	<?php } ?>
@@ -95,17 +94,17 @@ if (!$adminSettingsSidebar || !$adminSettingsForm) {
 						<div class="<?php echo esc_attr("{$sectionClass}__actions"); ?>">
 							<a href="<?php echo esc_url($adminSettingsFormEditLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
 								<?php
-									// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-									echo UtilsHelper::getUtilsIcons('edit'),
-									esc_html__('Edit form', 'eightshift-forms');
+								// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+								echo UtilsHelper::getUtilsIcons('edit'),
+								esc_html__('Edit form', 'eightshift-forms');
 								?>
 							</a>
 
 							<a href="<?php echo esc_url($adminSettingsFormLocationsLink); ?>" class="<?php echo esc_attr("{$sectionClass}__link"); ?> <?php echo esc_attr("{$sectionClass}__link--cta"); ?>">
 								<?php
-									// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-									echo UtilsHelper::getUtilsIcons('location'),
-									esc_html__('Locations used', 'eightshift-forms');
+								// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+								echo UtilsHelper::getUtilsIcons('location'),
+								esc_html__('Locations used', 'eightshift-forms');
 								?>
 							</a>
 						</div>

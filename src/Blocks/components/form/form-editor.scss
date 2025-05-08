@@ -1,32 +1,32 @@
 // stylelint-disable max-nesting-depth
 
-@import './form-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
 
 .es-form {
 	$this: &;
 
-	@include form-reset;
-	@include form-styles;
+	@include theme.form-reset;
+	@include theme.form-styles;
 
 	> #{$this}__fields {
 		> .block-editor-inner-blocks {
 			> .block-editor-block-list__layout {
-				@include form-fields-mandatory-styles;
-				@include form-fields-styles;
+				@include theme.form-fields-mandatory-styles;
+				@include theme.form-fields-styles;
 
 				> * {
-					@include form-fields-children-mandatory-styles;
-					@include form-fields-children-styles;
-
 					margin-inline: 0;
 					margin-block-start: 0;
 					padding-block: 0;
+
+					@include theme.form-fields-children-mandatory-styles;
+					@include theme.form-fields-children-styles;
 				}
 			}
 		}
 	}
 
 	&__editor {
-		@include form-width-limit-styles;
+		@include theme.form-width-limit-styles;
 	}
 }

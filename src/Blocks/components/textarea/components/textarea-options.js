@@ -6,19 +6,8 @@ import { useState } from '@wordpress/element';
 import { isArray } from 'lodash';
 import { select } from '@wordpress/data';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
-import {
-	icons,
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	props,
-	Section,
-	Select,
-	IconToggle,
-	NumberPicker,
-	Control,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { checkAttr, getAttrKey, IconLabel, props, Section, Select, IconToggle, NumberPicker, Control, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -26,9 +15,7 @@ import { ConditionalTagsOptions } from '../../conditional-tags/components/condit
 export const TextareaOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('textarea');
 
-	const {
-		options,
-	} = manifest;
+	const { options } = manifest;
 
 	const {
 		setAttributes,
@@ -60,7 +47,10 @@ export const TextareaOptions = (attributes) => {
 
 	return (
 		<PanelBody title={__('Multiline text', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+			<Section
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={textareaName}
 					attribute={getAttrKey('textareaName', attributes, manifest)}
@@ -78,8 +68,11 @@ export const TextareaOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
-				{!textareaUseLabelAsPlaceholder &&
+			<Section
+				icon={icons.fieldPlaceholder}
+				label={__('Placeholder', 'eightshift-forms')}
+			>
+				{!textareaUseLabelAsPlaceholder && (
 					<TextControl
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={textareaPlaceholder}
@@ -87,7 +80,7 @@ export const TextareaOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('textareaPlaceholder', attributes, manifest), textareaDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
-				}
+				)}
 				<IconToggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
@@ -105,7 +98,10 @@ export const TextareaOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+			<Section
+				icon={icons.checks}
+				label={__('Validation', 'eightshift-forms')}
+			>
 				<IconToggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
@@ -127,15 +123,14 @@ export const TextareaOptions = (attributes) => {
 					clearable
 				/>
 
-				{(showTextareaMinLength || showTextareaMaxLength) &&
+				{(showTextareaMinLength || showTextareaMaxLength) && (
 					<Control
 						icon={icons.textLength}
 						label={__('Entry length', 'eightshift-forms')}
 						additionalLabelClasses='es-mb-0!'
-						noBottomSpacing
 					>
 						<div className='es-h-spaced es-gap-5!'>
-							{showTextareaMinLength &&
+							{showTextareaMinLength && (
 								<div className='es-display-flex es-items-end es-gap-2'>
 									<NumberPicker
 										label={__('Min', 'eightshift-forms')}
@@ -146,10 +141,9 @@ export const TextareaOptions = (attributes) => {
 										disabled={isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions)}
 										placeholder='–'
 										fixedWidth={4}
-										noBottomSpacing
 									/>
 
-									{textareaMinLength > 0 && !isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions) &&
+									{textareaMinLength > 0 && !isOptionDisabled(getAttrKey('textareaMinLength', attributes, manifest), textareaDisabledOptions) && (
 										<Button
 											label={__('Disable', 'eightshift-forms')}
 											icon={icons.clear}
@@ -158,11 +152,11 @@ export const TextareaOptions = (attributes) => {
 											showTooltip
 											isSmall
 										/>
-									}
+									)}
 								</div>
-							}
+							)}
 
-							{showTextareaMaxLength &&
+							{showTextareaMaxLength && (
 								<div className='es-display-flex es-items-end es-gap-2'>
 									<NumberPicker
 										label={__('Max', 'eightshift-forms')}
@@ -173,10 +167,9 @@ export const TextareaOptions = (attributes) => {
 										disabled={isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions)}
 										placeholder='–'
 										fixedWidth={4}
-										noBottomSpacing
 									/>
 
-									{textareaMaxLength > 0 && !isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions) &&
+									{textareaMaxLength > 0 && !isOptionDisabled(getAttrKey('textareaMaxLength', attributes, manifest), textareaDisabledOptions) && (
 										<Button
 											label={__('Disable', 'eightshift-forms')}
 											icon={icons.clear}
@@ -184,17 +177,25 @@ export const TextareaOptions = (attributes) => {
 											className='es-button-square-32 es-button-icon-24'
 											showTooltip
 										/>
-									}
+									)}
 								</div>
-							}
+							)}
 						</div>
 					</Control>
-				}
+				)}
 			</Section>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<Section
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<TextControl
-					label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.fieldValue}
+							label={__('Initial value', 'eightshift-forms')}
+						/>
+					}
 					value={textareaValue}
 					onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('textareaValue', attributes, manifest), textareaDisabledOptions)}
@@ -220,13 +221,21 @@ export const TextareaOptions = (attributes) => {
 					checked={textareaIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('textareaIsDisabled', attributes, manifest), textareaDisabledOptions)}
-					noBottomSpacing
 				/>
 			</Section>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
+			<Section
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
 				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.googleTagManager}
+							label={__('GTM tracking code', 'eightshift-forms')}
+						/>
+					}
 					value={textareaTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('textareaTracking', attributes, manifest), textareaDisabledOptions)}

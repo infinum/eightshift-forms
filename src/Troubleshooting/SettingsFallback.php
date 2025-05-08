@@ -10,15 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsFallback class.
  */
-class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterface, UtilsSettingGlobalInterface
+class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterface, SettingGlobalInterface
 {
 	/**
 	 * Filter global settings key.
@@ -68,8 +68,8 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
-		$email = UtilsSettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY);
+		$email = SettingsHelpers::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
 
 		if (!$isUsed || empty($email)) {
 			return false;
@@ -85,12 +85,12 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_FALLBACK_USE_KEY, self::SETTINGS_FALLBACK_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -108,20 +108,20 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 							],
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 								'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 								'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY),
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_FALLBACK_IGNORE_KEY),
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_FALLBACK_IGNORE_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Ignore keys', 'eightshift-forms'),
 								'textareaFieldHelp' => \__("Don't send failback email if any of these keys are present in the submission. One key per line.", 'eightshift-forms'),
-								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_FALLBACK_IGNORE_KEY, 1),
+								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_FALLBACK_IGNORE_KEY, 1),
 							],
 						],
 					],
@@ -153,11 +153,11 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				],
 				[
 					'component' => 'input',
-					'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
+					'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 					'inputFieldLabel' => \__('Fallback e-mail', 'eightshift-forms'),
 					'inputFieldHelp' => \__('E-mail will be added to the "CC" field; the "From" field will be read from global settings.<br />Use commas to separate multiple e-mails.', 'eightshift-forms'),
 					'inputType' => 'text',
-					'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
+					'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $integration),
 				],
 			],
 		] : [];

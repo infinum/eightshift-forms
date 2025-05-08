@@ -1,5 +1,7 @@
 // stylelint-disable declaration-no-important
 
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-field--file {
 	.es-file {
 		display: none;
@@ -31,10 +33,11 @@
 		}
 
 		&__button {
-			@include submit-styles($size: 'medium');
 			margin-block-start: 15px;
 			display: inline-flex;
 			inline-size: initial;
+
+			@include theme.submit-styles($size: 'medium');
 		}
 	}
 
@@ -101,7 +104,8 @@
 					duration: 1s;
 				}
 
-				@include media(large up) { // stylelint-disable-line max-nesting-depth
+				@include theme.media(large up) {
+					// stylelint-disable-line max-nesting-depth
 					--dz-progress-scoped-height: 6px;
 				}
 			}
@@ -111,11 +115,12 @@
 			padding-block-end: 20px;
 
 			.dz-error-message {
-				@include error-styles;
 				display: block;
 				position: absolute;
 				inset-inline-start: 0;
 				inset-block-end: 0;
+
+				@include theme.error-styles;
 			}
 		}
 

@@ -11,15 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Talentlyft;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UploadHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * TalentlyftClient integration class.
@@ -43,7 +43,7 @@ class TalentlyftClient implements ClientInterface
 		$output = \get_transient(self::CACHE_TALENTLYFT_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -131,14 +131,14 @@ class TalentlyftClient implements ClientInterface
 		$body = \array_merge_recursive(
 			[
 				'JobId' => $itemId,
-				'Applied' => UtilsSettingsHelper::isSettingCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
-				'IsProspect' => UtilsSettingsHelper::isSettingCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
+				'Applied' => SettingsHelpers::isSettingCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
+				'IsProspect' => SettingsHelpers::isSettingCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
 			],
 			$paramsPrepared,
 			$paramsFiles,
 		);
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $paramsPrepared, $formId) ?? $itemId;
 		}
@@ -154,7 +154,7 @@ class TalentlyftClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiReponseDetails(
 			SettingsTalentlyft::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -162,22 +162,22 @@ class TalentlyftClient implements ClientInterface
 			$paramsFiles,
 			$itemId,
 			$formId,
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY)
+			SettingsHelpers::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
-		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
-		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+		$details[Config::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -252,7 +252,7 @@ class TalentlyftClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return UtilsApiHelper::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiReponseDetails(
 			SettingsTalentlyft::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -265,7 +265,7 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function getTalentlyftItems(): array
 	{
-		$statuses = \array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_LIST_TYPE_KEY)));
+		$statuses = \array_filter(\explode(Config::DELIMITER, SettingsHelpers::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_LIST_TYPE_KEY)));
 
 		\array_unshift($statuses, 'published');
 
@@ -282,17 +282,17 @@ class TalentlyftClient implements ClientInterface
 			);
 
 			// Structure response details.
-			$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+			$details = ApiHelpers::getIntegrationApiReponseDetails(
 				SettingsTalentlyft::SETTINGS_TYPE_KEY,
 				$response,
 				$url,
 			);
 
-			$code = $details[UtilsConfig::IARD_CODE];
-			$body = $details[UtilsConfig::IARD_BODY];
+			$code = $details[Config::IARD_CODE];
+			$body = $details[Config::IARD_BODY];
 
 			// On success return output.
-			if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 				$output = \array_merge($output, $body['Results'] ?? []);
 			}
 		}
@@ -319,17 +319,17 @@ class TalentlyftClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiReponseDetails(
 			SettingsTalentlyft::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body ?? [];
 		}
 
@@ -360,7 +360,7 @@ class TalentlyftClient implements ClientInterface
 	private function prepareParams(array $params): array
 	{
 		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		$params = GeneralHelpers::removeUneceseryParamFields($params);
 
 		$output = [];
 		$outputCustom = [];
@@ -443,7 +443,7 @@ class TalentlyftClient implements ClientInterface
 			$name = \preg_replace('/^q_/', '', $name);
 
 			foreach ($value as $file) {
-				$fileName = UtilsUploadHelper::getFileNameFromPath($file);
+				$fileName = UploadHelpers::getFileNameFromPath($file);
 
 				switch ($typeCustom) {
 					case 'customField':
@@ -485,7 +485,7 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyTalentlyft(), SettingsTalentlyft::SETTINGS_TALENTLYFT_API_KEY_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiKeyTalentlyft(), SettingsTalentlyft::SETTINGS_TALENTLYFT_API_KEY_KEY);
 	}
 
 	/**

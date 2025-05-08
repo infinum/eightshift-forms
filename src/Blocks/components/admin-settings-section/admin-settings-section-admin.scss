@@ -1,5 +1,7 @@
 // stylelint-disable number-max-precision, selector-max-specificity
 
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .eightshift-forms_page_es-settings-global,
 .toplevel_page_es-forms,
 .admin_page_es-settings {
@@ -43,7 +45,7 @@
 
 		padding-block: var(--global-esf-spacing-l);
 
-		@include media(desktop up) {
+		@include theme.media(desktop up) {
 			inset-block-start: 2rem; // Admin bar height (desktop).
 		}
 	}
@@ -220,8 +222,8 @@
 		&--cta {
 			// Inheriting Submit button style, with a slight tweak.
 			// stylelint-disable declaration-no-important, scss/at-extend-no-missing-placeholder
-			@extend .es-submit;
-			@extend .es-submit--ghost;
+			@extend .es-submit !optional;
+			@extend .es-submit--ghost !optional;
 
 			padding: 0.5rem 0.75rem !important;
 			block-size: auto !important;

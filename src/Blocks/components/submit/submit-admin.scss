@@ -1,4 +1,4 @@
-@import './submit-style';
+@use './submit-style';
 
 a,
 button {
@@ -40,7 +40,8 @@ button {
 
 		&:focus:focus-visible {
 			outline: none;
-			box-shadow: 0 0 0 1px var(--global-colors-esf-white),
+			box-shadow:
+				0 0 0 1px var(--global-colors-esf-white),
 				0 0 0 4px var(--esf-submit-focus-color, var(--global-colors-esf-admin-accent-50));
 		}
 

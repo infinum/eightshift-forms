@@ -14,10 +14,10 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * Class FormSubmitPaycekRoute
@@ -36,7 +36,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -48,19 +48,19 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('paycekMissingConfig', $formId)
 				)
 			);
 		}
 
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsPaycek::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
+		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsPaycek::SETTINGS_PAYCEK_PARAMS_MAP_KEY, $formId);
 
-		$params = $this->prepareParams($mapParams, $formDetails[UtilsConfig::FD_PARAMS], $formId);
+		$params = $this->prepareParams($mapParams, $formDetails[Config::FD_PARAMS], $formId);
 
 		$reqParams = [
 			'profileCode',
@@ -73,7 +73,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 
 		if ($missingOrEmpty) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('paycekMissingReqParams', $formId)
 				)
 			);
@@ -101,7 +101,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				$this->labels->getLabel('paycekSuccess', $formId),
 				\array_merge(
 					$successAdditionalData['public'],
@@ -157,11 +157,11 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 			$output[$key] = $param;
 		}
 
-		$output['secretKey'] = UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY);
-		$output['profileCode'] = UtilsSettingsHelper::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_PROFILE_KEY);
-		$output['language'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_LANG_KEY, $formId);
+		$output['secretKey'] = SettingsHelpers::getOptionWithConstant(Variables::getApiKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_KEY_KEY);
+		$output['profileCode'] = SettingsHelpers::getOptionWithConstant(Variables::getApiProfileKeyPaycek(), SettingsPaycek::SETTINGS_PAYCEK_API_PROFILE_KEY);
+		$output['language'] = SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_LANG_KEY, $formId);
 		$output['paymentId'] = 'temp'; // Temp name, the real one will be set after the increment.
-		$output['description'] = UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);
+		$output['description'] = SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_CART_DESC_KEY, $formId);
 
 		return $output;
 	}
@@ -179,7 +179,7 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 	{
 		$orderId = FormsHelper::getIncrement($formId);
 
-		if (UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '') {
+		if (SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_ENTRY_ID_USE_KEY, $formId) ?: '') {
 			$entryId = $successAdditionalData['private'][UtilsHelper::getStateResponseOutputKey('entry')] ?? '';
 
 			if ($entryId) {
@@ -189,9 +189,9 @@ class FormSubmitPaycekRoute extends AbstractFormSubmit
 
 		$params['paymentId'] = $orderId;
 
-		$params['urlSuccess'] = $this->getCallbackUrl($formId, $orderId, UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_SUCCESS, $formId));
-		$params['urlFail'] = $this->getCallbackUrl($formId, $orderId, UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_FAIL, $formId));
-		$params['urlCancel'] = $this->getCallbackUrl($formId, $orderId, UtilsSettingsHelper::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_CANCEL, $formId));
+		$params['urlSuccess'] = $this->getCallbackUrl($formId, $orderId, SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_SUCCESS, $formId));
+		$params['urlFail'] = $this->getCallbackUrl($formId, $orderId, SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_FAIL, $formId));
+		$params['urlCancel'] = $this->getCallbackUrl($formId, $orderId, SettingsHelpers::getSettingValue(SettingsPaycek::SETTINGS_PAYCEK_URL_CANCEL, $formId));
 
 		// Set the correct order as it is req by Paycek.
 		\ksort($params);

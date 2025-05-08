@@ -1,3 +1,5 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 textarea.es-textarea {
 	inline-size: 100%;
 	border: 1px solid var(--es-input-border-color);
@@ -15,14 +17,14 @@ textarea.es-textarea {
 	resize: vertical;
 
 	&:focus {
-		@include input-styles-focus;
+		@include theme.input-styles-focus;
 	}
 
 	&:disabled {
-		@include input-styles-disabled;
+		@include theme.input-styles-disabled;
 	}
 
 	&:read-only {
-		@include input-styles-read-only;
+		@include theme.input-styles-read-only;
 	}
 }

@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 
 /**
  * Class SubmitFilesRoute
@@ -55,10 +55,10 @@ class SubmitFilesRoute extends AbstractFormSubmit
 	{
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				\esc_html__('File upload success', 'eightshift-forms'),
 				[
-					UtilsHelper::getStateResponseOutputKey('file') => $formDetails[UtilsConfig::FD_FILES_UPLOAD]['id'] ?? '',
+					UtilsHelper::getStateResponseOutputKey('file') => $formDetails[Config::FD_FILES_UPLOAD]['id'] ?? '',
 				],
 				[
 					'formDetails' => $formDetails,

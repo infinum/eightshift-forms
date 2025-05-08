@@ -1,7 +1,6 @@
 /* global esFormsLocalization */
 
 import globalManifest from '../../../manifest.json';
-import utilsManifest from '../../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
 
 ////////////////////////////////////////////////////////////////
 // Constants
@@ -189,32 +188,32 @@ export function setStateInitial() {
 	};
 
 	// Selectors.
-	for (const [key, item] of Object.entries(utilsManifest.enums.selectors ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.selectors ?? {})) {
 		setState([key], item, StateEnum.SELECTORS);
 	}
 
 	// Selectors Admin.
-	for (const [key, item] of Object.entries(utilsManifest.enums.selectorsAdmin ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.selectorsAdmin ?? {})) {
 		setState([key], item, StateEnum.SELECTORS_ADMIN);
 	}
 
 	// Response output keys.
-	for (const [key, item] of Object.entries(utilsManifest.enums.responseOutputKeys ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.responseOutputKeys ?? {})) {
 		setState([key], item, StateEnum.RESPONSE_OUTPUT_KEYS);
 	}
 
 	// Success Redirect Url keys.
-	for (const [key, item] of Object.entries(utilsManifest.enums.successRedirectUrlKeys ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.successRedirectUrlKeys ?? {})) {
 		setState([key], item, StateEnum.SUCCESS_REDIRECT_URL_KEYS);
 	}
 
 	// Attributes.
-	for (const [key, item] of Object.entries(utilsManifest.enums.attrs ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.attrs ?? {})) {
 		setState([key], item, StateEnum.ATTRIBUTES);
 	}
 
 	// Params.
-	for (const [key, item] of Object.entries(utilsManifest.enums.params ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.params ?? {})) {
 		setState([key], item, StateEnum.PARAMS);
 	}
 
@@ -397,12 +396,15 @@ export function setStateFormInitial(formId) {
 				break;
 			case 'select-one':
 			case 'select-multiple':
-				const selectedValues = [...item.options].filter((option) => option?.selected).map((option) => {
-					return {
-						value: option?.value,
-						meta: JSON.parse(option?.getAttribute(getStateAttribute('selectCustomProperties')))
-					};
-				}).filter((option) => option.value);
+				const selectedValues = [...item.options]
+					.filter((option) => option?.selected)
+					.map((option) => {
+						return {
+							value: option?.value,
+							meta: JSON.parse(option?.getAttribute(getStateAttribute('selectCustomProperties'))),
+						};
+					})
+					.filter((option) => option.value);
 
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], selectedValues, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], selectedValues, formId);
@@ -485,11 +487,7 @@ export function setStateFormInitial(formId) {
 
 	// Loop all fields for conditional tags later because we need to have all state set.
 	for (const item of Object.values(formFields)) {
-		const {
-			value,
-			name,
-			type,
-		} = item;
+		const { value, name, type } = item;
 
 		if (name === 'search_terms') {
 			continue;
@@ -497,7 +495,7 @@ export function setStateFormInitial(formId) {
 
 		const field = formElement.querySelector(`${getStateSelector('field', true)}[${getStateAttribute('fieldName')}="${name}"]`);
 
-		if (type ==='radio' || type ==='checkbox') {
+		if (type === 'radio' || type === 'checkbox') {
 			setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
 		}
 
@@ -511,7 +509,6 @@ export function setStateFormInitial(formId) {
 
 	// Loop all fields for conditional tags later because we need to have all state set beforehand.
 	[...customFields].forEach((field) => {
-			
 		const name = field.getAttribute(getStateAttribute('fieldName'));
 
 		// Conditional tags.
@@ -635,11 +632,15 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 
 	// Check if fields exist and remove conditional tags if not.
 	// This can happend if the user deletes a field and the conditional tag is still there on other field.
-	const output = tag[1].map((item) => item.filter((inner) => {
-		const itemName = inner[0] ?? '';
+	const output = tag[1]
+		.map((item) =>
+			item.filter((inner) => {
+				const itemName = inner[0] ?? '';
 
-		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
-	})).filter(outputInner => outputInner.length > 0);
+				return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
+			}),
+		)
+		.filter((outputInner) => outputInner.length > 0);
 
 	if (!output.length) {
 		return;
@@ -650,7 +651,6 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 
 	setStateConditionalTagsInner(name, formId, output, isNoneFormBlock);
 }
-
 
 /**
  * Set state conditional tags inner items on one field.
@@ -679,11 +679,15 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 
 	// Check if fields exist and remove conditional tags if not.
 	// This can happend if the user deletes a field and the conditional tag is still there on other field.
-	const output = tag[1].map((item) => item.filter((inner) => {
-		const itemName = inner[0] ?? '';
+	const output = tag[1]
+		.map((item) =>
+			item.filter((inner) => {
+				const itemName = inner[0] ?? '';
 
-		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
-	})).filter(outputInner => outputInner.length > 0);
+				return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
+			}),
+		)
+		.filter((outputInner) => outputInner.length > 0);
 
 	if (!output.length) {
 		return;
@@ -716,7 +720,7 @@ export function setStateConditionalTagsInner(name, formId, tags, isNoneFormBlock
 	const events = isInner ? getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], formId) : getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], formId);
 
 	const eventsOutput = {
-		...events ?? {},
+		...(events ?? {}),
 	};
 
 	tags.forEach((item) => {
@@ -724,10 +728,7 @@ export function setStateConditionalTagsInner(name, formId, tags, isNoneFormBlock
 
 		// Loop inner fields.
 		item.forEach((inner) => {
-			eventsOutput[inner[0]] = [
-				...eventsOutput[inner[0]] ?? [],
-				(isInner) ? `${name}---${innerName}` : name,
-			];
+			eventsOutput[inner[0]] = [...(eventsOutput[inner[0]] ?? []), isInner ? `${name}---${innerName}` : name];
 		});
 	});
 
@@ -769,7 +770,7 @@ export function setState(keyArray, value, formId) {
 	if (keyArray.length > 1) {
 		window[prefix].state[formKey] = {
 			...window[prefix].state[formKey],
-			...stateObject[keyArray[0]]
+			...stateObject[keyArray[0]],
 		};
 	} else {
 		window[prefix].state[formKey] = {
@@ -802,9 +803,7 @@ export function removeStateForm(formId) {
 	if (index > -1) {
 		forms.splice(index, 1);
 
-		window[prefix].state[StateEnum.FORMS] = [
-			...forms,
-		];
+		window[prefix].state[StateEnum.FORMS] = [...forms];
 	}
 }
 
@@ -870,7 +869,7 @@ export function getStateRoute(name) {
 
 /**
  * Get state selector.
- * 
+ *
  * @param {string} name Name key to get.
  *
  * @returns {string}
@@ -881,7 +880,7 @@ export function getStateResponseOutputKey(name) {
 
 /**
  * Get state selector.
- * 
+ *
  * @param {string} name Name key to get.
  * @param {boolean} usePrefix Use prefix.
  *
@@ -893,7 +892,7 @@ export function getStateSelector(name, usePrefix = false) {
 
 /**
  * Get state selector admin.
- * 
+ *
  * @param {string} name Name key to get.
  * @param {boolean} usePrefix Use prefix.
  *
@@ -988,7 +987,7 @@ export function getRestUrlByType(type, value, isPartial = false, checkRef = fals
  * @returns {string}
  */
 export function getUtilsIcons(name) {
-	return utilsManifest?.icons?.[name];
+	return globalManifest?.icons?.[name];
 }
 
 ////////////////////////////////////////////////////////////////
@@ -1008,7 +1007,7 @@ function isLocalStorageAvailable() {
 		localStorage.removeItem(test);
 
 		return true;
-	} catch(e) {
+	} catch (e) {
 		return false;
 	}
 }

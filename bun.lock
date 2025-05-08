@@ -4,7 +4,8 @@
     "": {
       "name": "@eightshift/eightshift-forms",
       "dependencies": {
-        "@eightshift/frontend-libs": "^15.0.0",
+        "@eightshift/frontend-libs": "^15.0.1",
+        "@eightshift/ui-components": "^5.0.1",
         "autosize": "^6.0.1",
         "choices.js": "^10.2.0",
         "dropzone": "^6.0.0-beta.2",
@@ -14,7 +15,7 @@
       },
       "devDependencies": {
         "husky": "^9.1.7",
-        "webpack": "^5.99.6",
+        "webpack": "^5.99.8",
         "webpack-cli": "^6.0.1",
       },
     },
@@ -48,9 +49,9 @@
 
     "@dual-bundle/import-meta-resolve": ["@dual-bundle/import-meta-resolve@4.1.0", "", {}, "sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg=="],
 
-    "@eightshift/frontend-libs": ["@eightshift/frontend-libs@15.0.0", "", { "dependencies": { "@dnd-kit/core": "^6.3.1", "@dnd-kit/modifiers": "^9.0.0", "@dnd-kit/sortable": "^10.0.0", "@dnd-kit/utilities": "^3.2.2", "@eightshift/ui-components": "^3.0.1", "@stylistic/eslint-plugin-js": "^4.2.0", "@stylistic/stylelint-plugin": "^3.1.2", "@swc/core": "^1.11.22", "@wordpress/dependency-extraction-webpack-plugin": "^6.22.0", "autoprefixer": "^10.4.21", "browserslist": "^4.24.4", "css-loader": "^7.1.2", "css-minimizer-webpack-plugin": "^7.0.2", "eslint": "^9.25.1", "eslint-config-prettier": "^10.1.2", "eslint-plugin-prettier": "^5.2.6", "globals": "^16.0.0", "husky": "^9.1.7", "lightningcss": "^1.29.3", "mini-css-extract-plugin": "^2.9.2", "postcss": "^8.5.3", "postcss-loader": "^8.1.1", "postcss-scss": "^4.0.9", "sass": "^1.87.0", "sass-loader": "^16.0.5", "style-loader": "^4.0.0", "stylelint": "^16.19.0", "stylelint-config-standard": "^38.0.0", "stylelint-config-standard-scss": "^14.0.0", "swc-loader": "^0.2.6", "terser-webpack-plugin": "^5.3.14", "webpack": "^5.99.6", "webpack-cli": "^6.0.1", "webpack-manifest-plugin": "^5.0.1", "webpack-merge": "^6.0.1" } }, "sha512-S3PUeTjRLwPUMpqQUyFmP9OIji8CMqGSfCuPjyE08X15e3tM1/CIui2yRXfJiAbXtWGNotFnGvSsa4VGjYmoRQ=="],
+    "@eightshift/frontend-libs": ["@eightshift/frontend-libs@15.0.1", "", { "dependencies": { "@dnd-kit/core": "^6.3.1", "@dnd-kit/modifiers": "^9.0.0", "@dnd-kit/sortable": "^10.0.0", "@dnd-kit/utilities": "^3.2.2", "@eightshift/ui-components": "^3.0.1", "@stylistic/eslint-plugin-js": "^4.2.0", "@stylistic/stylelint-plugin": "^3.1.2", "@swc/core": "^1.11.22", "@wordpress/dependency-extraction-webpack-plugin": "^6.22.0", "autoprefixer": "^10.4.21", "browserslist": "^4.24.4", "css-loader": "^7.1.2", "css-minimizer-webpack-plugin": "^7.0.2", "eslint": "^9.25.1", "eslint-config-prettier": "^10.1.2", "eslint-plugin-prettier": "^5.2.6", "globals": "^16.0.0", "husky": "^9.1.7", "lightningcss": "^1.29.3", "mini-css-extract-plugin": "^2.9.2", "postcss": "^8.5.3", "postcss-loader": "^8.1.1", "postcss-scss": "^4.0.9", "sass": "^1.87.0", "sass-loader": "^16.0.5", "style-loader": "^4.0.0", "stylelint": "^16.19.0", "stylelint-config-standard": "^38.0.0", "stylelint-config-standard-scss": "^14.0.0", "swc-loader": "^0.2.6", "terser-webpack-plugin": "^5.3.14", "webpack": "^5.99.6", "webpack-cli": "^6.0.1", "webpack-manifest-plugin": "^5.0.1", "webpack-merge": "^6.0.1" } }, "sha512-6KcnnjIyX8jCK7AdW8UcGacKrsmq8MUiQEXbn39p2CIUi/fXFSIOM1r0XFjX+6FVAo3LYOzuPJI7uF8n57MtNQ=="],
 
-    "@eightshift/ui-components": ["@eightshift/ui-components@3.0.1", "", { "dependencies": { "@fontsource-variable/geist": "^5.2.5", "@fontsource-variable/geist-mono": "^5.2.5" }, "peerDependencies": { "react": "^18.3.1", "react-dom": "^18.3.1" } }, "sha512-xGYdb3iRpAGk038zARvkZNDLQB+6Ne7eNxSQRy85vQB2G2B18UEc9w5QvjuVBqfBQlKZIUwNfKt1wZiLWNuzJw=="],
+    "@eightshift/ui-components": ["@eightshift/ui-components@5.0.1", "", { "dependencies": { "@fontsource-variable/geist": "^5.2.6", "@fontsource-variable/geist-mono": "^5.2.6" }, "peerDependencies": { "react": "^18.3.1", "react-dom": "^18.3.1" } }, "sha512-AxvRfNcU4KxV+xXgEx640PL8fDDML8q+cRUzT+xXw51ptMBeRByWBzsfWIAiMD6VwtnUsW10nj1HFaVEyvX6vg=="],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.6.1", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-KTsJMmobmbrFLe3LDh0PC2FXpcSYJt/MLjlkh/9LEnmKYLSYmT/0EW9JWANjeoemiuZrmogti0tW5Ch+qNUYDw=="],
 
@@ -70,9 +71,9 @@
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.2.8", "", { "dependencies": { "@eslint/core": "^0.13.0", "levn": "^0.4.1" } }, "sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA=="],
 
-    "@fontsource-variable/geist": ["@fontsource-variable/geist@5.2.5", "", {}, "sha512-773ht1maARKCDSxxmyc6cWiSRudk4GU+pW/0PHHnTEISprej9ARfGZVVhW04nmrk1Nlj888MLyuutTx1UnYy0g=="],
+    "@fontsource-variable/geist": ["@fontsource-variable/geist@5.2.6", "", {}, "sha512-Bt9pdD55Fojq4h9yFKQAzh5+Xj4tKFpwbcDzK6t5PPSH2GrjPoPqm6N8y+tK6vzwKZ9hHyaOz/tAbO9cQd9UFQ=="],
 
-    "@fontsource-variable/geist-mono": ["@fontsource-variable/geist-mono@5.2.5", "", {}, "sha512-zyuyDtO00SbmqU4Bo5XWzX2hE5RUxL+h2bv3P8SrmxqfqW66FU/xw5DW3xRQPqQgyEpb/Fh5FEFCpOna78dvCA=="],
+    "@fontsource-variable/geist-mono": ["@fontsource-variable/geist-mono@5.2.6", "", {}, "sha512-vw6T9JGTrYJ980bn7W8iTPhe2jVK5ifunVs7xh9dfTVArjDSkJs03JjeZrH5LKEpGABLXSlSlNU57HRm4tmFMg=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 
@@ -938,7 +939,7 @@
 
     "watchpack": ["watchpack@2.4.2", "", { "dependencies": { "glob-to-regexp": "^0.4.1", "graceful-fs": "^4.1.2" } }, "sha512-TnbFSbcOCcDgjZ4piURLCbJ3nJhznVh9kw6F6iokjiFPl8ONxe9A6nMDVXDiNbrSfLILs6vB07F7wLBrwPYzJw=="],
 
-    "webpack": ["webpack@5.99.6", "", { "dependencies": { "@types/eslint-scope": "^3.7.7", "@types/estree": "^1.0.6", "@webassemblyjs/ast": "^1.14.1", "@webassemblyjs/wasm-edit": "^1.14.1", "@webassemblyjs/wasm-parser": "^1.14.1", "acorn": "^8.14.0", "browserslist": "^4.24.0", "chrome-trace-event": "^1.0.2", "enhanced-resolve": "^5.17.1", "es-module-lexer": "^1.2.1", "eslint-scope": "5.1.1", "events": "^3.2.0", "glob-to-regexp": "^0.4.1", "graceful-fs": "^4.2.11", "json-parse-even-better-errors": "^2.3.1", "loader-runner": "^4.2.0", "mime-types": "^2.1.27", "neo-async": "^2.6.2", "schema-utils": "^4.3.0", "tapable": "^2.1.1", "terser-webpack-plugin": "^5.3.11", "watchpack": "^2.4.1", "webpack-sources": "^3.2.3" }, "bin": { "webpack": "bin/webpack.js" } }, "sha512-TJOLrJ6oeccsGWPl7ujCYuc0pIq2cNsuD6GZDma8i5o5Npvcco/z+NKvZSFsP0/x6SShVb0+X2JK/JHUjKY9dQ=="],
+    "webpack": ["webpack@5.99.8", "", { "dependencies": { "@types/eslint-scope": "^3.7.7", "@types/estree": "^1.0.6", "@types/json-schema": "^7.0.15", "@webassemblyjs/ast": "^1.14.1", "@webassemblyjs/wasm-edit": "^1.14.1", "@webassemblyjs/wasm-parser": "^1.14.1", "acorn": "^8.14.0", "browserslist": "^4.24.0", "chrome-trace-event": "^1.0.2", "enhanced-resolve": "^5.17.1", "es-module-lexer": "^1.2.1", "eslint-scope": "5.1.1", "events": "^3.2.0", "glob-to-regexp": "^0.4.1", "graceful-fs": "^4.2.11", "json-parse-even-better-errors": "^2.3.1", "loader-runner": "^4.2.0", "mime-types": "^2.1.27", "neo-async": "^2.6.2", "schema-utils": "^4.3.2", "tapable": "^2.1.1", "terser-webpack-plugin": "^5.3.11", "watchpack": "^2.4.1", "webpack-sources": "^3.2.3" }, "bin": { "webpack": "bin/webpack.js" } }, "sha512-lQ3CPiSTpfOnrEGeXDwoq5hIGzSjmwD72GdfVzF7CQAI7t47rJG9eDWvcEkEn3CUQymAElVvDg3YNTlCYj+qUQ=="],
 
     "webpack-cli": ["webpack-cli@6.0.1", "", { "dependencies": { "@discoveryjs/json-ext": "^0.6.1", "@webpack-cli/configtest": "^3.0.1", "@webpack-cli/info": "^3.0.1", "@webpack-cli/serve": "^3.0.1", "colorette": "^2.0.14", "commander": "^12.1.0", "cross-spawn": "^7.0.3", "envinfo": "^7.14.0", "fastest-levenshtein": "^1.0.12", "import-local": "^3.0.2", "interpret": "^3.1.1", "rechoir": "^0.8.0", "webpack-merge": "^6.0.1" }, "peerDependencies": { "webpack": "^5.82.0" }, "bin": { "webpack-cli": "./bin/cli.js" } }, "sha512-MfwFQ6SfwinsUVi0rNJm7rHZ31GyTcpVE5pgVA3hwFRb7COD4TzjUUwhGWKfO50+xdc2MQPuEBBJoqIMGt3JDw=="],
 
@@ -961,6 +962,10 @@
     "zustand": ["zustand@4.5.6", "", { "dependencies": { "use-sync-external-store": "^1.2.2" }, "peerDependencies": { "@types/react": ">=16.8", "immer": ">=9.0.6", "react": ">=16.8" }, "optionalPeers": ["@types/react", "immer", "react"] }, "sha512-ibr/n1hBzLLj5Y+yUcU7dYw8p6WnIVzdJbnX+1YpaScvZVF2ziugqHs+LAmHw4lWO9c/zRj+K1ncgWDQuthEdQ=="],
 
     "@csstools/selector-specificity/postcss-selector-parser": ["postcss-selector-parser@7.1.0", "", { "dependencies": { "cssesc": "^3.0.0", "util-deprecate": "^1.0.2" } }, "sha512-8sLjZwK0R+JlxlYcTuVnyT2v+htpdrjDOKuMcOVdYjt52Lh8hWRYpxBPoKx/Zg+bcjc3wx6fmQevMmUztS/ccA=="],
+
+    "@eightshift/frontend-libs/@eightshift/ui-components": ["@eightshift/ui-components@3.0.1", "", { "dependencies": { "@fontsource-variable/geist": "^5.2.5", "@fontsource-variable/geist-mono": "^5.2.5" }, "peerDependencies": { "react": "^18.3.1", "react-dom": "^18.3.1" } }, "sha512-xGYdb3iRpAGk038zARvkZNDLQB+6Ne7eNxSQRy85vQB2G2B18UEc9w5QvjuVBqfBQlKZIUwNfKt1wZiLWNuzJw=="],
+
+    "@eightshift/frontend-libs/webpack": ["webpack@5.99.6", "", { "dependencies": { "@types/eslint-scope": "^3.7.7", "@types/estree": "^1.0.6", "@webassemblyjs/ast": "^1.14.1", "@webassemblyjs/wasm-edit": "^1.14.1", "@webassemblyjs/wasm-parser": "^1.14.1", "acorn": "^8.14.0", "browserslist": "^4.24.0", "chrome-trace-event": "^1.0.2", "enhanced-resolve": "^5.17.1", "es-module-lexer": "^1.2.1", "eslint-scope": "5.1.1", "events": "^3.2.0", "glob-to-regexp": "^0.4.1", "graceful-fs": "^4.2.11", "json-parse-even-better-errors": "^2.3.1", "loader-runner": "^4.2.0", "mime-types": "^2.1.27", "neo-async": "^2.6.2", "schema-utils": "^4.3.0", "tapable": "^2.1.1", "terser-webpack-plugin": "^5.3.11", "watchpack": "^2.4.1", "webpack-sources": "^3.2.3" }, "bin": { "webpack": "bin/webpack.js" } }, "sha512-TJOLrJ6oeccsGWPl7ujCYuc0pIq2cNsuD6GZDma8i5o5Npvcco/z+NKvZSFsP0/x6SShVb0+X2JK/JHUjKY9dQ=="],
 
     "@eslint-community/eslint-utils/eslint-visitor-keys": ["eslint-visitor-keys@3.4.3", "", {}, "sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag=="],
 
@@ -1033,6 +1038,10 @@
     "terser/commander": ["commander@2.20.3", "", {}, "sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ=="],
 
     "webpack-manifest-plugin/webpack-sources": ["webpack-sources@2.3.1", "", { "dependencies": { "source-list-map": "^2.0.1", "source-map": "^0.6.1" } }, "sha512-y9EI9AO42JjEcrTJFOYmVywVZdKVUfOvDUPsJea5GIr1JOEGFVqwlY2K098fFoIjOkDzHn2AjRvM8dsBZu+gCA=="],
+
+    "@eightshift/frontend-libs/@eightshift/ui-components/@fontsource-variable/geist": ["@fontsource-variable/geist@5.2.5", "", {}, "sha512-773ht1maARKCDSxxmyc6cWiSRudk4GU+pW/0PHHnTEISprej9ARfGZVVhW04nmrk1Nlj888MLyuutTx1UnYy0g=="],
+
+    "@eightshift/frontend-libs/@eightshift/ui-components/@fontsource-variable/geist-mono": ["@fontsource-variable/geist-mono@5.2.5", "", {}, "sha512-zyuyDtO00SbmqU4Bo5XWzX2hE5RUxL+h2bv3P8SrmxqfqW66FU/xw5DW3xRQPqQgyEpb/Fh5FEFCpOna78dvCA=="],
 
     "@eslint/eslintrc/ajv/json-schema-traverse": ["json-schema-traverse@0.4.1", "", {}, "sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg=="],
 

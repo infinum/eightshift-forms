@@ -1,5 +1,7 @@
 // stylelint-disable max-nesting-depth
 
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-card-inline {
 	$this: &;
 	position: relative;
@@ -97,7 +99,14 @@
 	}
 
 	&__title-link {
-		@extend %link-reset;
+		margin: 0;
+		padding: 0;
+		color: unset;
+		text-decoration: none;
+
+		&:hover {
+			color: unset;
+		}
 	}
 
 	&__subtitle {
@@ -114,11 +123,11 @@
 			display: grid;
 			grid-gap: 0 1rem;
 
-			@include media(tablet) {
+			@include theme.media(tablet) {
 				grid-template-columns: repeat(2, 1fr);
 			}
 
-			@include media(desktop up) {
+			@include theme.media(desktop up) {
 				grid-template-columns: repeat(3, 1fr);
 			}
 

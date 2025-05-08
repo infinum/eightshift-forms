@@ -1,17 +1,17 @@
-@import './form-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
 
 .es-form {
 	$this: &;
 
-	@include form-reset;
-	@include form-styles;
-	@include form-width-limit-styles;
+	@include theme.form-reset;
+	@include theme.form-styles;
+	@include theme.form-width-limit-styles;
 
 	&__fields {
-		@include form-fields-styles;
+		@include theme.form-fields-styles;
 
 		> .es-field {
-			@include form-fields-children-styles;
+			@include theme.form-fields-children-styles;
 		}
 	}
 }

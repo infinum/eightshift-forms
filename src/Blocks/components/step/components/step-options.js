@@ -3,15 +3,14 @@ import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { NameField } from './../../utils';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const StepOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -23,7 +22,10 @@ export const StepOptions = (attributes) => {
 	return (
 		<>
 			<PanelBody title={__('Step', 'eightshift-forms')}>
-				<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+				<Section
+					icon={icons.options}
+					label={__('General', 'eightshift-forms')}
+				>
 					<NameField
 						value={stepName}
 						help={__('Used to identify the step within form multi step flow.', 'eightshift-forms')}
@@ -35,7 +37,10 @@ export const StepOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
+				<Section
+					icon={icons.tag}
+					label={__('Label', 'eightshift-forms')}
+				>
 					<TextControl
 						help={__('This label will not be shown on the frontend, this is only for easier configuration.', 'eightshift-forms')}
 						value={stepLabel}
@@ -43,17 +48,29 @@ export const StepOptions = (attributes) => {
 					/>
 				</Section>
 
-				<Section icon={icons.buttonFilled} label={__('Buttons', 'eightshift-forms')}>
-
+				<Section
+					icon={icons.buttonFilled}
+					label={__('Buttons', 'eightshift-forms')}
+				>
 					<TextControl
-						label={<IconLabel icon={icons.tag} label={__('Previous button label', 'eightshift-forms')} />}
+						label={
+							<IconLabel
+								icon={icons.tag}
+								label={__('Previous button label', 'eightshift-forms')}
+							/>
+						}
 						placeholder={__('Previous', 'eightshift-forms')}
 						value={stepPrevLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepPrevLabel', attributes, manifest)]: value })}
 					/>
 
 					<TextControl
-						label={<IconLabel icon={icons.tag} label={__('Next button label', 'eightshift-forms')} />}
+						label={
+							<IconLabel
+								icon={icons.tag}
+								label={__('Next button label', 'eightshift-forms')}
+							/>
+						}
 						placeholder={__('Next', 'eightshift-forms')}
 						value={stepNextLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepNextLabel', attributes, manifest)]: value })}

@@ -12,10 +12,10 @@ namespace EightshiftForms\Geolocation;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Misc\SettingsCloudflare;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDataHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use Exception;
 
 /**
@@ -54,7 +54,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Bailout if we use cookieless setup.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY)) {
 			return;
 		}
 
@@ -90,7 +90,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	}
 
 	/**
-	 * Tooggle geolocation usage based on this flag.
+	 * Toggle geolocation usage based on this flag.
 	 *
 	 * @return boolean
 	 */
@@ -119,9 +119,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	public function getGeolocationPharLocation(): string
 	{
 		$sep = \DIRECTORY_SEPARATOR;
-		$path = UtilsDataHelper::getDataManifestPath("geolocation{$sep}geoip.phar");
+		$path = Helpers::getProjectPaths('', ['data', 'geolocation', 'geoip.phar']);
 
-		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'pharLocation']);
+		$filterName = HooksHelpers::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -143,10 +143,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = UtilsDataHelper::getDataManifestPath("geolocation{$sep}geoip.mmdb");
+		$path = Helpers::getProjectPaths('', ['data', 'geolocation', 'geoip.mmdb']);
 
-		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'dbLocation']);
+		$filterName = HooksHelpers::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -166,13 +165,15 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getCountriesList(): array
 	{
-		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'countriesList']);
+		$filterName = HooksHelpers::getFilterName(['geolocation', 'countriesList']);
+
+		$countries = $this->getCountries();
 
 		if (\has_filter($filterName)) {
-			return \apply_filters($filterName, $this->getCountries());
+			return \apply_filters($filterName, $countries);
 		}
 
-		return $this->getCountries();
+		return $countries;
 	}
 
 	/**
@@ -286,7 +287,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Use Cloudflare header if that feature is used.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$outputCloudflare = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CF_IPCOUNTRY']) : ''; // phpcs:ignore
 
 			if ($outputCloudflare) {
@@ -295,7 +296,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Check if cookie is set and return that value.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY) && isset($_COOKIE[$this->getGeolocationCookieName()])) {
+		if (!SettingsHelpers::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY) && isset($_COOKIE[$this->getGeolocationCookieName()])) {
 			$outputCookie = $this->cleanCookieValue($_COOKIE[$this->getGeolocationCookieName()]); // phpcs:ignore
 
 			if ($outputCookie) {
