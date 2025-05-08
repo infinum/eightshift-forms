@@ -31,23 +31,6 @@ $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockName = $attributes['blockName'] ?? '';
 
-// Update media breakpoints from the filter.
-$filterName = HooksHelpers::getFilterName(['blocks', 'mediaBreakpoints']);
-
-if (has_filter($filterName)) {
-	$customMediaBreakpoints = apply_filters($filterName, []);
-
-	if (
-		is_array($customMediaBreakpoints) &&
-		isset($customMediaBreakpoints['mobile']) &&
-		isset($customMediaBreakpoints['tablet']) &&
-		isset($customMediaBreakpoints['desktop']) &&
-		isset($customMediaBreakpoints['large'])
-	) {
-		Helpers::getSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
-	}
-}
-
 $unique = Helpers::getUnique();
 
 $fieldLabel = Helpers::checkAttr('fieldLabel', $attributes, $manifest);

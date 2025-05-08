@@ -518,7 +518,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	public const CAP_LISTING = 'eightshift_forms_adminu_menu';
+	public const CAP_LISTING = 'eightshift_forms_admin_menu';
 
 	/**
 	 * Cap for settings page.

@@ -333,7 +333,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 			];
 		}
 
-		return \array_values($output);
+		return $output;
 	}
 
 	/**

@@ -15,7 +15,7 @@ parameters:
 		- src/**/*Example.php
 	ignoreErrors:
 		# Block templates
-		- '#^Variable \$attributes might not be defined\.#'
-		- '#^Variable \$renderContent might not be defined\.#'
+		- '/^Variable (\$attributes|\$renderContent|\$this|\$templatePath|\$reflectionClass|\$manifest|\$globalManifest) might not be defined\.$/'
 		- identifier: missingType.generics
+		- identifier: new.noConstructor
 

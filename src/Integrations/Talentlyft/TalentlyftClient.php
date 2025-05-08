@@ -225,7 +225,7 @@ class TalentlyftClient implements ClientInterface
 			\preg_match_all("/(The )(\w*)( field is required.)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
 
 			if ($matchesReq) {
-				$key = $matchesReq[0][2] ?? '';
+				$key = $matchesReq[0][2] ?: '';
 				if ($key) {
 					$output["q_{$key}"] = 'validationRequired';
 				}

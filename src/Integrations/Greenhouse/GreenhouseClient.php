@@ -250,7 +250,7 @@ class GreenhouseClient implements ClientInterface
 		\preg_match_all("/(Invalid attributes: )([a-zA-Z0-9_,]*)/", $msg, $matchesReq, \PREG_SET_ORDER, 0);
 
 		if ($matchesReq) {
-			$key = $matchesReq[0][2] ?? '';
+			$key = $matchesReq[0][2] ?: '';
 			if ($key) {
 				$keys = \explode(',', $key);
 

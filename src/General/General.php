@@ -38,9 +38,9 @@ class General implements ServiceInterface
 	/**
 	 * Return http request args.
 	 *
-	 * @param array<int, mixed> $args Arguments from core.
+	 * @param array<mixed> $args Arguments from core.
 	 *
-	 * @return array<int, mixed>
+	 * @return array<mixed>
 	 */
 	public function getHttpRequestArgs(array $args): array
 	{

@@ -39,7 +39,7 @@ if ($formsStyle && gettype($formsStyle) === 'array') {
 	);
 }
 
-// Not published or removed at somepoint.
+// Not published or removed at some point.
 if ((!$formsFormPostId || get_post_status($formsFormPostId) !== 'publish')) {
 	if (!is_user_logged_in()) {
 		return;

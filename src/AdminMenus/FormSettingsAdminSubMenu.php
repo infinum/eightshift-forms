@@ -48,21 +48,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	public function register(): void
 	{
-		\add_action(
-			'admin_menu',
-			function () {
-				\add_submenu_page(
-					$this->getParentMenu(),
-					$this->getTitle(),
-					$this->getMenuTitle(),
-					$this->getCapability(),
-					$this->getMenuSlug(),
-					[$this, 'processAdminSubmenu']
-				);
-			},
-			30
-		);
-
+		parent::register();
 		\add_filter('parent_file', [$this, 'changeHighlightParent'], 31);
 		\add_filter('admin_title', [$this, 'fixPageTitle'], 10, 2);
 	}
@@ -87,6 +73,16 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 * @var string
 	 */
 	public const PARENT_MENU_SLUG = FormAdminMenu::ADMIN_MENU_SLUG;
+
+	/**
+	 * Return hook priority order.
+	 *
+	 * @return integer
+	 */
+	public function getPriorityOrder(): int
+	{
+		return 30;
+	}
 
 	/**
 	 * Get the title to use for the admin page.

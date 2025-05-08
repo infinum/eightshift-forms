@@ -116,7 +116,7 @@ class Transfer implements TransferInterface
 	 * @param string $item Specify item id to query.
 	 * @param string $postType Specify post type to query.
 	 *
-	 * @return array<int, mixed>
+	 * @return array<mixed>
 	 */
 	public function getExportCpt(string $item, string $postType = Forms::POST_TYPE_SLUG): array
 	{

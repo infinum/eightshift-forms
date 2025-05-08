@@ -120,7 +120,7 @@ class ResultOutputItemPart implements ServiceInterface
 		}
 
 		if (!$output) {
-			[
+			return [
 				'isRedirectPage' => true,
 				'value' => '',
 			];

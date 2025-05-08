@@ -42,7 +42,7 @@ class GoodbitsClient implements ClientInterface
 	{
 		$key = $this->getApiKey();
 
-		if (\is_string($key) && Helpers::isJson($key)) {
+		if (Helpers::isJson($key)) {
 			$key = \json_decode($key);
 
 			$output = [];

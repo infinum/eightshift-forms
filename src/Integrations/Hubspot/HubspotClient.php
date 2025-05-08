@@ -520,7 +520,7 @@ class HubspotClient implements HubspotClientInterface
 				\preg_match_all("/(Required field) '(\w+)' (is missing)/", $message, $matchesReq, \PREG_SET_ORDER, 0);
 
 				if ($matchesReq) {
-					$match = $matchesReq[0][2] ?? '';
+					$match = $matchesReq[0][2] ?: '';
 					if ($match) {
 						$output[$match] = 'validationRequired';
 					}

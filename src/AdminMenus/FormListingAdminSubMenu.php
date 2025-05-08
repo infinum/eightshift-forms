@@ -15,7 +15,6 @@ use EightshiftForms\Listing\FormListingInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * FormListingAdminSubMenu class.
@@ -46,20 +45,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	public function register(): void
 	{
-		\add_action(
-			'admin_menu',
-			function () {
-				\add_submenu_page(
-					$this->getParentMenu(),
-					$this->getTitle(),
-					$this->getMenuTitle(),
-					$this->getCapability(),
-					$this->getMenuSlug(),
-					[$this, 'processAdminSubmenu']
-				);
-			},
-			20
-		);
+		parent::register();
 
 		\add_action('admin_menu', [$this, 'addCustomLinkIntoAppearanceMenu'], 32);
 	}
@@ -84,6 +70,16 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 * @var string
 	 */
 	public const PARENT_MENU_SLUG = FormAdminMenu::ADMIN_MENU_SLUG;
+
+	/**
+	 * Return hook priority order.
+	 *
+	 * @return integer
+	 */
+	public function getPriorityOrder(): int
+	{
+		return 20;
+	}
 
 	/**
 	 * Get the title to use for the admin page.
@@ -146,7 +142,7 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	 */
 	protected function getViewComponent(array $attributes): string
 	{
-		return Helpers::render('admin-listing', $attributes);
+		return '';
 	}
 
 	/**

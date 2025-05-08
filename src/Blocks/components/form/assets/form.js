@@ -1252,6 +1252,7 @@ export class Form {
 				allowHTML: true,
 				removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
+				searchResultLimit: 10,
 				searchFields: [
 					'label',
 					'value',

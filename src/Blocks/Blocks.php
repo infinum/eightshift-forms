@@ -31,6 +31,7 @@ class Blocks extends AbstractBlocks
 	public function register(): void
 	{
 		// Register all custom blocks.
+		\add_filter('es_boilerplate_get_settings', [$this, 'getSettingsOverrides'], 11, 2);
 		\add_action('init', [$this, 'registerBlocks'], 11);
 
 		// Create new custom category for custom blocks.
@@ -107,5 +108,49 @@ class Blocks extends AbstractBlocks
 				],
 			]
 		);
+	}
+
+	/**
+	 * Provide overrides for the settings.
+	 *
+	 * @param array<mixed> $output Array of settings.
+	 * @param string $name Project name.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getSettingsOverrides(array $output, string $name): array
+	{
+		if ($name !== Config::FILTER_PREFIX) {
+			return $output;
+		}
+
+		if (\is_admin()) {
+			return $output;
+		}
+
+		if (!$output) {
+			return $output;
+		}
+
+		// Update media breakpoints from the filter.
+		$filterName = HooksHelpers::getFilterName(['blocks', 'mediaBreakpoints']);
+
+		if (!has_filter($filterName)) {
+			return $output;
+		}
+
+		$customMediaBreakpoints = apply_filters($filterName, []);
+
+		if (
+			is_array($customMediaBreakpoints) &&
+			isset($customMediaBreakpoints['mobile']) &&
+			isset($customMediaBreakpoints['tablet']) &&
+			isset($customMediaBreakpoints['desktop']) &&
+			isset($customMediaBreakpoints['large'])
+		) {
+			$output['globalVariables']['breakpoints'] = $customMediaBreakpoints;
+		}
+
+		return $output;
 	}
 }

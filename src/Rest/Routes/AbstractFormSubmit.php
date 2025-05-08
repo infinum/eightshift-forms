@@ -149,11 +149,11 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			}
 		}
 
+		// Prepare all data.
+		$formDetails = $this->getFormDetailsApi($request);
+
 		// Try catch request.
 		try {
-			// Prepare all data.
-			$formDetails = $this->getFormDetailsApi($request);
-
 			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
 			if (!$this->getValidator()->validateFormMandatoryProperties($formDetails)) {
 				throw new UnverifiedRequestException(

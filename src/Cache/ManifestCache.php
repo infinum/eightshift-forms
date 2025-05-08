@@ -66,22 +66,6 @@ class ManifestCache extends AbstractManifestCache
 	}
 
 	/**
-	 * Set the cache for the entire project.
-	 *
-	 * @param array<string> $ignoreCache Array of cache to ignore.
-	 *
-	 * @return void
-	 */
-	public function setProjectCache($ignoreCache = []): void
-	{
-		$this->setAllCache($ignoreCache);
-
-		if (!isset($ignoreCache[self::TYPE_FORMS])) {
-			// $this->setCache(self::TYPE_FORMS);
-		}
-	}
-
-	/**
 	 * Get cache builder.
 	 *
 	 * @return array<string, array<mixed>> Array of cache builder.
