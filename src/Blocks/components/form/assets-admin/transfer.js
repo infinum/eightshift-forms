@@ -12,7 +12,7 @@ export class Transfer {
 		this.confirmMsg = options.confirmMsg;
 	}
 
-	init () {
+	init() {
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
@@ -44,7 +44,7 @@ export class Transfer {
 			formData.append('upload', this.utils.getFileNameFromFileObject(file));
 			formData.append('override', document.querySelector(`${this.overrideExistingSelector} input`).checked);
 
-			if(!confirm(this.confirmMsg)) {
+			if (!confirm(this.confirmMsg)) {
 				return;
 			}
 		} else {
@@ -73,11 +73,7 @@ export class Transfer {
 			.then((responseData) => {
 				const response = this.utils.formSubmitIsJsonString(responseData, 'transfer', formId);
 
-				const {
-					message,
-					status,
-					data,
-				} = response;
+				const { message, status, data } = response;
 
 				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);
@@ -99,16 +95,12 @@ export class Transfer {
 	};
 
 	onClickItem = (event) => {
-		const {
-			value,
-			checked,
-			name,
-		} = event.target;
+		const { value, checked, name } = event.target;
 
 		const button = document.querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('migrationType')}='${name}']`);
 		const items = button?.getAttribute(this.state.getStateAttribute('migrationExportItems'));
 
-		let output = items ? items.split(",") : [];
+		let output = items ? items.split(',') : [];
 
 		if (checked) {
 			output.push(value);
@@ -120,12 +112,12 @@ export class Transfer {
 	};
 
 	createFile(data, exportName) {
-		const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(data);
+		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(data);
 
 		const downloadAnchorNode = document.createElement('a');
 
-		downloadAnchorNode.setAttribute("href", dataStr);
-		downloadAnchorNode.setAttribute("download", exportName + ".json");
+		downloadAnchorNode.setAttribute('href', dataStr);
+		downloadAnchorNode.setAttribute('download', exportName + '.json');
 
 		document.body.appendChild(downloadAnchorNode); // required for Firefox browser
 

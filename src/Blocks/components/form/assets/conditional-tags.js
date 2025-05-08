@@ -1,8 +1,4 @@
-import {
-	prefix,
-	setStateWindow,
-	StateEnum,
-} from './state-init';
+import { prefix, setStateWindow, StateEnum } from './state-init';
 import globalManifest from './../../../manifest.json';
 
 /**
@@ -37,7 +33,7 @@ export class ConditionalTags {
 	////////////////////////////////////////////////////////////////
 	/**
 	 * Init one form by element after the loaded event is fired.
-	 * 
+	 *
 	 * @param {string} fromId Form Id.
 	 *
 	 * @returns {void}
@@ -49,10 +45,7 @@ export class ConditionalTags {
 		}
 
 		// Listen to every field element change.
-		window.addEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onInitEvent
-		);
+		window.addEventListener(this.state.getStateEvent('formJsLoaded'), this.onInitEvent);
 	}
 
 	/**
@@ -139,12 +132,12 @@ export class ConditionalTags {
 	 */
 	initFields(formId) {
 		// Set all rules for all form fields.
-		for(const [name] of this.state.getStateElements(formId)) {
+		for (const [name] of this.state.getStateElements(formId)) {
 			this.setFieldsRulesAll(formId, name);
 		}
 
 		// Set all rules for all non-form fields.
-		for(const [name] of this.state.getStateElementsFields(formId)) {
+		for (const [name] of this.state.getStateElementsFields(formId)) {
 			this.setFieldsRulesAll(formId, name);
 		}
 
@@ -185,24 +178,20 @@ export class ConditionalTags {
 		};
 
 		// Loop all fields.
-		for(const [name] of this.state.getStateElements(formId)) {
+		for (const [name] of this.state.getStateElements(formId)) {
 			// Get element type.
 			const type = this.state.getStateElementTypeField(name, formId);
 
 			// Only select, checkbox and radio fields can have inner items.
-			if (
-				type === 'select' ||
-				type === 'checkbox' ||
-				type === 'radio'
-			) {
+			if (type === 'select' || type === 'checkbox' || type === 'radio') {
 				// Prepare inner level outputs.
 				let innerOutput = {};
 
 				// Select fields can have multiple or single select inner options.
 				if (type === 'select') {
-					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId) ?
-					this.getFieldInnerSelectMultiple(formId, name) :
-					this.getFieldInnerSelectSingle(formId, name);
+					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId)
+						? this.getFieldInnerSelectMultiple(formId, name)
+						: this.getFieldInnerSelectSingle(formId, name);
 				} else {
 					// Checkbox and radio inner fields.
 					innerOutput = this.getFieldInner(formId, name);
@@ -228,7 +217,7 @@ export class ConditionalTags {
 		}
 
 		// Loop all non-form fields.
-		for(const [name] of this.state.getStateElementsFields(formId)) {
+		for (const [name] of this.state.getStateElementsFields(formId)) {
 			// Set top level fields state.
 			const check = this.getFieldTopLevel(formId, name, true);
 
@@ -322,10 +311,14 @@ export class ConditionalTags {
 		this.ouputStyles(formId, output, stateName);
 
 		// Set state for conditional tags.
-		this.state.setState([StateEnum.FORM, stateName], {
-			...data,
-			topFinal: [...new Set(topFinalOutput)],
-		}, formId);
+		this.state.setState(
+			[StateEnum.FORM, stateName],
+			{
+				...data,
+				topFinal: [...new Set(topFinalOutput)],
+			},
+			formId,
+		);
 	}
 
 	/**
@@ -367,7 +360,7 @@ export class ConditionalTags {
 		const styleTag = document.getElementById(`${styleSelector}`);
 
 		// Set style output.
-		const styleOutput = data.length ? `${data.join(',')}{display:${type} !important;}`: '';
+		const styleOutput = data.length ? `${data.join(',')}{display:${type} !important;}` : '';
 
 		// Set style to DOM.
 		if (!styleTag) {
@@ -390,13 +383,9 @@ export class ConditionalTags {
 	 */
 	getFieldTopLevel(formId, name, isNoneFormBlock = false) {
 		// Find defaults to know what direction to use.
-		const defaultState = !isNoneFormBlock ?
-		this.state.getStateElementConditionalTagsDefaults(name, formId) :
-		this.state.getStateElementFieldConditionalTagsDefaults(name, formId);
+		const defaultState = !isNoneFormBlock ? this.state.getStateElementConditionalTagsDefaults(name, formId) : this.state.getStateElementFieldConditionalTagsDefaults(name, formId);
 
-		const ref = !isNoneFormBlock ?
-		this.state.getStateElementConditionalTagsRef(name, formId) :
-		this.state.getStateElementFieldConditionalTagsRef(name, formId);
+		const ref = !isNoneFormBlock ? this.state.getStateElementConditionalTagsRef(name, formId) : this.state.getStateElementFieldConditionalTagsRef(name, formId);
 
 		// Check if conditions are valid or not. This is where the magic happens.
 		const isValid = ref?.map((validItem) => validItem.every(Boolean)).some(Boolean);
@@ -461,7 +450,10 @@ export class ConditionalTags {
 	 */
 	getFieldInnerByName(formId, name, innerName) {
 		// Check if conditions are valid or not. This is where the magic happens.
-		const isValid = this.state.getStateElementConditionalTagsRefInner(name, innerName, formId)?.map((validItem) => validItem.every(Boolean)).some(Boolean);
+		const isValid = this.state
+			.getStateElementConditionalTagsRefInner(name, innerName, formId)
+			?.map((validItem) => validItem.every(Boolean))
+			.some(Boolean);
 
 		// Find defaults to know what direction to use.
 		const defaultState = this.state.getStateElementConditionalTagsDefaultsInner(name, innerName, formId);
@@ -495,7 +487,7 @@ export class ConditionalTags {
 		};
 
 		// Loop all options.
-		[...this.state.getStateElementCustom(name, formId)?.choiceList?.element?.children ?? []].forEach((option) => {
+		[...(this.state.getStateElementCustom(name, formId)?.choiceList?.element?.children ?? [])].forEach((option) => {
 			// Find item value.
 			const innerName = option.getAttribute(this.state.getStateAttribute('selectValue'));
 
@@ -529,7 +521,6 @@ export class ConditionalTags {
 	 * @returns {object}
 	 */
 	getFieldInnerSelectSingle(formId, name) {
-
 		// Get choices object.
 		const custom = this.state.getStateElementCustom(name, formId);
 
@@ -639,7 +630,11 @@ export class ConditionalTags {
 						// If check box inner items are missing this applys to parent element not children.
 						if (innerValue === '') {
 							// If all inner items are empty and not set this will output value to empty.
-							if (Object.values(this.state.getStateElementValue(innerName, formId)).map((inner) => !inner).every(Boolean)) {
+							if (
+								Object.values(this.state.getStateElementValue(innerName, formId))
+									.map((inner) => !inner)
+									.every(Boolean)
+							) {
 								value = '';
 							} else {
 								// If we don't care about value just need to have not empty any item, value is set to something random.
@@ -716,7 +711,11 @@ export class ConditionalTags {
 						// If check box inner items are missing this applys to parent element not children.
 						if (inner[2] === '') {
 							// If all inner items are empty and not set this will output value to empty.
-							if (Object.values(this.state.getStateElementValue(inner[0], formId)).map((inner) => !inner).every(Boolean)) {
+							if (
+								Object.values(this.state.getStateElementValue(inner[0], formId))
+									.map((inner) => !inner)
+									.every(Boolean)
+							) {
 								value = '';
 							} else {
 								// If we don't care about value just need to have not empty any item, value is set to something random.
@@ -778,14 +777,11 @@ export class ConditionalTags {
 
 	/**
 	 * Remove all event listeners from elements.
-	 * 
+	 *
 	 * @returns {vodi}
 	 */
 	removeEvents() {
-		window?.removeEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onInitEvent
-		);
+		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onInitEvent);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -814,7 +810,7 @@ export class ConditionalTags {
 
 	/**
 	 * Set all public methods.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	publicMethods() {

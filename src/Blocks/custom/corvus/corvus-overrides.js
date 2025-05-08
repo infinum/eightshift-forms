@@ -4,14 +4,14 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 export const overrides = {
 	...manifest,
-	icon:{
+	icon: {
 		src: getUtilsIcons('corvus') ?? manifest.icon.src,
 	},
 	attributes: {
 		...manifest.attributes,
 		corvusAllowedBlocks: {
 			...manifest.attributes.corvusAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList
+			default: globalManifest.allowedBlocksBuilderBlocksList,
 		},
 	},
 };

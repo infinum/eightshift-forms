@@ -17,7 +17,7 @@ export class Increment {
 	onClick = (event) => {
 		event.preventDefault();
 
-		if(!confirm(this.confirmMsg)) {
+		if (!confirm(this.confirmMsg)) {
 			return;
 		}
 
@@ -51,10 +51,7 @@ export class Increment {
 			.then((responseData) => {
 				const response = this.utils.formSubmitIsJsonString(responseData, 'increment', formId);
 
-				const {
-					message,
-					status,
-				} = response;
+				const { message, status } = response;
 
 				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);

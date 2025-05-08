@@ -2,20 +2,15 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "step",
 	"title": "Step",
-	"description" : "Separate your form in multiple step or multiple flows.",
+	"description": "Separate your form in multiple step or multiple flows.",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-steps"
 	},
-	"keywords": [
-		"step",
-		"multistep"
-	],
+	"keywords": ["step", "multistep"],
 	"hasInnerBlocks": true,
 	"components": {
 		"step": "step"
 	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	"parent": ["eightshift-forms/form"]
 }

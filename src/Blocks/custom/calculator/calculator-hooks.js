@@ -10,7 +10,7 @@ export const hooks = () => {
 	const { blockName } = select(STORE_NAME).getBlock('calculator');
 	const namespace = select(STORE_NAME).getSettingsNamespace();
 
-	// Adding all additional blocks to the custom form builder. 
+	// Adding all additional blocks to the custom form builder.
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
 		if (name === `${namespace}/${blockName}`) {
 			if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
@@ -21,14 +21,15 @@ export const hooks = () => {
 				});
 			}
 
-			select(STORE_NAME).getSettings().allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
-				if (!settings.attributes.calculatorAllowedBlocks.default.includes(element)) {
-					settings.attributes.calculatorAllowedBlocks.default.push(element);
-				}
-			});
+			select(STORE_NAME)
+				.getSettings()
+				.allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
+					if (!settings.attributes.calculatorAllowedBlocks.default.includes(element)) {
+						settings.attributes.calculatorAllowedBlocks.default.push(element);
+					}
+				});
 		}
 
 		return settings;
 	});
 };
-

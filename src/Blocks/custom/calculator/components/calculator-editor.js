@@ -7,9 +7,7 @@ import { FormEditor } from '../../../components/form/components/form-editor';
 export const CalculatorEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('calculator');
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	const calculatorAllowedBlocks = checkAttr('calculatorAllowedBlocks', attributes, manifest);
 
@@ -18,12 +16,13 @@ export const CalculatorEditor = ({ attributes, setAttributes, clientId }) => {
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent:
+					formContent: (
 						<InnerBlocks
-							allowedBlocks={(typeof calculatorAllowedBlocks === 'undefined') || calculatorAllowedBlocks}
+							allowedBlocks={typeof calculatorAllowedBlocks === 'undefined' || calculatorAllowedBlocks}
 							templateLock={false}
 							renderAppender={() => <BlockInserter clientId={clientId} />}
 						/>
+					),
 				})}
 			/>
 		</div>

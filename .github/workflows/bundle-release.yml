@@ -2,7 +2,7 @@ name: Bundle release
 
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [ 'latest' ]
-        php: [ '8.3' ]
+        node: ['latest']
+        php: ['8.3']
     steps:
       - name: Bundle release
         uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle/release@main

@@ -4,14 +4,14 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 export const overrides = {
 	...manifest,
-	icon:{
+	icon: {
 		src: getUtilsIcons('calculate') ?? manifest.icon.src,
 	},
 	attributes: {
 		...manifest.attributes,
 		calculatorAllowedBlocks: {
 			...manifest.attributes.calculatorAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList
+			default: globalManifest.allowedBlocksBuilderBlocksList,
 		},
 	},
 };

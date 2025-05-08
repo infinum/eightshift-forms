@@ -11,7 +11,7 @@ export const overrides = {
 		...manifest.attributes,
 		nationbuilderAllowedBlocks: {
 			...manifest.attributes.nationbuilderAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList
+			default: globalManifest.allowedBlocksBuilderBlocksList,
 		},
 	},
 };

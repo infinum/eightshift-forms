@@ -2,6 +2,6 @@
 
 .es-loader {
 	&::after {
-		background-color: #F0F0F1;
+		background-color: var(--global-colors-esf-gray-100);
 	}
 }

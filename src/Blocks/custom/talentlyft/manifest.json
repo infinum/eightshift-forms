@@ -2,14 +2,12 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "talentlyft",
 	"title": "Talentlyft form",
-	"description" : "Talentlyft job application form",
+	"description": "Talentlyft job application form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-talentlyft"
 	},
-	"keywords": [
-		"talentlyft"
-	],
+	"keywords": ["talentlyft"],
 	"components": {
 		"form": "form",
 		"step": "step"
@@ -24,7 +22,5 @@
 			"default": []
 		}
 	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	"parent": ["eightshift-forms/form-selector"]
 }

@@ -61,7 +61,7 @@
 	},
 	"options": {
 		"checkboxesIsRequiredCount": {
-			"min":  1,
+			"min": 1,
 			"step": 1
 		}
 	}

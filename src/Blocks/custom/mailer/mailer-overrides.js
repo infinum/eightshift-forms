@@ -4,14 +4,14 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 export const overrides = {
 	...manifest,
-	icon:{
+	icon: {
 		src: getUtilsIcons('form') ?? manifest.icon.src,
 	},
 	attributes: {
 		...manifest.attributes,
 		mailerAllowedBlocks: {
 			...manifest.attributes.mailerAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList
+			default: globalManifest.allowedBlocksBuilderBlocksList,
 		},
 	},
 };

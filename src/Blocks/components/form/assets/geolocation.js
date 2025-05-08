@@ -31,12 +31,8 @@ export class Geolocation {
 		}
 
 		// Set select fields based on geolocation.
-		window?.addEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onSetSelectField
-		);
+		window?.addEventListener(this.state.getStateEvent('formJsLoaded'), this.onSetSelectField);
 	}
-
 
 	////////////////////////////////////////////////////////////////
 	// Other
@@ -44,14 +40,11 @@ export class Geolocation {
 
 	/**
 	 * Remove all event listeners from elements.
-	 * 
+	 *
 	 * @returns {vodi}
 	 */
 	removeEvents() {
-		window?.removeEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onSetSelectField
-		);
+		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onSetSelectField);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -73,10 +66,7 @@ export class Geolocation {
 			return;
 		}
 
-		[
-			...this.state.getStateElementByTypeField('select', formId),
-			...this.state.getStateElementByTypeField('country', formId),
-		].forEach((select) => {
+		[...this.state.getStateElementByTypeField('select', formId), ...this.state.getStateElementByTypeField('country', formId)].forEach((select) => {
 			const name = select.name;
 
 			const custom = this.state.getStateElementCustom(name, formId);
@@ -88,7 +78,7 @@ export class Geolocation {
 					{
 						value: selectValue?.value ?? '',
 						meta: selectValue?.customProperties ?? {},
-					}
+					},
 				]);
 			}
 		});

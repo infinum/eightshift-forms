@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [ 'latest' ]
-        php: [ '8.3' ]
+        node: ['latest']
+        php: ['8.3']
     steps:
       - name: Bundle artifact
         uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle/artifact@main

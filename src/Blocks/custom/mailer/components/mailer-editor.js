@@ -7,9 +7,7 @@ import { FormEditor } from '../../../components/form/components/form-editor';
 export const MailerEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('mailer');
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	const mailerAllowedBlocks = checkAttr('mailerAllowedBlocks', attributes, manifest);
 
@@ -18,12 +16,13 @@ export const MailerEditor = ({ attributes, setAttributes, clientId }) => {
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent:
+					formContent: (
 						<InnerBlocks
-							allowedBlocks={(typeof mailerAllowedBlocks === 'undefined') || mailerAllowedBlocks}
+							allowedBlocks={typeof mailerAllowedBlocks === 'undefined' || mailerAllowedBlocks}
 							templateLock={false}
 							renderAppender={() => <BlockInserter clientId={clientId} />}
 						/>
+					),
 				})}
 			/>
 		</div>

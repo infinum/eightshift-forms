@@ -2,14 +2,12 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "forms",
 	"title": "Form",
-	"description" : "Allows selecting the form that should be displayed",
+	"description": "Allows selecting the form that should be displayed",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form"
 	},
-	"keywords": [
-		"forms"
-	],
+	"keywords": ["forms"],
 	"attributes": {
 		"formsFormPostId": {
 			"type": "string"

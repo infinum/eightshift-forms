@@ -12,12 +12,7 @@
 	--es-input-background-color: transparent;
 }
 
-@mixin input-styles(
-	$loadReadonly: 'true',
-	$loadDisabled: 'true',
-	$loadFocus: 'true',
-	$loadPlaceholder: 'true',
-) {
+@mixin input-styles($loadReadonly: 'true', $loadDisabled: 'true', $loadFocus: 'true', $loadPlaceholder: 'true') {
 	inline-size: 100%;
 	max-inline-size: 100%;
 	border: 1px solid var(--es-input-border-color);

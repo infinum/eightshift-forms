@@ -7,27 +7,24 @@ import { ResultOutputOptions } from './components/result-output-options';
 import { fetchFromWpRest } from '@eightshift/frontend-libs/scripts';
 import { outputFormSelectItemWithIcon } from '../../components/utils';
 
-const dynamicItemSelectOptions = function(postType) {
-	return fetchFromWpRest(
-		postType,
-		{
-			noCache: true,
-			processLabel: ({ title: { rendered: label }, integration_type: metadata, id }) => {
-				return outputFormSelectItemWithIcon({
-					label,
-					id,
-					metadata,
-				})?.label;
-			},
-			fields: 'id,title,integration_type',
-			processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
-				id,
-				value: id,
+const dynamicItemSelectOptions = function (postType) {
+	return fetchFromWpRest(postType, {
+		noCache: true,
+		processLabel: ({ title: { rendered: label }, integration_type: metadata, id }) => {
+			return outputFormSelectItemWithIcon({
 				label,
+				id,
 				metadata,
-			}),
-		}
-	);
+			})?.label;
+		},
+		fields: 'id,title,integration_type',
+		processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+			id,
+			value: id,
+			label,
+			metadata,
+		}),
+	});
 };
 
 export const ResultOutput = (props) => {

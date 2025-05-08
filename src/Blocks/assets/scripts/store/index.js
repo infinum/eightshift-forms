@@ -35,7 +35,7 @@ const actions = {
 };
 
 // Define reducers - only setters.
-const reducer = ( state = DEFAULT_STATE, action ) => {
+const reducer = (state = DEFAULT_STATE, action) => {
 	switch (action.type) {
 		case 'SET_SYNC_DIALOG': {
 			return {
@@ -52,8 +52,10 @@ const reducer = ( state = DEFAULT_STATE, action ) => {
 	}
 };
 
-register(createReduxStore(FORMS_STORE_NAME, {
-	selectors,
-	actions,
-	reducer,
-}));
+register(
+	createReduxStore(FORMS_STORE_NAME, {
+		selectors,
+		actions,
+		reducer,
+	}),
+);

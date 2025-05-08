@@ -10,13 +10,14 @@
 Eightshift forms plugins is a complete form builder tool that utilizes modern Block editor features with multiple third-party integrations to boost your project to another level.
 
 ## ⚠️ Requirements
+
 To get started, you'll need:
 
-* [Node LTS](https://nodejs.org/)
-* [Composer](https://getcomposer.org/)
-* [Bun](https://bun.sh/)
-* [git](https://git-scm.com/)
-* [WP-CLI](https://wp-cli.org/)
+- [Node LTS](https://nodejs.org/)
+- [Composer](https://getcomposer.org/)
+- [Bun](https://bun.sh/)
+- [git](https://git-scm.com/)
+- [WP-CLI](https://wp-cli.org/)
 
 ## 🏁 Quick start
 
@@ -35,12 +36,14 @@ Eightshift forms plugin is created on the [Eightshift development kit](https://e
 
 ## 🛟 Getting help
 
-If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms/issues) on GitHub. 
+If you have any questions or problems, please [open an issue](https://github.com/infinum/eightshift-forms/issues) on GitHub.
 
 When submitting issues or otherwise participating in development, please follow our [code of conduct](https://github.com/infinum/eightshift-forms/blob/develop/CODE_OF_CONDUCT.md), and fill out the issue template properly. We'll do our best to answer your issues as quickly as humanly possible: following these steps helps us out a lot in doing that.
 
-## 👩‍💻 Maintainers 🧑‍💻 
+## 👩‍💻 Maintainers 🧑‍💻
+
 Eightshift Forms is maintained and sponsored by [Infinum](https://infinum.com).
 
 ## ⚖️ License
+
 Eightshift Forms by [Infinum](https://infinum.com). It is free software, and may be redistributed under the terms specified in the LICENSE file.

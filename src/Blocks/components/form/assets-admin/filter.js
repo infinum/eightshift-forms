@@ -1,5 +1,5 @@
 export class Filter {
-	constructor(options={}) {
+	constructor(options = {}) {
 		/** @type {import('./../assets/utils').Utils} */
 		this.utils = options.utils;
 		/** @type {import('./../assets/state').State} */

@@ -3,18 +3,10 @@ import { select } from '@wordpress/data';
 import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { IntegrationsOptions } from './../../../components/integrations/components/integrations-options';
 
-export const MailerliteOptions = ({
-	attributes,
-	setAttributes,
-	clientId,
-	itemIdKey,
-}) => {
+export const MailerliteOptions = ({ attributes, setAttributes, clientId, itemIdKey }) => {
 	const manifest = select(STORE_NAME).getBlock('mailerlite');
 
-	const {
-		title,
-		blockName,
-	} = manifest;
+	const { title, blockName } = manifest;
 
 	return (
 		<IntegrationsOptions

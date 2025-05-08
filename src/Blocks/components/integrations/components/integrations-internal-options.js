@@ -25,9 +25,7 @@ export const IntegrationsInternalOptions = ({ title, attributes, setAttributes, 
 					icon={icons.warning}
 					label={__('Danger zone', 'eightshift-forms')}
 				>
-					<Control
-						help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')}
-					>
+					<Control help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')}>
 						<Button
 							icon={icons.reset}
 							onClick={() => {

@@ -2,16 +2,13 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "jira",
 	"title": "Jira form",
-	"description" : "Jira issues application form",
+	"description": "Jira issues application form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-jira"
 	},
-	"keywords": [
-		"jira"
-	],
-	"example": {
-	},
+	"keywords": ["jira"],
+	"example": {},
 	"components": {
 		"form": "form",
 		"step": "step"
@@ -32,7 +29,5 @@
 			"type": "string"
 		}
 	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	"parent": ["eightshift-forms/form-selector"]
 }

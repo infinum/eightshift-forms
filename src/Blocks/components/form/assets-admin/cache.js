@@ -48,10 +48,7 @@ export class Cache {
 			.then((responseData) => {
 				const response = this.utils.formSubmitIsJsonString(responseData, 'cache', formId);
 
-				const {
-					message,
-					status,
-				} = response;
+				const { message, status } = response;
 
 				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);

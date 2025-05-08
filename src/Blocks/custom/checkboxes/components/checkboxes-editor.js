@@ -7,13 +7,9 @@ import { CheckboxesEditor as CheckboxesEditorComponent } from '../../../componen
 export const CheckboxesEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('checkboxes');
 
-	const {
-		template,
-	} = manifest;
+	const { template } = manifest;
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	const checkboxesAllowedBlocks = checkAttr('checkboxesAllowedBlocks', attributes, manifest);
 
@@ -23,12 +19,18 @@ export const CheckboxesEditor = ({ attributes, setAttributes, clientId }) => {
 				setAttributes,
 				blockClass,
 				clientId,
-				checkboxesContent:
+				checkboxesContent: (
 					<InnerBlocks
-						allowedBlocks={(typeof checkboxesAllowedBlocks === 'undefined') || checkboxesAllowedBlocks}
+						allowedBlocks={typeof checkboxesAllowedBlocks === 'undefined' || checkboxesAllowedBlocks}
 						template={template}
-						renderAppender={() => <BlockInserter clientId={clientId} small />}
+						renderAppender={() => (
+							<BlockInserter
+								clientId={clientId}
+								small
+							/>
+						)}
 					/>
+				),
 			})}
 		/>
 	);

@@ -1,12 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import { clsx } from '@eightshift/ui-components/utilities';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
@@ -15,16 +9,9 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const PhoneEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('phone');
 
-	const {
-		componentClass,
-		componentName
-	} = manifest;
+	const { componentClass, componentName } = manifest;
 
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { additionalFieldClass, additionalClass, blockClientId } = attributes;
 
 	const manifestSelect = select(STORE_NAME).getComponent('select');
 
@@ -34,15 +21,9 @@ export const PhoneEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
 
-	const phoneClass = clsx(
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	);
+	const phoneClass = clsx(selector(componentClass, componentClass), selector(additionalClass, additionalClass));
 
-	const selectClass = clsx(
-		selector(manifestSelect.componentClass, manifestSelect.componentClass),
-		selector(additionalClass, additionalClass),
-	);
+	const selectClass = clsx(selector(manifestSelect.componentClass, manifestSelect.componentClass), selector(additionalClass, additionalClass));
 
 	const phone = (
 		<>
@@ -55,11 +36,12 @@ export const PhoneEditor = (attributes) => {
 				readOnly
 			/>
 
-			<MissingName value={phoneName} isEditor={true} />
-
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
+			<MissingName
+				value={phoneName}
+				isEditor={true}
 			/>
+
+			<ConditionalTagsEditor {...props('conditionalTags', attributes)} />
 		</>
 	);
 

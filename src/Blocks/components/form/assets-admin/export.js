@@ -57,11 +57,7 @@ export class Export {
 			.then((responseData) => {
 				const response = this.utils.formSubmitIsJsonString(responseData, 'bulk', null);
 
-				const {
-					message,
-					status,
-					data,
-				} = response;
+				const { message, status, data } = response;
 
 				if (data?.output) {
 					const csv = this.downloadCSVFromJson(JSON.parse(data?.output));
@@ -82,9 +78,9 @@ export class Export {
 	}
 
 	downloadCSVFromJson(arrayOfJson) {
-		const replacer = (key, value) => value === null ? '' : value;
+		const replacer = (key, value) => (value === null ? '' : value);
 		const header = Object.keys(arrayOfJson[0]);
-		let csv = arrayOfJson.map((row) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
+		let csv = arrayOfJson.map((row) => header.map((fieldName) => JSON.stringify(row[fieldName], replacer)).join(','));
 		csv.unshift(header.join(','));
 
 		return csv.join('\r\n');

@@ -7,9 +7,7 @@ import { FormEditor } from '../../../components/form/components/form-editor';
 export const JiraEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('jira');
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	const jiraAllowedBlocks = checkAttr('jiraAllowedBlocks', attributes, manifest);
 
@@ -18,11 +16,13 @@ export const JiraEditor = ({ attributes, setAttributes, clientId }) => {
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-						allowedBlocks={(typeof jiraAllowedBlocks === 'undefined') || jiraAllowedBlocks}
-						templateLock={false}
-						renderAppender={() => <BlockInserter clientId={clientId} />}
-					/>
+					formContent: (
+						<InnerBlocks
+							allowedBlocks={typeof jiraAllowedBlocks === 'undefined' || jiraAllowedBlocks}
+							templateLock={false}
+							renderAppender={() => <BlockInserter clientId={clientId} />}
+						/>
+					),
 				})}
 			/>
 		</div>

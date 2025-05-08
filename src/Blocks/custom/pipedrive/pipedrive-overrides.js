@@ -4,14 +4,14 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 export const overrides = {
 	...manifest,
-	icon:{
+	icon: {
 		src: getUtilsIcons('pipedrive') ?? manifest.icon.src,
 	},
 	attributes: {
 		...manifest.attributes,
 		pipedriveAllowedBlocks: {
 			...manifest.attributes.pipedriveAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList
+			default: globalManifest.allowedBlocksBuilderBlocksList,
 		},
 	},
 };

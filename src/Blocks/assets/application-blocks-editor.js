@@ -18,4 +18,3 @@ dynamicImport(require.context('./../custom', true, /-editor\.scss$/));
 
 // Scripts.
 import './scripts/blocks-editor';
-

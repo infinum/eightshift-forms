@@ -234,9 +234,7 @@ export const ConditionalTagsOptions = (attributes) => {
 							additionalClasses='es-font-weight-500'
 						/>
 
-						<Section
-							showIf={conditionalTagsUse}
-						>
+						<Section showIf={conditionalTagsUse}>
 							{conditionalTagsIsHidden && (
 								<Notification
 									text={__('Field is hidden. This might introduce issues if used with conditional tags.', 'eightshift-forms')}

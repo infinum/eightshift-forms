@@ -21,14 +21,15 @@ export const hooks = () => {
 				});
 			}
 
-			select(STORE_NAME).getSettings().allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
-				if (!settings.attributes.activeCampaignAllowedBlocks.default.includes(element)) {
-					settings.attributes.activeCampaignAllowedBlocks.default.push(element);
-				}
-			});
+			select(STORE_NAME)
+				.getSettings()
+				.allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
+					if (!settings.attributes.activeCampaignAllowedBlocks.default.includes(element)) {
+						settings.attributes.activeCampaignAllowedBlocks.default.push(element);
+					}
+				});
 		}
 
 		return settings;
 	});
 };
-

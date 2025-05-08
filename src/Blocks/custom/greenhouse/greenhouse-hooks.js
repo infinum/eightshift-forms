@@ -7,7 +7,6 @@ import { isArray } from 'lodash';
 
 // Provide additional blocks to the forms.
 export const hooks = () => {
-
 	const { blockName } = select(STORE_NAME).getBlock('greenhouse');
 	const namespace = select(STORE_NAME).getSettingsNamespace();
 
@@ -22,11 +21,13 @@ export const hooks = () => {
 				});
 			}
 
-			select(STORE_NAME).getSettings().allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
-				if (!settings.attributes.greenhouseAllowedBlocks.default.includes(element)) {
-					settings.attributes.greenhouseAllowedBlocks.default.push(element);
-				}
-			});
+			select(STORE_NAME)
+				.getSettings()
+				.allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
+					if (!settings.attributes.greenhouseAllowedBlocks.default.includes(element)) {
+						settings.attributes.greenhouseAllowedBlocks.default.push(element);
+					}
+				});
 		}
 
 		return settings;

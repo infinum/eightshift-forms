@@ -11,7 +11,7 @@ export const overrides = {
 		...manifest.attributes,
 		paycekAllowedBlocks: {
 			...manifest.attributes.paycekAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList
+			default: globalManifest.allowedBlocksBuilderBlocksList,
 		},
 	},
 };

@@ -1,13 +1,7 @@
-import React  from 'react';
+import React from 'react';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import { clsx } from '@eightshift/ui-components/utilities';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import { MissingName, VisibilityHidden, preventSaveOnMissingProps } from './../../utils';
@@ -15,16 +9,9 @@ import { MissingName, VisibilityHidden, preventSaveOnMissingProps } from './../.
 export const CheckboxEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('checkbox');
 
-	const {
-		componentClass,
-	} = manifest;
+	const { componentClass } = manifest;
 
-	const {
-		selectorClass = componentClass,
-		blockClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { selectorClass = componentClass, blockClass, additionalClass, blockClientId } = attributes;
 
 	const checkboxLabel = checkAttr('checkboxLabel', attributes, manifest);
 	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
@@ -48,20 +35,24 @@ export const CheckboxEditor = (attributes) => {
 
 	return (
 		<div className={checkboxClass}>
-			<VisibilityHidden value={checkboxIsHidden} label={__('Checkbox', 'eightshift-forms')} />
+			<VisibilityHidden
+				value={checkboxIsHidden}
+				label={__('Checkbox', 'eightshift-forms')}
+			/>
 
 			<div className={`${componentClass}__content`}>
 				<div className={checkboxLabelClass}>
-					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms')}} />
+					<span
+						className={`${componentClass}__label-inner`}
+						dangerouslySetInnerHTML={{
+							__html: checkboxLabel ? checkboxLabel : __('Please enter checkbox label in sidebar or this checkbox will not show on the frontend.', 'eightshift-forms'),
+						}}
+					/>
 				</div>
 
 				<MissingName value={checkboxValue} />
 
-				{checkboxValue &&
-					<ConditionalTagsEditor
-						{...props('conditionalTags', attributes)}
-					/>
-				}
+				{checkboxValue && <ConditionalTagsEditor {...props('conditionalTags', attributes)} />}
 			</div>
 		</div>
 	);

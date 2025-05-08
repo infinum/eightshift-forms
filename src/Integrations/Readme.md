@@ -1,6 +1,7 @@
 # Integrations
 
 Adding new integration steps:
+
 1. Add new folder in the Integrations.
 2. Add new class `Integrations/<Integration_Name>.php`. This holds mappings for API to our components.
 3. Add new class `Integrations/<Integration_Name>Client.php`. This holds all data connections to the API.

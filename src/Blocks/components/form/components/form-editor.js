@@ -6,15 +6,9 @@ import { clsx } from '@eightshift/ui-components/utilities';
 export const FormEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('form');
 
-	const {
-		componentClass,
-	} = manifest;
+	const { componentClass } = manifest;
 
-	const {
-		selectorClass = componentClass,
-		blockClass,
-		additionalClass,
-	} = attributes;
+	const { selectorClass = componentClass, blockClass, additionalClass } = attributes;
 
 	const formContent = checkAttr('formContent', attributes, manifest);
 
@@ -27,9 +21,7 @@ export const FormEditor = (attributes) => {
 
 	return (
 		<div className={formClass}>
-			<div className={`${componentClass}__fields`}>
-				{formContent}
-			</div>
+			<div className={`${componentClass}__fields`}>{formContent}</div>
 		</div>
 	);
 };

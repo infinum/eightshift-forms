@@ -2,19 +2,14 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "select-option",
 	"title": "Option",
-	"description" : "Select field option",
+	"description": "Select field option",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-select-option"
 	},
-	"keywords": [
-		"select",
-		"option"
-	],
+	"keywords": ["select", "option"],
 	"components": {
 		"selectOption": "selectOption"
 	},
-	"parent": [
-		"eightshift-forms/select"
-	]
+	"parent": ["eightshift-forms/select"]
 }

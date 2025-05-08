@@ -3,7 +3,7 @@ import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 export const overrides = {
 	...manifest,
-	icon:{
+	icon: {
 		src: getUtilsIcons('activeCampaign') ?? manifest.icon.src,
-	}
+	},
 };

@@ -2,16 +2,13 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "mailchimp",
 	"title": "Mailchimp form",
-	"description" : "Mailchimp subscription form",
+	"description": "Mailchimp subscription form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-mailchimp"
 	},
-	"keywords": [
-		"mailchimp"
-	],
-	"example": {
-	},
+	"keywords": ["mailchimp"],
+	"example": {},
 	"components": {
 		"form": "form",
 		"step": "step"
@@ -26,7 +23,5 @@
 			"default": []
 		}
 	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	"parent": ["eightshift-forms/form-selector"]
 }

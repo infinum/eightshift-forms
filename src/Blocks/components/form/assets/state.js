@@ -396,7 +396,6 @@ export class State {
 		setState([StateEnum.ELEMENTS, name, StateEnum.HAS_ERROR], value, formId);
 	};
 
-
 	////////////////////////////////////////////////////////////////
 	// Captcha getters.
 	////////////////////////////////////////////////////////////////
@@ -439,19 +438,17 @@ export class State {
 		return getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
 	getStateEnrichmentIsLocalStorageUsed = () => {
-		return getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) &&
-		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
-		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return (
+			getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG)
+		);
 	};
 	getStateEnrichmentIsPrefillUsed = () => {
-		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) &&
-		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
-		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
 	getStateEnrichmentIsPrefillUrlUsed = () => {
-		return getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) &&
-		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
-		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return (
+			getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG)
+		);
 	};
 	getStateEnrichmentExpiration = () => {
 		return getState([StateEnum.ENRICHMENT_EXPIRATION], StateEnum.ENRICHMENT);
@@ -544,13 +541,7 @@ export class State {
 	////////////////////////////////////////////////////////////////
 
 	getStateFilteredBykey = (obj, targetKey, findItem, formId) => {
-		return Object?.values(
-			Object?.fromEntries(
-				Object?.entries(
-					getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem
-				)
-			)
-		);
+		return Object?.values(Object?.fromEntries(Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem)));
 	};
 	getFormElementByChild = (element) => {
 		return element?.closest(this.getStateSelector('form', true));

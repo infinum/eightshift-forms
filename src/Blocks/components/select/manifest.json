@@ -85,11 +85,11 @@
 	},
 	"options": {
 		"selectMinCount": {
-			"min":  0,
+			"min": 0,
 			"step": 1
 		},
 		"selectMaxCount": {
-			"min":  1,
+			"min": 1,
 			"step": 1
 		}
 	}
