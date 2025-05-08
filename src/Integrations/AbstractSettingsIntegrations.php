@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations;
 
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
@@ -28,8 +28,8 @@ abstract class AbstractSettingsIntegrations
 	 */
 	protected function getGlobalGeneralSettings(string $integrationType): array
 	{
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($integrationType, '');
-		$variation = FiltersOuputMock::getVariationFilterValue($integrationType, '', []);
+		$successRedirectUrl = FiltersOutputMock::getSuccessRedirectUrlFilterValue($integrationType, '');
+		$variation = FiltersOutputMock::getVariationFilterValue($integrationType, '', []);
 
 		return [
 			[

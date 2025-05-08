@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public/admin form submiting endpoint
+ * The class register route for public/admin form submitting endpoint
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -19,7 +19,7 @@ use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
@@ -143,9 +143,9 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	{
 		// If route is used for admin only, check if user has permission. (generally used for settings).
 		if ($this->isRouteAdminProtected()) {
-			$premission = $this->checkUserPermission();
-			if ($premission) {
-				return \rest_ensure_response($premission);
+			$permission = $this->checkUserPermission();
+			if ($permission) {
+				return \rest_ensure_response($permission);
 			}
 		}
 
@@ -155,7 +155,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 			$formDetails = $this->getFormDetailsApi($request);
 
 			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
-			if (!$this->getValidator()->validateFormManadatoryProperies($formDetails)) {
+			if (!$this->getValidator()->validateFormMandatoryProperties($formDetails)) {
 				throw new UnverifiedRequestException(
 					$this->getValidatorLabels()->getLabel('validationMissingMandatoryParams'),
 					[
@@ -490,13 +490,13 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		$output = [];
 
 		// Tracking event name.
-		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($type, $formId)['data'];
+		$trackingEventName = FiltersOutputMock::getTrackingEventNameFilterValue($type, $formId)['data'];
 		if ($trackingEventName) {
 			$output[UtilsHelper::getStateResponseOutputKey('trackingEventName')] = $trackingEventName;
 		}
 
 		// Provide additional data to tracking attr.
-		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($type, $formId)['data'];
+		$trackingAdditionalData = FiltersOutputMock::getTrackingAdditionalDataFilterValue($type, $formId)['data'];
 		if ($trackingAdditionalData) {
 			$output[UtilsHelper::getStateResponseOutputKey('trackingAdditionalData')] = $trackingAdditionalData;
 		}
@@ -733,7 +733,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	}
 
 	/**
-	 * Returns securicty class.
+	 * Returns security class.
 	 *
 	 * @return FormSubmitMailerInterface
 	 */
@@ -876,21 +876,21 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		$entryNewData = $entryData['entryValue'] ?? [];
 
 		if (
-			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_REDIRECT_URL_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY, $formId) &&
 			isset($output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')])
 		) {
 			$entryNewData[UtilsHelper::getStateResponseOutputKey('successRedirectUrl')] = $output['public'][UtilsHelper::getStateResponseOutputKey('successRedirectUrl')];
 		}
 
 		if (
-			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_VARIATIONS_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY, $formId) &&
 			isset($output['public'][UtilsHelper::getStateResponseOutputKey('variation')])
 		) {
 			$entryNewData[UtilsHelper::getStateResponseOutputKey('variation')] = $output['public'][UtilsHelper::getStateResponseOutputKey('variation')];
 		}
 
 		if (
-			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId) &&
+			SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_INCREMENT_ID_KEY, SettingsEntries::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY, $formId) &&
 			isset($output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')])
 		) {
 			$entryNewData[UtilsHelper::getStateResponseOutputKey('incrementId')] = $output['private'][UtilsHelper::getStateResponseOutputKey('incrementId')];
@@ -941,7 +941,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 		$type = $formDetails[Config::FD_TYPE] ?? '';
 
-		$variation = FiltersOuputMock::getVariationFilterValue($type, $formId, $formDetails)['data'];
+		$variation = FiltersOutputMock::getVariationFilterValue($type, $formId, $formDetails)['data'];
 		if (!$variation) {
 			return $output;
 		}
@@ -964,7 +964,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 		$type = $formDetails[Config::FD_TYPE] ?? '';
 
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
+		$successRedirectUrl = FiltersOutputMock::getSuccessRedirectUrlFilterValue($type, $formId)['data'];
 		if (!$successRedirectUrl) {
 			return $output;
 		}

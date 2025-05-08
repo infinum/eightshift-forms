@@ -154,7 +154,7 @@ class TalentlyftClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsTalentlyft::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -252,7 +252,7 @@ class TalentlyftClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsTalentlyft::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -282,7 +282,7 @@ class TalentlyftClient implements ClientInterface
 			);
 
 			// Structure response details.
-			$details = ApiHelpers::getIntegrationApiReponseDetails(
+			$details = ApiHelpers::getIntegrationApiResponseDetails(
 				SettingsTalentlyft::SETTINGS_TYPE_KEY,
 				$response,
 				$url,
@@ -319,7 +319,7 @@ class TalentlyftClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsTalentlyft::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -359,8 +359,8 @@ class TalentlyftClient implements ClientInterface
 	 */
 	private function prepareParams(array $params): array
 	{
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$output = [];
 		$outputCustom = [];
@@ -479,7 +479,7 @@ class TalentlyftClient implements ClientInterface
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */

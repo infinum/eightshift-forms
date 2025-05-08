@@ -33,14 +33,14 @@ final class UploadHelpers
 			'errorFileUploadNoIdProvided' => '',
 			'errorFileUploadFolderUploadPathMissing' => '',
 			'errorFileUploadUnableToCreateFolder' => '',
-			'errorFileUploadFailtyFile' => '',
+			'errorFileUploadFaultyFile' => '',
 			'errorFileUploadUnableToMoveFile' => '',
 
 			// getFilePath() method errors.
 			'errorFilePathMissingUploadFolder' => '',
 			'errorFilePathMissingFile' => '',
 
-			// getUploadFolerPath() method errors.
+			// getUploadFolderPath() method errors.
 			'errorUploadFolderPathMissingWpContentDir' => '',
 		];
 
@@ -89,7 +89,7 @@ final class UploadHelpers
 			);
 		}
 
-		$folderPath = self::getUploadFolerPath();
+		$folderPath = self::getUploadFolderPath();
 		if (self::isUploadError($folderPath)) {
 			return \array_merge(
 				$output,
@@ -119,7 +119,7 @@ final class UploadHelpers
 			return \array_merge(
 				$output,
 				[
-					'errorOutput' => 'errorFileUploadFailtyFile',
+					'errorOutput' => 'errorFileUploadFaultyFile',
 				]
 			);
 		}
@@ -188,7 +188,7 @@ final class UploadHelpers
 	 */
 	public static function deleteUploadFolderContent(int $numberOfHours = 2): void
 	{
-		$folderPath = self::getUploadFolerPath();
+		$folderPath = self::getUploadFolderPath();
 		if (self::isUploadError($folderPath)) {
 			return;
 		}
@@ -223,7 +223,7 @@ final class UploadHelpers
 	 */
 	public static function getFilePath(string $name): string
 	{
-		$folderPath = self::getUploadFolerPath();
+		$folderPath = self::getUploadFolderPath();
 		if (self::isUploadError($folderPath)) {
 			return 'errorFilePathMissingUploadFolder';
 		}
@@ -290,7 +290,7 @@ final class UploadHelpers
 	 *
 	 * @return string
 	 */
-	private static function getUploadFolerPath(): string
+	private static function getUploadFolderPath(): string
 	{
 		if (!\defined('WP_CONTENT_DIR')) {
 			return 'errorUploadFolderPathMissingWpContentDir';

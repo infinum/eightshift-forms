@@ -52,7 +52,7 @@ class PipedriveClient implements PipedriveClientInterface
 	/**
 	 * Return person fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -123,7 +123,7 @@ class PipedriveClient implements PipedriveClientInterface
 	/**
 	 * Return leads fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -297,7 +297,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -371,7 +371,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -399,7 +399,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -432,7 +432,7 @@ class PipedriveClient implements PipedriveClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsPipedrive::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -469,8 +469,8 @@ class PipedriveClient implements PipedriveClientInterface
 
 		$output['name'] = FormsHelper::getParamValue($personName, $params);
 
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsPipedrive::SETTINGS_PIPEDRIVE_PARAMS_MAP_KEY, $formId);
 

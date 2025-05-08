@@ -52,10 +52,10 @@ class EntriesHelper
 			$params = \apply_filters($filterName, $params, $formId, $formDetails) ?? [];
 		}
 
-		// Get skipped params earlier as we are removing them from the main array using removeUneceseryParamFields method.
+		// Get skipped params earlier as we are removing them from the main array using removeUnnecessaryParamFields method.
 		$paramsSkipped = FormsHelper::getParamValue(UtilsHelper::getStateParam('skippedParams'), $params);
 
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$saveEmptyFields = SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId);
 

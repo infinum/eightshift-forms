@@ -90,7 +90,7 @@ class ClearbitClient implements ClearbitClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsClearbit::SETTINGS_TYPE_KEY,
 			$response,
 			$url,

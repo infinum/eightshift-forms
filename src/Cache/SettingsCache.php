@@ -161,7 +161,7 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 								'submitValue' => \__('Clear', 'eightshift-forms'),
 								'submitVariant' => 'ghost',
 								'submitAttrs' => [
-									UtilsHelper::getStateAttribute('cacheType') => 'allInteral',
+									UtilsHelper::getStateAttribute('cacheType') => 'allInternal',
 									UtilsHelper::getStateAttribute('reload') => 'false',
 								],
 								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),

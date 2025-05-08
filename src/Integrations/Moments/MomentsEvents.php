@@ -54,7 +54,7 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -107,8 +107,8 @@ class MomentsEvents extends AbstractMoments implements MomentsEventsInterface
 			$params = \apply_filters($filterName, $params, $eventName, $map, $formId) ?? [];
 		}
 
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		// Map params.
 		if ($map) {

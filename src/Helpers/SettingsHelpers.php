@@ -284,7 +284,7 @@ final class SettingsHelpers
 	 */
 	public static function getOptionName(string $key): string
 	{
-		$sufix = '';
+		$suffix = '';
 
 		$data = \EIGHTSHIFT_FORMS[Config::PUBLIC_NONE_TRANSLATABLE_NAMES_NAME] ?? []; // @phpstan-ignore-line
 
@@ -293,11 +293,11 @@ final class SettingsHelpers
 
 			if ($locale) {
 				$delimiter = Config::DELIMITER;
-				$sufix = "{$delimiter}{$locale}";
+				$suffix = "{$delimiter}{$locale}";
 			}
 		}
 
-		return Config::SETTINGS_NAME_PREFIX . "-{$key}{$sufix}";
+		return Config::SETTINGS_NAME_PREFIX . "-{$key}{$suffix}";
 	}
 
 	// --------------------------------------------------

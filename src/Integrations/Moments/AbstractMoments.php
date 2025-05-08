@@ -45,7 +45,7 @@ abstract class AbstractMoments
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */
@@ -55,7 +55,7 @@ abstract class AbstractMoments
 	}
 
 	/**
-	 * Return Api Url from settings or global vairaible.
+	 * Return Api Url from settings or global variable.
 	 *
 	 * @return string
 	 */

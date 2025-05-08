@@ -20,7 +20,7 @@ class Countries implements CountriesInterface
 	/**
 	 * Get countries data set depending on the provided filter and default set.
 	 *
-	 * @param bool $useFullOutput Used to output limited output used for seetings and output.
+	 * @param bool $useFullOutput Used to output limited output used for settings and output.
 	 *
 	 * @return array<string, mixed>
 	 */

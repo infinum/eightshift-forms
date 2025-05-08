@@ -29,7 +29,7 @@ final class ApiHelpers
 	 * Return API response array details.
 	 *
 	 * @param string $integration Integration name from settings.
-	 * @param mixed $response API full reponse.
+	 * @param mixed $response API full response.
 	 * @param string $url Url of the request.
 	 * @param array<mixed> $params All params prepared for API.
 	 * @param array<mixed> $files All files prepared for API.
@@ -40,7 +40,7 @@ final class ApiHelpers
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function getIntegrationApiReponseDetails(
+	public static function getIntegrationApiResponseDetails(
 		string $integration,
 		$response,
 		string $url,
@@ -89,11 +89,11 @@ final class ApiHelpers
 	}
 
 	/**
-	 * Return Integration API error response array - in combination with getIntegrationApiReponseDetails response.
+	 * Return Integration API error response array - in combination with getIntegrationApiResponseDetails response.
 	 *
 	 * NOTE: Not for public response on API.
 	 *
-	 * @param array<string, mixed> $details Details provided by getIntegrationApiReponseDetails method.
+	 * @param array<string, mixed> $details Details provided by getIntegrationApiResponseDetails method.
 	 * @param array<string, mixed> $additional Additional array details to attach to the success output.
 	 *
 	 * @return array<string, mixed>
@@ -111,11 +111,11 @@ final class ApiHelpers
 	}
 
 	/**
-	 * Return Integration API success response array - in combination with getIntegrationApiReponseDetails response.
+	 * Return Integration API success response array - in combination with getIntegrationApiResponseDetails response.
 	 *
 	 * NOTE: Not for public response on API.
 	 *
-	 * @param array<string, mixed> $details Details provided by getIntegrationApiReponseDetails method.
+	 * @param array<string, mixed> $details Details provided by getIntegrationApiResponseDetails method.
 	 * @param array<string, mixed> $additional Additional array details to attach to the success output.
 	 *
 	 * @return array<string, mixed>
@@ -166,7 +166,7 @@ final class ApiHelpers
 	 * Return API success response array - Generic.
 	 *
 	 * @param string $msg Msg for the user.
-	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
+	 * @param array<int|string, mixed> $additional Additional data to attach to response.
 	 * @param array<string, mixed> $debug Debug options.
 	 *
 	 * @return array<string, array<mixed>|int|string>
@@ -194,7 +194,7 @@ final class ApiHelpers
 	 * Return API warning response array - Generic.
 	 *
 	 * @param string $msg Msg for the user.
-	 * @param array<int|string, mixed> $additional Additonal data to attach to response.
+	 * @param array<int|string, mixed> $additional Additional data to attach to response.
 	 * @param array<string, mixed> $debug Debug options.
 	 *
 	 * @return array<string, array<mixed>|int|string>

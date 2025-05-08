@@ -42,7 +42,7 @@ class GreenhouseClient implements ClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -187,7 +187,7 @@ class GreenhouseClient implements ClientInterface
 		}
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -288,7 +288,7 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -334,7 +334,7 @@ class GreenhouseClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsGreenhouse::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -381,8 +381,8 @@ class GreenhouseClient implements ClientInterface
 	 */
 	private function prepareParams(array $params): array
 	{
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		return GeneralHelpers::prepareGenericParamsOutput($params);
 	}
@@ -415,7 +415,7 @@ class GreenhouseClient implements ClientInterface
 	}
 
 	/**
-	 * Return Board Token from settings or global vairaible.
+	 * Return Board Token from settings or global variable.
 	 *
 	 * @return string
 	 */
@@ -425,7 +425,7 @@ class GreenhouseClient implements ClientInterface
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */

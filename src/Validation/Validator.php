@@ -27,7 +27,6 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -41,13 +40,6 @@ class Validator extends AbstractValidation
 	 * @var LabelsInterface
 	 */
 	protected $labels;
-
-	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
 
 	/**
 	 * Validation Fields to check.
@@ -89,7 +81,7 @@ class Validator extends AbstractValidation
 	];
 
 	/**
-	 * Transient cache name for validatior labels. No need to flush it because it is short live.
+	 * Transient cache name for validator labels. No need to flush it because it is short live.
 	 */
 	public const CACHE_VALIDATOR_LABELS_TRANSIENT_NAME = 'es_validator_labels_cache';
 
@@ -102,14 +94,10 @@ class Validator extends AbstractValidation
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 */
-	public function __construct(
-		LabelsInterface $labels,
-		ManifestCacheInterface $manifestCache
-	) {
+	public function __construct(LabelsInterface $labels)
+	{
 		$this->labels = $labels;
-		$this->manifestCache = $manifestCache;
 	}
 
 	/**
@@ -132,12 +120,12 @@ class Validator extends AbstractValidation
 			$formDetails[Config::FD_FILES]
 		);
 
-		// Manualy build fields from settings components.
+		// Manual build fields from settings components.
 		if ($formType === Config::SETTINGS_TYPE_NAME || $formType === Config::SETTINGS_GLOBAL_TYPE_NAME) {
 			$fieldsOnly = $this->getValidationReferenceManual($fieldsOnly);
 		}
 
-		// Find refference fields in admin config.
+		// Find reference fields in admin config.
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
 		// Define order of validation.
@@ -193,7 +181,7 @@ class Validator extends AbstractValidation
 							break;
 						}
 
-						// Expolode and remove empty files.
+						// Explode and remove empty files.
 						$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, $value));
 						if (!$fileName) {
 							continue;
@@ -405,14 +393,14 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Validate all manadatory fields that are passed from the `getFormDetailsApi` function.
+	 * Validate all mandatory fields that are passed from the `getFormDetailsApi` function.
 	 * If these fields are missing it can be that the forme is not configured correctly or it could be a unauthorized request.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function validateFormManadatoryProperies(array $formDetails): bool
+	public function validateFormMandatoryProperties(array $formDetails): bool
 	{
 		$type = $formDetails[Config::FD_TYPE] ?? '';
 		$formId = $formDetails[Config::FD_FORM_ID] ?? '';

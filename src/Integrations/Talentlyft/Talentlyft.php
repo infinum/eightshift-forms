@@ -407,7 +407,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
-		// Change the final output if necesery.
+		// Change the final output if  necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];

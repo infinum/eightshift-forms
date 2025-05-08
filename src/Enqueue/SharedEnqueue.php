@@ -37,7 +37,7 @@ use EightshiftForms\Helpers\HooksHelpers;
 trait SharedEnqueue
 {
 	/**
-	 * Get enqueue shared inline varables.
+	 * Get enqueue shared inline variables.
 	 *
 	 * @param boolean $isPublic If enqueue is public or not.
 	 *

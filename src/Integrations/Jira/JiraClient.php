@@ -43,7 +43,7 @@ class JiraClient implements JiraClientInterface
 	/**
 	 * Return projects.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -170,7 +170,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -262,7 +262,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -356,7 +356,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -398,7 +398,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -469,8 +469,8 @@ class JiraClient implements JiraClientInterface
 			return $output;
 		}
 
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$params = \array_merge($params, $files);
 

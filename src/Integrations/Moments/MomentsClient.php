@@ -37,7 +37,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -133,7 +133,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -336,7 +336,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -360,7 +360,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -388,8 +388,8 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	{
 		$output = [];
 
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';

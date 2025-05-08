@@ -66,10 +66,10 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 	/**
 	 * Entries settings send entry in form submit key.
 	 */
-	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY = 'entries-save-additional-values';
-	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY = 'redirect-url';
-	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY = 'variations';
-	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY = 'increment-id';
+	public const SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY = 'entries-save-additional-values';
+	public const SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_REDIRECT_URL_KEY = 'redirect-url';
+	public const SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_VARIATIONS_KEY = 'variations';
+	public const SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_INCREMENT_ID_KEY = 'increment-id';
 
 	/**
 	 * Data data key.
@@ -223,14 +223,14 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => \__('Save additional keys to your record entry.', 'eightshift-forms'),
-									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Success redirect url', 'eightshift-forms'),
 											'checkboxHelp' => \__('Full URL where user will be redirected after successful form submission.', 'eightshift-forms'),
-											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
-											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_REDIRECT_URL_KEY,
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_REDIRECT_URL_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_REDIRECT_URL_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
 										],
@@ -238,8 +238,8 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Variation values', 'eightshift-forms'),
 											'checkboxHelp' => \__('List of all Variation values set by your form.', 'eightshift-forms'),
-											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
-											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_VARIATIONS_KEY,
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_VARIATIONS_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_VARIATIONS_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
 										],
@@ -247,8 +247,8 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Increment ID', 'eightshift-forms'),
 											'checkboxHelp' => \__('Increment ID set by the form successful submission.', 'eightshift-forms'),
-											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_KEY, $formId),
-											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY,
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_INCREMENT_ID_KEY, self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_SAVE_ADDITIONAL_VALUES_INCREMENT_ID_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
 										],
@@ -284,7 +284,7 @@ class SettingsEntries implements SettingGlobalInterface, SettingInterface, Servi
 						'tabContent' => [
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('Entries collection will allow you to store every form submition into the database and preview the data from WordPress admin.', 'eightshift-forms'),
+								'introSubtitle' => \__('Entries collection will allow you to store every form submission into the database and preview the data from WordPress admin.', 'eightshift-forms'),
 							],
 							[
 								'component' => 'intro',

@@ -60,7 +60,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	/**
 	 * Return custom fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<mixed>
 	 */
@@ -234,7 +234,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -318,7 +318,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -379,7 +379,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -499,7 +499,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -534,8 +534,8 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 */
 	private function prepareParams(array $params, string $formId): array
 	{
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
 		$output = [];
 
@@ -595,7 +595,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			]
 		);
 
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -612,7 +612,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// Structure response details.
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,

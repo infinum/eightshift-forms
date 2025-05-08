@@ -19,7 +19,7 @@ use InvalidArgumentException;
 final class UnverifiedRequestException extends InvalidArgumentException implements GeneralExceptionInterface
 {
 	/**
-	 * Iternal data.
+	 * Internal data.
 	 *
 	 * @var array<int|string, mixed>
 	 */

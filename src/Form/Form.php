@@ -28,7 +28,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 class Form extends AbstractFormBuilder implements ServiceInterface
 {
 	/**
-	 * Filter form component atributes modifications key.
+	 * Filter form component attributes modifications key.
 	 */
 	public const FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS = 'es_forms_form_settings_options';
 
@@ -206,7 +206,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 
 					// Add custom field block around none forms block to be able to use positioning.
 					if ($namespace !== $formsNamespace) {
-						// Find all forms attribtues added to a custom block.
+						// Find all forms attributes added to a custom block.
 						$customUsedAttrsDiff = \array_intersect_key(
 							$inBlock['attrs'] ?? [],
 							\array_merge(
@@ -248,7 +248,7 @@ class Form extends AbstractFormBuilder implements ServiceInterface
 					if ($hasSteps) {
 						// If block is step we need to just create block output and exit this loop.
 						if ($name === 'step') {
-							// Output key is insite the step key and this changes everytime we have step in the loop.
+							// Output key is inside the step key and this changes every time we have step in the loop.
 							$stepKey = $inKey;
 
 							$innerBlock['attrs']["{$blockName}FormProgressBarSteps"][] = [

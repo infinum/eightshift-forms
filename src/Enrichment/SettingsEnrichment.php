@@ -13,7 +13,7 @@ namespace EightshiftForms\Enrichment;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Settings\SettingGlobalInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -131,7 +131,7 @@ class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$enrichment = FiltersOuputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
+		$enrichment = FiltersOutputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
 
 		$isUsedPrefill = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY);
 		$isUsedPrefillUrl = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY);

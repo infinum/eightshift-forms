@@ -34,7 +34,7 @@ class WorkableClient implements ClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -161,7 +161,7 @@ class WorkableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsWorkable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -275,7 +275,7 @@ class WorkableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsWorkable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -299,7 +299,7 @@ class WorkableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsWorkable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -335,7 +335,7 @@ class WorkableClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsWorkable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -380,8 +380,8 @@ class WorkableClient implements ClientInterface
 		$output = [];
 		$answers = [];
 
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -498,7 +498,7 @@ class WorkableClient implements ClientInterface
 	}
 
 	/**
-	 * Return Subdomain from settings or global vairaible.
+	 * Return Subdomain from settings or global variable.
 	 *
 	 * @return string
 	 */
@@ -508,7 +508,7 @@ class WorkableClient implements ClientInterface
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */

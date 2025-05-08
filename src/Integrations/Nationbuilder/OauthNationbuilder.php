@@ -187,7 +187,7 @@ class OauthNationbuilder extends AbstractOauth
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$data['url'],

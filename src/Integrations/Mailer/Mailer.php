@@ -387,8 +387,8 @@ class Mailer implements MailerInterface
 	{
 		$output = [];
 
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$shouldSendEmptyFields = SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, SettingsMailer::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, $formId);
 

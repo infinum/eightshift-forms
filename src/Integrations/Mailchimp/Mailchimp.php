@@ -332,7 +332,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
-		// Change the final output if necesery.
+		// Change the final output if  necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];

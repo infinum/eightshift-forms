@@ -16,7 +16,7 @@ namespace EightshiftForms\Helpers;
 class EncryptionHelpers
 {
 	/**
-	 * Encript method.
+	 * Encrypt method.
 	 *
 	 * @param string $value Value used.
 	 * @param string $action Action used.

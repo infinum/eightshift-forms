@@ -222,7 +222,7 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Is test mode enabled?', 'eightshift-forms'),
-										'checkboxHelp' => \__('In test mode all playments will go to the test payment gateway.', 'eightshift-forms'),
+										'checkboxHelp' => \__('In test mode all payments will go to the test payment gateway.', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_CORVUS_IS_TEST, self::SETTINGS_CORVUS_IS_TEST, $formId),
 										'checkboxValue' => self::SETTINGS_CORVUS_IS_TEST,
 										'checkboxAsToggle' => true,

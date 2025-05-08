@@ -188,10 +188,10 @@ final class SettingsOutputHelpers
 			'inputIsDisabled' => $options['isDisabled'],
 		];
 
-		$isContantValueUsed = $options['isContantValueUsed'] ?? false;
+		$isConstantValueUsed = $options['isConstantValueUsed'] ?? false;
 		$value = $options['value'] ?? '';
 
-		if ($isContantValueUsed) {
+		if ($isConstantValueUsed) {
 			// Show only last 3 characters.
 			$visibleCharacters = 3;
 
@@ -240,7 +240,7 @@ final class SettingsOutputHelpers
 	): array {
 		$isDisabled = !empty($constantValue);
 		$value = '';
-		$isContantValueUsed = false;
+		$isConstantValueUsed = false;
 
 		$option = SettingsHelpers::getOptionValue($optionName);
 
@@ -248,7 +248,7 @@ final class SettingsOutputHelpers
 			$value = $option;
 		} else {
 			$value = $constantValue;
-			$isContantValueUsed = true;
+			$isConstantValueUsed = true;
 		}
 
 		$helpOutput = '';
@@ -265,7 +265,7 @@ final class SettingsOutputHelpers
 					This field value can also be set using a global variable via code.
 				</details>', 'eightshift-forms'), $constantName);
 
-			if ($isContantValueUsed) {
+			if ($isConstantValueUsed) {
 				$helpOutput = '<span class="is-filter-applied">' . \__('This field value is set with a global variable via code.', 'eightshift-forms') . '</span>';
 			}
 		}
@@ -276,7 +276,7 @@ final class SettingsOutputHelpers
 			'isDisabled' => $isDisabled,
 			'help' => $helpOutput,
 			'constantValue' => $constantValue,
-			'isContantValueUsed' => $isContantValueUsed,
+			'isConstantValueUsed' => $isConstantValueUsed,
 		];
 	}
 

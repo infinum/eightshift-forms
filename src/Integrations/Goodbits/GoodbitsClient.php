@@ -34,7 +34,7 @@ class GoodbitsClient implements ClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -119,7 +119,7 @@ class GoodbitsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsGoodbits::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -162,7 +162,7 @@ class GoodbitsClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsGoodbits::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -248,8 +248,8 @@ class GoodbitsClient implements ClientInterface
 	 */
 	private function prepareParams(array $params): array
 	{
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		return GeneralHelpers::prepareGenericParamsOutput($params);
 	}

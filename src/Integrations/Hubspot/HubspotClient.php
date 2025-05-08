@@ -73,7 +73,7 @@ class HubspotClient implements HubspotClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -269,7 +269,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -311,7 +311,7 @@ class HubspotClient implements HubspotClientInterface
 
 		if ($params) {
 			foreach ($params as $key => $value) {
-				// Remove unecesery fields.
+				// Remove unnecessary fields.
 				if (isset($customFields[$key])) {
 					continue;
 				}
@@ -336,7 +336,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -548,7 +548,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -582,7 +582,7 @@ class HubspotClient implements HubspotClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsHubspot::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -780,8 +780,8 @@ class HubspotClient implements HubspotClientInterface
 	{
 		$output = [];
 
-		// Remove unecesery params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		foreach ($params as $param) {
 			$typeCustom = $param['typeCustom'] ?? '';
@@ -879,7 +879,7 @@ class HubspotClient implements HubspotClientInterface
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */

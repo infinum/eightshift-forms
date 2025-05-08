@@ -196,7 +196,7 @@ class BulkRoute extends AbstractBaseRoute
 				$internalType = 'forms';
 				break;
 			case 'delete-permanently':
-				$msg = \esc_html__('deleted perminently', 'eightshift-forms');
+				$msg = \esc_html__('deleted permanently', 'eightshift-forms');
 				$internalType = 'forms';
 				break;
 			case 'duplicate':
@@ -288,7 +288,7 @@ class BulkRoute extends AbstractBaseRoute
 				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
 			}
 
-			// Prevent non syncahble forms from syncing like mailer.
+			// Prevent non-sync forms from syncing like mailer.
 			if (!GeneralHelpers::canIntegrationUseSync(GeneralHelpers::getFormTypeById((string) $id))) {
 				$output['skip'][] = $title;
 				continue;

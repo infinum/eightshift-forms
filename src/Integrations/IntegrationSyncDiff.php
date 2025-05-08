@@ -445,7 +445,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			];
 		}
 
-		// Bailout if update is not necesery.
+		// Bailout if update is not  necessary.
 		if (!$output['update']) {
 			return [
 				'formId' => $formId,
@@ -535,7 +535,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 
 			// Loop all outputs and prepare for the final output.
 			foreach ($changes as $changeKey => $changeValue) {
-				// No value no output necesery.
+				// No value no output  necessary.
 				if (!$changeValue) {
 					continue;
 				}

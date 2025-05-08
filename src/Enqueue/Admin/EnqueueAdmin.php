@@ -79,8 +79,8 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 			$this->getEnqueueSharedInlineCommonItems(false),
 			[
 				'nonce' => \wp_create_nonce('wp_rest'),
-				'confirmMsg' => \__('Are you sure you want to continue?', 'eighshift-forms'),
-				'importErrorMsg' => \__('There is an error with your data, please try again.', 'eighshift-forms'),
+				'confirmMsg' => \__('Are you sure you want to continue?', 'eightshift-forms'),
+				'importErrorMsg' => \__('There is an error with your data, please try again.', 'eightshift-forms'),
 				'isAdmin' => true,
 				'redirectionTimeout' => 100,
 			],

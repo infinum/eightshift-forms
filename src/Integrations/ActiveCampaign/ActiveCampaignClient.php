@@ -32,7 +32,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -132,7 +132,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -211,7 +211,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -260,7 +260,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -297,7 +297,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -356,7 +356,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -447,7 +447,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		$details = ApiHelpers::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -460,7 +460,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			return [];
 		}
 
-		// Prepeare custom actions.
+		// Prepare custom actions.
 		$actions = [];
 
 		if (isset($body['form']['actiondata']['actions'])) {
@@ -514,7 +514,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		);
 
 		// Structure response details.
-		return ApiHelpers::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY,
 			$response,
 			$url
@@ -550,8 +550,8 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	{
 		$output = [];
 
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$standardFields = \array_flip(ActiveCampaign::STANDARD_FIELDS);
 
@@ -586,7 +586,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 					$output[$name] = $value;
 				}
 			} else {
-				// Mape custom fields.
+				// Map custom fields.
 				$output['fieldValues'][] = [
 					'field' => $name,
 					'value' => $value,
@@ -610,7 +610,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */
@@ -620,7 +620,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 	}
 
 	/**
-	 * Return Api Url from settings or global vairaible.
+	 * Return Api Url from settings or global variable.
 	 *
 	 * @return string
 	 */

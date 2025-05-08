@@ -659,14 +659,14 @@ final class GeneralHelpers
 	}
 
 	/**
-	 * Remove unecesery custom params.
+	 * Remove unnecessary custom params.
 	 *
 	 * @param array<string, mixed> $params Params to check.
 	 * @param array<int, string> $additional Additional keys to remove.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public static function removeUneceseryParamFields(array $params, array $additional = []): array
+	public static function removeUnnecessaryParamFields(array $params, array $additional = []): array
 	{
 		$customFields = \array_flip(Helpers::flattenArray(UtilsHelper::getStateParams()));
 		$additional = \array_flip($additional);

@@ -22,12 +22,11 @@ use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\IntegrationsHelpers;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Validation\ValidationPatterns;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -49,23 +48,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	protected EnrichmentInterface $enrichment;
 
 	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
 	 * Create a new admin instance.
 	 *
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
 	public function __construct(
-		ManifestCacheInterface $manifestCache,
 		EnrichmentInterface $enrichment
 	) {
-		$this->manifestCache = $manifestCache;
 		$this->enrichment = $enrichment;
 	}
 
@@ -282,8 +271,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		);
 		$output['formResetOnSuccess'] = !DeveloperHelpers::isDeveloperSkipFormResetActive();
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
-		$output['formCaptchaErrorMsg'] = \esc_html__('A ReCaptcha error has occured. Please try again.', 'eightshift-forms');
-		$output['formMisconfigured'] = \is_user_logged_in() ? \esc_html__('You form is missing forms block or it is missconfigured.', 'eightshift-forms') : '';
+		$output['formCaptchaErrorMsg'] = \esc_html__('A ReCaptcha error has occurred. Please try again.', 'eightshift-forms');
+		$output['formMisconfigured'] = \is_user_logged_in() ? \esc_html__('You form is missing forms block or it is misconfigured.', 'eightshift-forms') : '';
 
 		// Enrichment config.
 		if (\apply_filters(SettingsEnrichment::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
@@ -294,7 +283,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 					'isUsedPrefillUrl' => SettingsHelpers::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
 					'allowedSmart' => \array_values(\array_filter(\explode(\PHP_EOL, SettingsHelpers::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY, 1)))),
 				],
-				FiltersOuputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
+				FiltersOutputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
 			);
 		} else {
 			$output['enrichment'] = [

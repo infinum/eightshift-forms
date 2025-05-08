@@ -65,9 +65,9 @@ class DebugEncryptRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$premission = $this->checkUserPermission();
-		if ($premission) {
-			return \rest_ensure_response($premission);
+		$permission = $this->checkUserPermission();
+		if ($permission) {
+			return \rest_ensure_response($permission);
 		}
 
 		$debug = [

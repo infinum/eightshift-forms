@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class that holds data for mocking filters output used in seeting for better UX.
+ * Class that holds data for mocking filters output used in setting for better UX.
  *
  * @package EightshiftForms\Hooks
  */
@@ -17,9 +17,9 @@ use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
- * FiltersOuputMock class.
+ * FiltersOutputMock class.
  */
-final class FiltersOuputMock
+final class FiltersOutputMock
 {
 	/**
 	 * Return enrichment manual map data filter output.
@@ -224,7 +224,7 @@ final class FiltersOuputMock
 	 *
 	 * @return array<string, array<mixed>>
 	 */
-	public static function getTrackingAditionalDataFilterValue(string $type, string $formId): array
+	public static function getTrackingAdditionalDataFilterValue(string $type, string $formId): array
 	{
 		$data = [];
 		$settings = '';

@@ -15,7 +15,7 @@ use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Settings\SettingInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -134,10 +134,10 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 		$formDetails = GeneralHelpers::getFormDetails($formId);
 		$formType = $formDetails[Config::FD_TYPE] ?? '';
 
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
-		$variation = FiltersOuputMock::getVariationFilterValue($formType, $formId, []);
-		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($formType, $formId);
-		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($formType, $formId);
+		$successRedirectUrl = FiltersOutputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
+		$variation = FiltersOutputMock::getVariationFilterValue($formType, $formId, []);
+		$trackingEventName = FiltersOutputMock::getTrackingEventNameFilterValue($formType, $formId);
+		$trackingAdditionalData = FiltersOutputMock::getTrackingAdditionalDataFilterValue($formType, $formId);
 
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
@@ -212,7 +212,7 @@ class SettingsGeneral implements SettingInterface, ServiceInterface
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
-										'checkboxHelp' => \__('Usualy used in combination with single submit for calculators.', 'eightshift-forms'),
+										'checkboxHelp' => \__('Usually used in combination with single submit for calculators.', 'eightshift-forms'),
 										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
 										'checkboxSingleSubmit' => true,

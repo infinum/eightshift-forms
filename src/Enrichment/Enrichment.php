@@ -12,7 +12,7 @@ namespace EightshiftForms\Enrichment;
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Helpers\UtilsHelper;
 
 /**
@@ -119,7 +119,7 @@ class Enrichment implements EnrichmentInterface
 	public function mapEnrichmentFields(array $params): array
 	{
 		// Get enrichment map.
-		$enrichment = FiltersOuputMock::getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
+		$enrichment = FiltersOutputMock::getEnrichmentManualMapFilterValue($this->getEnrichmentConfig())['config'];
 
 		if (!$enrichment) {
 			return $params;

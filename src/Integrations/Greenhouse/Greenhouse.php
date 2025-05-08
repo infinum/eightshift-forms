@@ -124,7 +124,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 				$name = $field['name'] ?? '';
 				$values = $field['values'];
 
-				// In GH select and check box is the same, addes some conditions to fine tune output.
+				// In GH select and check box is the same, adds some conditions to fine tune output.
 				switch ($type) {
 					case 'input_text':
 						switch ($name) {
@@ -312,7 +312,7 @@ class Greenhouse extends AbstractFormBuilder implements MapperInterface, Service
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
-		// Change the final output if necesery.
+		// Change the final output if  necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsGreenhouse::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];

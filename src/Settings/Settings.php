@@ -41,7 +41,7 @@ class Settings extends AbstractFormBuilder implements SettingsBuilderInterface
 		$output = [];
 
 		foreach (\apply_filters(Config::FILTER_SETTINGS_DATA, []) as $key => $value) {
-			// Determin if there is filter key name.
+			// Determine if there is filter key name.
 			if (!isset($value[$internalType])) {
 				continue;
 			}

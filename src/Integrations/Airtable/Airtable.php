@@ -237,7 +237,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 						'textareaName' => $name,
 						'textareaTracking' => $name,
 						'textareaFieldLabel' => $label,
-						'textareatDisabledOptions' => $this->prepareDisabledOptions('textarea'),
+						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea'),
 					];
 					break;
 				case 'singleSelect':
@@ -326,7 +326,7 @@ class Airtable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			'submitFieldUseError' => false,
 		];
 
-		// Change the final output if necesery.
+		// Change the final output if necessary.
 		$filterName = HooksHelpers::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];

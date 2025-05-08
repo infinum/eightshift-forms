@@ -71,7 +71,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 		$params = $formDetails[Config::FD_PARAMS];
 
 		// Remove unnecessary params.
-		$params = GeneralHelpers::removeUneceseryParamFields($params);
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		// If form ID is not set this is considered an global setting.
 		// Save all fields in the settings.

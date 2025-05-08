@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template for admin listing - item deails partial - used via ajax.
+ * Template for admin listing - item details partial - used via ajax.
  *
  * @package EightshiftForms\Blocks.
  */

@@ -332,7 +332,7 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									\__('Log in to your Clearbit Account.', 'eightshift-forms'),
-									// translators: %s will be replaced with the api externa link.
+									// translators: %s will be replaced with the api external link.
 									\sprintf(\__('Click on the <strong><a target="_blank" rel="noopener noreferrer" href="%s">API</a></strong> in the sidebar.', 'eightshift-forms'), 'https://dashboard.clearbit.com/api'),
 									\__('Copy the secret API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],
