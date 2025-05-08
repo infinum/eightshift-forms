@@ -82,9 +82,4 @@ if (\class_exists(Main::class) && \class_exists(ManifestCache::class)) {
 
 	// Require public helper class.
 	require __DIR__ . "{$sep}src{$sep}Helpers{$sep}publicHelper.php";
-
-	// Require test filters.
-	require __DIR__ . "{$sep}testFilters{$sep}testFilters.php";
-
-	(new TestFilters())->register();
 }
