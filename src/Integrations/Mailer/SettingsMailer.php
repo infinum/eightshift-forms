@@ -536,7 +536,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlob
 	{
 		return GeneralHelpers::minifyString(\sprintf(\__("
 			You can use markdown to provide additional styling to your email.
-			If you need help with writing markdown, <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at this cheatsheet</a>.
+			If you need help with writing markdown, <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at this cheatSheet</a>.
 			You can also use <a href='%2\$s' target='_blank' rel='noopener noreferrer'>this helper</a> to preview how your email will look like and is it valid.<br /><br />
 			Note: <br />
 			- <strong>If you want to add new line add two enters.</strong><br /><br />", 'eightshift-forms'), 'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet', 'https://parsedown.org/demo'));

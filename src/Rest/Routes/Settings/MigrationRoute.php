@@ -377,7 +377,7 @@ class MigrationRoute extends AbstractBaseRoute
 
 		if (!$outputFinal['items']) {
 			return ApiHelpers::getApiErrorPublicOutput(
-				\__('All forms returned and error. It looks like you allready migrated everything.', 'eightshift-forms'),
+				\__('All forms returned and error. It looks like you already migrated everything.', 'eightshift-forms'),
 				$outputFinal,
 			);
 		}

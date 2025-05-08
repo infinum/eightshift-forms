@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - files
+ * The class register route for public form submitting endpoint - files
  *
  * @package EightshiftForms\Rest\Routes
  */

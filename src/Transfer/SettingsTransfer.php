@@ -280,7 +280,7 @@ class SettingsTransfer implements ServiceInterface, SettingGlobalInterface
 								'component' => 'intro',
 								'introTitle' => \__('Manual import', 'eightshift-forms'),
 								'introSubtitle' => \__('
-								<span>Manual import JSON data thay you get from the failed integration.</span>
+								<span>Manual import JSON data that you get from the failed integration.</span>
 								<span>Paste the JSON data from you email in the <strong>Import data field</strong>.</span>', 'eightshift-forms'),
 							],
 							[

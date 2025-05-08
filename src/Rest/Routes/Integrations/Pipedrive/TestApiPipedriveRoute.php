@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Pipedrive
+ * The class register route for public form submitting endpoint - Pipedrive
  *
  * @package EightshiftForms\Rest\Route\Integrations\Pipedrive
  */

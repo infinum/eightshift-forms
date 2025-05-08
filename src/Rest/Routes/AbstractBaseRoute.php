@@ -112,7 +112,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				break;
 		}
 
-		// Check if request maybe has json params usualy sent by the Block editor.
+		// Check if request maybe has json params usually sent by the Block editor.
 		if ($request->get_json_params()) {
 			$params = \array_merge(
 				$params,
@@ -381,7 +381,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	/**
 	 * Prepare file from request for later usage. Attach custom data to file array.
 	 *
-	 * @param array<string, mixed> $file File array from reuqest.
+	 * @param array<string, mixed> $file File array from request.
 	 * @param array<string, mixed> $params Params to use.
 	 * @return array<string, mixed>
 	 */

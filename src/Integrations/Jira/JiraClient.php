@@ -292,7 +292,7 @@ class JiraClient implements JiraClientInterface
 	}
 
 	/**
-	 * Return base url claned from user input.
+	 * Return base url cleaned from user input.
 	 *
 	 * @param string $output Output to clean.
 	 *
@@ -692,7 +692,7 @@ class JiraClient implements JiraClientInterface
 					$descriptionOutput .= \PHP_EOL . \PHP_EOL . \esc_html($additionalDescription);
 				}
 
-				// Custom fields maps is not suported.
+				// Custom fields maps is not supported.
 			}
 
 			// Populate output desc.

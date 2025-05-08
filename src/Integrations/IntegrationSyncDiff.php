@@ -114,7 +114,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				'formId' => $formId,
 				'status' => Config::STATUS_ERROR,
 				'debugType' => 'integration_missing_itemId',
-				'message' => \esc_html__('Block grammer build failed.', 'eightshift-forms'),
+				'message' => \esc_html__('Block grammar build failed.', 'eightshift-forms'),
 			];
 		}
 
@@ -263,7 +263,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	}
 
 	/**
-	 * Sync content and integration form and provide the otuput for block editor route to manualy sync forms.
+	 * Sync content and integration form and provide the output for block editor route to manually sync forms.
 	 *
 	 * @param string $formId Form Id.
 	 * @param boolean $editorOutput Change output keys depending on the output type.
@@ -575,7 +575,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 			$output['isOutputMissing'] = true;
 		} else {
 			// If output not is missing recreate a form.
-			// Recounstruct blocks output and build array for final serialization.
+			// Reconstruct blocks output and build array for final serialization.
 			$output['output'] = $this->reconstructBlocksTopLevelOutput($output, $editorOutput);
 		}
 
@@ -659,7 +659,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 				// Find attributes in integration and content that match disabled options item.
 				$i = $integration['attrs'][$disabledOption] ?? '';
 				$c = $content['attrs'][$disabledOption] ?? '';
-				// If intregration is missing disabled or protected attribute. There could be and issue in the mapping of component attributes for integration.
+				// If integration is missing disabled or protected attribute. There could be and issue in the mapping of component attributes for integration.
 				if (!$i) {
 					// This condition is here if both integration and content are empty.
 					if ($i !== $c) {
@@ -681,7 +681,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 					}
 				}
 
-				// If values of attribute in content and intregation are diffrerent do something.
+				// If values of attribute in content and internation are different do something.
 				if ($i !== $c) {
 					// If protected attribute name has changed we need to update the whole block. This is an unlikely scenario but it can happen.
 					if ($i === "{$prefix}Name" && $c === "{$prefix}Name") {
@@ -721,7 +721,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 					continue;
 				}
 
-				// Add missing attributes to the otput.
+				// Add missing attributes to the output.
 				$output['update'] = true;
 				$output['added'] = $missingAttributesKey;
 				$output['output']['attrs'][$missingAttributesKey] = $missingAttributesValue;
@@ -738,7 +738,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 					continue;
 				}
 
-				// Remove attributes to the otput.
+				// Remove attributes to the output.
 				$output['update'] = true;
 				$output['removed'] = $removedAttributesKey;
 				unset($output['output']['attrs'][$removedAttributesKey]);
@@ -1100,7 +1100,7 @@ class IntegrationSyncDiff implements ServiceInterface, IntegrationSyncInterface
 	}
 
 	/**
-	 * General inner blocks key name from component value atrribute.
+	 * General inner blocks key name from component value attribute.
 	 *
 	 * @param string $prefix Component prefix.
 	 * @param array<string, mixed> $attributes Array of all component attributes.

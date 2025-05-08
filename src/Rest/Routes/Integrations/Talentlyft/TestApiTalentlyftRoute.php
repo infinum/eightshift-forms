@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Talentlyft
+ * The class register route for public form submitting endpoint - Talentlyft
  *
  * @package EightshiftForms\Rest\Route\Integrations\Talentlyft
  */

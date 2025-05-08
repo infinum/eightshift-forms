@@ -371,7 +371,7 @@ class Transfer implements TransferInterface
 	}
 
 	/**
-	 * Get formated meta/options output.
+	 * Get formatted meta/options output.
 	 *
 	 * @param array<int, object> $items Query output items.
 	 *

@@ -473,9 +473,9 @@ class MailchimpClient implements MailchimpClientInterface
 				$output[$name] = [
 					'addr1' => $value,
 					'addr2' => '',
-					'city' => '&sbsp;',
+					'city' => '&nbsp;',
 					'state' => '',
-					'zip' => '&sbsp;',
+					'zip' => '&nbsp;',
 					'country' => '',
 				];
 

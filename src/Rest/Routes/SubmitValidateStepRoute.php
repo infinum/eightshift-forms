@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - validating step
+ * The class register route for public form submitting endpoint - validating step
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -178,7 +178,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	}
 
 	/**
-	 * Check if conditons are met to go to next step.
+	 * Check if conditions are met to go to next step.
 	 *
 	 * @param array<int, mixed> $flowConditions Flow conditions that we need to check.
 	 * @param array<string, mixed> $params Params array.

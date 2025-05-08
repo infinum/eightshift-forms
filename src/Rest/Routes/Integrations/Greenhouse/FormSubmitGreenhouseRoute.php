@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Greenhouse
+ * The class register route for public form submitting endpoint - Greenhouse
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Greenhouse
  */

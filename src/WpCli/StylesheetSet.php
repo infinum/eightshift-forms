@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The file that holds WpCli command to copy stylessheet set from form to your project.
+ * The file that holds Wp-Cli command to copy stylesheet set from form to your project.
  *
  * @package EightshiftForms\WpCli
  */
@@ -20,7 +20,7 @@ use WP_CLI;
 class StylesheetSet implements ServiceCliInterface
 {
 	/**
-	 * Register method for WPCLI command
+	 * Register method for WP-CLI command
 	 *
 	 * @return void
 	 */
@@ -44,7 +44,7 @@ class StylesheetSet implements ServiceCliInterface
 	}
 
 	/**
-	 * Get WPCLI command name.
+	 * Get WP-CLI command name.
 	 *
 	 * @return string
 	 */
@@ -54,14 +54,14 @@ class StylesheetSet implements ServiceCliInterface
 	}
 
 	/**
-	 * Return WPCLI command documentation.
+	 * Return WP-CLI command documentation.
 	 *
 	 * @return array<string, mixed>
 	 */
 	public function getDocs(): array
 	{
 		return [
-			'shortdesc' => 'This stylesheet set is used to give you a headstart in providing your own style to the form.',
+			'shortdesc' => 'This stylesheet set is used to give you a head start in providing your own style to the form.',
 			'synopsis' => [
 				[
 					'type' => 'assoc',

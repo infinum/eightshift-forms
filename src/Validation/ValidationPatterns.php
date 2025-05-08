@@ -78,7 +78,7 @@ class ValidationPatterns
 	/**
 	 * Get validation pattern - output from pattern.
 	 *
-	 * @param string $pattern Pattern to serach.
+	 * @param string $pattern Pattern to search.
 	 *
 	 * @return array<string, string>
 	 */

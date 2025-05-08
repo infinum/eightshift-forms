@@ -43,7 +43,7 @@ class Main extends AbstractMain
 	}
 
 	/**
-	 * Reguster all the services and trigger custom action hook used for addons.
+	 * Register all the services and trigger custom action hook used for addons.
 	 *
 	 * @return void
 	 */

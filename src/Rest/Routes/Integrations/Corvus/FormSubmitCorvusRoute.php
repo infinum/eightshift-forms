@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Corvus
+ * The class register route for public form submitting endpoint - Corvus
  *
  * @package EightshiftForms\Rest\Route\Integrations\Corvus
  */
@@ -95,7 +95,7 @@ class FormSubmitCorvusRoute extends AbstractFormSubmit
 		// Set validation submit once.
 		$this->validator->setValidationSubmitOnce($formId);
 
-		// Located before the sendEmail mentod so we can utilize common email response tags.
+		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.

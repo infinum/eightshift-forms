@@ -68,7 +68,7 @@ class Security implements SecurityInterface
 				'time' => $time,
 			];
 
-			\update_option($keyName, $data); // No need for unserilize because we are storing array.
+			\update_option($keyName, $data); // No need for unserialize because we are storing array.
 			return true;
 		}
 
@@ -97,7 +97,7 @@ class Security implements SecurityInterface
 			return false;
 		}
 
-		// Finaly update the count and time.
+		// Finally update the count and time.
 		$data[$ip] = [
 			'count' => $count + 1,
 			'time' => $time,

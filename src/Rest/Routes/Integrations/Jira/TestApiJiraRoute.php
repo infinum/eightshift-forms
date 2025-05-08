@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Jira
+ * The class register route for public form submitting endpoint - Jira
  *
  * @package EightshiftForms\Rest\Route\Integrations\Jira
  */

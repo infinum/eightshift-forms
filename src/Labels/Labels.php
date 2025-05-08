@@ -69,7 +69,7 @@ class Labels implements LabelsInterface
 			$this->getGenericLabels(),
 			$this->getValidationLabels(),
 			$this->getMailerLabels(),
-			$this->getCutomLabels()
+			$this->getCustomLabels()
 		);
 
 		// Google reCaptcha.
@@ -192,7 +192,7 @@ class Labels implements LabelsInterface
 	}
 
 	/**
-	 * Output all validation labels from cache for fater validation.
+	 * Output all validation labels from cache for faster validation.
 	 *
 	 * @param string $formId Form ID.
 	 *
@@ -266,13 +266,13 @@ class Labels implements LabelsInterface
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
-			'validationPhone' => \__('This phone number is not valid. It must contain a valid contry/network prefix with only numbers.', 'eightshift-forms'),
+			'validationPhone' => \__('This phone number is not valid. It must contain a valid country/network prefix with only numbers.', 'eightshift-forms'),
 			'validationDate' => \__('This date format is not valid.', 'eightshift-forms'),
 			'validationDateTime' => \__('This date/time format is not valid.', 'eightshift-forms'),
 			'validationDateNoFuture' => \__('This fields only allows dates in the past.', 'eightshift-forms'),
 			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
 			'validationGreenhouseAcceptMime' => \__('The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed.', 'eightshift-forms'),
-			'validationMomentsInvalidPhoneLenght' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
+			'validationMomentsInvalidPhoneLength' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
 			'validationMomentsInvalidSpecialCharacters' => \__('This field contains forbidden special characters.', 'eightshift-forms'),
 			'validationWorkableMaxLength127' => \__('This field is too long. Max length is 127 characters.', 'eightshift-forms'),
 			'validationWorkableMaxLength255' => \__('This field is too long. Max length is 255 characters.', 'eightshift-forms'),
@@ -288,13 +288,13 @@ class Labels implements LabelsInterface
 	 *
 	 * @return array<string, string>
 	 */
-	private function getCutomLabels(): array
+	private function getCustomLabels(): array
 	{
 		return [
 			'customNoAction' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
 			'customError' => \__('There was an error with your form submission.', 'eightshift-forms'),
-			'customSuccess' => \__('Form was successfuly submitted.', 'eightshift-forms'),
-			'customSuccessRedirect' => \__('Form was successfuly submitted. Redirecting you now.', 'eightshift-forms'),
+			'customSuccess' => \__('Form was successfully submitted.', 'eightshift-forms'),
+			'customSuccessRedirect' => \__('Form was successfully submitted. Redirecting you now.', 'eightshift-forms'),
 		];
 	}
 
@@ -375,7 +375,7 @@ class Labels implements LabelsInterface
 			'hubspotMissingCommunicationConsentTextError' => \__('The communication consent text was missing for a subscription. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotMissingLegitimateInterestTextError' => \__('The legitimate interest consent text was missing. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotDuplicateSubscriptionTypeIdError' => \__('The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator.', 'eightshift-forms'),
-			'hubspotHasRecaptchaEnabledError' => \__('Your Hubspot form has reCaptch enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotHasRecaptchaEnabledError' => \__('Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotError429Error' => \__('The HubSpot account has reached the rate limit. Please contact website administrator.', 'eightshift-forms'),
 		];
 	}
@@ -419,7 +419,7 @@ class Labels implements LabelsInterface
 			'activeCampaignInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'activeCampaignDuplicateError' => \__('Email address already exists in the system.', 'eightshift-forms'),
 			'activeCampaign500Error' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
-			'activeCampaignForbidenError' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
+			'activeCampaignForbiddenError' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
 			'activeCampaignSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -494,7 +494,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'talentlyftBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-			'talentlyftValicationError' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
+			'talentlyftValidationError' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
 			'talentlyftSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}

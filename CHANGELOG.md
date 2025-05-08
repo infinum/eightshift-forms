@@ -1067,7 +1067,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - filter for setting http request from `httpRequestArgs ` to `httpRequestTimeout` because it is used only to set timeout.
 - Greenhouse integration from `wp_remote_post ` to regular `Curl` because of the issues while sending the attachments. You are now only limited on the amount of memory your server can send.
 - form will now throw an error if form-ID or type is missing in the request.
-- all remote requests are now outputed via helper for easier and more predictable output.
+- all remote requests are now outputted via helper for easier and more predictable output.
 - converting from internal geolocation logic to libs abstract class logic.
 - updating libs.
 - `ES_GEOLOCAITON` global constant to `ES_GEOLOCAITON_IP`.

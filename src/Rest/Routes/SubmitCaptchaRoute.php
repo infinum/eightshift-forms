@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Captcha
+ * The class register route for public form submitting endpoint - Captcha
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -109,7 +109,7 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 					\array_merge(
 						$debug,
 						[
-							'exeption' => $t,
+							'exception' => $t,
 						]
 					)
 				)

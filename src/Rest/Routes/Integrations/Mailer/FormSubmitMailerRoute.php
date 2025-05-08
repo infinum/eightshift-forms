@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Mailer
+ * The class register route for public form submitting endpoint - Mailer
  *
  * @package EightshiftForms\Rest\Route\Integrations\Mailer
  */

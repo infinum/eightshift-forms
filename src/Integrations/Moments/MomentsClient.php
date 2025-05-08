@@ -240,10 +240,10 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		}
 
 		// Validate invalid phone field.
-		\preg_match_all("/(\w*) (number is not numeric)/", $msg, $matchesPhoneIsNumberic, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (number is not numeric)/", $msg, $matchesPhoneIsNumeric, \PREG_SET_ORDER, 0);
 
-		if ($matchesPhoneIsNumberic) {
-			$key = $matchesPhoneIsNumberic[0][1] ?? '';
+		if ($matchesPhoneIsNumeric) {
+			$key = $matchesPhoneIsNumeric[0][1] ?? '';
 
 			if ($key) {
 				$output[$key] = 'validationPhone';
@@ -257,7 +257,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesPhoneLength[0][1] ?? '';
 
 			if ($key) {
-				$output[$key] = 'validationMomentsInvalidPhoneLenght';
+				$output[$key] = 'validationMomentsInvalidPhoneLength';
 			}
 		}
 

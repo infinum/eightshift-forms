@@ -280,7 +280,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 							],
 							[
 								'component' => 'intro',
-								'introSubtitle' => \__('All fields will be outputed in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
+								'introSubtitle' => \__('All fields will be outputted in the Jira issue description field using table layout but you can also map individual custom field.', 'eightshift-forms'),
 								'introHelp' => SettingsOutputHelpers::getPartialFieldTags(SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES])),
 							],
 							[
@@ -483,7 +483,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'inputFieldLabel' => \__('Alternative board url', 'eightshift-forms'),
 								'inputType' => 'text',
 								'inputIsRequired' => false,
-								'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a defference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
+								'inputFieldHelp' => \__('Provided the Jira alternative board URL if there is a difference. For example, if the board URL is https://infinum-wordpress.atlassian.net, the board name is <b>infinum-wordpress.atlassian.net</b>.', 'eightshift-forms'),
 								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_JIRA_API_BOARD_URL_KEY),
 							],
 						],
@@ -498,7 +498,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 								'stepsTitle' => \__('How to get the API key?', 'eightshift-forms'),
 								'stepsContent' => [
 									\__('Log in to your Jira Account.', 'eightshift-forms'),
-									// translators: %s will be replaced with the api externa link.
+									// translators: %s will be replaced with the api external link.
 									\sprintf(\__('Click on the <strong><a target="_blank" rel="noopener noreferrer" href="%s">API</a></strong>.', 'eightshift-forms'), 'https://id.atlassian.com/manage-profile/security/api-tokens'),
 									\__('Copy the secret API key into the field under the API tab or use the global constant.', 'eightshift-forms'),
 								],

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Moments
+ * The class register route for public form submitting endpoint - Moments
  *
- * @package EightshiftForms\Rest\Rout\Integrations\Momentses
+ * @package EightshiftForms\Rest\Rout\Integrations\Moments
  */
 
 declare(strict_types=1);

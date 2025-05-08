@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Calculator
+ * The class register route for public form submitting endpoint - Calculator
  *
  * @package EightshiftForms\Rest\Route\Integrations\Calculator
  */
@@ -53,7 +53,7 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 		// Set validation submit once.
 		$this->validator->setValidationSubmitOnce($formId);
 
-		// Located before the sendEmail mentod so we can utilize common email response tags.
+		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.

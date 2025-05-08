@@ -427,7 +427,7 @@ class TestFilters implements ServiceInterface
 	}
 
 	/**
-	 * Add additional style classet to field block.
+	 * Add additional style classed to field block.
 	 *
 	 * @param array<string, mixed> $attributes Block attributes.
 	 *
@@ -585,7 +585,7 @@ class TestFilters implements ServiceInterface
 	/**
 	 * Change the current locale.
 	 *
-	 * This filter can be used to change the value of current locale. By default WordPress sets the locale in the admin to `en_US` and with this filter it can be changed to whichever locale is needed (e.g. when using multilanguage plugin).
+	 * This filter can be used to change the value of current locale. By default WordPress sets the locale in the admin to `en_US` and with this filter it can be changed to whichever locale is needed (e.g. when using multilingual plugin).
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -739,7 +739,7 @@ class TestFilters implements ServiceInterface
 	 * Change integration ID fields data before we send it to the external integration.
 	 *
 	 * @param string $itemId Item id.
-	 * @param array<mixed> $params Params to alterate.
+	 * @param array<mixed> $params Params to alternate.
 	 * @param string $formId Form id.
 	 *
 	 * @return string
@@ -847,7 +847,7 @@ class TestFilters implements ServiceInterface
 	// Migration actions.
 
 	/**
-	 * Run custom action after migration from verson 2 to 3 - general.
+	 * Run custom action after migration from version 2 to 3 - general.
 	 *
 	 * @return void
 	 */
@@ -857,7 +857,7 @@ class TestFilters implements ServiceInterface
 	}
 
 	/**
-	 * Run custom action after migration from verson 2 to 3 - forms.
+	 * Run custom action after migration from version 2 to 3 - forms.
 	 *
 	 * @return void
 	 */
@@ -867,7 +867,7 @@ class TestFilters implements ServiceInterface
 	}
 
 	/**
-	 * Run custom action after migration from verson 2 to 3 - locale.
+	 * Run custom action after migration from version 2 to 3 - locale.
 	 *
 	 * @return void
 	 */

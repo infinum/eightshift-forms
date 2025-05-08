@@ -120,7 +120,7 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Ignore keys', 'eightshift-forms'),
-								'textareaFieldHelp' => \__("Don't send failback email if any of these keys are present in the submission. One key per line.", 'eightshift-forms'),
+								'textareaFieldHelp' => \__("Don't send fallback email if any of these keys are present in the submission. One key per line.", 'eightshift-forms'),
 								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_FALLBACK_IGNORE_KEY, 1),
 							],
 						],

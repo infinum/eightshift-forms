@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Workable
+ * The class register route for public form submitting endpoint - Workable
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Workable
  */
