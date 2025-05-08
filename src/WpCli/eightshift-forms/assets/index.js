@@ -2,7 +2,7 @@
 
 import domReady from '@wordpress/dom-ready';
 
-export default function() {
+export default function () {
 	domReady(() => {
 		const selector = `.js-es-block`;
 		const elements = document.querySelectorAll(selector);

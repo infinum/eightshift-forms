@@ -22,9 +22,7 @@ $data = apply_filters(Config::FILTER_SETTINGS_DATA, []);
 $sectionClass = $attributes['sectionClass'] ?? '';
 $adminSettingsType = $attributes['adminSettingsType'] ?? '';
 
-foreach ($items as $key => $innerItems) {
-?>
-
+foreach ($items as $key => $innerItems) { ?>
 	<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
 		<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
 			<div class="<?php echo esc_attr("{$sectionClass}__sidebar-label"); ?>">

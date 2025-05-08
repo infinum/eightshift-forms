@@ -135,14 +135,14 @@ class Blocks extends AbstractBlocks
 		// Update media breakpoints from the filter.
 		$filterName = HooksHelpers::getFilterName(['blocks', 'mediaBreakpoints']);
 
-		if (!has_filter($filterName)) {
+		if (!\has_filter($filterName)) {
 			return $output;
 		}
 
-		$customMediaBreakpoints = apply_filters($filterName, []);
+		$customMediaBreakpoints = \apply_filters($filterName, []);
 
 		if (
-			is_array($customMediaBreakpoints) &&
+			\is_array($customMediaBreakpoints) &&
 			isset($customMediaBreakpoints['mobile']) &&
 			isset($customMediaBreakpoints['tablet']) &&
 			isset($customMediaBreakpoints['desktop']) &&

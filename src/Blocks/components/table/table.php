@@ -35,8 +35,12 @@ if (!$tableContent) {
 			<thead>
 				<tr>
 					<?php foreach ($tableHead as $head) { ?>
-						<th><?php echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-								?></th>
+						<th>
+							<?php
+							// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+							echo $head;
+							?>
+						</th>
 					<?php } ?>
 				</tr>
 			</thead>
@@ -45,8 +49,12 @@ if (!$tableContent) {
 			<?php foreach ($tableContent as $row) { ?>
 				<tr>
 					<?php foreach ($tableHead as $headKey => $headValue) { ?>
-						<td><?php echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-								?></td>
+						<th>
+							<?php
+							// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+							echo $row[$headKey] ?? '';
+							?>
+						</th>
 					<?php } ?>
 				</tr>
 			<?php } ?>

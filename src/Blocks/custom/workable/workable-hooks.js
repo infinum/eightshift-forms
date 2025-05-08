@@ -21,11 +21,13 @@ export const hooks = () => {
 				});
 			}
 
-			select(STORE_NAME).getSettings().allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
-				if (!settings.attributes.workableAllowedBlocks.default.includes(element)) {
-					settings.attributes.workableAllowedBlocks.default.push(element);
-				}
-			});
+			select(STORE_NAME)
+				.getSettings()
+				.allowedBlocksBuilderIntegrationAdditionalBlocksList.forEach((element) => {
+					if (!settings.attributes.workableAllowedBlocks.default.includes(element)) {
+						settings.attributes.workableAllowedBlocks.default.push(element);
+					}
+				});
 		}
 
 		return settings;

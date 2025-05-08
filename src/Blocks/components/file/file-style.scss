@@ -1,4 +1,4 @@
-// stylelint-disable declaration-no-important
+// stylelint-disable max-nesting-depth
 
 @use '../../assets/styles/bootstrap-scss.scss' as theme;
 
@@ -105,7 +105,6 @@
 				}
 
 				@include theme.media(large up) {
-					// stylelint-disable-line max-nesting-depth
 					--dz-progress-scoped-height: 6px;
 				}
 			}

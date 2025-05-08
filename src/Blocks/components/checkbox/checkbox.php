@@ -100,8 +100,10 @@ if ($checkboxFieldAttrs) {
 
 ?>
 
-<div class="<?php echo esc_attr($checkboxClass); ?>" <?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-																											?>>
+<div
+	class="<?php echo esc_attr($checkboxClass); ?>"
+	<?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'content', "{$componentClass}__content")); ?>">
 		<input
 			class="<?php echo esc_attr($checkboxInputClass); ?>"

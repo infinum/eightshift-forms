@@ -56,8 +56,10 @@ $nextButtonComponent = '';
 
 ?>
 
-<div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-																									?>>
+<div
+	class="<?php echo esc_attr($stepClass); ?>"
+	<?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'debug-details', "{$componentClass}__debug-details")); ?>">
 		<?php

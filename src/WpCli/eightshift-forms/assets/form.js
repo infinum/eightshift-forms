@@ -10,9 +10,7 @@ export class Form {
 		const elements = document.querySelectorAll(this.formSelector);
 
 		if (elements?.length) {
-			[...elements].forEach(() => {
-
-			});
+			[...elements].forEach(() => {});
 		}
 	};
 }

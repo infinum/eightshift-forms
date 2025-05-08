@@ -7,7 +7,6 @@
  */
 
 use EightshiftForms\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
 $heading = $attributes['heading'] ?? '';

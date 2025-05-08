@@ -269,12 +269,10 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 					// Validate captcha.
 					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-						$shouldValidateCaptcha = [
-							$formDetails[Config::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY,
-							!DeveloperHelpers::isDeveloperSkipCaptchaActive(),
-						];
-
-						if (!\in_array(false, $shouldValidateCaptcha, true)) {
+						if (
+							$formDetails[Config::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY &&
+							!DeveloperHelpers::isDeveloperSkipCaptchaActive()
+						) {
 							$captchaParams = $formDetails[Config::FD_CAPTCHA] ?? [];
 
 							if (!$captchaParams) {

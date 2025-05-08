@@ -1,3 +1,5 @@
+// stylelint-disable max-nesting-depth
+
 @use '../../assets/styles/bootstrap-scss.scss' as theme;
 
 .es-layout {
@@ -26,7 +28,6 @@
 
 			> * {
 				@include theme.media(desktop up) {
-					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 6;
 				}
 			}
@@ -41,12 +42,10 @@
 
 			> * {
 				@include theme.media(desktop) {
-					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 6;
 				}
 
 				@include theme.media(large up) {
-					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 4;
 				}
 			}
@@ -61,12 +60,10 @@
 
 			> * {
 				@include theme.media(desktop) {
-					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 6;
 				}
 
 				@include theme.media(large up) {
-					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 3;
 				}
 			}
@@ -132,14 +129,12 @@
 				padding: 1.5rem;
 
 				@include theme.media(large up) {
-					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 9;
 				}
 			}
 
 			> *:nth-child(2) {
 				> * {
-					// stylelint-disable-line max-nesting-depth
 					background-color: var(--global-colors-esf-white);
 					border-radius: 0.5rem;
 					border: 1px solid var(--global-colors-esf-border);
@@ -148,7 +143,6 @@
 				}
 
 				@include theme.media(large up) {
-					// stylelint-disable-line max-nesting-depth
 					grid-column-end: span 3;
 				}
 			}

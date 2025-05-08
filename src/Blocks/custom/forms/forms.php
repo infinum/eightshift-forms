@@ -104,8 +104,10 @@ $formsClass = Helpers::classnames([
 
 ?>
 
-<div class="<?php echo esc_attr($formsClass); ?>" <?php echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-																									?>>
+<div
+	class="<?php echo esc_attr($formsClass); ?>"
+	<?php echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 	<?php
 	foreach ($allForms as $formId) {
 		// Convert blocks to array.

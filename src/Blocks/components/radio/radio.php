@@ -79,8 +79,10 @@ if ($radioFieldAttrs) {
 
 ?>
 
-<div class="<?php echo esc_attr($radioClass); ?>" <?php echo $radioFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-																									?>>
+<div
+	class="<?php echo esc_attr($radioClass); ?>"
+	<?php echo $radioFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'content', "{$componentClass}__content")); ?>">
 		<input
 			class="<?php echo esc_attr($radioInputClass); ?>"
