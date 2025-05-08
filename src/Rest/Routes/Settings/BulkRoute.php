@@ -77,9 +77,9 @@ class BulkRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$premission = $this->checkUserPermission();
-		if ($premission) {
-			return \rest_ensure_response($premission);
+		$permission = $this->checkUserPermission();
+		if ($permission) {
+			return \rest_ensure_response($permission);
 		}
 
 		$debug = [
@@ -123,8 +123,8 @@ class BulkRoute extends AbstractBaseRoute
 			case 'restore':
 				$output = $this->restore($ids);
 				break;
-			case 'delete-perminentely':
-				$output = $this->deletePerminently($ids);
+			case 'delete-permanently':
+				$output = $this->deletePermanently($ids);
 				break;
 			case 'duplicate':
 				$output = $this->duplicate($ids);
@@ -180,36 +180,36 @@ class BulkRoute extends AbstractBaseRoute
 		$skip = $details['skip'] ?? [];
 
 		$msg = '';
-		$intrernaType = 'forms';
+		$internalType = 'forms';
 
 		switch ($type) {
 			case 'sync':
 				$msg = \esc_html__('synced', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'delete':
 				$msg = \esc_html__('deleted', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'restore':
 				$msg = \esc_html__('restored', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
-			case 'delete-perminentely':
+			case 'delete-permanently':
 				$msg = \esc_html__('deleted perminently', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'duplicate':
 				$msg = \esc_html__('duplicate', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'delete-entry':
 				$msg = \esc_html__('deleted', 'eightshift-forms');
-				$intrernaType = 'entries';
+				$internalType = 'entries';
 				break;
 			case 'duplicate-entry':
 				$msg = \esc_html__('duplicate', 'eightshift-forms');
-				$intrernaType = 'entries';
+				$internalType = 'entries';
 				break;
 		}
 
@@ -217,14 +217,14 @@ class BulkRoute extends AbstractBaseRoute
 			return [
 				'status' => 'error',
 				// translators: %s replaces form msg type.
-				'msg' => \sprintf(\esc_html__('There are no %1$s in your list to %2$s.', 'eightshift-forms'), $intrernaType, $msg),
+				'msg' => \sprintf(\esc_html__('There are no %1$s in your list to %2$s.', 'eightshift-forms'), $internalType, $msg),
 			];
 		}
 
 		if (\count($details) > 1) {
 			$msgOutput = [
 				// translators: %s replaces type.
-				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $intrernaType),
+				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $internalType),
 			];
 
 			if ($error) {
@@ -334,13 +334,13 @@ class BulkRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Delete perminently forms by Ids.
+	 * Delete permanently forms by Ids.
 	 *
 	 * @param array<int> $ids Form Ids.
 	 *
 	 * @return array<int>
 	 */
-	private function deletePerminently(array $ids): array
+	private function deletePermanently(array $ids): array
 	{
 		$output = [];
 
@@ -361,7 +361,7 @@ class BulkRoute extends AbstractBaseRoute
 			}
 		}
 
-		return $this->output($output, 'delete-perminentely');
+		return $this->output($output, 'delete-permanently');
 	}
 
 	/**
