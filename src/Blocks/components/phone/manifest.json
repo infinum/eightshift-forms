@@ -87,8 +87,28 @@
 		"phoneTypeCustom": {
 			"type": "string"
 		},
+		"phoneViewType": {
+			"type": "string",
+			"default": "number"
+		},
 		"phoneTwSelectorsData": {
 			"type": "array"
 		}
+	},
+	"options": {
+		"phoneViewType": [
+			{
+				"value": "number",
+				"label": "Number"
+			},
+			{
+				"value": "number-country-code",
+				"label": "Number with country code"
+			},
+			{
+				"value": "number-country-label",
+				"label": "Number with country label"
+			}
+		]
 	}
 }

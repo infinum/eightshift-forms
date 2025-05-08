@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.5.0]
+
+### Added
+
+- New option on phone field to toggle what type of value to show on the frontend.
+- Mailer sender conditional logic now supports negation.
+- Choices.js for select now output 50 items when searching.
+
 ## [6.4.1]
 
 ### Fixed
@@ -1195,6 +1203,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.5.0]: https://github.com/infinum/eightshift-forms/compare/6.4.1...6.5.0
 [6.4.1]: https://github.com/infinum/eightshift-forms/compare/6.4.0...6.4.1
 [6.4.0]: https://github.com/infinum/eightshift-forms/compare/6.3.3...6.4.0
 [6.3.3]: https://github.com/infinum/eightshift-forms/compare/6.3.2...6.3.3
