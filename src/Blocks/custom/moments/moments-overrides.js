@@ -1,5 +1,5 @@
 import manifest from './manifest.json';
-import { getUtilsIcons } from '../../components/form/assets/state-init';
+import { getUtilsIcons } from '../../components/utils';
 
 export const overrides = {
 	...manifest,

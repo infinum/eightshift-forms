@@ -9,7 +9,7 @@ import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blo
 import { IconLabel, STORE_NAME, Notification, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs/scripts';
 import { icons } from '@eightshift/ui-components/icons';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
-import { getRestUrl, getRestUrlByType, getUtilsIcons } from '../form/assets/state-init';
+import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
 import globalManifest from '../../manifest.json';
 import { camelCase, clsx, unescapeHTML } from '@eightshift/ui-components/utilities';
 import { AnimatedVisibility } from '@eightshift/ui-components';
@@ -631,6 +631,19 @@ export const DashboardButton = () => {
 	);
 };
 
+////////////////////////////////////////////////////////////////
+// Block editor only.
+////////////////////////////////////////////////////////////////
+
+/**
+ * Get utils icons, used in the block editor only.
+ *
+ * @returns {string}
+ */
+export const getUtilsIcons = (name) => {
+	return globalManifest?.icons?.[name];
+};
+
 /**
  * Returns output select item with icon.
  *
@@ -638,10 +651,6 @@ export const DashboardButton = () => {
  */
 export const outputFormSelectItemWithIcon = (props) => {
 	const { label, id, metadata } = props;
-
-	if (!id) {
-		return '';
-	}
 
 	let outputLabel = unescapeHTML(label);
 	let icon = getUtilsIcons('post');
@@ -660,7 +669,7 @@ export const outputFormSelectItemWithIcon = (props) => {
 
 	return {
 		id,
-		label: <span dangerouslySetInnerHTML={{ __html: `<span class="es-display-inline-flex es-vertical-align-middle es-mr-2">${icon}</span>${outputLabel}` }} />,
+		label: outputLabel,
 		value: id,
 		metadata,
 	};

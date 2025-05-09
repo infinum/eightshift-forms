@@ -3,9 +3,8 @@ import { select } from '@wordpress/data';
 import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import { clsx } from '@eightshift/ui-components/utilities';
 import { FieldEditor } from '../../field/components/field-editor';
-import { MissingName, preventSaveOnMissingProps } from '../../utils';
+import { getUtilsIcons, MissingName, preventSaveOnMissingProps } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
-import { getUtilsIcons } from '../../form/assets/state-init';
 
 export const RatingEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('rating');

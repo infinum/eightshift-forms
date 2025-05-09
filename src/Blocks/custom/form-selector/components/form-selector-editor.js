@@ -4,8 +4,7 @@ import { select } from '@wordpress/data';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
-import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
-import { getUtilsIcons } from '../../../components/form/assets/state-init';
+import { createBlockFromTemplate, DashboardButton, getUtilsIcons } from './../../../components/utils';
 import { icons } from '@eightshift/ui-components/icons';
 import { camelCase } from '@eightshift/ui-components/utilities';
 

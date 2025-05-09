@@ -1,8 +1,8 @@
 /* global esFormsLocalization */
 
+import { getUtilsIcons } from '../../components/utils';
 import globalManifest from '../../manifest.json';
 import manifest from './manifest.json';
-import { getUtilsIcons } from '../../components/form/assets/state-init';
 
 const forms = [...manifest.forms, ...esFormsLocalization.formsSelectorTemplates];
 

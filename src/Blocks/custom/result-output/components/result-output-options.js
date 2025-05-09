@@ -2,9 +2,10 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, AsyncSelect, STORE_NAME, IconToggle } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, STORE_NAME, IconToggle } from '@eightshift/frontend-libs/scripts';
 import { outputFormSelectItemWithIcon } from '../../../components/utils';
 import { icons } from '@eightshift/ui-components/icons';
+import { AsyncSelect } from '@eightshift/ui-components';
 
 export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptions, resultSelectOptions }) => {
 	const manifest = select(STORE_NAME).getBlock('result-output');
