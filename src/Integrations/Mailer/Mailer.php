@@ -529,6 +529,7 @@ class Mailer implements MailerInterface
 	 *
 	 * Operators between conditions can be "&" (AND) or "|" (OR).
 	 * Operators between values can be "---" and that means OR.
+	 * Negation is supported by adding "!=" to the condition.
 	 *
 	 * @param string $logic Logic string.
 	 * @param array<string, mixed> $params Params.
@@ -546,15 +547,25 @@ class Mailer implements MailerInterface
 		foreach ($tokens as $token) {
 			$token = \trim($token);
 			if ($token === '&' || $token === '|') {
-					$processedTokens[] = $token;
-					continue;
+				$processedTokens[] = $token;
+				continue;
 			}
 
-			[$key, $value] = \explode('=', $token, 2);
+			// Check if the condition is a negation.
+			$isNegation = \strpos($token, '!=') !== false;
+			$operator = $isNegation ? '!=' : '=';
+
+			[$key, $value] = \explode($operator, $token, 2);
 			$key = \trim($key);
 			$values = \explode('---', \trim($value)); // Split values by ---.
 
 			$conditionResult = isset($params[$key]) && \array_intersect((array)$params[$key], $values);
+
+			// If it's a negation, invert the result.
+			if ($isNegation) {
+				$conditionResult = !$conditionResult;
+			}
+
 			$processedTokens[] = !empty($conditionResult);
 		}
 

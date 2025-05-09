@@ -288,12 +288,14 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 										Provide one key-value pair per line, following this format: <code>email : conditions</code><br/>
 										Conditions can be separated by <code>|</code> for OR and <code>&</code> for AND operators.<br/>
 										If you are using multiple filed values they are separated by <code>---</code> and behave like OR condition.<br/>
+										Negation is supported by adding <code>!=</code> to the condition.<br/>
 
 										Example:
 										<ul>
-										<li>test1@infinum.com : rating=3&checkboxes=check-1---check-2</li>
-										<li>test2@infinum.com : rating=3|select=option-1</li>
-										<li>test3@infinum.com : rating=3</li>
+										<li>test1@infinum.com : rating=1&checkboxes=check-1---check-2</li>
+										<li>test2@infinum.com : rating=2|select=option-1</li>
+										<li>test3@infinum.com : rating!=3|select=option-2</li>
+										<li>test4@infinum.com : rating=4</li>
 										</ul>", 'eightshift-forms')),
 									'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_MAILER_TO_ADVANCED_KEY, $formId),
 								],
