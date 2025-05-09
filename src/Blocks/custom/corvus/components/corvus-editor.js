@@ -7,9 +7,7 @@ import { FormEditor } from '../../../components/form/components/form-editor';
 export const CorvusEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('corvus');
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	const corvusAllowedBlocks = checkAttr('corvusAllowedBlocks', attributes, manifest);
 
@@ -18,11 +16,13 @@ export const CorvusEditor = ({ attributes, setAttributes, clientId }) => {
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-						allowedBlocks={(typeof corvusAllowedBlocks === 'undefined') || corvusAllowedBlocks}
-						templateLock={false}
-						renderAppender={() => <BlockInserter clientId={clientId} />}
-					/>
+					formContent: (
+						<InnerBlocks
+							allowedBlocks={typeof corvusAllowedBlocks === 'undefined' || corvusAllowedBlocks}
+							templateLock={false}
+							renderAppender={() => <BlockInserter clientId={clientId} />}
+						/>
+					),
 				})}
 			/>
 		</div>

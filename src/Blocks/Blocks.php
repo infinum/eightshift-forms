@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Blocks;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Blocks\UtilsBlocks;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftFormsVendor\EightshiftLibs\Blocks\AbstractBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_Block_Editor_Context;
 use WP_Post;
@@ -21,7 +21,7 @@ use WP_Post;
 /**
  * Class Blocks
  */
-class Blocks extends UtilsBlocks
+class Blocks extends AbstractBlocks
 {
 	/**
 	 * Register all the hooks
@@ -30,7 +30,9 @@ class Blocks extends UtilsBlocks
 	 */
 	public function register(): void
 	{
-		parent::register();
+		// Register all custom blocks.
+		\add_filter('es_boilerplate_get_settings', [$this, 'getSettingsOverrides'], 11, 2);
+		\add_action('init', [$this, 'registerBlocks'], 11);
 
 		// Create new custom category for custom blocks.
 		\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
@@ -54,7 +56,7 @@ class Blocks extends UtilsBlocks
 		if (
 			$blockEditorContext->post instanceof WP_Post &&
 			!empty($blockEditorContext->post->post_type) &&
-			$blockEditorContext->post->post_type === UtilsConfig::SLUG_POST_TYPE
+			$blockEditorContext->post->post_type === Config::SLUG_POST_TYPE
 		) {
 			return true;
 		}
@@ -69,7 +71,7 @@ class Blocks extends UtilsBlocks
 		}
 
 		// Merge addon blocks to the list.
-		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'allowedBlocks']);
+		$filterName = HooksHelpers::getFilterName(['blocks', 'allowedBlocks']);
 		if (\has_filter($filterName)) {
 			$allowedBlockTypes = \array_merge($allowedBlockTypes, \apply_filters($filterName, []));
 		}
@@ -95,16 +97,60 @@ class Blocks extends UtilsBlocks
 			$categories,
 			[
 				[
-					'slug' => UtilsConfig::BLOCKS_MAIN_CATEGORY_SLUG,
+					'slug' => Config::BLOCKS_MAIN_CATEGORY_SLUG,
 					'title' => \esc_html__('Eightshift Forms', 'eightshift-forms'),
 					'icon' => 'admin-settings',
 				],
 				[
-					'slug' => UtilsConfig::BLOCKS_ADDONS_CATEGORY_SLUG,
+					'slug' => Config::BLOCKS_ADDONS_CATEGORY_SLUG,
 					'title' => \esc_html__('Eightshift Forms Addons', 'eightshift-forms'),
 					'icon' => 'admin-settings',
 				],
 			]
 		);
+	}
+
+	/**
+	 * Provide overrides for the settings.
+	 *
+	 * @param array<mixed> $output Array of settings.
+	 * @param string $name Project name.
+	 *
+	 * @return array<mixed>
+	 */
+	public function getSettingsOverrides(array $output, string $name): array
+	{
+		if ($name !== Config::FILTER_PREFIX) {
+			return $output;
+		}
+
+		if (\is_admin()) {
+			return $output;
+		}
+
+		if (!$output) {
+			return $output;
+		}
+
+		// Update media breakpoints from the filter.
+		$filterName = HooksHelpers::getFilterName(['blocks', 'mediaBreakpoints']);
+
+		if (!\has_filter($filterName)) {
+			return $output;
+		}
+
+		$customMediaBreakpoints = \apply_filters($filterName, []);
+
+		if (
+			\is_array($customMediaBreakpoints) &&
+			isset($customMediaBreakpoints['mobile']) &&
+			isset($customMediaBreakpoints['tablet']) &&
+			isset($customMediaBreakpoints['desktop']) &&
+			isset($customMediaBreakpoints['large'])
+		) {
+			$output['globalVariables']['breakpoints'] = $customMediaBreakpoints;
+		}
+
+		return $output;
 	}
 }

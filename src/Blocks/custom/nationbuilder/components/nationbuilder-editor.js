@@ -7,9 +7,7 @@ import { FormEditor } from '../../../components/form/components/form-editor';
 export const NationbuilderEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('nationbuilder');
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	const nationbuilderAllowedBlocks = checkAttr('nationbuilderAllowedBlocks', attributes, manifest);
 
@@ -18,11 +16,13 @@ export const NationbuilderEditor = ({ attributes, setAttributes, clientId }) => 
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-						allowedBlocks={(typeof nationbuilderAllowedBlocks === 'undefined') || nationbuilderAllowedBlocks}
-						templateLock={false}
-						renderAppender={() => <BlockInserter clientId={clientId} />}
-					/>
+					formContent: (
+						<InnerBlocks
+							allowedBlocks={typeof nationbuilderAllowedBlocks === 'undefined' || nationbuilderAllowedBlocks}
+							templateLock={false}
+							renderAppender={() => <BlockInserter clientId={clientId} />}
+						/>
+					),
 				})}
 			/>
 		</div>

@@ -1,36 +1,19 @@
 /* global esFormsLocalization */
 
 import React from 'react';
-import classnames from 'classnames';
-import { isObject } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { dispatch, select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	outputCssVariables,
-	STORE_NAME,
-	props,
-} from '@eightshift/frontend-libs/scripts';
+import { select } from '@wordpress/data';
+import { selector, checkAttr, outputCssVariables, STORE_NAME, props, bem } from '@eightshift/frontend-libs/scripts';
+import { clsx } from '@eightshift/ui-components/utilities';
 import { MissingName, VisibilityHidden } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
-export const FieldEditorExternalBlocks = ({
-	attributes,
-	children,
-	clientId,
-	fieldName,
-}) => {
+export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fieldName }) => {
 	const manifest = select(STORE_NAME).getComponent('field');
 
-	const {
-		componentClass,
-	} = manifest;
+	const { componentClass } = manifest;
 
-	const fieldClass = classnames([
-		selector(componentClass, componentClass),
-		selector(componentClass, componentClass, '', 'field'),
-	]);
+	const fieldClass = clsx(componentClass, bem(componentClass, '', 'field'));
 
 	return (
 		<div className={fieldClass}>
@@ -45,13 +28,13 @@ export const FieldEditorExternalBlocks = ({
 							isOptional
 						/>
 
-						{fieldName &&
+						{fieldName && (
 							<ConditionalTagsEditor
 								{...props('conditionalTags', attributes)}
 								conditionalTagsUse={attributes?.conditionalTagsUse}
 								useCustom
 							/>
-						}
+						)}
 					</div>
 				</div>
 			</div>
@@ -62,15 +45,9 @@ export const FieldEditorExternalBlocks = ({
 export const FieldEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('field');
 
-	const {
-		componentClass,
-	} = manifest;
+	const { componentClass } = manifest;
 
-	const {
-		selectorClass = componentClass,
-		additionalFieldClass,
-		clientId,
-	} = attributes;
+	const { selectorClass = componentClass, additionalFieldClass, clientId } = attributes;
 
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
@@ -79,18 +56,6 @@ export const FieldEditor = (attributes) => {
 	// Enable option to skip field and just render content.
 	if (fieldSkip) {
 		return fieldContent;
-	}
-
-	// Update media breakpoints from the filter.
-	if (
-		typeof esFormsLocalization !== 'undefined' &&
-		isObject(esFormsLocalization?.mediaBreakpoints) &&
-		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, "mobile") &&
-		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, "tablet") &&
-		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, "desktop") &&
-		Object.prototype.hasOwnProperty.call(esFormsLocalization?.mediaBreakpoints, "large")
-	) {
-		dispatch(STORE_NAME).setSettingsGlobalVariablesBreakpoints(esFormsLocalization.mediaBreakpoints);
 	}
 
 	const fieldLabel = checkAttr('fieldLabel', attributes, manifest);
@@ -103,68 +68,55 @@ export const FieldEditor = (attributes) => {
 	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
 	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
-	const fieldClass = classnames([
-		selector(componentClass, componentClass),
-		selector(componentClass, componentClass, '', selectorClass),
-		selector(additionalFieldClass, additionalFieldClass),
+	const fieldClass = clsx(
+		componentClass,
+		bem(componentClass, '', selectorClass),
+		additionalFieldClass,
 		selector(fieldHidden, 'es-form-is-hidden'),
 		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
-	]);
+	);
 
-	const labelClass = classnames([
-		selector(componentClass, componentClass, 'label'),
-		selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required'),
-	]);
+	const labelClass = clsx(bem(componentClass, 'label'), selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required'));
 
 	const LabelDefault = () => (
 		<>
-			{!fieldHideLabel &&
+			{!fieldHideLabel && (
 				<div className={labelClass}>
-					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
+					<span
+						className={`${componentClass}__label-inner`}
+						dangerouslySetInnerHTML={{ __html: fieldLabel }}
+					/>
 				</div>
-			}
+			)}
 		</>
 	);
 
 	const LegendDefault = () => (
 		<>
-			{!fieldHideLabel &&
+			{!fieldHideLabel && (
 				<div className={labelClass}>
-					<span className={`${componentClass}__label-inner`} dangerouslySetInnerHTML={{ __html: fieldLabel }} />
+					<span
+						className={`${componentClass}__label-inner`}
+						dangerouslySetInnerHTML={{ __html: fieldLabel }}
+					/>
 				</div>
-			}
+			)}
 		</>
 	);
 
 	const Content = () => (
 		<div className={`${componentClass}__content`}>
-			{fieldBeforeContent &&
-				<div className={`${componentClass}__before-content`}>
-					{fieldBeforeContent}
-				</div>
-			}
+			{fieldBeforeContent && <div className={`${componentClass}__before-content`}>{fieldBeforeContent}</div>}
 			<div className={`${componentClass}__content-wrap`}>
 				{fieldContent}
 
-				{fieldSuffixContent &&
-					<div className={`${componentClass}__suffix-content`}>
-						{fieldSuffixContent}
-					</div>
-				}
+				{fieldSuffixContent && <div className={`${componentClass}__suffix-content`}>{fieldSuffixContent}</div>}
 			</div>
-			{fieldAfterContent &&
-				<div className={`${componentClass}__after-content`}>
-					{fieldAfterContent}
-				</div>
-			}
+			{fieldAfterContent && <div className={`${componentClass}__after-content`}>{fieldAfterContent}</div>}
 		</div>
 	);
 
-	const Help = () => (
-		<div className={`${componentClass}__help`}>
-			{fieldHelp}
-		</div>
-	);
+	const Help = () => <div className={`${componentClass}__help`}>{fieldHelp}</div>;
 
 	const DivContent = () => {
 		return (
@@ -172,14 +124,15 @@ export const FieldEditor = (attributes) => {
 				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 
 				<div className={`${componentClass}__inner`}>
-					{fieldLabel &&
-						<LabelDefault />
-					}
+					{fieldLabel && <LabelDefault />}
 					<Content />
 					<Help />
 				</div>
 
-				<VisibilityHidden value={fieldHidden} label={__('Field', 'eightshift-forms')} />
+				<VisibilityHidden
+					value={fieldHidden}
+					label={__('Field', 'eightshift-forms')}
+				/>
 			</div>
 		);
 	};
@@ -190,14 +143,15 @@ export const FieldEditor = (attributes) => {
 				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 
 				<div className={`${componentClass}__inner`}>
-					{fieldLabel &&
-						<LegendDefault />
-					}
+					{fieldLabel && <LegendDefault />}
 					<Content />
 					<Help />
 				</div>
 
-				<VisibilityHidden value={fieldHidden} label={__('Field', 'eightshift-forms')} />
+				<VisibilityHidden
+					value={fieldHidden}
+					label={__('Field', 'eightshift-forms')}
+				/>
 			</fieldset>
 		);
 	};

@@ -7,11 +7,9 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -58,7 +56,7 @@ if ($fileCustomInfoTextUse) {
 	$infoTextContent .= '<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'info', "{$componentClass}__info")) . '">' . wp_kses_post($infoText) . '</div>';
 }
 
-$filter = UtilsHooksHelper::getFilterName(['block', 'file', 'infoAdditionalContent']);
+$filter = HooksHelpers::getFilterName(['block', 'file', 'infoAdditionalContent']);
 if (has_filter($filter)) {
 	$infoTextContent .= apply_filters($filter, '', $attributes);
 }
@@ -79,7 +77,7 @@ if ($fileAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('file', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('file', $attributes);
 
 $file = '
 	<input

@@ -2,27 +2,14 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "input",
 	"title": "Input",
-	"description" : "A simple data input field (text, e-mail, numbers, URLs, etc.)",
+	"description": "A simple data input field (text, e-mail, numbers, URLs, etc.)",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-input"
 	},
-	"keywords": [
-		"input",
-		"text",
-		"email",
-		"e-mail",
-		"number",
-		"numbers",
-		"url",
-		"urls",
-		"link",
-		"links"
-	],
+	"keywords": ["input", "text", "email", "e-mail", "number", "numbers", "url", "urls", "link", "links"],
 	"components": {
 		"input": "input"
 	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	"parent": ["eightshift-forms/form"]
 }

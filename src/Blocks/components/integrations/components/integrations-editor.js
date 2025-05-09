@@ -6,16 +6,7 @@ import { props } from '@eightshift/frontend-libs/scripts';
 import { FormEditor } from './../../form/components/form-editor';
 import { InvalidEditor } from './../../invalid/components/invalid-editor';
 
-export const IntegrationsEditor = ({
-	attributes,
-	setAttributes,
-	itemId,
-	innerId,
-	clientId,
-	useInnerId = false,
-	allowedBlocks = [],
-}) => {
-
+export const IntegrationsEditor = ({ attributes, setAttributes, itemId, innerId, clientId, useInnerId = false, allowedBlocks = [] }) => {
 	// Check if form selector has inner blocks.
 	const hasInnerBlocks = useSelect((select) => {
 		const blocks = select('core/block-editor').getBlock(clientId);
@@ -24,33 +15,15 @@ export const IntegrationsEditor = ({
 	});
 
 	const InvalidPlaceholder = () => {
-		return (
-			<InvalidEditor
-				heading={__('Please use the sidebar settings to choose your desired form.', 'eightshift-forms')}
-			/>
-		);
+		return <InvalidEditor heading={__('Please use the sidebar settings to choose your desired form.', 'eightshift-forms')} />;
 	};
 
 	const OutputDefault = () => {
-		return (
-			<>
-				{itemId ?
-					<Output /> :
-					<InvalidPlaceholder />
-				}
-			</>
-		);
+		return <>{itemId ? <Output /> : <InvalidPlaceholder />}</>;
 	};
 
 	const OutputWithInner = () => {
-		return (
-			<>
-				{(itemId && innerId) ?
-					<Output /> :
-					<InvalidPlaceholder />
-				}
-			</>
-		);
+		return <>{itemId && innerId ? <Output /> : <InvalidPlaceholder />}</>;
 	};
 
 	const Output = () => {
@@ -58,22 +31,20 @@ export const IntegrationsEditor = ({
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-						allowedBlocks={allowedBlocks}
-						templateLock={!allowedBlocks.length}
-					/>
+					formContent: (
+						<InnerBlocks
+							allowedBlocks={allowedBlocks}
+							templateLock={!allowedBlocks.length}
+						/>
+					),
 				})}
 			/>
 		);
 	};
 
 	if (hasInnerBlocks) {
-		return (
-			useInnerId ? <OutputWithInner /> : <OutputDefault />
-		);
+		return useInnerId ? <OutputWithInner /> : <OutputDefault />;
 	}
 
-	return (
-		<InvalidPlaceholder />
-	);
+	return <InvalidPlaceholder />;
 };

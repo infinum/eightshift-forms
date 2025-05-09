@@ -2,14 +2,13 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { TextControl } from '@wordpress/components';
-import { icons, checkAttr, IconToggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, IconToggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const ProgressBarOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('progress-bar');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const progressBarUse = checkAttr('progressBarUse', attributes, manifest);
 	const progressBarHideLabels = checkAttr('progressBarHideLabels', attributes, manifest);
@@ -37,14 +36,14 @@ export const ProgressBarOptions = (attributes) => {
 				}}
 			/>
 
-			{progressBarMultiflowUse &&
+			{progressBarMultiflowUse && (
 				<TextControl
 					type={'number'}
 					label={__('Progress bar initial steps number', 'eightshift-forms')}
 					value={progressBarMultiflowInitCount}
 					onChange={(value) => setAttributes({ [getAttrKey('progressBarMultiflowInitCount', attributes, manifest)]: value })}
 				/>
-			}
+			)}
 		</>
 	);
 };

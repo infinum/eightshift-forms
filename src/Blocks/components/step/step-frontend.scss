@@ -1,9 +1,9 @@
-@import './../form/form-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
 
 .es-step {
 	&__inner {
 		> .es-field {
-			@include form-fields-children-styles;
+			@include theme.form-fields-children-styles;
 		}
 	}
 

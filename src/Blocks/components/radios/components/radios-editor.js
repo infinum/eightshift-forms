@@ -1,11 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import {
-	STORE_NAME,
-	checkAttr,
-	props,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME, checkAttr, props, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -13,14 +8,9 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const RadiosEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('radios');
 
-	const {
-		componentName
-	} = manifest;
+	const { componentName } = manifest;
 
-	const {
-		additionalFieldClass,
-		blockClientId,
-	} = attributes;
+	const { additionalFieldClass, blockClientId } = attributes;
 
 	const radiosContent = checkAttr('radiosContent', attributes, manifest);
 	const radiosName = checkAttr('radiosName', attributes, manifest);
@@ -33,11 +23,7 @@ export const RadiosEditor = (attributes) => {
 
 			<MissingName value={radiosName} />
 
-			{radiosName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
+			{radiosName && <ConditionalTagsEditor {...props('conditionalTags', attributes)} />}
 		</>
 	);
 

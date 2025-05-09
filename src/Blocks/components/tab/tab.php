@@ -6,10 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestTabs = Helpers::getComponent('tabs');
 $componentClass = $manifest['componentClass'] ?? '';
 
@@ -38,5 +37,6 @@ if (!$tabLabel || !$tabContent) {
 </button>
 
 <div class="<?php echo esc_attr($tabContentClass); ?>">
-	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>
 </div>

@@ -7,7 +7,7 @@ export const CheckboxesOptions = ({ attributes, setAttributes, clientId }) => {
 		<CheckboxesOptionsComponent
 			{...props('checkboxes', attributes, {
 				setAttributes,
-				clientId
+				clientId,
 			})}
 		/>
 	);

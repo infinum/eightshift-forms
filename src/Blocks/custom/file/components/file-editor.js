@@ -7,7 +7,7 @@ export const FileEditor = ({ attributes, setAttributes, clientId }) => {
 		<FileEditorComponent
 			{...props('file', attributes, {
 				setAttributes,
-				clientId
+				clientId,
 			})}
 		/>
 	);

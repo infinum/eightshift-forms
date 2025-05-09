@@ -4,29 +4,16 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { PanelBody, Button, Modal } from '@wordpress/components';
-import {
-	icons,
-	getAttrKey,
-	checkAttr,
-	IconToggle,
-	Select,
-	Control,
-	Section,
-	IconLabel,
-	OptionSelector,
-	STORE_NAME,
-	Notification,
-} from '@eightshift/frontend-libs/scripts';
+import { getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector, STORE_NAME, Notification } from '@eightshift/frontend-libs/scripts';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const ConditionalTagsFormsOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('conditional-tags');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const conditionalTagsUse = checkAttr('conditionalTagsUse', attributes, manifest);
 	const conditionalTagsRulesForms = checkAttr('conditionalTagsRulesForms', attributes, manifest);
@@ -60,13 +47,12 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 						conditionalTagsRulesForms[index][0] = value;
 						setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms] });
 					}}
-					noBottomSpacing
 					simpleValue
 					noSearch
 					additionalSelectClasses='es-w-40'
 				/>
 
-				{optionsItem?.length > 0 &&
+				{optionsItem?.length > 0 && (
 					<Select
 						value={conditionalTagsRulesForms?.[index]?.[2]}
 						options={optionsItem.map((item) => {
@@ -83,12 +69,11 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 							conditionalTagsRulesForms[index][2] = value;
 							setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms] });
 						}}
-						noBottomSpacing
 						simpleValue
 						noSearch
 						additionalSelectClasses='es-w-40'
 					/>
-				}
+				)}
 
 				<OptionSelector
 					value={conditionalTagsRulesForms?.[index]?.[1]}
@@ -99,7 +84,6 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					}}
 					additionalContainerClass='es-w-40'
 					additionalButtonClass='es-h-7.5'
-					noBottomSpacing
 				/>
 
 				<Button
@@ -131,17 +115,15 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 						setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [] });
 					}
 				}}
-				noBottomSpacing={!conditionalTagsUse}
 				additionalClasses='es-font-weight-500'
 			/>
 
-			<Section showIf={conditionalTagsUse} noBottomSpacing>
+			<Section showIf={conditionalTagsUse}>
 				<Control
 					icon={icons.conditionH}
 					label={__('Rules', 'eightshift-forms')}
 					// Translators: %d refers to the number of active rules
 					subtitle={conditionalTagsRulesForms?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), conditionalTagsRulesForms.length)}
-					noBottomSpacing
 					inlineLabel
 				>
 					<Button
@@ -154,29 +136,41 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 				</Control>
 			</Section>
 
-			{conditionalTagsUse && isModalOpen &&
+			{conditionalTagsUse && isModalOpen && (
 				<Modal
 					overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 					className='es-modal-max-width-xxl es-rounded-3!'
-					title={<IconLabel icon={icons.visibilityAlt} label={__('Field visibility overrides', 'eightshift-forms')} standalone />}
+					title={
+						<IconLabel
+							icon={icons.visibilityAlt}
+							label={__('Field visibility overrides', 'eightshift-forms')}
+							standalone
+						/>
+					}
 					onRequestClose={() => setIsModalOpen(false)}
 				>
 					<Notification
-						text={__('It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.', 'eightshift-forms')}
+						text={__(
+							'It is important to remember that utilizing field visibility overrides may result in unforeseen consequences when used with conditional tags.',
+							'eightshift-forms',
+						)}
 						type={'warning'}
 					/>
 
-					{conditionalTagsRulesForms.length > 0 &&
+					{conditionalTagsRulesForms.length > 0 && (
 						<div className='es-h-spaced es-pb-2 es-mb-2 es-border-b-cool-gray-300'>
 							<span className='es-w-40'>{__('Field', 'eightshift-forms')}</span>
 							<span className='es-w-40'>{__('Visibility', 'eightshift-forms')}</span>
 						</div>
-					}
+					)}
 
 					<div className='es-v-spaced'>
 						{conditionalTagsRulesForms?.map((_, index) => {
 							return (
-								<div key={index} className='es-h-spaced'>
+								<div
+									key={index}
+									className='es-h-spaced'
+								>
 									<ConditionalTagsItem index={index} />
 								</div>
 							);
@@ -185,7 +179,9 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 
 					<Button
 						icon={icons.plusCircleFillAlt}
-						onClick={() => setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms, [formFields?.[0]?.value ?? '', 'show', '']] })}
+						onClick={() =>
+							setAttributes({ [getAttrKey('conditionalTagsRulesForms', attributes, manifest)]: [...conditionalTagsRulesForms, [formFields?.[0]?.value ?? '', 'show', '']] })
+						}
 						className='es-rounded-1 es-mt-4'
 					>
 						{__('Add visibility rule', 'eightshift-forms')}
@@ -194,7 +190,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 					<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
 						<IconLabel
 							icon={icons.lightBulb}
-							label={__('If you can\'t find a field, make sure the form is saved, and all fields have a name set.', 'eightshift-forms')}
+							label={__("If you can't find a field, make sure the form is saved, and all fields have a name set.", 'eightshift-forms')}
 							additionalClasses='es-nested-color-yellow-500!'
 							standalone
 						/>
@@ -208,7 +204,7 @@ export const ConditionalTagsFormsOptions = (attributes) => {
 						</Button>
 					</div>
 				</Modal>
-			}
+			)}
 		</PanelBody>
 	);
 };

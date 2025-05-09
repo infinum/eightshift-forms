@@ -12,8 +12,8 @@ namespace EightshiftForms\Captcha;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Helpers\ApiHelpers;
 use Throwable;
 
 /**
@@ -56,7 +56,7 @@ class Captcha implements CaptchaInterface
 		];
 
 		if (!$token) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			return ApiHelpers::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaBadRequest'),
 				[],
 				$debug
@@ -71,7 +71,7 @@ class Captcha implements CaptchaInterface
 
 		// Generic error msg from WP.
 		if (\is_wp_error($response)) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			return ApiHelpers::getApiErrorPublicOutput(
 				$this->labels->getLabel('submitWpError'),
 				[],
 				$debug
@@ -82,7 +82,7 @@ class Captcha implements CaptchaInterface
 		try {
 			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		} catch (Throwable $t) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			return ApiHelpers::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaBadRequest'),
 				[],
 				$debug
@@ -106,9 +106,9 @@ class Captcha implements CaptchaInterface
 	 */
 	private function onEnterprise(string $token, string $action)
 	{
-		$siteKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
-		$apiKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
-		$projectIdKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
+		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		$apiKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
+		$projectIdKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
 
 		return \wp_remote_post(
 			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
@@ -137,7 +137,7 @@ class Captcha implements CaptchaInterface
 	 */
 	private function onFree(string $token)
 	{
-		$secretKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
+		$secretKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
 
 		return \wp_remote_post(
 			"https://www.google.com/recaptcha/api/siteverify",
@@ -171,7 +171,7 @@ class Captcha implements CaptchaInterface
 		// If error status returns error.
 		if ($error) {
 			// Bailout on error.
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			return ApiHelpers::getApiErrorPublicOutput(
 				$error['message'] ?? '',
 				[
 					'response' => $responseBody,
@@ -204,7 +204,7 @@ class Captcha implements CaptchaInterface
 		// If error status returns error.
 		if (!$success) {
 			// Bailout on error.
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			return ApiHelpers::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaError'),
 				[
 					'response' => $responseBody,
@@ -237,7 +237,7 @@ class Captcha implements CaptchaInterface
 
 		// Bailout if action is not correct.
 		if ($actionResponse !== $action) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			return ApiHelpers::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaWrongAction'),
 				[
 					'response' => $responseBody,
@@ -246,11 +246,11 @@ class Captcha implements CaptchaInterface
 			);
 		}
 
-		$setScore = UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$setScore = SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			return ApiHelpers::getApiErrorPublicOutput(
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
 					'response' => $responseBody,
@@ -260,7 +260,7 @@ class Captcha implements CaptchaInterface
 			);
 		}
 
-		return UtilsApiHelper::getApiSuccessPublicOutput(
+		return ApiHelpers::getApiSuccessPublicOutput(
 			'Success',
 			[
 				'response' => $responseBody,

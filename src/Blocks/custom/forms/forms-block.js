@@ -5,32 +5,29 @@ import { useState } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
 import { FormsEditor } from './components/forms-editor';
 import { FormsOptions } from './components/forms-options';
-import { getFetchWpApi } from '@eightshift/frontend-libs/scripts';
+import { fetchFromWpRest } from '@eightshift/frontend-libs/scripts';
 import { outputFormSelectItemWithIcon } from '../../components/utils';
 
 export const Forms = (props) => {
 	const [isGeoPreview, setIsGeoPreview] = useState(false);
 
-	const formSelectOptions = getFetchWpApi(
-		esFormsLocalization?.postTypes?.forms,
-		{
-			noCache: true,
-			processLabel: ({ title: { rendered: label }, integration_type: metadata, id }) => {
-				return outputFormSelectItemWithIcon({
-					label,
-					id,
-					metadata,
-				})?.label;
-			},
-			fields: 'id,title,integration_type',
-			processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
-				id,
-				value: id,
+	const formSelectOptions = fetchFromWpRest(esFormsLocalization?.postTypes?.forms, {
+		noCache: true,
+		fields: 'id,title,integration_type',
+		processLabel: ({ title: { rendered: label }, integration_type: metadata, id }) => {
+			return outputFormSelectItemWithIcon({
 				label,
+				id,
 				metadata,
-			}),
-		}
-	);
+			})?.label;
+		},
+		processMetadata: ({ title: { rendered: label }, integration_type: metadata, id }) => ({
+			id,
+			value: id,
+			label,
+			metadata,
+		}),
+	});
 
 	return (
 		<>
@@ -39,7 +36,7 @@ export const Forms = (props) => {
 					{...props}
 					preview={{
 						isGeoPreview: isGeoPreview,
-						setIsGeoPreview: setIsGeoPreview
+						setIsGeoPreview: setIsGeoPreview,
 					}}
 					formSelectOptions={formSelectOptions}
 				/>
@@ -48,7 +45,7 @@ export const Forms = (props) => {
 				{...props}
 				preview={{
 					isGeoPreview: isGeoPreview,
-					setIsGeoPreview: setIsGeoPreview
+					setIsGeoPreview: setIsGeoPreview,
 				}}
 				formSelectOptions={formSelectOptions}
 			/>

@@ -2,16 +2,13 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "pipedrive",
 	"title": "Pipedrive form",
-	"description" : "Pipedrive subscription form",
+	"description": "Pipedrive subscription form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-pipedrive"
 	},
-	"keywords": [
-		"pipedrive"
-	],
-	"example": {
-	},
+	"keywords": ["pipedrive"],
+	"example": {},
 	"components": {
 		"form": "form",
 		"step": "step"
@@ -26,7 +23,5 @@
 			"default": []
 		}
 	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	"parent": ["eightshift-forms/form-selector"]
 }

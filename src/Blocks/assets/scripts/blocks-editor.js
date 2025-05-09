@@ -12,11 +12,7 @@
 
 import { unregisterBlockType } from '@wordpress/blocks';
 import { select } from '@wordpress/data';
-import {
-	registerBlocks,
-	outputCssVariablesGlobal,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts/editor';
+import { registerBlocks, outputCssVariablesGlobal, STORE_NAME } from '@eightshift/frontend-libs/scripts/editor';
 import globalManifest from '../../manifest.json';
 import './store';
 

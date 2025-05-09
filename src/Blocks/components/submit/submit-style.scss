@@ -1,6 +1,8 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 a,
 button {
 	&.es-submit {
-		@include submit-styles;
+		@include theme.submit-styles;
 	}
 }

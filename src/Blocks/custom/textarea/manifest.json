@@ -2,18 +2,14 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "textarea",
 	"title": "Multiline text",
-	"description" : "Multiline text input field",
+	"description": "Multiline text input field",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-textarea"
 	},
-	"keywords": [
-		"textarea"
-	],
+	"keywords": ["textarea"],
 	"components": {
 		"textarea": "textarea"
 	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	"parent": ["eightshift-forms/form"]
 }

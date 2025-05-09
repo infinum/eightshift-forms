@@ -1,7 +1,9 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .wp-block[data-type='eightshift-forms/radios'] {
 	.es-field {
 		.es-field__content-wrap {
-			@include input-styles-disabled;
+			@include theme.input-styles-disabled;
 
 			padding: var(--es-input-spacing);
 			border: 1px solid var(--es-input-border-color);

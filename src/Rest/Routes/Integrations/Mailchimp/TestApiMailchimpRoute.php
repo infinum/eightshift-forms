@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Mailchimp
+ * The class register route for public form submitting endpoint - Mailchimp
  *
  * @package EightshiftForms\Rest\Route\Integrations\Mailchimp
  */

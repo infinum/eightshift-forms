@@ -2,18 +2,14 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "submit",
 	"title": "Submit",
-	"description" : "Form submission button",
+	"description": "Form submission button",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-submit"
 	},
-	"keywords": [
-		"submit"
-	],
+	"keywords": ["submit"],
 	"components": {
 		"submit": "submit"
 	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	"parent": ["eightshift-forms/form"]
 }

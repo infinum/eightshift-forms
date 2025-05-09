@@ -1,22 +1,26 @@
+// stylelint-disable selector-max-specificity
+
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 div.es-select {
 	border-radius: var(--es-input-radius);
 	margin: 0;
 	font-size: initial;
 
-	&.choices[data-type*='select-one'] .choices__inner { // stylelint-disable-line selector-max-specificity
+	&.choices[data-type*='select-one'] .choices__inner {
 		padding: 0;
 	}
 
-	&.choices[data-type*='select-multiple'] .choices__inner { // stylelint-disable-line selector-max-specificity
+	&.choices[data-type*='select-multiple'] .choices__inner {
 		padding-block: var(--es-input-spacing) calc(var(--es-input-spacing) - 0.2344rem);
 		padding-inline: var(--es-input-spacing);
 
-		.choices__input { // stylelint-disable-line selector-max-specificity
+		.choices__input {
 			padding: 0;
 			margin: 0;
 
-			&::placeholder { // stylelint-disable-line selector-max-specificity
-				@include input-styles-placeholder;
+			&::placeholder {
+				@include theme.input-styles-placeholder;
 			}
 		}
 	}
@@ -81,7 +85,7 @@ div.es-select {
 		font-size: initial;
 
 		&:focus {
-			@include input-styles-focus;
+			@include theme.input-styles-focus;
 		}
 	}
 
@@ -99,7 +103,7 @@ div.es-select {
 }
 
 select.es-select__select {
-	@include input-styles($loadReadonly: 'false');
+	@include theme.input-styles($loadReadonly: 'false');
 
 	padding-inline-end: calc(var(--es-input-spacing) * 2.5);
 }

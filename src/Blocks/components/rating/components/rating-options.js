@@ -3,16 +3,8 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import {
-	icons,
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	props,
-	Section,
-	IconToggle,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts';
+import { icons } from '@eightshift/ui-components/icons';
+import { checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -20,10 +12,7 @@ import { ConditionalTagsOptions } from '../../conditional-tags/components/condit
 export const RatingOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('rating');
 
-	const {
-		setAttributes,
-		title = __('Rating', 'eightshift-forms'),
-	} = attributes;
+	const { setAttributes, title = __('Rating', 'eightshift-forms') } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -38,7 +27,10 @@ export const RatingOptions = (attributes) => {
 
 	return (
 		<PanelBody title={title}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+			<Section
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={ratingName}
 					attribute={getAttrKey('ratingName', attributes, manifest)}
@@ -50,7 +42,12 @@ export const RatingOptions = (attributes) => {
 				/>
 
 				<TextControl
-					label={<IconLabel icon={icons.star} label={__('Amount of stars', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.star}
+							label={__('Amount of stars', 'eightshift-forms')}
+						/>
+					}
 					value={ratingAmount}
 					onChange={(value) => setAttributes({ [getAttrKey('ratingAmount', attributes, manifest)]: value })}
 					min={1}
@@ -73,9 +70,17 @@ export const RatingOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<Section
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<TextControl
-					label={<IconLabel icon={icons.titleGeneric} label={__('Initial value', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.titleGeneric}
+							label={__('Initial value', 'eightshift-forms')}
+						/>
+					}
 					value={ratingValue}
 					onChange={(value) => setAttributes({ [getAttrKey('ratingValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('ratingValue', attributes, manifest), ratingDisabledOptions)}
@@ -86,7 +91,6 @@ export const RatingOptions = (attributes) => {
 						fieldDisabledOptions: ratingDisabledOptions,
 					})}
 				/>
-
 
 				<IconToggle
 					icon={icons.readOnly}
@@ -102,11 +106,13 @@ export const RatingOptions = (attributes) => {
 					checked={ratingIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('ratingIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('ratingIsDisabled', attributes, manifest), ratingDisabledOptions)}
-					noBottomSpacing
 				/>
 			</Section>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
+			<Section
+				icon={icons.checks}
+				label={__('Validation', 'eightshift-forms')}
+			>
 				<IconToggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
@@ -116,9 +122,18 @@ export const RatingOptions = (attributes) => {
 				/>
 			</Section>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
+			<Section
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
 				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+					label={
+						<IconLabel
+							icon={icons.googleTagManager}
+							label={__('GTM tracking code', 'eightshift-forms')}
+						/>
+					}
 					value={ratingTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('ratingTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('ratingTracking', attributes, manifest), ratingDisabledOptions)}

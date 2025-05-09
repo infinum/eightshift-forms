@@ -1,5 +1,7 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-checkbox {
-	@include checkbox-styles;
+	@include theme.checkbox-styles;
 
 	&__label::before {
 		border-radius: 0.25rem;

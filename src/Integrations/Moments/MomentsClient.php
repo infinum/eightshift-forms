@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Moments;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * MomentsClient integration class.
@@ -37,7 +37,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -46,7 +46,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		$output = \get_transient(self::CACHE_MOMENTS_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -106,7 +106,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	public function postApplication(string $itemId, array $params, array $files, string $formId): array
 	{
 		// Filter override post request.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
 			$filterValue = \apply_filters($filterName, [], $itemId, $params, $files, $formId) ?? [];
 
@@ -117,7 +117,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 
 		$body = $this->prepareParams($params);
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMoments::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId);
 		}
@@ -133,7 +133,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -141,22 +141,22 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$files,
 			$itemId,
 			$formId,
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)
+			SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
-		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
-		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+		$details[Config::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -200,7 +200,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(No data was submitted for a mandatory field: )(\w*)/", $msg, $matchesReq, \PREG_SET_ORDER, 0);
 
 		if ($matchesReq) {
-			$key = $matchesReq[0][2] ?? '';
+			$key = $matchesReq[0][2] ?: '';
 			if ($key) {
 				$output[$key] = 'validationRequired';
 			}
@@ -210,7 +210,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (should have a valid email format)/", $msg, $matchesEmail, \PREG_SET_ORDER, 0);
 
 		if ($matchesEmail) {
-			$key = $matchesEmail[0][1] ?? '';
+			$key = $matchesEmail[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationEmail';
@@ -221,7 +221,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (is not a valid phone number)/", $msg, $matchesPhone, \PREG_SET_ORDER, 0);
 
 		if ($matchesPhone) {
-			$key = $matchesPhone[0][1] ?? '';
+			$key = $matchesPhone[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationPhone';
@@ -232,7 +232,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (number does not have valid country\/network prefix)/", $msg, $matchesPhonePrefix, \PREG_SET_ORDER, 0);
 
 		if ($matchesPhonePrefix) {
-			$key = $matchesPhonePrefix[0][1] ?? '';
+			$key = $matchesPhonePrefix[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationPhone';
@@ -240,10 +240,10 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		}
 
 		// Validate invalid phone field.
-		\preg_match_all("/(\w*) (number is not numeric)/", $msg, $matchesPhoneIsNumberic, \PREG_SET_ORDER, 0);
+		\preg_match_all("/(\w*) (number is not numeric)/", $msg, $matchesPhoneIsNumeric, \PREG_SET_ORDER, 0);
 
-		if ($matchesPhoneIsNumberic) {
-			$key = $matchesPhoneIsNumberic[0][1] ?? '';
+		if ($matchesPhoneIsNumeric) {
+			$key = $matchesPhoneIsNumeric[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationPhone';
@@ -254,10 +254,10 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (number has invalid length for network)/", $msg, $matchesPhoneLength, \PREG_SET_ORDER, 0);
 
 		if ($matchesPhoneLength) {
-			$key = $matchesPhoneLength[0][1] ?? '';
+			$key = $matchesPhoneLength[0][1] ?: '';
 
 			if ($key) {
-				$output[$key] = 'validationMomentsInvalidPhoneLenght';
+				$output[$key] = 'validationMomentsInvalidPhoneLength';
 			}
 		}
 
@@ -265,7 +265,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (should be an ISO datetime, but there is)/", $msg, $matchesDate, \PREG_SET_ORDER, 0);
 
 		if ($matchesDate) {
-			$key = $matchesDate[0][1] ?? '';
+			$key = $matchesDate[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationDateTime';
@@ -276,7 +276,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (should be an ISO date, but there is)/", $msg, $matchesDate, \PREG_SET_ORDER, 0);
 
 		if ($matchesDate) {
-			$key = $matchesDate[0][1] ?? '';
+			$key = $matchesDate[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationDate';
@@ -287,7 +287,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (should be earlier than current date)/", $msg, $matchesDateNoFuture, \PREG_SET_ORDER, 0);
 
 		if ($matchesDateNoFuture) {
-			$key = $matchesDateNoFuture[0][1] ?? '';
+			$key = $matchesDateNoFuture[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationDateNoFuture';
@@ -298,7 +298,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (should be one of valid options)/", $msg, $matchesCountry, \PREG_SET_ORDER, 0);
 
 		if ($matchesCountry) {
-			$key = $matchesCountry[0][1] ?? '';
+			$key = $matchesCountry[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationInvalid';
@@ -309,7 +309,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		\preg_match_all("/(\w*) (contains forbidden special characters)/", $msg, $matchesForbiddenCharacters, \PREG_SET_ORDER, 0);
 
 		if ($matchesForbiddenCharacters) {
-			$key = $matchesForbiddenCharacters[0][1] ?? '';
+			$key = $matchesForbiddenCharacters[0][1] ?: '';
 
 			if ($key) {
 				$output[$key] = 'validationMomentsInvalidSpecialCharacters';
@@ -336,7 +336,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		);
 
 		// Structure response details.
-		return UtilsApiHelper::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -360,17 +360,17 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMoments::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body['forms'] ?? [];
 		}
 
@@ -388,8 +388,8 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 	{
 		$output = [];
 
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		foreach ($params as $param) {
 			$type = $param['type'] ?? '';
