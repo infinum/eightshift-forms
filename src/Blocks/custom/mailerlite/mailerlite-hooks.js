@@ -3,7 +3,7 @@
 import { addFilter } from '@wordpress/hooks';
 import { select } from '@wordpress/data';
 import { STORE_NAME } from '@eightshift/frontend-libs/scripts/editor';
-import { isArray } from 'lodash';
+import { __ } from '@wordpress/i18n';
 
 // Provide additional blocks to the forms.
 export const hooks = () => {
@@ -13,7 +13,7 @@ export const hooks = () => {
 	// All adding additional blocks to the custom form builder.
 	addFilter('blocks.registerBlockType', `${namespace}/${blockName}`, (settings, name) => {
 		if (name === `${namespace}/${blockName}`) {
-			if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.additionalBlocks)) {
+			if (typeof esFormsLocalization !== 'undefined' && Array.isArray(esFormsLocalization?.additionalBlocks)) {
 				esFormsLocalization.additionalBlocks.forEach((element) => {
 					if (!settings.attributes.mailerliteAllowedBlocks.default.includes(element)) {
 						settings.attributes.mailerliteAllowedBlocks.default.push(element);

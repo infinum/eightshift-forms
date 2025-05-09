@@ -3,7 +3,6 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
-import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
@@ -73,7 +72,7 @@ export const InputOptions = (attributes) => {
 
 	let inputValidationPatternOptions = [];
 
-	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
+	if (typeof esFormsLocalization !== 'undefined' && Array.isArray(esFormsLocalization?.validationPatternsOptions)) {
 		inputValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
 

@@ -2,9 +2,8 @@
 
 import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
-import { isArray } from 'lodash';
-import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
+import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
@@ -51,7 +50,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 
 	if (typeof esFormsLocalization !== 'undefined') {
 		// Custom block forms style options.
-		if (isArray(esFormsLocalization?.formsBlockStyleOptions)) {
+		if (Array.isArray(esFormsLocalization?.formsBlockStyleOptions)) {
 			formsStyleOptions = esFormsLocalization.formsBlockStyleOptions;
 		}
 

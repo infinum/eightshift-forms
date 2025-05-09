@@ -3,7 +3,6 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
-import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, Select, STORE_NAME, getOption } from '@eightshift/frontend-libs/scripts';
@@ -35,7 +34,7 @@ export const PhoneOptions = (attributes) => {
 
 	let phoneValidationPatternOptions = [];
 
-	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
+	if (typeof esFormsLocalization !== 'undefined' && Array.isArray(esFormsLocalization?.validationPatternsOptions)) {
 		phoneValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
 

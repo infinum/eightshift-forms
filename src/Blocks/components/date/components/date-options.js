@@ -1,10 +1,9 @@
 /* global esFormsLocalization */
 
 import React from 'react';
-import { isArray } from 'lodash';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { checkAttr, getAttrKey, IconLabel, props, Section, Select, IconToggle, getOption, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
