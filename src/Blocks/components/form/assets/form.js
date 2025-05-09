@@ -1250,6 +1250,7 @@ export class Form {
 				shouldSort: false,
 				position: 'bottom',
 				allowHTML: true,
+				searchResultLimit: 50,
 				removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
 				duplicateItemsAllowed: false,
 				searchResultLimit: 10,

@@ -37,6 +37,7 @@ $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest)
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
 $phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
 $phoneSelectValue = Helpers::checkAttr('phoneSelectValue', $attributes, $manifest);
+$phoneViewType = Helpers::checkAttr('phoneViewType', $attributes, $manifest);
 
 $phoneId = $phoneName . '-' . Helpers::getUnique();
 
@@ -104,12 +105,24 @@ if (has_filter($filterName)) {
 			UtilsHelper::getStateAttribute('selectCountryNumber') => $value,
 		];
 
+		switch ($phoneViewType) {
+			case 'number-country-code':
+				$value = "+{$value} (" . strtoupper($code) . ")";
+				break;
+			case 'number-country-label':
+				$value = "(+{$value}) {$label}";
+				break;
+			default:
+				$value = "+{$value}";
+				break;
+		}
+
 		$options[] = '
 			<option
 				value="' . $value . '"
 				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
 				' . selected($code, $preselectedValue, false) . '
-			>+' . $value . '</option>';
+			>' . $value . '</option>';
 	}
 }
 

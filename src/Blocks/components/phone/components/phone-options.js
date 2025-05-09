@@ -6,7 +6,7 @@ import { select } from '@wordpress/data';
 import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, Select, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, Select, STORE_NAME, getOption } from '@eightshift/frontend-libs/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -119,6 +119,18 @@ export const PhoneOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('phoneSelectValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneSelectValue', attributes, manifest), phoneDisabledOptions)}
 					help={__('Initial value of the field. This value depends on the value type.', 'eightshift-forms')}
+				/>
+
+				<Select
+					icon={icons.visible}
+					label={__('View type', 'eightshift-forms')}
+					help={__('Select the type of view for the phone field.', 'eightshift-forms')}
+					options={getOption('phoneViewType', attributes, manifest)}
+					value={checkAttr('phoneViewType', attributes, manifest)}
+					onChange={(value) => setAttributes({ [getAttrKey('phoneViewType', attributes, manifest)]: value })}
+					disabled={isOptionDisabled(getAttrKey('phoneViewType', attributes, manifest), phoneDisabledOptions)}
+					simpleValue
+					noSearch
 				/>
 
 				<FieldOptionsVisibility
