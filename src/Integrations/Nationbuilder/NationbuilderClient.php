@@ -675,7 +675,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 */
 	private function setPaginationAttributes(string $path): string
 	{
-		return add_query_arg(
+		return \add_query_arg(
 			[
 				'page[number]' => 1,
 				'page[size]' => self::NATIONBUILDER_PAGINATION_PAGE_SIZE,
