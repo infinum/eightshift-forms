@@ -489,10 +489,13 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 * API request to get all custom data from endpoints.
 	 *
 	 * @param string $endpoint Endpoint.
+	 * @param bool $paginate Use pagination.
+	 * @param array<string, mixed> $pagedData Paged data.
+	 * @param string $nextEndpoint Next page endpoint.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getNationbuilderCustomApiData($endpoint, $paginate = false, $pagedData = [], $nextEndpoint = ''): array
+	private function getNationbuilderCustomApiData(string $endpoint, bool $paginate = false, array $pagedData = [], string $nextEndpoint = ''): array
 	{
 		$url = $paginate && !empty($nextEndpoint) ? $this->getNextUrl($nextEndpoint) : $this->setPaginationAttributes($this->getBaseUrl($endpoint));
 
