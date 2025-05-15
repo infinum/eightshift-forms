@@ -14,6 +14,6 @@
 		"radio": "radio"
 	},
 	"parent": [
-		"eightshift-forms/radio"
+		"eightshift-forms/radios"
 	]
 }
