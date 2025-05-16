@@ -6,7 +6,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [6.6.0]
 
+### Changed
 
+- Restructured the way how allowed blocks are handled and how form block limits work in WordPress 6.8+.
 
 ## [6.5.1]
 
