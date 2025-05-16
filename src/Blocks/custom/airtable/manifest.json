@@ -18,30 +18,6 @@
 	"supports": {
 		"inserter": false
 	},
-	"supports": {
-		"inserter": false
-	},
-	"supports": {
-		"inserter": false
-	},
-	"supports": {
-		"inserter": false
-	},
-	"supports": {
-		"inserter": false
-	},
-	"supports": {
-		"inserter": false
-	},
-	"supports": {
-		"inserter": false
-	},
-	"supports": {
-		"inserter": false
-	},
-	"supports": {
-		"inserter": false
-	},
 	"attributes": {
 		"airtableIntegrationId": {
 			"type": "string"
