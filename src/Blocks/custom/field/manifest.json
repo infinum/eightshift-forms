@@ -15,6 +15,6 @@
 		"conditionalTags": "conditionalTags"
 	},
 	"parent": [
-		"eightshift-forms/form"
+		"eightshift-forms/mailer"
 	]
 }

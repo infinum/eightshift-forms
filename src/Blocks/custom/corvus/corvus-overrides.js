@@ -7,11 +7,5 @@ export const overrides = {
 	icon:{
 		src: getUtilsIcons('corvus') ?? manifest.icon.src,
 	},
-	attributes: {
-		...manifest.attributes,
-		corvusAllowedBlocks: {
-			...manifest.attributes.corvusAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList
-		},
-	},
+	parent: globalManifest.allowedBlocksList.formsCpt,
 };

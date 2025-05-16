@@ -11,18 +11,14 @@
 		"calculator"
 	],
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	],
 	"attributes": {
-		"calculatorAllowedBlocks": {
-			"type": "array",
-			"default": []
-		},
 		"calculatorFormPostId": {
 			"type": "string"
 		},

@@ -20,7 +20,6 @@ export const ActiveCampaignEditor = ({
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}
 				setAttributes={setAttributes}
-				allowedBlocks={checkAttr('activeCampaignAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);

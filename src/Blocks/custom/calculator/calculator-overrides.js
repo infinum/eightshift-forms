@@ -7,11 +7,5 @@ export const overrides = {
 	icon:{
 		src: getUtilsIcons('calculate') ?? manifest.icon.src,
 	},
-	attributes: {
-		...manifest.attributes,
-		calculatorAllowedBlocks: {
-			...manifest.attributes.calculatorAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList
-		},
-	},
+	parent: globalManifest.allowedBlocksList.formsCpt,
 };

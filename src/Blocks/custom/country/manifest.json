@@ -10,11 +10,7 @@
 	"keywords": [
 		"country"
 	],
-	"hasInnerBlocks": true,
 	"components": {
 		"country": "country"
-	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	}
 }

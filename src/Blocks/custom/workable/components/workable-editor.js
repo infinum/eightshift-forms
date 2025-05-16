@@ -20,7 +20,6 @@ export const WorkableEditor = ({
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}
 				setAttributes={setAttributes}
-				allowedBlocks={checkAttr('workableAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);

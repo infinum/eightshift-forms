@@ -86,7 +86,9 @@ class Forms extends AbstractPostType
 	{
 		$template = [
 			[
-				'eightshift-forms/form-selector', [], []
+				'eightshift-forms/form-selector',
+				[],
+				[]
 			]
 		];
 
@@ -118,8 +120,8 @@ class Forms extends AbstractPostType
 			'can_export' => true,
 			'capability_type' => self::POST_CAPABILITY_TYPE,
 			'rest_base' => static::REST_API_ENDPOINT_SLUG,
-			'template_lock' => 'all',
 			'template' => $template,
+			'template_lock' => 'insert',
 		];
 	}
 }

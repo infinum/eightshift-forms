@@ -25,7 +25,6 @@ export const AirtableEditor = ({
 				useInnerId={true}
 				attributes={attributes}
 				setAttributes={setAttributes}
-				allowedBlocks={checkAttr('airtableAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);

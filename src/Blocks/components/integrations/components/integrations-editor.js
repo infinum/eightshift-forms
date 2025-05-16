@@ -1,9 +1,11 @@
+/* global esFormsLocalization */
+
 import React from 'react';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props } from '@eightshift/frontend-libs/scripts';
-import { FormEditor } from './../../form/components/form-editor';
+import { BlockInserter, props } from '@eightshift/frontend-libs/scripts';
+import { additionalBlocksIntegration, FormEditor } from './../../form/components/form-editor';
 import { InvalidEditor } from './../../invalid/components/invalid-editor';
 
 export const IntegrationsEditor = ({
@@ -59,8 +61,13 @@ export const IntegrationsEditor = ({
 				{...props('form', attributes, {
 					setAttributes,
 					formContent: <InnerBlocks
-						allowedBlocks={allowedBlocks}
-						templateLock={!allowedBlocks.length}
+						allowedBlocks={
+							[
+								...allowedBlocks,
+								...additionalBlocksIntegration,
+							]
+						}
+						renderAppender={() => <BlockInserter clientId={clientId} />}
 					/>
 				})}
 			/>

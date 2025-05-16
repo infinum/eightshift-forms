@@ -166,7 +166,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['validationPatternsOptions'] = ValidationPatterns::getValidationPatternsEditor();
 		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
-		$output['currentPostType'] = \get_post_type() ? \get_post_type() : '';
+		$output['currentPostType'] = [
+			'isForms' => \get_post_type() === Forms::POST_TYPE_SLUG,
+			'isResults' => \get_post_type() === Result::POST_TYPE_SLUG,
+			'isCommon' => \get_post_type() !== Forms::POST_TYPE_SLUG && \get_post_type() !== Result::POST_TYPE_SLUG,
+		];
 		$output['postTypes'] = [
 			'results' => Result::POST_TYPE_SLUG,
 			'forms' => Forms::POST_TYPE_SLUG,
