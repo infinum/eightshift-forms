@@ -11,11 +11,9 @@
  */
 
 import { unregisterBlockType } from '@wordpress/blocks';
-import { select } from '@wordpress/data';
 import {
 	registerBlocks,
 	outputCssVariablesGlobal,
-	STORE_NAME,
 } from '@eightshift/frontend-libs/scripts/editor';
 import globalManifest from '../../manifest.json';
 import './store';
@@ -36,19 +34,15 @@ registerBlocks(
 // Output global css variables.
 outputCssVariablesGlobal();
 
-// Remove form-selector block from anywhere else other than form CPT.
-const namespace = select(STORE_NAME).getSettingsNamespace();
+if (esFormsLocalization?.currentPostType?.isForms) {
+	globalManifest?.unregisterBlocks?.forms?.forEach((block) => unregisterBlockType(block));
+}
 
-// switch (esFormsLocalization?.currentPostType) {
-// 	case esFormsLocalization?.postTypes?.forms:
-// 		unregisterBlockType(`${namespace}/result-output-item`);
-// 		break;
-// 	case esFormsLocalization?.postTypes?.results:
-// 		unregisterBlockType(`${namespace}/form-selector`);
-// 		unregisterBlockType(`${namespace}/result-output`);
-// 		break;
-// 	default:
-// 		unregisterBlockType(`${namespace}/form-selector`);
-// 		unregisterBlockType(`${namespace}/result-output-item`);
-// 		break;
-// }
+if (esFormsLocalization?.currentPostType?.isResults) {
+	globalManifest?.unregisterBlocks?.results?.forEach((block) => unregisterBlockType(block));
+}
+
+if (esFormsLocalization?.currentPostType?.isCommon) {
+	globalManifest?.unregisterBlocks?.common?.forEach((block) => unregisterBlockType(block));
+}
+

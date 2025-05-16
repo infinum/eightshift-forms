@@ -19,16 +19,26 @@
 		"useComponents": true,
 		"useVariations": false
 	},
+	"unregisterBlocks": {
+		"forms": [
+			"eightshift-forms/result-output-item"
+		],
+		"results": [
+			"eightshift-forms/form-selector",
+			"eightshift-forms/result-output"
+		],
+		"common": [
+			"eightshift-forms/form-selector",
+			"eightshift-forms/result-output-item"
+		]
+	},
 	"allowedBlocksList": {
 		"formsCpt": [
 			"eightshift-forms/form-selector"
 		],
-		"noFormsCpt": [
-			"eightshift-forms/result-output",
-			"eightshift-forms/forms"
-		],
-		"resultOutputCpt": [
+		"other": [
 			"eightshift-forms/forms",
+			"eightshift-forms/result-output",
 			"eightshift-forms/result-output-item"
 		],
 		"fieldsNoIntegration": [

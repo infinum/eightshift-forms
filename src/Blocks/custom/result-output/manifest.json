@@ -13,9 +13,6 @@
 		"results"
 	],
 	"hasInnerBlocks": true,
-	"supports": {
-		"inserter": false
-	},
 	"attributes": {
 		"resultOutputName": {
 			"type": "string"

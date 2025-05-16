@@ -50,59 +50,35 @@ class Blocks extends UtilsBlocks
 	 */
 	public function getAllBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
 	{
-		if (!$blockEditorContext->post instanceof WP_Post) {
-			return $allowedBlockTypes;
-		}
-
-		if (empty($blockEditorContext->post->post_type)) {
-			return $allowedBlockTypes;
-		}
-
 		$settings = Helpers::getSettings()['allowedBlocksList'];
 
-		switch ($blockEditorContext->post->post_type) {
-			case UtilsConfig::SLUG_POST_TYPE:
-				$out =  \array_values(
-					\array_unique(
-						\array_merge(
-							$settings['formsCpt'],
-							$settings['fieldsNoIntegration'],
-							$settings['fieldsIntegration'],
-							$settings['integrationsNoBuilder'],
-							$settings['integrationsBuilder'],
-							\apply_filters(UtilsHooksHelper::getFilterName(['blocks', 'additionalBlocks']), [])
-						)
-					)
-				);
-				dump('perica');
-				return $out;
-			case UtilsConfig::SLUG_RESULT_POST_TYPE:
-				$out = \array_values(
-					\array_unique(
-						\array_merge(
-							$settings['resultOutputCpt'],
-							\is_array($allowedBlockTypes) ? $allowedBlockTypes : [],
-							\apply_filters(UtilsHooksHelper::getFilterName(['blocks', 'allowedBlocks']), [])
-						)
-					)
-				);
-				dump('želčjko');
-				dump($out);
-				return $out;
-			default:
-				$out = \array_values(
-					\array_unique(
-						\array_merge(
-							$settings['noFormsCpt'],
-							\is_array($allowedBlockTypes) ? $allowedBlockTypes : [],
-							\apply_filters(UtilsHooksHelper::getFilterName(['blocks', 'allowedBlocks']), [])
-						)
-					)
-				);
-				dump('miki');
-				dump($out);
-				return $out;
+		if (
+			!$blockEditorContext->post instanceof WP_Post ||
+			empty($blockEditorContext->post->post_type) ||
+			$blockEditorContext->post->post_type !== UtilsConfig::SLUG_POST_TYPE
+		) {
+			if (\is_bool($allowedBlockTypes)) {
+				return $allowedBlockTypes;
+			}
+
+			return \array_values(\array_unique(\array_merge(
+				$allowedBlockTypes,
+				$settings['other'],
+			)));
 		}
+
+		return \array_values(
+			\array_unique(
+				\array_merge(
+					$settings['formsCpt'],
+					$settings['fieldsNoIntegration'],
+					$settings['fieldsIntegration'],
+					$settings['integrationsNoBuilder'],
+					$settings['integrationsBuilder'],
+					\apply_filters(UtilsHooksHelper::getFilterName(['blocks', 'additionalBlocks']), [])
+				)
+			)
+		);
 	}
 
 	/**
