@@ -14,9 +14,6 @@
 	"components": {
 		"select": "select"
 	},
-	"parent": [
-		"eightshift-forms/form"
-	],
 	"example": {
 		"innerBlocks": [
 			{
@@ -41,17 +38,6 @@
 				}
 			}
 		]
-	},
-	"attributes": {
-		"selectAllowedBlocks": {
-			"type": "array",
-			"items": {
-				"type": "string"
-			},
-			"default": [
-				"eightshift-forms/select-option"
-			]
-		}
 	},
 	"template": [
 		[

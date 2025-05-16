@@ -10,23 +10,17 @@
 	"keywords": [
 		"workable"
 	],
-	"example": {
-	},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"workableIntegrationId": {
 			"type": "string"
-		},
-		"workableAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	}
 }

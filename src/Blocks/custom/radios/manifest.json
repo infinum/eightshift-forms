@@ -14,9 +14,6 @@
 	"components": {
 		"radios": "radios"
 	},
-	"parent": [
-		"eightshift-forms/form"
-	],
 	"attributes": {
 		"radiosAllowedBlocks": {
 			"type": "array",

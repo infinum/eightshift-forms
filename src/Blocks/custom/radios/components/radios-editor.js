@@ -1,9 +1,9 @@
 import React from 'react';
-import { select } from '@wordpress/data';
+import { select, useSelect } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, checkAttr, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { RadiosEditor as RadiosEditorComponent } from '../../../components/radios/components/radios-editor';
-
+import globalManifest from '../../../manifest.json';
 export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('radios');
 
@@ -11,7 +11,12 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 		template,
 	} = manifest;
 
-	const radiosAllowedBlocks = checkAttr('radiosAllowedBlocks', attributes, manifest);
+	const parentBlock = useSelect((select) => {
+		const parentBlockIds = select('core/block-editor').getBlockParents(clientId);
+		const parents = select('core/block-editor').getBlocksByClientId(parentBlockIds);
+
+		return parents.filter((parent) => globalManifest.allowedBlocksList.integrationsBuilder.includes(parent.name));
+	});
 
 	return (
 		<RadiosEditorComponent
@@ -20,9 +25,13 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 				clientId,
 				radiosContent:
 					<InnerBlocks
-						allowedBlocks={(typeof radiosAllowedBlocks === 'undefined') || radiosAllowedBlocks}
+						allowedBlocks={[
+							'eightshift-forms/radio',
+							'eightshift-forms/input',
+						]}
+						templateLock={parentBlock.length > 0 ? 'insert' : false}
 						template={template}
-						renderAppender={() => <BlockInserter clientId={clientId} small />}
+						renderAppender={() => <BlockInserter clientId={clientId} />}
 					/>
 			})}
 		/>

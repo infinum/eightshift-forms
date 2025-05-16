@@ -19,29 +19,61 @@
 		"useComponents": true,
 		"useVariations": false
 	},
-	"allowedBlocksNoneBuilderBlocksList": [
-		"eightshift-forms/form-selector",
-		"eightshift-forms/forms",
-		"eightshift-forms/result-output",
-		"eightshift-forms/result-output-item"
-	],
-	"allowedBlocksBuilderIntegrationAdditionalBlocksList": [
-		"eightshift-forms/step"
-	],
-	"allowedBlocksBuilderBlocksList": [
-		"eightshift-forms/file",
-		"eightshift-forms/input",
-		"eightshift-forms/radios",
-		"eightshift-forms/select",
-		"eightshift-forms/submit",
-		"eightshift-forms/textarea",
-		"eightshift-forms/checkboxes",
-		"eightshift-forms/phone",
-		"eightshift-forms/date",
-		"eightshift-forms/country",
-		"eightshift-forms/step",
-		"eightshift-forms/rating"
-	],
+	"allowedBlocksList": {
+		"formsCpt": [
+			"eightshift-forms/form-selector"
+		],
+		"noFormsCpt": [
+			"eightshift-forms/result-output",
+			"eightshift-forms/forms"
+		],
+		"resultOutputCpt": [
+			"eightshift-forms/forms",
+			"eightshift-forms/result-output-item"
+		],
+		"fieldsNoIntegration": [
+			"eightshift-forms/file",
+			"eightshift-forms/input",
+			"eightshift-forms/radios",
+			"eightshift-forms/radio",
+			"eightshift-forms/select",
+			"eightshift-forms/select-option",
+			"eightshift-forms/submit",
+			"eightshift-forms/textarea",
+			"eightshift-forms/checkboxes",
+			"eightshift-forms/checkbox",
+			"eightshift-forms/phone",
+			"eightshift-forms/date",
+			"eightshift-forms/country",
+			"eightshift-forms/step",
+			"eightshift-forms/rating",
+			"eightshift-forms/dynamic"
+		],
+		"fieldsIntegration": [
+			"eightshift-forms/step"
+		],
+		"integrationsNoBuilder": [
+			"eightshift-forms/mailer",
+			"eightshift-forms/jira",
+			"eightshift-forms/corvus",
+			"eightshift-forms/paycek",
+			"eightshift-forms/calculator",
+			"eightshift-forms/pipedrive",
+			"eightshift-forms/nationbuilder"
+		],
+		"integrationsBuilder": [
+			"eightshift-forms/mailchimp",
+			"eightshift-forms/greenhouse",
+			"eightshift-forms/hubspot",
+			"eightshift-forms/mailerlite",
+			"eightshift-forms/goodbits",
+			"eightshift-forms/active-campaign",
+			"eightshift-forms/airtable",
+			"eightshift-forms/moments",
+			"eightshift-forms/workable",
+			"eightshift-forms/talentlyft"
+		]
+	},
 	"showAsMap": {
 		"options": [
 			{

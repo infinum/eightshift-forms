@@ -12,8 +12,5 @@
 	],
 	"components": {
 		"dynamic": "dynamic"
-	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	}
 }

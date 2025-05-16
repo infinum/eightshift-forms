@@ -21,8 +21,5 @@
 	],
 	"components": {
 		"input": "input"
-	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	}
 }

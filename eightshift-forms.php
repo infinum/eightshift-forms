@@ -92,3 +92,10 @@ if (\class_exists(Main::class)) {
 
 	(new Testfilters())->register();
 }
+
+
+\add_filter('es_forms_blocks_additional_blocks', function () {
+	return [
+		"core/paragraph",
+	];
+});

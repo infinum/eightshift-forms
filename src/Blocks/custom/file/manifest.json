@@ -12,8 +12,5 @@
 	],
 	"components": {
 		"file": "file"
-	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	}
 }

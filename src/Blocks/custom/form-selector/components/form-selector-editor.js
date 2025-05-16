@@ -4,12 +4,12 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { STORE_NAME, checkAttr, icons } from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME, icons } from '@eightshift/frontend-libs/scripts';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
 import { getUtilsIcons } from '../../../components/form/assets/state-init';
+import globalSettings from './../../../manifest.json';
 
 export const FormSelectorEditor = ({
-	attributes,
 	clientId,
 	hasInnerBlocks,
 }) => {
@@ -19,11 +19,9 @@ export const FormSelectorEditor = ({
 		forms,
 	} = manifest;
 
-	const formSelectorAllowedBlocks = checkAttr('formSelectorAllowedBlocks', attributes, manifest);
-
 	return (
 		<>
-			{!hasInnerBlocks &&
+			 {!hasInnerBlocks &&
 				<Placeholder
 					icon={icons.form}
 					label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
@@ -65,9 +63,13 @@ export const FormSelectorEditor = ({
 			}
 
 			<InnerBlocks
-				allowedBlocks={(typeof formSelectorAllowedBlocks === 'undefined') || formSelectorAllowedBlocks}
-				templateLock={hasInnerBlocks && 'insert'}
-				renderAppender={false}
+				templateLock={false}
+				allowedBlocks={
+					[
+						...globalSettings.allowedBlocksList.integrationsBuilder,
+						...globalSettings.allowedBlocksList.integrationsNoBuilder,
+					]
+				}
 			/>
 		</>
 	);

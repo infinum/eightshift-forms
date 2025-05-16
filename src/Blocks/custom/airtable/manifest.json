@@ -10,26 +10,44 @@
 	"keywords": [
 		"airtable"
 	],
-	"example": {
-	},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
+	"supports": {
+		"inserter": false
+	},
+	"supports": {
+		"inserter": false
+	},
+	"supports": {
+		"inserter": false
+	},
+	"supports": {
+		"inserter": false
+	},
+	"supports": {
+		"inserter": false
+	},
+	"supports": {
+		"inserter": false
+	},
+	"supports": {
+		"inserter": false
+	},
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"airtableIntegrationId": {
 			"type": "string"
 		},
 		"airtableIntegrationInnerId": {
 			"type": "string"
-		},
-		"airtableAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	}
 }
