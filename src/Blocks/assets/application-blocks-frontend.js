@@ -5,8 +5,9 @@
  * Usage: `WordPress frontend screen`.
  */
 
-// Styles.
-import './styles/blocks-frontend.scss';
+import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+
+dynamicImport(require.context('./../components', true, /-frontend\.scss$/));
 
 // Scripts.
 import './scripts/blocks-frontend';

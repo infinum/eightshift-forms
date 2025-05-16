@@ -7,9 +7,7 @@ import { SelectEditor as SelectEditorComponent } from '../../../components/selec
 export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('select');
 
-	const {
-		template,
-	} = manifest;
+	const { template } = manifest;
 
 	const selectAllowedBlocks = checkAttr('selectAllowedBlocks', attributes, manifest);
 
@@ -18,11 +16,18 @@ export const SelectEditor = ({ attributes, setAttributes, clientId }) => {
 			{...props('select', attributes, {
 				setAttributes,
 				clientId,
-				selectContent: <InnerBlocks
-					allowedBlocks={(typeof selectAllowedBlocks === 'undefined') || selectAllowedBlocks}
-					template={template}
-					renderAppender={() => <BlockInserter clientId={clientId} small />}
-				/>
+				selectContent: (
+					<InnerBlocks
+						allowedBlocks={typeof selectAllowedBlocks === 'undefined' || selectAllowedBlocks}
+						template={template}
+						renderAppender={() => (
+							<BlockInserter
+								clientId={clientId}
+								small
+							/>
+						)}
+					/>
+				),
 			})}
 		/>
 	);

@@ -2,16 +2,13 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "workable",
 	"title": "Workable form",
-	"description" : "Workable job application form",
+	"description": "Workable job application form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-workable"
 	},
-	"keywords": [
-		"workable"
-	],
-	"example": {
-	},
+	"keywords": ["workable"],
+	"example": {},
 	"components": {
 		"form": "form",
 		"step": "step"
@@ -26,7 +23,5 @@
 			"default": []
 		}
 	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	"parent": ["eightshift-forms/form-selector"]
 }

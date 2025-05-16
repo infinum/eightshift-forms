@@ -4,20 +4,19 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { icons, getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
 import { ProgressBarOptions } from '../../progress-bar/components/progress-bar-options';
 import { MultiflowFormsReactFlow } from '../../react-flow';
 import globalManifest from '../../../manifest.json';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const StepMultiflowOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const stepMultiflowUse = checkAttr('stepMultiflowUse', attributes, manifest);
 	const stepMultiflowRules = checkAttr('stepMultiflowRules', attributes, manifest);
@@ -45,7 +44,10 @@ export const StepMultiflowOptions = (attributes) => {
 			<>
 				{stepMultiflowRules?.map((_, index) => {
 					return (
-						<div key={index} className='es-border-b-cool-gray-100 es-pb-7 es-mb-7'>
+						<div
+							key={index}
+							className='es-border-b-cool-gray-100 es-pb-7 es-mb-7'
+						>
 							<div className='es-h-spaced es-mb-3'>
 								<span>{__('Go to from step', 'eightshift-forms')}</span>
 								<Select
@@ -56,7 +58,6 @@ export const StepMultiflowOptions = (attributes) => {
 										stepMultiflowRules[index][2] = [];
 										setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 									}}
-									noBottomSpacing
 									simpleValue
 									noSearch
 								/>
@@ -70,7 +71,6 @@ export const StepMultiflowOptions = (attributes) => {
 										stepMultiflowRules[index][0] = value;
 										setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 									}}
-									noBottomSpacing
 									simpleValue
 									noSearch
 								/>
@@ -88,30 +88,32 @@ export const StepMultiflowOptions = (attributes) => {
 								/>
 							</div>
 
-							<ConditionalTagsType topParent={index}/>
+							<ConditionalTagsType topParent={index} />
 
-							{stepProgressBarUse &&
+							{stepProgressBarUse && (
 								<div className='es-h-spaced es-mt-3'>
 									<span>{__('and show', 'eightshift-forms')}</span>
-										<TextControl
-											type={'number'}
-											value={stepMultiflowRules?.[index]?.[3]}
-											onChange={(value) => {
-												stepMultiflowRules[index][3] = value;
-												setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
-											}}
-											className='es-w-15 es-mb-0'
-										/>
+									<TextControl
+										type={'number'}
+										value={stepMultiflowRules?.[index]?.[3]}
+										onChange={(value) => {
+											stepMultiflowRules[index][3] = value;
+											setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
+										}}
+										className='es-w-15 es-mb-0'
+									/>
 									<span>{__('steps in the progress bar.', 'eightshift-forms')}</span>
 								</div>
-							}
+							)}
 						</div>
 					);
 				})}
 
 				<Button
 					icon={icons.plusCircleFillAlt}
-					onClick={() => setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules, [formFields?.[0]?.value ?? '', formFields?.[0]?.value ?? '', []]] })}
+					onClick={() =>
+						setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules, [formFields?.[0]?.value ?? '', formFields?.[0]?.value ?? '', []]] })
+					}
 					className='es-rounded-1'
 				>
 					{__('Add flow', 'eightshift-forms')}
@@ -120,7 +122,7 @@ export const StepMultiflowOptions = (attributes) => {
 		);
 	};
 
-	const ConditionalTagsType = ({topParent}) => {
+	const ConditionalTagsType = ({ topParent }) => {
 		if (!formFields) {
 			return null;
 		}
@@ -134,23 +136,18 @@ export const StepMultiflowOptions = (attributes) => {
 						return (
 							<>
 								{stepMultiflowRules?.[topParent]?.[2]?.[index]?.map((_, innerIndex) => {
-										return (
-											<ConditionalTagsItem
-												key={innerIndex}
-												topParent={topParent}
-												parent={index}
-												index={innerIndex}
-												total={stepMultiflowRules[topParent][2][index].length}
-											/>
-										);
-									})
-								}
+									return (
+										<ConditionalTagsItem
+											key={innerIndex}
+											topParent={topParent}
+											parent={index}
+											index={innerIndex}
+											total={stepMultiflowRules[topParent][2][index].length}
+										/>
+									);
+								})}
 
-								{(stepMultiflowRules?.[topParent]?.[2]?.length > 1 && (index + 1) < total) &&
-									<div className='es-font-weight-700'>
-										{__('OR', 'eightshift-forms')}
-									</div>
-								}
+								{stepMultiflowRules?.[topParent]?.[2]?.length > 1 && index + 1 < total && <div className='es-font-weight-700'>{__('OR', 'eightshift-forms')}</div>}
 							</>
 						);
 					})}
@@ -164,7 +161,7 @@ export const StepMultiflowOptions = (attributes) => {
 						}}
 						className='es-rounded-1 es-mt-4'
 					>
-						{(__('Add step rules', 'eightshift-forms'))}
+						{__('Add step rules', 'eightshift-forms')}
 					</Button>
 
 					<IconToggle
@@ -172,7 +169,6 @@ export const StepMultiflowOptions = (attributes) => {
 						type={'button'}
 						label={__('Disable next button', 'eightshift-forms')}
 						checked={stepMultiflowRules[topParent][4]}
-						noBottomSpacing
 						additionalClasses={'es-w-fit'}
 						onChange={() => {
 							stepMultiflowRules[topParent][4] = !stepMultiflowRules[topParent][4];
@@ -206,7 +202,6 @@ export const StepMultiflowOptions = (attributes) => {
 							stepMultiflowRules[topParent][2][parent][index][2] = '';
 							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 						}}
-						noBottomSpacing
 						simpleValue
 						noSearch
 						additionalSelectClasses='es-w-40'
@@ -219,14 +214,13 @@ export const StepMultiflowOptions = (attributes) => {
 							stepMultiflowRules[topParent][2][parent][index][1] = value;
 							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 						}}
-						noBottomSpacing
 						simpleValue
 						noSearch
 						additionalSelectClasses='es-w-40'
 					/>
 
 					<span>{'='}</span>
-					{!showRuleValuePicker ?
+					{!showRuleValuePicker ? (
 						<TextControl
 							value={inputCheck}
 							onBlur={() => setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] })}
@@ -235,7 +229,8 @@ export const StepMultiflowOptions = (attributes) => {
 								setInputCheck(value);
 							}}
 							className='es-w-40 es-m-0-bcf!'
-						/> :
+						/>
+					) : (
 						<Select
 							value={stepMultiflowRules?.[topParent]?.[2]?.[parent]?.[index]?.[2]}
 							options={formFieldSelectedItem}
@@ -243,14 +238,13 @@ export const StepMultiflowOptions = (attributes) => {
 								stepMultiflowRules[topParent][2][parent][index][2] = value;
 								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
 							}}
-							noBottomSpacing
 							simpleValue
 							noSearch
 							additionalSelectClasses='es-w-40'
 						/>
-					}
+					)}
 
-					{(total === index + 1) &&
+					{total === index + 1 && (
 						<Button
 							icon={icons.plusCircleFillAlt}
 							onClick={() => {
@@ -261,7 +255,7 @@ export const StepMultiflowOptions = (attributes) => {
 						>
 							{__('AND', 'eightshift-forms')}
 						</Button>
-					}
+					)}
 
 					<Button
 						icon={icons.trash}
@@ -283,7 +277,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 	return (
 		<PanelBody title={__('Multi step/flow form', 'eightshift-forms')}>
-			{(formFields?.length > 1) ?
+			{formFields?.length > 1 ? (
 				<>
 					<ProgressBarOptions
 						{...props('progressBar', attributes, {
@@ -316,7 +310,6 @@ export const StepMultiflowOptions = (attributes) => {
 
 					<Section
 						showIf={stepMultiflowUse}
-						noBottomSpacing
 						additionalClasses='es-pl-5'
 					>
 						<Control
@@ -336,27 +329,39 @@ export const StepMultiflowOptions = (attributes) => {
 						</Control>
 					</Section>
 
-					{isModalPreviewOpen &&
-						<Modal
-								overlayClassName='es-conditional-tags-modal es-geolocation-modal'
-								className='es-modal-max-width-5xl es-rounded-3!'
-								title={<IconLabel icon={icons.anchor} label={__('Multi-flow preview', 'eightshift-forms')} standalone />}
-								onRequestClose={() => {
-									setIsModalPreviewOpen(false);
-								}}
-							>
-								<MultiflowFormsReactFlow
-									formFields={formFieldsFull}
-									stepMultiflowRules={stepMultiflowRules}
-								/>
-						</Modal>
-					}
-
-					{isModalOpen &&
+					{isModalPreviewOpen && (
 						<Modal
 							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 							className='es-modal-max-width-5xl es-rounded-3!'
-							title={<IconLabel icon={icons.anchor} label={__('Multi-flow setup', 'eightshift-forms')} standalone />}
+							title={
+								<IconLabel
+									icon={icons.anchor}
+									label={__('Multi-flow preview', 'eightshift-forms')}
+									standalone
+								/>
+							}
+							onRequestClose={() => {
+								setIsModalPreviewOpen(false);
+							}}
+						>
+							<MultiflowFormsReactFlow
+								formFields={formFieldsFull}
+								stepMultiflowRules={stepMultiflowRules}
+							/>
+						</Modal>
+					)}
+
+					{isModalOpen && (
+						<Modal
+							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
+							className='es-modal-max-width-5xl es-rounded-3!'
+							title={
+								<IconLabel
+									icon={icons.anchor}
+									label={__('Multi-flow setup', 'eightshift-forms')}
+									standalone
+								/>
+							}
 							onRequestClose={() => {
 								setIsModalOpen(false);
 							}}
@@ -368,7 +373,7 @@ export const StepMultiflowOptions = (attributes) => {
 							<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
 								<IconLabel
 									icon={icons.lightBulb}
-									label={__('If you can\'t find a field, make sure the form is saved, and all fields have a name set.', 'eightshift-forms')}
+									label={__("If you can't find a field, make sure the form is saved, and all fields have a name set.", 'eightshift-forms')}
 									additionalClasses='es-nested-color-yellow-500!'
 									standalone
 								/>
@@ -384,8 +389,9 @@ export const StepMultiflowOptions = (attributes) => {
 								</Button>
 							</div>
 						</Modal>
-					}
-				</> :
+					)}
+				</>
+			) : (
 				<IconLabel
 					icon={icons.warningFillTransparent}
 					label={__('Feature unavailable', 'eightshift-forms')}
@@ -394,7 +400,7 @@ export const StepMultiflowOptions = (attributes) => {
 					addSubtitleGap
 					standalone
 				/>
-			}
+			)}
 		</PanelBody>
 	);
 };

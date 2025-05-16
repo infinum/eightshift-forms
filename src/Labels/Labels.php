@@ -21,7 +21,7 @@ use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -69,91 +69,91 @@ class Labels implements LabelsInterface
 			$this->getGenericLabels(),
 			$this->getValidationLabels(),
 			$this->getMailerLabels(),
-			$this->getCutomLabels()
+			$this->getCustomLabels()
 		);
 
 		// Google reCaptcha.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
 			$output = \array_merge($output, $this->getCaptchaLabels());
 		}
 
 		// Greenhouse.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
 			$output = \array_merge($output, $this->getGreenhouseLabels());
 		}
 
 		// Mailchimp.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
 			$output = \array_merge($output, $this->getMailchimpLabels());
 		}
 
 		// Hubspot.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
 			$output = \array_merge($output, $this->getHubspotLabels());
 		}
 
 		// Mailerlite.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
 			$output = \array_merge($output, $this->getMailerliteLabels());
 		}
 
 		// Goodbits.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
 			$output = \array_merge($output, $this->getGoodbitsLabels());
 		}
 
 		// ActiveCampaign.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
 			$output = \array_merge($output, $this->getActiveCampaignLabels());
 		}
 
 		// Airtable.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getAirtableLabels());
 		}
 
 		// Moments.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
 			$output = \array_merge($output, $this->getMomentsLabels());
 		}
 
 		// Workable.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
 			$output = \array_merge($output, $this->getWorkableLabels());
 		}
 
 		// Talentlyft.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY)) {
 			$output = \array_merge($output, $this->getTalentlyftLabels());
 		}
 
 		// Jira.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
 			$output = \array_merge($output, $this->getJiraLabels());
 		}
 
 		// Corvus.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_USE_KEY)) {
 			$output = \array_merge($output, $this->getCorvusLabels());
 		}
 
 		// Paycek.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPaycek::SETTINGS_PAYCEK_USE_KEY, SettingsPaycek::SETTINGS_PAYCEK_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPaycek::SETTINGS_PAYCEK_USE_KEY, SettingsPaycek::SETTINGS_PAYCEK_USE_KEY)) {
 			$output = \array_merge($output, $this->getPaycekLabels());
 		}
 
 		// Pipedrive.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
 			$output = \array_merge($output, $this->getPipedriveLabels());
 		}
 
 		// Calculator.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
 			$output = \array_merge($output, $this->getCalculatorLabels());
 		}
 
 		// Nationbuilder.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY)) {
 			$output = \array_merge($output, $this->getNationbuilderLabels());
 		}
 
@@ -175,9 +175,9 @@ class Labels implements LabelsInterface
 			$local = \array_flip(self::ALL_LOCAL_LABELS);
 
 			if (isset($local[$key])) {
-				$dbLabel = UtilsSettingsHelper::getSettingValue($key, $formId);
+				$dbLabel = SettingsHelpers::getSettingValue($key, $formId);
 			} else {
-				$dbLabel = UtilsSettingsHelper::getOptionValue($key);
+				$dbLabel = SettingsHelpers::getOptionValue($key);
 			}
 
 			// If there is an override in the DB use that.
@@ -192,7 +192,7 @@ class Labels implements LabelsInterface
 	}
 
 	/**
-	 * Output all validation labels from cache for fater validation.
+	 * Output all validation labels from cache for faster validation.
 	 *
 	 * @param string $formId Form ID.
 	 *
@@ -266,13 +266,13 @@ class Labels implements LabelsInterface
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
-			'validationPhone' => \__('This phone number is not valid. It must contain a valid contry/network prefix with only numbers.', 'eightshift-forms'),
+			'validationPhone' => \__('This phone number is not valid. It must contain a valid country/network prefix with only numbers.', 'eightshift-forms'),
 			'validationDate' => \__('This date format is not valid.', 'eightshift-forms'),
 			'validationDateTime' => \__('This date/time format is not valid.', 'eightshift-forms'),
 			'validationDateNoFuture' => \__('This fields only allows dates in the past.', 'eightshift-forms'),
 			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
 			'validationGreenhouseAcceptMime' => \__('The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed.', 'eightshift-forms'),
-			'validationMomentsInvalidPhoneLenght' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
+			'validationMomentsInvalidPhoneLength' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
 			'validationMomentsInvalidSpecialCharacters' => \__('This field contains forbidden special characters.', 'eightshift-forms'),
 			'validationWorkableMaxLength127' => \__('This field is too long. Max length is 127 characters.', 'eightshift-forms'),
 			'validationWorkableMaxLength255' => \__('This field is too long. Max length is 255 characters.', 'eightshift-forms'),
@@ -288,13 +288,13 @@ class Labels implements LabelsInterface
 	 *
 	 * @return array<string, string>
 	 */
-	private function getCutomLabels(): array
+	private function getCustomLabels(): array
 	{
 		return [
 			'customNoAction' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
 			'customError' => \__('There was an error with your form submission.', 'eightshift-forms'),
-			'customSuccess' => \__('Form was successfuly submitted.', 'eightshift-forms'),
-			'customSuccessRedirect' => \__('Form was successfuly submitted. Redirecting you now.', 'eightshift-forms'),
+			'customSuccess' => \__('Form was successfully submitted.', 'eightshift-forms'),
+			'customSuccessRedirect' => \__('Form was successfully submitted. Redirecting you now.', 'eightshift-forms'),
 		];
 	}
 
@@ -375,7 +375,7 @@ class Labels implements LabelsInterface
 			'hubspotMissingCommunicationConsentTextError' => \__('The communication consent text was missing for a subscription. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotMissingLegitimateInterestTextError' => \__('The legitimate interest consent text was missing. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotDuplicateSubscriptionTypeIdError' => \__('The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator.', 'eightshift-forms'),
-			'hubspotHasRecaptchaEnabledError' => \__('Your Hubspot form has reCaptch enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotHasRecaptchaEnabledError' => \__('Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotError429Error' => \__('The HubSpot account has reached the rate limit. Please contact website administrator.', 'eightshift-forms'),
 		];
 	}
@@ -419,7 +419,7 @@ class Labels implements LabelsInterface
 			'activeCampaignInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'activeCampaignDuplicateError' => \__('Email address already exists in the system.', 'eightshift-forms'),
 			'activeCampaign500Error' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
-			'activeCampaignForbidenError' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
+			'activeCampaignForbiddenError' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
 			'activeCampaignSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -494,7 +494,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'talentlyftBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-			'talentlyftValicationError' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
+			'talentlyftValidationError' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
 			'talentlyftSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}

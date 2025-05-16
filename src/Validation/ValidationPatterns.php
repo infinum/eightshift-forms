@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * Class ValidationPatterns
@@ -78,7 +78,7 @@ class ValidationPatterns
 	/**
 	 * Get validation pattern - output from pattern.
 	 *
-	 * @param string $pattern Pattern to serach.
+	 * @param string $pattern Pattern to search.
 	 *
 	 * @return array<string, string>
 	 */
@@ -116,14 +116,14 @@ class ValidationPatterns
 			...self::VALIDATION_PATTERNS_PRIVATE,
 		];
 
-		$userPatterns = \preg_split("/\\r\\n|\\r|\\n/", UtilsSettingsHelper::getOptionValueAsJson(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
+		$userPatterns = \preg_split("/\\r\\n|\\r|\\n/", SettingsHelpers::getOptionValueAsJson(SettingsValidation::SETTINGS_VALIDATION_PATTERNS_KEY));
 
 		if ($userPatterns) {
 			foreach ($userPatterns as $pattern) {
 				$pattern = \explode(' : ', $pattern);
 
 				if (!isset($pattern[0]) || !isset($pattern[1]) || !isset($pattern[2])) {
-						continue;
+					continue;
 				};
 
 				$output[] = [

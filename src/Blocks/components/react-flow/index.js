@@ -1,41 +1,39 @@
+import { camelCase } from '@eightshift/ui-components/utilities';
 import React, { memo } from 'react';
 import ReactFlow, { MarkerType, Controls, Background, MiniMap, Position, Handle } from 'reactflow';
-import { camelize } from '@eightshift/frontend-libs/scripts';
 
 // Create custom handle with 4 points.
-const CustomHandle = memo(({data}) => {
+const CustomHandle = memo(({ data }) => {
 	return (
 		<>
 			<Handle
-				type="source"
+				type='source'
 				position={Position.Bottom}
-				id="bottom-source"
+				id='bottom-source'
 				style={{
 					right: 20,
 					left: 'auto',
 				}}
 			/>
 			<Handle
-				type="target"
+				type='target'
 				position={Position.Bottom}
-				id="bottom-target"
+				id='bottom-target'
 				style={{
 					left: 20,
 				}}
 			/>
 			<Handle
-				type="source"
+				type='source'
 				position={Position.Right}
-				id="right"
+				id='right'
 			/>
 			<Handle
-				type="target"
+				type='target'
 				position={Position.Left}
-				id="left"
+				id='left'
 			/>
-			<div>
-				{data.label}
-			</div>
+			<div>{data.label}</div>
 		</>
 	);
 });
@@ -49,8 +47,11 @@ const markerStyle = {
 
 // Generate a random hex color that is not too light or too dark.
 const getRandomHexColor = () => {
-	const getRandomHexValue = () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
-	
+	const getRandomHexValue = () =>
+		Math.floor(Math.random() * 256)
+			.toString(16)
+			.padStart(2, '0');
+
 	let hexColor, luminance;
 	do {
 		hexColor = `#${getRandomHexValue()}${getRandomHexValue()}${getRandomHexValue()}`;
@@ -68,7 +69,7 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 	const color = '#333333';
 
 	const edges = formFields.map(({ value }, index) => {
-		const target = formFields?.[index+1]?.value;
+		const target = formFields?.[index + 1]?.value;
 
 		// If there is no target bailout.
 		if (!target) {
@@ -76,9 +77,9 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 		}
 
 		return {
-			id: camelize(`${value}-default-flow`), // Unique ID for the edge.
-			source: camelize(value),
-			target: camelize(target),
+			id: camelCase(`${value}-default-flow`), // Unique ID for the edge.
+			source: camelCase(value),
+			target: camelCase(target),
 			sourceHandle: 'right',
 			targetHandle: 'left',
 			style: {
@@ -94,13 +95,13 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 
 	// Custom flows.
 	const customFlows = stepMultiflowRules.map((item, index) => {
-		const source = camelize(item?.[1].toLowerCase());
-		const target = camelize(item?.[0].toLowerCase());
+		const source = camelCase(item?.[1].toLowerCase());
+		const target = camelCase(item?.[0].toLowerCase());
 
 		const edgeColor = getRandomHexColor();
 
 		return {
-			id: camelize(`${source}-rule-${index}`), // Unique ID for the edge.
+			id: camelCase(`${source}-rule-${index}`), // Unique ID for the edge.
 			source: source,
 			target: target,
 			type: 'smoothstep',
@@ -122,12 +123,9 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 	});
 
 	// Nodes list.
-	const nodes = formFields.map(({
-		label,
-		value,
-	}, index) => {
+	const nodes = formFields.map(({ label, value }, index) => {
 		return {
-			id: camelize(value), // Unique ID for the node.
+			id: camelCase(value), // Unique ID for the node.
 			data: {
 				label: `${label.substring(0, 40)}...`, // Limit the label to 40 characters.
 			},
@@ -150,20 +148,14 @@ const outputMultiFlowPreviewData = (formFields, stepMultiflowRules) => {
 	});
 
 	return {
-		edges: [
-			...edges,
-			...customFlows,
-		].filter(n => n),
+		edges: [...edges, ...customFlows].filter((n) => n),
 		nodes,
 	};
 };
 
 // Export multiflow forms react flow.
-export const MultiflowFormsReactFlow = ({formFields, stepMultiflowRules}) => {
-	const {
-		edges,
-		nodes,
-	} = outputMultiFlowPreviewData(formFields, stepMultiflowRules);
+export const MultiflowFormsReactFlow = ({ formFields, stepMultiflowRules }) => {
+	const { edges, nodes } = outputMultiFlowPreviewData(formFields, stepMultiflowRules);
 
 	return (
 		<div style={{ height: '500px', minWidth: '70vw', minHeight: '500px' }}>
@@ -173,10 +165,13 @@ export const MultiflowFormsReactFlow = ({formFields, stepMultiflowRules}) => {
 				nodeTypes={{
 					selectorNode: CustomHandle,
 				}}
-				>
+			>
 				<Background />
 				<Controls />
-				<MiniMap zoomable pannable />
+				<MiniMap
+					zoomable
+					pannable
+				/>
 			</ReactFlow>
 		</div>
 	);

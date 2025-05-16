@@ -7,9 +7,7 @@ import { FormEditor } from '../../../components/form/components/form-editor';
 export const PipedriveEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('pipedrive');
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	const pipedriveAllowedBlocks = checkAttr('pipedriveAllowedBlocks', attributes, manifest);
 
@@ -18,11 +16,13 @@ export const PipedriveEditor = ({ attributes, setAttributes, clientId }) => {
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-						allowedBlocks={(typeof pipedriveAllowedBlocks === 'undefined') || pipedriveAllowedBlocks}
-						templateLock={false}
-						renderAppender={() => <BlockInserter clientId={clientId} />}
-					/>
+					formContent: (
+						<InnerBlocks
+							allowedBlocks={typeof pipedriveAllowedBlocks === 'undefined' || pipedriveAllowedBlocks}
+							templateLock={false}
+							renderAppender={() => <BlockInserter clientId={clientId} />}
+						/>
+					),
 				})}
 			/>
 		</div>

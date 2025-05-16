@@ -2,16 +2,13 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "airtable",
 	"title": "Airtable form",
-	"description" : "Airtable subscription form",
+	"description": "Airtable subscription form",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form-airtable"
 	},
-	"keywords": [
-		"airtable"
-	],
-	"example": {
-	},
+	"keywords": ["airtable"],
+	"example": {},
 	"components": {
 		"form": "form",
 		"step": "step"
@@ -29,7 +26,5 @@
 			"default": []
 		}
 	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	"parent": ["eightshift-forms/form-selector"]
 }

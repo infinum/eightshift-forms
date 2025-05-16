@@ -7,9 +7,7 @@ import { FormEditor } from '../../../components/form/components/form-editor';
 export const PaycekEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('paycek');
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	const paycekAllowedBlocks = checkAttr('paycekAllowedBlocks', attributes, manifest);
 
@@ -18,11 +16,13 @@ export const PaycekEditor = ({ attributes, setAttributes, clientId }) => {
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,
-					formContent: <InnerBlocks
-						allowedBlocks={(typeof paycekAllowedBlocks === 'undefined') || paycekAllowedBlocks}
-						templateLock={false}
-						renderAppender={() => <BlockInserter clientId={clientId} />}
-					/>
+					formContent: (
+						<InnerBlocks
+							allowedBlocks={typeof paycekAllowedBlocks === 'undefined' || paycekAllowedBlocks}
+							templateLock={false}
+							renderAppender={() => <BlockInserter clientId={clientId} />}
+						/>
+					),
 				})}
 			/>
 		</div>

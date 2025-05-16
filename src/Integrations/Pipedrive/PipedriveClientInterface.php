@@ -18,7 +18,7 @@ interface PipedriveClientInterface extends ClientMappingInterface
 	/**
 	 * Return person fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -27,7 +27,7 @@ interface PipedriveClientInterface extends ClientMappingInterface
 	/**
 	 * Return leads fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */

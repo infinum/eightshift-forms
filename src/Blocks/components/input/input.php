@@ -7,11 +7,9 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -63,7 +61,7 @@ $inputClass = Helpers::classnames([
 ]);
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('input', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('input', $attributes);
 
 if ($inputValue) {
 	$inputAttrs['value'] = esc_attr($inputValue);

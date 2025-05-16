@@ -11,18 +11,18 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Labels\Labels;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingInterface;
+use EightshiftForms\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsValidation class.
  */
-class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsValidation implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -101,7 +101,7 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$formType = UtilsGeneralHelper::getFormTypeById($formId);
+		$formType = GeneralHelpers::getFormTypeById($formId);
 
 		if (!$formType) {
 			return [];
@@ -109,10 +109,10 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 
 		$key = "{$formType}Success";
 
-		$loggedInSubmit = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$loggedInSubmit = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -122,10 +122,10 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName($key),
+								'inputName' => SettingsHelpers::getSettingName($key),
 								'inputFieldLabel' => \ucfirst($key),
 								'inputPlaceholder' => $this->labels->getLabels()[$key],
-								'inputValue' => UtilsSettingsHelper::getSettingValue($key, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue($key, $formId),
 							],
 						],
 					],
@@ -136,13 +136,13 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Show only to logged in users', 'eightshift-forms'),
 										'checkboxHelp' => \__('The form will be accessible only to users who are logged in.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_VALIDATION_USE_ONLY_LOGGED_IN_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -152,13 +152,13 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Allow only logged in users to submit', 'eightshift-forms'),
 										'checkboxHelp' => \__('If enabled, only logged in users can submit the form.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -169,13 +169,13 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Use single submit per user', 'eightshift-forms'),
 											'checkboxHelp' => \__('If enabled, each logged in user can submit the form only once.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
@@ -218,15 +218,15 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 
 			$messagesOutput[] = [
 				'component' => 'input',
-				'inputName' => UtilsSettingsHelper::getOptionName($key),
+				'inputName' => SettingsHelpers::getOptionName($key),
 				'inputFieldLabel' => \ucfirst($key),
 				'inputPlaceholder' => $label,
-				'inputValue' => UtilsSettingsHelper::getOptionValue($key),
+				'inputValue' => SettingsHelpers::getOptionValue($key),
 			];
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -237,12 +237,12 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use top level domain validation on all email fields', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
+										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY),
 										'checkboxValue' => self::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -255,12 +255,12 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_VALIDATION_PATTERNS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Custom validation patterns', 'eightshift-forms'),
 								// translators: %s will be replaced with local validation patterns.
-								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => GeneralHelpers::minifyString(\sprintf(\__("
 									Patterns defined in this field can be selected in the Form editor.<br />
 									If you need help with writing regular expressions (regex), <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at regex101.com</a>.<br /><br />
 									Enter one pattern per line, in the following format:<br />
@@ -269,7 +269,7 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 									<ul>
 									%2\$s
 									</ul>", 'eightshift-forms'), 'https://regex101.com/', $validationPatterns)),
-								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
+								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_VALIDATION_PATTERNS_KEY, 3),
 							],
 						],
 					],

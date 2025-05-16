@@ -2,31 +2,24 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "radios",
 	"title": "Radio buttons",
-	"description" : "Group of radio buttons",
+	"description": "Group of radio buttons",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-radios"
 	},
-	"keywords": [
-		"radios"
-	],
+	"keywords": ["radios"],
 	"hasInnerBlocks": true,
 	"components": {
 		"radios": "radios"
 	},
-	"parent": [
-		"eightshift-forms/form"
-	],
+	"parent": ["eightshift-forms/form"],
 	"attributes": {
 		"radiosAllowedBlocks": {
 			"type": "array",
 			"items": {
 				"type": "string"
 			},
-			"default": [
-				"eightshift-forms/radio",
-				"eightshift-forms/input"
-			]
+			"default": ["eightshift-forms/radio", "eightshift-forms/input"]
 		}
 	},
 	"template": [

@@ -8,7 +8,7 @@
  * Usage: `WordPress admin `.
  */
 
- import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
 
 // Find all blocks and require assets index.js inside it.
 dynamicImport(require.context('./../../components', true, /assets-admin\/index\.js$/));

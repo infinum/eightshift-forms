@@ -3,16 +3,10 @@ import { select } from '@wordpress/data';
 import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
 import { IntegrationsEditor } from './../../../components/integrations/components/integrations-editor';
 
-export const GoodbitsEditor = ({
-	attributes,
-	setAttributes,
-	itemIdKey,
-}) => {
+export const GoodbitsEditor = ({ attributes, setAttributes, itemIdKey }) => {
 	const manifest = select(STORE_NAME).getBlock('goodbits');
 
-	const {
-		blockClass,
-	} = attributes;
+	const { blockClass } = attributes;
 
 	return (
 		<div className={blockClass}>
