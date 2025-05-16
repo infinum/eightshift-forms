@@ -21,7 +21,7 @@ export const FormSelectorEditor = ({
 
 	return (
 		<>
-			 {!hasInnerBlocks &&
+			 {!hasInnerBlocks && (
 				<Placeholder
 					icon={icons.form}
 					label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
@@ -60,7 +60,7 @@ export const FormSelectorEditor = ({
 						</>
 					}
 				</Placeholder>
-			}
+			)}
 
 			<InnerBlocks
 				templateLock={false}
