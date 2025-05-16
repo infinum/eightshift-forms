@@ -41,6 +41,11 @@ class NationbuilderClient implements NationbuilderClientInterface
 	public const CACHE_NATIONBUILDER_TAGS_TRANSIENT_NAME = 'es_nationbuilder_tags_cache';
 
 	/**
+	 * Pagination page size.
+	 */
+	public const NATIONBUILDER_PAGINATION_PAGE_SIZE = 100;
+
+	/**
 	 * Instance variable for Oauth.
 	 *
 	 * @var OauthInterface
@@ -76,7 +81,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 
 		// Check if form exists in cache.
 		if (!$output) {
-			$items = $this->getNationbuilderCustomApiData('custom_fields');
+			$items = $this->getNationbuilderCustomApiData('custom_fields', true);
 
 			if ($items) {
 				foreach ($items as $item) {
@@ -122,7 +127,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 
 		// Check if form exists in cache.
 		if (!$output) {
-			$items = $this->getNationbuilderCustomApiData('lists');
+			$items = $this->getNationbuilderCustomApiData('lists', true);
 
 			if ($items) {
 				foreach ($items as $item) {
@@ -168,7 +173,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 
 		// Check if form exists in cache.
 		if (!$output) {
-			$items = $this->getNationbuilderCustomApiData('signup_tags');
+			$items = $this->getNationbuilderCustomApiData('signup_tags', true);
 
 			if ($items) {
 				foreach ($items as $item) {
@@ -484,12 +489,15 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 * API request to get all custom data from endpoints.
 	 *
 	 * @param string $endpoint Endpoint.
+	 * @param bool $paginate Use pagination.
+	 * @param array<string, mixed> $pagedData Paged data.
+	 * @param string $nextEndpoint Next page endpoint.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private function getNationbuilderCustomApiData($endpoint): array
+	private function getNationbuilderCustomApiData(string $endpoint, bool $paginate = false, array $pagedData = [], string $nextEndpoint = ''): array
 	{
-		$url = $this->getBaseUrl($endpoint);
+		$url = $paginate && !empty($nextEndpoint) ? $this->getNextUrl($nextEndpoint) : $this->setPaginationAttributes($this->getBaseUrl($endpoint));
 
 		$response = \wp_remote_get(
 			$url,
@@ -518,14 +526,27 @@ class NationbuilderClient implements NationbuilderClientInterface
 
 		// On success return output.
 		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			// Check if we need to paginate.
+			if ($paginate) {
+				$pagedData = \array_merge($pagedData, $body['data'] ?? []);
+				$next = $body['links']['next'] ?? '';
+
+				if (!empty($next)) {
+					return $this->getNationbuilderCustomApiData($endpoint, true, $pagedData, $next);
+				}
+
+				return $pagedData;
+			}
+
 			return $body['data'] ?? [];
 		}
 
-		return [];
+		// In case of pagination error, return the data we have.
+		return $pagedData ?: [];
 	}
 
 	/**
-	 * Prepare params
+	 * Prepare params.
 	 *
 	 * @param array<string, mixed> $params Params.
 	 * @param string $formId FormId.
@@ -534,7 +555,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 */
 	private function prepareParams(array $params, string $formId): array
 	{
-		// Remove unecesery params.
+		// Remove unnecessary params.
 		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
 		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
 		$output = [];
@@ -631,5 +652,35 @@ class NationbuilderClient implements NationbuilderClientInterface
 		$accessToken = UtilsSettingsHelper::getOptionValue(OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY);
 
 		return $this->oauthNationbuilder->getApiUrl("api/v2/{$path}?access_token={$accessToken}");
+	}
+
+	/**
+	 * Return pagination next url.
+	 *
+	 * @param string $path Path.
+	 *
+	 * @return string
+	 */
+	private function getNextUrl(string $path): string
+	{
+		return $this->oauthNationbuilder->getApiUrl(\ltrim($path, '/'));
+	}
+
+	/**
+	 * Return a path with pagination attributes url.
+	 *
+	 * @param string $path Path.
+	 *
+	 * @return string
+	 */
+	private function setPaginationAttributes(string $path): string
+	{
+		return \add_query_arg(
+			[
+				'page[number]' => 1,
+				'page[size]' => self::NATIONBUILDER_PAGINATION_PAGE_SIZE,
+			],
+			$path
+		);
 	}
 }
