@@ -10,23 +10,17 @@
 	"keywords": [
 		"greenhouse"
 	],
-	"example": {
-	},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"greenhouseIntegrationId": {
 			"type": "string"
-		},
-		"greenhouseAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	}
 }

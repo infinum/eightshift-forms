@@ -10,26 +10,20 @@
 	"keywords": [
 		"active-campaign"
 	],
-	"example": {
-	},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"activeCampaignIntegrationId": {
 			"type": "string"
 		},
 		"activeCampaignIntegrationInnerId": {
 			"type": "string"
-		},
-		"activeCampaignAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	}
 }

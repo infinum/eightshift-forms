@@ -20,7 +20,6 @@ export const TalentlyftEditor = ({
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}
 				setAttributes={setAttributes}
-				allowedBlocks={checkAttr('talentlyftAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);

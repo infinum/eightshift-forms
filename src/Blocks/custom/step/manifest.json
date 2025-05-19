@@ -11,11 +11,7 @@
 		"step",
 		"multistep"
 	],
-	"hasInnerBlocks": true,
 	"components": {
 		"step": "step"
-	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	}
 }

@@ -21,8 +21,5 @@
 	],
 	"components": {
 		"phone": "phone"
-	},
-	"parent": [
-		"eightshift-forms/form"
-	]
+	}
 }

@@ -1,17 +1,14 @@
+/* global esFormsLocalization */
+
 import React from 'react';
-import { select } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, checkAttr, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
-import { FormEditor } from '../../../components/form/components/form-editor';
+import { props, BlockInserter } from '@eightshift/frontend-libs/scripts';
+import { additionalBlocksNoIntegration, FormEditor } from '../../../components/form/components/form-editor';
 
 export const MailerEditor = ({ attributes, setAttributes, clientId }) => {
-	const manifest = select(STORE_NAME).getBlock('mailer');
-
 	const {
 		blockClass,
 	} = attributes;
-
-	const mailerAllowedBlocks = checkAttr('mailerAllowedBlocks', attributes, manifest);
 
 	return (
 		<div className={blockClass}>
@@ -20,8 +17,7 @@ export const MailerEditor = ({ attributes, setAttributes, clientId }) => {
 					setAttributes,
 					formContent:
 						<InnerBlocks
-							allowedBlocks={(typeof mailerAllowedBlocks === 'undefined') || mailerAllowedBlocks}
-							templateLock={false}
+							allowedBlocks={additionalBlocksNoIntegration}
 							renderAppender={() => <BlockInserter clientId={clientId} />}
 						/>
 				})}

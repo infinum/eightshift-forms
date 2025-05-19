@@ -10,23 +10,17 @@
 	"keywords": [
 		"mailerlite"
 	],
-	"example": {
-	},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"mailerliteIntegrationId": {
 			"type": "string"
-		},
-		"mailerliteAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	}
 }

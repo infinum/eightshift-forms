@@ -10,23 +10,17 @@
 	"keywords": [
 		"moments"
 	],
-	"example": {
-	},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"momentsIntegrationId": {
 			"type": "string"
-		},
-		"momentsAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": [
-		"eightshift-forms/form-selector"
-	]
+	}
 }

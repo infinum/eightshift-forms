@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.6.0]
+
+### Changed
+
+- Restructured the way how allowed blocks are handled and how form block limits work in WordPress 6.8+.
+
 ## [6.5.1]
 
 ### Added
@@ -1209,6 +1215,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.6.0]: https://github.com/infinum/eightshift-forms/compare/6.5.1...6.6.0
 [6.5.1]: https://github.com/infinum/eightshift-forms/compare/6.5.0...6.5.1
 [6.5.0]: https://github.com/infinum/eightshift-forms/compare/6.4.1...6.5.0
 [6.4.1]: https://github.com/infinum/eightshift-forms/compare/6.4.0...6.4.1
