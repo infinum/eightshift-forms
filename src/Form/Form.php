@@ -28,7 +28,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 class Form extends AbstractFormBuilder implements ServiceInterface
 {
 	/**
-	 * Filter form component atributes modifications key.
+	 * Filter form component attributes modifications key.
 	 */
 	public const FILTER_FORM_COMPONENT_ATTRIBUTES_MODIFICATIONS = 'es_forms_form_settings_options';
 

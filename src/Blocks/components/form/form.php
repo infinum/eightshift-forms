@@ -103,7 +103,7 @@ if ($formConditionalTags) {
 	$rawConditionalTagData = $formConditionalTags;
 
 	if (str_contains($formConditionalTags, 'subItems')) {
-		$rawConditionalTagData = wp_json_encode(array_map(fn ($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
+		$rawConditionalTagData = wp_json_encode(array_map(fn($item) => [$item[0]->value, $item[1], $item[2]], json_decode($formConditionalTags)));
 	}
 
 	$formAttrs[UtilsHelper::getStateAttribute('conditionalTags')] = esc_html($rawConditionalTagData);
@@ -143,19 +143,19 @@ if ($formAttrs) {
 
 <form
 	class="<?php echo esc_attr($formClass); ?>"
-	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>
 	novalidate
-	onsubmit="event.preventDefault();"
->
+	onsubmit="event.preventDefault();">
 	<?php
 	if (is_user_logged_in() && !is_admin()) {
 		echo Helpers::render(
 			'form-edit-actions',
 			Helpers::props('formEditActions', $attributes, [
-					'formPostId' => $formPostId,
-					'formHasSteps' => $formHasSteps,
-					'formEditActionsTwSelectorsData' => $twClassesData,
-				])
+				'formPostId' => $formPostId,
+				'formHasSteps' => $formHasSteps,
+				'formEditActionsTwSelectorsData' => $twClassesData,
+			])
 		);
 	}
 
@@ -175,9 +175,11 @@ if ($formAttrs) {
 	?>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form', 'fields', "{$componentClass}__fields")); ?>">
-		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		?>
 
-		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		?>
 	</div>
 
 	<?php
