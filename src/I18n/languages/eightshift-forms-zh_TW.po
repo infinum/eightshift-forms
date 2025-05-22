@@ -397,6 +397,15 @@ msgstr "訂閱有問題，請檢查所有欄位並再試一次。"
 msgid "Application submitted successfully. Thank you!"
 msgstr "申請已成功提交，謝謝！"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "缺少一個或多個處理請求所需的參數。"
+
+msgid "File uploaded successfully."
+msgstr "檔案上傳成功。"
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "由於設定中配置了故障排除，表單驗證碼被跳過。"
+
 msgid "Afghanistan"
 msgstr "阿富汗"
 

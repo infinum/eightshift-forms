@@ -397,6 +397,15 @@ msgstr "Qualcosa non va con l'iscrizione. Controlla tutti i campi e riprova."
 msgid "Application submitted successfully. Thank you!"
 msgstr "Candidatura inviata con successo. Grazie!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "Manca uno o più parametri richiesti per elaborare la richiesta."
+
+msgid "File uploaded successfully."
+msgstr "File caricato con successo."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha del modulo saltato a causa della configurazione di risoluzione dei problemi impostata nelle impostazioni."
+
 msgid "Afghanistan"
 msgstr "Afghanistan"
 

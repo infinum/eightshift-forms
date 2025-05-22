@@ -137,7 +137,7 @@ msgid "Confirmation e-mail was not sent due to unknown issue. Please try again."
 msgstr "Potvrdna e-pošta nije poslana zbog nepoznate pogreške. Molimo pokušajte ponovno."
 
 msgid "E-mail was sent successfully."
-msgstr "E-pošta je uspješno poslana."
+msgstr "Poruka je uspješno poslana."
 
 msgid "Greenhouse integration is not configured correctly. Please try again."
 msgstr "Integracija s Greenhouse nije pravilno konfigurirana. Molimo pokušajte ponovno."
@@ -396,6 +396,15 @@ msgstr "Nešto nije u redu s pretplatom. Provjerite sva polja i pokušajte ponov
 
 msgid "Application submitted successfully. Thank you!"
 msgstr "Prijava je uspješno poslana. Hvala!"
+
+msgid "Missing one or more required parameters to process the request."
+msgstr "Nedostaje jedan ili više obaveznih parametara za obradu zahtjeva."
+
+msgid "File uploaded successfully."
+msgstr "Datoteka je uspješno prenesena."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha obrasca je preskočena zbog konfiguracije za otklanjanje poteškoća postavljene u postavkama."
 
 msgid "Afghanistan"
 msgstr "Afganistan"

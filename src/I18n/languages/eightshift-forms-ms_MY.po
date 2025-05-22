@@ -397,6 +397,15 @@ msgstr "Ada masalah dengan langganan. Sila semak semua medan dan cuba sekali lag
 msgid "Application submitted successfully. Thank you!"
 msgstr "Permohonan berjaya dihantar. Terima kasih!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "Satu atau lebih parameter yang diperlukan untuk memproses permintaan tidak ada."
+
+msgid "File uploaded successfully."
+msgstr "Fail berjaya dimuat naik."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha borang diabaikan kerana konfigurasi penyelesaian masalah yang ditetapkan dalam tetapan."
+
 msgid "Afghanistan"
 msgstr "Afghanistan"
 

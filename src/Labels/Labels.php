@@ -44,36 +44,36 @@ class Labels implements LabelsInterface
 	/**
 	 * Get all labels
 	 *
-	 * @return array<string, string>
+	 * @return array<string, array<string, string>>
 	 */
 	public function getLabels(): array
 	{
-		$output = \array_merge(
-			$this->getGenericLabels(),
-			$this->getValidationFormLabels(),
-			$this->getValidationGeolocationLabels(),
-			$this->getValidationStepsLabels(),
-			$this->getValidationFieldLabels(),
-			$this->getMailerLabels(),
-			$this->getCustomLabels(),
-			$this->getCaptchaLabels(),
-			$this->getGreenhouseLabels(),
-			$this->getMailchimpLabels(),
-			$this->getHubspotLabels(),
-			$this->getMailerliteLabels(),
-			$this->getGoodbitsLabels(),
-			$this->getActiveCampaignLabels(),
-			$this->getAirtableLabels(),
-			$this->getMomentsLabels(),
-			$this->getWorkableLabels(),
-			$this->getTalentlyftLabels(),
-			$this->getJiraLabels(),
-			$this->getCorvusLabels(),
-			$this->getPaycekLabels(),
-			$this->getPipedriveLabels(),
-			$this->getCalculatorLabels(),
-			$this->getNationbuilderLabels(),
-		);
+		$output = [
+			'validationField' => $this->getValidationFieldLabels(),
+			'validationForm' => $this->getValidationFormLabels(),
+			'validationSteps' => $this->getValidationStepsLabels(),
+			'generic' => $this->getGenericLabels(),
+			'validationGeolocation' => $this->getValidationGeolocationLabels(),
+			'mailer' => $this->getMailerLabels(),
+			'custom' => $this->getCustomLabels(),
+			'captcha' => $this->getCaptchaLabels(),
+			'greenhouse' => $this->getGreenhouseLabels(),
+			'mailchimp' => $this->getMailchimpLabels(),
+			'hubspot' => $this->getHubspotLabels(),
+			'mailerlite' => $this->getMailerliteLabels(),
+			'goodbits' => $this->getGoodbitsLabels(),
+			'activeCampaign' => $this->getActiveCampaignLabels(),
+			'airtable' => $this->getAirtableLabels(),
+			'moments' => $this->getMomentsLabels(),
+			'workable' => $this->getWorkableLabels(),
+			'talentlyft' => $this->getTalentlyftLabels(),
+			'jira' => $this->getJiraLabels(),
+			'corvus' => $this->getCorvusLabels(),
+			'paycek' => $this->getPaycekLabels(),
+			'pipedrive' => $this->getPipedriveLabels(),
+			'calculator' => $this->getCalculatorLabels(),
+			'nationbuilder' => $this->getNationbuilderLabels(),
+		];
 
 		return $output;
 	}
@@ -108,7 +108,7 @@ class Labels implements LabelsInterface
 		static $labels = [];
 
 		if (!$labels) {
-			$labels = $this->getLabels();
+			$labels = \array_merge(...\array_values($this->getLabels()));
 		}
 
 		return $labels[$key] ?? '';

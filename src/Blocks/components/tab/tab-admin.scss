@@ -159,5 +159,12 @@
 
 			border-radius: var(--global-esf-spacing-s);
 		}
+
+		&--no-bg {
+			background-color: transparent;
+			border: none;
+			box-shadow: none;
+			padding: 0;
+		}
 	}
 }

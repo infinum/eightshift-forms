@@ -397,6 +397,15 @@ msgstr "Algo está errado com a subscrição. Por favor, verifique todos os camp
 msgid "Application submitted successfully. Thank you!"
 msgstr "Candidatura submetida com sucesso. Obrigado!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "Falta um ou mais parâmetros obrigatórios para processar o pedido."
+
+msgid "File uploaded successfully."
+msgstr "Ficheiro carregado com sucesso."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha do formulário ignorado devido à configuração de resolução de problemas definida nas definições."
+
 msgid "Afghanistan"
 msgstr "Afeganistão"
 

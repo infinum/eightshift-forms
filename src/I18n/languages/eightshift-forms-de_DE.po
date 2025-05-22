@@ -397,6 +397,15 @@ msgstr "Mit dem Abonnement stimmt etwas nicht. Bitte überprüfen Sie alle Felde
 msgid "Application submitted successfully. Thank you!"
 msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "Un ou plusieurs paramètres requis pour traiter la demande sont manquants."
+
+msgid "File uploaded successfully."
+msgstr "Fichier téléchargé avec succès."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha du formulaire ignoré en raison de la configuration de dépannage définie dans les paramètres."
+
 msgid "Afghanistan"
 msgstr "Afghanistan"
 

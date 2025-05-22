@@ -397,6 +397,15 @@ msgstr "Có vấn đề với đăng ký. Vui lòng kiểm tra tất cả các t
 msgid "Application submitted successfully. Thank you!"
 msgstr "Đơn ứng tuyển đã được gửi thành công. Cảm ơn bạn!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "Thiếu một hoặc nhiều tham số bắt buộc để xử lý yêu cầu."
+
+msgid "File uploaded successfully."
+msgstr "Tệp đã được tải lên thành công."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha của biểu mẫu đã bị bỏ qua do cấu hình khắc phục sự cố được thiết lập trong cài đặt."
+
 msgid "Afghanistan"
 msgstr "Afghanistan"
 

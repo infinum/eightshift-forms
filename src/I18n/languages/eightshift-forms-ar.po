@@ -397,6 +397,15 @@ msgstr "هناك خطأ ما في الاشتراك. يرجى التحقق من �
 msgid "Application submitted successfully. Thank you!"
 msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "يفتقر إلى واحد أو أكثر من المعاملات المطلوبة لمعالجة الطلب."
+
+msgid "File uploaded successfully."
+msgstr "تم رفع الملف بنجاح."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "تم تخطي كابشا النموذج بسبب إعدادات استكشاف الأخطاء وإصلاحها في الإعدادات."
+
 msgid "Afghanistan"
 msgstr "أفغانستان"
 

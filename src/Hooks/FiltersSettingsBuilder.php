@@ -69,7 +69,6 @@ use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
-use EightshiftForms\Validation\Validator;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;

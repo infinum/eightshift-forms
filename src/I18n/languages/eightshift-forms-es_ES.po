@@ -397,6 +397,15 @@ msgstr "Algo no está bien con la suscripción. Por favor, revisa todos los camp
 msgid "Application submitted successfully. Thank you!"
 msgstr "Solicitud enviada correctamente. ¡Gracias!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "Falta uno o más parámetros requeridos para procesar la solicitud."
+
+msgid "File uploaded successfully."
+msgstr "Archivo subido con éxito."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha del formulario omitido debido a la configuración de solución de problemas establecida en la configuración."
+
 msgid "Afghanistan"
 msgstr "Afganistán"
 

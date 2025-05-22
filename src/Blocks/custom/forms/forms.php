@@ -63,7 +63,7 @@ $allForms = [
 	$formsFormPostId,
 ];
 
-if ($formsFormGeolocationAlternatives && \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+if ($formsFormGeolocationAlternatives && apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 	$allForms = [
 		...$allForms,
 		...array_map(

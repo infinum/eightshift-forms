@@ -397,6 +397,15 @@ msgstr "구독에 문제가 있습니다. 모든 필드를 확인하고 다시 �
 msgid "Application submitted successfully. Thank you!"
 msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "요청을 처리하는 데 필요한 하나 이상의 필수 매개변수가 누락되었습니다."
+
+msgid "File uploaded successfully."
+msgstr "파일이 성공적으로 업로드되었습니다."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "설정에서 문제 해결 구성이 설정되어 폼 캡차가 건너뛰어졌습니다."
+
 msgid "Afghanistan"
 msgstr "아프가니스탄"
 

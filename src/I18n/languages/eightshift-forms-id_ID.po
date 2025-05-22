@@ -397,6 +397,15 @@ msgstr "Ada yang tidak beres dengan langganan. Silakan periksa semua kolom dan c
 msgid "Application submitted successfully. Thank you!"
 msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "Satu atau lebih parameter yang diperlukan untuk memproses permintaan tidak ada."
+
+msgid "File uploaded successfully."
+msgstr "Berkas berhasil diunggah."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha formulir dilewati karena konfigurasi pemecahan masalah diatur dalam pengaturan."
+
 msgid "Afghanistan"
 msgstr "Afganistan"
 

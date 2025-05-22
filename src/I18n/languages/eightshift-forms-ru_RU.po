@@ -397,6 +397,15 @@ msgstr "В подписке что-то не так. Пожалуйста, пр�
 msgid "Application submitted successfully. Thank you!"
 msgstr "Заявка успешно отправлена. Спасибо!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "Отсутствует один или несколько обязательных параметров для обработки запроса."
+
+msgid "File uploaded successfully."
+msgstr "Файл успешно загружен."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Капча формы пропущена из-за настроек устранения неполадок, установленных в настройках."
+
 msgid "Afghanistan"
 msgstr "Афганистан"
 

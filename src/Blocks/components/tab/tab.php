@@ -15,7 +15,7 @@ $componentClass = $manifest['componentClass'] ?? '';
 
 $tabLabel = Helpers::checkAttr('tabLabel', $attributes, $manifest);
 $tabContent = Helpers::checkAttr('tabContent', $attributes, $manifest);
-$tabFull = Helpers::checkAttr('tabFull', $attributes, $manifest);
+$tabNoBg = Helpers::checkAttr('tabNoBg', $attributes, $manifest);
 
 $tabLabelClass = Helpers::classnames([
 	Helpers::selector($componentClass, $componentClass, 'label'),
@@ -24,7 +24,7 @@ $tabLabelClass = Helpers::classnames([
 
 $tabContentClass = Helpers::classnames([
 	Helpers::selector($componentClass, $componentClass, 'content'),
-	Helpers::selector($tabFull, $componentClass, 'content', 'full'),
+	Helpers::selector($tabNoBg, $componentClass, 'content', 'no-bg'),
 ]);
 
 if (!$tabLabel || !$tabContent) {
@@ -38,5 +38,6 @@ if (!$tabLabel || !$tabContent) {
 </button>
 
 <div class="<?php echo esc_attr($tabContentClass); ?>">
-	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+	<?php echo $tabContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>
 </div>

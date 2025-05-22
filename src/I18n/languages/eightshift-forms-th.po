@@ -397,6 +397,15 @@ msgstr "เกิดข้อผิดพลาดกับการสมัค
 msgid "Application submitted successfully. Thank you!"
 msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
 
+msgid "Missing one or more required parameters to process the request."
+msgstr "ขาดหนึ่งหรือมากกว่าหนึ่งพารามิเตอร์ที่จำเป็นสำหรับการประมวลผลคำขอ"
+
+msgid "File uploaded successfully."
+msgstr "อัปโหลดไฟล์สำเร็จแล้ว"
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "ข้ามการตรวจสอบ captcha ของแบบฟอร์มเนื่องจากการตั้งค่าการแก้ไขปัญหาในระบบ"
+
 msgid "Afghanistan"
 msgstr "อัฟกานิสถาน"
 

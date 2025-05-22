@@ -10,7 +10,7 @@
 		"tabContent": {
 			"type": "string"
 		},
-		"tabFull": {
+		"tabNoBg": {
 			"type": "boolean",
 			"default": false
 		}
