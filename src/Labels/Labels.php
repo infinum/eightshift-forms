@@ -10,24 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
-use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
-use EightshiftForms\Integrations\Airtable\SettingsAirtable;
-use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Integrations\Jira\SettingsJira;
-use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
-use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
-use EightshiftForms\Integrations\Moments\SettingsMoments;
-use EightshiftForms\Integrations\Workable\SettingsWorkable;
-use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Integrations\Calculator\SettingsCalculator;
-use EightshiftForms\Integrations\Corvus\SettingsCorvus;
-use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
-use EightshiftForms\Integrations\Paycek\SettingsPaycek;
-use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
 /**
  * Labels class.
@@ -67,95 +50,30 @@ class Labels implements LabelsInterface
 	{
 		$output = \array_merge(
 			$this->getGenericLabels(),
-			$this->getValidationLabels(),
+			$this->getValidationFormLabels(),
+			$this->getValidationGeolocationLabels(),
+			$this->getValidationStepsLabels(),
+			$this->getValidationFieldLabels(),
 			$this->getMailerLabels(),
-			$this->getCutomLabels()
+			$this->getCustomLabels(),
+			$this->getCaptchaLabels(),
+			$this->getGreenhouseLabels(),
+			$this->getMailchimpLabels(),
+			$this->getHubspotLabels(),
+			$this->getMailerliteLabels(),
+			$this->getGoodbitsLabels(),
+			$this->getActiveCampaignLabels(),
+			$this->getAirtableLabels(),
+			$this->getMomentsLabels(),
+			$this->getWorkableLabels(),
+			$this->getTalentlyftLabels(),
+			$this->getJiraLabels(),
+			$this->getCorvusLabels(),
+			$this->getPaycekLabels(),
+			$this->getPipedriveLabels(),
+			$this->getCalculatorLabels(),
+			$this->getNationbuilderLabels(),
 		);
-
-		// Google reCaptcha.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
-			$output = \array_merge($output, $this->getCaptchaLabels());
-		}
-
-		// Greenhouse.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
-			$output = \array_merge($output, $this->getGreenhouseLabels());
-		}
-
-		// Mailchimp.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
-			$output = \array_merge($output, $this->getMailchimpLabels());
-		}
-
-		// Hubspot.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
-			$output = \array_merge($output, $this->getHubspotLabels());
-		}
-
-		// Mailerlite.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
-			$output = \array_merge($output, $this->getMailerliteLabels());
-		}
-
-		// Goodbits.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
-			$output = \array_merge($output, $this->getGoodbitsLabels());
-		}
-
-		// ActiveCampaign.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
-			$output = \array_merge($output, $this->getActiveCampaignLabels());
-		}
-
-		// Airtable.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
-			$output = \array_merge($output, $this->getAirtableLabels());
-		}
-
-		// Moments.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
-			$output = \array_merge($output, $this->getMomentsLabels());
-		}
-
-		// Workable.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
-			$output = \array_merge($output, $this->getWorkableLabels());
-		}
-
-		// Talentlyft.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY)) {
-			$output = \array_merge($output, $this->getTalentlyftLabels());
-		}
-
-		// Jira.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
-			$output = \array_merge($output, $this->getJiraLabels());
-		}
-
-		// Corvus.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_USE_KEY)) {
-			$output = \array_merge($output, $this->getCorvusLabels());
-		}
-
-		// Paycek.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPaycek::SETTINGS_PAYCEK_USE_KEY, SettingsPaycek::SETTINGS_PAYCEK_USE_KEY)) {
-			$output = \array_merge($output, $this->getPaycekLabels());
-		}
-
-		// Pipedrive.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
-			$output = \array_merge($output, $this->getPipedriveLabels());
-		}
-
-		// Calculator.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
-			$output = \array_merge($output, $this->getCalculatorLabels());
-		}
-
-		// Nationbuilder.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY)) {
-			$output = \array_merge($output, $this->getNationbuilderLabels());
-		}
 
 		return $output;
 	}
@@ -186,27 +104,14 @@ class Labels implements LabelsInterface
 			}
 		}
 
-		$labels = $this->getLabels();
 
-		return $labels[$key] ?? '';
-	}
+		static $labels = [];
 
-	/**
-	 * Output all validation labels from cache for fater validation.
-	 *
-	 * @param string $formId Form ID.
-	 *
-	 * @return array<string, string>
-	 */
-	public function getValidationLabelsOutput(string $formId = ''): array
-	{
-		$output = [];
-
-		foreach ($this->getValidationLabels() as $key => $value) {
-			$output[$key] = $this->getLabel($key, $formId);
+		if (!$labels) {
+			$labels = $this->getLabels();
 		}
 
-		return $output;
+		return $labels[$key] ?? '';
 	}
 
 	/**
@@ -222,11 +127,11 @@ class Labels implements LabelsInterface
 	}
 
 	/**
-	 * Return labels - Validation
+	 * Return labels - Validation field.
 	 *
 	 * @return array<string, string>
 	 */
-	private function getValidationLabels(): array
+	private function getValidationFieldLabels(): array
 	{
 		return [
 			'validationRequired' => \__('This field is required.', 'eightshift-forms'),
@@ -266,7 +171,7 @@ class Labels implements LabelsInterface
 			'validationMinSize' => \__('The file is smaller than allowed. Minimum file size is %s MB.', 'eightshift-forms'),
 			// translators: %s used for displaying number value.
 			'validationMaxSize' => \__('The file is larger than allowed. Maximum file size is %s MB.', 'eightshift-forms'),
-			'validationPhone' => \__('This phone number is not valid. It must contain a valid contry/network prefix with only numbers.', 'eightshift-forms'),
+			'validationPhone' => \__('This phone number is not valid. It must contain a valid country/network prefix with only numbers.', 'eightshift-forms'),
 			'validationDate' => \__('This date format is not valid.', 'eightshift-forms'),
 			'validationDateTime' => \__('This date/time format is not valid.', 'eightshift-forms'),
 			'validationDateNoFuture' => \__('This fields only allows dates in the past.', 'eightshift-forms'),
@@ -284,17 +189,59 @@ class Labels implements LabelsInterface
 	}
 
 	/**
+	 * Return labels - Validation Form global
+	 *
+	 * @return array<string, string>
+	 */
+	private function getValidationFormLabels(): array
+	{
+		return [
+			'validationGlobalMissingRequiredParams' => \__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+			'validationFileUploadSuccess' => \__('File uploaded successfully.', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Validation Geolocation
+	 *
+	 * @return array<string, string>
+	 */
+	private function getValidationGeolocationLabels(): array
+	{
+		return [
+			'geolocationSkipCheck' => \__('Form geolocation skipped. Feature inactive.', 'eightshift-forms'),
+			'geolocationMalformedOrNotValid' => \__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
+			'geolocationSuccess' => \__('Success geolocation', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Validation Steps
+	 *
+	 * @return array<string, string>
+	 */
+	private function getValidationStepsLabels(): array
+	{
+		return [
+			'validationStepsCurrentStepProblem' => \__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+			'validationStepsNextStepProblem' => \__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
+			'validationStepsParametersProblem' => \__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
+			'validationStepsSuccess' => \__('Step validation is successful, you may continue.', 'eightshift-forms'),
+		];
+	}
+
+	/**
 	 * Return labels - Custom action
 	 *
 	 * @return array<string, string>
 	 */
-	private function getCutomLabels(): array
+	private function getCustomLabels(): array
 	{
 		return [
 			'customNoAction' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
 			'customError' => \__('There was an error with your form submission.', 'eightshift-forms'),
-			'customSuccess' => \__('Form was successfuly submitted.', 'eightshift-forms'),
-			'customSuccessRedirect' => \__('Form was successfuly submitted. Redirecting you now.', 'eightshift-forms'),
+			'customSuccess' => \__('Form was successfully submitted.', 'eightshift-forms'),
+			'customSuccessRedirect' => \__('Form was successfully submitted. Redirecting you now.', 'eightshift-forms'),
 		];
 	}
 
@@ -375,7 +322,7 @@ class Labels implements LabelsInterface
 			'hubspotMissingCommunicationConsentTextError' => \__('The communication consent text was missing for a subscription. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotMissingLegitimateInterestTextError' => \__('The legitimate interest consent text was missing. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotDuplicateSubscriptionTypeIdError' => \__('The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator.', 'eightshift-forms'),
-			'hubspotHasRecaptchaEnabledError' => \__('Your Hubspot form has reCaptch enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotHasRecaptchaEnabledError' => \__('Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotError429Error' => \__('The HubSpot account has reached the rate limit. Please contact website administrator.', 'eightshift-forms'),
 		];
 	}
@@ -432,6 +379,7 @@ class Labels implements LabelsInterface
 	private function getCaptchaLabels(): array
 	{
 		return [
+			'captchaSkipCheck' => \__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
 			'captchaBadRequest' => \__('Spam prevention system encountered an error. Captcha "request" is invalid or malformed.', 'eightshift-forms'),
 			'captchaWrongAction' => \__('Spam prevention system encountered an error. Captcha response "action" is not valid.', 'eightshift-forms'),
 			'captchaScoreSpam' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),

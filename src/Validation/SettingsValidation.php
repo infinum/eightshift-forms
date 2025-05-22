@@ -210,6 +210,9 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 				'introSubtitle' => \__('Validation messages are shared between all forms.', 'eightshift-forms'),
 			],
 		];
+
+		dump($this->labels->getLabels());
+
 		// List all labels for settings override.
 		foreach ($this->labels->getLabels() as $key => $label) {
 			if (isset($labels[$key])) {

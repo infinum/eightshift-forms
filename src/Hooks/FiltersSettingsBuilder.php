@@ -136,9 +136,6 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settingsGlobal' => SettingsValidation::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
 				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
-				'cache' => [
-					Validator::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME,
-				],
 				'labels' => [
 					'title' => \__('Validation', 'eightshift-forms'),
 					'desc' => \__('Settings for all forms validation options.', 'eightshift-forms'),
@@ -228,7 +225,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
 				'settingsForceShow' => true,
 				'emailTemplateTags' => [
-					 // Empty string as we are not using it to match the value.
+					// Empty string as we are not using it to match the value.
 					'mailerSuccessRedirectUrl' => '',
 					'mailerEntryId' => '',
 					'mailerEntryUrl' => '',

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Validation;
 
 use EightshiftForms\Cache\ManifestCache;
-use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Form\AbstractFormBuilder;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
@@ -26,7 +25,6 @@ use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -87,11 +85,6 @@ class Validator extends AbstractValidation
 		'radios',
 		'file',
 	];
-
-	/**
-	 * Transient cache name for validatior labels. No need to flush it because it is short live.
-	 */
-	public const CACHE_VALIDATOR_LABELS_TRANSIENT_NAME = 'es_validator_labels_cache';
 
 	/**
 	 * User submit once meta key.
@@ -181,14 +174,14 @@ class Validator extends AbstractValidation
 				if (\is_array($inputValue)) {
 					// Check if single or multiple and output error.
 					if (!isset($reference['isMultiple']) && \count($inputValue) > 1) {
-						$output[$paramKey] = $this->getValidationLabel('validationFileMaxAmount', $formId);
+						$output[$paramKey] = $this->labels->getLabel('validationFileMaxAmount', $formId);
 						$isFilesError = true;
 					}
 
 					// Check if wrong upload path.
 					foreach ($inputValue as $value) {
 						if (UtilsUploadHelper::isUploadError($value)) {
-							$output[$paramKey] = $this->getValidationLabel('validationFileNotLocated', $formId);
+							$output[$paramKey] = $this->labels->getLabel('validationFileNotLocated', $formId);
 							$isFilesError = true;
 							break;
 						}
@@ -207,7 +200,7 @@ class Validator extends AbstractValidation
 						}
 
 						// Output error if file is not uploaded to the correct path.
-						$output[$paramKey] = $this->getValidationLabel('validationFileWrongUploadPath', $formId);
+						$output[$paramKey] = $this->labels->getLabel('validationFileWrongUploadPath', $formId);
 						$isFilesError = true;
 						break;
 					}
@@ -225,77 +218,77 @@ class Validator extends AbstractValidation
 					case 'isRequired':
 						if (\is_string($inputValue)) {
 							if (\preg_match('/^\s*$/u', $inputValue) === 1) {
-								$output[$paramKey] = $this->getValidationLabel('validationRequired', $formId);
+								$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 							}
 						} else {
 							if (empty($inputValue)) {
-								$output[$paramKey] = $this->getValidationLabel('validationRequired', $formId);
+								$output[$paramKey] = $this->labels->getLabel('validationRequired', $formId);
 							}
 						}
 						break;
 					// Check validation for required count params.
 					case 'isRequiredCount':
 						if (\is_array($inputValue) && \count($inputValue) < $dataValue && !empty($inputValue)) {
-							$output[$paramKey] = \sprintf($this->getValidationLabel('validationRequiredCount', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->labels->getLabel('validationRequiredCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for email params.
 					case 'isEmail':
 						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = $this->getValidationLabel('validationEmail', $formId);
+							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						} else {
 							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
 								if (!$this->isEmailTldValid($inputValue, \array_values($this->manifestCache->getManifestCacheTopItem(ManifestCache::TLD_KEY, ManifestCache::TYPE_FORMS)))) {
-									$output[$paramKey] = $this->getValidationLabel('validationEmailTld', $formId);
+									$output[$paramKey] = $this->labels->getLabel('validationEmailTld', $formId);
 								}
 							}
 						}
 						break;
 					case 'isNumber':
 						if (!\is_numeric($inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = $this->getValidationLabel('validationNumber', $formId);
+							$output[$paramKey] = $this->labels->getLabel('validationNumber', $formId);
 						}
 						break;
 					// Check validation for url params.
 					case 'isUrl':
 						if (!$this->isUrl($inputValue) && !empty($inputValue)) {
-							$output[$paramKey] = $this->getValidationLabel('validationUrl', $formId);
+							$output[$paramKey] = $this->labels->getLabel('validationUrl', $formId);
 						}
 						break;
 					// Check validation for min number value.
 					case 'min':
 						if ((string) $dataValue > (string) $inputValue && !empty($inputValue)) {
-							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMin', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMin', $formId), $dataValue);
 						}
 						break;
 					// Check validation for min number value.
 					case 'max':
 						if ((string) $dataValue < (string) $inputValue && !empty($inputValue)) {
-							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMax', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMax', $formId), $dataValue);
 						}
 						break;
 					// Check validation for min array items length.
 					case 'minCount':
 						if (\is_array($inputValue) && $dataValue > \count($inputValue)) {
-							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMinCount', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMinCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for max array items length.
 					case 'maxCount':
 						if (\is_array($inputValue) && $dataValue < \count($inputValue)) {
-							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMaxCount', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMaxCount', $formId), $dataValue);
 						}
 						break;
 					// Check validation for min characters length.
 					case 'minLength':
 						if ($dataValue > \strlen($inputValue)) {
-							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMinLength', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMinLength', $formId), $dataValue);
 						}
 						break;
 					// Check validation for max characters length.
 					case 'maxLength':
 						if ($dataValue < \strlen($inputValue)) {
-							$output[$paramKey] = \sprintf($this->getValidationLabel('validationMaxLength', $formId), $dataValue);
+							$output[$paramKey] = \sprintf($this->labels->getLabel('validationMaxLength', $formId), $dataValue);
 						}
 						break;
 					case 'validationPattern':
@@ -323,7 +316,7 @@ class Validator extends AbstractValidation
 									$patternOutput = $patternLabel;
 								}
 
-								$output[$paramKey] = \sprintf($this->getValidationLabel('validationPattern', $formId), $patternOutput);
+								$output[$paramKey] = \sprintf($this->labels->getLabel('validationPattern', $formId), $patternOutput);
 							}
 						}
 
@@ -336,7 +329,7 @@ class Validator extends AbstractValidation
 									continue;
 								}
 
-								$output[$paramKey] = \sprintf($this->getValidationLabel('validationAcceptMimeMultiple', $formId), $dataValue);
+								$output[$paramKey] = \sprintf($this->labels->getLabel('validationAcceptMimeMultiple', $formId), $dataValue);
 							}
 						}
 						break;
@@ -380,20 +373,20 @@ class Validator extends AbstractValidation
 			switch ($dataKey) {
 				case 'accept':
 					if (!$this->isMimeTypeValid($file)) {
-						$output[$id] = \sprintf($this->getValidationLabel('validationAcceptMime', $formId), $dataValue);
+						$output[$id] = \sprintf($this->labels->getLabel('validationAcceptMime', $formId), $dataValue);
 					}
 					if (!$this->isFileTypeValid($fileName, $dataValue)) {
-						$output[$id] = \sprintf($this->getValidationLabel('validationAccept', $formId), $dataValue);
+						$output[$id] = \sprintf($this->labels->getLabel('validationAccept', $formId), $dataValue);
 					}
 					break;
 				case 'minSize':
 					if (!$this->isFileMinSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-						$output[$id] = \sprintf($this->getValidationLabel('validationMinSize', $formId), $dataValue / 1000);
+						$output[$id] = \sprintf($this->labels->getLabel('validationMinSize', $formId), $dataValue / 1000);
 					}
 					break;
 				case 'maxSize':
 					if (!$this->isFileMaxSizeValid((int) $fileSize, (int) $dataValue * 1000)) {
-						$output[$id] = \sprintf($this->getValidationLabel('validationMaxSize', $formId), $dataValue / 1000);
+						$output[$id] = \sprintf($this->labels->getLabel('validationMaxSize', $formId), $dataValue / 1000);
 					}
 					break;
 			}
@@ -467,7 +460,7 @@ class Validator extends AbstractValidation
 	{
 		return \array_map(
 			function ($item) use ($formId) {
-				return $this->getValidationLabel($item, $formId);
+				return $this->labels->getLabel($item, $formId);
 			},
 			$items
 		);
@@ -539,32 +532,6 @@ class Validator extends AbstractValidation
 		$output = \get_user_meta(\get_current_user_id(), self::USER_SUBMIT_ONCE_META_KEY, true) ?: [];
 
 		return isset($output[$formId]) && $output[$formId] === true;
-	}
-
-	/**
-	 * Get validation label from cache or db.
-	 *
-	 * @param string $key Key to get data from.
-	 * @param string $formId Form ID.
-	 *
-	 * @return string
-	 */
-	private function getValidationLabel(string $key, string $formId): string
-	{
-		$output = \get_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-
-		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
-			$output = [];
-		}
-
-		if (!$output) {
-			$output = $this->labels->getValidationLabelsOutput($formId);
-
-			\set_transient(self::CACHE_VALIDATOR_LABELS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['quick']);
-		}
-
-		return $output[$key] ?? '';
 	}
 
 	/**

@@ -1,3 +1,402 @@
+msgid "Something went wrong while submitting your form. Please try again."
+msgstr "حدث خطأ أثناء إرسال النموذج الخاص بك. يرجى المحاولة مرة أخرى."
+
+msgid "This field is required."
+msgstr "هذا الحقل مطلوب."
+
+msgid "This field is required, with at least %s items selected."
+msgstr "هذا الحقل مطلوب، يرجى تحديد %s عناصر على الأقل."
+
+msgid "This field is not valid."
+msgstr "هذا الحقل غير صالح."
+
+msgid "This e-mail is not valid."
+msgstr "البريد الإلكتروني غير صالح."
+
+msgid "This e-mail already exists in our system."
+msgstr "البريد الإلكتروني موجود بالفعل في نظامنا."
+
+msgid "This e-mails top level domain is not valid."
+msgstr "نطاق المستوى الأعلى للبريد الإلكتروني غير صالح."
+
+msgid "This URL is not valid."
+msgstr "الرابط غير صالح."
+
+msgid "This field value is less than expected. Minimal number should be %s."
+msgstr "قيمة الحقل أقل من المتوقع. الحد الأدنى للعدد هو %s."
+
+msgid "This field value is more than expected. Maximal number should be %s."
+msgstr "قيمة الحقل أكبر من المتوقع. الحد الأقصى للعدد هو %s."
+
+msgid "This field value has less characters than expected. We expect minimum %s characters."
+msgstr "قيمة الحقل تحتوي على أحرف أقل من المتوقع. الحد الأدنى هو %s حرف."
+
+msgid "This field value has more characters than expected. We expect maximum %s characters."
+msgstr "قيمة الحقل تحتوي على أحرف أكثر من المتوقع. الحد الأقصى هو %s حرف."
+
+msgid "This field value has less items than expected. We expect minimum %s items."
+msgstr "قيمة الحقل تحتوي على عناصر أقل من المتوقع. الحد الأدنى هو %s عنصر."
+
+msgid "This field value has more items than expected. We expect maximum %s items."
+msgstr "قيمة الحقل تحتوي على عناصر أكثر من المتوقع. الحد الأقصى هو %s عنصر."
+
+msgid "This field should only contain numbers."
+msgstr "يجب أن يحتوي هذا الحقل على أرقام فقط."
+
+msgid "This field value should be in this format: %s."
+msgstr "يجب أن تكون قيمة الحقل بهذا الشكل: %s."
+
+msgid "The file type is not supported. Only %s files are allowed."
+msgstr "نوع الملف غير مدعوم. يُسمح فقط بملفات %s."
+
+msgid "The file seems to be corrupted or invalid format. Only %s are allowed."
+msgstr "يبدو أن الملف تالف أو بصيغة غير صالحة. يُسمح فقط بـ %s."
+
+msgid "One or more files seem to be corrupt or have invalid format. Only %s are allowed."
+msgstr "يبدو أن ملفًا أو أكثر تالف أو بصيغة غير صالحة. يُسمح فقط بـ %s."
+
+msgid "One or more files seem to be uploaded using an unauthorized method."
+msgstr "يبدو أن ملفًا أو أكثر تم رفعه باستخدام طريقة غير مصرح بها."
+
+msgid "It seems that one or more files were not uploaded to the server. Please remove the files and try again."
+msgstr "يبدو أن ملفًا أو أكثر لم يتم رفعه إلى الخادم. يرجى إزالة الملفات والمحاولة مرة أخرى."
+
+msgid "There seems to be an error with the file upload. Please try again."
+msgstr "حدث خطأ أثناء رفع الملف. يرجى المحاولة مرة أخرى."
+
+msgid "You can only upload a single file in this field. If you have multiple files, please remove them and try again."
+msgstr "يمكنك رفع ملف واحد فقط في هذا الحقل. إذا كان لديك عدة ملفات، يرجى إزالتها والمحاولة مرة أخرى."
+
+msgid "The file is smaller than allowed. Minimum file size is %s MB."
+msgstr "حجم الملف أصغر من المسموح به. الحد الأدنى لحجم الملف هو %s ميجابايت."
+
+msgid "The file is larger than allowed. Maximum file size is %s MB."
+msgstr "حجم الملف أكبر من المسموح به. الحد الأقصى لحجم الملف هو %s ميجابايت."
+
+msgid "This phone number is not valid. It must contain a valid country/network prefix with only numbers."
+msgstr "رقم الهاتف غير صالح. يجب أن يحتوي على بادئة صالحة للدولة/الشبكة وأرقام فقط."
+
+msgid "This date format is not valid."
+msgstr "صيغة التاريخ غير صالحة."
+
+msgid "This date/time format is not valid."
+msgstr "صيغة التاريخ/الوقت غير صالحة."
+
+msgid "This fields only allows dates in the past."
+msgstr "هذا الحقل يسمح فقط بالتواريخ السابقة."
+
+msgid "This field value has more characters than expected. We expect maximum 5 numbers."
+msgstr "قيمة الحقل تحتوي على أحرف أكثر من المتوقع. الحد الأقصى هو 5 أرقام."
+
+msgid "The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed."
+msgstr "يبدو أن الملف تالف أو بصيغة غير صالحة. يُسمح فقط بـ pdf,doc,docx,txt,rtf."
+
+msgid "This field has invalid length for phone number."
+msgstr "طول الحقل غير صالح لرقم الهاتف."
+
+msgid "This field contains forbidden special characters."
+msgstr "الحقل يحتوي على أحرف خاصة ممنوعة."
+
+msgid "This field is too long. Max length is 127 characters."
+msgstr "الحقل طويل جدًا. الحد الأقصى للطول هو 127 حرفًا."
+
+msgid "This field is too long. Max length is 255 characters."
+msgstr "الحقل طويل جدًا. الحد الأقصى للطول هو 255 حرفًا."
+
+msgid "You have made too many requests in a short time. Please slow down and try again."
+msgstr "لقد قمت بطلب الكثير من الطلبات في وقت قصير. يرجى التباطؤ والمحاولة مرة أخرى."
+
+msgid "This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "النموذج غير مكتمل أو غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "This form can be submitted only once."
+msgstr "يمكن إرسال هذا النموذج مرة واحدة فقط."
+
+msgid "This form can be submitted only by logged in users."
+msgstr "يمكن إرسال هذا النموذج فقط من قبل المستخدمين المسجلين."
+
+msgid "There was an issue with form action. Check the form settings."
+msgstr "حدثت مشكلة في إجراء النموذج. يرجى التحقق من إعدادات النموذج."
+
+msgid "There was an error with your form submission."
+msgstr "حدث خطأ أثناء إرسال النموذج الخاص بك."
+
+msgid "Form was successfully submitted."
+msgstr "تم إرسال النموذج بنجاح."
+
+msgid "Form was successfully submitted. Redirecting you now."
+msgstr "تم إرسال النموذج بنجاح. سيتم توجيهك الآن."
+
+msgid "Form is not configured correctly. Please try again."
+msgstr "النموذج غير مضبوط بشكل صحيح. يرجى المحاولة مرة أخرى."
+
+msgid "E-mail was not sent due to an unknown issue. Please try again."
+msgstr "لم يتم إرسال البريد الإلكتروني بسبب مشكلة غير معروفة. يرجى المحاولة مرة أخرى."
+
+msgid "Confirmation e-mail was not sent due to unknown issue. Please try again."
+msgstr "لم يتم إرسال بريد التأكيد بسبب مشكلة غير معروفة. يرجى المحاولة مرة أخرى."
+
+msgid "E-mail was sent successfully."
+msgstr "تم إرسال البريد الإلكتروني بنجاح."
+
+msgid "Greenhouse integration is not configured correctly. Please try again."
+msgstr "تكامل Greenhouse غير مضبوط بشكل صحيح. يرجى المحاولة مرة أخرى."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "هناك خطأ ما في طلب الوظيفة. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
+
+msgid "Mailchimp integration is not configured correctly. Please try again."
+msgstr "تكامل Mailchimp غير مضبوط بشكل صحيح. يرجى المحاولة مرة أخرى."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "هناك خطأ ما في الاشتراك. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "تم الاشتراك في النشرة الإخبارية بنجاح. شكرًا لك!"
+
+msgid "Hubspot integration is not configured correctly. Please try again."
+msgstr "تكامل Hubspot غير مضبوط بشكل صحيح. يرجى المحاولة مرة أخرى."
+
+msgid "Something is not with the application. Please check all the fields and try again."
+msgstr "هناك خطأ ما في الطلب. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "Something is not right with the application. Please check all the fields and try again."
+msgstr "هناك خطأ ما في الطلب. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "تم إرسال النموذج بنجاح. شكرًا لك!"
+
+msgid "More than 1000 fields were included in the response. Please contact website administrator."
+msgstr "تم تضمين أكثر من 1000 حقل في الرد. يرجى التواصل مع مدير الموقع."
+
+msgid "Enter a valid email address."
+msgstr "أدخل بريدًا إلكترونيًا صالحًا."
+
+msgid "We are sorry but you email was blocked in our blacklist."
+msgstr "نأسف، ولكن بريدك الإلكتروني محظور في القائمة السوداء لدينا."
+
+msgid "Some of number fields are not a valid number value."
+msgstr "بعض حقول الأرقام تحتوي على قيمة غير صالحة."
+
+msgid "The value in the field is too large for the type of field."
+msgstr "القيمة في الحقل كبيرة جدًا بالنسبة لنوع الحقل."
+
+msgid "The field was included in the form submission but is not in the form definition."
+msgstr "تم تضمين الحقل في إرسال النموذج ولكنه غير موجود في تعريف النموذج."
+
+msgid "The value of a number field outside the range specified in the field settings."
+msgstr "قيمة حقل الرقم خارج النطاق المحدد في إعدادات الحقل."
+
+msgid "The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options."
+msgstr "القيمة المقدمة لحقل التعداد (مثل مربع الاختيار، القائمة المنسدلة، زر الاختيار) ليست من الخيارات المتاحة."
+
+msgid "The context object contains an unexpected attribute. Please contact website administrator."
+msgstr "كائن السياق يحتوي على خاصية غير متوقعة. يرجى التواصل مع مدير الموقع."
+
+msgid "The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator."
+msgstr "القيمة في goToWebinarWebinarKey في كائن السياق غير صالحة. يرجى التواصل مع مدير الموقع."
+
+msgid "The hutk field in the context object is invalid. Please contact website administrator."
+msgstr "حقل hutk في كائن السياق غير صالح. يرجى التواصل مع مدير الموقع."
+
+msgid "The ipAddress field in the context object is invalid. Please contact website administrator."
+msgstr "حقل ipAddress في كائن السياق غير صالح. يرجى التواصل مع مدير الموقع."
+
+msgid "The pageUri field in the context object is invalid. Please contact website administrator."
+msgstr "حقل pageUri في كائن السياق غير صالح. يرجى التواصل مع مدير الموقع."
+
+msgid "LegalConsentOptions was empty or it contains both the consent and legitimateInterest fields. Please contact website administrator."
+msgstr "LegalConsentOptions فارغ أو يحتوي على كلا الحقلين consent و legitimateInterest. يرجى التواصل مع مدير الموقع."
+
+msgid "The consentToProcess field in consent or value field in legitimateInterest was false. Please contact website administrator."
+msgstr "حقل consentToProcess في consent أو حقل value في legitimateInterest كان false. يرجى التواصل مع مدير الموقع."
+
+msgid "The text field for processing consent was missing. Please contact website administrator."
+msgstr "حقل النص لمعالجة الموافقة مفقود. يرجى التواصل مع مدير الموقع."
+
+msgid "The communication consent text was missing for a subscription. Please contact website administrator."
+msgstr "نص موافقة الاتصال مفقود للاشتراك. يرجى التواصل مع مدير الموقع."
+
+msgid "The legitimate interest consent text was missing. Please contact website administrator."
+msgstr "نص موافقة المصلحة المشروعة مفقود. يرجى التواصل مع مدير الموقع."
+
+msgid "The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator."
+msgstr "قائمة الاتصالات تحتوي على عنصرين أو أكثر بنفس subscriptionTypeId. يرجى التواصل مع مدير الموقع."
+
+msgid "Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator."
+msgstr "نموذج Hubspot لديك يحتوي على reCaptcha مفعل ولا يمكننا معالجة الطلب. يرجى تعطيل reCaptcha والمحاولة مرة أخرى. يرجى التواصل مع مدير الموقع."
+
+msgid "The HubSpot account has reached the rate limit. Please contact website administrator."
+msgstr "حساب HubSpot وصل إلى الحد الأقصى للطلبات. يرجى التواصل مع مدير الموقع."
+
+msgid "MailerLite integration is not configured correctly. Please try again."
+msgstr "تكامل MailerLite غير مضبوط بشكل صحيح. يرجى المحاولة مرة أخرى."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "هناك خطأ ما في الاشتراك. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "تم الاشتراك في النشرة الإخبارية بنجاح. شكرًا لك!"
+
+msgid "Goodbits integration is not configured correctly. Please try again."
+msgstr "تكامل Goodbits غير مضبوط بشكل صحيح. يرجى المحاولة مرة أخرى."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "هناك خطأ ما في الاشتراك. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "تم الاشتراك في النشرة الإخبارية بنجاح. شكرًا لك!"
+
+msgid "Enter a valid email address."
+msgstr "أدخل بريدًا إلكترونيًا صالحًا."
+
+msgid "Email address already exists in the system."
+msgstr "البريد الإلكتروني موجود بالفعل في النظام."
+
+msgid "There was an error with the service. Please try again."
+msgstr "حدث خطأ في الخدمة. يرجى المحاولة مرة أخرى."
+
+msgid "It looks like this API key is not authorized to make this request. Please check your API key and try again."
+msgstr "يبدو أن مفتاح API هذا غير مصرح له بإجراء هذا الطلب. يرجى التحقق من مفتاح API الخاص بك والمحاولة مرة أخرى."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "تم إرسال النموذج بنجاح. شكرًا لك!"
+
+msgid "Spam prevention system encountered an error. Captcha \"request\" is invalid or malformed."
+msgstr "نظام منع البريد العشوائي واجه خطأ. طلب Captcha غير صالح أو غير مكتمل."
+
+msgid "Spam prevention system encountered an error. Captcha response \"action\" is not valid."
+msgstr "نظام منع البريد العشوائي واجه خطأ. استجابة Captcha \"action\" غير صالحة."
+
+msgid "The request was marked as a potential spam request. Please try again."
+msgstr "تم وضع علامة على الطلب كطلب بريد عشوائي محتمل. يرجى المحاولة مرة أخرى."
+
+msgid "Spam prevention system encountered an error. Please try again."
+msgstr "نظام منع البريد العشوائي واجه خطأ. يرجى المحاولة مرة أخرى."
+
+msgid "Airtable integration is not configured correctly. Please try again."
+msgstr "تكامل Airtable غير مضبوط بشكل صحيح. يرجى المحاولة مرة أخرى."
+
+msgid "Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct."
+msgstr "صلاحيات غير صالحة، أو لم يتم العثور على النموذج المطلوب. تحقق من أن الرمز الخاص بك لديه الصلاحيات المطلوبة وأن أسماء/معرفات النموذج صحيحة."
+
+msgid "You are not permitted to perform this operation."
+msgstr "غير مسموح لك بتنفيذ هذه العملية."
+
+msgid "Invalid request: parameter validation failed. Check your request data."
+msgstr "طلب غير صالح: فشلت عملية التحقق من المعاملات. تحقق من بيانات طلبك."
+
+msgid "One or more fields are invalid. Please try again."
+msgstr "حقل واحد أو أكثر غير صالح. يرجى المحاولة مرة أخرى."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "تم إرسال النموذج بنجاح. شكرًا لك!"
+
+msgid "Moments integration is not configured correctly. Please try again."
+msgstr "تكامل Moments غير مضبوط بشكل صحيح. يرجى المحاولة مرة أخرى."
+
+msgid "Something is not right with the submission. Please check all the fields and try again."
+msgstr "هناك خطأ ما في الإرسال. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "تم إرسال النموذج بنجاح. شكرًا لك!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "هناك خطأ ما في طلب الوظيفة. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake."
+msgstr "نعتذر، ولكن هذه الوظيفة لم تعد متاحة. يرجى المحاولة مرة أخرى لاحقًا، أو التواصل معنا إذا كنت تعتقد أن هذا خطأ."
+
+msgid "One of your uploaded files has a filename that is too long. Please reduce the filename and try again."
+msgstr "أحد الملفات التي رفعتها يحتوي على اسم ملف طويل جدًا. يرجى تقصير اسم الملف والمحاولة مرة أخرى."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "هناك خطأ ما في طلب الوظيفة. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "It looks like there are some issues with your form fields. Please check all the fields and try again."
+msgstr "يبدو أن هناك بعض المشكلات في حقول النموذج الخاص بك. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
+
+msgid "Your form is missing project key. Please try again."
+msgstr "النموذج الخاص بك يفتقد مفتاح المشروع. يرجى المحاولة مرة أخرى."
+
+msgid "Your form is missing issue type. Please try again."
+msgstr "النموذج الخاص بك يفتقد نوع المشكلة. يرجى المحاولة مرة أخرى."
+
+msgid "Your form is missing issue summary. Please try again."
+msgstr "النموذج الخاص بك يفتقد ملخص المشكلة. يرجى المحاولة مرة أخرى."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "هناك خطأ ما في طلب الوظيفة. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "Payment submitted successfully. Thank you!"
+msgstr "تم إرسال الدفع بنجاح. شكرًا لك!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "Organization ID is invalid."
+msgstr "معرف المؤسسة غير صالح."
+
+msgid "Integration dataset is invalid."
+msgstr "مجموعة بيانات التكامل غير صالحة."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "هناك خطأ ما في طلب الوظيفة. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "هناك خطأ ما في الاشتراك. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "هذا النموذج غير مضبوط بشكل صحيح. يرجى التواصل مع مدير الموقع لحل المشكلة."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "هناك خطأ ما في الاشتراك. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "تم إرسال الطلب بنجاح. شكرًا لك!"
+
 msgid "Afghanistan"
 msgstr "أفغانستان"
 
