@@ -2,18 +2,17 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, Control, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
+import { InputField, BaseControl, Toggle, ContainerPanel } from '@eightshift/ui-components';
 
 export const FileOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('file');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -30,8 +29,11 @@ export const FileOptions = (attributes) => {
 	const fileIsDisabled = checkAttr('fileIsDisabled', attributes, manifest);
 
 	return (
-		<PanelBody title={__('File', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+		<ContainerPanel title={__('File', 'eightshift-forms')}>
+			<BaseControl
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={fileName}
 					attribute={getAttrKey('fileName', attributes, manifest)}
@@ -41,7 +43,7 @@ export const FileOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptions
 				{...props('field', attributes, {
@@ -55,8 +57,11 @@ export const FileOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
-				<IconToggle
+			<BaseControl
+				icon={icons.checks}
+				label={__('Validation', 'eightshift-forms')}
+			>
+				<Toggle
 					icon={icons.fieldRequired}
 					label={__('Required', 'eightshift-forms')}
 					checked={fileIsRequired}
@@ -64,8 +69,9 @@ export const FileOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('fileIsRequired', attributes, manifest), fileDisabledOptions)}
 				/>
 
-				<TextControl
-					label={<IconLabel icon={icons.fileType} label={__('Accepted file types', 'eightshift-forms')} />}
+				<InputField
+					icon={icons.fileType}
+					label={__('Accepted file types', 'eightshift-forms')}
 					value={fileAccept}
 					help={__('Separate items with a comma.', 'eightshift-forms')}
 					placeholder={__('e.g. .jpg,.png,.pdf', 'eightshift-forms')}
@@ -73,9 +79,12 @@ export const FileOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('fileAccept', attributes, manifest), fileDisabledOptions)}
 				/>
 
-				<Control icon={icons.fileSize} label={__('File size limits', 'eightshift-forms')} additionalLabelClasses='es-mb-0!' noBottomSpacing>
+				<BaseControl
+					icon={icons.fileSize}
+					label={__('File size limits', 'eightshift-forms')}
+				>
 					<div className='es-fifty-fifty-h'>
-						<TextControl
+						<InputField
 							label={__('Min (KB)', 'eightshift-forms')}
 							help={__('1MB = 1000 KB', 'eightshift-forms')}
 							value={fileMinSize}
@@ -85,7 +94,7 @@ export const FileOptions = (attributes) => {
 							className='es-no-field-spacing'
 						/>
 
-						<TextControl
+						<InputField
 							label={__('Max (KB)', 'eightshift-forms')}
 							value={fileMaxSize}
 							type='number'
@@ -94,17 +103,20 @@ export const FileOptions = (attributes) => {
 							className='es-no-field-spacing'
 						/>
 					</div>
-				</Control>
-			</Section>
+				</BaseControl>
+			</BaseControl>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<BaseControl
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<FieldOptionsVisibility
 					{...props('field', attributes, {
 						fieldDisabledOptions: fileDisabledOptions,
 					})}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.files}
 					label={__('Allow multi-file upload', 'eightshift-forms')}
 					checked={fileIsMultiple}
@@ -112,50 +124,62 @@ export const FileOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('fileIsMultiple', attributes, manifest), fileDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={fileIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('fileIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileIsDisabled', attributes, manifest), fileDisabledOptions)}
-					noBottomSpacing
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section icon={icons.upload} label={__('Custom uploader', 'eightshift-forms')} collapsable>
-				<TextControl
+			<BaseControl
+				icon={icons.upload}
+				label={__('Custom uploader', 'eightshift-forms')}
+				collapsable
+			>
+				<InputField
 					value={fileCustomInfoText}
-					label={<IconLabel icon={icons.infoCircle} label={__('Prompt text', 'eightshift-forms')} />}
+					icon={icons.infoCircle}
+					label={__('Prompt text', 'eightshift-forms')}
 					placeholder={__('Drag and drop files here', 'eightshift-forms')}
-					onChange={(value) => setAttributes({
-						[getAttrKey('fileCustomInfoText', attributes, manifest)]: value,
-						[getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: value?.length > 0,
-					})}
+					onChange={(value) =>
+						setAttributes({
+							[getAttrKey('fileCustomInfoText', attributes, manifest)]: value,
+							[getAttrKey('fileCustomInfoTextUse', attributes, manifest)]: value?.length > 0,
+						})
+					}
 					disabled={
-						isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions)
-						|| isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)
+						isOptionDisabled(getAttrKey('fileCustomInfoText', attributes, manifest), fileDisabledOptions) ||
+						isOptionDisabled(getAttrKey('fileCustomInfoTextUse', attributes, manifest), fileDisabledOptions)
 					}
 				/>
 
-				<TextControl
-					label={<IconLabel icon={icons.buttonOutline} label={__('Upload button text', 'eightshift-forms')} />}
+				<InputField
+					icon={icons.buttonOutline}
+					label={__('Upload button text', 'eightshift-forms')}
 					value={fileCustomInfoButtonText}
 					placeholder={__('Add files', 'eightshift-forms')}
 					onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileCustomInfoButtonText', attributes, manifest), fileDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
-				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+			<BaseControl
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={fileTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileTracking', attributes, manifest), fileDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -169,6 +193,6 @@ export const FileOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('fileFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

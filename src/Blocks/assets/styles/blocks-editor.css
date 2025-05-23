@@ -1,0 +1,13 @@
+/**
+ * This is the main entry point for Block Editor blocks styles used for the `WordPress admin editor`.
+ * File names must follow naming convention to be able to run dynamically.
+ *
+ * `src/blocks/custom/block_name/block_name-editor.scss`.
+ *
+ * Usage: `WordPress admin editor`.
+ *
+ */
+
+@import '@eightshift/ui-components/dist/assets/wp-font-enhancements.css';
+@import '@eightshift/ui-components/dist/assets/wp-ui-enhancements.css';
+@import '@eightshift/ui-components/dist/assets/style-editor.css';

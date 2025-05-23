@@ -1,13 +1,6 @@
 import React from 'react';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -15,11 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const DateEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('date');
 
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId } = attributes;
 
 	const dateValue = checkAttr('dateValue', attributes, manifest);
 	const datePlaceholder = checkAttr('datePlaceholder', attributes, manifest);
@@ -28,15 +17,9 @@ export const DateEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('dateName', attributes, manifest), dateName);
 
-	const dateClass = classnames([
-		selector(manifest.componentClass, manifest.componentClass),
-		selector(additionalClass, additionalClass),
-	]);
-
 	const date = (
 		<>
 			<input
-				className={dateClass}
 				value={dateValue}
 				placeholder={datePlaceholder}
 				type={dateType}
@@ -45,11 +28,7 @@ export const DateEditor = (attributes) => {
 
 			<MissingName value={dateName} />
 
-			{dateName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
+			{dateName && <ConditionalTagsEditor {...props('conditionalTags', attributes)} />}
 		</>
 	);
 
@@ -60,8 +39,6 @@ export const DateEditor = (attributes) => {
 					fieldContent: date,
 					fieldIsRequired: checkAttr('dateIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={manifest.componentName}
 			/>
 		</>
 	);

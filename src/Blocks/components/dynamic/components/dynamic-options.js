@@ -2,28 +2,17 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import {
-	icons,
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	props,
-	Section,
-	IconToggle,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
+import { InputField, Toggle, BaseControl, ContainerPanel } from '@eightshift/ui-components';
 
 export const DynamicOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('dynamic');
 
-	const {
-		setAttributes,
-		title = __('Dynamic', 'eightshift-forms'),
-	} = attributes;
+	const { setAttributes, title = __('Dynamic', 'eightshift-forms') } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -36,8 +25,8 @@ export const DynamicOptions = (attributes) => {
 	const dynamicIsMultiple = checkAttr('dynamicIsMultiple', attributes, manifest);
 
 	return (
-		<PanelBody title={title}>
-			<IconToggle
+		<ContainerPanel title={title}>
+			<Toggle
 				icon={icons.cursorDisabled}
 				label={__('Deactivated', 'eightshift-forms')}
 				help={__('All dynamic fields are deactivated by default.', 'eightshift-forms')}
@@ -46,9 +35,12 @@ export const DynamicOptions = (attributes) => {
 				disabled={isOptionDisabled(getAttrKey('dynamicIsDeactivated', attributes, manifest), dynamicDisabledOptions)}
 			/>
 
-			{!dynamicIsDeactivated &&
+			{!dynamicIsDeactivated && (
 				<>
-					<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+					<BaseControl
+						icon={icons.options}
+						label={__('General', 'eightshift-forms')}
+					>
 						<NameField
 							value={dynamicName}
 							attribute={getAttrKey('dynamicName', attributes, manifest)}
@@ -58,7 +50,7 @@ export const DynamicOptions = (attributes) => {
 							isChanged={isNameChanged}
 							setIsChanged={setIsNameChanged}
 						/>
-					</Section>
+					</BaseControl>
 
 					<FieldOptions
 						{...props('field', attributes, {
@@ -72,15 +64,18 @@ export const DynamicOptions = (attributes) => {
 						})}
 					/>
 
-					<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+					<BaseControl
+						icon={icons.tools}
+						label={__('Advanced', 'eightshift-forms')}
+					>
 						<FieldOptionsVisibility
 							{...props('field', attributes, {
 								fieldDisabledOptions: dynamicDisabledOptions,
 							})}
 						/>
 
-						{dynamicType === 'select' &&
-							<IconToggle
+						{dynamicType === 'select' && (
+							<Toggle
 								icon={icons.files}
 								label={__('Allow multi selection', 'eightshift-forms')}
 								checked={dynamicIsMultiple}
@@ -88,30 +83,37 @@ export const DynamicOptions = (attributes) => {
 									setAttributes({ [getAttrKey('dynamicIsMultiple', attributes, manifest)]: value });
 								}}
 								disabled={isOptionDisabled(getAttrKey('dynamicIsMultiple', attributes, manifest), dynamicDisabledOptions)}
-								noBottomSpacing
 							/>
-						}
-					</Section>
+						)}
+					</BaseControl>
 
-					<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
-						<IconToggle
+					<BaseControl
+						icon={icons.checks}
+						label={__('Validation', 'eightshift-forms')}
+					>
+						<Toggle
 							icon={icons.required}
 							label={__('Required', 'eightshift-forms')}
 							checked={dynamicIsRequired}
 							onChange={(value) => setAttributes({ [getAttrKey('dynamicIsRequired', attributes, manifest)]: value })}
 							disabled={isOptionDisabled(getAttrKey('dynamicIsRequired', attributes, manifest), dynamicDisabledOptions)}
 						/>
-					</Section>
+					</BaseControl>
 
-					<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
-						<TextControl
-							label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+					<BaseControl
+						icon={icons.alignHorizontalVertical}
+						label={__('Tracking', 'eightshift-forms')}
+						collapsable
+					>
+						<InputField
+							icon={icons.googleTagManager}
+							label={__('GTM tracking code', 'eightshift-forms')}
 							value={dynamicTracking}
 							onChange={(value) => setAttributes({ [getAttrKey('dynamicTracking', attributes, manifest)]: value })}
 							disabled={isOptionDisabled(getAttrKey('dynamicTracking', attributes, manifest), dynamicDisabledOptions)}
 							className='es-no-field-spacing'
 						/>
-					</Section>
+					</BaseControl>
 
 					<FieldOptionsMore
 						{...props('field', attributes, {
@@ -126,7 +128,7 @@ export const DynamicOptions = (attributes) => {
 						})}
 					/>
 				</>
-			}
-		</PanelBody>
+			)}
+		</ContainerPanel>
 	);
 };

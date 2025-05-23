@@ -8,8 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $layoutUse = Helpers::checkAttr('layoutUse', $attributes, $manifest);
 if (!$layoutUse) {
 	return;
@@ -43,9 +41,9 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 			echo wp_kses_post(" {$key}='" . $value . "'");
 		}
 	}
-	?>
->
+	?>>
 	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+		<?php echo $layoutContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		?>
 	</div>
 </<?php echo esc_attr($layoutTag); ?>>

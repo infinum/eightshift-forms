@@ -11,7 +11,7 @@ export class ManualImportApi {
 		this.importErrorMsg = options.importErrorMsg;
 	}
 
-	init () {
+	init() {
 		[...document.querySelectorAll(this.selector)].forEach((element) => {
 			element.addEventListener('click', this.onClick, true);
 		});
@@ -37,11 +37,7 @@ export class ManualImportApi {
 		// If no items, show error and return.
 		if (!items.length) {
 			this.utils.hideLoader(formId);
-			this.utils.setGlobalMsg(
-				formId,
-				this.importErrorMsg,
-				'error'
-			);
+			this.utils.setGlobalMsg(formId, this.importErrorMsg, 'error');
 
 			return;
 		}
@@ -49,71 +45,92 @@ export class ManualImportApi {
 		[...items].forEach((item, index) => {
 			setTimeout(() => {
 				if (item.formId) {
-					formData.append(this.state.getStateParam('formId'), JSON.stringify({
-						name: this.state.getStateParam('formId'),
-						value: item.formId,
-						type: 'text',
-						typeCustom: 'text',
-						custom: '',
-					}));
+					formData.append(
+						this.state.getStateParam('formId'),
+						JSON.stringify({
+							name: this.state.getStateParam('formId'),
+							value: item.formId,
+							type: 'text',
+							typeCustom: 'text',
+							custom: '',
+						}),
+					);
 				}
 
 				if (item.postId) {
-					formData.append(this.state.getStateParam('postId'), JSON.stringify({
-						name: this.state.getStateParam('postId'),
-						value: item.postId,
-						type: 'text',
-						typeCustom: 'text',
-						custom: '',
-					}));
+					formData.append(
+						this.state.getStateParam('postId'),
+						JSON.stringify({
+							name: this.state.getStateParam('postId'),
+							value: item.postId,
+							type: 'text',
+							typeCustom: 'text',
+							custom: '',
+						}),
+					);
 				}
 
 				if (item.type) {
-					formData.append(this.state.getStateParam('type'), JSON.stringify({
-						name: this.state.getStateParam('type'),
-						value: item.type,
-						type: 'text',
-						typeCustom: 'text',
-						custom: '',
-					}));
+					formData.append(
+						this.state.getStateParam('type'),
+						JSON.stringify({
+							name: this.state.getStateParam('type'),
+							value: item.type,
+							type: 'text',
+							typeCustom: 'text',
+							custom: '',
+						}),
+					);
 				}
 
-				formData.append(this.state.getStateParam('direct'), JSON.stringify({
-					name: this.state.getStateParam('direct'),
-					value: 'true',
-					type: 'text',
-					typeCustom: 'text',
-					custom: '',
-				}));
-
-				if (item.itemId) {
-					formData.append(this.state.getStateParam('itemId'), JSON.stringify({
-						name: this.state.getStateParam('itemId'),
-						value: item.itemId,
+				formData.append(
+					this.state.getStateParam('direct'),
+					JSON.stringify({
+						name: this.state.getStateParam('direct'),
+						value: 'true',
 						type: 'text',
 						typeCustom: 'text',
 						custom: '',
-					}));
+					}),
+				);
+
+				if (item.itemId) {
+					formData.append(
+						this.state.getStateParam('itemId'),
+						JSON.stringify({
+							name: this.state.getStateParam('itemId'),
+							value: item.itemId,
+							type: 'text',
+							typeCustom: 'text',
+							custom: '',
+						}),
+					);
 				}
 
 				if (item.innerId) {
-					formData.append(this.state.getStateParam('innerId'), JSON.stringify({
-						name: this.state.getStateParam('innerId'),
-						value: item.innerId,
-						type: 'text',
-						typeCustom: 'text',
-						custom: '',
-					}));
+					formData.append(
+						this.state.getStateParam('innerId'),
+						JSON.stringify({
+							name: this.state.getStateParam('innerId'),
+							value: item.innerId,
+							type: 'text',
+							typeCustom: 'text',
+							custom: '',
+						}),
+					);
 				}
 
-				for(const [name, value] of Object.entries(item.params)) {
-					formData.append(name, JSON.stringify({
-						name: name,
-						value: value,
-						type: 'text',
-						typeCustom: 'text',
-						custom: '',
-					}));
+				for (const [name, value] of Object.entries(item.params)) {
+					formData.append(
+						name,
+						JSON.stringify({
+							name: name,
+							value: value,
+							type: 'text',
+							typeCustom: 'text',
+							custom: '',
+						}),
+					);
 				}
 
 				// Populate body data.
@@ -138,10 +155,7 @@ export class ManualImportApi {
 					.then((responseData) => {
 						const response = this.utils.formSubmitIsJsonString(responseData, 'manualImport', formId);
 
-						const {
-							message,
-							status,
-						} = response;
+						const { message, status } = response;
 
 						this.utils.hideLoader(formId);
 						this.utils.setGlobalMsg(formId, message, status);
@@ -150,11 +164,11 @@ export class ManualImportApi {
 						document.querySelector(this.outputSelector).value += `${JSON.stringify(response, null, 4)} \n`;
 					});
 
-					if (items.length - 1 === index) {
-						setTimeout(() => {
-							this.utils.unsetGlobalMsg(formId);
-						}, 6000);
-					}
+				if (items.length - 1 === index) {
+					setTimeout(() => {
+						this.utils.unsetGlobalMsg(formId);
+					}, 6000);
+				}
 			}, 2000 * index);
 		});
 	};

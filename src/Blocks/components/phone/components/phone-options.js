@@ -3,21 +3,18 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
-import { isArray } from 'lodash';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import {icons,checkAttr,getAttrKey,IconLabel,props,IconToggle,Section,Select, STORE_NAME, getOption} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
+import { InputField, Select, Toggle, BaseControl, ContainerPanel } from '@eightshift/ui-components';
 
 export const PhoneOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('phone');
 
-	const {
-		setAttributes,
-		title = __('Phone', 'eightshift-forms'),
-	} = attributes;
+	const { setAttributes, title = __('Phone', 'eightshift-forms') } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -37,13 +34,16 @@ export const PhoneOptions = (attributes) => {
 
 	let phoneValidationPatternOptions = [];
 
-	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
+	if (typeof esFormsLocalization !== 'undefined' && Array.isArray(esFormsLocalization?.validationPatternsOptions)) {
 		phoneValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
 
 	return (
-		<PanelBody title={title}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+		<ContainerPanel title={title}>
+			<BaseControl
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={phoneName}
 					attribute={getAttrKey('phoneName', attributes, manifest)}
@@ -53,7 +53,7 @@ export const PhoneOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptions
 				{...props('field', attributes, {
@@ -61,17 +61,20 @@ export const PhoneOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
-				{!phoneUseLabelAsPlaceholder &&
-					<TextControl
+			<BaseControl
+				icon={icons.fieldPlaceholder}
+				label={__('Placeholder', 'eightshift-forms')}
+			>
+				{!phoneUseLabelAsPlaceholder && (
+					<InputField
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={phonePlaceholder}
 						onChange={(value) => setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('phonePlaceholder', attributes, manifest), phoneDisabledOptions)}
 						className='es-no-field-spacing'
 					/>
-				}
-				<IconToggle
+				)}
+				<Toggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={phoneUseLabelAsPlaceholder}
@@ -80,7 +83,7 @@ export const PhoneOptions = (attributes) => {
 						setAttributes({ [getAttrKey('phoneUseLabelAsPlaceholder', attributes, manifest)]: value });
 					}}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -88,16 +91,21 @@ export const PhoneOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-				<TextControl
-					label={<IconLabel icon={icons.fieldValue} label={__('Initial value', 'eightshift-forms')} />}
+			<BaseControl
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
+				<InputField
+					icon={icons.fieldValue}
+					label={__('Initial value', 'eightshift-forms')}
 					value={phoneValue}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneValue', attributes, manifest), phoneDisabledOptions)}
 				/>
 
-				<TextControl
-					label={<IconLabel icon={icons.titleGeneric} label={__('Select initial value', 'eightshift-forms')} />}
+				<InputField
+					icon={icons.titleGeneric}
+					label={__('Select initial value', 'eightshift-forms')}
 					value={phoneSelectValue}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneSelectValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneSelectValue', attributes, manifest), phoneDisabledOptions)}
@@ -122,7 +130,7 @@ export const PhoneOptions = (attributes) => {
 					})}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.readOnly}
 					label={__('Read-only', 'eightshift-forms')}
 					checked={phoneIsReadOnly}
@@ -130,7 +138,7 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneIsReadOnly', attributes, manifest), phoneDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={phoneIsDisabled}
@@ -138,7 +146,7 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneIsDisabled', attributes, manifest), phoneDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.order}
 					label={__('Number', 'eightshift-forms')}
 					checked={phoneIsNumber}
@@ -146,18 +154,20 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneIsNumber', attributes, manifest), phoneDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.search}
 					label={__('Search', 'eightshift-forms')}
 					checked={phoneUseSearch}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneUseSearch', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneUseSearch', attributes, manifest), phoneDisabledOptions)}
-					noBottomSpacing
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
-				<IconToggle
+			<BaseControl
+				icon={icons.checks}
+				label={__('Validation', 'eightshift-forms')}
+			>
+				<Toggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={phoneIsRequired}
@@ -174,21 +184,25 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneValidationPattern', attributes, manifest), phoneDisabledOptions)}
 					placeholder='–'
 					additionalSelectClasses='es-w-32'
-					noBottomSpacing
-					inlineLabel
+					inline
 					clearable
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
-				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+			<BaseControl
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={phoneTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneTracking', attributes, manifest), phoneDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -202,6 +216,6 @@ export const PhoneOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('phoneFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

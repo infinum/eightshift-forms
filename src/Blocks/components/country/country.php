@@ -6,14 +6,13 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestSelect = Helpers::getComponent('select');
 
 $componentName = $manifest['componentName'] ?? '';
@@ -76,7 +75,7 @@ if ($countryAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('country', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('country', $attributes);
 
 $placeholder = $countryPlaceholder ? Helpers::render(
 	'select-option',
@@ -87,7 +86,7 @@ $placeholder = $countryPlaceholder ? Helpers::render(
 ) : '';
 
 $options = [];
-$filterName = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
+$filterName = apply_filters(Config::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $countryFormPostId);

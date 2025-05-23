@@ -2,34 +2,20 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { useSelect, select } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import {
-	checkAttr,
-	getAttrKey,
-	props,
-	icons,
-	Section,
-	IconToggle,
-	AnimatedContentVisibility,
-	STORE_NAME,
-	Select,
- } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
+import { InputField, Select, BaseControl, Toggle, AnimatedVisibility, ContainerPanel } from '@eightshift/ui-components';
 
 export const CheckboxesOptions = (attributes) => {
 	const globalManifest = select(STORE_NAME).getSettings();
 	const manifest = select(STORE_NAME).getComponent('checkboxes');
 
-	const {
-		options,
-	} = manifest;
+	const { options } = manifest;
 
-	const {
-		setAttributes,
-		clientId,
-	} = attributes;
+	const { setAttributes, clientId } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -56,8 +42,11 @@ export const CheckboxesOptions = (attributes) => {
 	}, [countInnerBlocksCheck]);
 
 	return (
-		<PanelBody title={__('Checkboxes', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+		<ContainerPanel title={__('Checkboxes', 'eightshift-forms')}>
+			<BaseControl
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={checkboxesName}
 					attribute={getAttrKey('checkboxesName', attributes, manifest)}
@@ -67,7 +56,7 @@ export const CheckboxesOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<Select
 				icon={icons.optionListAlt}
@@ -77,7 +66,7 @@ export const CheckboxesOptions = (attributes) => {
 				disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
 				simpleValue
-				inlineLabel
+				inline
 				noSearch
 				clearable
 				placeholder={__('Choose an alternative', 'eightshift-forms')}
@@ -89,18 +78,21 @@ export const CheckboxesOptions = (attributes) => {
 				})}
 			/>
 
-			{checkboxesShowAs === 'select' &&
-				<Section icon={icons.fieldPlaceholder} label={__('Placeholder', 'eightshift-forms')}>
-					{!checkboxesUseLabelAsPlaceholder &&
-						<TextControl
+			{checkboxesShowAs === 'select' && (
+				<BaseControl
+					icon={icons.fieldPlaceholder}
+					label={__('Placeholder', 'eightshift-forms')}
+				>
+					{!checkboxesUseLabelAsPlaceholder && (
+						<InputField
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={checkboxesPlaceholder}
 							onChange={(value) => setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })}
 							disabled={isOptionDisabled(getAttrKey('checkboxesPlaceholder', attributes, manifest), checkboxesDisabledOptions)}
 							className='es-no-field-spacing'
 						/>
-					}
-					<IconToggle
+					)}
+					<Toggle
 						icon={icons.fieldPlaceholder}
 						label={__('Use label as a placeholder', 'eightshift-forms')}
 						checked={checkboxesUseLabelAsPlaceholder}
@@ -109,8 +101,8 @@ export const CheckboxesOptions = (attributes) => {
 							setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
 						}}
 					/>
-				</Section>
-			}
+				</BaseControl>
+			)}
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -118,8 +110,11 @@ export const CheckboxesOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.checks} label={__('Validation', 'eightshift-forms')}>
-				<IconToggle
+			<BaseControl
+				icon={icons.checks}
+				label={__('Validation', 'eightshift-forms')}
+			>
+				<Toggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={checkboxesIsRequired}
@@ -131,13 +126,12 @@ export const CheckboxesOptions = (attributes) => {
 						}
 					}}
 					reducedBottomSpacing={checkboxesIsRequired}
-					noBottomSpacing={!checkboxesIsRequired}
 				/>
 
-				<AnimatedContentVisibility showIf={checkboxesIsRequired}>
+				<AnimatedVisibility visible={checkboxesIsRequired}>
 					<div className='es-h-spaced'>
 						<span>{__('At least', 'eightshift-forms')}</span>
-						<TextControl
+						<InputField
 							value={checkboxesIsRequiredCount}
 							onChange={(value) => setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })}
 							min={options.checkboxesIsRequiredCount.min}
@@ -148,16 +142,19 @@ export const CheckboxesOptions = (attributes) => {
 						/>
 						<span>{_n(__('item needs to be checked', 'eightshift-forms'), __('items need to be checked', 'eightshift-forms'), checkboxesIsRequiredCount, 'eightshift-forms')}</span>
 					</div>
-				</AnimatedContentVisibility>
-			</Section>
+				</AnimatedVisibility>
+			</BaseControl>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<BaseControl
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<FieldOptionsVisibility
 					{...props('field', attributes, {
 						fieldDisabledOptions: checkboxesDisabledOptions,
 					})}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -171,6 +168,6 @@ export const CheckboxesOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('checkboxesFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

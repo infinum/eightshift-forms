@@ -5,8 +5,11 @@
  * Usage: `WordPress frontend screen`.
  */
 
-// Styles.
-import './styles/blocks-frontend.scss';
+import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
+
+import '../../../tailwind.css';
+
+dynamicImport(require.context('./../components', true, /-frontend\.css$/));
 
 // Scripts.
 import './scripts/blocks-frontend';

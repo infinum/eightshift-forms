@@ -1,15 +1,13 @@
 import React from 'react';
 import { select, useSelect } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { RadiosEditor as RadiosEditorComponent } from '../../../components/radios/components/radios-editor';
 import globalManifest from '../../../manifest.json';
 export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('radios');
 
-	const {
-		template,
-	} = manifest;
+	const { template } = manifest;
 
 	const parentBlock = useSelect((select) => {
 		const parentBlockIds = select('core/block-editor').getBlockParents(clientId);
@@ -23,16 +21,14 @@ export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {
 			{...props('radios', attributes, {
 				setAttributes,
 				clientId,
-				radiosContent:
+				radiosContent: (
 					<InnerBlocks
-						allowedBlocks={[
-							'eightshift-forms/radio',
-							'eightshift-forms/input',
-						]}
+						allowedBlocks={['eightshift-forms/radio', 'eightshift-forms/input']}
 						templateLock={parentBlock.length > 0 ? 'insert' : false}
 						template={template}
 						renderAppender={() => <BlockInserter clientId={clientId} />}
 					/>
+				),
 			})}
 		/>
 	);

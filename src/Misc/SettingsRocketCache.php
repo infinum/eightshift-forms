@@ -10,15 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsRocketCache class.
  */
-class SettingsRocketCache implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsRocketCache implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -58,7 +58,7 @@ class SettingsRocketCache implements UtilsSettingGlobalInterface, ServiceInterfa
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ROCKET_CACHE_USE_KEY, self::SETTINGS_ROCKET_CACHE_USE_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ROCKET_CACHE_USE_KEY, self::SETTINGS_ROCKET_CACHE_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -74,13 +74,13 @@ class SettingsRocketCache implements UtilsSettingGlobalInterface, ServiceInterfa
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ROCKET_CACHE_USE_KEY, self::SETTINGS_ROCKET_CACHE_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ROCKET_CACHE_USE_KEY, self::SETTINGS_ROCKET_CACHE_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			UtilsSettingsOutputHelper::getMiscDisclaimer(\__('WP Rocket Cache', 'eightshift-forms')),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getMiscDisclaimer(\__('WP Rocket Cache', 'eightshift-forms')),
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Features affected by WP Rocket cache are:', 'eightshift-forms'),

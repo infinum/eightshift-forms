@@ -8,8 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $containerUse = Helpers::checkAttr('containerUse', $attributes, $manifest);
 
 if (!$containerUse) {
@@ -32,10 +30,9 @@ $additionalAttributes = $attributes['additionalAttributes'] ?? [];
 			echo wp_kses_post(" {$key}='" . $value . "'");
 		}
 	}
-	?>
->
+	?>>
 	<?php
-		// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-		echo $containerContent;
+	// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+	echo $containerContent;
 	?>
 </<?php echo esc_attr($containerTag); ?>>

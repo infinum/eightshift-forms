@@ -1,5 +1,6 @@
-@import './textarea-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+@use './textarea-style';
 
 textarea.es-textarea {
-	@include input-styles-disabled;
+	@include theme.input-styles-disabled;
 }
