@@ -6,7 +6,22 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [6.7.0]
 
+### Added
 
+- Tab component now has no background option for settings.
+- Multilingual support for validation labels both in admin and frontend.
+- All frontend labels are now translatable
+- All frontend labels AI translations for 15 available languages.
+- Missing frontend facing labels.
+- Fallback email will ignore keys are now displayed in the settings.
+
+### Fixed
+
+- If you have geolocation alternatives on some forms you can now turn off the geolocation feature and the output will not break.
+
+### Removed
+
+- Caching for Validation labels.
 
 ## [6.6.0]
 
