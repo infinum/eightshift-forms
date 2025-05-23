@@ -177,7 +177,7 @@ class Labels implements LabelsInterface
 			'validationDateNoFuture' => \__('This fields only allows dates in the past.', 'eightshift-forms'),
 			'validationMailchimpInvalidZip' => \__('This field value has more characters than expected. We expect maximum 5 numbers.', 'eightshift-forms'),
 			'validationGreenhouseAcceptMime' => \__('The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed.', 'eightshift-forms'),
-			'validationMomentsInvalidPhoneLenght' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
+			'validationMomentsInvalidPhoneLength' => \__('This field has invalid length for phone number.', 'eightshift-forms'),
 			'validationMomentsInvalidSpecialCharacters' => \__('This field contains forbidden special characters.', 'eightshift-forms'),
 			'validationWorkableMaxLength127' => \__('This field is too long. Max length is 127 characters.', 'eightshift-forms'),
 			'validationWorkableMaxLength255' => \__('This field is too long. Max length is 255 characters.', 'eightshift-forms'),
@@ -312,7 +312,7 @@ class Labels implements LabelsInterface
 			'hubspotNumberOutOfRangeError' => \__('The value of a number field outside the range specified in the field settings.', 'eightshift-forms'),
 			'hubspotValueNotInFieldDefinitionError' => \__('The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options.', 'eightshift-forms'),
 			'hubspotInvalidMetadataError' => \__('The context object contains an unexpected attribute. Please contact website administrator.', 'eightshift-forms'),
-			'hubspotInvalidGotowebinarWebinarKeyError' => \__('The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotInvalidGotoWebinarKeyError' => \__('The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotInvalidHutkError' => \__('The hutk field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotInvalidIpAddressError' => \__('The ipAddress field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotInvalidPageUriError' => \__('The pageUri field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
@@ -366,7 +366,7 @@ class Labels implements LabelsInterface
 			'activeCampaignInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'activeCampaignDuplicateError' => \__('Email address already exists in the system.', 'eightshift-forms'),
 			'activeCampaign500Error' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
-			'activeCampaignForbidenError' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
+			'activeCampaignForbiddenError' => \__('It looks like this API key is not authorized to make this request. Please check your API key and try again.', 'eightshift-forms'),
 			'activeCampaignSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -442,7 +442,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'talentlyftBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
-			'talentlyftValicationError' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
+			'talentlyftValidationError' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
 			'talentlyftSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}

@@ -257,7 +257,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$key = $matchesPhoneLength[0][1] ?? '';
 
 			if ($key) {
-				$output[$key] = 'validationMomentsInvalidPhoneLenght';
+				$output[$key] = 'validationMomentsInvalidPhoneLength';
 			}
 		}
 

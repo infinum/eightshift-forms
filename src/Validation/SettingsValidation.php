@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Labels\Labels;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
@@ -205,6 +206,11 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 		$labels = \array_flip(Labels::ALL_LOCAL_LABELS);
 
 		$messagesOutput = [];
+
+		$locale = FormsHelper::getLocaleFromCountryCode();
+		if ($locale) {
+			\switch_to_locale($locale);
+		}
 
 		// List all labels for settings override.
 		foreach ($this->labels->getLabels() as $type => $labels) {

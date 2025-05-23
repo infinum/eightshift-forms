@@ -195,7 +195,7 @@ class TalentlyftClient implements ClientInterface
 			case 'An error has occurred':
 				return 'talentlyftBadRequestError';
 			case 'Validation Failed':
-				return 'talentlyftValicationError';
+				return 'talentlyftValidationError';
 			default:
 				return 'submitWpError';
 		}
