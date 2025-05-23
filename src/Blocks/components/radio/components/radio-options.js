@@ -5,7 +5,7 @@ import { select } from '@wordpress/data';
 import { PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, IconToggle, props, Section, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, IconLabel, Toggle, props, Section, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameField } from './../../utils';
 
@@ -47,7 +47,7 @@ export const RadioOptions = (attributes) => {
 				icon={icons.tag}
 				label={__('Label', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					label={__('Use label', 'eightshift-forms')}
 					checked={!radioHideLabelText}
 					onChange={(value) => setAttributes({ [getAttrKey('radioHideLabelText', attributes, manifest)]: !value })}
@@ -76,7 +76,7 @@ export const RadioOptions = (attributes) => {
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.checkCircle}
 					label={__('Selected', 'eightshift-forms')}
 					checked={radioIsChecked}
@@ -84,7 +84,7 @@ export const RadioOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('radioIsChecked', attributes, manifest), radioDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={radioIsDisabled}
@@ -92,7 +92,7 @@ export const RadioOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('radioIsDisabled', attributes, manifest), radioDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.hide}
 					label={__('Hidden', 'eightshift-forms')}
 					checked={radioIsHidden}

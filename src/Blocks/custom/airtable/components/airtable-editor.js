@@ -6,10 +6,8 @@ import { IntegrationsEditor } from './../../../components/integrations/component
 export const AirtableEditor = ({ attributes, setAttributes, itemIdKey, innerIdKey, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('airtable');
 
-	const { blockClass } = attributes;
-
 	return (
-		<div className={blockClass}>
+		<div>
 			<IntegrationsEditor
 				clientId={clientId}
 				itemId={checkAttr(itemIdKey, attributes, manifest)}

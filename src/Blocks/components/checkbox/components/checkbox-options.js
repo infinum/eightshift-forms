@@ -4,7 +4,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import { checkAttr, getAttrKey, IconLabel, IconToggle, Section, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, IconLabel, Toggle, Section, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
@@ -50,7 +50,7 @@ export const CheckboxOptions = (attributes) => {
 				icon={icons.tag}
 				label={__('Label', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					label={__('Use label', 'eightshift-forms')}
 					checked={!checkboxHideLabelText}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxHideLabelText', attributes, manifest)]: !value })}
@@ -79,7 +79,7 @@ export const CheckboxOptions = (attributes) => {
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.checkSquare}
 					label={__('Checked', 'eightshift-forms')}
 					checked={checkboxIsChecked}
@@ -87,7 +87,7 @@ export const CheckboxOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('checkboxIsChecked', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.readOnly}
 					label={__('Read-only', 'eightshift-forms')}
 					checked={checkboxIsReadOnly}
@@ -95,7 +95,7 @@ export const CheckboxOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('checkboxIsReadOnly', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={checkboxIsDisabled}
@@ -103,7 +103,7 @@ export const CheckboxOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('checkboxIsDisabled', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.hide}
 					label={__('Hidden', 'eightshift-forms')}
 					checked={checkboxIsHidden}

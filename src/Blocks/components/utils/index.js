@@ -316,14 +316,13 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
 /**
  * Outputs notification if name is missing.
  *
- * @param {string} value Field name value.
- * @param {bool} asPlaceholder If this is a placeholder.
+ * @param {any} value Field name value.
  * @param {string} className Additional class name to add.
  *
  * @returns Component
  */
-export const MissingName = ({ value, asPlaceholder, className = '', isOptional = false }) => {
-	if (value || asPlaceholder) {
+export const MissingName = ({ value, className = '', isOptional = false }) => {
+	if (value) {
 		return null;
 	}
 
@@ -365,7 +364,7 @@ export const VisibilityHidden = ({ value, label }) => {
 /**
  * "Name" option with optional "Required" notification.
  *
- * @param {string} value Field name value.
+ * @param {any} value Field name value.
  * @param {string} attribute Field name attribute.
  * @param {string} help Field help text.
  * @param {array} disabledOptions Array of disabled options.

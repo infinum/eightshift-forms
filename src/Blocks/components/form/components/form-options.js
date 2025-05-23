@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { TextControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, Section, IconToggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, IconLabel, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
 
 export const FormOptions = (attributes) => {
@@ -51,7 +51,7 @@ export const FormOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('formAction', attributes, manifest)]: value })}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.externalLink}
 					label={__('Process form externally', 'eightshift-forms')}
 					checked={formActionExternal}

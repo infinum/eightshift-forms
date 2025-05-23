@@ -1,7 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { clsx } from '@eightshift/ui-components/utilities';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -9,19 +8,15 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const DynamicEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('dynamic');
 
-	const { componentName, componentClass } = manifest;
-
-	const { additionalFieldClass, blockClientId, additionalClass } = attributes;
+	const { blockClientId } = attributes;
 
 	const dynamicName = checkAttr('dynamicName', attributes, manifest);
 	const dynamicCustomLabel = checkAttr('dynamicCustomLabel', attributes, manifest);
 
-	const dynamicClass = clsx(selector(componentClass, componentClass), selector(additionalClass, additionalClass));
-
 	preventSaveOnMissingProps(blockClientId, getAttrKey('dynamicName', attributes, manifest), dynamicName);
 
 	const dynamic = (
-		<div className={dynamicClass}>
+		<div>
 			{dynamicCustomLabel}
 
 			<MissingName value={dynamicName} />
@@ -37,8 +32,6 @@ export const DynamicEditor = (attributes) => {
 				fieldIsRequired: checkAttr('dynamicIsRequired', attributes, manifest),
 				fieldHidden: checkAttr('dynamicIsDeactivated', attributes, manifest),
 			})}
-			additionalFieldClass={additionalFieldClass}
-			selectorClass={componentName}
 		/>
 	);
 };

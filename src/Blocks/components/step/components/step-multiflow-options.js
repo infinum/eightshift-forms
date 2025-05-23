@@ -4,7 +4,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { getAttrKey, checkAttr, Toggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
@@ -164,7 +164,7 @@ export const StepMultiflowOptions = (attributes) => {
 						{__('Add step rules', 'eightshift-forms')}
 					</Button>
 
-					<IconToggle
+					<Toggle
 						icon={icons.visible}
 						type={'button'}
 						label={__('Disable next button', 'eightshift-forms')}
@@ -285,14 +285,14 @@ export const StepMultiflowOptions = (attributes) => {
 						})}
 					/>
 
-					<IconToggle
+					<Toggle
 						icon={icons.visible}
 						label={__('Flow preview', 'eightshift-forms')}
 						checked={isModalPreviewOpen}
 						onChange={() => setIsModalPreviewOpen(true)}
 					/>
 
-					<IconToggle
+					<Toggle
 						icon={icons.anchor}
 						label={__('Use steps multi-flow', 'eightshift-forms')}
 						checked={stepMultiflowUse}

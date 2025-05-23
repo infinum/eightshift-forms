@@ -6,7 +6,7 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, props, Section, Select, IconToggle, NumberPicker, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Section, Select, Toggle, NumberPicker, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -80,7 +80,7 @@ export const TextareaOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				)}
-				<IconToggle
+				<Toggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={textareaUseLabelAsPlaceholder}
@@ -101,7 +101,7 @@ export const TextareaOptions = (attributes) => {
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={textareaIsRequired}
@@ -206,7 +206,7 @@ export const TextareaOptions = (attributes) => {
 					})}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.readOnly}
 					label={__('Read-only', 'eightshift-forms')}
 					checked={textareaIsReadOnly}
@@ -214,7 +214,7 @@ export const TextareaOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('textareaIsReadOnly', attributes, manifest), textareaDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={textareaIsDisabled}

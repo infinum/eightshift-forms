@@ -1,17 +1,14 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
-import { clsx } from '@eightshift/ui-components/utilities';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const InputEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('input');
 
-	const { componentClass, componentName } = manifest;
-
-	const { additionalFieldClass, additionalClass, blockClientId } = attributes;
+	const { blockClientId } = attributes;
 
 	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
@@ -22,8 +19,6 @@ export const InputEditor = (attributes) => {
 	const inputStep = checkAttr('inputStep', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
-
-	const inputClass = clsx(selector(componentClass, componentClass), selector(additionalClass, additionalClass));
 
 	let additionalProps = {};
 
@@ -39,7 +34,6 @@ export const InputEditor = (attributes) => {
 	const input = (
 		<>
 			<input
-				className={inputClass}
 				value={inputValue}
 				placeholder={inputPlaceholder}
 				type={inputType}
@@ -60,8 +54,6 @@ export const InputEditor = (attributes) => {
 					fieldContent: input,
 					fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

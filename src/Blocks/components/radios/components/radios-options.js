@@ -4,7 +4,7 @@ import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, props, Section, IconToggle, IconLabel, STORE_NAME, Select } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, Section, Toggle, IconLabel, STORE_NAME, Select } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -76,7 +76,7 @@ export const RadiosOptions = (attributes) => {
 							className='es-no-field-spacing'
 						/>
 					)}
-					<IconToggle
+					<Toggle
 						icon={icons.fieldPlaceholder}
 						label={__('Use label as a placeholder', 'eightshift-forms')}
 						checked={radiosUseLabelAsPlaceholder}
@@ -98,7 +98,7 @@ export const RadiosOptions = (attributes) => {
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={radiosIsRequired}

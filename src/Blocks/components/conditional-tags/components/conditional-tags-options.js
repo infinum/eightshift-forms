@@ -3,7 +3,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, Button, Modal } from '@wordpress/components';
-import { getAttrKey, checkAttr, IconToggle, IconLabel, Select, Control, Section, STORE_NAME, Notification } from '@eightshift/frontend-libs-tailwind/scripts';
+import { getAttrKey, checkAttr, Toggle, IconLabel, Select, Control, Section, STORE_NAME, Notification } from '@eightshift/frontend-libs-tailwind/scripts';
 import { getConstantsOptions } from '../../utils';
 import { icons } from '@eightshift/ui-components/icons';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS, CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from './conditional-tags-labels';
@@ -224,7 +224,7 @@ export const ConditionalTagsOptions = (attributes) => {
 					/>
 				) : (
 					<>
-						<IconToggle
+						<Toggle
 							label={__('Use conditional visibility', 'eightshift-forms')}
 							checked={conditionalTagsUse}
 							onChange={(value) => {

@@ -6,15 +6,11 @@ import { IntegrationsEditor } from './../../../components/integrations/component
 export const WorkableEditor = ({ attributes, setAttributes, itemIdKey }) => {
 	const manifest = select(STORE_NAME).getBlock('workable');
 
-	const { blockClass } = attributes;
-
 	return (
-		<div className={blockClass}>
-			<IntegrationsEditor
-				itemId={checkAttr(itemIdKey, attributes, manifest)}
-				attributes={attributes}
-				setAttributes={setAttributes}
-			/>
-		</div>
+		<IntegrationsEditor
+			itemId={checkAttr(itemIdKey, attributes, manifest)}
+			attributes={attributes}
+			setAttributes={setAttributes}
+		/>
 	);
 };

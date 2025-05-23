@@ -6,10 +6,8 @@ import { IntegrationsEditor } from './../../../components/integrations/component
 export const ActiveCampaignEditor = ({ attributes, setAttributes, itemIdKey }) => {
 	const manifest = select(STORE_NAME).getBlock('active-campaign');
 
-	const { blockClass } = attributes;
-
 	return (
-		<div className={blockClass}>
+		<div>
 			<IntegrationsEditor
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}

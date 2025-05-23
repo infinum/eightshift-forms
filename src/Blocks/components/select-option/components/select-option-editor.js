@@ -1,17 +1,14 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { clsx } from '@eightshift/ui-components/utilities';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import { MissingName, VisibilityHidden, preventSaveOnMissingProps } from './../../utils';
 
 export const SelectOptionEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('select-option');
 
-	const { componentClass } = manifest;
-
-	const { selectorClass = componentClass, blockClass, additionalClass, blockClientId } = attributes;
+	const { blockClientId } = attributes;
 
 	const selectOptionLabel = checkAttr('selectOptionLabel', attributes, manifest);
 	const selectOptionValue = checkAttr('selectOptionValue', attributes, manifest);
@@ -21,17 +18,8 @@ export const SelectOptionEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
-	const selectOptionClass = clsx(
-		selector(componentClass, componentClass),
-		selector(blockClass, blockClass, selectorClass),
-		selector(additionalClass, additionalClass),
-		selector(selectOptionIsHidden, 'es-form-is-hidden'),
-		selector(selectOptionLabel === '', componentClass, '', 'placeholder'),
-		selector(selectOptionIsSelected, componentClass, '', 'checked'),
-	);
-
 	return (
-		<div className={selectOptionClass}>
+		<div>
 			<VisibilityHidden
 				value={selectOptionIsHidden}
 				label={__('Option', 'eightshift-forms')}

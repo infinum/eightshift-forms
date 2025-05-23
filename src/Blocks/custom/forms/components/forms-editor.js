@@ -21,11 +21,10 @@ export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOpti
 		return (
 			<Placeholder
 				icon={icons.form}
-				label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-				className='es-max-w-80 es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
+				label={__('Eightshift Forms', 'eightshift-forms')}
 			>
 				<AsyncSelect
-					label={<span className='es-mb-0! es-mx-0! es-mt-1! es-text-3.5 es-font-weight-500'>To get started, select a form:</span>}
+					label={__('To get started, select a form:', 'eightshift-forms')}
 					help={__("If you can't find a form, start typing its name while the dropdown is open.", 'eightshift-forms')}
 					value={outputFormSelectItemWithIcon(Object.keys(formsFormPostIdRaw).length ? formsFormPostIdRaw : { id: formsFormPostId })}
 					loadOptions={formSelectOptions}
@@ -47,12 +46,11 @@ export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOpti
 
 	return (
 		<>
-			{isGeoPreview && <div className='es-text-7 es-mb-3 es-text-align-center es-font-weight-700'>{__('Original form', 'eightshift-forms')}</div>}
+			{isGeoPreview && <div>{__('Original form', 'eightshift-forms')}</div>}
 
 			<Placeholder
 				icon={icons.form}
-				label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-				className='es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
+				label={__('Eightshift Forms', 'eightshift-forms')}
 				isColumnLayout={true}
 			>
 				{sprintf(__('Form "%s" with type "%s" will be displayed here.', 'eightshift-forms'), formsFormPostIdRaw?.label, formsFormPostIdRaw?.metadata)}
@@ -67,14 +65,13 @@ export const FormsEditor = ({ attributes, setAttributes, preview, formSelectOpti
 
 			{isGeoPreview && (
 				<>
-					<div className='es-mt-5 es-text-7 es-text-align-center es-font-weight-700'>{__('Geolocation alternatives', 'eightshift-forms')}</div>
+					<div>{__('Geolocation alternatives', 'eightshift-forms')}</div>
 					{formsFormGeolocationAlternatives.map((item, index) => {
 						return (
 							<Placeholder
 								key={index}
 								icon={icons.form}
-								label={<span className='es-font-weight-400'>{__('Eightshift Forms', 'eightshift-forms')}</span>}
-								className='es-rounded-3! es-mt-5! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
+								label={__('Eightshift Forms', 'eightshift-forms')}
 							>
 								{sprintf(__('Form "%s" with type "%s" will be displayed here.', 'eightshift-forms'), item?.form?.label, item?.form?.metadata)}
 								<br />

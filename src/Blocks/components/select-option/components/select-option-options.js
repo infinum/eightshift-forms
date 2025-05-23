@@ -3,7 +3,7 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextareaControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconToggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, Toggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
@@ -55,7 +55,7 @@ export const SelectOptionOptions = (attributes) => {
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.checkSquare}
 					label={__('Selected', 'eightshift-forms')}
 					checked={selectOptionIsSelected}
@@ -63,7 +63,7 @@ export const SelectOptionOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('selectOptionIsSelected', attributes, manifest), selectOptionDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={selectOptionIsDisabled}
@@ -71,7 +71,7 @@ export const SelectOptionOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('selectOptionIsDisabled', attributes, manifest), selectOptionDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.hide}
 					label={__('Hidden', 'eightshift-forms')}
 					checked={selectOptionIsHidden}

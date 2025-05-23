@@ -1,7 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { clsx } from '@eightshift/ui-components/utilities';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -9,11 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const PhoneEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('phone');
 
-	const { componentClass, componentName } = manifest;
-
-	const { additionalFieldClass, additionalClass, blockClientId } = attributes;
-
-	const manifestSelect = select(STORE_NAME).getComponent('select');
+	const { blockClientId } = attributes;
 
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
@@ -21,15 +16,10 @@ export const PhoneEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
 
-	const phoneClass = clsx(selector(componentClass, componentClass), selector(additionalClass, additionalClass));
-
-	const selectClass = clsx(selector(manifestSelect.componentClass, manifestSelect.componentClass), selector(additionalClass, additionalClass));
-
 	const phone = (
 		<>
-			<select className={selectClass} />
+			<select />
 			<input
-				className={phoneClass}
 				value={phoneValue}
 				placeholder={phonePlaceholder}
 				type={'tel'}
@@ -52,8 +42,6 @@ export const PhoneEditor = (attributes) => {
 					fieldContent: phone,
 					fieldIsRequired: checkAttr('phoneIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

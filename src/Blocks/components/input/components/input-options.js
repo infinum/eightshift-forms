@@ -6,7 +6,20 @@ import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { getOption, checkAttr, getAttrKey, IconLabel, props, Select, Section, NumberPicker, IconToggle, UseToggle, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import {
+	getOption,
+	checkAttr,
+	getAttrKey,
+	IconLabel,
+	props,
+	Select,
+	Section,
+	NumberPicker,
+	Toggle,
+	UseToggle,
+	Control,
+	STORE_NAME,
+} from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -134,7 +147,7 @@ export const InputOptions = (attributes) => {
 				)}
 
 				{inputType === 'range' && (
-					<IconToggle
+					<Toggle
 						icon={icons.fieldPlaceholder}
 						label={__('Show custom input field', 'eightshift-forms')}
 						checked={inputRangeUseCustomField}
@@ -163,7 +176,7 @@ export const InputOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				)}
-				<IconToggle
+				<Toggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={inputUseLabelAsPlaceholder}
@@ -206,7 +219,7 @@ export const InputOptions = (attributes) => {
 				/>
 
 				{showInputIsReadOnly && (
-					<IconToggle
+					<Toggle
 						icon={icons.readOnly}
 						label={__('Read-only', 'eightshift-forms')}
 						checked={inputIsReadOnly}
@@ -216,7 +229,7 @@ export const InputOptions = (attributes) => {
 				)}
 
 				{showInputIsDisabled && (
-					<IconToggle
+					<Toggle
 						icon={icons.cursorDisabled}
 						label={__('Disabled', 'eightshift-forms')}
 						checked={inputIsDisabled}
@@ -232,7 +245,7 @@ export const InputOptions = (attributes) => {
 				label={__('Validation', 'eightshift-forms')}
 			>
 				{showInputIsRequired && (
-					<IconToggle
+					<Toggle
 						icon={icons.required}
 						label={__('Required', 'eightshift-forms')}
 						checked={inputIsRequired}

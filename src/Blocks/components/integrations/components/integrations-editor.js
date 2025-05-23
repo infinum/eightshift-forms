@@ -6,7 +6,7 @@ import { BlockInserter, props } from '@eightshift/frontend-libs-tailwind/scripts
 import { additionalBlocksIntegration, FormEditor } from './../../form/components/form-editor';
 import { InvalidEditor } from './../../invalid/components/invalid-editor';
 
-export const IntegrationsEditor = ({ attributes, setAttributes, itemId, innerId, clientId, useInnerId = false, allowedBlocks = [] }) => {
+export const IntegrationsEditor = ({ attributes, setAttributes, itemId, innerId = null, clientId = null, useInnerId = false, allowedBlocks = [] }) => {
 	// Check if form selector has inner blocks.
 	const hasInnerBlocks = useSelect((select) => {
 		const blocks = select('core/block-editor').getBlock(clientId);

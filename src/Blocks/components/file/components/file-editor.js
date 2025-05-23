@@ -9,9 +9,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const FileEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('file');
 
-	const { componentClass, componentName } = manifest;
-
-	const { additionalFieldClass, blockClientId } = attributes;
+	const { blockClientId } = attributes;
 
 	const fileName = checkAttr('fileName', attributes, manifest);
 	const fileCustomInfoText = checkAttr('fileCustomInfoText', attributes, manifest);
@@ -22,11 +20,11 @@ export const FileEditor = (attributes) => {
 
 	const file = (
 		<>
-			<div className={`${componentClass}__custom-wrap`}>
+			<div>
 				{fileCustomInfoTextUse && fileCustomInfoText}
 				{!fileCustomInfoTextUse && __('Drag and drop files here', 'eightshift-forms')}
 
-				<div className={`${componentClass}__button`}>{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}</div>
+				<div>{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}</div>
 			</div>
 
 			<MissingName value={fileName} />
@@ -42,8 +40,6 @@ export const FileEditor = (attributes) => {
 					fieldContent: file,
 					fieldIsRequired: checkAttr('fileIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

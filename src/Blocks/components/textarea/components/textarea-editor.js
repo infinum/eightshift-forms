@@ -1,7 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { clsx } from '@eightshift/ui-components/utilities';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -9,9 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const TextareaEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('textarea');
 
-	const { componentClass, componentName } = manifest;
-
-	const { additionalFieldClass, additionalClass, blockClientId } = attributes;
+	const { blockClientId } = attributes;
 
 	const textareaValue = checkAttr('textareaValue', attributes, manifest);
 	const textareaPlaceholder = checkAttr('textareaPlaceholder', attributes, manifest);
@@ -19,12 +16,9 @@ export const TextareaEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('textareaName', attributes, manifest), textareaName);
 
-	const textareaClass = clsx(selector(componentClass, componentClass), selector(additionalClass, additionalClass));
-
 	const textarea = (
 		<>
 			<textarea
-				className={textareaClass}
 				placeholder={textareaPlaceholder}
 				readOnly
 			>
@@ -44,8 +38,6 @@ export const TextareaEditor = (attributes) => {
 					fieldContent: textarea,
 					fieldIsRequired: checkAttr('textareaIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

@@ -6,12 +6,10 @@ export const RadioEditor = ({ attributes, setAttributes }) => {
 	const { blockClass } = attributes;
 
 	return (
-		<div className={blockClass}>
-			<RadioEditorComponent
-				{...props('radio', attributes, {
-					setAttributes,
-				})}
-			/>
-		</div>
+		<RadioEditorComponent
+			{...props('radio', attributes, {
+				setAttributes,
+			})}
+		/>
 	);
 };

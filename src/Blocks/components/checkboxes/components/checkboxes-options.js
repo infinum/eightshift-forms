@@ -3,7 +3,7 @@ import { useState } from '@wordpress/element';
 import { useSelect, select } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, Section, IconToggle, AnimatedContentVisibility, STORE_NAME, Select } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, Section, Toggle, AnimatedContentVisibility, STORE_NAME, Select } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -92,7 +92,7 @@ export const CheckboxesOptions = (attributes) => {
 							className='es-no-field-spacing'
 						/>
 					)}
-					<IconToggle
+					<Toggle
 						icon={icons.fieldPlaceholder}
 						label={__('Use label as a placeholder', 'eightshift-forms')}
 						checked={checkboxesUseLabelAsPlaceholder}
@@ -114,7 +114,7 @@ export const CheckboxesOptions = (attributes) => {
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={checkboxesIsRequired}

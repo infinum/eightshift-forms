@@ -6,15 +6,11 @@ import { IntegrationsEditor } from './../../../components/integrations/component
 export const HubspotEditor = ({ attributes, setAttributes, itemIdKey }) => {
 	const manifest = select(STORE_NAME).getBlock('hubspot');
 
-	const { blockClass } = attributes;
-
 	return (
-		<div className={blockClass}>
-			<IntegrationsEditor
-				itemId={checkAttr(itemIdKey, attributes, manifest)}
-				attributes={attributes}
-				setAttributes={setAttributes}
-			/>
-		</div>
+		<IntegrationsEditor
+			itemId={checkAttr(itemIdKey, attributes, manifest)}
+			attributes={attributes}
+			setAttributes={setAttributes}
+		/>
 	);
 };

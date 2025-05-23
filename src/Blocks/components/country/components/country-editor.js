@@ -9,8 +9,6 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const CountryEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('country');
 
-	const { componentClass, componentName } = manifest;
-
 	const { additionalFieldClass, blockClientId } = attributes;
 
 	const countryName = checkAttr('countryName', attributes, manifest);
@@ -19,7 +17,7 @@ export const CountryEditor = (attributes) => {
 
 	const country = (
 		<>
-			<div className={`${componentClass}__info-text`}>{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}</div>
+			<div>{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}</div>
 
 			<MissingName value={countryName} />
 
@@ -35,7 +33,6 @@ export const CountryEditor = (attributes) => {
 					fieldIsRequired: checkAttr('countryIsRequired', attributes, manifest),
 				})}
 				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

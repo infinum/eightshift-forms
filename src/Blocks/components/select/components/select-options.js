@@ -4,7 +4,7 @@ import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, STORE_NAME, NumberPicker, Control, Select } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Section, Toggle, STORE_NAME, NumberPicker, Control, Select } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -82,7 +82,7 @@ export const SelectOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				)}
-				<IconToggle
+				<Toggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={selectUseLabelAsPlaceholder}
@@ -103,7 +103,7 @@ export const SelectOptions = (attributes) => {
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={selectIsRequired}
@@ -178,7 +178,7 @@ export const SelectOptions = (attributes) => {
 					})}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={selectIsDisabled}
@@ -186,7 +186,7 @@ export const SelectOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('selectIsDisabled', attributes, manifest), selectDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.search}
 					label={__('Search', 'eightshift-forms')}
 					checked={selectUseSearch}
@@ -194,7 +194,7 @@ export const SelectOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('selectUseSearch', attributes, manifest), selectDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.files}
 					label={__('Allow multi selection', 'eightshift-forms')}
 					checked={selectIsMultiple}

@@ -18,8 +18,7 @@ export const ResultOutputEditor = ({ attributes, setAttributes, formSelectOption
 	return (
 		<Placeholder
 			icon={icons.form}
-			label={<span className='es-font-weight-400'>{__('Eightshift Forms - Result output', 'eightshift-forms')}</span>}
-			className='es-max-w-80 es-rounded-3! es-mx-auto! es-font-weight-400 es-color-cool-gray-500! es-nested-color-current!'
+			label={__('Eightshift Forms - Result output', 'eightshift-forms')}
 		>
 			<AsyncSelect
 				label={__('Result Output', 'eightshift-forms')}

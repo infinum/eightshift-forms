@@ -1,7 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { clsx } from '@eightshift/ui-components/utilities';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -9,9 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const SelectEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('select');
 
-	const { componentClass, componentName } = manifest;
-
-	const { additionalFieldClass, additionalClass, blockClientId } = attributes;
+	const { blockClientId } = attributes;
 
 	const selectContent = checkAttr('selectContent', attributes, manifest);
 	const selectName = checkAttr('selectName', attributes, manifest);
@@ -19,11 +16,9 @@ export const SelectEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('selectName', attributes, manifest), selectName);
 
-	const selectClass = clsx(selector(componentClass, componentClass), selector(selectIsDisabled, componentClass, '', 'disabled'), selector(additionalClass, additionalClass));
-
 	const selectComponent = (
 		<>
-			<div className={selectClass}>
+			<div>
 				{selectContent}
 
 				<MissingName value={selectName} />
@@ -40,8 +35,6 @@ export const SelectEditor = (attributes) => {
 					fieldContent: selectComponent,
 					fieldIsRequired: checkAttr('selectIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

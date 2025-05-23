@@ -7,21 +7,17 @@ import { FormEditor, additionalBlocksNoIntegration } from '../../../components/f
 export const JiraEditor = ({ attributes, setAttributes, clientId }) => {
 	const manifest = select(STORE_NAME).getBlock('jira');
 
-	const { blockClass } = attributes;
-
 	return (
-		<div className={blockClass}>
-			<FormEditor
-				{...props('form', attributes, {
-					setAttributes,
-					formContent: (
-						<InnerBlocks
-							allowedBlocks={additionalBlocksNoIntegration}
-							renderAppender={() => <BlockInserter clientId={clientId} />}
-						/>
-					),
-				})}
-			/>
-		</div>
+		<FormEditor
+			{...props('form', attributes, {
+				setAttributes,
+				formContent: (
+					<InnerBlocks
+						allowedBlocks={additionalBlocksNoIntegration}
+						renderAppender={() => <BlockInserter clientId={clientId} />}
+					/>
+				),
+			})}
+		/>
 	);
 };

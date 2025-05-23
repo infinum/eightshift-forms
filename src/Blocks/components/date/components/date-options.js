@@ -5,7 +5,7 @@ import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, props, Section, Select, IconToggle, getOption, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Section, Select, Toggle, getOption, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -87,7 +87,7 @@ export const DateOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				)}
-				<IconToggle
+				<Toggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={dateUseLabelAsPlaceholder}
@@ -108,7 +108,7 @@ export const DateOptions = (attributes) => {
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={dateIsRequired}
@@ -201,7 +201,7 @@ export const DateOptions = (attributes) => {
 					})}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.readOnly}
 					label={__('Read-only', 'eightshift-forms')}
 					checked={dateIsReadOnly}
@@ -209,7 +209,7 @@ export const DateOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('dateIsReadOnly', attributes, manifest), dateDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={dateIsDisabled}

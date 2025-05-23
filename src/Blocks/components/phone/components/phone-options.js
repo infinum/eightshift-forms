@@ -5,7 +5,7 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, Select, STORE_NAME, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Toggle, Section, Select, STORE_NAME, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -74,7 +74,7 @@ export const PhoneOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				)}
-				<IconToggle
+				<Toggle
 					icon={icons.fieldPlaceholder}
 					label={__('Use label as placeholder', 'eightshift-forms')}
 					checked={phoneUseLabelAsPlaceholder}
@@ -138,7 +138,7 @@ export const PhoneOptions = (attributes) => {
 					})}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.readOnly}
 					label={__('Read-only', 'eightshift-forms')}
 					checked={phoneIsReadOnly}
@@ -146,7 +146,7 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneIsReadOnly', attributes, manifest), phoneDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={phoneIsDisabled}
@@ -154,7 +154,7 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneIsDisabled', attributes, manifest), phoneDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.order}
 					label={__('Number', 'eightshift-forms')}
 					checked={phoneIsNumber}
@@ -162,7 +162,7 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneIsNumber', attributes, manifest), phoneDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.search}
 					label={__('Search', 'eightshift-forms')}
 					checked={phoneUseSearch}
@@ -175,7 +175,7 @@ export const PhoneOptions = (attributes) => {
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
-				<IconToggle
+				<Toggle
 					icon={icons.required}
 					label={__('Required', 'eightshift-forms')}
 					checked={phoneIsRequired}

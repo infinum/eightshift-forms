@@ -9,7 +9,7 @@ import {
 	checkAttr,
 	getAttrKey,
 	IconLabel,
-	IconToggle,
+	Toggle,
 	STORE_NAME,
 	Section,
 	ResponsiveNumberPicker,
@@ -79,7 +79,7 @@ export const FieldOptions = (attributes) => {
 					label={__('Label', 'eightshift-forms')}
 				>
 					{showFieldHideLabel && (
-						<IconToggle
+						<Toggle
 							label={__('Use label', 'eightshift-forms')}
 							checked={!fieldHideLabel}
 							onChange={(value) => setAttributes({ [getAttrKey('fieldHideLabel', attributes, manifest)]: !value })}
@@ -251,7 +251,7 @@ export const FieldOptionsVisibility = (attributes) => {
 	const fieldDisabledOptions = checkAttr('fieldDisabledOptions', attributes, manifest);
 
 	return (
-		<IconToggle
+		<Toggle
 			icon={icons.hide}
 			label={__('Hidden', 'eightshift-forms')}
 			checked={fieldHidden}

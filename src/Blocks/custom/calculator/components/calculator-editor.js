@@ -4,10 +4,8 @@ import { props, BlockInserter } from '@eightshift/frontend-libs-tailwind/scripts
 import { FormEditor, additionalBlocksNoIntegration } from '../../../components/form/components/form-editor';
 
 export const CalculatorEditor = ({ attributes, setAttributes, clientId }) => {
-	const { blockClass } = attributes;
-
 	return (
-		<div className={blockClass}>
+		<div>
 			<FormEditor
 				{...props('form', attributes, {
 					setAttributes,

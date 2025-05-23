@@ -1,7 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
-import { clsx } from '@eightshift/ui-components/utilities';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { getUtilsIcons, MissingName, preventSaveOnMissingProps } from '../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -9,29 +8,21 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const RatingEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('rating');
 
-	const { componentName, componentClass } = manifest;
-
-	const { additionalFieldClass, blockClientId, additionalClass } = attributes;
+	const { blockClientId } = attributes;
 
 	const ratingName = checkAttr('ratingName', attributes, manifest);
 	const ratingAmount = checkAttr('ratingAmount', attributes, manifest);
 	const ratingValue = checkAttr('ratingValue', attributes, manifest);
 
-	const ratingClass = clsx(selector(componentClass, componentClass), selector(additionalClass, additionalClass));
-
 	preventSaveOnMissingProps(blockClientId, getAttrKey('ratingName', attributes, manifest), ratingName);
 
 	const rating = (
-		<div
-			className={ratingClass}
-			data-rating={ratingValue}
-		>
+		<div data-rating={ratingValue}>
 			{ratingAmount && (
 				<>
 					{[...Array(parseInt(ratingAmount, 10))].map((x, i) => {
 						return (
 							<div
-								className={`${componentClass}__star`}
 								key={i}
 								dangerouslySetInnerHTML={{ __html: getUtilsIcons('rating') }}
 								data-rating={i + 1}
@@ -53,8 +44,6 @@ export const RatingEditor = (attributes) => {
 				fieldContent: rating,
 				fieldIsRequired: checkAttr('ratingIsRequired', attributes, manifest),
 			})}
-			additionalFieldClass={additionalFieldClass}
-			selectorClass={componentName}
 		/>
 	);
 };

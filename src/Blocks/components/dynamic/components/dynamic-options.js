@@ -3,7 +3,7 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
@@ -26,7 +26,7 @@ export const DynamicOptions = (attributes) => {
 
 	return (
 		<PanelBody title={title}>
-			<IconToggle
+			<Toggle
 				icon={icons.cursorDisabled}
 				label={__('Deactivated', 'eightshift-forms')}
 				help={__('All dynamic fields are deactivated by default.', 'eightshift-forms')}
@@ -75,7 +75,7 @@ export const DynamicOptions = (attributes) => {
 						/>
 
 						{dynamicType === 'select' && (
-							<IconToggle
+							<Toggle
 								icon={icons.files}
 								label={__('Allow multi selection', 'eightshift-forms')}
 								checked={dynamicIsMultiple}
@@ -91,7 +91,7 @@ export const DynamicOptions = (attributes) => {
 						icon={icons.checks}
 						label={__('Validation', 'eightshift-forms')}
 					>
-						<IconToggle
+						<Toggle
 							icon={icons.required}
 							label={__('Required', 'eightshift-forms')}
 							checked={dynamicIsRequired}

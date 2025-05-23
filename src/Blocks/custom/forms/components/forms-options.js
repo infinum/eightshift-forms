@@ -8,7 +8,7 @@ import { MediaPlaceholder } from '@wordpress/block-editor';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { icons } from '@eightshift/ui-components/icons';
-import { IconLabel, getAttrKey, checkAttr, props, MultiSelect, IconToggle, Control, Section, STORE_NAME, Repeater, RepeaterItem, Toggle } from '@eightshift/frontend-libs-tailwind/scripts';
+import { IconLabel, getAttrKey, checkAttr, props, MultiSelect, Control, Section, STORE_NAME, Repeater, RepeaterItem, Toggle } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { FormEditButton, LocationsButton, SettingsButton, outputFormSelectItemWithIcon } from '../../../components/utils';
 import { getRestUrl } from '../../../components/form/assets/state-init';
@@ -389,7 +389,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 					</Control>
 
 					{formsFormGeolocationAlternatives?.length > 0 && (
-						<IconToggle
+						<Toggle
 							icon={icons.visible}
 							label={__('Rule preview', 'eightshift-forms')}
 							checked={isGeoPreview}

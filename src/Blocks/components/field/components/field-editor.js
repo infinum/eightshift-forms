@@ -1,24 +1,19 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, outputCssVariables, STORE_NAME, props, bem } from '@eightshift/frontend-libs-tailwind/scripts';
-import { clsx } from '@eightshift/ui-components/utilities';
+import { checkAttr, outputCssVariables, STORE_NAME, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { MissingName, VisibilityHidden } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
 export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fieldName }) => {
 	const manifest = select(STORE_NAME).getComponent('field');
 
-	const { componentClass } = manifest;
-
-	const fieldClass = clsx(componentClass, bem(componentClass, '', 'field'));
-
 	return (
-		<div className={fieldClass}>
+		<div>
 			{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-			<div className={`${componentClass}__inner`}>
-				<div className={`${componentClass}__content`}>
-					<div className={`${componentClass}__content-wrap`}>
+			<div>
+				<div>
+					<div>
 						{children}
 
 						<MissingName
@@ -43,9 +38,7 @@ export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fiel
 export const FieldEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('field');
 
-	const { componentClass } = manifest;
-
-	const { selectorClass = componentClass, additionalFieldClass, clientId } = attributes;
+	const { clientId } = attributes;
 
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
@@ -66,24 +59,11 @@ export const FieldEditor = (attributes) => {
 	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
 	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
-	const fieldClass = clsx(
-		componentClass,
-		bem(componentClass, '', selectorClass),
-		additionalFieldClass,
-		selector(fieldHidden, 'es-form-is-hidden'),
-		selector(fieldStyle && componentClass, componentClass, '', fieldStyle),
-	);
-
-	const labelClass = clsx(bem(componentClass, 'label'), selector(fieldIsRequired && componentClass, componentClass, 'label', 'is-required'));
-
 	const LabelDefault = () => (
 		<>
 			{!fieldHideLabel && (
-				<div className={labelClass}>
-					<span
-						className={`${componentClass}__label-inner`}
-						dangerouslySetInnerHTML={{ __html: fieldLabel }}
-					/>
+				<div>
+					<span dangerouslySetInnerHTML={{ __html: fieldLabel }} />
 				</div>
 			)}
 		</>
@@ -92,36 +72,33 @@ export const FieldEditor = (attributes) => {
 	const LegendDefault = () => (
 		<>
 			{!fieldHideLabel && (
-				<div className={labelClass}>
-					<span
-						className={`${componentClass}__label-inner`}
-						dangerouslySetInnerHTML={{ __html: fieldLabel }}
-					/>
+				<div>
+					<span dangerouslySetInnerHTML={{ __html: fieldLabel }} />
 				</div>
 			)}
 		</>
 	);
 
 	const Content = () => (
-		<div className={`${componentClass}__content`}>
-			{fieldBeforeContent && <div className={`${componentClass}__before-content`}>{fieldBeforeContent}</div>}
-			<div className={`${componentClass}__content-wrap`}>
+		<div>
+			{fieldBeforeContent && <div>{fieldBeforeContent}</div>}
+			<div>
 				{fieldContent}
 
-				{fieldSuffixContent && <div className={`${componentClass}__suffix-content`}>{fieldSuffixContent}</div>}
+				{fieldSuffixContent && <div>{fieldSuffixContent}</div>}
 			</div>
-			{fieldAfterContent && <div className={`${componentClass}__after-content`}>{fieldAfterContent}</div>}
+			{fieldAfterContent && <div>{fieldAfterContent}</div>}
 		</div>
 	);
 
-	const Help = () => <div className={`${componentClass}__help`}>{fieldHelp}</div>;
+	const Help = () => <div>{fieldHelp}</div>;
 
 	const DivContent = () => {
 		return (
-			<div className={fieldClass}>
+			<div>
 				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 
-				<div className={`${componentClass}__inner`}>
+				<div>
 					{fieldLabel && <LabelDefault />}
 					<Content />
 					<Help />
@@ -137,10 +114,10 @@ export const FieldEditor = (attributes) => {
 
 	const FieldsetContent = () => {
 		return (
-			<fieldset className={fieldClass}>
+			<fieldset>
 				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 
-				<div className={`${componentClass}__inner`}>
+				<div>
 					{fieldLabel && <LegendDefault />}
 					<Content />
 					<Help />

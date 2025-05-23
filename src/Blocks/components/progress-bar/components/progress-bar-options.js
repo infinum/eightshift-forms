@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { TextControl } from '@wordpress/components';
-import { checkAttr, IconToggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, Toggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
 
 export const ProgressBarOptions = (attributes) => {
@@ -17,7 +17,7 @@ export const ProgressBarOptions = (attributes) => {
 
 	return (
 		<>
-			<IconToggle
+			<Toggle
 				icon={icons.scrollbarH}
 				label={__('Show progress bar', 'eightshift-forms')}
 				checked={progressBarUse}
@@ -26,7 +26,7 @@ export const ProgressBarOptions = (attributes) => {
 				}}
 			/>
 
-			<IconToggle
+			<Toggle
 				icon={icons.tag}
 				label={__('Hide progress bar labels', 'eightshift-forms')}
 				help={__('This will hide the labels on the progress bar.', 'eightshift-forms')}
