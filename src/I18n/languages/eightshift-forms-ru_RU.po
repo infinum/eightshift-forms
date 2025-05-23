@@ -1,3 +1,411 @@
+msgid "Something went wrong while submitting your form. Please try again."
+msgstr "При отправке формы произошла ошибка. Пожалуйста, попробуйте снова."
+
+msgid "This field is required."
+msgstr "Это поле обязательно для заполнения."
+
+msgid "This field is required, with at least %s items selected."
+msgstr "Это поле обязательно для заполнения, выберите хотя бы %s элемент(а/ов)."
+
+msgid "This field is not valid."
+msgstr "Это поле содержит недопустимые данные."
+
+msgid "This e-mail is not valid."
+msgstr "Этот адрес электронной почты недействителен."
+
+msgid "This e-mail already exists in our system."
+msgstr "Этот адрес электронной почты уже существует в нашей системе."
+
+msgid "This e-mails top level domain is not valid."
+msgstr "Домен верхнего уровня этого адреса электронной почты недействителен."
+
+msgid "This URL is not valid."
+msgstr "Этот URL недействителен."
+
+msgid "This field value is less than expected. Minimal number should be %s."
+msgstr "Значение этого поля меньше ожидаемого. Минимальное значение должно быть %s."
+
+msgid "This field value is more than expected. Maximal number should be %s."
+msgstr "Значение этого поля больше ожидаемого. Максимальное значение должно быть %s."
+
+msgid "This field value has less characters than expected. We expect minimum %s characters."
+msgstr "В этом поле меньше символов, чем ожидалось. Минимальное количество символов — %s."
+
+msgid "This field value has more characters than expected. We expect maximum %s characters."
+msgstr "В этом поле больше символов, чем ожидалось. Максимальное количество символов — %s."
+
+msgid "This field value has less items than expected. We expect minimum %s items."
+msgstr "В этом поле меньше элементов, чем ожидалось. Минимальное количество элементов — %s."
+
+msgid "This field value has more items than expected. We expect maximum %s items."
+msgstr "В этом поле больше элементов, чем ожидалось. Максимальное количество элементов — %s."
+
+msgid "This field should only contain numbers."
+msgstr "Это поле должно содержать только числа."
+
+msgid "This field value should be in this format: %s."
+msgstr "Значение этого поля должно быть в формате: %s."
+
+msgid "The file type is not supported. Only %s files are allowed."
+msgstr "Этот тип файла не поддерживается. Разрешены только файлы %s."
+
+msgid "The file seems to be corrupted or invalid format. Only %s are allowed."
+msgstr "Файл повреждён или имеет недопустимый формат. Разрешены только %s."
+
+msgid "One or more files seem to be corrupt or have invalid format. Only %s are allowed."
+msgstr "Один или несколько файлов повреждены или имеют недопустимый формат. Разрешены только %s."
+
+msgid "One or more files seem to be uploaded using an unauthorized method."
+msgstr "Один или несколько файлов были загружены неавторизованным способом."
+
+msgid "It seems that one or more files were not uploaded to the server. Please remove the files and try again."
+msgstr "Похоже, что один или несколько файлов не были загружены на сервер. Удалите файлы и попробуйте снова."
+
+msgid "There seems to be an error with the file upload. Please try again."
+msgstr "Похоже, что произошла ошибка при загрузке файла. Пожалуйста, попробуйте снова."
+
+msgid "You can only upload a single file in this field. If you have multiple files, please remove them and try again."
+msgstr "В это поле можно загрузить только один файл. Если у вас несколько файлов, удалите их и попробуйте снова."
+
+msgid "The file is smaller than allowed. Minimum file size is %s MB."
+msgstr "Файл меньше допустимого размера. Минимальный размер файла — %s МБ."
+
+msgid "The file is larger than allowed. Maximum file size is %s MB."
+msgstr "Файл больше допустимого размера. Максимальный размер файла — %s МБ."
+
+msgid "This phone number is not valid. It must contain a valid country/network prefix with only numbers."
+msgstr "Этот номер телефона недействителен. Он должен содержать действительный префикс страны/оператора и только цифры."
+
+msgid "This date format is not valid."
+msgstr "Этот формат даты недействителен."
+
+msgid "This date/time format is not valid."
+msgstr "Этот формат даты/времени недействителен."
+
+msgid "This fields only allows dates in the past."
+msgstr "Это поле допускает только даты в прошлом."
+
+msgid "This field value has more characters than expected. We expect maximum 5 numbers."
+msgstr "В этом поле больше символов, чем ожидалось. Максимальное количество цифр — 5."
+
+msgid "The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed."
+msgstr "Файл повреждён или имеет недопустимый формат. Разрешены только pdf,doc,docx,txt,rtf."
+
+msgid "This field has invalid length for phone number."
+msgstr "В этом поле недопустимая длина для номера телефона."
+
+msgid "This field contains forbidden special characters."
+msgstr "Это поле содержит запрещённые специальные символы."
+
+msgid "This field is too long. Max length is 127 characters."
+msgstr "Это поле слишком длинное. Максимальная длина — 127 символов."
+
+msgid "This field is too long. Max length is 255 characters."
+msgstr "Это поле слишком длинное. Максимальная длина — 255 символов."
+
+msgid "You have made too many requests in a short time. Please slow down and try again."
+msgstr "Вы совершили слишком много запросов за короткое время. Пожалуйста, замедлитесь и попробуйте снова."
+
+msgid "This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Форма некорректна или неправильно настроена. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "This form can be submitted only once."
+msgstr "Эту форму можно отправить только один раз."
+
+msgid "This form can be submitted only by logged in users."
+msgstr "Эту форму могут отправлять только авторизованные пользователи."
+
+msgid "There was an issue with form action. Check the form settings."
+msgstr "Возникла проблема с действием формы. Проверьте настройки формы."
+
+msgid "There was an error with your form submission."
+msgstr "При отправке формы произошла ошибка."
+
+msgid "Form was successfully submitted."
+msgstr "Форма успешно отправлена."
+
+msgid "Form was successfully submitted. Redirecting you now."
+msgstr "Форма успешно отправлена. Сейчас вы будете перенаправлены."
+
+msgid "Form is not configured correctly. Please try again."
+msgstr "Форма настроена некорректно. Пожалуйста, попробуйте снова."
+
+msgid "E-mail was not sent due to an unknown issue. Please try again."
+msgstr "Письмо не было отправлено из-за неизвестной ошибки. Пожалуйста, попробуйте снова."
+
+msgid "Confirmation e-mail was not sent due to unknown issue. Please try again."
+msgstr "Письмо с подтверждением не было отправлено из-за неизвестной ошибки. Пожалуйста, попробуйте снова."
+
+msgid "E-mail was sent successfully."
+msgstr "Письмо успешно отправлено."
+
+msgid "Greenhouse integration is not configured correctly. Please try again."
+msgstr "Интеграция с Greenhouse настроена некорректно. Пожалуйста, попробуйте снова."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "В заявке на вакансию что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Заявка успешно отправлена. Спасибо!"
+
+msgid "Mailchimp integration is not configured correctly. Please try again."
+msgstr "Интеграция с Mailchimp настроена некорректно. Пожалуйста, попробуйте снова."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "В подписке что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Подписка на рассылку успешно оформлена. Спасибо!"
+
+msgid "Hubspot integration is not configured correctly. Please try again."
+msgstr "Интеграция с Hubspot настроена некорректно. Пожалуйста, попробуйте снова."
+
+msgid "Something is not with the application. Please check all the fields and try again."
+msgstr "В заявке что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "Something is not right with the application. Please check all the fields and try again."
+msgstr "В заявке что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Форма успешно отправлена. Спасибо!"
+
+msgid "More than 1000 fields were included in the response. Please contact website administrator."
+msgstr "В ответе содержится более 1000 полей. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "Enter a valid email address."
+msgstr "Введите действительный адрес электронной почты."
+
+msgid "We are sorry but you email was blocked in our blacklist."
+msgstr "К сожалению, ваш адрес электронной почты заблокирован в нашей чёрном списке."
+
+msgid "Some of number fields are not a valid number value."
+msgstr "Некоторые числовые поля содержат недопустимое значение."
+
+msgid "The value in the field is too large for the type of field."
+msgstr "Значение в этом поле слишком велико для данного типа поля."
+
+msgid "The field was included in the form submission but is not in the form definition."
+msgstr "Это поле включено в отправку формы, но отсутствует в определении формы."
+
+msgid "The value of a number field outside the range specified in the field settings."
+msgstr "Значение числового поля выходит за пределы диапазона, указанного в настройках поля."
+
+msgid "The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options."
+msgstr "Указанное значение для поля выбора (например, чекбокс, выпадающий список, радио) не является одной из допустимых опций."
+
+msgid "The context object contains an unexpected attribute. Please contact website administrator."
+msgstr "Объект контекста содержит неожиданный атрибут. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator."
+msgstr "Значение goToWebinarWebinarKey в объекте контекста недействительно. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The hutk field in the context object is invalid. Please contact website administrator."
+msgstr "Поле hutk в объекте контекста недействительно. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The ipAddress field in the context object is invalid. Please contact website administrator."
+msgstr "Поле ipAddress в объекте контекста недействительно. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The pageUri field in the context object is invalid. Please contact website administrator."
+msgstr "Поле pageUri в объекте контекста недействительно. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "LegalConsentOptions was empty or it contains both the consent and legitimateInterest fields. Please contact website administrator."
+msgstr "LegalConsentOptions пусто или содержит как поле consent, так и legitimateInterest. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The consentToProcess field in consent or value field in legitimateInterest was false. Please contact website administrator."
+msgstr "Поле consentToProcess в consent или поле value в legitimateInterest имеет значение false. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The text field for processing consent was missing. Please contact website administrator."
+msgstr "Отсутствует текстовое поле для обработки согласия. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The communication consent text was missing for a subscription. Please contact website administrator."
+msgstr "Отсутствует текст согласия на коммуникацию для подписки. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The legitimate interest consent text was missing. Please contact website administrator."
+msgstr "Отсутствует текст согласия на обработку по законному интересу. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator."
+msgstr "Список коммуникаций содержит два или более элемента с одинаковым subscriptionTypeId. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator."
+msgstr "В вашей форме Hubspot включён reCaptcha, и мы не можем обработать запрос. Отключите reCaptcha и попробуйте снова. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "The HubSpot account has reached the rate limit. Please contact website administrator."
+msgstr "Аккаунт HubSpot достиг лимита запросов. Пожалуйста, обратитесь к администратору сайта."
+
+msgid "MailerLite integration is not configured correctly. Please try again."
+msgstr "Интеграция с MailerLite настроена некорректно. Пожалуйста, попробуйте снова."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "В подписке что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Подписка на рассылку успешно оформлена. Спасибо!"
+
+msgid "Goodbits integration is not configured correctly. Please try again."
+msgstr "Интеграция с Goodbits настроена некорректно. Пожалуйста, попробуйте снова."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "В подписке что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Подписка на рассылку успешно оформлена. Спасибо!"
+
+msgid "Enter a valid email address."
+msgstr "Введите действительный адрес электронной почты."
+
+msgid "Email address already exists in the system."
+msgstr "Этот адрес электронной почты уже существует в системе."
+
+msgid "There was an error with the service. Please try again."
+msgstr "Произошла ошибка в сервисе. Пожалуйста, попробуйте снова."
+
+msgid "It looks like this API key is not authorized to make this request. Please check your API key and try again."
+msgstr "Похоже, что этот API-ключ не авторизован для выполнения этого запроса. Пожалуйста, проверьте свой API-ключ и попробуйте снова."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Форма успешно отправлена. Спасибо!"
+
+msgid "Spam prevention system encountered an error. Captcha \"request\" is invalid or malformed."
+msgstr "Система защиты от спама столкнулась с ошибкой. Запрос Captcha недействителен или неправильно сформирован."
+
+msgid "Spam prevention system encountered an error. Captcha response \"action\" is not valid."
+msgstr "Система защиты от спама столкнулась с ошибкой. Ответ Captcha \"action\" недействителен."
+
+msgid "The request was marked as a potential spam request. Please try again."
+msgstr "Запрос был помечен как потенциально спамный. Пожалуйста, попробуйте снова."
+
+msgid "Spam prevention system encountered an error. Please try again."
+msgstr "Система защиты от спама столкнулась с ошибкой. Пожалуйста, попробуйте снова."
+
+msgid "Airtable integration is not configured correctly. Please try again."
+msgstr "Интеграция с Airtable настроена некорректно. Пожалуйста, попробуйте снова."
+
+msgid "Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct."
+msgstr "Недопустимые разрешения или запрошенная модель не найдена. Убедитесь, что ваш токен имеет необходимые права и что имена и/или идентификаторы моделей верны."
+
+msgid "You are not permitted to perform this operation."
+msgstr "У вас нет разрешения на выполнение этой операции."
+
+msgid "Invalid request: parameter validation failed. Check your request data."
+msgstr "Недопустимый запрос: не пройдена проверка параметров. Проверьте данные вашего запроса."
+
+msgid "One or more fields are invalid. Please try again."
+msgstr "Одно или несколько полей недействительны. Пожалуйста, попробуйте снова."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Форма успешно отправлена. Спасибо!"
+
+msgid "Moments integration is not configured correctly. Please try again."
+msgstr "Интеграция с Moments настроена некорректно. Пожалуйста, попробуйте снова."
+
+msgid "Something is not right with the submission. Please check all the fields and try again."
+msgstr "В отправке что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Форма успешно отправлена. Спасибо!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "В заявке на вакансию что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake."
+msgstr "Приносим извинения, но эта вакансия больше недоступна. Пожалуйста, попробуйте позже или свяжитесь с нами, если считаете это ошибкой."
+
+msgid "One of your uploaded files has a filename that is too long. Please reduce the filename and try again."
+msgstr "Один из загруженных файлов имеет слишком длинное имя. Уменьшите имя файла и попробуйте снова."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Заявка успешно отправлена. Спасибо!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "В заявке на вакансию что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "It looks like there are some issues with your form fields. Please check all the fields and try again."
+msgstr "Похоже, что есть проблемы с полями вашей формы. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Заявка успешно отправлена. Спасибо!"
+
+msgid "Your form is missing project key. Please try again."
+msgstr "В вашей форме отсутствует ключ проекта. Пожалуйста, попробуйте снова."
+
+msgid "Your form is missing issue type. Please try again."
+msgstr "В вашей форме отсутствует тип проблемы. Пожалуйста, попробуйте снова."
+
+msgid "Your form is missing issue summary. Please try again."
+msgstr "В вашей форме отсутствует описание проблемы. Пожалуйста, попробуйте снова."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "В заявке на вакансию что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Заявка успешно отправлена. Спасибо!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Заявка успешно отправлена. Спасибо!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "Payment submitted successfully. Thank you!"
+msgstr "Платеж успешно отправлен. Спасибо!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "Organization ID is invalid."
+msgstr "ID организации недействителен."
+
+msgid "Integration dataset is invalid."
+msgstr "Набор данных для интеграции недействителен."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "В заявке на вакансию что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Заявка успешно отправлена. Спасибо!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "В подписке что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Заявка успешно отправлена. Спасибо!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Эта форма настроена некорректно. Пожалуйста, обратитесь к администратору сайта для решения проблемы."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "В подписке что-то не так. Пожалуйста, проверьте все поля и попробуйте снова."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Заявка успешно отправлена. Спасибо!"
+
+msgid "Missing one or more required parameters to process the request."
+msgstr "Отсутствует один или несколько обязательных параметров для обработки запроса."
+
+msgid "File uploaded successfully."
+msgstr "Файл успешно загружен."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Капча формы пропущена из-за настроек устранения неполадок, установленных в настройках."
+
 msgid "Afghanistan"
 msgstr "Афганистан"
 

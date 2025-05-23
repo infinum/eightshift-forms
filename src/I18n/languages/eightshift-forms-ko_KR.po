@@ -1,3 +1,411 @@
+msgid "Something went wrong while submitting your form. Please try again."
+msgstr "양식을 제출하는 중 오류가 발생했습니다. 다시 시도해 주세요."
+
+msgid "This field is required."
+msgstr "이 필드는 필수 항목입니다."
+
+msgid "This field is required, with at least %s items selected."
+msgstr "이 필드는 필수 항목이며, 최소 %s개 항목을 선택해야 합니다."
+
+msgid "This field is not valid."
+msgstr "이 필드는 유효하지 않습니다."
+
+msgid "This e-mail is not valid."
+msgstr "이 이메일은 유효하지 않습니다."
+
+msgid "This e-mail already exists in our system."
+msgstr "이 이메일은 이미 시스템에 존재합니다."
+
+msgid "This e-mails top level domain is not valid."
+msgstr "이 이메일의 최상위 도메인이 유효하지 않습니다."
+
+msgid "This URL is not valid."
+msgstr "이 URL은 유효하지 않습니다."
+
+msgid "This field value is less than expected. Minimal number should be %s."
+msgstr "이 필드의 값이 예상보다 작습니다. 최소값은 %s이어야 합니다."
+
+msgid "This field value is more than expected. Maximal number should be %s."
+msgstr "이 필드의 값이 예상보다 큽니다. 최대값은 %s이어야 합니다."
+
+msgid "This field value has less characters than expected. We expect minimum %s characters."
+msgstr "이 필드의 값이 예상보다 적은 문자 수입니다. 최소 %s문자 이상 입력해야 합니다."
+
+msgid "This field value has more characters than expected. We expect maximum %s characters."
+msgstr "이 필드의 값이 예상보다 많은 문자 수입니다. 최대 %s문자까지만 입력할 수 있습니다."
+
+msgid "This field value has less items than expected. We expect minimum %s items."
+msgstr "이 필드의 값이 예상보다 적은 항목 수입니다. 최소 %s개 항목을 선택해야 합니다."
+
+msgid "This field value has more items than expected. We expect maximum %s items."
+msgstr "이 필드의 값이 예상보다 많은 항목 수입니다. 최대 %s개 항목까지만 선택할 수 있습니다."
+
+msgid "This field should only contain numbers."
+msgstr "이 필드는 숫자만 입력할 수 있습니다."
+
+msgid "This field value should be in this format: %s."
+msgstr "이 필드의 값은 %s 형식이어야 합니다."
+
+msgid "The file type is not supported. Only %s files are allowed."
+msgstr "해당 파일 형식은 지원되지 않습니다. %s 파일만 허용됩니다."
+
+msgid "The file seems to be corrupted or invalid format. Only %s are allowed."
+msgstr "파일이 손상되었거나 형식이 잘못되었습니다. %s 파일만 허용됩니다."
+
+msgid "One or more files seem to be corrupt or have invalid format. Only %s are allowed."
+msgstr "하나 이상의 파일이 손상되었거나 형식이 잘못되었습니다. %s 파일만 허용됩니다."
+
+msgid "One or more files seem to be uploaded using an unauthorized method."
+msgstr "하나 이상의 파일이 허가되지 않은 방법으로 업로드된 것으로 보입니다."
+
+msgid "It seems that one or more files were not uploaded to the server. Please remove the files and try again."
+msgstr "하나 이상의 파일이 서버에 업로드되지 않은 것으로 보입니다. 파일을 제거하고 다시 시도해 주세요."
+
+msgid "There seems to be an error with the file upload. Please try again."
+msgstr "파일 업로드 중 오류가 발생한 것으로 보입니다. 다시 시도해 주세요."
+
+msgid "You can only upload a single file in this field. If you have multiple files, please remove them and try again."
+msgstr "이 필드에는 파일 하나만 업로드할 수 있습니다. 여러 파일이 있다면 제거하고 다시 시도해 주세요."
+
+msgid "The file is smaller than allowed. Minimum file size is %s MB."
+msgstr "파일 크기가 허용 범위보다 작습니다. 최소 파일 크기는 %s MB입니다."
+
+msgid "The file is larger than allowed. Maximum file size is %s MB."
+msgstr "파일 크기가 허용 범위보다 큽니다. 최대 파일 크기는 %s MB입니다."
+
+msgid "This phone number is not valid. It must contain a valid country/network prefix with only numbers."
+msgstr "이 전화번호는 유효하지 않습니다. 국가/통신사 코드와 숫자만 입력해 주세요."
+
+msgid "This date format is not valid."
+msgstr "이 날짜 형식은 유효하지 않습니다."
+
+msgid "This date/time format is not valid."
+msgstr "이 날짜/시간 형식은 유효하지 않습니다."
+
+msgid "This fields only allows dates in the past."
+msgstr "이 필드는 과거 날짜만 입력할 수 있습니다."
+
+msgid "This field value has more characters than expected. We expect maximum 5 numbers."
+msgstr "이 필드의 값이 예상보다 많은 문자 수입니다. 최대 5자리 숫자까지만 입력할 수 있습니다."
+
+msgid "The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed."
+msgstr "파일이 손상되었거나 형식이 잘못되었습니다. pdf,doc,docx,txt,rtf 파일만 허용됩니다."
+
+msgid "This field has invalid length for phone number."
+msgstr "이 필드의 길이는 전화번호로 유효하지 않습니다."
+
+msgid "This field contains forbidden special characters."
+msgstr "이 필드에 허용되지 않는 특수 문자가 포함되어 있습니다."
+
+msgid "This field is too long. Max length is 127 characters."
+msgstr "이 필드가 너무 깁니다. 최대 길이는 127자입니다."
+
+msgid "This field is too long. Max length is 255 characters."
+msgstr "이 필드가 너무 깁니다. 최대 길이는 255자입니다."
+
+msgid "You have made too many requests in a short time. Please slow down and try again."
+msgstr "짧은 시간에 너무 많은 요청을 보냈습니다. 잠시 후 다시 시도해 주세요."
+
+msgid "This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 잘못 구성되었거나 설정이 올바르지 않습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "This form can be submitted only once."
+msgstr "이 양식은 한 번만 제출할 수 있습니다."
+
+msgid "This form can be submitted only by logged in users."
+msgstr "이 양식은 로그인한 사용자만 제출할 수 있습니다."
+
+msgid "There was an issue with form action. Check the form settings."
+msgstr "양식 작업에 문제가 발생했습니다. 양식 설정을 확인해 주세요."
+
+msgid "There was an error with your form submission."
+msgstr "양식 제출 중 오류가 발생했습니다."
+
+msgid "Form was successfully submitted."
+msgstr "양식이 성공적으로 제출되었습니다."
+
+msgid "Form was successfully submitted. Redirecting you now."
+msgstr "양식이 성공적으로 제출되었습니다. 곧 이동합니다."
+
+msgid "Form is not configured correctly. Please try again."
+msgstr "양식이 올바르게 설정되지 않았습니다. 다시 시도해 주세요."
+
+msgid "E-mail was not sent due to an unknown issue. Please try again."
+msgstr "알 수 없는 문제로 이메일이 전송되지 않았습니다. 다시 시도해 주세요."
+
+msgid "Confirmation e-mail was not sent due to unknown issue. Please try again."
+msgstr "알 수 없는 문제로 확인 이메일이 전송되지 않았습니다. 다시 시도해 주세요."
+
+msgid "E-mail was sent successfully."
+msgstr "이메일이 성공적으로 전송되었습니다."
+
+msgid "Greenhouse integration is not configured correctly. Please try again."
+msgstr "Greenhouse 연동이 올바르게 설정되지 않았습니다. 다시 시도해 주세요."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "채용 지원서에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "Mailchimp integration is not configured correctly. Please try again."
+msgstr "Mailchimp 연동이 올바르게 설정되지 않았습니다. 다시 시도해 주세요."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "구독에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "뉴스레터 구독이 완료되었습니다. 감사합니다!"
+
+msgid "Hubspot integration is not configured correctly. Please try again."
+msgstr "Hubspot 연동이 올바르게 설정되지 않았습니다. 다시 시도해 주세요."
+
+msgid "Something is not with the application. Please check all the fields and try again."
+msgstr "지원서에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "Something is not right with the application. Please check all the fields and try again."
+msgstr "지원서에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "양식이 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "More than 1000 fields were included in the response. Please contact website administrator."
+msgstr "응답에 1000개 이상의 필드가 포함되어 있습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "Enter a valid email address."
+msgstr "유효한 이메일 주소를 입력해 주세요."
+
+msgid "We are sorry but you email was blocked in our blacklist."
+msgstr "죄송하지만, 귀하의 이메일이 블랙리스트에 등록되어 있습니다."
+
+msgid "Some of number fields are not a valid number value."
+msgstr "일부 숫자 필드에 유효하지 않은 값이 있습니다."
+
+msgid "The value in the field is too large for the type of field."
+msgstr "필드의 값이 해당 필드 유형에 비해 너무 큽니다."
+
+msgid "The field was included in the form submission but is not in the form definition."
+msgstr "양식 제출에 포함된 필드가 양식 정의에 없습니다."
+
+msgid "The value of a number field outside the range specified in the field settings."
+msgstr "숫자 필드의 값이 필드 설정에서 지정한 범위를 벗어났습니다."
+
+msgid "The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options."
+msgstr "열거형 필드(예: 체크박스, 드롭다운, 라디오)에 제공된 값이 허용된 옵션이 아닙니다."
+
+msgid "The context object contains an unexpected attribute. Please contact website administrator."
+msgstr "컨텍스트 객체에 예상치 못한 속성이 포함되어 있습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator."
+msgstr "컨텍스트 객체의 goToWebinarWebinarKey 값이 유효하지 않습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The hutk field in the context object is invalid. Please contact website administrator."
+msgstr "컨텍스트 객체의 hutk 필드가 유효하지 않습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The ipAddress field in the context object is invalid. Please contact website administrator."
+msgstr "컨텍스트 객체의 ipAddress 필드가 유효하지 않습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The pageUri field in the context object is invalid. Please contact website administrator."
+msgstr "컨텍스트 객체의 pageUri 필드가 유효하지 않습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "LegalConsentOptions was empty or it contains both the consent and legitimateInterest fields. Please contact website administrator."
+msgstr "LegalConsentOptions가 비어 있거나 consent와 legitimateInterest 필드가 모두 포함되어 있습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The consentToProcess field in consent or value field in legitimateInterest was false. Please contact website administrator."
+msgstr "consent의 consentToProcess 필드 또는 legitimateInterest의 value 필드가 false입니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The text field for processing consent was missing. Please contact website administrator."
+msgstr "동의 처리를 위한 텍스트 필드가 누락되었습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The communication consent text was missing for a subscription. Please contact website administrator."
+msgstr "구독을 위한 통신 동의 텍스트가 누락되었습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The legitimate interest consent text was missing. Please contact website administrator."
+msgstr "합법적 이익 동의 텍스트가 누락되었습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator."
+msgstr "통신 목록에 동일한 subscriptionTypeId를 가진 항목이 두 개 이상 있습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator."
+msgstr "Hubspot 양식에서 reCaptcha가 활성화되어 있어 요청을 처리할 수 없습니다. reCaptcha를 비활성화하고 다시 시도해 주세요. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "The HubSpot account has reached the rate limit. Please contact website administrator."
+msgstr "HubSpot 계정이 요청 한도에 도달했습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "MailerLite integration is not configured correctly. Please try again."
+msgstr "MailerLite 연동이 올바르게 설정되지 않았습니다. 다시 시도해 주세요."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "구독에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "뉴스레터 구독이 완료되었습니다. 감사합니다!"
+
+msgid "Goodbits integration is not configured correctly. Please try again."
+msgstr "Goodbits 연동이 올바르게 설정되지 않았습니다. 다시 시도해 주세요."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "구독에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "뉴스레터 구독이 완료되었습니다. 감사합니다!"
+
+msgid "Enter a valid email address."
+msgstr "유효한 이메일 주소를 입력해 주세요."
+
+msgid "Email address already exists in the system."
+msgstr "이미 시스템에 등록된 이메일 주소입니다."
+
+msgid "There was an error with the service. Please try again."
+msgstr "서비스에 오류가 발생했습니다. 다시 시도해 주세요."
+
+msgid "It looks like this API key is not authorized to make this request. Please check your API key and try again."
+msgstr "이 API 키는 이 요청을 수행할 권한이 없는 것으로 보입니다. API 키를 확인하고 다시 시도해 주세요."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "양식이 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "Spam prevention system encountered an error. Captcha \"request\" is invalid or malformed."
+msgstr "스팸 방지 시스템에서 오류가 발생했습니다. Captcha \"request\"이(가) 유효하지 않거나 잘못된 형식입니다."
+
+msgid "Spam prevention system encountered an error. Captcha response \"action\" is not valid."
+msgstr "스팸 방지 시스템에서 오류가 발생했습니다. Captcha 응답 \"action\"이(가) 유효하지 않습니다."
+
+msgid "The request was marked as a potential spam request. Please try again."
+msgstr "요청이 스팸으로 의심되어 차단되었습니다. 다시 시도해 주세요."
+
+msgid "Spam prevention system encountered an error. Please try again."
+msgstr "스팸 방지 시스템에서 오류가 발생했습니다. 다시 시도해 주세요."
+
+msgid "Airtable integration is not configured correctly. Please try again."
+msgstr "Airtable 연동이 올바르게 설정되지 않았습니다. 다시 시도해 주세요."
+
+msgid "Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct."
+msgstr "권한이 없거나 요청한 모델을 찾을 수 없습니다. 토큰에 필요한 권한이 있는지, 모델 이름 및/또는 ID가 올바른지 확인해 주세요."
+
+msgid "You are not permitted to perform this operation."
+msgstr "이 작업을 수행할 권한이 없습니다."
+
+msgid "Invalid request: parameter validation failed. Check your request data."
+msgstr "요청이 유효하지 않습니다: 매개변수 검증에 실패했습니다. 요청 데이터를 확인해 주세요."
+
+msgid "One or more fields are invalid. Please try again."
+msgstr "하나 이상의 필드가 유효하지 않습니다. 다시 시도해 주세요."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "양식이 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "Moments integration is not configured correctly. Please try again."
+msgstr "Moments 연동이 올바르게 설정되지 않았습니다. 다시 시도해 주세요."
+
+msgid "Something is not right with the submission. Please check all the fields and try again."
+msgstr "제출에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "양식이 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "채용 지원서에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake."
+msgstr "죄송하지만, 해당 채용 공고는 더 이상 지원할 수 없습니다. 나중에 다시 시도하거나, 오류로 생각되시면 문의해 주세요."
+
+msgid "One of your uploaded files has a filename that is too long. Please reduce the filename and try again."
+msgstr "업로드한 파일 중 파일명이 너무 긴 파일이 있습니다. 파일명을 줄이고 다시 시도해 주세요."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "채용 지원서에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "It looks like there are some issues with your form fields. Please check all the fields and try again."
+msgstr "양식 필드에 문제가 있는 것으로 보입니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "Your form is missing project key. Please try again."
+msgstr "양식에 프로젝트 키가 누락되었습니다. 다시 시도해 주세요."
+
+msgid "Your form is missing issue type. Please try again."
+msgstr "양식에 이슈 유형이 누락되었습니다. 다시 시도해 주세요."
+
+msgid "Your form is missing issue summary. Please try again."
+msgstr "양식에 이슈 요약이 누락되었습니다. 다시 시도해 주세요."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "채용 지원서에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "Payment submitted successfully. Thank you!"
+msgstr "결제가 성공적으로 완료되었습니다. 감사합니다!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "Organization ID is invalid."
+msgstr "조직 ID가 유효하지 않습니다."
+
+msgid "Integration dataset is invalid."
+msgstr "통합 데이터셋이 유효하지 않습니다."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "채용 지원서에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "구독에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문이해 주세요."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "이 양식이 올바르게 설정되지 않았습니다. 웹사이트 관리자에게 문의해 주세요."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "구독에 문제가 있습니다. 모든 필드를 확인하고 다시 시도해 주세요."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "지원서가 성공적으로 제출되었습니다. 감사합니다!"
+
+msgid "Missing one or more required parameters to process the request."
+msgstr "요청을 처리하는 데 필요한 하나 이상의 필수 매개변수가 누락되었습니다."
+
+msgid "File uploaded successfully."
+msgstr "파일이 성공적으로 업로드되었습니다."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "설정에서 문제 해결 구성이 설정되어 폼 캡차가 건너뛰어졌습니다."
+
 msgid "Afghanistan"
 msgstr "아프가니스탄"
 

@@ -13,6 +13,7 @@ namespace EightshiftForms\Helpers;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsI18nHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -341,5 +342,19 @@ final class FormsHelper
 	public static function getParamValue(string $key, array $params): string|array
 	{
 		return \array_reduce($params, fn($carry, $paramKey) => $carry ?: ($paramKey['name'] === $key ? $paramKey['value'] : ''), '');
+	}
+
+	/**
+	 * Get locale from country code.
+	 *
+	 * @return string
+	 */
+	public static function getLocaleFromCountryCode(): string
+	{
+		$locale = UtilsI18nHelper::getLocale();
+
+		$languages = \apply_filters('wpml_active_languages', []);
+
+		return \array_values(\array_filter($languages, fn($language) => $language['code'] === $locale))[0]['default_locale'] ?? 'en_US';
 	}
 }

@@ -1,3 +1,411 @@
+msgid "Something went wrong while submitting your form. Please try again."
+msgstr "เกิดข้อผิดพลาดขณะส่งแบบฟอร์ม กรุณาลองใหม่อีกครั้ง"
+
+msgid "This field is required."
+msgstr "กรุณากรอกข้อมูลในช่องนี้"
+
+msgid "This field is required, with at least %s items selected."
+msgstr "กรุณาเลือกอย่างน้อย %s รายการในช่องนี้"
+
+msgid "This field is not valid."
+msgstr "ข้อมูลในช่องนี้ไม่ถูกต้อง"
+
+msgid "This e-mail is not valid."
+msgstr "อีเมลนี้ไม่ถูกต้อง"
+
+msgid "This e-mail already exists in our system."
+msgstr "อีเมลนี้มีอยู่ในระบบแล้ว"
+
+msgid "This e-mails top level domain is not valid."
+msgstr "โดเมนระดับบนสุดของอีเมลนี้ไม่ถูกต้อง"
+
+msgid "This URL is not valid."
+msgstr "URL นี้ไม่ถูกต้อง"
+
+msgid "This field value is less than expected. Minimal number should be %s."
+msgstr "ค่าที่กรอกน้อยกว่าที่กำหนด ควรมีอย่างน้อย %s"
+
+msgid "This field value is more than expected. Maximal number should be %s."
+msgstr "ค่าที่กรอกมากกว่าที่กำหนด ควรมีไม่เกิน %s"
+
+msgid "This field value has less characters than expected. We expect minimum %s characters."
+msgstr "จำนวนตัวอักษรน้อยกว่าที่กำหนด ควรมีอย่างน้อย %s ตัวอักษร"
+
+msgid "This field value has more characters than expected. We expect maximum %s characters."
+msgstr "จำนวนตัวอักษรมากกว่าที่กำหนด ควรมีไม่เกิน %s ตัวอักษร"
+
+msgid "This field value has less items than expected. We expect minimum %s items."
+msgstr "จำนวนรายการน้อยกว่าที่กำหนด ควรมีอย่างน้อย %s รายการ"
+
+msgid "This field value has more items than expected. We expect maximum %s items."
+msgstr "จำนวนรายการมากกว่าที่กำหนด ควรมีไม่เกิน %s รายการ"
+
+msgid "This field should only contain numbers."
+msgstr "ช่องนี้ควรกรอกเฉพาะตัวเลขเท่านั้น"
+
+msgid "This field value should be in this format: %s."
+msgstr "ข้อมูลในช่องนี้ควรอยู่ในรูปแบบ: %s"
+
+msgid "The file type is not supported. Only %s files are allowed."
+msgstr "ประเภทไฟล์ไม่รองรับ อนุญาตเฉพาะไฟล์ %s"
+
+msgid "The file seems to be corrupted or invalid format. Only %s are allowed."
+msgstr "ไฟล์อาจเสียหายหรือรูปแบบไม่ถูกต้อง อนุญาตเฉพาะไฟล์ %s"
+
+msgid "One or more files seem to be corrupt or have invalid format. Only %s are allowed."
+msgstr "ไฟล์หนึ่งไฟล์ขึ้นไปอาจเสียหายหรือรูปแบบไม่ถูกต้อง อนุญาตเฉพาะไฟล์ %s"
+
+msgid "One or more files seem to be uploaded using an unauthorized method."
+msgstr "พบไฟล์หนึ่งไฟล์ขึ้นไปถูกอัปโหลดด้วยวิธีที่ไม่ได้รับอนุญาต"
+
+msgid "It seems that one or more files were not uploaded to the server. Please remove the files and try again."
+msgstr "เกิดข้อผิดพลาดขณะอัปโหลดไฟล์ไปยังเซิร์ฟเวอร์ กรุณาลบไฟล์แล้วลองใหม่อีกครั้ง"
+
+msgid "There seems to be an error with the file upload. Please try again."
+msgstr "เกิดข้อผิดพลาดขณะอัปโหลดไฟล์ กรุณาลองใหม่อีกครั้ง"
+
+msgid "You can only upload a single file in this field. If you have multiple files, please remove them and try again."
+msgstr "สามารถอัปโหลดไฟล์ได้เพียงไฟล์เดียวเท่านั้น หากมีหลายไฟล์ กรุณาลบไฟล์แล้วลองใหม่อีกครั้ง"
+
+msgid "The file is smaller than allowed. Minimum file size is %s MB."
+msgstr "ไฟล์มีขนาดเล็กกว่าที่กำหนด ขนาดไฟล์ขั้นต่ำคือ %s MB"
+
+msgid "The file is larger than allowed. Maximum file size is %s MB."
+msgstr "ไฟล์มีขนาดใหญ่กว่าที่กำหนด ขนาดไฟล์สูงสุดคือ %s MB"
+
+msgid "This phone number is not valid. It must contain a valid country/network prefix with only numbers."
+msgstr "หมายเลขโทรศัพท์ไม่ถูกต้อง ต้องประกอบด้วยรหัสประเทศ/เครือข่ายที่ถูกต้องและมีแต่ตัวเลขเท่านั้น"
+
+msgid "This date format is not valid."
+msgstr "รูปแบบวันที่ไม่ถูกต้อง"
+
+msgid "This date/time format is not valid."
+msgstr "รูปแบบวันที่/เวลาที่ไม่ถูกต้อง"
+
+msgid "This fields only allows dates in the past."
+msgstr "ช่องนี้สามารถเลือกวันที่ในอดีตเท่านั้น"
+
+msgid "This field value has more characters than expected. We expect maximum 5 numbers."
+msgstr "ค่าที่กรอกมีจำนวนตัวอักษรมากกว่าที่กำหนด ควรมีไม่เกิน 5 ตัวเลข"
+
+msgid "The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed."
+msgstr "ไฟล์อาจเสียหายหรือรูปแบบไม่ถูกต้อง อนุญาตเฉพาะไฟล์ pdf,doc,docx,txt,rtf"
+
+msgid "This field has invalid length for phone number."
+msgstr "ความยาวของหมายเลขโทรศัพท์ไม่ถูกต้อง"
+
+msgid "This field contains forbidden special characters."
+msgstr "ช่องนี้มีอักขระพิเศษที่ไม่อนุญาต"
+
+msgid "This field is too long. Max length is 127 characters."
+msgstr "ข้อมูลในช่องนี้ยาวเกินไป ควรมีไม่เกิน 127 ตัวอักษร"
+
+msgid "This field is too long. Max length is 255 characters."
+msgstr "ข้อมูลในช่องนี้ยาวเกินไป ควรมีไม่เกิน 255 ตัวอักษร"
+
+msgid "You have made too many requests in a short time. Please slow down and try again."
+msgstr "คุณทำคำขอมากเกินไปในเวลาสั้นๆ กรุณารอสักครู่แล้วลองใหม่อีกครั้ง"
+
+msgid "This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้มีรูปแบบไม่ถูกต้องหรือตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "This form can be submitted only once."
+msgstr "แบบฟอร์มนี้สามารถส่งได้เพียงครั้งเดียวเท่านั้น"
+
+msgid "This form can be submitted only by logged in users."
+msgstr "แบบฟอร์มนี้สามารถส่งได้เฉพาะผู้ใช้ที่เข้าสู่ระบบเท่านั้น"
+
+msgid "There was an issue with form action. Check the form settings."
+msgstr "เกิดปัญหาในการดำเนินการของแบบฟอร์ม กรุณาตรวจสอบการตั้งค่าแบบฟอร์ม"
+
+msgid "There was an error with your form submission."
+msgstr "เกิดข้อผิดพลาดขณะส่งแบบฟอร์ม"
+
+msgid "Form was successfully submitted."
+msgstr "ส่งแบบฟอร์มเรียบร้อยแล้ว"
+
+msgid "Form was successfully submitted. Redirecting you now."
+msgstr "ส่งแบบฟอร์มเรียบร้อยแล้ว กำลังนำคุณไปยังหน้าถัดไป"
+
+msgid "Form is not configured correctly. Please try again."
+msgstr "แบบฟอร์มตั้งค่าไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "E-mail was not sent due to an unknown issue. Please try again."
+msgstr "ไม่สามารถส่งอีเมลได้เนื่องจากเกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+
+msgid "Confirmation e-mail was not sent due to unknown issue. Please try again."
+msgstr "ไม่สามารถส่งอีเมลยืนยันได้เนื่องจากเกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+
+msgid "E-mail was sent successfully."
+msgstr "ส่งอีเมลเรียบร้อยแล้ว"
+
+msgid "Greenhouse integration is not configured correctly. Please try again."
+msgstr "การเชื่อมต่อกับ Greenhouse ตั้งค่าไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครงาน กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Mailchimp integration is not configured correctly. Please try again."
+msgstr "การเชื่อมต่อกับ Mailchimp ตั้งค่าไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครรับข่าวสาร กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "สมัครรับข่าวสารเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Hubspot integration is not configured correctly. Please try again."
+msgstr "การเชื่อมต่อกับ Hubspot ตั้งค่าไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "Something is not with the application. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัคร กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "Something is not right with the application. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัคร กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "ส่งแบบฟอร์มเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "More than 1000 fields were included in the response. Please contact website administrator."
+msgstr "พบข้อมูลมากกว่า 1,000 ช่องในคำตอบ กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "Enter a valid email address."
+msgstr "กรุณากรอกอีเมลที่ถูกต้อง"
+
+msgid "We are sorry but you email was blocked in our blacklist."
+msgstr "ขออภัย อีเมลของคุณถูกบล็อกในรายชื่อดำของเรา"
+
+msgid "Some of number fields are not a valid number value."
+msgstr "ช่องตัวเลขบางช่องมีค่าไม่ถูกต้อง"
+
+msgid "The value in the field is too large for the type of field."
+msgstr "ค่าที่กรอกมีขนาดใหญ่เกินไปสำหรับช่องนี้"
+
+msgid "The field was included in the form submission but is not in the form definition."
+msgstr "พบช่องข้อมูลที่ไม่มีอยู่ในแบบฟอร์มนี้"
+
+msgid "The value of a number field outside the range specified in the field settings."
+msgstr "ค่าของช่องตัวเลขอยู่นอกช่วงที่กำหนดไว้"
+
+msgid "The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options."
+msgstr "ค่าที่เลือกสำหรับช่องนี้ไม่ตรงกับตัวเลือกที่มีอยู่"
+
+msgid "The context object contains an unexpected attribute. Please contact website administrator."
+msgstr "พบข้อมูลที่ไม่คาดคิด กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator."
+msgstr "ค่า goToWebinarWebinarKey ไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The hutk field in the context object is invalid. Please contact website administrator."
+msgstr "ค่า hutk ไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The ipAddress field in the context object is invalid. Please contact website administrator."
+msgstr "ค่า ipAddress ไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The pageUri field in the context object is invalid. Please contact website administrator."
+msgstr "ค่า pageUri ไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "LegalConsentOptions was empty or it contains both the consent and legitimateInterest fields. Please contact website administrator."
+msgstr "LegalConsentOptions ว่างเปล่าหรือมีทั้ง consent และ legitimateInterest กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The consentToProcess field in consent or value field in legitimateInterest was false. Please contact website administrator."
+msgstr "ค่า consentToProcess หรือ value ใน legitimateInterest ไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The text field for processing consent was missing. Please contact website administrator."
+msgstr "ไม่พบข้อความยินยอม กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The communication consent text was missing for a subscription. Please contact website administrator."
+msgstr "ไม่พบข้อความยินยอมในการติดต่อสำหรับการสมัคร กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The legitimate interest consent text was missing. Please contact website administrator."
+msgstr "ไม่พบข้อความยินยอมตามความจำเป็น กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator."
+msgstr "พบรายการข้อมูลที่มี subscriptionTypeId ซ้ำกัน กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator."
+msgstr "แบบฟอร์ม Hubspot ของคุณเปิดใช้งาน reCaptcha ทำให้ไม่สามารถดำเนินการได้ กรุณาปิด reCaptcha แล้วลองใหม่อีกครั้ง กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "The HubSpot account has reached the rate limit. Please contact website administrator."
+msgstr "บัญชี HubSpot เกินขีดจำกัดการใช้งาน กรุณาติดต่อผู้ดูแลเว็บไซต์"
+
+msgid "MailerLite integration is not configured correctly. Please try again."
+msgstr "การเชื่อมต่อกับ MailerLite ตั้งค่าไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครรับข่าวสาร กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "สมัครรับข่าวสารเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Goodbits integration is not configured correctly. Please try again."
+msgstr "การเชื่อมต่อกับ Goodbits ตั้งค่าไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครรับข่าวสาร กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "สมัครรับข่าวสารเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Enter a valid email address."
+msgstr "กรุณากรอกอีเมลที่ถูกต้อง"
+
+msgid "Email address already exists in the system."
+msgstr "อีเมลนี้มีอยู่ในระบบแล้ว"
+
+msgid "There was an error with the service. Please try again."
+msgstr "เกิดข้อผิดพลาดกับบริการ กรุณาลองใหม่อีกครั้ง"
+
+msgid "It looks like this API key is not authorized to make this request. Please check your API key and try again."
+msgstr "API key นี้ไม่มีสิทธิ์ในการใช้งาน กรุณาตรวจสอบ API key แล้วลองใหม่อีกครั้ง"
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "ส่งแบบฟอร์มเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Spam prevention system encountered an error. Captcha \"request\" is invalid or malformed."
+msgstr "ระบบป้องกันสแปมพบข้อผิดพลาด คำขอ Captcha ไม่ถูกต้องหรือมีรูปแบบไม่ถูกต้อง"
+
+msgid "Spam prevention system encountered an error. Captcha response \"action\" is not valid."
+msgstr "ระบบป้องกันสแปมพบข้อผิดพลาด คำตอบ Captcha \"action\" ไม่ถูกต้อง"
+
+msgid "The request was marked as a potential spam request. Please try again."
+msgstr "คำขอถูกระบุว่าเป็นสแปม กรุณาลองใหม่อีกครั้ง"
+
+msgid "Spam prevention system encountered an error. Please try again."
+msgstr "ระบบป้องกันสแปมพบข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+
+msgid "Airtable integration is not configured correctly. Please try again."
+msgstr "การเชื่อมต่อกับ Airtable ตั้งค่าไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct."
+msgstr "สิทธิ์ไม่ถูกต้อง หรือไม่พบโมเดลที่ต้องการ กรุณาตรวจสอบสิทธิ์ของ Token และชื่อหรือ ID ของโมเดล"
+
+msgid "You are not permitted to perform this operation."
+msgstr "คุณไม่มีสิทธิ์ในการดำเนินการนี้"
+
+msgid "Invalid request: parameter validation failed. Check your request data."
+msgstr "คำขอไม่ถูกต้อง: ตรวจสอบพารามิเตอร์ไม่ผ่าน กรุณาตรวจสอบข้อมูลคำขอ"
+
+msgid "One or more fields are invalid. Please try again."
+msgstr "ข้อมูลในช่องใดช่องหนึ่งไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "ส่งแบบฟอร์มเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Moments integration is not configured correctly. Please try again."
+msgstr "การเชื่อมต่อกับ Moments ตั้งค่าไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+
+msgid "Something is not right with the submission. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการส่งข้อมูล กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "ส่งแบบฟอร์มเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครงาน กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake."
+msgstr "ขออภัย ตำแหน่งงานนี้ไม่ว่างแล้ว กรุณาลองใหม่อีกครั้งในภายหลัง หรือติดต่อเรา หากคิดว่าเป็นข้อผิดพลาด"
+
+msgid "One of your uploaded files has a filename that is too long. Please reduce the filename and try again."
+msgstr "ชื่อไฟล์ที่อัปโหลดยาวเกินไป กรุณาตัดชื่อไฟล์ให้สั้นลงแล้วลองใหม่อีกครั้ง"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Something is not right with the job application. please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครงาน กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "It looks like there are some issues with your form fields. Please check all the fields and try again."
+msgstr "พบปัญหากับข้อมูลในแบบฟอร์ม กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Your form is missing project key. Please try again."
+msgstr "ไม่พบรหัสโปรเจกต์ในแบบฟอร์ม กรุณาลองใหม่อีกครั้ง"
+
+msgid "Your form is missing issue type. Please try again."
+msgstr "ไม่พบประเภทปัญหาในแบบฟอร์ม กรุณาลองใหม่อีกครั้ง"
+
+msgid "Your form is missing issue summary. Please try again."
+msgstr "ไม่พบสรุปปัญหาในแบบฟอร์ม กรุณาลองใหม่อีกครั้ง"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครงาน กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "Payment submitted successfully. Thank you!"
+msgstr "ส่งข้อมูลการชำระเงินเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "Organization ID is invalid."
+msgstr "รหัสองค์กรไม่ถูกต้อง"
+
+msgid "Integration dataset is invalid."
+msgstr "ชุดข้อมูลสำหรับการเชื่อมต่อไม่ถูกต้อง"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครงาน กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครรับข่าวสาร กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "แบบฟอร์มนี้ตั้งค่าไม่ถูกต้อง กรุณาติดต่อผู้ดูแลเว็บไซต์เพื่อแก้ไขปัญหา"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "เกิดข้อผิดพลาดกับการสมัครรับข่าวสาร กรุณาตรวจสอบข้อมูลทุกช่องแล้วลองใหม่อีกครั้ง"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "ส่งใบสมัครเรียบร้อยแล้ว ขอบคุณ!"
+
+msgid "Missing one or more required parameters to process the request."
+msgstr "ขาดหนึ่งหรือมากกว่าหนึ่งพารามิเตอร์ที่จำเป็นสำหรับการประมวลผลคำขอ"
+
+msgid "File uploaded successfully."
+msgstr "อัปโหลดไฟล์สำเร็จแล้ว"
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "ข้ามการตรวจสอบ captcha ของแบบฟอร์มเนื่องจากการตั้งค่าการแก้ไขปัญหาในระบบ"
+
 msgid "Afghanistan"
 msgstr "อัฟกานิสถาน"
 

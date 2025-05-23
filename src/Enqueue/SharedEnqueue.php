@@ -85,7 +85,7 @@ trait SharedEnqueue
 				'export' => ExportRoute::ROUTE_SLUG,
 				'debugEncrypt' => DebugEncryptRoute::ROUTE_SLUG,
 
-					// Editor.
+				// Editor.
 				'prefixIntegrationItemsInner' => UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
 				'prefixIntegrationItems' => UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS,
 				'prefixIntegrationEditor' => UtilsConfig::ROUTE_PREFIX_INTEGRATION_EDITOR,

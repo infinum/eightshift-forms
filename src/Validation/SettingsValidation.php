@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Validation;
 
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Labels\Labels;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Labels\LabelsInterface;
@@ -124,7 +125,7 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 								'component' => 'input',
 								'inputName' => UtilsSettingsHelper::getSettingName($key),
 								'inputFieldLabel' => \ucfirst($key),
-								'inputPlaceholder' => $this->labels->getLabels()[$key],
+								'inputPlaceholder' => $this->labels->getLabels()[$formType][$key] ?? '',
 								'inputValue' => UtilsSettingsHelper::getSettingValue($key, $formId),
 							],
 						],
@@ -204,25 +205,41 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 
 		$labels = \array_flip(Labels::ALL_LOCAL_LABELS);
 
-		$messagesOutput = [
-			[
-				'component' => 'intro',
-				'introSubtitle' => \__('Validation messages are shared between all forms.', 'eightshift-forms'),
-			],
-		];
+		$messagesOutput = [];
+
+		$locale = FormsHelper::getLocaleFromCountryCode();
+		if ($locale) {
+			\switch_to_locale($locale);
+		}
+
 		// List all labels for settings override.
-		foreach ($this->labels->getLabels() as $key => $label) {
-			if (isset($labels[$key])) {
-				continue;
+		foreach ($this->labels->getLabels() as $type => $labels) {
+			$output = [
+				'component' => 'layout',
+				'layoutType' => 'layout-v-stack-card',
+				'layoutContent' => [
+					[
+						'component' => 'intro',
+						'introTitle' => \ucfirst($type),
+					],
+				],
+			];
+
+			foreach ($labels as $key => $label) {
+				if (isset($label[$key])) {
+					continue;
+				}
+
+				$output['layoutContent'][] = [
+					'component' => 'input',
+					'inputName' => UtilsSettingsHelper::getOptionName($key),
+					'inputFieldLabel' => \ucfirst($key),
+					'inputPlaceholder' => $label,
+					'inputValue' => UtilsSettingsHelper::getOptionValue($key),
+				];
 			}
 
-			$messagesOutput[] = [
-				'component' => 'input',
-				'inputName' => UtilsSettingsHelper::getOptionName($key),
-				'inputFieldLabel' => \ucfirst($key),
-				'inputPlaceholder' => $label,
-				'inputValue' => UtilsSettingsHelper::getOptionValue($key),
-			];
+			$messagesOutput[] = $output;
 		}
 
 		return [
@@ -276,6 +293,7 @@ class SettingsValidation implements UtilsSettingGlobalInterface, UtilsSettingInt
 					[
 						'component' => 'tab',
 						'tabLabel' => \__('Messages', 'eightshift-forms'),
+						'tabNoBg' => true,
 						'tabContent' => $messagesOutput,
 					],
 				]

@@ -447,7 +447,7 @@ class HubspotClient implements HubspotClientInterface
 			case 'The request is not valid':
 				return 'hubspotInvalidRequestError';
 
-			// Hubspot.
+				// Hubspot.
 			case 'MAX_NUMBER_OF_SUBMITTED_VALUES_EXCEEDED':
 				return 'hubspotMaxNumberOfSubmittedValuesExceededError';
 			case 'INVALID_EMAIL':
@@ -467,7 +467,7 @@ class HubspotClient implements HubspotClientInterface
 			case 'INVALID_METADATA':
 				return 'hubspotInvalidMetadataError';
 			case 'INVALID_GOTOWEBINAR_WEBINAR_KEY':
-				return 'hubspotInvalidGotowebinarWebinarKeyError';
+				return 'hubspotInvalidGotoWebinarKeyError';
 			case 'INVALID_HUTK':
 				return 'hubspotInvalidHutkError';
 			case 'INVALID_IP_ADDRESS':

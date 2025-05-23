@@ -7,6 +7,7 @@
  */
 
 use EightshiftForms\Form\Form;
+use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
@@ -41,7 +42,7 @@ if ($formsStyle && gettype($formsStyle) === 'array') {
 	);
 }
 
-// Not published or removed at somepoint.
+// Not published or removed at some point.
 if ((!$formsFormPostId || get_post_status($formsFormPostId) !== 'publish')) {
 	if (!is_user_logged_in()) {
 		return;
@@ -62,7 +63,7 @@ $allForms = [
 	$formsFormPostId,
 ];
 
-if ($formsFormGeolocationAlternatives) {
+if ($formsFormGeolocationAlternatives && apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 	$allForms = [
 		...$allForms,
 		...array_map(
@@ -106,7 +107,11 @@ $formsClass = Helpers::classnames([
 
 ?>
 
-<div class="<?php echo esc_attr($formsClass); ?>" <?php echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
+<div
+	class="<?php echo esc_attr($formsClass); ?>"
+	<?php
+	echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 	<?php
 	foreach ($allForms as $formId) {
 		// Convert blocks to array.
