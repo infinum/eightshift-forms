@@ -4,13 +4,12 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, Button } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, Section, Select, Toggle, getOption, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, getOption, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, Select, Toggle, BaseControl, Button, ContainerPanel } from '@eightshift/ui-components';
 
 export const DateOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('date');
@@ -40,8 +39,8 @@ export const DateOptions = (attributes) => {
 	}
 
 	return (
-		<PanelBody title={title}>
-			<Section
+		<ContainerPanel title={title}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -64,10 +63,10 @@ export const DateOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('dateType', attributes, manifest)]: value })}
 					additionalSelectClasses='es-w-32'
 					simpleValue
-					inlineLabel
+					inline
 					noSearch
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptions
 				{...props('field', attributes, {
@@ -75,7 +74,7 @@ export const DateOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.fieldPlaceholder}
 				label={__('Placeholder', 'eightshift-forms')}
 			>
@@ -97,7 +96,7 @@ export const DateOptions = (attributes) => {
 						setAttributes({ [getAttrKey('dateUseLabelAsPlaceholder', attributes, manifest)]: value });
 					}}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -105,7 +104,7 @@ export const DateOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
@@ -126,12 +125,12 @@ export const DateOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('dateValidationPattern', attributes, manifest), dateDisabledOptions)}
 					placeholder='–'
 					additionalSelectClasses='es-w-32'
-					inlineLabel
+					inline
 					clearable
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Formats', 'eightshift-forms')}
 			>
@@ -170,9 +169,9 @@ export const DateOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('dateOutputFormat', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('dateOutputFormat', attributes, manifest), dateDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -205,9 +204,9 @@ export const DateOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('dateIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('dateIsDisabled', attributes, manifest), dateDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
@@ -220,7 +219,7 @@ export const DateOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('dateTracking', attributes, manifest), dateDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -234,6 +233,6 @@ export const DateOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('dateFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

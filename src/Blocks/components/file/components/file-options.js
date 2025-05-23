@@ -2,13 +2,12 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, Section, Toggle, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, BaseControl, Toggle, ContainerPanel } from '@eightshift/ui-components';
 
 export const FileOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('file');
@@ -30,8 +29,8 @@ export const FileOptions = (attributes) => {
 	const fileIsDisabled = checkAttr('fileIsDisabled', attributes, manifest);
 
 	return (
-		<PanelBody title={__('File', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('File', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -44,7 +43,7 @@ export const FileOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptions
 				{...props('field', attributes, {
@@ -58,7 +57,7 @@ export const FileOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
@@ -80,10 +79,9 @@ export const FileOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('fileAccept', attributes, manifest), fileDisabledOptions)}
 				/>
 
-				<Control
+				<BaseControl
 					icon={icons.fileSize}
 					label={__('File size limits', 'eightshift-forms')}
-					additionalLabelClasses='es-mb-0!'
 				>
 					<div className='es-fifty-fifty-h'>
 						<InputField
@@ -105,10 +103,10 @@ export const FileOptions = (attributes) => {
 							className='es-no-field-spacing'
 						/>
 					</div>
-				</Control>
-			</Section>
+				</BaseControl>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -133,9 +131,9 @@ export const FileOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('fileIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileIsDisabled', attributes, manifest), fileDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.upload}
 				label={__('Custom uploader', 'eightshift-forms')}
 				collapsable
@@ -166,9 +164,9 @@ export const FileOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('fileCustomInfoButtonText', attributes, manifest), fileDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
@@ -181,7 +179,7 @@ export const FileOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('fileTracking', attributes, manifest), fileDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -195,6 +193,6 @@ export const FileOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('fileFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

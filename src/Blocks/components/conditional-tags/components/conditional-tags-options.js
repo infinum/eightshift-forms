@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { Button, Modal } from '@wordpress/components';
-import { getAttrKey, checkAttr, Toggle, IconLabel, Select, Control, Section, STORE_NAME, Notification } from '@eightshift/frontend-libs-tailwind/scripts';
-import { InputField } from '@eightshift/ui-components';
+import { getAttrKey, checkAttr, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { InputField, RichLabel, BaseControl, Select, Toggle, Notice, Button, Modal } from '@eightshift/ui-components';
 import { getConstantsOptions } from '../../utils';
 import { icons } from '@eightshift/ui-components/icons';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS, CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from './conditional-tags-labels';
@@ -209,19 +208,16 @@ export const ConditionalTagsOptions = (attributes) => {
 	const rulesCount = conditionalTagsRules?.[1]?.length && conditionalTagsRules?.[1]?.flat()?.length;
 
 	return (
-		<Section
+		<BaseControl
 			icon={icons.conditionalVisibility}
 			label={__('Conditional visibility', 'eightshift-forms')}
 		>
 			<>
 				{formFields?.length < 1 ? (
-					<IconLabel
+					<RichLabel
 						icon={icons.warningFillTransparent}
 						label={__('Feature unavailable', 'eightshift-forms')}
 						subtitle={__('It looks like your field has a missing name.', 'eightshift-forms')}
-						additionalClasses='es:nested-color-yellow-500!'
-						addSubtitleGap
-						standalone
 					/>
 				) : (
 					<>
@@ -232,23 +228,22 @@ export const ConditionalTagsOptions = (attributes) => {
 								setAttributes({ [conditionalTagsUseKey]: value });
 								setAttributes({ [conditionalTagsRulesKey]: !value ? undefined : [globalManifest.comparatorActions.HIDE, []] });
 							}}
-							additionalClasses='es:font-weight-500'
 						/>
 
-						<Section showIf={conditionalTagsUse}>
+						<BaseControl showIf={conditionalTagsUse}>
 							{conditionalTagsIsHidden && (
-								<Notification
-									text={__('Field is hidden. This might introduce issues if used with conditional tags.', 'eightshift-forms')}
+								<Notice
+									label={__('Field is hidden. This might introduce issues if used with conditional tags.', 'eightshift-forms')}
 									type='warning'
 								/>
 							)}
 
-							<Control
+							<BaseControl
 								icon={icons.conditionH}
 								label={__('Rules', 'eightshift-forms')}
 								// Translators: %d refers to the number of active rules
 								subtitle={rulesCount > 0 && sprintf(__('%d rules', 'eightshift-forms'), rulesCount)}
-								inlineLabel
+								inline
 							>
 								<Button
 									variant='tertiary'
@@ -257,14 +252,12 @@ export const ConditionalTagsOptions = (attributes) => {
 								>
 									{rulesCount > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
 								</Button>
-							</Control>
+							</BaseControl>
 
 							{isModalOpen && (
 								<Modal
 									overlayClassName='es-conditional-tags-modal es-geolocation-modal'
-									className='es-modal-max-width-5xl es:rounded-3!'
-									icon={icons.conditionalVisibility}
-									label={__('Conditional visibility', 'eightshift-forms')}
+									title={__('Conditional visibility', 'eightshift-forms')}
 									onRequestClose={() => setIsModalOpen(false)}
 								>
 									<div className='es:v-spaced'>
@@ -272,11 +265,9 @@ export const ConditionalTagsOptions = (attributes) => {
 									</div>
 
 									<div className='es:mt-8 -es:mx-8 es:px-8 es:pt-8 es:border-t-cool-gray-100 es:h-between es:gap-8!'>
-										<IconLabel
+										<RichLabel
 											icon={icons.lightBulb}
 											label={__("If you can't find a field, make sure the form is saved, and all fields have a name set.", 'eightshift-forms')}
-											additionalClasses='es:nested-color-yellow-500!'
-											standalone
 										/>
 
 										<Button
@@ -289,10 +280,10 @@ export const ConditionalTagsOptions = (attributes) => {
 									</div>
 								</Modal>
 							)}
-						</Section>
+						</BaseControl>
 					</>
 				)}
 			</>
-		</Section>
+		</BaseControl>
 	);
 };

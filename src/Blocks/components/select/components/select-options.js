@@ -2,13 +2,12 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, props, Section, Toggle, STORE_NAME, NumberPicker, Control, Select } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, BaseControl, Select, Toggle, NumberPicker, Button, ContainerPanel } from '@eightshift/ui-components';
 
 export const SelectOptions = (attributes) => {
 	const globalManifest = select(STORE_NAME).getSettings();
@@ -34,8 +33,8 @@ export const SelectOptions = (attributes) => {
 	const selectShowAs = checkAttr('selectShowAs', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Select', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('Select', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -48,7 +47,7 @@ export const SelectOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<Select
 				icon={icons.optionListAlt}
@@ -58,7 +57,7 @@ export const SelectOptions = (attributes) => {
 				disabled={isOptionDisabled(getAttrKey('selectShowAs', attributes, manifest), selectDisabledOptions)}
 				onChange={(value) => setAttributes({ [getAttrKey('selectShowAs', attributes, manifest)]: value })}
 				simpleValue
-				inlineLabel
+				inline
 				noSearch
 				clearable
 				placeholder={__('Choose an alternative', 'eightshift-forms')}
@@ -70,7 +69,7 @@ export const SelectOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.fieldPlaceholder}
 				label={__('Placeholder', 'eightshift-forms')}
 			>
@@ -92,7 +91,7 @@ export const SelectOptions = (attributes) => {
 						setAttributes({ [getAttrKey('selectUseLabelAsPlaceholder', attributes, manifest)]: value });
 					}}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -100,7 +99,7 @@ export const SelectOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
@@ -113,10 +112,9 @@ export const SelectOptions = (attributes) => {
 				/>
 
 				{selectIsMultiple && (
-					<Control
+					<BaseControl
 						icon={icons.range}
 						label={__('Number of items', 'eightshift-forms')}
-						additionalLabelClasses='es-mb-0!'
 					>
 						<div className='es-h-spaced es-gap-5!'>
 							<div className='es-display-flex es-items-end es-gap-2'>
@@ -165,11 +163,11 @@ export const SelectOptions = (attributes) => {
 								)}
 							</div>
 						</div>
-					</Control>
+					</BaseControl>
 				)}
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -206,9 +204,9 @@ export const SelectOptions = (attributes) => {
 					}}
 					disabled={isOptionDisabled(getAttrKey('selectIsMultiple', attributes, manifest), selectDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
@@ -221,7 +219,7 @@ export const SelectOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('selectTracking', attributes, manifest), selectDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -235,6 +233,6 @@ export const SelectOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('selectFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

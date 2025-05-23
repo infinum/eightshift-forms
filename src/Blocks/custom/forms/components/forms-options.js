@@ -5,14 +5,13 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import { PanelBody, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { icons } from '@eightshift/ui-components/icons';
-import { getAttrKey, checkAttr, props, MultiSelect, Control, Section, STORE_NAME, Repeater, RepeaterItem } from '@eightshift/frontend-libs-tailwind/scripts';
+import { getAttrKey, checkAttr, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { FormEditButton, LocationsButton, SettingsButton, outputFormSelectItemWithIcon } from '../../../components/utils';
 import { getRestUrl } from '../../../components/form/assets/state-init';
-import { AsyncSelect, InputField, Toggle } from '@eightshift/ui-components';
+import { AsyncSelect, InputField, Toggle, BaseControl, MultiSelect, Repeater, RepeaterItem, Button, Modal, ContainerPanel } from '@eightshift/ui-components';
 
 export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOptions }) => {
 	const manifest = select(STORE_NAME).getBlock('forms');
@@ -69,7 +68,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 
 	return (
 		<>
-			<PanelBody title={__('Form', 'eightshift-forms')}>
+			<ContainerPanel title={__('Form', 'eightshift-forms')}>
 				<AsyncSelect
 					help={__("If you can't find a form, start typing its name while the dropdown is open.", 'eightshift-forms')}
 					value={outputFormSelectItemWithIcon(Object.keys(formsFormPostIdRaw ?? {}).length ? formsFormPostIdRaw : { id: formsFormPostId })}
@@ -88,16 +87,16 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 				/>
 
 				{formsFormPostId && (
-					<Control>
+					<BaseControl>
 						<div className='es-fifty-fifty-h es-gap-2!'>
 							<FormEditButton formId={formsFormPostId} />
 							<SettingsButton formId={formsFormPostId} />
 							<LocationsButton formId={formsFormPostId} />
 						</div>
-					</Control>
+					</BaseControl>
 				)}
 
-				<Section
+				<BaseControl
 					icon={icons.tools}
 					label={__('Advanced', 'eightshift-forms')}
 				>
@@ -108,7 +107,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 						value={formsFormDataTypeSelector}
 						onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
 					/>
-				</Section>
+				</BaseControl>
 
 				{formsStyleOptions?.length > 0 && (
 					<MultiSelect
@@ -120,9 +119,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 						simpleValue
 					/>
 				)}
-			</PanelBody>
+			</ContainerPanel>
 
-			<PanelBody
+			<ContainerPanel
 				title={__('Results output', 'eightshift-forms')}
 				initialOpen={true}
 			>
@@ -213,7 +212,6 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 									items={formsVariationDataFiles}
 									attributeName={getAttrKey('formsVariationDataFiles', attributes, manifest)}
 									setAttributes={setAttributes}
-									additionalClasses='es-border-t-cool-gray-300 es-mt-4 es-pt-4'
 								>
 									{formsVariationDataFiles.map((item, index) => (
 										<RepeaterItem
@@ -342,10 +340,10 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 						)}
 					</>
 				)}
-			</PanelBody>
+			</ContainerPanel>
 
 			{formsUseGeolocation && (
-				<PanelBody
+				<ContainerPanel
 					title={__('Geolocation', 'eightshift-forms')}
 					initialOpen={false}
 				>
@@ -361,13 +359,13 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 						placeholder={formsFormGeolocationAlternatives?.length > 0 && __('Overriden by advanced rules', 'eightshift-forms')}
 					/>
 
-					<Control
+					<BaseControl
 						icon={icons.locationSettings}
 						label={__('Advanced rules', 'eightshift-forms')}
 						// Translators: %d refers to the number of active rules
 						subtitle={formsFormGeolocationAlternatives?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), formsFormGeolocationAlternatives.length)}
 						reducedBottomSpacing={formsFormGeolocationAlternatives?.length > 0}
-						inlineLabel
+						inline
 					>
 						<Button
 							variant='tertiary'
@@ -376,7 +374,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 						>
 							{formsFormGeolocationAlternatives?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
 						</Button>
-					</Control>
+					</BaseControl>
 
 					{formsFormGeolocationAlternatives?.length > 0 && (
 						<Toggle
@@ -406,7 +404,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 							{geolocationApi && (
 								<p>
 									{__('You can find complete list of countries and regions on this', 'eightshift-forms')}{' '}
-									<ExternalLink href={geolocationApi}>{__('link', 'eightshift-forms')}</ExternalLink>.
+									<Button onClick={() => window.open(geolocationApi, '_blank')}>{__('link', 'eightshift-forms')}</Button>.
 								</p>
 							)}
 
@@ -492,7 +490,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 							</div>
 						</Modal>
 					)}
-				</PanelBody>
+				</ContainerPanel>
 			)}
 
 			<ConditionalTagsFormsOptions

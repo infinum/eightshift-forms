@@ -190,8 +190,6 @@ $additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('field',
 	?>>
 
 	<?php
-	echo Helpers::outputCssVariables($attributes, $manifest, $unique);
-
 	echo Helpers::render(
 		'debug-field-details',
 		[

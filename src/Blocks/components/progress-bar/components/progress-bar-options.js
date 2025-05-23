@@ -1,9 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { checkAttr, Toggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, Toggle } from '@eightshift/ui-components';
 
 export const ProgressBarOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('progress-bar');

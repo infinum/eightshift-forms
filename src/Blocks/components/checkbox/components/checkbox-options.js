@@ -2,13 +2,12 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import { checkAttr, getAttrKey, IconLabel, Toggle, Section, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { AnimatedVisibility, InputField } from '@eightshift/ui-components';
+import { AnimatedVisibility, InputField, RichLabel, Toggle, BaseControl, Button, ContainerPanel } from '@eightshift/ui-components';
 
 export const CheckboxOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('checkbox');
@@ -29,8 +28,8 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxIsHidden = checkAttr('checkboxIsHidden', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Checkbox', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('Checkbox', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -44,9 +43,9 @@ export const CheckboxOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tag}
 				label={__('Label', 'eightshift-forms')}
 			>
@@ -58,7 +57,8 @@ export const CheckboxOptions = (attributes) => {
 				/>
 
 				{!checkboxHideLabelText && (
-					<TextareaControl
+					<InputField
+						type={'multiline'}
 						value={checkboxLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
@@ -66,16 +66,14 @@ export const CheckboxOptions = (attributes) => {
 				)}
 
 				<AnimatedVisibility visible={checkboxHideLabelText}>
-					<IconLabel
+					<RichLabel
 						label={__('Might impact accessibility', 'eightshift-forms')}
 						icon={icons.a11yWarning}
-						additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5'
-						standalone
 					/>
 				</AnimatedVisibility>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -110,9 +108,9 @@ export const CheckboxOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsHidden', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('checkboxIsHidden', attributes, manifest), checkboxDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.image}
 				label={__('Field icon', 'eightshift-forms')}
 				collapsable
@@ -139,9 +137,9 @@ export const CheckboxOptions = (attributes) => {
 						onSelect={({ url }) => setAttributes({ [getAttrKey('checkboxIcon', attributes, manifest)]: url })}
 					/>
 				)}
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
@@ -154,7 +152,7 @@ export const CheckboxOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
@@ -162,6 +160,6 @@ export const CheckboxOptions = (attributes) => {
 					conditionalTagsIsHidden: checkboxIsHidden,
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

@@ -1,15 +1,15 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
+import { ContainerPanel } from '@eightshift/ui-components';
 import { SettingsButton, GlobalSettingsButton } from '../../../components/utils';
 
 export const FormSelectorOptions = () => {
 	return (
-		<PanelBody title={__('Eightshift Forms', 'eightshift-forms')}>
+		<ContainerPanel title={__('Eightshift Forms', 'eightshift-forms')}>
 			<SettingsButton />
 			<br />
 			<br />
 			<GlobalSettingsButton />
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

@@ -1,9 +1,0 @@
-@forward 'media-blender'
-	with(
-		$media-breakpoints: (
-			mobile: 0 479,
-			tablet: 480 959,
-			desktop: 960 1919,
-			large: 1920,
-		)
-	);

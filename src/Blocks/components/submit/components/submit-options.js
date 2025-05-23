@@ -1,12 +1,11 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, Toggle, Section, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, BaseControl, Toggle, ContainerPanel } from '@eightshift/ui-components';
 
 export const SubmitOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('submit');
@@ -19,8 +18,8 @@ export const SubmitOptions = (attributes) => {
 	const submitDisabledOptions = checkAttr('submitDisabledOptions', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Submit', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('Submit', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -31,7 +30,7 @@ export const SubmitOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('submitValue', attributes, manifest), submitDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -39,7 +38,7 @@ export const SubmitOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -56,9 +55,9 @@ export const SubmitOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('submitIsDisabled', attributes, manifest), submitDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
@@ -71,13 +70,13 @@ export const SubmitOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('submitTracking', attributes, manifest), submitDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
 					fieldDisabledOptions: submitDisabledOptions,
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

@@ -2,11 +2,11 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextareaControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, Toggle, props, STORE_NAME, Section } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
+import { BaseControl, Toggle, ContainerPanel, InputField } from '@eightshift/ui-components';
 
 export const SelectOptionOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('select-option');
@@ -23,8 +23,8 @@ export const SelectOptionOptions = (attributes) => {
 	const selectOptionDisabledOptions = checkAttr('selectOptionDisabledOptions', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Option', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('Option', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -38,20 +38,21 @@ export const SelectOptionOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tag}
 				label={__('Label', 'eightshift-forms')}
 			>
-				<TextareaControl
+				<InputField
+					type={'multiline'}
 					value={selectOptionLabel}
 					onChange={(value) => setAttributes({ [getAttrKey('selectOptionLabel', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('selectOptionLabel', attributes, manifest), selectOptionDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -78,7 +79,7 @@ export const SelectOptionOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('selectOptionIsHidden', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('selectOptionIsHidden', attributes, manifest), selectOptionDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
@@ -86,6 +87,6 @@ export const SelectOptionOptions = (attributes) => {
 					conditionalTagsIsHidden: selectOptionIsHidden,
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { checkAttr, outputCssVariables, STORE_NAME, props } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, STORE_NAME, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { MissingName, VisibilityHidden } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
@@ -10,7 +10,6 @@ export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fiel
 
 	return (
 		<div>
-			{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
 			<div>
 				<div>
 					<div>
@@ -96,8 +95,6 @@ export const FieldEditor = (attributes) => {
 	const DivContent = () => {
 		return (
 			<div>
-				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-
 				<div>
 					{fieldLabel && <LabelDefault />}
 					<Content />
@@ -115,8 +112,6 @@ export const FieldEditor = (attributes) => {
 	const FieldsetContent = () => {
 		return (
 			<fieldset>
-				{outputCssVariables(attributes, manifest, clientId, {}, 'wp-block')}
-
 				<div>
 					{fieldLabel && <LegendDefault />}
 					<Content />

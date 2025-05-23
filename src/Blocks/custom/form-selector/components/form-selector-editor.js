@@ -1,12 +1,13 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { Button, Placeholder } from '@wordpress/components';
+import { Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
 import globalSettings from './../../../manifest.json';
 import { icons } from '@eightshift/ui-components/icons';
+import { Button } from '@eightshift/ui-components';
 
 export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 	const manifest = select(STORE_NAME).getBlock('form-selector');

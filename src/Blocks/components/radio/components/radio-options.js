@@ -2,12 +2,12 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, Toggle, props, Section, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameField } from './../../utils';
+import { RichLabel, BaseControl, Toggle, AnimatedVisibility, Button, ContainerPanel, InputField } from '@eightshift/ui-components';
 
 export const RadioOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('radio');
@@ -26,8 +26,8 @@ export const RadioOptions = (attributes) => {
 	const radioIsHidden = checkAttr('radioIsHidden', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Radio button', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('Radio button', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -41,9 +41,9 @@ export const RadioOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tag}
 				label={__('Label', 'eightshift-forms')}
 			>
@@ -55,24 +55,23 @@ export const RadioOptions = (attributes) => {
 				/>
 
 				{!radioHideLabelText && (
-					<TextareaControl
+					<InputField
+						type={'multiline'}
 						value={radioLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('radioLabel', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('radioLabel', attributes, manifest), radioDisabledOptions)}
 					/>
 				)}
 
-				<AnimatedContentVisibility showIf={radioHideLabelText}>
-					<IconLabel
+				<AnimatedVisibility visible={radioHideLabelText}>
+					<RichLabel
 						label={__('Might impact accessibility', 'eightshift-forms')}
 						icon={icons.a11yWarning}
-						additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5'
-						standalone
 					/>
-				</AnimatedContentVisibility>
-			</Section>
+				</AnimatedVisibility>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -99,9 +98,9 @@ export const RadioOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('radioIsHidden', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('radioIsHidden', attributes, manifest), radioDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.image}
 				label={__('Field icon', 'eightshift-forms')}
 				collapsable
@@ -128,7 +127,7 @@ export const RadioOptions = (attributes) => {
 						onSelect={({ url }) => setAttributes({ [getAttrKey('radioIcon', attributes, manifest)]: url })}
 					/>
 				)}
-			</Section>
+			</BaseControl>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
@@ -136,6 +135,6 @@ export const RadioOptions = (attributes) => {
 					conditionalTagsIsHidden: radioIsHidden,
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

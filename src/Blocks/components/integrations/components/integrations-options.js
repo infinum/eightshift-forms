@@ -4,13 +4,13 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { select, useDispatch, useSelect, dispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
-import { Button, PanelBody, Modal } from '@wordpress/components';
-import { Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs-tailwind/scripts';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
 import { updateIntegrationBlocks, resetInnerBlocks, syncIntegrationBlocks, clearTransientCache, SettingsButton, LocationsButton } from '../../utils';
 import { getRestUrlByType } from '../../form/assets/state-init';
 import { FORMS_STORE_NAME } from './../../../assets/scripts/store';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
+import { RichLabel, BaseControl, Select, Button, Modal, ContainerPanel } from '@eightshift/ui-components';
 
 export const IntegrationsOptions = ({ title, block, attributes, setAttributes, clientId, itemId, itemIdKey, innerId, innerIdKey }) => {
 	const postId = select('core/editor').getCurrentPostId();
@@ -57,28 +57,20 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 
 		return (
 			<Modal
-				className='es-modal-max-width-xxl es-rounded-3!'
-				title={
-					<IconLabel
-						icon={icons.clipboard}
-						label={__('Sync report', 'eightshift-forms')}
-						standalone
-					/>
-				}
+				title={__('Sync report', 'eightshift-forms')}
 				onRequestClose={() => {
 					setModalOpen(false);
 					dispatch(FORMS_STORE_NAME).setIsSyncDialogOpen(false);
 				}}
 			>
-				<Section
+				<BaseControl
 					showIf={added.length > 0}
 					icon={icons.add}
 					label={__('Added fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-green-500!'
 				>
 					<div className='es-v-spaced'>
 						{added.map((item, i) => (
-							<IconLabel
+							<RichLabel
 								icon={icons.dummySpacer}
 								label={item}
 								key={i}
@@ -86,17 +78,16 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 							/>
 						))}
 					</div>
-				</Section>
+				</BaseControl>
 
-				<Section
+				<BaseControl
 					showIf={removed.length > 0}
 					icon={icons.trash}
 					label={__('Removed fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-red-500!'
 				>
 					<div className='es-v-spaced'>
 						{removed.map((item, i) => (
-							<IconLabel
+							<RichLabel
 								icon={icons.dummySpacer}
 								label={item}
 								key={i}
@@ -104,17 +95,16 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 							/>
 						))}
 					</div>
-				</Section>
+				</BaseControl>
 
-				<Section
+				<BaseControl
 					showIf={replaced.length > 0}
 					icon={icons.swap}
 					label={__('Replaced fields', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-yellow-500!'
 				>
 					<div className='es-v-spaced'>
 						{replaced.map((item, i) => (
-							<IconLabel
+							<RichLabel
 								icon={icons.dummySpacer}
 								label={item}
 								key={i}
@@ -122,17 +112,16 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 							/>
 						))}
 					</div>
-				</Section>
+				</BaseControl>
 
-				<Section
+				<BaseControl
 					showIf={changed.length > 0}
 					icon={icons.edit}
 					label={__('Updated field attributes', 'eightshift-forms')}
-					additionalLabelClasses='es-nested-bg-blue-500!'
 				>
 					<div className='es-v-spaced'>
 						{changed.map((item, i) => (
-							<IconLabel
+							<RichLabel
 								icon={icons.dummySpacer}
 								label={
 									<span key={i}>
@@ -144,22 +133,22 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 							/>
 						))}
 					</div>
-				</Section>
+				</BaseControl>
 			</Modal>
 		);
 	};
 
 	return (
 		<>
-			<PanelBody title={title}>
-				<Control>
+			<ContainerPanel title={title}>
+				<BaseControl>
 					<div className='es-fifty-fifty-h es-gap-2!'>
 						<SettingsButton />
 						<LocationsButton />
 					</div>
-				</Control>
+				</BaseControl>
 
-				<Section
+				<BaseControl
 					icon={icons.tools}
 					label={__('Integration options', 'eightshift-forms')}
 				>
@@ -214,10 +203,7 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 
 					{hasInnerBlocks && (
 						<div className={'es-border-t-gray-300 es-mt-5 es-pt-5'}>
-							<Control
-								help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}
-								additionalClasses={'es-border-b-gray-300 es-pb-5'}
-							>
+							<BaseControl help={__('Syncs the current form with the integration. Unsaved changes will be lost!', 'eightshift-forms')}>
 								<Button
 									icon={icons.loopMode}
 									onClick={() => {
@@ -256,9 +242,9 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 										{__('View changes', 'eightshift-forms')}
 									</Button>
 								)}
-							</Control>
+							</BaseControl>
 
-							<Control
+							<BaseControl
 								help={__('Integration data is cached to improve editor performance. If a form has been updated, cache should be cleared, followed by a sync.', 'eightshift-forms')}
 							>
 								<Button
@@ -275,16 +261,16 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 								>
 									{__('Clear cache', 'eightshift-forms')}
 								</Button>
-							</Control>
+							</BaseControl>
 						</div>
 					)}
-				</Section>
+				</BaseControl>
 
-				<Section
+				<BaseControl
 					icon={icons.warning}
 					label={__('Danger zone', 'eightshift-forms')}
 				>
-					<Control help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')}>
+					<BaseControl help={__('If you want to use a different integration for this form. Current configuration will be deleted.', 'eightshift-forms')}>
 						<Button
 							icon={icons.reset}
 							onClick={() => {
@@ -295,11 +281,11 @@ export const IntegrationsOptions = ({ title, block, attributes, setAttributes, c
 						>
 							{__('Reset form', 'eightshift-forms')}
 						</Button>
-					</Control>
-				</Section>
+					</BaseControl>
+				</BaseControl>
 
 				{isModalOpen && <SyncModal />}
-			</PanelBody>
+			</ContainerPanel>
 
 			<StepMultiflowOptions
 				{...props('step', attributes, {

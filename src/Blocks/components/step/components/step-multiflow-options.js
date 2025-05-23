@@ -3,8 +3,7 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { PanelBody, Button, Modal } from '@wordpress/components';
-import { getAttrKey, checkAttr, Toggle, props, Select, Control, Section, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { getAttrKey, checkAttr, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
@@ -12,7 +11,7 @@ import { ProgressBarOptions } from '../../progress-bar/components/progress-bar-o
 import { MultiflowFormsReactFlow } from '../../react-flow';
 import globalManifest from '../../../manifest.json';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, RichLabel } from '@eightshift/ui-components';
+import { InputField, RichLabel, BaseControl, Select, Button, Toggle, Modal, ContainerPanel } from '@eightshift/ui-components';
 
 export const StepMultiflowOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
@@ -170,7 +169,6 @@ export const StepMultiflowOptions = (attributes) => {
 						type={'button'}
 						label={__('Disable next button', 'eightshift-forms')}
 						checked={stepMultiflowRules[topParent][4]}
-						additionalClasses={'es-w-fit'}
 						onChange={() => {
 							stepMultiflowRules[topParent][4] = !stepMultiflowRules[topParent][4];
 							setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] });
@@ -277,7 +275,7 @@ export const StepMultiflowOptions = (attributes) => {
 	};
 
 	return (
-		<PanelBody title={__('Multi step/flow form', 'eightshift-forms')}>
+		<ContainerPanel title={__('Multi step/flow form', 'eightshift-forms')}>
 			{formFields?.length > 1 ? (
 				<>
 					<ProgressBarOptions
@@ -306,19 +304,15 @@ export const StepMultiflowOptions = (attributes) => {
 								setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [] });
 							}
 						}}
-						additionalClasses='es-font-weight-500 es-mb-5'
 					/>
 
-					<Section
-						showIf={stepMultiflowUse}
-						additionalClasses='es-pl-5'
-					>
-						<Control
+					<BaseControl showIf={stepMultiflowUse}>
+						<BaseControl
 							icon={icons.conditionH}
 							label={__('Rules', 'eightshift-forms')}
 							// Translators: %d refers to the number of active rules
 							subtitle={stepMultiflowRules?.length > 0 && sprintf(__('%d added', 'eightshift-forms'), stepMultiflowRules.length)}
-							inlineLabel
+							inline
 						>
 							<Button
 								variant='tertiary'
@@ -327,14 +321,13 @@ export const StepMultiflowOptions = (attributes) => {
 							>
 								{stepMultiflowRules?.length > 0 ? __('Edit', 'eightshift-forms') : __('Add', 'eightshift-forms')}
 							</Button>
-						</Control>
-					</Section>
+						</BaseControl>
+					</BaseControl>
 
 					{isModalPreviewOpen && (
 						<Modal
 							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 							className='es-modal-max-width-5xl es-rounded-3!'
-							icon={icons.anchor}
 							title={__('Multi-flow preview', 'eightshift-forms')}
 							onRequestClose={() => {
 								setIsModalPreviewOpen(false);
@@ -351,7 +344,6 @@ export const StepMultiflowOptions = (attributes) => {
 						<Modal
 							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 							className='es-modal-max-width-5xl es-rounded-3!'
-							icon={icons.anchor}
 							title={__('Multi-flow setup', 'eightshift-forms')}
 							onRequestClose={() => {
 								setIsModalOpen(false);
@@ -381,15 +373,12 @@ export const StepMultiflowOptions = (attributes) => {
 					)}
 				</>
 			) : (
-				<IconLabel
+				<RichLabel
 					icon={icons.warningFillTransparent}
 					label={__('Feature unavailable', 'eightshift-forms')}
 					subtitle={__('It looks like you are missing step blocks.', 'eightshift-forms')}
-					additionalClasses='es-nested-color-yellow-500!'
-					addSubtitleGap
-					standalone
 				/>
 			)}
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

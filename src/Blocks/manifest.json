@@ -233,6 +233,12 @@
 			"sm": 80,
 			"md": 90
 		},
+		"breakpointsLegacy": {
+			"mobile": 480,
+			"tablet": 960,
+			"desktop": 1920,
+			"large": 1921
+		},
 		"breakpointData": {
 			"xs": {
 				"icon": "screenMobile",

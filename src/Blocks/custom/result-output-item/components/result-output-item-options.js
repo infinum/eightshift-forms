@@ -1,13 +1,12 @@
 import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, Select } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../../components/conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions, NameField } from './../../../components/utils';
 import manifest from '../manifest.json';
 import globalManifest from '../../../manifest.json';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, Select, ContainerPanel } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 
 export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
@@ -21,7 +20,7 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 	const [showEndValue, setShowEndValue] = useState(resultOutputItemOperator.toUpperCase() in globalManifest.comparatorExtended);
 
 	return (
-		<PanelBody title={__('Result item', 'eightshift-forms')}>
+		<ContainerPanel title={__('Result item', 'eightshift-forms')}>
 			<NameField
 				value={resultOutputItemName}
 				attribute={getAttrKey('resultOutputItemName', attributes, manifest)}
@@ -64,6 +63,6 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 					help={showEndValue && __('End value must be number.', 'eightshift-forms')}
 				/>
 			)}
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

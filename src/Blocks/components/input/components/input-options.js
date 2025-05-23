@@ -4,13 +4,12 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { getOption, checkAttr, getAttrKey, props, Select, Section, NumberPicker, Toggle, UseToggle, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { getOption, checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, BaseControl, Select, Toggle, NumberPicker, Button, ContainerPanel } from '@eightshift/ui-components';
 
 export const InputOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('input');
@@ -81,8 +80,8 @@ export const InputOptions = (attributes) => {
 	const formatNumber = (number) => Number(Number.isInteger(number) ? number.toString() : number.toFixed(2));
 
 	return (
-		<PanelBody title={title}>
-			<Section
+		<ContainerPanel title={title}>
+			<BaseControl
 				showIf={showInputPlaceholder || showInputType || showInputName}
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -128,7 +127,7 @@ export const InputOptions = (attributes) => {
 						}}
 						additionalSelectClasses='es-w-32'
 						simpleValue
-						inlineLabel
+						inline
 						noSearch
 						closeMenuAfterSelect
 					/>
@@ -142,7 +141,7 @@ export const InputOptions = (attributes) => {
 						onChange={(value) => setAttributes({ [getAttrKey('inputRangeUseCustomField', attributes, manifest)]: value })}
 					/>
 				)}
-			</Section>
+			</BaseControl>
 
 			<FieldOptions
 				{...props('field', attributes, {
@@ -150,7 +149,7 @@ export const InputOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				showIf={showInputPlaceholder}
 				icon={icons.fieldPlaceholder}
 				label={__('Placeholder', 'eightshift-forms')}
@@ -173,7 +172,7 @@ export const InputOptions = (attributes) => {
 						setAttributes({ [getAttrKey('inputUseLabelAsPlaceholder', attributes, manifest)]: value });
 					}}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -181,7 +180,7 @@ export const InputOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				showIf={showInputAdvancedOptions}
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
@@ -221,9 +220,9 @@ export const InputOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('inputIsDisabled', attributes, manifest), inputDisabledOptions)}
 					/>
 				)}
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				showIf={showInputValidationOptions}
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
@@ -239,10 +238,9 @@ export const InputOptions = (attributes) => {
 				)}
 
 				{!['number', 'range'].includes(inputType) && (showInputMinLength || showInputMaxLength) && (
-					<Control
+					<BaseControl
 						icon={icons.textLength}
 						label={__('Entry length', 'eightshift-forms')}
-						additionalLabelClasses='es-mb-0!'
 					>
 						<div className='es-h-spaced es-gap-5!'>
 							{showInputMinLength && (
@@ -298,18 +296,17 @@ export const InputOptions = (attributes) => {
 								</div>
 							)}
 						</div>
-					</Control>
+					</BaseControl>
 				)}
 
 				{(inputType === 'number' || inputType === 'range') && (showInputMin || showInputMax) && (
-					<Control
+					<BaseControl
 						icon={icons.range}
 						label={__('Value range', 'eightshift-forms')}
-						additionalLabelClasses='es-mb-0!'
 					>
 						{inputType === 'range' && (
 							<>
-								<UseToggle
+								<div
 									label={__('Show min value', 'eightshift-forms')}
 									checked={inputRangeShowMin}
 									onChange={(value) => {
@@ -338,8 +335,8 @@ export const InputOptions = (attributes) => {
 											className='es-no-field-spacing'
 										/>
 									</div>
-								</UseToggle>
-								<UseToggle
+								</div>
+								<div
 									label={__('Show current value', 'eightshift-forms')}
 									checked={inputRangeShowCurrent}
 									onChange={(value) => {
@@ -368,8 +365,8 @@ export const InputOptions = (attributes) => {
 											className='es-no-field-spacing'
 										/>
 									</div>
-								</UseToggle>
-								<UseToggle
+								</div>
+								<div
 									label={__('Show max value', 'eightshift-forms')}
 									checked={inputRangeShowMax}
 									onChange={(value) => {
@@ -398,7 +395,7 @@ export const InputOptions = (attributes) => {
 											className='es-no-field-spacing'
 										/>
 									</div>
-								</UseToggle>
+								</div>
 							</>
 						)}
 
@@ -455,14 +452,11 @@ export const InputOptions = (attributes) => {
 								</div>
 							)}
 						</div>
-					</Control>
+					</BaseControl>
 				)}
 
 				{(inputType === 'number' || inputType === 'range') && showInputStep && (
-					<Control
-						label={__('Increment step', 'eightshift-forms')}
-						additionalLabelClasses='es-mb-0!'
-					>
+					<BaseControl label={__('Increment step', 'eightshift-forms')}>
 						<div className='es-display-flex es-items-end es-gap-2'>
 							<NumberPicker
 								value={inputStep}
@@ -484,7 +478,7 @@ export const InputOptions = (attributes) => {
 								/>
 							)}
 						</div>
-					</Control>
+					</BaseControl>
 				)}
 
 				{showInputValidationPattern && !inputIsUrl && !inputIsEmail && (
@@ -497,13 +491,13 @@ export const InputOptions = (attributes) => {
 						disabled={isOptionDisabled(getAttrKey('inputValidationPattern', attributes, manifest), inputDisabledOptions)}
 						placeholder='–'
 						additionalSelectClasses='es-w-32'
-						inlineLabel
+						inline
 						clearable
 					/>
 				)}
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				showIf={showInputAdvancedOptions}
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
@@ -519,7 +513,7 @@ export const InputOptions = (attributes) => {
 						className='es-no-field-spacing'
 					/>
 				)}
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -533,6 +527,6 @@ export const InputOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('inputFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

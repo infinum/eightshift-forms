@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { useSelect, select } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, Section, Toggle, AnimatedContentVisibility, STORE_NAME, Select } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, Select, BaseControl, Toggle, AnimatedVisibility, ContainerPanel } from '@eightshift/ui-components';
 
 export const CheckboxesOptions = (attributes) => {
 	const globalManifest = select(STORE_NAME).getSettings();
@@ -43,8 +42,8 @@ export const CheckboxesOptions = (attributes) => {
 	}, [countInnerBlocksCheck]);
 
 	return (
-		<PanelBody title={__('Checkboxes', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('Checkboxes', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -57,7 +56,7 @@ export const CheckboxesOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<Select
 				icon={icons.optionListAlt}
@@ -67,7 +66,7 @@ export const CheckboxesOptions = (attributes) => {
 				disabled={isOptionDisabled(getAttrKey('checkboxesShowAs', attributes, manifest), checkboxesDisabledOptions)}
 				onChange={(value) => setAttributes({ [getAttrKey('checkboxesShowAs', attributes, manifest)]: value })}
 				simpleValue
-				inlineLabel
+				inline
 				noSearch
 				clearable
 				placeholder={__('Choose an alternative', 'eightshift-forms')}
@@ -80,7 +79,7 @@ export const CheckboxesOptions = (attributes) => {
 			/>
 
 			{checkboxesShowAs === 'select' && (
-				<Section
+				<BaseControl
 					icon={icons.fieldPlaceholder}
 					label={__('Placeholder', 'eightshift-forms')}
 				>
@@ -102,7 +101,7 @@ export const CheckboxesOptions = (attributes) => {
 							setAttributes({ [getAttrKey('checkboxesUseLabelAsPlaceholder', attributes, manifest)]: value });
 						}}
 					/>
-				</Section>
+				</BaseControl>
 			)}
 
 			<FieldOptionsLayout
@@ -111,7 +110,7 @@ export const CheckboxesOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
@@ -129,7 +128,7 @@ export const CheckboxesOptions = (attributes) => {
 					reducedBottomSpacing={checkboxesIsRequired}
 				/>
 
-				<AnimatedContentVisibility showIf={checkboxesIsRequired}>
+				<AnimatedVisibility visible={checkboxesIsRequired}>
 					<div className='es-h-spaced'>
 						<span>{__('At least', 'eightshift-forms')}</span>
 						<InputField
@@ -143,10 +142,10 @@ export const CheckboxesOptions = (attributes) => {
 						/>
 						<span>{_n(__('item needs to be checked', 'eightshift-forms'), __('items need to be checked', 'eightshift-forms'), checkboxesIsRequiredCount, 'eightshift-forms')}</span>
 					</div>
-				</AnimatedContentVisibility>
-			</Section>
+				</AnimatedVisibility>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -155,7 +154,7 @@ export const CheckboxesOptions = (attributes) => {
 						fieldDisabledOptions: checkboxesDisabledOptions,
 					})}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -169,6 +168,6 @@ export const CheckboxesOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('checkboxesFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

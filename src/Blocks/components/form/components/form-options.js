@@ -1,9 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { checkAttr, getAttrKey, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, BaseControl, Toggle } from '@eightshift/ui-components';
 
 export const FormOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('form');
@@ -17,7 +17,7 @@ export const FormOptions = (attributes) => {
 
 	return (
 		<>
-			<Section
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -28,9 +28,9 @@ export const FormOptions = (attributes) => {
 					value={formName}
 					onChange={(value) => setAttributes({ [getAttrKey('formName', attributes, manifest)]: value })}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 				collapsable
@@ -60,7 +60,7 @@ export const FormOptions = (attributes) => {
 					value={formId}
 					onChange={(value) => setAttributes({ [getAttrKey('formId', attributes, manifest)]: value })}
 				/>
-			</Section>
+			</BaseControl>
 		</>
 	);
 };

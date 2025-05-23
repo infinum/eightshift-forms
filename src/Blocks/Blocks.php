@@ -152,7 +152,7 @@ class Blocks extends AbstractBlocks
 			isset($customMediaBreakpoints['desktop']) &&
 			isset($customMediaBreakpoints['large'])
 		) {
-			$output['globalVariables']['breakpoints'] = $customMediaBreakpoints;
+			$output['globalVariables']['breakpointsLegacy'] = $customMediaBreakpoints;
 		}
 
 		return $output;

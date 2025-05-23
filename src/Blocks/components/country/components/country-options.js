@@ -2,13 +2,12 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { PanelBody, Button } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, props, Section, Toggle, STORE_NAME, Select, Control, NumberPicker } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, BaseControl, Select, Toggle, NumberPicker, Button, ContainerPanel } from '@eightshift/ui-components';
 
 export const CountryOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('country');
@@ -34,8 +33,8 @@ export const CountryOptions = (attributes) => {
 	const countryValue = checkAttr('countryValue', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Country', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('Country', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -48,7 +47,7 @@ export const CountryOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptions
 				{...props('field', attributes, {
@@ -56,7 +55,7 @@ export const CountryOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.fieldPlaceholder}
 				label={__('Placeholder', 'eightshift-forms')}
 			>
@@ -78,7 +77,7 @@ export const CountryOptions = (attributes) => {
 						setAttributes({ [getAttrKey('countryUseLabelAsPlaceholder', attributes, manifest)]: value });
 					}}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -86,7 +85,7 @@ export const CountryOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
@@ -99,10 +98,9 @@ export const CountryOptions = (attributes) => {
 				/>
 
 				{countryIsMultiple && (
-					<Control
+					<BaseControl
 						icon={icons.range}
 						label={__('Number of items', 'eightshift-forms')}
-						additionalLabelClasses='es-mb-0!'
 					>
 						<div className='es-h-spaced es-gap-5!'>
 							<div className='es-display-flex es-items-end es-gap-2'>
@@ -151,21 +149,17 @@ export const CountryOptions = (attributes) => {
 								)}
 							</div>
 						</div>
-					</Control>
+					</BaseControl>
 				)}
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
 				<InputField
-					label={
-						<IconLabel
-							icon={icons.titleGeneric}
-							label={__('Initial value', 'eightshift-forms')}
-						/>
-					}
+					icon={icons.titleGeneric}
+					label={__('Initial value', 'eightshift-forms')}
 					value={countryValue}
 					onChange={(value) => setAttributes({ [getAttrKey('countryValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryValue', attributes, manifest), countryDisabledOptions)}
@@ -218,26 +212,22 @@ export const CountryOptions = (attributes) => {
 					}}
 					disabled={isOptionDisabled(getAttrKey('countryIsMultiple', attributes, manifest), countryDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
 				<InputField
-					label={
-						<IconLabel
-							icon={icons.googleTagManager}
-							label={__('GTM tracking code', 'eightshift-forms')}
-						/>
-					}
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={countryTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('countryTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('countryTracking', attributes, manifest), countryDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -251,6 +241,6 @@ export const CountryOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('countryFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

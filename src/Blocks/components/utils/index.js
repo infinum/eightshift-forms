@@ -4,16 +4,14 @@ import React, { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { Tooltip, Button } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { IconLabel, STORE_NAME, Notification, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
+import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
 import globalManifest from '../../manifest.json';
 import { camelCase, clsx, unescapeHTML } from '@eightshift/ui-components/utilities';
-import { AnimatedVisibility } from '@eightshift/ui-components';
-import { InputField } from '@eightshift/ui-components';
+import { AnimatedVisibility, RichLabel, Notice, InputField, Button, Tooltip } from '@eightshift/ui-components';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -393,10 +391,9 @@ export const NameField = ({ value, attribute, help = '', disabledOptions = [], l
 
 		return (
 			<div className='es-h-between es-w-full'>
-				<IconLabel
+				<RichLabel
 					icon={icons.idCard}
 					label={label ? label : __('Name', 'eightshift-forms')}
-					additionalClasses={clsx(!value && 'es-nested-color-red-500!')}
 					standalone
 				/>
 
@@ -513,8 +510,8 @@ export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
 	}
 
 	return (
-		<Notification
-			text={text}
+		<Notice
+			label={text}
 			type={'warning'}
 		/>
 	);

@@ -4,13 +4,12 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
-import { PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, props, Section, Select, Toggle, NumberPicker, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, BaseControl, Select, Toggle, NumberPicker, Button, ContainerPanel } from '@eightshift/ui-components';
 
 export const TextareaOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('textarea');
@@ -46,8 +45,8 @@ export const TextareaOptions = (attributes) => {
 	}
 
 	return (
-		<PanelBody title={__('Multiline text', 'eightshift-forms')}>
-			<Section
+		<ContainerPanel title={__('Multiline text', 'eightshift-forms')}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -60,7 +59,7 @@ export const TextareaOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptions
 				{...props('field', attributes, {
@@ -68,7 +67,7 @@ export const TextareaOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.fieldPlaceholder}
 				label={__('Placeholder', 'eightshift-forms')}
 			>
@@ -90,7 +89,7 @@ export const TextareaOptions = (attributes) => {
 						setAttributes({ [getAttrKey('textareaUseLabelAsPlaceholder', attributes, manifest)]: value });
 					}}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -98,7 +97,7 @@ export const TextareaOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
@@ -119,15 +118,14 @@ export const TextareaOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('textareaValidationPattern', attributes, manifest), textareaDisabledOptions)}
 					placeholder='–'
 					additionalSelectClasses='es-w-32'
-					inlineLabel
+					inline
 					clearable
 				/>
 
 				{(showTextareaMinLength || showTextareaMaxLength) && (
-					<Control
+					<BaseControl
 						icon={icons.textLength}
 						label={__('Entry length', 'eightshift-forms')}
-						additionalLabelClasses='es-mb-0!'
 					>
 						<div className='es-h-spaced es-gap-5!'>
 							{showTextareaMinLength && (
@@ -181,11 +179,11 @@ export const TextareaOptions = (attributes) => {
 								</div>
 							)}
 						</div>
-					</Control>
+					</BaseControl>
 				)}
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -218,9 +216,9 @@ export const TextareaOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('textareaIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('textareaIsDisabled', attributes, manifest), textareaDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
@@ -233,7 +231,7 @@ export const TextareaOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('textareaTracking', attributes, manifest), textareaDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -247,6 +245,6 @@ export const TextareaOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('textareaFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

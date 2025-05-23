@@ -4,13 +4,12 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, props, Toggle, Section, Select, STORE_NAME, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, Select, Toggle, BaseControl, ContainerPanel } from '@eightshift/ui-components';
 
 export const PhoneOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('phone');
@@ -40,8 +39,8 @@ export const PhoneOptions = (attributes) => {
 	}
 
 	return (
-		<PanelBody title={title}>
-			<Section
+		<ContainerPanel title={title}>
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -54,7 +53,7 @@ export const PhoneOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptions
 				{...props('field', attributes, {
@@ -62,7 +61,7 @@ export const PhoneOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.fieldPlaceholder}
 				label={__('Placeholder', 'eightshift-forms')}
 			>
@@ -84,7 +83,7 @@ export const PhoneOptions = (attributes) => {
 						setAttributes({ [getAttrKey('phoneUseLabelAsPlaceholder', attributes, manifest)]: value });
 					}}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -92,7 +91,7 @@ export const PhoneOptions = (attributes) => {
 				})}
 			/>
 
-			<Section
+			<BaseControl
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
@@ -162,9 +161,9 @@ export const PhoneOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('phoneUseSearch', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneUseSearch', attributes, manifest), phoneDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.checks}
 				label={__('Validation', 'eightshift-forms')}
 			>
@@ -185,12 +184,12 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneValidationPattern', attributes, manifest), phoneDisabledOptions)}
 					placeholder='–'
 					additionalSelectClasses='es-w-32'
-					inlineLabel
+					inline
 					clearable
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.alignHorizontalVertical}
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
@@ -203,7 +202,7 @@ export const PhoneOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('phoneTracking', attributes, manifest), phoneDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
@@ -217,6 +216,6 @@ export const PhoneOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('phoneFieldHidden', attributes, manifest),
 				})}
 			/>
-		</PanelBody>
+		</ContainerPanel>
 	);
 };

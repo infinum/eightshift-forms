@@ -2,11 +2,10 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, Section, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { NameField } from './../../utils';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField } from '@eightshift/ui-components';
+import { InputField, BaseControl, ContainerPanel } from '@eightshift/ui-components';
 
 export const StepOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
@@ -22,8 +21,8 @@ export const StepOptions = (attributes) => {
 
 	return (
 		<>
-			<PanelBody title={__('Step', 'eightshift-forms')}>
-				<Section
+			<ContainerPanel title={__('Step', 'eightshift-forms')}>
+				<BaseControl
 					icon={icons.options}
 					label={__('General', 'eightshift-forms')}
 				>
@@ -36,9 +35,9 @@ export const StepOptions = (attributes) => {
 						isChanged={isNameChanged}
 						setIsChanged={setIsNameChanged}
 					/>
-				</Section>
+				</BaseControl>
 
-				<Section
+				<BaseControl
 					icon={icons.tag}
 					label={__('Label', 'eightshift-forms')}
 				>
@@ -47,9 +46,9 @@ export const StepOptions = (attributes) => {
 						value={stepLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepLabel', attributes, manifest)]: value })}
 					/>
-				</Section>
+				</BaseControl>
 
-				<Section
+				<BaseControl
 					icon={icons.buttonFilled}
 					label={__('Buttons', 'eightshift-forms')}
 				>
@@ -66,8 +65,8 @@ export const StepOptions = (attributes) => {
 						value={stepNextLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepNextLabel', attributes, manifest)]: value })}
 					/>
-				</Section>
-			</PanelBody>
+				</BaseControl>
+			</ContainerPanel>
 		</>
 	);
 };

@@ -4,31 +4,26 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
-import { TextareaControl } from '@wordpress/components';
-import {
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	Toggle,
-	STORE_NAME,
-	Section,
-	ResponsiveNumberPicker,
-	getDefaultBreakpointNames,
-	MultiSelect,
-	props,
-} from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, STORE_NAME, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../../components/conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { isObject, upperFirst } from '@eightshift/ui-components/utilities';
-import { AnimatedVisibility, InputField } from '@eightshift/ui-components';
+import { isObject } from '@eightshift/ui-components/utilities';
+import { AnimatedVisibility, InputField, RichLabel, MultiSelect, BaseControl, Toggle, ResponsiveLegacy, Slider } from '@eightshift/ui-components';
+import globalManifest from './../../../manifest.json';
+
+const getResponsiveLegacyData = (responsiveAttr, attributes, manifest, setAttributes) => ({
+	attribute: Object.fromEntries(Object.entries(responsiveAttr).map(([breakpoint, attrName]) => [breakpoint, getAttrKey(attrName, attributes, manifest)])),
+	value: attributes,
+	onChange: (attributeName, value) => setAttributes({ [attributeName]: value }),
+});
 
 export const FieldOptionsExternalBlocks = ({ attributes, setAttributes }) => {
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
 	return (
 		<>
-			<Section
+			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
@@ -41,7 +36,7 @@ export const FieldOptionsExternalBlocks = ({ attributes, setAttributes }) => {
 					setIsChanged={setIsNameChanged}
 					isOptional
 				/>
-			</Section>
+			</BaseControl>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes)}
@@ -74,7 +69,7 @@ export const FieldOptions = (attributes) => {
 	return (
 		<>
 			{showFieldLabel && (
-				<Section
+				<BaseControl
 					icon={icons.tag}
 					label={__('Label', 'eightshift-forms')}
 				>
@@ -88,7 +83,8 @@ export const FieldOptions = (attributes) => {
 					)}
 
 					{!fieldHideLabel && (
-						<TextareaControl
+						<InputField
+							type={'multiline'}
 							value={fieldLabel}
 							onChange={(value) => setAttributes({ [getAttrKey('fieldLabel', attributes, manifest)]: value })}
 							disabled={fieldHideLabel}
@@ -96,14 +92,12 @@ export const FieldOptions = (attributes) => {
 					)}
 
 					<AnimatedVisibility visible={fieldHideLabel || fieldLabel === ''}>
-						<IconLabel
+						<RichLabel
 							label={__('Empty or missing label might impact accessibility!', 'eightshift-forms')}
 							icon={icons.a11yWarning}
-							additionalClasses='es:nested-color-yellow-500! es:line-h-1 es:color-cool-gray-500 es:mb-5'
-							standalone
 						/>
 					</AnimatedVisibility>
-				</Section>
+				</BaseControl>
 			)}
 
 			{additionalControls}
@@ -130,34 +124,29 @@ export const FieldOptionsLayout = (attributes) => {
 	}
 
 	return (
-		<Section
+		<BaseControl
 			icon={icons.containerSpacing}
 			label={__('Layout', 'eightshift-forms')}
 		>
-			<ResponsiveNumberPicker
-				value={getDefaultBreakpointNames().reduce((all, current) => {
-					return {
-						...all,
-						[current]: checkAttr(fieldWidth[current], attributes, manifest, true),
-					};
-				}, {})}
-				onChange={(value) => {
-					const newData = Object.entries(value).reduce((all, [breakpoint, currentValue]) => {
-						return {
-							...all,
-							[getAttrKey(`fieldWidth${upperFirst(breakpoint)}`, attributes, manifest)]: currentValue,
-						};
-					}, {});
-
-					setAttributes(newData);
-				}}
-				min={options.fieldWidth.min}
-				max={options.fieldWidth.max}
-				step={options.fieldWidth.step}
+			<ResponsiveLegacy
+				{...getResponsiveLegacyData(manifest.responsiveAttributes.fieldWidth, attributes, manifest, setAttributes)}
+				breakpointData={globalManifest.globalVariables.breakpointsLegacy}
 				icon={icons.width}
 				label={__('Width', 'eightshift-forms')}
-				additionalProps={{ fixedWidth: 4 }}
-			/>
+			>
+				{({ currentValue, handleChange }) => (
+					<div className='infinum-editor-res-slider-fix'>
+						<Slider
+							value={currentValue ?? 0}
+							onChange={handleChange}
+							min={manifest.options.fieldWidth.min}
+							max={manifest.options.fieldWidth.max}
+							step={manifest.options.fieldWidth.step}
+							after={currentValue}
+						/>
+					</div>
+				)}
+			</ResponsiveLegacy>
 
 			{fieldStyleOptions?.length > 0 && (
 				<MultiSelect
@@ -168,10 +157,10 @@ export const FieldOptionsLayout = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('fieldStyle', attributes, manifest)]: value })}
 					simpleValue
 					additionalSelectClasses='es:w-50'
-					inlineLabel
+					inline
 				/>
 			)}
-		</Section>
+		</BaseControl>
 	);
 };
 
@@ -186,7 +175,7 @@ export const FieldOptionsMore = (attributes) => {
 	const fieldSuffixContent = checkAttr('fieldSuffixContent', attributes, manifest);
 
 	return (
-		<Section
+		<BaseControl
 			icon={icons.moreH}
 			label={__('More options', 'eightshift-forms')}
 			collapsable
@@ -222,7 +211,7 @@ export const FieldOptionsMore = (attributes) => {
 					className='es:no-field-spacing'
 				/>
 			</>
-		</Section>
+		</BaseControl>
 	);
 };
 
