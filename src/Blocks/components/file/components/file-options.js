@@ -2,12 +2,13 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, props, Section, Toggle, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { PanelBody } from '@wordpress/components';
+import { checkAttr, getAttrKey, props, Section, Toggle, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField } from '@eightshift/ui-components';
 
 export const FileOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('file');
@@ -69,13 +70,9 @@ export const FileOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('fileIsRequired', attributes, manifest), fileDisabledOptions)}
 				/>
 
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.fileType}
-							label={__('Accepted file types', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.fileType}
+					label={__('Accepted file types', 'eightshift-forms')}
 					value={fileAccept}
 					help={__('Separate items with a comma.', 'eightshift-forms')}
 					placeholder={__('e.g. .jpg,.png,.pdf', 'eightshift-forms')}
@@ -89,7 +86,7 @@ export const FileOptions = (attributes) => {
 					additionalLabelClasses='es-mb-0!'
 				>
 					<div className='es-fifty-fifty-h'>
-						<TextControl
+						<InputField
 							label={__('Min (KB)', 'eightshift-forms')}
 							help={__('1MB = 1000 KB', 'eightshift-forms')}
 							value={fileMinSize}
@@ -99,7 +96,7 @@ export const FileOptions = (attributes) => {
 							className='es-no-field-spacing'
 						/>
 
-						<TextControl
+						<InputField
 							label={__('Max (KB)', 'eightshift-forms')}
 							value={fileMaxSize}
 							type='number'
@@ -143,14 +140,10 @@ export const FileOptions = (attributes) => {
 				label={__('Custom uploader', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
+				<InputField
 					value={fileCustomInfoText}
-					label={
-						<IconLabel
-							icon={icons.infoCircle}
-							label={__('Prompt text', 'eightshift-forms')}
-						/>
-					}
+					icon={icons.infoCircle}
+					label={__('Prompt text', 'eightshift-forms')}
 					placeholder={__('Drag and drop files here', 'eightshift-forms')}
 					onChange={(value) =>
 						setAttributes({
@@ -164,13 +157,9 @@ export const FileOptions = (attributes) => {
 					}
 				/>
 
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.buttonOutline}
-							label={__('Upload button text', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.buttonOutline}
+					label={__('Upload button text', 'eightshift-forms')}
 					value={fileCustomInfoButtonText}
 					placeholder={__('Add files', 'eightshift-forms')}
 					onChange={(value) => setAttributes({ [getAttrKey('fileCustomInfoButtonText', attributes, manifest)]: value })}
@@ -184,13 +173,9 @@ export const FileOptions = (attributes) => {
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.googleTagManager}
-							label={__('GTM tracking code', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={fileTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('fileTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('fileTracking', attributes, manifest), fileDisabledOptions)}

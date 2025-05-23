@@ -4,12 +4,13 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, props, Section, Select, Toggle, NumberPicker, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, Section, Select, Toggle, NumberPicker, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { InputField } from '@eightshift/ui-components';
 
 export const TextareaOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('textarea');
@@ -72,7 +73,7 @@ export const TextareaOptions = (attributes) => {
 				label={__('Placeholder', 'eightshift-forms')}
 			>
 				{!textareaUseLabelAsPlaceholder && (
-					<TextControl
+					<InputField
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={textareaPlaceholder}
 						onChange={(value) => setAttributes({ [getAttrKey('textareaPlaceholder', attributes, manifest)]: value })}
@@ -188,13 +189,9 @@ export const TextareaOptions = (attributes) => {
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.fieldValue}
-							label={__('Initial value', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.fieldValue}
+					label={__('Initial value', 'eightshift-forms')}
 					value={textareaValue}
 					onChange={(value) => setAttributes({ [getAttrKey('textareaValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('textareaValue', attributes, manifest), textareaDisabledOptions)}
@@ -228,13 +225,9 @@ export const TextareaOptions = (attributes) => {
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.googleTagManager}
-							label={__('GTM tracking code', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={textareaTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('textareaTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('textareaTracking', attributes, manifest), textareaDisabledOptions)}

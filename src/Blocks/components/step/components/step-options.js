@@ -2,10 +2,11 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, Section, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { PanelBody } from '@wordpress/components';
+import { checkAttr, getAttrKey, Section, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { NameField } from './../../utils';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField } from '@eightshift/ui-components';
 
 export const StepOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
@@ -41,7 +42,7 @@ export const StepOptions = (attributes) => {
 					icon={icons.tag}
 					label={__('Label', 'eightshift-forms')}
 				>
-					<TextControl
+					<InputField
 						help={__('This label will not be shown on the frontend, this is only for easier configuration.', 'eightshift-forms')}
 						value={stepLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepLabel', attributes, manifest)]: value })}
@@ -52,25 +53,15 @@ export const StepOptions = (attributes) => {
 					icon={icons.buttonFilled}
 					label={__('Buttons', 'eightshift-forms')}
 				>
-					<TextControl
-						label={
-							<IconLabel
-								icon={icons.tag}
-								label={__('Previous button label', 'eightshift-forms')}
-							/>
-						}
+					<InputField
+						label={__('Previous button label', 'eightshift-forms')}
 						placeholder={__('Previous', 'eightshift-forms')}
 						value={stepPrevLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepPrevLabel', attributes, manifest)]: value })}
 					/>
 
-					<TextControl
-						label={
-							<IconLabel
-								icon={icons.tag}
-								label={__('Next button label', 'eightshift-forms')}
-							/>
-						}
+					<InputField
+						label={__('Next button label', 'eightshift-forms')}
 						placeholder={__('Next', 'eightshift-forms')}
 						value={stepNextLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('stepNextLabel', attributes, manifest)]: value })}

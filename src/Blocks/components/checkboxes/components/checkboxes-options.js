@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import { useState } from '@wordpress/element';
 import { useSelect, select } from '@wordpress/data';
 import { __, _n } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, props, Section, Toggle, AnimatedContentVisibility, STORE_NAME, Select } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField } from '@eightshift/ui-components';
 
 export const CheckboxesOptions = (attributes) => {
 	const globalManifest = select(STORE_NAME).getSettings();
@@ -84,7 +85,7 @@ export const CheckboxesOptions = (attributes) => {
 					label={__('Placeholder', 'eightshift-forms')}
 				>
 					{!checkboxesUseLabelAsPlaceholder && (
-						<TextControl
+						<InputField
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={checkboxesPlaceholder}
 							onChange={(value) => setAttributes({ [getAttrKey('checkboxesPlaceholder', attributes, manifest)]: value })}
@@ -131,7 +132,7 @@ export const CheckboxesOptions = (attributes) => {
 				<AnimatedContentVisibility showIf={checkboxesIsRequired}>
 					<div className='es-h-spaced'>
 						<span>{__('At least', 'eightshift-forms')}</span>
-						<TextControl
+						<InputField
 							value={checkboxesIsRequiredCount}
 							onChange={(value) => setAttributes({ [getAttrKey('checkboxesIsRequiredCount', attributes, manifest)]: value })}
 							min={options.checkboxesIsRequiredCount.min}

@@ -2,12 +2,13 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, props, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { InputField } from '@eightshift/ui-components';
 
 export const RatingOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('rating');
@@ -41,13 +42,9 @@ export const RatingOptions = (attributes) => {
 					setIsChanged={setIsNameChanged}
 				/>
 
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.star}
-							label={__('Amount of stars', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.star}
+					label={__('Amount of stars', 'eightshift-forms')}
 					value={ratingAmount}
 					onChange={(value) => setAttributes({ [getAttrKey('ratingAmount', attributes, manifest)]: value })}
 					min={1}
@@ -74,13 +71,9 @@ export const RatingOptions = (attributes) => {
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.titleGeneric}
-							label={__('Initial value', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.titleGeneric}
+					label={__('Initial value', 'eightshift-forms')}
 					value={ratingValue}
 					onChange={(value) => setAttributes({ [getAttrKey('ratingValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('ratingValue', attributes, manifest), ratingDisabledOptions)}
@@ -127,13 +120,9 @@ export const RatingOptions = (attributes) => {
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.googleTagManager}
-							label={__('GTM tracking code', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={ratingTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('ratingTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('ratingTracking', attributes, manifest), ratingDisabledOptions)}

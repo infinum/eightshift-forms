@@ -1,9 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { TextControl } from '@wordpress/components';
 import { checkAttr, Toggle, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField } from '@eightshift/ui-components';
 
 export const ProgressBarOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('progress-bar');
@@ -37,7 +37,7 @@ export const ProgressBarOptions = (attributes) => {
 			/>
 
 			{progressBarMultiflowUse && (
-				<TextControl
+				<InputField
 					type={'number'}
 					label={__('Progress bar initial steps number', 'eightshift-forms')}
 					value={progressBarMultiflowInitCount}

@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { Tooltip, Button, TextControl } from '@wordpress/components';
+import { Tooltip, Button } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
 import { IconLabel, STORE_NAME, Notification, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
@@ -13,6 +13,7 @@ import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
 import globalManifest from '../../manifest.json';
 import { camelCase, clsx, unescapeHTML } from '@eightshift/ui-components/utilities';
 import { AnimatedVisibility } from '@eightshift/ui-components';
+import { InputField } from '@eightshift/ui-components';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -436,7 +437,7 @@ export const NameField = ({ value, attribute, help = '', disabledOptions = [], l
 		<>
 			{show && (
 				<>
-					<TextControl
+					<InputField
 						label={<NameFieldLabel />}
 						help={helpText}
 						value={value}

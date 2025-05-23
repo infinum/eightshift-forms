@@ -3,8 +3,8 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { getAttrKey, checkAttr, Toggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { PanelBody, Button, Modal } from '@wordpress/components';
+import { getAttrKey, checkAttr, Toggle, props, Select, Control, Section, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';
@@ -12,6 +12,7 @@ import { ProgressBarOptions } from '../../progress-bar/components/progress-bar-o
 import { MultiflowFormsReactFlow } from '../../react-flow';
 import globalManifest from '../../../manifest.json';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField, RichLabel } from '@eightshift/ui-components';
 
 export const StepMultiflowOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
@@ -93,7 +94,7 @@ export const StepMultiflowOptions = (attributes) => {
 							{stepProgressBarUse && (
 								<div className='es-h-spaced es-mt-3'>
 									<span>{__('and show', 'eightshift-forms')}</span>
-									<TextControl
+									<InputField
 										type={'number'}
 										value={stepMultiflowRules?.[index]?.[3]}
 										onChange={(value) => {
@@ -221,7 +222,7 @@ export const StepMultiflowOptions = (attributes) => {
 
 					<span>{'='}</span>
 					{!showRuleValuePicker ? (
-						<TextControl
+						<InputField
 							value={inputCheck}
 							onBlur={() => setAttributes({ [getAttrKey('stepMultiflowRules', attributes, manifest)]: [...stepMultiflowRules] })}
 							onChange={(value) => {
@@ -333,13 +334,8 @@ export const StepMultiflowOptions = (attributes) => {
 						<Modal
 							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 							className='es-modal-max-width-5xl es-rounded-3!'
-							title={
-								<IconLabel
-									icon={icons.anchor}
-									label={__('Multi-flow preview', 'eightshift-forms')}
-									standalone
-								/>
-							}
+							icon={icons.anchor}
+							title={__('Multi-flow preview', 'eightshift-forms')}
 							onRequestClose={() => {
 								setIsModalPreviewOpen(false);
 							}}
@@ -355,13 +351,8 @@ export const StepMultiflowOptions = (attributes) => {
 						<Modal
 							overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 							className='es-modal-max-width-5xl es-rounded-3!'
-							title={
-								<IconLabel
-									icon={icons.anchor}
-									label={__('Multi-flow setup', 'eightshift-forms')}
-									standalone
-								/>
-							}
+							icon={icons.anchor}
+							title={__('Multi-flow setup', 'eightshift-forms')}
 							onRequestClose={() => {
 								setIsModalOpen(false);
 							}}
@@ -371,11 +362,9 @@ export const StepMultiflowOptions = (attributes) => {
 							</div>
 
 							<div className='es-mt-8 -es-mx-8 es-px-8 es-pt-8 es-border-t-cool-gray-100 es-h-between es-gap-8!'>
-								<IconLabel
+								<RichLabel
 									icon={icons.lightBulb}
 									label={__("If you can't find a field, make sure the form is saved, and all fields have a name set.", 'eightshift-forms')}
-									additionalClasses='es-nested-color-yellow-500!'
-									standalone
 								/>
 
 								<Button

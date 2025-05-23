@@ -2,12 +2,13 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, props, Section, Toggle, IconLabel, STORE_NAME, Select } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, Section, Toggle, STORE_NAME, Select } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { InputField } from '@eightshift/ui-components';
 
 export const RadiosOptions = (attributes) => {
 	const globalManifest = select(STORE_NAME).getSettings();
@@ -68,7 +69,7 @@ export const RadiosOptions = (attributes) => {
 					label={__('Placeholder', 'eightshift-forms')}
 				>
 					{!radiosUseLabelAsPlaceholder && (
-						<TextControl
+						<InputField
 							help={__('Shown when the field is empty', 'eightshift-forms')}
 							value={radiosPlaceholder}
 							onChange={(value) => setAttributes({ [getAttrKey('radiosPlaceholder', attributes, manifest)]: value })}
@@ -123,13 +124,9 @@ export const RadiosOptions = (attributes) => {
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.googleTagManager}
-							label={__('GTM tracking code', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={radiosTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('radiosTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('radiosTracking', attributes, manifest), radiosDisabledOptions)}

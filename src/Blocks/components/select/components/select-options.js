@@ -2,12 +2,13 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, props, Section, Toggle, STORE_NAME, NumberPicker, Control, Select } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, props, Section, Toggle, STORE_NAME, NumberPicker, Control, Select } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { InputField } from '@eightshift/ui-components';
 
 export const SelectOptions = (attributes) => {
 	const globalManifest = select(STORE_NAME).getSettings();
@@ -74,7 +75,7 @@ export const SelectOptions = (attributes) => {
 				label={__('Placeholder', 'eightshift-forms')}
 			>
 				{!selectUseLabelAsPlaceholder && (
-					<TextControl
+					<InputField
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={selectPlaceholder}
 						onChange={(value) => setAttributes({ [getAttrKey('selectPlaceholder', attributes, manifest)]: value })}
@@ -212,13 +213,9 @@ export const SelectOptions = (attributes) => {
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.googleTagManager}
-							label={__('GTM tracking code', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={selectTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('selectTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('selectTracking', attributes, manifest), selectDisabledOptions)}

@@ -4,7 +4,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
-import { TextareaControl, TextControl } from '@wordpress/components';
+import { TextareaControl } from '@wordpress/components';
 import {
 	checkAttr,
 	getAttrKey,
@@ -21,7 +21,7 @@ import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../../components/conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
 import { isObject, upperFirst } from '@eightshift/ui-components/utilities';
-import { AnimatedVisibility } from '@eightshift/ui-components';
+import { AnimatedVisibility, InputField } from '@eightshift/ui-components';
 
 export const FieldOptionsExternalBlocks = ({ attributes, setAttributes }) => {
 	const [isNameChanged, setIsNameChanged] = useState(false);
@@ -192,47 +192,31 @@ export const FieldOptionsMore = (attributes) => {
 			collapsable
 		>
 			<>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.help}
-							label={__('Help text', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.help}
+					label={__('Help text', 'eightshift-forms')}
 					value={fieldHelp}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldHelp', attributes, manifest)]: value })}
 				/>
 
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.fieldBeforeText}
-							label={__('Below the field label', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.fieldBeforeText}
+					label={__('Below the field label', 'eightshift-forms')}
 					value={fieldBeforeContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldBeforeContent', attributes, manifest)]: value })}
 				/>
 
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.fieldAfterText}
-							label={__('Above the help text', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.fieldAfterText}
+					label={__('Above the help text', 'eightshift-forms')}
 					value={fieldAfterContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldAfterContent', attributes, manifest)]: value })}
 					className='es:no-field-spacing'
 				/>
 
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.fieldAfterText}
-							label={__('After field text', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.fieldAfterText}
+					label={__('After field text', 'eightshift-forms')}
 					value={fieldSuffixContent}
 					onChange={(value) => setAttributes({ [getAttrKey('fieldSuffixContent', attributes, manifest)]: value })}
 					className='es:no-field-spacing'

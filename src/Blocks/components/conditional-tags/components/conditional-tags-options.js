@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { TextControl, Button, Modal } from '@wordpress/components';
+import { Button, Modal } from '@wordpress/components';
 import { getAttrKey, checkAttr, Toggle, IconLabel, Select, Control, Section, STORE_NAME, Notification } from '@eightshift/frontend-libs-tailwind/scripts';
+import { InputField } from '@eightshift/ui-components';
 import { getConstantsOptions } from '../../utils';
 import { icons } from '@eightshift/ui-components/icons';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS, CONDITIONAL_TAGS_ACTIONS_INVERSE_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from './conditional-tags-labels';
@@ -152,7 +153,7 @@ export const ConditionalTagsOptions = (attributes) => {
 
 				<span>{'='}</span>
 				{!showRuleValuePicker ? (
-					<TextControl
+					<InputField
 						value={inputCheck}
 						onBlur={() => setAttributes({ [conditionalTagsRulesKey]: [...conditionalTagsRules] })}
 						onChange={(value) => {
@@ -262,13 +263,8 @@ export const ConditionalTagsOptions = (attributes) => {
 								<Modal
 									overlayClassName='es-conditional-tags-modal es-geolocation-modal'
 									className='es-modal-max-width-5xl es:rounded-3!'
-									title={
-										<IconLabel
-											icon={icons.conditionalVisibility}
-											label={__('Conditional visibility', 'eightshift-forms')}
-											standalone
-										/>
-									}
+									icon={icons.conditionalVisibility}
+									label={__('Conditional visibility', 'eightshift-forms')}
 									onRequestClose={() => setIsModalOpen(false)}
 								>
 									<div className='es:v-spaced'>

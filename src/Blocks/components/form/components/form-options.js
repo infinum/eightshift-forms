@@ -1,9 +1,9 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { TextControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { checkAttr, getAttrKey, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField } from '@eightshift/ui-components';
 
 export const FormOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('form');
@@ -21,13 +21,9 @@ export const FormOptions = (attributes) => {
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.tag}
-							label={__('Form name', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.tag}
+					label={__('Form name', 'eightshift-forms')}
 					help={__('Used as a name attribute for form element Useful if you want to add additional code style for the form.', 'eightshift-forms')}
 					value={formName}
 					onChange={(value) => setAttributes({ [getAttrKey('formName', attributes, manifest)]: value })}
@@ -39,13 +35,9 @@ export const FormOptions = (attributes) => {
 				label={__('Advanced', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.gears}
-							label={__('Custom action', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.gears}
+					label={__('Custom action', 'eightshift-forms')}
 					value={formAction}
 					help={__('Custom form action that will process form data.', 'eightshift-forms')}
 					onChange={(value) => setAttributes({ [getAttrKey('formAction', attributes, manifest)]: value })}
@@ -62,13 +54,9 @@ export const FormOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('formActionExternal', attributes, manifest)]: value })}
 				/>
 
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.id}
-							label={__('Unique identifier', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.id}
+					label={__('Unique identifier', 'eightshift-forms')}
 					value={formId}
 					onChange={(value) => setAttributes({ [getAttrKey('formId', attributes, manifest)]: value })}
 				/>

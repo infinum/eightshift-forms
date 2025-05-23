@@ -5,14 +5,14 @@ import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
+import { PanelBody, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { icons } from '@eightshift/ui-components/icons';
-import { IconLabel, getAttrKey, checkAttr, props, MultiSelect, Control, Section, STORE_NAME, Repeater, RepeaterItem, Toggle } from '@eightshift/frontend-libs-tailwind/scripts';
+import { getAttrKey, checkAttr, props, MultiSelect, Control, Section, STORE_NAME, Repeater, RepeaterItem } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { FormEditButton, LocationsButton, SettingsButton, outputFormSelectItemWithIcon } from '../../../components/utils';
 import { getRestUrl } from '../../../components/form/assets/state-init';
-import { AsyncSelect } from '@eightshift/ui-components';
+import { AsyncSelect, InputField, Toggle } from '@eightshift/ui-components';
 
 export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOptions }) => {
 	const manifest = select(STORE_NAME).getBlock('forms');
@@ -101,13 +101,9 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 					icon={icons.tools}
 					label={__('Advanced', 'eightshift-forms')}
 				>
-					<TextControl
-						label={
-							<IconLabel
-								icon={icons.codeVariable}
-								label={__('Additional type specifier', 'eightshift-forms')}
-							/>
-						}
+					<InputField
+						icon={icons.codeVariable}
+						label={__('Additional type specifier', 'eightshift-forms')}
 						help={__('Additional data type selectors', 'eightshift-forms')}
 						value={formsFormDataTypeSelector}
 						onChange={(value) => setAttributes({ [getAttrKey('formsFormDataTypeSelector', attributes, manifest)]: value })}
@@ -145,7 +141,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 							title={item?.title}
 						>
 							<div className='es-fifty-fifty-h'>
-								<TextControl
+								<InputField
 									value={item.title}
 									label={__('Key', 'eightshift-forms')}
 									onChange={(value) => {
@@ -155,7 +151,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 										setAttributes({ [getAttrKey('formsVariation', attributes, manifest)]: newArray });
 									}}
 								/>
-								<TextControl
+								<InputField
 									value={item.slug}
 									label={__('Value', 'eightshift-forms')}
 									onChange={(value) => {
@@ -185,16 +181,10 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 								size='large'
 								overlayClassName='es-result-output-modal'
 								className='es-modal-max-width-xxl es-rounded-3!'
-								title={
-									<IconLabel
-										icon={icons.locationSettings}
-										label={__('Results output', 'eightshift-forms')}
-										standalone
-									/>
-								}
+								title={__('Results output', 'eightshift-forms')}
 								onRequestClose={() => setIsResultOutputModalOpen(false)}
 							>
-								<TextControl
+								<InputField
 									value={formsVariationData?.title}
 									placeholder={__('Title', 'eightshift-forms')}
 									onChange={(value) => {
@@ -205,7 +195,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 									}}
 								/>
 
-								<TextControl
+								<InputField
 									value={formsVariationData?.subtitle}
 									placeholder={__('Subtitle', 'eightshift-forms')}
 									onChange={(value) => {
@@ -232,7 +222,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 											title={item?.title}
 										>
 											<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-fifty-fifty-h'>
-												<TextControl
+												<InputField
 													value={item.label}
 													placeholder={__('Label', 'eightshift-forms')}
 													onChange={(value) => {
@@ -242,7 +232,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
 													}}
 												/>
-												<TextControl
+												<InputField
 													value={item.title}
 													placeholder={__('Title', 'eightshift-forms')}
 													onChange={(value) => {
@@ -273,7 +263,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 											/>
 
 											{!formsVariationDataFiles[index].asFile && (
-												<TextControl
+												<InputField
 													placeholder={__('Link URL', 'eightshift-forms')}
 													value={item.url}
 													onChange={(value) => {
@@ -324,7 +314,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 											)}
 
 											<div className='es-border-t-cool-gray-300 es-mt-2 es-pt-2 es-fifty-fifty-h'>
-												<TextControl
+												<InputField
 													placeholder={__('Field Name', 'eightshift-forms')}
 													value={item.fieldName}
 													onChange={(value) => {
@@ -334,7 +324,7 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 														setAttributes({ [getAttrKey('formsVariationDataFiles', attributes, manifest)]: newArray });
 													}}
 												/>
-												<TextControl
+												<InputField
 													value={item.fieldValue}
 													placeholder={__('Field Value', 'eightshift-forms')}
 													onChange={(value) => {
@@ -401,13 +391,8 @@ export const FormsOptions = ({ attributes, setAttributes, preview, formSelectOpt
 						<Modal
 							overlayClassName='es-geolocation-modal'
 							className='es-modal-max-width-xxl es-rounded-3!'
-							title={
-								<IconLabel
-									icon={icons.locationSettings}
-									label={__('Advanced rules', 'eightshift-forms')}
-									standalone
-								/>
-							}
+							icon={icons.locationSettings}
+							title={__('Advanced rules', 'eightshift-forms')}
 							onRequestClose={() => setIsGeoModalOpen(false)}
 						>
 							<p>{__("Geolocation rules allow you to display alternate forms based on the user's location.", 'eightshift-forms')}</p>

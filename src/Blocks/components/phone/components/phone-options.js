@@ -4,12 +4,13 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, props, Toggle, Section, Select, STORE_NAME, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
+import { PanelBody } from '@wordpress/components';
+import { checkAttr, getAttrKey, props, Toggle, Section, Select, STORE_NAME, getOption } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField } from '@eightshift/ui-components';
 
 export const PhoneOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('phone');
@@ -66,7 +67,7 @@ export const PhoneOptions = (attributes) => {
 				label={__('Placeholder', 'eightshift-forms')}
 			>
 				{!phoneUseLabelAsPlaceholder && (
-					<TextControl
+					<InputField
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={phonePlaceholder}
 						onChange={(value) => setAttributes({ [getAttrKey('phonePlaceholder', attributes, manifest)]: value })}
@@ -95,25 +96,17 @@ export const PhoneOptions = (attributes) => {
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.fieldValue}
-							label={__('Initial value', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.fieldValue}
+					label={__('Initial value', 'eightshift-forms')}
 					value={phoneValue}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneValue', attributes, manifest), phoneDisabledOptions)}
 				/>
 
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.titleGeneric}
-							label={__('Select initial value', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.titleGeneric}
+					label={__('Select initial value', 'eightshift-forms')}
 					value={phoneSelectValue}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneSelectValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneSelectValue', attributes, manifest), phoneDisabledOptions)}
@@ -202,13 +195,9 @@ export const PhoneOptions = (attributes) => {
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.googleTagManager}
-							label={__('GTM tracking code', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={phoneTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('phoneTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('phoneTracking', attributes, manifest), phoneDisabledOptions)}

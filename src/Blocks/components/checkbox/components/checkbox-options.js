@@ -2,13 +2,13 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody, Button, TextareaControl } from '@wordpress/components';
+import { PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { checkAttr, getAttrKey, IconLabel, Toggle, Section, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { AnimatedVisibility } from '@eightshift/ui-components';
+import { AnimatedVisibility, InputField } from '@eightshift/ui-components';
 
 export const CheckboxOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('checkbox');
@@ -146,13 +146,9 @@ export const CheckboxOptions = (attributes) => {
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
-					label={
-						<IconLabel
-							icon={icons.googleTagManager}
-							label={__('GTM tracking code', 'eightshift-forms')}
-						/>
-					}
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={checkboxTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}

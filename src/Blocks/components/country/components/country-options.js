@@ -2,12 +2,13 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { PanelBody, Button } from '@wordpress/components';
 import { checkAttr, getAttrKey, IconLabel, props, Section, Toggle, STORE_NAME, Select, Control, NumberPicker } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField } from '@eightshift/ui-components';
 
 export const CountryOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('country');
@@ -60,7 +61,7 @@ export const CountryOptions = (attributes) => {
 				label={__('Placeholder', 'eightshift-forms')}
 			>
 				{!countryUseLabelAsPlaceholder && (
-					<TextControl
+					<InputField
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={countryPlaceholder}
 						onChange={(value) => setAttributes({ [getAttrKey('countryPlaceholder', attributes, manifest)]: value })}
@@ -158,7 +159,7 @@ export const CountryOptions = (attributes) => {
 				icon={icons.tools}
 				label={__('Advanced', 'eightshift-forms')}
 			>
-				<TextControl
+				<InputField
 					label={
 						<IconLabel
 							icon={icons.titleGeneric}
@@ -224,7 +225,7 @@ export const CountryOptions = (attributes) => {
 				label={__('Tracking', 'eightshift-forms')}
 				collapsable
 			>
-				<TextControl
+				<InputField
 					label={
 						<IconLabel
 							icon={icons.googleTagManager}

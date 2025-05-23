@@ -2,12 +2,13 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, props, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
+import { PanelBody } from '@wordpress/components';
+import { checkAttr, getAttrKey, props, Section, Toggle, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
+import { InputField } from '@eightshift/ui-components';
 
 export const DynamicOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('dynamic');
@@ -105,13 +106,9 @@ export const DynamicOptions = (attributes) => {
 						label={__('Tracking', 'eightshift-forms')}
 						collapsable
 					>
-						<TextControl
-							label={
-								<IconLabel
-									icon={icons.googleTagManager}
-									label={__('GTM tracking code', 'eightshift-forms')}
-								/>
-							}
+						<InputField
+							icon={icons.googleTagManager}
+							label={__('GTM tracking code', 'eightshift-forms')}
 							value={dynamicTracking}
 							onChange={(value) => setAttributes({ [getAttrKey('dynamicTracking', attributes, manifest)]: value })}
 							disabled={isOptionDisabled(getAttrKey('dynamicTracking', attributes, manifest), dynamicDisabledOptions)}

@@ -4,25 +4,13 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody, Button } from '@wordpress/components';
+import { PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import {
-	getOption,
-	checkAttr,
-	getAttrKey,
-	IconLabel,
-	props,
-	Select,
-	Section,
-	NumberPicker,
-	Toggle,
-	UseToggle,
-	Control,
-	STORE_NAME,
-} from '@eightshift/frontend-libs-tailwind/scripts';
+import { getOption, checkAttr, getAttrKey, props, Select, Section, NumberPicker, Toggle, UseToggle, Control, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { InputField } from '@eightshift/ui-components';
 
 export const InputOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('input');
@@ -168,7 +156,7 @@ export const InputOptions = (attributes) => {
 				label={__('Placeholder', 'eightshift-forms')}
 			>
 				{!inputUseLabelAsPlaceholder && (
-					<TextControl
+					<InputField
 						help={__('Shown when the field is empty', 'eightshift-forms')}
 						value={inputPlaceholder}
 						onChange={(value) => setAttributes({ [getAttrKey('inputPlaceholder', attributes, manifest)]: value })}
@@ -199,13 +187,9 @@ export const InputOptions = (attributes) => {
 				label={__('Advanced', 'eightshift-forms')}
 			>
 				{showInputValue && (
-					<TextControl
-						label={
-							<IconLabel
-								icon={icons.titleGeneric}
-								label={__('Initial value', 'eightshift-forms')}
-							/>
-						}
+					<InputField
+						icon={icons.titleGeneric}
+						label={__('Initial value', 'eightshift-forms')}
 						value={inputValue}
 						onChange={(value) => setAttributes({ [getAttrKey('inputValue', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('inputValue', attributes, manifest), inputDisabledOptions)}
@@ -339,15 +323,15 @@ export const InputOptions = (attributes) => {
 									disabled={isOptionDisabled(getAttrKey('inputRangeShowMin', attributes, manifest), inputDisabledOptions)}
 								>
 									<div className='es-h-center es-mb-5'>
-										<TextControl
-											label={<IconLabel label={__('Min prefix', 'eightshift-forms')} />}
+										<InputField
+											label={__('Min prefix', 'eightshift-forms')}
 											value={inputRangeShowMinPrefix}
 											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMinPrefix', attributes, manifest)]: value })}
 											disabled={isOptionDisabled(getAttrKey('inputRangeShowMinPrefix', attributes, manifest), inputDisabledOptions)}
 											className='es-no-field-spacing'
 										/>
-										<TextControl
-											label={<IconLabel label={__('Min suffix', 'eightshift-forms')} />}
+										<InputField
+											label={__('Min suffix', 'eightshift-forms')}
 											value={inputRangeShowMinSuffix}
 											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMinSuffix', attributes, manifest)]: value })}
 											disabled={isOptionDisabled(getAttrKey('inputRangeShowMinSuffix', attributes, manifest), inputDisabledOptions)}
@@ -369,15 +353,15 @@ export const InputOptions = (attributes) => {
 									disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrent', attributes, manifest), inputDisabledOptions)}
 								>
 									<div className='es-h-center es-mb-5'>
-										<TextControl
-											label={<IconLabel label={__('Current prefix', 'eightshift-forms')} />}
+										<InputField
+											label={__('Current prefix', 'eightshift-forms')}
 											value={inputRangeShowCurrentPrefix}
 											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest)]: value })}
 											disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrentPrefix', attributes, manifest), inputDisabledOptions)}
 											className='es-no-field-spacing'
 										/>
-										<TextControl
-											label={<IconLabel label={__('Current suffix', 'eightshift-forms')} />}
+										<InputField
+											label={__('Current suffix', 'eightshift-forms')}
 											value={inputRangeShowCurrentSuffix}
 											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest)]: value })}
 											disabled={isOptionDisabled(getAttrKey('inputRangeShowCurrentSuffix', attributes, manifest), inputDisabledOptions)}
@@ -399,15 +383,15 @@ export const InputOptions = (attributes) => {
 									disabled={isOptionDisabled(getAttrKey('inputRangeShowMax', attributes, manifest), inputDisabledOptions)}
 								>
 									<div className='es-h-center es-mb-5'>
-										<TextControl
-											label={<IconLabel label={__('Max prefix', 'eightshift-forms')} />}
+										<InputField
+											label={__('Max prefix', 'eightshift-forms')}
 											value={inputRangeShowMaxPrefix}
 											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMaxPrefix', attributes, manifest)]: value })}
 											disabled={isOptionDisabled(getAttrKey('inputRangeShowMaxPrefix', attributes, manifest), inputDisabledOptions)}
 											className='es-no-field-spacing'
 										/>
-										<TextControl
-											label={<IconLabel label={__('Max suffix', 'eightshift-forms')} />}
+										<InputField
+											label={__('Max suffix', 'eightshift-forms')}
 											value={inputRangeShowMaxSuffix}
 											onChange={(value) => setAttributes({ [getAttrKey('inputRangeShowMaxSuffix', attributes, manifest)]: value })}
 											disabled={isOptionDisabled(getAttrKey('inputRangeShowMaxSuffix', attributes, manifest), inputDisabledOptions)}
@@ -526,13 +510,9 @@ export const InputOptions = (attributes) => {
 				collapsable
 			>
 				{showInputTracking && (
-					<TextControl
-						label={
-							<IconLabel
-								icon={icons.googleTagManager}
-								label={__('GTM tracking code', 'eightshift-forms')}
-							/>
-						}
+					<InputField
+						icon={icons.googleTagManager}
+						label={__('GTM tracking code', 'eightshift-forms')}
 						value={inputTracking}
 						onChange={(value) => setAttributes({ [getAttrKey('inputTracking', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('inputTracking', attributes, manifest), inputDisabledOptions)}
