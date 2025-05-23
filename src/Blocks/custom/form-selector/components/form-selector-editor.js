@@ -3,11 +3,10 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { STORE_NAME, icons } from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME } from '@eightshift/frontend-libs/scripts';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
-import { getUtilsIcons } from '../../../components/form/assets/state-init';
 import globalSettings from './../../../manifest.json';
-import { camelCase } from '@eightshift/ui-components/utilities';
+import { icons } from '@eightshift/ui-components/icons';
 
 export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 	const manifest = select(STORE_NAME).getBlock('form-selector');
@@ -26,20 +25,13 @@ export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 					{forms.length > 0 && (
 						<div className='es:h-spaced-wrap es:gap-2!'>
 							{forms.map((form, index) => {
-								const { label, slug, icon } = form;
-
-								let iconComponent = icon;
-
-								if (!icon) {
-									iconComponent = getUtilsIcons(camelCase(slug));
-								}
+								const { label, slug } = form;
 
 								return (
 									<Button
 										key={index}
 										className='es:v-spaced es:content-center! es:m-0! es:nested-w-8 es:nested-h-8 es:h-auto es:w-32 es:h-24 es:rounded-1.5 es:border es:border-cool-gray-100 es:hover-border-cool-gray-400 es:transition es:nested-m-0!'
 										onClick={() => createBlockFromTemplate(clientId, slug, forms)}
-										icon={<div dangerouslySetInnerHTML={{ __html: iconComponent }} />}
 									>
 										{label}
 									</Button>

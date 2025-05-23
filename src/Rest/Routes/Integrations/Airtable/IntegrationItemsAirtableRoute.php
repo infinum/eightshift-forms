@@ -75,7 +75,7 @@ class IntegrationItemsAirtableRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$permission = $this->checkUserPermission();
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}

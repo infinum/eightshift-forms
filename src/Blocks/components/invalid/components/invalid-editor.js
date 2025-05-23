@@ -2,7 +2,7 @@ import React from 'react';
 import { icons } from '@eightshift/ui-components/icons';
 import { getUtilsIcons } from '../../utils';
 
-export const InvalidEditor = ({ icon, heading, text }) => {
+export const InvalidEditor = ({ heading, icon = null, text = null }) => {
 	return (
 		<div className='es-v-center es-gap-1! es-w-96 es-mx-auto es-px-5 es-py-10 es-rounded-3 es-border-red-500 es-text-align-center'>
 			<div className='es-nested-w-8 es-nested-h-8 es-nested-color-red-500 es-mb-2'>

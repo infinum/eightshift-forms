@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -56,7 +56,9 @@ class CptRoutes implements ServiceInterface
 		}
 
 		if ($find && !\current_user_can(Config::CAP_SETTINGS)) {
-			return ApiHelpers::getApiPermissionsErrorPublicOutput();
+			return Helpers::getApiErrorPublicOutput(
+				\__('You don\'t have enough permissions to perform this action!', 'eightshift-libs'),
+			);
 		}
 
 		return $results;

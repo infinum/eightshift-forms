@@ -11,10 +11,7 @@
  */
 
 import { unregisterBlockType } from '@wordpress/blocks';
-import {
-	registerBlocks,
-	outputCssVariablesGlobal,
-} from '@eightshift/frontend-libs/scripts/editor';
+import { registerBlocks, outputCssVariablesGlobal } from '@eightshift/frontend-libs/scripts/editor';
 import globalManifest from '../../manifest.json';
 import './store';
 
@@ -45,4 +42,3 @@ if (esFormsLocalization?.currentPostType?.isResults) {
 if (esFormsLocalization?.currentPostType?.isCommon) {
 	globalManifest?.unregisterBlocks?.common?.forEach((block) => unregisterBlockType(block));
 }
-

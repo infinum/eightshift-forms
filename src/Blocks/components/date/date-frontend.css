@@ -1,0 +1,43 @@
+.flatpickr-calendar {
+	@apply text-neutral-80 mb-0 bg-white text-sm;
+}
+
+.flatpickr-day {
+	@apply m-2;
+}
+
+.flatpickr-day:hover {
+	@apply border-primary-60 bg-white rounded-full;
+}
+
+.flatpickr-day.selected:hover {
+	@apply border-primary-60 bg-primary-60;
+}
+
+.flatpickr-day.today {
+	@apply border-none;
+}
+
+.flatpickr-day.today::after {
+	@apply content-[''] absolute bottom-4 left-1/2 -translate-x-1/2 size-4 rounded-full bg-primary-60;
+}
+
+.flatpickr-day.today:hover,
+.flatpickr-day.today:focus-visible {
+	@apply bg-primary-60;
+}
+
+.flatpickr-day.today:hover::after,
+.flatpickr-day.today:focus-visible::after {
+	@apply bg-white;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected.nextMonthDay {
+	@apply text-white border-primary-90 bg-primary-90 rounded-full;
+}
+
+.flatpickr-day:focus-visible,
+.flatpickr-day.selected:focus-visible {
+	@apply text-white border-primary-60 bg-primary-60 ring ring-primary-60 ring-offset-2 rounded-full;
+}

@@ -143,7 +143,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 	{
 		// If route is used for admin only, check if user has permission. (generally used for settings).
 		if ($this->isRouteAdminProtected()) {
-			$permission = $this->checkUserPermission();
+			$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 			if ($permission) {
 				return \rest_ensure_response($permission);
 			}

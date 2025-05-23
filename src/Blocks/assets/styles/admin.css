@@ -1,5 +1,3 @@
-// stylelint-disable scss/load-partial-extension
-
 /**
  * This is the main entry point for Admin styles used for the `WordPress admin`.
  * File names must follow naming convention to be able to run dynamically.
@@ -10,8 +8,7 @@
  *
  */
 
-@use 'sass:meta';
-@include meta.load-css('@eightshift/ui-components/dist/assets/style-admin.css');
+@import '@eightshift/ui-components/dist/assets/style-admin.css';
 
 .es-form-is-hidden {
 	display: none;

@@ -8,9 +8,9 @@
 import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
 
 // Styles.
-import './styles/admin.scss';
+import './styles/admin.css';
 
-dynamicImport(require.context('./../components', true, /-admin\.scss$/));
+dynamicImport(require.context('./../components', true, /-admin\.css$/));
 
 // Scripts.
 import './scripts/admin';

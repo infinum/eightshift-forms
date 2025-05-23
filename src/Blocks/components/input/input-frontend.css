@@ -1,0 +1,42 @@
+/* Webkit */
+.es-input__range::-webkit-slider-runnable-track {
+	@apply h-full cursor-pointer rounded-sm p-0 border-none outline-none;
+	background-image: linear-gradient(to right, var(--color-primary-70) 0% var(--es-form-range-progress, 0%), var(--color-primary-10) var(--es-form-range-progress, 0%) 10%);
+}
+
+.es-input__range::-webkit-slider-thumb {
+	@apply bg-primary-70 h-24 w-24 -translate-y-1/4 appearance-none rounded-full border-none;
+}
+
+.es-input__range:hover::-webkit-slider-thumb {
+	@apply bg-primary-50;
+}
+
+.es-input__range:active::-webkit-slider-thumb {
+	@apply bg-primary-80;
+}
+
+.es-input__range:focus-visible::-webkit-slider-thumb {
+	@apply outline-none;
+}
+
+/* Moz */
+.es-input__range::-moz-range-progress {
+	@apply bg-primary-70 h-full rounded-sm;
+}
+
+.es-input__range::-moz-range-thumb {
+	@apply bg-primary-70 h-24 w-24 appearance-none rounded-full border-none;
+}
+
+.es-input__range:hover::-moz-range-thumb {
+	@apply bg-primary-50;
+}
+
+.es-input__range:active::-moz-range-thumb {
+	@apply bg-primary-80;
+}
+
+.es-input__range:focus-visible::-moz-range-thumb {
+	@apply outline-2 outline-primary-30 outline-offset-2 ring-2 ring-primary-5;
+}

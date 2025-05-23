@@ -1,0 +1,85 @@
+.es-select.choices {
+	@apply text-neutral-80 mb-0 text-sm;
+}
+
+.es-select .choices__inner {
+	@apply border-neutral-50 hover:border-neutral-80 min-h-48 rounded-sm border bg-white px-12 py-14;
+}
+
+.choices.is-disabled .choices__inner {
+	@apply bg-neutral-5 border-neutral-50;
+}
+
+.es-select.choices[data-type*='select-one'] .choices__inner {
+	@apply pb-12;
+}
+
+.es-select .choices__list--dropdown {
+	@apply border-neutral-20 mt-8 rounded-sm border bg-white p-8;
+}
+
+.es-select .choices__list--single {
+	@apply p-0;
+}
+
+.es-select .choices__list--single .choices__item {
+	@apply pr-24;
+}
+
+.es-select .choices__list--single .choices__item[data-deletable] {
+	@apply pr-48;
+}
+
+.es-select.choices[data-type*='select-one']::after {
+	@apply top-0 right-12 m-0 h-full w-20 border-none bg-center bg-no-repeat;
+	background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wLjY5NTMxMiAxLjVMNi4wMDA4NyA2LjgwNTU2TDExLjMwNjQgMS41IiBzdHJva2U9IiMxMzBEMDUiIHN0cm9rZS13aWR0aD0iMS4yNSIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==');
+}
+
+.es-select.choices[data-type*='select-one'].is-open::after {
+	@apply m-0 rotate-180 transform transition-transform;
+}
+
+.es-select.choices[data-type*='select-one'] .choices__button {
+	@apply top-0 right-36 m-0 h-full w-28 rounded-none border-none bg-auto bg-center bg-no-repeat opacity-100;
+	background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4Ljc1IDUuNzVMNS4yNSAxOS4yNU01LjI1IDUuNzVMMTguNzUgMTkuMjUiIHN0cm9rZT0iIzIxMTY0NiIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==');
+}
+
+.es-select.choices .choices__button:focus {
+	@apply border-neutral-30 border border-solid shadow-none outline-none;
+}
+
+.es-form-is-active .es-select .choices__inner {
+	@apply border-primary-50;
+}
+
+.es-select.choices[data-type*='select-one'] .choices__input {
+	@apply text-neutral-80 bg-white text-sm;
+}
+
+.es-select .choices__list--dropdown .choices__item--selectable.is-highlighted {
+	@apply bg-primary-5;
+}
+
+.es-select .choices__list--dropdown .choices__item {
+	@apply rounded-sm px-16 py-12 text-sm;
+}
+
+.es-form-has-error .es-select .choices__inner {
+	@apply border-error-50;
+}
+
+.es-select .choices__inner .choices__input {
+	@apply text-neutral-80 m-0 h-full border-none bg-transparent py-6 align-top text-sm;
+}
+
+.es-select .choices__list--multiple .choices__item {
+	@apply border-primary-60 bg-primary-60 mb-8 inline-flex items-center text-sm text-white rounded-sm;
+}
+
+.es-select.choices[data-type*='select-multiple'] .choices__inner {
+	@apply pt-8 pb-0;
+}
+
+.es-select.choices[data-type*='select-multiple'] .choices__button {
+	@apply mr-0 ml-8 size-16 border-none pl-0 opacity-100;
+}

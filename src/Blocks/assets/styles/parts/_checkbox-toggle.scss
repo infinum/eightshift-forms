@@ -75,6 +75,10 @@
 		display: block;
 
 		margin-inline-end: calc(var(--es-checkbox-toggle-scoped-width) + 1rem);
+
+		p {
+			margin: 0;
+		}
 	}
 
 	&__input:checked {

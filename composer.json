@@ -27,19 +27,17 @@
 		"source": "https://github.com/infinum/eightshift-forms"
 	},
 	"require-dev": {
-		"brain/faker": "dev-master",
-		"brain/monkey": "^2.6.2",
 		"dealerdirect/phpcodesniffer-composer-installer": "^v1.0.0",
 		"infinum/eightshift-coding-standards": "3.0.0",
 		"php-parallel-lint/php-parallel-lint": "v1.4.0",
 		"php-stubs/wordpress-stubs": "v6.8.1",
-		"szepeviktor/phpstan-wordpress": "v2.0.1",
+		"szepeviktor/phpstan-wordpress": "2.0.2",
 		"wp-cli/wp-cli": "v2.12.0"
 	},
 	"require": {
 		"php": ">=8.3",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-libs": "^10.1.0"
+		"infinum/eightshift-libs": "^10.3.1"
 	},
 	"autoload": {
 		"psr-4": {
@@ -58,8 +56,7 @@
 		"optimize-autoloader": true,
 		"process-timeout": 2000,
 		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"pestphp/pest-plugin": true
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	},
 	"scripts": {

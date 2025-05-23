@@ -11,10 +11,10 @@ import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
 import './images/blocks-editor';
 
 // Styles.
-import './styles/blocks-editor.scss';
+import './styles/blocks-editor.css';
 
-dynamicImport(require.context('./../components', true, /-editor\.scss$/));
-dynamicImport(require.context('./../custom', true, /-editor\.scss$/));
+dynamicImport(require.context('./../components', true, /-editor\.css$/));
+dynamicImport(require.context('./../custom', true, /-editor\.css$/));
 
 // Scripts.
 import './scripts/blocks-editor';

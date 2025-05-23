@@ -135,7 +135,7 @@ export const StateEnum = {
 };
 
 /**
- * Routes enum connected to enqueu object.
+ * Routes enum connected to enqueue object.
  * Used as a constant to be able to be reused on block editor because we don't have this state there.
  */
 export const ROUTES = esFormsLocalization?.restRoutes ?? {};
@@ -631,7 +631,7 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 	const tag = JSON.parse(conditionalTags)?.[0];
 
 	// Check if fields exist and remove conditional tags if not.
-	// This can happend if the user deletes a field and the conditional tag is still there on other field.
+	// This can happened if the user deletes a field and the conditional tag is still there on other field.
 	const output = tag[1]
 		.map((item) =>
 			item.filter((inner) => {
@@ -678,7 +678,7 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 	const tag = JSON.parse(conditionalTags)?.[0];
 
 	// Check if fields exist and remove conditional tags if not.
-	// This can happend if the user deletes a field and the conditional tag is still there on other field.
+	// This can happened if the user deletes a field and the conditional tag is still there on other field.
 	const output = tag[1]
 		.map((item) =>
 			item.filter((inner) => {
@@ -950,9 +950,9 @@ export function getRestUrl(value, isPartial = false) {
 	const prefix = isPartial ? ROUTES?.prefixProject : ROUTES?.prefix;
 
 	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
-	const sufix = ROUTES?.[value].replace(/^\/+/, ''); // Remove leading slash.
+	const suffix = ROUTES?.[value].replace(/^\/+/, ''); // Remove leading slash.
 
-	return `${url}/${sufix}`;
+	return `${url}/${suffix}`;
 }
 
 /**
@@ -971,10 +971,10 @@ export function getRestUrlByType(type, value, isPartial = false, checkRef = fals
 	const newVal = checkRef ? ROUTES?.[value] : value;
 
 	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
-	const sufix = newVal.replace(/^\/+/, ''); // Remove leading slash.
+	const suffix = newVal.replace(/^\/+/, ''); // Remove leading slash.
 	const typePrefix = ROUTES?.[type].replace(/^\/|\/$/g, ''); // Remove leading and trailing slash.
 
-	return `${url}/${typePrefix}/${sufix}`;
+	return `${url}/${typePrefix}/${suffix}`;
 }
 
 ////////////////////////////////////////////////////////////////

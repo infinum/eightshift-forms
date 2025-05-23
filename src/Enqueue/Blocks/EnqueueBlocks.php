@@ -71,7 +71,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		// Frontend only style.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyle'], 50);
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript'], 11);
@@ -102,23 +102,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	// -----------------------------------------------------
 
 	/**
-	 * Enqueue blocks style for editor only.
+	 * Get style dependencies
 	 *
-	 * @return void
+	 * @return string[] List of all the style dependencies.
 	 */
-	public function enqueueBlockEditorStyle(): void
+	public function getBlockEditorStyleDependencies(): array
 	{
-		$handle = $this->getBlockEditorStyleHandle();
-
-		\wp_register_style(
-			$handle,
-			$this->setAssetsItem(static::BLOCKS_EDITOR_STYLE_URI),
-			[],
-			$this->getAssetsVersion(),
-			$this->getMedia()
-		);
-
-		\wp_enqueue_style($handle);
+		return [];
 	}
 
 	/**
@@ -175,11 +165,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
-	 * List of admin script dependencies
+	 * List block editor script dependencies.
 	 *
 	 * @return string[] List of all the admin dependencies.
 	 */
-	protected function getAdminScriptDependencies(): array
+	protected function getBlockEditorScriptDependencies(): array
 	{
 		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'blocksEditor']);
 		$scriptsDependencyOutput = [];
@@ -227,14 +217,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendStyleLocal(): void
+	public function enqueueBlockFrontendStyle(): void
 	{
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return;
 		}
 
-
-		$this->enqueueBlockFrontendStyle();
+		parent::enqueueBlockFrontendStyle();
 	}
 
 	/**
@@ -326,18 +315,29 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
+	 * Get front end style dependencies
+	 *
+	 * @return array<int, string> List of all the style dependencies.
+	 */
+	protected function getBlockFrontendStyleDependencies(): array
+	{
+		return [];
+	}
+
+	/**
 	 * Get frontend script dependencies.
 	 *
 	 * @return array<int, string> List of all the script dependencies.
 	 */
 	protected function getBlockFrontendScriptDependencies(): array
 	{
+
 		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return [];
+			return parent::getBlockFrontendScriptDependencies();
 		}
 
 		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'blocksFrontend']);
-		$scriptsDependencyOutput = [];
+		$scriptsDependencyOutput = parent::getBlockFrontendScriptDependencies();
 
 		if (\has_filter($scriptsDependency)) {
 			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);

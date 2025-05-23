@@ -217,16 +217,4 @@ final class ApiHelpers
 
 		return $output;
 	}
-
-	/**
-	 * Return API error response array for missing permissions.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function getApiPermissionsErrorPublicOutput(): array
-	{
-		return self::getApiErrorPublicOutput(
-			\__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'),
-		);
-	}
 }

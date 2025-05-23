@@ -4,7 +4,7 @@
 		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
 		"This file is @generated automatically"
 	],
-	"content-hash": "41e0d839213d4b7e325490ee5dc4d05c",
+	"content-hash": "36c7e9caed6f86f04976c99f7390aa13",
 	"packages": [
 		{
 			"name": "erusev/parsedown",
@@ -34,7 +34,9 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Emanuil Rusev",
@@ -44,7 +46,10 @@
 			],
 			"description": "Parser for Markdown.",
 			"homepage": "http://parsedown.org",
-			"keywords": ["markdown", "parser"],
+			"keywords": [
+				"markdown",
+				"parser"
+			],
 			"support": {
 				"issues": "https://github.com/erusev/parsedown/issues",
 				"source": "https://github.com/erusev/parsedown/tree/1.7.x"
@@ -53,16 +58,16 @@
 		},
 		{
 			"name": "infinum/eightshift-libs",
-			"version": "10.1.0",
+			"version": "10.3.1",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/infinum/eightshift-libs.git",
-				"reference": "4aaab329d99df291d51fa42e5b8250c3e7c781e5"
+				"reference": "811fabf4f1766831c6e17d0d981617a1595c07d1"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/4aaab329d99df291d51fa42e5b8250c3e7c781e5",
-				"reference": "4aaab329d99df291d51fa42e5b8250c3e7c781e5",
+				"url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/811fabf4f1766831c6e17d0d981617a1595c07d1",
+				"reference": "811fabf4f1766831c6e17d0d981617a1595c07d1",
 				"shasum": ""
 			},
 			"require": {
@@ -88,7 +93,9 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Eightshift team",
@@ -99,12 +106,19 @@
 			],
 			"description": "WordPress libs developed by Eightshift team to use in modern WordPress.",
 			"homepage": "https://eightshift.com/",
-			"keywords": ["blocks", "composer", "gutenberg", "installer", "plugin", "wordpress"],
+			"keywords": [
+				"blocks",
+				"composer",
+				"gutenberg",
+				"installer",
+				"plugin",
+				"wordpress"
+			],
 			"support": {
 				"issues": "https://github.com/infinum/eightshift-libs/issues",
 				"source": "https://github.com/infinum/eightshift-libs"
 			},
-			"time": "2025-05-08T10:35:02+00:00"
+			"time": "2025-05-16T16:21:41+00:00"
 		},
 		{
 			"name": "laravel/serializable-closure",
@@ -142,7 +156,9 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Taylor Otwell",
@@ -154,7 +170,11 @@
 				}
 			],
 			"description": "Laravel Serializable Closure provides an easy and secure way to serialize closures in PHP.",
-			"keywords": ["closure", "laravel", "serializable"],
+			"keywords": [
+				"closure",
+				"laravel",
+				"serializable"
+			],
 			"support": {
 				"issues": "https://github.com/laravel/serializable-closure/issues",
 				"source": "https://github.com/laravel/serializable-closure"
@@ -191,10 +211,19 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"description": "Generic and extensible callable invoker",
 			"homepage": "https://github.com/PHP-DI/Invoker",
-			"keywords": ["callable", "dependency", "dependency-injection", "injection", "invoke", "invoker"],
+			"keywords": [
+				"callable",
+				"dependency",
+				"dependency-injection",
+				"injection",
+				"invoke",
+				"invoker"
+			],
 			"support": {
 				"issues": "https://github.com/PHP-DI/Invoker/issues",
 				"source": "https://github.com/PHP-DI/Invoker/tree/2.3.6"
@@ -242,16 +271,28 @@
 			},
 			"type": "library",
 			"autoload": {
-				"files": ["src/functions.php"],
+				"files": [
+					"src/functions.php"
+				],
 				"psr-4": {
 					"DI\\": "src/"
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"description": "The dependency injection container for humans",
 			"homepage": "https://php-di.org/",
-			"keywords": ["PSR-11", "container", "container-interop", "dependency injection", "di", "ioc", "psr11"],
+			"keywords": [
+				"PSR-11",
+				"container",
+				"container-interop",
+				"dependency injection",
+				"di",
+				"ioc",
+				"psr11"
+			],
 			"support": {
 				"issues": "https://github.com/PHP-DI/PHP-DI/issues",
 				"source": "https://github.com/PHP-DI/PHP-DI/tree/7.0.10"
@@ -297,7 +338,9 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "PHP-FIG",
@@ -306,7 +349,13 @@
 			],
 			"description": "Common Container Interface (PHP FIG PSR-11)",
 			"homepage": "https://github.com/php-fig/container",
-			"keywords": ["PSR-11", "container", "container-interface", "container-interop", "psr"],
+			"keywords": [
+				"PSR-11",
+				"container",
+				"container-interface",
+				"container-interop",
+				"psr"
+			],
 			"support": {
 				"issues": "https://github.com/php-fig/container/issues",
 				"source": "https://github.com/php-fig/container/tree/2.0.2"
@@ -315,164 +364,6 @@
 		}
 	],
 	"packages-dev": [
-		{
-			"name": "antecedent/patchwork",
-			"version": "2.2.1",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/antecedent/patchwork.git",
-				"reference": "1bf183a3e1bd094f231a2128b9ecc5363c269245"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/antecedent/patchwork/zipball/1bf183a3e1bd094f231a2128b9ecc5363c269245",
-				"reference": "1bf183a3e1bd094f231a2128b9ecc5363c269245",
-				"shasum": ""
-			},
-			"require": {
-				"php": ">=7.1.0"
-			},
-			"require-dev": {
-				"phpunit/phpunit": ">=4"
-			},
-			"type": "library",
-			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
-			"authors": [
-				{
-					"name": "Ignas Rudaitis",
-					"email": "ignas.rudaitis@gmail.com"
-				}
-			],
-			"description": "Method redefinition (monkey-patching) functionality for PHP.",
-			"homepage": "https://antecedent.github.io/patchwork/",
-			"keywords": ["aop", "aspect", "interception", "monkeypatching", "redefinition", "runkit", "testing"],
-			"support": {
-				"issues": "https://github.com/antecedent/patchwork/issues",
-				"source": "https://github.com/antecedent/patchwork/tree/2.2.1"
-			},
-			"time": "2024-12-11T10:19:54+00:00"
-		},
-		{
-			"name": "brain/faker",
-			"version": "dev-master",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/Brain-WP/BrainFaker.git",
-				"reference": "7dfab73a6003ea187de7d1d0c703346638d46d09"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/Brain-WP/BrainFaker/zipball/7dfab73a6003ea187de7d1d0c703346638d46d09",
-				"reference": "7dfab73a6003ea187de7d1d0c703346638d46d09",
-				"shasum": ""
-			},
-			"require": {
-				"brain/monkey": "^2.3.1",
-				"fakerphp/faker": "^1.20",
-				"php": ">=7.2"
-			},
-			"require-dev": {
-				"inpsyde/php-coding-standards": "^1.0",
-				"phpunit/phpunit": "^9.5"
-			},
-			"default-branch": true,
-			"type": "library",
-			"autoload": {
-				"files": ["inc/functions.php"],
-				"psr-4": {
-					"Brain\\Faker\\": "src/"
-				}
-			},
-			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
-			"authors": [
-				{
-					"name": "Giuseppe Mazzapica",
-					"email": "giuseppe.mazzapica@gmail.com",
-					"homepage": "https://gmazzap.me",
-					"role": "Developer"
-				}
-			],
-			"description": "Faker (phpfaker/faker) for WordPress via Brain Monkey",
-			"keywords": [
-				"Fake data",
-				"Monkey Patching",
-				"faker",
-				"interception",
-				"mock",
-				"mock functions",
-				"mockery",
-				"patchwork",
-				"redefinition",
-				"runkit",
-				"test",
-				"test data",
-				"testing",
-				"unit tests data",
-				"wordpress"
-			],
-			"support": {
-				"issues": "https://github.com/Brain-WP/BrainFaker/issues",
-				"source": "https://github.com/Brain-WP/BrainFaker"
-			},
-			"time": "2022-11-03T09:05:19+00:00"
-		},
-		{
-			"name": "brain/monkey",
-			"version": "2.6.2",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/Brain-WP/BrainMonkey.git",
-				"reference": "d95a9d895352c30f47604ad1b825ab8fa9d1a373"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/Brain-WP/BrainMonkey/zipball/d95a9d895352c30f47604ad1b825ab8fa9d1a373",
-				"reference": "d95a9d895352c30f47604ad1b825ab8fa9d1a373",
-				"shasum": ""
-			},
-			"require": {
-				"antecedent/patchwork": "^2.1.17",
-				"mockery/mockery": "^1.3.5 || ^1.4.4",
-				"php": ">=5.6.0"
-			},
-			"require-dev": {
-				"dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
-				"phpcompatibility/php-compatibility": "^9.3.0",
-				"phpunit/phpunit": "^5.7.26 || ^6.0 || ^7.0 || >=8.0 <8.5.12 || ^8.5.14 || ^9.0"
-			},
-			"type": "library",
-			"extra": {
-				"branch-alias": {
-					"dev-master": "2.x-dev",
-					"dev-version/1": "1.x-dev"
-				}
-			},
-			"autoload": {
-				"files": ["inc/api.php"],
-				"psr-4": {
-					"Brain\\Monkey\\": "src/"
-				}
-			},
-			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
-			"authors": [
-				{
-					"name": "Giuseppe Mazzapica",
-					"email": "giuseppe.mazzapica@gmail.com",
-					"homepage": "https://gmazzap.me",
-					"role": "Developer"
-				}
-			],
-			"description": "Mocking utility for PHP functions and WordPress plugin API",
-			"keywords": ["Monkey Patching", "interception", "mock", "mock functions", "mockery", "patchwork", "redefinition", "runkit", "test", "testing"],
-			"support": {
-				"issues": "https://github.com/Brain-WP/BrainMonkey/issues",
-				"source": "https://github.com/Brain-WP/BrainMonkey"
-			},
-			"time": "2024-08-29T20:15:04+00:00"
-		},
 		{
 			"name": "dealerdirect/phpcodesniffer-composer-installer",
 			"version": "v1.0.0",
@@ -510,7 +401,9 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Franck Nijhof",
@@ -550,108 +443,6 @@
 			"time": "2023-01-05T11:28:13+00:00"
 		},
 		{
-			"name": "fakerphp/faker",
-			"version": "v1.24.1",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/FakerPHP/Faker.git",
-				"reference": "e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/FakerPHP/Faker/zipball/e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5",
-				"reference": "e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5",
-				"shasum": ""
-			},
-			"require": {
-				"php": "^7.4 || ^8.0",
-				"psr/container": "^1.0 || ^2.0",
-				"symfony/deprecation-contracts": "^2.2 || ^3.0"
-			},
-			"conflict": {
-				"fzaninotto/faker": "*"
-			},
-			"require-dev": {
-				"bamarni/composer-bin-plugin": "^1.4.1",
-				"doctrine/persistence": "^1.3 || ^2.0",
-				"ext-intl": "*",
-				"phpunit/phpunit": "^9.5.26",
-				"symfony/phpunit-bridge": "^5.4.16"
-			},
-			"suggest": {
-				"doctrine/orm": "Required to use Faker\\ORM\\Doctrine",
-				"ext-curl": "Required by Faker\\Provider\\Image to download images.",
-				"ext-dom": "Required by Faker\\Provider\\HtmlLorem for generating random HTML.",
-				"ext-iconv": "Required by Faker\\Provider\\ru_RU\\Text::realText() for generating real Russian text.",
-				"ext-mbstring": "Required for multibyte Unicode string functionality."
-			},
-			"type": "library",
-			"autoload": {
-				"psr-4": {
-					"Faker\\": "src/Faker/"
-				}
-			},
-			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
-			"authors": [
-				{
-					"name": "François Zaninotto"
-				}
-			],
-			"description": "Faker is a PHP library that generates fake data for you.",
-			"keywords": ["data", "faker", "fixtures"],
-			"support": {
-				"issues": "https://github.com/FakerPHP/Faker/issues",
-				"source": "https://github.com/FakerPHP/Faker/tree/v1.24.1"
-			},
-			"time": "2024-11-21T13:46:39+00:00"
-		},
-		{
-			"name": "hamcrest/hamcrest-php",
-			"version": "v2.1.1",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/hamcrest/hamcrest-php.git",
-				"reference": "f8b1c0173b22fa6ec77a81fe63e5b01eba7e6487"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/f8b1c0173b22fa6ec77a81fe63e5b01eba7e6487",
-				"reference": "f8b1c0173b22fa6ec77a81fe63e5b01eba7e6487",
-				"shasum": ""
-			},
-			"require": {
-				"php": "^7.4|^8.0"
-			},
-			"replace": {
-				"cordoval/hamcrest-php": "*",
-				"davedevelopment/hamcrest-php": "*",
-				"kodova/hamcrest-php": "*"
-			},
-			"require-dev": {
-				"phpunit/php-file-iterator": "^1.4 || ^2.0 || ^3.0",
-				"phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5 || ^7.0 || ^8.0 || ^9.0"
-			},
-			"type": "library",
-			"extra": {
-				"branch-alias": {
-					"dev-master": "2.1-dev"
-				}
-			},
-			"autoload": {
-				"classmap": ["hamcrest"]
-			},
-			"notification-url": "https://packagist.org/downloads/",
-			"license": ["BSD-3-Clause"],
-			"description": "This is the PHP port of Hamcrest Matchers",
-			"keywords": ["test"],
-			"support": {
-				"issues": "https://github.com/hamcrest/hamcrest-php/issues",
-				"source": "https://github.com/hamcrest/hamcrest-php/tree/v2.1.1"
-			},
-			"time": "2025-04-30T06:54:44+00:00"
-		},
-		{
 			"name": "infinum/eightshift-coding-standards",
 			"version": "3.0.0",
 			"source": {
@@ -680,7 +471,9 @@
 			},
 			"type": "phpcodesniffer-standard",
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Denis Žoljom",
@@ -694,79 +487,17 @@
 			],
 			"description": "Eightshift WordPress Coding Standards",
 			"homepage": "https://github.com/infinum/eightshift-coding-standards",
-			"keywords": ["Eightshift", "phpcs", "standards", "wordpress"],
+			"keywords": [
+				"Eightshift",
+				"phpcs",
+				"standards",
+				"wordpress"
+			],
 			"support": {
 				"issues": "https://github.com/infinum/eightshift-coding-standards/issues",
 				"source": "https://github.com/infinum/eightshift-coding-standards"
 			},
 			"time": "2024-05-20T07:30:13+00:00"
-		},
-		{
-			"name": "mockery/mockery",
-			"version": "1.6.12",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/mockery/mockery.git",
-				"reference": "1f4efdd7d3beafe9807b08156dfcb176d18f1699"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/mockery/mockery/zipball/1f4efdd7d3beafe9807b08156dfcb176d18f1699",
-				"reference": "1f4efdd7d3beafe9807b08156dfcb176d18f1699",
-				"shasum": ""
-			},
-			"require": {
-				"hamcrest/hamcrest-php": "^2.0.1",
-				"lib-pcre": ">=7.0",
-				"php": ">=7.3"
-			},
-			"conflict": {
-				"phpunit/phpunit": "<8.0"
-			},
-			"require-dev": {
-				"phpunit/phpunit": "^8.5 || ^9.6.17",
-				"symplify/easy-coding-standard": "^12.1.14"
-			},
-			"type": "library",
-			"autoload": {
-				"files": ["library/helpers.php", "library/Mockery.php"],
-				"psr-4": {
-					"Mockery\\": "library/Mockery"
-				}
-			},
-			"notification-url": "https://packagist.org/downloads/",
-			"license": ["BSD-3-Clause"],
-			"authors": [
-				{
-					"name": "Pádraic Brady",
-					"email": "padraic.brady@gmail.com",
-					"homepage": "https://github.com/padraic",
-					"role": "Author"
-				},
-				{
-					"name": "Dave Marshall",
-					"email": "dave.marshall@atstsolutions.co.uk",
-					"homepage": "https://davedevelopment.co.uk",
-					"role": "Developer"
-				},
-				{
-					"name": "Nathanael Esayeas",
-					"email": "nathanael.esayeas@protonmail.com",
-					"homepage": "https://github.com/ghostwriter",
-					"role": "Lead Developer"
-				}
-			],
-			"description": "Mockery is a simple yet flexible PHP mock object framework",
-			"homepage": "https://github.com/mockery/mockery",
-			"keywords": ["BDD", "TDD", "library", "mock", "mock objects", "mockery", "stub", "test", "test double", "testing"],
-			"support": {
-				"docs": "https://docs.mockery.io/",
-				"issues": "https://github.com/mockery/mockery/issues",
-				"rss": "https://github.com/mockery/mockery/releases.atom",
-				"security": "https://github.com/mockery/mockery/security/advisories",
-				"source": "https://github.com/mockery/mockery"
-			},
-			"time": "2024-05-16T03:13:13+00:00"
 		},
 		{
 			"name": "php-parallel-lint/php-parallel-lint",
@@ -798,13 +529,19 @@
 			"suggest": {
 				"php-parallel-lint/php-console-highlighter": "Highlight syntax in code snippet"
 			},
-			"bin": ["parallel-lint"],
+			"bin": [
+				"parallel-lint"
+			],
 			"type": "library",
 			"autoload": {
-				"classmap": ["./src/"]
+				"classmap": [
+					"./src/"
+				]
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["BSD-2-Clause"],
+			"license": [
+				"BSD-2-Clause"
+			],
 			"authors": [
 				{
 					"name": "Jakub Onderka",
@@ -813,7 +550,10 @@
 			],
 			"description": "This tool checks the syntax of PHP files about 20x faster than serial check.",
 			"homepage": "https://github.com/php-parallel-lint/PHP-Parallel-Lint",
-			"keywords": ["lint", "static analysis"],
+			"keywords": [
+				"lint",
+				"static analysis"
+			],
 			"support": {
 				"issues": "https://github.com/php-parallel-lint/PHP-Parallel-Lint/issues",
 				"source": "https://github.com/php-parallel-lint/PHP-Parallel-Lint/tree/v1.4.0"
@@ -855,10 +595,16 @@
 			},
 			"type": "library",
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"description": "WordPress function and class declaration stubs for static analysis.",
 			"homepage": "https://github.com/php-stubs/wordpress-stubs",
-			"keywords": ["PHPStan", "static analysis", "wordpress"],
+			"keywords": [
+				"PHPStan",
+				"static analysis",
+				"wordpress"
+			],
 			"support": {
 				"issues": "https://github.com/php-stubs/wordpress-stubs/issues",
 				"source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.8.1"
@@ -895,7 +641,9 @@
 			},
 			"type": "phpcodesniffer-standard",
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["LGPL-3.0-or-later"],
+			"license": [
+				"LGPL-3.0-or-later"
+			],
 			"authors": [
 				{
 					"name": "Wim Godden",
@@ -914,7 +662,11 @@
 			],
 			"description": "A set of sniffs for PHP_CodeSniffer that checks for PHP cross-version compatibility.",
 			"homepage": "http://techblog.wimgodden.be/tag/codesniffer/",
-			"keywords": ["compatibility", "phpcs", "standards"],
+			"keywords": [
+				"compatibility",
+				"phpcs",
+				"standards"
+			],
 			"support": {
 				"issues": "https://github.com/PHPCompatibility/PHPCompatibility/issues",
 				"source": "https://github.com/PHPCompatibility/PHPCompatibility"
@@ -949,7 +701,9 @@
 			},
 			"type": "phpcodesniffer-standard",
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["LGPL-3.0-or-later"],
+			"license": [
+				"LGPL-3.0-or-later"
+			],
 			"authors": [
 				{
 					"name": "Wim Godden",
@@ -962,7 +716,14 @@
 			],
 			"description": "A set of rulesets for PHP_CodeSniffer to check for PHP cross-version compatibility issues in projects, while accounting for polyfills provided by the Paragonie polyfill libraries.",
 			"homepage": "http://phpcompatibility.com/",
-			"keywords": ["compatibility", "paragonie", "phpcs", "polyfill", "standards", "static analysis"],
+			"keywords": [
+				"compatibility",
+				"paragonie",
+				"phpcs",
+				"polyfill",
+				"standards",
+				"static analysis"
+			],
 			"support": {
 				"issues": "https://github.com/PHPCompatibility/PHPCompatibilityParagonie/issues",
 				"security": "https://github.com/PHPCompatibility/PHPCompatibilityParagonie/security/policy",
@@ -1011,7 +772,9 @@
 			},
 			"type": "phpcodesniffer-standard",
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["LGPL-3.0-or-later"],
+			"license": [
+				"LGPL-3.0-or-later"
+			],
 			"authors": [
 				{
 					"name": "Wim Godden",
@@ -1024,7 +787,13 @@
 			],
 			"description": "A ruleset for PHP_CodeSniffer to check for PHP cross-version compatibility issues in projects, while accounting for polyfills provided by WordPress.",
 			"homepage": "http://phpcompatibility.com/",
-			"keywords": ["compatibility", "phpcs", "standards", "static analysis", "wordpress"],
+			"keywords": [
+				"compatibility",
+				"phpcs",
+				"standards",
+				"static analysis",
+				"wordpress"
+			],
 			"support": {
 				"issues": "https://github.com/PHPCompatibility/PHPCompatibilityWP/issues",
 				"security": "https://github.com/PHPCompatibility/PHPCompatibilityWP/security/policy",
@@ -1080,7 +849,9 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["LGPL-3.0-or-later"],
+			"license": [
+				"LGPL-3.0-or-later"
+			],
 			"authors": [
 				{
 					"name": "Juliette Reinders Folmer",
@@ -1093,7 +864,14 @@
 				}
 			],
 			"description": "A collection of sniffs and standards for use with PHP_CodeSniffer.",
-			"keywords": ["PHP_CodeSniffer", "phpcbf", "phpcodesniffer-standard", "phpcs", "standards", "static analysis"],
+			"keywords": [
+				"PHP_CodeSniffer",
+				"phpcbf",
+				"phpcodesniffer-standard",
+				"phpcs",
+				"standards",
+				"static analysis"
+			],
 			"support": {
 				"issues": "https://github.com/PHPCSStandards/PHPCSExtra/issues",
 				"security": "https://github.com/PHPCSStandards/PHPCSExtra/security/policy",
@@ -1153,10 +931,14 @@
 				}
 			},
 			"autoload": {
-				"classmap": ["PHPCSUtils/"]
+				"classmap": [
+					"PHPCSUtils/"
+				]
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["LGPL-3.0-or-later"],
+			"license": [
+				"LGPL-3.0-or-later"
+			],
 			"authors": [
 				{
 					"name": "Juliette Reinders Folmer",
@@ -1170,7 +952,17 @@
 			],
 			"description": "A suite of utility functions for use with PHP_CodeSniffer",
 			"homepage": "https://phpcsutils.com/",
-			"keywords": ["PHP_CodeSniffer", "phpcbf", "phpcodesniffer-standard", "phpcs", "phpcs3", "standards", "static analysis", "tokens", "utility"],
+			"keywords": [
+				"PHP_CodeSniffer",
+				"phpcbf",
+				"phpcodesniffer-standard",
+				"phpcs",
+				"phpcs3",
+				"standards",
+				"static analysis",
+				"tokens",
+				"utility"
+			],
 			"support": {
 				"docs": "https://phpcsutils.com/",
 				"issues": "https://github.com/PHPCSStandards/PHPCSUtils/issues",
@@ -1224,11 +1016,15 @@
 			"type": "library",
 			"autoload": {
 				"psr-4": {
-					"PHPStan\\PhpDocParser\\": ["src/"]
+					"PHPStan\\PhpDocParser\\": [
+						"src/"
+					]
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"description": "PHPDoc parser with support for nullable, intersection and generic types",
 			"support": {
 				"issues": "https://github.com/phpstan/phpdoc-parser/issues",
@@ -1256,15 +1052,25 @@
 			"conflict": {
 				"phpstan/phpstan-shim": "*"
 			},
-			"bin": ["phpstan", "phpstan.phar"],
+			"bin": [
+				"phpstan",
+				"phpstan.phar"
+			],
 			"type": "library",
 			"autoload": {
-				"files": ["bootstrap.php"]
+				"files": [
+					"bootstrap.php"
+				]
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"description": "PHPStan - PHP Static Analysis Tool",
-			"keywords": ["dev", "static analysis"],
+			"keywords": [
+				"dev",
+				"static analysis"
+			],
 			"support": {
 				"docs": "https://phpstan.org/user-guide/getting-started",
 				"forum": "https://github.com/phpstan/phpstan/discussions",
@@ -1325,9 +1131,14 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
-			"keywords": ["dev", "phpcs"],
+			"keywords": [
+				"dev",
+				"phpcs"
+			],
 			"support": {
 				"issues": "https://github.com/slevomat/coding-standard/issues",
 				"source": "https://github.com/slevomat/coding-standard/tree/8.18.0"
@@ -1367,7 +1178,10 @@
 			"require-dev": {
 				"phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.3.4"
 			},
-			"bin": ["bin/phpcbf", "bin/phpcs"],
+			"bin": [
+				"bin/phpcbf",
+				"bin/phpcs"
+			],
 			"type": "library",
 			"extra": {
 				"branch-alias": {
@@ -1375,7 +1189,9 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["BSD-3-Clause"],
+			"license": [
+				"BSD-3-Clause"
+			],
 			"authors": [
 				{
 					"name": "Greg Sherwood",
@@ -1392,7 +1208,11 @@
 			],
 			"description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
 			"homepage": "https://github.com/PHPCSStandards/PHP_CodeSniffer",
-			"keywords": ["phpcs", "standards", "static analysis"],
+			"keywords": [
+				"phpcs",
+				"standards",
+				"static analysis"
+			],
 			"support": {
 				"issues": "https://github.com/PHPCSStandards/PHP_CodeSniffer/issues",
 				"security": "https://github.com/PHPCSStandards/PHP_CodeSniffer/security/policy",
@@ -1420,69 +1240,6 @@
 			"time": "2025-04-13T04:10:18+00:00"
 		},
 		{
-			"name": "symfony/deprecation-contracts",
-			"version": "v3.5.1",
-			"source": {
-				"type": "git",
-				"url": "https://github.com/symfony/deprecation-contracts.git",
-				"reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6"
-			},
-			"dist": {
-				"type": "zip",
-				"url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
-				"reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
-				"shasum": ""
-			},
-			"require": {
-				"php": ">=8.1"
-			},
-			"type": "library",
-			"extra": {
-				"thanks": {
-					"url": "https://github.com/symfony/contracts",
-					"name": "symfony/contracts"
-				},
-				"branch-alias": {
-					"dev-main": "3.5-dev"
-				}
-			},
-			"autoload": {
-				"files": ["function.php"]
-			},
-			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
-			"authors": [
-				{
-					"name": "Nicolas Grekas",
-					"email": "p@tchwork.com"
-				},
-				{
-					"name": "Symfony Community",
-					"homepage": "https://symfony.com/contributors"
-				}
-			],
-			"description": "A generic function and convention to trigger deprecation notices",
-			"homepage": "https://symfony.com",
-			"support": {
-				"source": "https://github.com/symfony/deprecation-contracts/tree/v3.5.1"
-			},
-			"funding": [
-				{
-					"url": "https://symfony.com/sponsor",
-					"type": "custom"
-				},
-				{
-					"url": "https://github.com/fabpot",
-					"type": "github"
-				},
-				{
-					"url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-					"type": "tidelift"
-				}
-			],
-			"time": "2024-09-25T14:20:29+00:00"
-		},
-		{
 			"name": "symfony/finder",
 			"version": "v7.2.2",
 			"source": {
@@ -1507,10 +1264,14 @@
 				"psr-4": {
 					"Symfony\\Component\\Finder\\": ""
 				},
-				"exclude-from-classmap": ["/Tests/"]
+				"exclude-from-classmap": [
+					"/Tests/"
+				]
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Fabien Potencier",
@@ -1544,16 +1305,16 @@
 		},
 		{
 			"name": "szepeviktor/phpstan-wordpress",
-			"version": "v2.0.1",
+			"version": "v2.0.2",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/szepeviktor/phpstan-wordpress.git",
-				"reference": "f7beb13cd22998e3d913fdb897a1e2553ccd637e"
+				"reference": "963887b04c21fe7ac78e61c1351f8b00fff9f8f8"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/f7beb13cd22998e3d913fdb897a1e2553ccd637e",
-				"reference": "f7beb13cd22998e3d913fdb897a1e2553ccd637e",
+				"url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/963887b04c21fe7ac78e61c1351f8b00fff9f8f8",
+				"reference": "963887b04c21fe7ac78e61c1351f8b00fff9f8f8",
 				"shasum": ""
 			},
 			"require": {
@@ -1576,7 +1337,9 @@
 			"type": "phpstan-extension",
 			"extra": {
 				"phpstan": {
-					"includes": ["extension.neon"]
+					"includes": [
+						"extension.neon"
+					]
 				}
 			},
 			"autoload": {
@@ -1585,14 +1348,22 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"description": "WordPress extensions for PHPStan",
-			"keywords": ["PHPStan", "code analyse", "code analysis", "static analysis", "wordpress"],
+			"keywords": [
+				"PHPStan",
+				"code analyse",
+				"code analysis",
+				"static analysis",
+				"wordpress"
+			],
 			"support": {
 				"issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
-				"source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v2.0.1"
+				"source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v2.0.2"
 			},
-			"time": "2024-12-01T02:13:05+00:00"
+			"time": "2025-02-12T18:43:37+00:00"
 		},
 		{
 			"name": "wp-cli/mustache",
@@ -1625,7 +1396,9 @@
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Justin Hileman",
@@ -1635,7 +1408,10 @@
 			],
 			"description": "A Mustache implementation in PHP.",
 			"homepage": "https://github.com/bobthecow/mustache.php",
-			"keywords": ["mustache", "templating"],
+			"keywords": [
+				"mustache",
+				"templating"
+			],
 			"support": {
 				"source": "https://github.com/wp-cli/mustache.php/tree/v2.14.99"
 			},
@@ -1668,13 +1444,17 @@
 				}
 			},
 			"autoload": {
-				"files": ["includes/functions.php"],
+				"files": [
+					"includes/functions.php"
+				],
 				"psr-4": {
 					"Mustangostang\\": "src/"
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "mustangostang",
@@ -1716,13 +1496,17 @@
 				}
 			},
 			"autoload": {
-				"files": ["lib/cli/cli.php"],
+				"files": [
+					"lib/cli/cli.php"
+				],
 				"psr-0": {
 					"cli": "lib/"
 				}
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Daniel Bachhuber",
@@ -1737,7 +1521,10 @@
 			],
 			"description": "Console utilities for PHP",
 			"homepage": "http://github.com/wp-cli/php-cli-tools",
-			"keywords": ["cli", "console"],
+			"keywords": [
+				"cli",
+				"console"
+			],
 			"support": {
 				"issues": "https://github.com/wp-cli/php-cli-tools/issues",
 				"source": "https://github.com/wp-cli/php-cli-tools/tree/v0.12.5"
@@ -1777,7 +1564,10 @@
 				"ext-readline": "Include for a better --prompt implementation",
 				"ext-zip": "Needed to support extraction of ZIP archives when doing downloads or updates"
 			},
-			"bin": ["bin/wp", "bin/wp.bat"],
+			"bin": [
+				"bin/wp",
+				"bin/wp.bat"
+			],
 			"type": "library",
 			"extra": {
 				"branch-alias": {
@@ -1788,13 +1578,21 @@
 				"psr-0": {
 					"WP_CLI\\": "php/"
 				},
-				"classmap": ["php/class-wp-cli.php", "php/class-wp-cli-command.php"]
+				"classmap": [
+					"php/class-wp-cli.php",
+					"php/class-wp-cli-command.php"
+				]
 			},
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"description": "WP-CLI framework",
 			"homepage": "https://wp-cli.org",
-			"keywords": ["cli", "wordpress"],
+			"keywords": [
+				"cli",
+				"wordpress"
+			],
 			"support": {
 				"docs": "https://make.wordpress.org/cli/handbook/",
 				"issues": "https://github.com/wp-cli/wp-cli/issues",
@@ -1839,7 +1637,9 @@
 			},
 			"type": "phpcodesniffer-standard",
 			"notification-url": "https://packagist.org/downloads/",
-			"license": ["MIT"],
+			"license": [
+				"MIT"
+			],
 			"authors": [
 				{
 					"name": "Contributors",
@@ -1847,7 +1647,12 @@
 				}
 			],
 			"description": "PHP_CodeSniffer rules (sniffs) to enforce WordPress coding conventions",
-			"keywords": ["phpcs", "standards", "static analysis", "wordpress"],
+			"keywords": [
+				"phpcs",
+				"standards",
+				"static analysis",
+				"wordpress"
+			],
 			"support": {
 				"issues": "https://github.com/WordPress/WordPress-Coding-Standards/issues",
 				"source": "https://github.com/WordPress/WordPress-Coding-Standards",
@@ -1864,9 +1669,7 @@
 	],
 	"aliases": [],
 	"minimum-stability": "dev",
-	"stability-flags": {
-		"brain/faker": 20
-	},
+	"stability-flags": {},
 	"prefer-stable": true,
 	"prefer-lowest": false,
 	"platform": {

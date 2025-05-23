@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
@@ -77,7 +78,7 @@ class BulkRoute extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$permission = $this->checkUserPermission();
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}

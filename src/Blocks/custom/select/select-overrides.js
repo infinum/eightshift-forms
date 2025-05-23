@@ -1,11 +1,10 @@
 import manifest from './manifest.json';
-import { getUtilsIcons } from '../../components/form/assets/state-init';
 import globalSettings from './../../manifest.json';
 
 export const overrides = {
 	...manifest,
 	icon: {
-		src: getUtilsIcons('select') ?? manifest.icon.src,
+		src: globalSettings.icons.select,
 	},
 	parent: globalSettings.allowedBlocksList.integrationsNoBuilder,
 };

@@ -1,0 +1,7 @@
+.es-field--phone .es-select {
+	@apply basis-128;
+}
+
+.es-field--phone .es-select .choices__inner {
+	@apply rounded-e-none;
+}

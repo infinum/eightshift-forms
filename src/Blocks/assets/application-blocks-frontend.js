@@ -7,7 +7,7 @@
 
 import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
 
-dynamicImport(require.context('./../components', true, /-frontend\.scss$/));
+dynamicImport(require.context('./../components', true, /-frontend\.css$/));
 
 // Scripts.
 import './scripts/blocks-frontend';

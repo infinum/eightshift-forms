@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\UploadHelpers;
@@ -400,22 +399,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				'fieldName' => $params[UtilsHelper::getStateParam('name')]['value'] ?? '',
 			]
 		);
-	}
-
-	/**
-	 * Check user permission for route action.
-	 *
-	 * @param string $permission Permission to check.
-	 *
-	 * @return array<string, mixed>
-	 */
-	protected function checkUserPermission(string $permission = Config::CAP_SETTINGS): array
-	{
-		if (\current_user_can($permission)) {
-			return [];
-		}
-
-		return ApiHelpers::getApiPermissionsErrorPublicOutput();
 	}
 
 	/**

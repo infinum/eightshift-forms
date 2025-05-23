@@ -10,5 +10,5 @@ import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
 // Images.
 import './images/blocks-frontend-mandatory';
 
-dynamicImport(require.context('./../components', true, /-frontend-mandatory\.scss$/));
-dynamicImport(require.context('./../custom', true, /-frontend-mandatory\.scss$/));
+dynamicImport(require.context('./../components', true, /-frontend-mandatory\.css$/));
+dynamicImport(require.context('./../custom', true, /-frontend-mandatory\.css$/));

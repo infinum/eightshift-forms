@@ -25,7 +25,6 @@ use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
-use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
