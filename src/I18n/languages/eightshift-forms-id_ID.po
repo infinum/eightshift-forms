@@ -1,3 +1,411 @@
+msgid "Something went wrong while submitting your form. Please try again."
+msgstr "Terjadi kesalahan saat mengirimkan formulir Anda. Silakan coba lagi."
+
+msgid "This field is required."
+msgstr "Kolom ini wajib diisi."
+
+msgid "This field is required, with at least %s items selected."
+msgstr "Kolom ini wajib diisi, silakan pilih setidaknya %s item."
+
+msgid "This field is not valid."
+msgstr "Kolom ini tidak valid."
+
+msgid "This e-mail is not valid."
+msgstr "Email ini tidak valid."
+
+msgid "This e-mail already exists in our system."
+msgstr "Email ini sudah ada di sistem kami."
+
+msgid "This e-mails top level domain is not valid."
+msgstr "Domain tingkat atas email ini tidak valid."
+
+msgid "This URL is not valid."
+msgstr "URL ini tidak valid."
+
+msgid "This field value is less than expected. Minimal number should be %s."
+msgstr "Nilai kolom ini kurang dari yang diharapkan. Jumlah minimal seharusnya %s."
+
+msgid "This field value is more than expected. Maximal number should be %s."
+msgstr "Nilai kolom ini lebih dari yang diharapkan. Jumlah maksimal seharusnya %s."
+
+msgid "This field value has less characters than expected. We expect minimum %s characters."
+msgstr "Nilai kolom ini memiliki karakter lebih sedikit dari yang diharapkan. Minimal %s karakter diperlukan."
+
+msgid "This field value has more characters than expected. We expect maximum %s characters."
+msgstr "Nilai kolom ini memiliki karakter lebih banyak dari yang diharapkan. Maksimal %s karakter diperbolehkan."
+
+msgid "This field value has less items than expected. We expect minimum %s items."
+msgstr "Nilai kolom ini memiliki item lebih sedikit dari yang diharapkan. Minimal %s item diperlukan."
+
+msgid "This field value has more items than expected. We expect maximum %s items."
+msgstr "Nilai kolom ini memiliki item lebih banyak dari yang diharapkan. Maksimal %s item diperbolehkan."
+
+msgid "This field should only contain numbers."
+msgstr "Kolom ini hanya boleh berisi angka."
+
+msgid "This field value should be in this format: %s."
+msgstr "Nilai kolom ini harus dalam format: %s."
+
+msgid "The file type is not supported. Only %s files are allowed."
+msgstr "Jenis file tidak didukung. Hanya file %s yang diperbolehkan."
+
+msgid "The file seems to be corrupted or invalid format. Only %s are allowed."
+msgstr "File tampaknya rusak atau format tidak valid. Hanya %s yang diperbolehkan."
+
+msgid "One or more files seem to be corrupt or have invalid format. Only %s are allowed."
+msgstr "Satu atau lebih file tampaknya rusak atau format tidak valid. Hanya %s yang diperbolehkan."
+
+msgid "One or more files seem to be uploaded using an unauthorized method."
+msgstr "Satu atau lebih file sepertinya diunggah dengan metode yang tidak sah."
+
+msgid "It seems that one or more files were not uploaded to the server. Please remove the files and try again."
+msgstr "Sepertinya satu atau lebih file tidak terunggah ke server. Silakan hapus file dan coba lagi."
+
+msgid "There seems to be an error with the file upload. Please try again."
+msgstr "Terjadi kesalahan saat mengunggah file. Silakan coba lagi."
+
+msgid "You can only upload a single file in this field. If you have multiple files, please remove them and try again."
+msgstr "Anda hanya dapat mengunggah satu file di kolom ini. Jika Anda memiliki beberapa file, silakan hapus dan coba lagi."
+
+msgid "The file is smaller than allowed. Minimum file size is %s MB."
+msgstr "Ukuran file lebih kecil dari yang diizinkan. Ukuran file minimal adalah %s MB."
+
+msgid "The file is larger than allowed. Maximum file size is %s MB."
+msgstr "Ukuran file lebih besar dari yang diizinkan. Ukuran file maksimal adalah %s MB."
+
+msgid "This phone number is not valid. It must contain a valid country/network prefix with only numbers."
+msgstr "Nomor telepon ini tidak valid. Harus berisi kode negara/jaringan yang valid dan hanya angka."
+
+msgid "This date format is not valid."
+msgstr "Format tanggal ini tidak valid."
+
+msgid "This date/time format is not valid."
+msgstr "Format tanggal/waktu ini tidak valid."
+
+msgid "This fields only allows dates in the past."
+msgstr "Kolom ini hanya memperbolehkan tanggal di masa lalu."
+
+msgid "This field value has more characters than expected. We expect maximum 5 numbers."
+msgstr "Nilai kolom ini memiliki karakter lebih banyak dari yang diharapkan. Maksimal 5 angka diperbolehkan."
+
+msgid "The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed."
+msgstr "File tampaknya rusak atau format tidak valid. Hanya pdf,doc,docx,txt,rtf yang diperbolehkan."
+
+msgid "This field has invalid length for phone number."
+msgstr "Panjang kolom ini tidak valid untuk nomor telepon."
+
+msgid "This field contains forbidden special characters."
+msgstr "Kolom ini berisi karakter khusus yang dilarang."
+
+msgid "This field is too long. Max length is 127 characters."
+msgstr "Kolom ini terlalu panjang. Panjang maksimal adalah 127 karakter."
+
+msgid "This field is too long. Max length is 255 characters."
+msgstr "Kolom ini terlalu panjang. Panjang maksimal adalah 255 karakter."
+
+msgid "You have made too many requests in a short time. Please slow down and try again."
+msgstr "Anda melakukan terlalu banyak permintaan dalam waktu singkat. Silakan pelan-pelan dan coba lagi."
+
+msgid "This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini bermasalah atau tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "This form can be submitted only once."
+msgstr "Formulir ini hanya dapat dikirimkan sekali."
+
+msgid "This form can be submitted only by logged in users."
+msgstr "Formulir ini hanya dapat dikirimkan oleh pengguna yang sudah login."
+
+msgid "There was an issue with form action. Check the form settings."
+msgstr "Terjadi masalah dengan aksi formulir. Silakan periksa pengaturan formulir."
+
+msgid "There was an error with your form submission."
+msgstr "Terjadi kesalahan saat mengirimkan formulir Anda."
+
+msgid "Form was successfully submitted."
+msgstr "Formulir berhasil dikirimkan."
+
+msgid "Form was successfully submitted. Redirecting you now."
+msgstr "Formulir berhasil dikirimkan. Anda akan dialihkan sekarang."
+
+msgid "Form is not configured correctly. Please try again."
+msgstr "Formulir tidak dikonfigurasi dengan benar. Silakan coba lagi."
+
+msgid "E-mail was not sent due to an unknown issue. Please try again."
+msgstr "Email tidak terkirim karena masalah yang tidak diketahui. Silakan coba lagi."
+
+msgid "Confirmation e-mail was not sent due to unknown issue. Please try again."
+msgstr "Email konfirmasi tidak terkirim karena masalah yang tidak diketahui. Silakan coba lagi."
+
+msgid "E-mail was sent successfully."
+msgstr "Email berhasil dikirim."
+
+msgid "Greenhouse integration is not configured correctly. Please try again."
+msgstr "Integrasi Greenhouse tidak dikonfigurasi dengan benar. Silakan coba lagi."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan lamaran pekerjaan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
+
+msgid "Mailchimp integration is not configured correctly. Please try again."
+msgstr "Integrasi Mailchimp tidak dikonfigurasi dengan benar. Silakan coba lagi."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan langganan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Langganan newsletter berhasil. Terima kasih!"
+
+msgid "Hubspot integration is not configured correctly. Please try again."
+msgstr "Integrasi Hubspot tidak dikonfigurasi dengan benar. Silakan coba lagi."
+
+msgid "Something is not with the application. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan aplikasi. Silakan periksa semua kolom dan coba lagi."
+
+msgid "Something is not right with the application. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan aplikasi. Silakan periksa semua kolom dan coba lagi."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Formulir berhasil dikirimkan. Terima kasih!"
+
+msgid "More than 1000 fields were included in the response. Please contact website administrator."
+msgstr "Lebih dari 1000 kolom disertakan dalam respons. Silakan hubungi administrator website."
+
+msgid "Enter a valid email address."
+msgstr "Masukkan alamat email yang valid."
+
+msgid "We are sorry but you email was blocked in our blacklist."
+msgstr "Kami mohon maaf, email Anda diblokir dalam daftar hitam kami."
+
+msgid "Some of number fields are not a valid number value."
+msgstr "Beberapa kolom angka tidak berisi nilai yang valid."
+
+msgid "The value in the field is too large for the type of field."
+msgstr "Nilai di kolom ini terlalu besar untuk jenis kolom ini."
+
+msgid "The field was included in the form submission but is not in the form definition."
+msgstr "Kolom ini disertakan dalam pengiriman formulir tetapi tidak ada dalam definisi formulir."
+
+msgid "The value of a number field outside the range specified in the field settings."
+msgstr "Nilai kolom angka di luar rentang yang ditentukan dalam pengaturan kolom."
+
+msgid "The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options."
+msgstr "Nilai yang diberikan untuk kolom enumerasi (mis. checkbox, dropdown, radio) bukan salah satu opsi yang tersedia."
+
+msgid "The context object contains an unexpected attribute. Please contact website administrator."
+msgstr "Objek konteks berisi atribut yang tidak diharapkan. Silakan hubungi administrator website."
+
+msgid "The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator."
+msgstr "Nilai di goToWebinarWebinarKey pada objek konteks tidak valid. Silakan hubungi administrator website."
+
+msgid "The hutk field in the context object is invalid. Please contact website administrator."
+msgstr "Kolom hutk pada objek konteks tidak valid. Silakan hubungi administrator website."
+
+msgid "The ipAddress field in the context object is invalid. Please contact website administrator."
+msgstr "Kolom ipAddress pada objek konteks tidak valid. Silakan hubungi administrator website."
+
+msgid "The pageUri field in the context object is invalid. Please contact website administrator."
+msgstr "Kolom pageUri pada objek konteks tidak valid. Silakan hubungi administrator website."
+
+msgid "LegalConsentOptions was empty or it contains both the consent and legitimateInterest fields. Please contact website administrator."
+msgstr "LegalConsentOptions kosong atau berisi kolom consent dan legitimateInterest sekaligus. Silakan hubungi administrator website."
+
+msgid "The consentToProcess field in consent or value field in legitimateInterest was false. Please contact website administrator."
+msgstr "Kolom consentToProcess di consent atau value di legitimateInterest bernilai false. Silakan hubungi administrator website."
+
+msgid "The text field for processing consent was missing. Please contact website administrator."
+msgstr "Kolom teks untuk memproses persetujuan tidak ada. Silakan hubungi administrator website."
+
+msgid "The communication consent text was missing for a subscription. Please contact website administrator."
+msgstr "Teks persetujuan komunikasi untuk langganan tidak ada. Silakan hubungi administrator website."
+
+msgid "The legitimate interest consent text was missing. Please contact website administrator."
+msgstr "Teks persetujuan kepentingan sah tidak ada. Silakan hubungi administrator website."
+
+msgid "The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator."
+msgstr "Daftar komunikasi berisi dua atau lebih item dengan subscriptionTypeId yang sama. Silakan hubungi administrator website."
+
+msgid "Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator."
+msgstr "Formulir Hubspot Anda mengaktifkan reCaptcha dan kami tidak dapat memproses permintaan. Silakan nonaktifkan reCaptcha dan coba lagi. Silakan hubungi administrator website."
+
+msgid "The HubSpot account has reached the rate limit. Please contact website administrator."
+msgstr "Akun HubSpot telah mencapai batas permintaan. Silakan hubungi administrator website."
+
+msgid "MailerLite integration is not configured correctly. Please try again."
+msgstr "Integrasi MailerLite tidak dikonfigurasi dengan benar. Silakan coba lagi."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan langganan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Langganan newsletter berhasil. Terima kasih!"
+
+msgid "Goodbits integration is not configured correctly. Please try again."
+msgstr "Integrasi Goodbits tidak dikonfigurasi dengan benar. Silakan coba lagi."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan langganan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Langganan newsletter berhasil. Terima kasih!"
+
+msgid "Enter a valid email address."
+msgstr "Masukkan alamat email yang valid."
+
+msgid "Email address already exists in the system."
+msgstr "Alamat email sudah ada di sistem."
+
+msgid "There was an error with the service. Please try again."
+msgstr "Terjadi kesalahan dengan layanan. Silakan coba lagi."
+
+msgid "It looks like this API key is not authorized to make this request. Please check your API key and try again."
+msgstr "Sepertinya kunci API ini tidak diizinkan untuk melakukan permintaan ini. Silakan periksa kunci API Anda dan coba lagi."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Formulir berhasil dikirimkan. Terima kasih!"
+
+msgid "Spam prevention system encountered an error. Captcha \"request\" is invalid or malformed."
+msgstr "Sistem pencegahan spam mengalami kesalahan. Captcha \"request\" tidak valid atau tidak terbentuk dengan benar."
+
+msgid "Spam prevention system encountered an error. Captcha response \"action\" is not valid."
+msgstr "Sistem pencegahan spam mengalami kesalahan. Tanggapan Captcha \"action\" tidak valid."
+
+msgid "The request was marked as a potential spam request. Please try again."
+msgstr "Permintaan ditandai sebagai permintaan spam potensial. Silakan coba lagi."
+
+msgid "Spam prevention system encountered an error. Please try again."
+msgstr "Sistem pencegahan spam mengalami kesalahan. Silakan coba lagi."
+
+msgid "Airtable integration is not configured correctly. Please try again."
+msgstr "Integrasi Airtable tidak dikonfigurasi dengan benar. Silakan coba lagi."
+
+msgid "Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct."
+msgstr "Izin tidak valid, atau model yang diminta tidak ditemukan. Pastikan token Anda memiliki izin yang diperlukan dan nama/id model benar."
+
+msgid "You are not permitted to perform this operation."
+msgstr "Anda tidak diizinkan untuk melakukan operasi ini."
+
+msgid "Invalid request: parameter validation failed. Check your request data."
+msgstr "Permintaan tidak valid: validasi parameter gagal. Periksa data permintaan Anda."
+
+msgid "One or more fields are invalid. Please try again."
+msgstr "Satu atau lebih kolom tidak valid. Silakan coba lagi."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Formulir berhasil dikirimkan. Terima kasih!"
+
+msgid "Moments integration is not configured correctly. Please try again."
+msgstr "Integrasi Moments tidak dikonfigurasi dengan benar. Silakan coba lagi."
+
+msgid "Something is not right with the submission. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan pengiriman. Silakan periksa semua kolom dan coba lagi."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Formulir berhasil dikirimkan. Terima kasih!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan lamaran pekerjaan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake."
+msgstr "Kami mohon maaf, pekerjaan ini tidak lagi tersedia. Silakan coba lagi nanti, atau hubungi kami jika Anda merasa ini adalah kesalahan."
+
+msgid "One of your uploaded files has a filename that is too long. Please reduce the filename and try again."
+msgstr "Salah satu file yang Anda unggah memiliki nama file yang terlalu panjang. Silakan persingkat nama file dan coba lagi."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan lamaran pekerjaan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "It looks like there are some issues with your form fields. Please check all the fields and try again."
+msgstr "Sepertinya ada masalah dengan kolom formulir Anda. Silakan periksa semua kolom dan coba lagi."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
+
+msgid "Your form is missing project key. Please try again."
+msgstr "Formulir Anda tidak memiliki kunci proyek. Silakan coba lagi."
+
+msgid "Your form is missing issue type. Please try again."
+msgstr "Formulir Anda tidak memiliki jenis masalah. Silakan coba lagi."
+
+msgid "Your form is missing issue summary. Please try again."
+msgstr "Formulir Anda tidak memiliki ringkasan masalah. Silakan coba lagi."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan lamaran pekerjaan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "Payment submitted successfully. Thank you!"
+msgstr "Pembayaran berhasil dikirimkan. Terima kasih!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "Organization ID is invalid."
+msgstr "ID organisasi tidak valid."
+
+msgid "Integration dataset is invalid."
+msgstr "Dataset integrasi tidak valid."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan lamaran pekerjaan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan langganan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Formulir ini tidak dikonfigurasi dengan benar. Silakan hubungi administrator website untuk menyelesaikan masalah ini."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Ada yang tidak beres dengan langganan. Silakan periksa semua kolom dan coba lagi."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Lamaran berhasil dikirimkan. Terima kasih!"
+
+msgid "Missing one or more required parameters to process the request."
+msgstr "Satu atau lebih parameter yang diperlukan untuk memproses permintaan tidak ada."
+
+msgid "File uploaded successfully."
+msgstr "Berkas berhasil diunggah."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha formulir dilewati karena konfigurasi pemecahan masalah diatur dalam pengaturan."
+
 msgid "Afghanistan"
 msgstr "Afganistan"
 

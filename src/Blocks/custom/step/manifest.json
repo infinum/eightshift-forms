@@ -7,10 +7,11 @@
 	"icon": {
 		"src": "esf-steps"
 	},
-	"keywords": ["step", "multistep"],
-	"hasInnerBlocks": true,
+	"keywords": [
+		"step",
+		"multistep"
+	],
 	"components": {
 		"step": "step"
-	},
-	"parent": ["eightshift-forms/form"]
+	}
 }

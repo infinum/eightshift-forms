@@ -10,6 +10,5 @@
 	"keywords": ["date", "text", "email", "e-mail", "number", "numbers", "url", "urls", "link", "links"],
 	"components": {
 		"date": "date"
-	},
-	"parent": ["eightshift-forms/form"]
+	}
 }

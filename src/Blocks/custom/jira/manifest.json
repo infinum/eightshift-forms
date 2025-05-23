@@ -8,17 +8,15 @@
 		"src": "esf-form-jira"
 	},
 	"keywords": ["jira"],
-	"example": {},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
-		"jiraAllowedBlocks": {
-			"type": "array",
-			"default": []
-		},
 		"jiraIntegrationId": {
 			"type": "string"
 		},
@@ -28,6 +26,5 @@
 		"jiraFormDataTypeSelector": {
 			"type": "string"
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

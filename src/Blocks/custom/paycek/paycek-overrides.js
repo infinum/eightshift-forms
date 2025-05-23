@@ -7,11 +7,5 @@ export const overrides = {
 	icon: {
 		src: getUtilsIcons('paycek') ?? manifest.icon.src,
 	},
-	attributes: {
-		...manifest.attributes,
-		paycekAllowedBlocks: {
-			...manifest.attributes.paycekAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList,
-		},
-	},
+	parent: globalManifest.allowedBlocksList.formsCpt,
 };

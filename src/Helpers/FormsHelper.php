@@ -342,4 +342,18 @@ final class FormsHelper
 	{
 		return \array_reduce($params, fn($carry, $paramKey) => $carry ?: ($paramKey['name'] === $key ? $paramKey['value'] : ''), '');
 	}
+
+	/**
+	 * Get locale from country code.
+	 *
+	 * @return string
+	 */
+	public static function getLocaleFromCountryCode(): string
+	{
+		$locale = I18nHelpers::getLocale();
+
+		$languages = \apply_filters('wpml_active_languages', []);
+
+		return \array_values(\array_filter($languages, fn($language) => $language['code'] === $locale))[0]['default_locale'] ?? 'en_US';
+	}
 }

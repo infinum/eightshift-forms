@@ -7,18 +7,18 @@
 	"icon": {
 		"src": "esf-form-corvus"
 	},
-	"keywords": ["corvus"],
-	"example": {},
+	"keywords": [
+		"corvus"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
-		"corvusAllowedBlocks": {
-			"type": "array",
-			"default": []
-		},
 		"corvusIntegrationId": {
 			"type": "string"
 		},
@@ -28,6 +28,5 @@
 		"corvusFormDataTypeSelector": {
 			"type": "string"
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

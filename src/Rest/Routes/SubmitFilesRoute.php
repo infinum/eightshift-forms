@@ -56,7 +56,7 @@ class SubmitFilesRoute extends AbstractFormSubmit
 		// Finish.
 		return \rest_ensure_response(
 			ApiHelpers::getApiSuccessPublicOutput(
-				\esc_html__('File upload success', 'eightshift-forms'),
+				$this->labels->getLabel('validationFileUploadSuccess'),
 				[
 					UtilsHelper::getStateResponseOutputKey('file') => $formDetails[Config::FD_FILES_UPLOAD]['id'] ?? '',
 				],

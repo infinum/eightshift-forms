@@ -7,21 +7,20 @@
 	"icon": {
 		"src": "esf-form-mailerlite"
 	},
-	"keywords": ["mailerlite"],
-	"example": {},
+	"keywords": [
+		"mailerlite"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"mailerliteIntegrationId": {
 			"type": "string"
-		},
-		"mailerliteAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

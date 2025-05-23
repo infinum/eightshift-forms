@@ -13,10 +13,10 @@
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
-		"nationbuilderAllowedBlocks": {
-			"type": "array"
-		},
 		"nationbuilderIntegrationId": {
 			"type": "string"
 		},
@@ -26,6 +26,5 @@
 		"nationbuilderFormDataTypeSelector": {
 			"type": "string"
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

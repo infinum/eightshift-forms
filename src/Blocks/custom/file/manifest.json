@@ -10,6 +10,5 @@
 	"keywords": ["file"],
 	"components": {
 		"file": "file"
-	},
-	"parent": ["eightshift-forms/form"]
+	}
 }

@@ -7,18 +7,18 @@
 	"icon": {
 		"src": "esf-form-paycek"
 	},
-	"keywords": ["paycek"],
-	"example": {},
+	"keywords": [
+		"paycek"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
-		"paycekAllowedBlocks": {
-			"type": "array",
-			"default": []
-		},
 		"paycekIntegrationId": {
 			"type": "string"
 		},
@@ -28,6 +28,5 @@
 		"paycekFormDataTypeSelector": {
 			"type": "string"
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

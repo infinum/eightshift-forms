@@ -10,24 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
-use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
-use EightshiftForms\Integrations\Airtable\SettingsAirtable;
-use EightshiftForms\Integrations\Goodbits\SettingsGoodbits;
-use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Integrations\Jira\SettingsJira;
-use EightshiftForms\Integrations\Mailchimp\SettingsMailchimp;
-use EightshiftForms\Integrations\Mailerlite\SettingsMailerlite;
-use EightshiftForms\Integrations\Moments\SettingsMoments;
-use EightshiftForms\Integrations\Workable\SettingsWorkable;
-use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftForms\Helpers\SettingsHelpers;
-use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\Integrations\Calculator\SettingsCalculator;
-use EightshiftForms\Integrations\Corvus\SettingsCorvus;
-use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
-use EightshiftForms\Integrations\Paycek\SettingsPaycek;
-use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 
 /**
  * Labels class.
@@ -61,101 +44,36 @@ class Labels implements LabelsInterface
 	/**
 	 * Get all labels
 	 *
-	 * @return array<string, string>
+	 * @return array<string, array<string, string>>
 	 */
 	public function getLabels(): array
 	{
-		$output = \array_merge(
-			$this->getGenericLabels(),
-			$this->getValidationLabels(),
-			$this->getMailerLabels(),
-			$this->getCustomLabels()
-		);
-
-		// Google reCaptcha.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY)) {
-			$output = \array_merge($output, $this->getCaptchaLabels());
-		}
-
-		// Greenhouse.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY)) {
-			$output = \array_merge($output, $this->getGreenhouseLabels());
-		}
-
-		// Mailchimp.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY)) {
-			$output = \array_merge($output, $this->getMailchimpLabels());
-		}
-
-		// Hubspot.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY, SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY)) {
-			$output = \array_merge($output, $this->getHubspotLabels());
-		}
-
-		// Mailerlite.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY)) {
-			$output = \array_merge($output, $this->getMailerliteLabels());
-		}
-
-		// Goodbits.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY, SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY)) {
-			$output = \array_merge($output, $this->getGoodbitsLabels());
-		}
-
-		// ActiveCampaign.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
-			$output = \array_merge($output, $this->getActiveCampaignLabels());
-		}
-
-		// Airtable.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY, SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY)) {
-			$output = \array_merge($output, $this->getAirtableLabels());
-		}
-
-		// Moments.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_KEY)) {
-			$output = \array_merge($output, $this->getMomentsLabels());
-		}
-
-		// Workable.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_USE_KEY, SettingsWorkable::SETTINGS_WORKABLE_USE_KEY)) {
-			$output = \array_merge($output, $this->getWorkableLabels());
-		}
-
-		// Talentlyft.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY, SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY)) {
-			$output = \array_merge($output, $this->getTalentlyftLabels());
-		}
-
-		// Jira.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_USE_KEY, SettingsJira::SETTINGS_JIRA_USE_KEY)) {
-			$output = \array_merge($output, $this->getJiraLabels());
-		}
-
-		// Corvus.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCorvus::SETTINGS_CORVUS_USE_KEY, SettingsCorvus::SETTINGS_CORVUS_USE_KEY)) {
-			$output = \array_merge($output, $this->getCorvusLabels());
-		}
-
-		// Paycek.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPaycek::SETTINGS_PAYCEK_USE_KEY, SettingsPaycek::SETTINGS_PAYCEK_USE_KEY)) {
-			$output = \array_merge($output, $this->getPaycekLabels());
-		}
-
-		// Pipedrive.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY)) {
-			$output = \array_merge($output, $this->getPipedriveLabels());
-		}
-
-		// Calculator.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY, SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY)) {
-			$output = \array_merge($output, $this->getCalculatorLabels());
-		}
-
-		// Nationbuilder.
-		if (SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY)) {
-			$output = \array_merge($output, $this->getNationbuilderLabels());
-		}
+		$output = [
+			'validationField' => $this->getValidationFieldLabels(),
+			'validationForm' => $this->getValidationFormLabels(),
+			'validationSteps' => $this->getValidationStepsLabels(),
+			'generic' => $this->getGenericLabels(),
+			'validationGeolocation' => $this->getValidationGeolocationLabels(),
+			'mailer' => $this->getMailerLabels(),
+			'custom' => $this->getCustomLabels(),
+			'captcha' => $this->getCaptchaLabels(),
+			'greenhouse' => $this->getGreenhouseLabels(),
+			'mailchimp' => $this->getMailchimpLabels(),
+			'hubspot' => $this->getHubspotLabels(),
+			'mailerlite' => $this->getMailerliteLabels(),
+			'goodbits' => $this->getGoodbitsLabels(),
+			'activeCampaign' => $this->getActiveCampaignLabels(),
+			'airtable' => $this->getAirtableLabels(),
+			'moments' => $this->getMomentsLabels(),
+			'workable' => $this->getWorkableLabels(),
+			'talentlyft' => $this->getTalentlyftLabels(),
+			'jira' => $this->getJiraLabels(),
+			'corvus' => $this->getCorvusLabels(),
+			'paycek' => $this->getPaycekLabels(),
+			'pipedrive' => $this->getPipedriveLabels(),
+			'calculator' => $this->getCalculatorLabels(),
+			'nationbuilder' => $this->getNationbuilderLabels(),
+		];
 
 		return $output;
 	}
@@ -186,27 +104,13 @@ class Labels implements LabelsInterface
 			}
 		}
 
-		$labels = $this->getLabels();
+		static $labels = [];
 
-		return $labels[$key] ?? '';
-	}
-
-	/**
-	 * Output all validation labels from cache for faster validation.
-	 *
-	 * @param string $formId Form ID.
-	 *
-	 * @return array<string, string>
-	 */
-	public function getValidationLabelsOutput(string $formId = ''): array
-	{
-		$output = [];
-
-		foreach ($this->getValidationLabels() as $key => $value) {
-			$output[$key] = $this->getLabel($key, $formId);
+		if (!$labels) {
+			$labels = \array_merge(...\array_values($this->getLabels()));
 		}
 
-		return $output;
+		return $labels[$key] ?? '';
 	}
 
 	/**
@@ -222,11 +126,11 @@ class Labels implements LabelsInterface
 	}
 
 	/**
-	 * Return labels - Validation
+	 * Return labels - Validation field.
 	 *
 	 * @return array<string, string>
 	 */
-	private function getValidationLabels(): array
+	private function getValidationFieldLabels(): array
 	{
 		return [
 			'validationRequired' => \__('This field is required.', 'eightshift-forms'),
@@ -280,6 +184,48 @@ class Labels implements LabelsInterface
 			'validationMissingMandatoryParams' => \__('This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'validationSubmitOnce' => \__('This form can be submitted only once.', 'eightshift-forms'),
 			'validationSubmitLoggedIn' => \__('This form can be submitted only by logged in users.', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Validation Form global
+	 *
+	 * @return array<string, string>
+	 */
+	private function getValidationFormLabels(): array
+	{
+		return [
+			'validationGlobalMissingRequiredParams' => \__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+			'validationFileUploadSuccess' => \__('File uploaded successfully.', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Validation Geolocation
+	 *
+	 * @return array<string, string>
+	 */
+	private function getValidationGeolocationLabels(): array
+	{
+		return [
+			'geolocationSkipCheck' => \__('Form geolocation skipped. Feature inactive.', 'eightshift-forms'),
+			'geolocationMalformedOrNotValid' => \__('The geolocation data is malformed or not valid.', 'eightshift-forms'),
+			'geolocationSuccess' => \__('Success geolocation', 'eightshift-forms'),
+		];
+	}
+
+	/**
+	 * Return labels - Validation Steps
+	 *
+	 * @return array<string, string>
+	 */
+	private function getValidationStepsLabels(): array
+	{
+		return [
+			'validationStepsCurrentStepProblem' => \__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+			'validationStepsNextStepProblem' => \__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
+			'validationStepsParametersProblem' => \__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
+			'validationStepsSuccess' => \__('Step validation is successful, you may continue.', 'eightshift-forms'),
 		];
 	}
 
@@ -365,7 +311,7 @@ class Labels implements LabelsInterface
 			'hubspotNumberOutOfRangeError' => \__('The value of a number field outside the range specified in the field settings.', 'eightshift-forms'),
 			'hubspotValueNotInFieldDefinitionError' => \__('The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options.', 'eightshift-forms'),
 			'hubspotInvalidMetadataError' => \__('The context object contains an unexpected attribute. Please contact website administrator.', 'eightshift-forms'),
-			'hubspotInvalidGotowebinarWebinarKeyError' => \__('The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
+			'hubspotInvalidGotoWebinarKeyError' => \__('The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotInvalidHutkError' => \__('The hutk field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotInvalidIpAddressError' => \__('The ipAddress field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
 			'hubspotInvalidPageUriError' => \__('The pageUri field in the context object is invalid. Please contact website administrator.', 'eightshift-forms'),
@@ -432,6 +378,7 @@ class Labels implements LabelsInterface
 	private function getCaptchaLabels(): array
 	{
 		return [
+			'captchaSkipCheck' => \__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
 			'captchaBadRequest' => \__('Spam prevention system encountered an error. Captcha "request" is invalid or malformed.', 'eightshift-forms'),
 			'captchaWrongAction' => \__('Spam prevention system encountered an error. Captcha response "action" is not valid.', 'eightshift-forms'),
 			'captchaScoreSpam' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),

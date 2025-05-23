@@ -61,7 +61,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		if (!$currentStep) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+					$this->labels->getLabel('validationStepsCurrentStepProblem'),
 					[],
 					$debug
 				)
@@ -72,7 +72,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		if (!$submittedNames) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					\esc_html__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+					$this->labels->getLabel('validationStepsCurrentStepProblem'),
 					[],
 					$debug
 				)
@@ -83,7 +83,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		if (!$steps) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					\esc_html__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
+					$this->labels->getLabel('validationStepsNextStepProblem'),
 					[],
 					$debug
 				)
@@ -104,7 +104,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			if (!$params) {
 				return \rest_ensure_response(
 					ApiHelpers::getApiErrorPublicOutput(
-						\esc_html__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
+						$this->labels->getLabel('validationStepsParametersProblem'),
 						[],
 						$debug
 					)
@@ -144,7 +144,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 
 		return \rest_ensure_response(
 			ApiHelpers::getApiSuccessPublicOutput(
-				\esc_html__('Step validation is successful, you may continue.', 'eightshift-forms'),
+				$this->labels->getLabel('validationStepsSuccess'),
 				[
 					UtilsHelper::getStateResponseOutputKey('stepType') => $type,
 					UtilsHelper::getStateResponseOutputKey('stepNextStep') => $nextStep,
@@ -212,8 +212,8 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		}
 
 		return \array_reduce($output, function ($carry, $validItem) {
-			return $carry || (bool) \array_reduce($validItem, function ($subcarry, $item) {
-				return $subcarry && (bool) $item;
+			return $carry || (bool) \array_reduce($validItem, function ($sub, $item) {
+				return $sub && (bool) $item;
 			}, true);
 		}, false);
 	}

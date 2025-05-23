@@ -52,31 +52,35 @@ class Blocks extends AbstractBlocks
 	 */
 	public function getAllBlocksList($allowedBlockTypes, WP_Block_Editor_Context $blockEditorContext)
 	{
-		// Allow forms to be used correctly.
+		$settings = Helpers::getSettings()['allowedBlocksList'];
+
 		if (
-			$blockEditorContext->post instanceof WP_Post &&
-			!empty($blockEditorContext->post->post_type) &&
-			$blockEditorContext->post->post_type === Config::SLUG_POST_TYPE
+			!$blockEditorContext->post instanceof WP_Post ||
+			empty($blockEditorContext->post->post_type) ||
+			$blockEditorContext->post->post_type !== Config::SLUG_POST_TYPE
 		) {
-			return true;
+			if (\is_bool($allowedBlockTypes)) {
+				return $allowedBlockTypes;
+			}
+
+			return \array_values(\array_unique(\array_merge(
+				$allowedBlockTypes,
+				$settings['other'],
+			)));
 		}
 
-		if (\is_bool($allowedBlockTypes)) {
-			return $allowedBlockTypes;
-		}
-
-		// Allow forms blocks.
-		foreach (Helpers::getSettings()['allowedBlocksNoneBuilderBlocksList'] as $value) {
-			$allowedBlockTypes[] = $value;
-		}
-
-		// Merge addon blocks to the list.
-		$filterName = HooksHelpers::getFilterName(['blocks', 'allowedBlocks']);
-		if (\has_filter($filterName)) {
-			$allowedBlockTypes = \array_merge($allowedBlockTypes, \apply_filters($filterName, []));
-		}
-
-		return $allowedBlockTypes;
+		return \array_values(
+			\array_unique(
+				\array_merge(
+					$settings['formsCpt'],
+					$settings['fieldsNoIntegration'],
+					$settings['fieldsIntegration'],
+					$settings['integrationsNoBuilder'],
+					$settings['integrationsBuilder'],
+					\apply_filters(HooksHelpers::getFilterName(['blocks', 'additionalBlocks']), [])
+				)
+			)
+		);
 	}
 
 	/**

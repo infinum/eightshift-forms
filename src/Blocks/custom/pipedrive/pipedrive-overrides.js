@@ -7,11 +7,5 @@ export const overrides = {
 	icon: {
 		src: getUtilsIcons('pipedrive') ?? manifest.icon.src,
 	},
-	attributes: {
-		...manifest.attributes,
-		pipedriveAllowedBlocks: {
-			...manifest.attributes.pipedriveAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList,
-		},
-	},
+	parent: globalManifest.allowedBlocksList.formsCpt,
 };

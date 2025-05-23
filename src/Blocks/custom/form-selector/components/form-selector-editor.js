@@ -3,17 +3,16 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
-import { createBlockFromTemplate, DashboardButton, getUtilsIcons } from './../../../components/utils';
-import { icons } from '@eightshift/ui-components/icons';
+import { STORE_NAME, icons } from '@eightshift/frontend-libs/scripts';
+import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
+import { getUtilsIcons } from '../../../components/form/assets/state-init';
+import globalSettings from './../../../manifest.json';
 import { camelCase } from '@eightshift/ui-components/utilities';
 
-export const FormSelectorEditor = ({ attributes, clientId, hasInnerBlocks }) => {
+export const FormSelectorEditor = ({ clientId, hasInnerBlocks }) => {
 	const manifest = select(STORE_NAME).getBlock('form-selector');
 
 	const { forms } = manifest;
-
-	const formSelectorAllowedBlocks = checkAttr('formSelectorAllowedBlocks', attributes, manifest);
 
 	return (
 		<>
@@ -62,9 +61,8 @@ export const FormSelectorEditor = ({ attributes, clientId, hasInnerBlocks }) => 
 			)}
 
 			<InnerBlocks
-				allowedBlocks={typeof formSelectorAllowedBlocks === 'undefined' || formSelectorAllowedBlocks}
-				templateLock={hasInnerBlocks && 'insert'}
-				renderAppender={false}
+				templateLock={false}
+				allowedBlocks={[...globalSettings.allowedBlocksList.integrationsBuilder, ...globalSettings.allowedBlocksList.integrationsNoBuilder]}
 			/>
 		</>
 	);

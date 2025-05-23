@@ -39,7 +39,6 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 	 */
 	public const CACHE_TRANSIENTS_TIMES = [
 		'integration' => \HOUR_IN_SECONDS, // 60 min
-		'quick' => \MINUTE_IN_SECONDS * 3 // 3 min
 	];
 
 	/**
@@ -69,36 +68,6 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 				$type = $value['type'] ?? '';
 
 				if ($cache && $type === Config::SETTINGS_INTERNAL_TYPE_INTEGRATION && $isUsedKey && SettingsHelpers::isOptionCheckboxChecked($isUsedKey, $isUsedKey)) {
-					return [
-						'component' => 'card-inline',
-						'cardInlineTitle' => $value['labels']['title'] ?? '',
-						'cardInlineIcon' => $value['labels']['icon'] ?? '',
-						'cardInlineRightContent' => [
-							[
-								'component' => 'submit',
-								'submitValue' => \__('Clear', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
-									UtilsHelper::getStateAttribute('cacheType') => $key,
-									UtilsHelper::getStateAttribute('reload') => 'false',
-								],
-								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
-							],
-						],
-					];
-				}
-			},
-			\array_keys($data),
-			$data
-		)));
-
-		$outputOther = \array_values(\array_filter(\array_map(
-			function ($key, $value) {
-				$cache = $value['cache'] ?? [];
-
-				$type = $value['type'] ?? '';
-
-				if ($cache && $type !== Config::SETTINGS_INTERNAL_TYPE_INTEGRATION) {
 					return [
 						'component' => 'card-inline',
 						'cardInlineTitle' => $value['labels']['title'] ?? '',
@@ -170,26 +139,18 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 					],
 				]
 			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Integration cache', 'eightshift-forms'),
-				'introSubtitle' => \__('Here you can clear individual cache for each integration.', 'eightshift-forms'),
-			],
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-clean',
-				'layoutContent' => $outputIntegrations,
-			],
-			[
-				'component' => 'intro',
-				'introTitle' => \__('Operational cache', 'eightshift-forms'),
-				'introSubtitle' => \__('Here you can clear individual operational cache.', 'eightshift-forms'),
-			],
-			[
-				'component' => 'layout',
-				'layoutType' => 'layout-v-stack-clean',
-				'layoutContent' => $outputOther,
-			],
+			...($outputIntegrations ? [
+				[
+					'component' => 'intro',
+					'introTitle' => \__('Integration cache', 'eightshift-forms'),
+					'introSubtitle' => \__('Here you can clear individual cache for each integration.', 'eightshift-forms'),
+				],
+				[
+					'component' => 'layout',
+					'layoutType' => 'layout-v-stack-clean',
+					'layoutContent' => $outputIntegrations,
+				],
+			] : []),
 		];
 	}
 }

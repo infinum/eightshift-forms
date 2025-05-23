@@ -1,3 +1,411 @@
+msgid "Something went wrong while submitting your form. Please try again."
+msgstr "Beim Absenden Ihres Formulars ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+
+msgid "This field is required."
+msgstr "Dieses Feld ist erforderlich."
+
+msgid "This field is required, with at least %s items selected."
+msgstr "Dieses Feld ist erforderlich, mindestens %s Elemente müssen ausgewählt sein."
+
+msgid "This field is not valid."
+msgstr "Dieses Feld ist ungültig."
+
+msgid "This e-mail is not valid."
+msgstr "Diese E-Mail-Adresse ist ungültig."
+
+msgid "This e-mail already exists in our system."
+msgstr "Diese E-Mail-Adresse existiert bereits in unserem System."
+
+msgid "This e-mails top level domain is not valid."
+msgstr "Die Top-Level-Domain dieser E-Mail-Adresse ist ungültig."
+
+msgid "This URL is not valid."
+msgstr "Diese URL ist ungültig."
+
+msgid "This field value is less than expected. Minimal number should be %s."
+msgstr "Der Wert dieses Feldes ist geringer als erwartet. Die Mindestzahl sollte %s sein."
+
+msgid "This field value is more than expected. Maximal number should be %s."
+msgstr "Der Wert dieses Feldes ist höher als erwartet. Die Höchstzahl sollte %s sein."
+
+msgid "This field value has less characters than expected. We expect minimum %s characters."
+msgstr "Der Wert dieses Feldes enthält weniger Zeichen als erwartet. Wir erwarten mindestens %s Zeichen."
+
+msgid "This field value has more characters than expected. We expect maximum %s characters."
+msgstr "Der Wert dieses Feldes enthält mehr Zeichen als erwartet. Wir erwarten maximal %s Zeichen."
+
+msgid "This field value has less items than expected. We expect minimum %s items."
+msgstr "Der Wert dieses Feldes enthält weniger Elemente als erwartet. Wir erwarten mindestens %s Elemente."
+
+msgid "This field value has more items than expected. We expect maximum %s items."
+msgstr "Der Wert dieses Feldes enthält mehr Elemente als erwartet. Wir erwarten maximal %s Elemente."
+
+msgid "This field should only contain numbers."
+msgstr "Dieses Feld darf nur Zahlen enthalten."
+
+msgid "This field value should be in this format: %s."
+msgstr "Der Wert dieses Feldes sollte in diesem Format sein: %s."
+
+msgid "The file type is not supported. Only %s files are allowed."
+msgstr "Der Dateityp wird nicht unterstützt. Es sind nur %s Dateien erlaubt."
+
+msgid "The file seems to be corrupted or invalid format. Only %s are allowed."
+msgstr "Die Datei scheint beschädigt oder in einem ungültigen Format zu sein. Es sind nur %s erlaubt."
+
+msgid "One or more files seem to be corrupt or have invalid format. Only %s are allowed."
+msgstr "Eine oder mehrere Dateien scheinen beschädigt oder in einem ungültigen Format zu sein. Es sind nur %s erlaubt."
+
+msgid "One or more files seem to be uploaded using an unauthorized method."
+msgstr "Eine oder mehrere Dateien wurden anscheinend mit einer nicht autorisierten Methode hochgeladen."
+
+msgid "It seems that one or more files were not uploaded to the server. Please remove the files and try again."
+msgstr "Es scheint, dass eine oder mehrere Dateien nicht auf den Server hochgeladen wurden. Bitte entfernen Sie die Dateien und versuchen Sie es erneut."
+
+msgid "There seems to be an error with the file upload. Please try again."
+msgstr "Es scheint ein Fehler beim Hochladen der Datei aufgetreten zu sein. Bitte versuchen Sie es erneut."
+
+msgid "You can only upload a single file in this field. If you have multiple files, please remove them and try again."
+msgstr "Sie können in dieses Feld nur eine einzelne Datei hochladen. Wenn Sie mehrere Dateien haben, entfernen Sie diese bitte und versuchen Sie es erneut."
+
+msgid "The file is smaller than allowed. Minimum file size is %s MB."
+msgstr "Die Datei ist kleiner als erlaubt. Die Mindestdateigröße beträgt %s MB."
+
+msgid "The file is larger than allowed. Maximum file size is %s MB."
+msgstr "Die Datei ist größer als erlaubt. Die maximale Dateigröße beträgt %s MB."
+
+msgid "This phone number is not valid. It must contain a valid country/network prefix with only numbers."
+msgstr "Diese Telefonnummer ist ungültig. Sie muss einen gültigen Länder-/Netzwerkpräfix enthalten und darf nur aus Zahlen bestehen."
+
+msgid "This date format is not valid."
+msgstr "Dieses Datumsformat ist ungültig."
+
+msgid "This date/time format is not valid."
+msgstr "Dieses Datums-/Zeitformat ist ungültig."
+
+msgid "This fields only allows dates in the past."
+msgstr "Dieses Feld erlaubt nur Daten in der Vergangenheit."
+
+msgid "This field value has more characters than expected. We expect maximum 5 numbers."
+msgstr "Der Wert dieses Feldes enthält mehr Zeichen als erwartet. Wir erwarten maximal 5 Zahlen."
+
+msgid "The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed."
+msgstr "Die Datei scheint beschädigt oder in einem ungültigen Format zu sein. Es sind nur pdf,doc,docx,txt,rtf erlaubt."
+
+msgid "This field has invalid length for phone number."
+msgstr "Dieses Feld hat eine ungültige Länge für eine Telefonnummer."
+
+msgid "This field contains forbidden special characters."
+msgstr "Dieses Feld enthält verbotene Sonderzeichen."
+
+msgid "This field is too long. Max length is 127 characters."
+msgstr "Dieses Feld ist zu lang. Die maximale Länge beträgt 127 Zeichen."
+
+msgid "This field is too long. Max length is 255 characters."
+msgstr "Dieses Feld ist zu lang. Die maximale Länge beträgt 255 Zeichen."
+
+msgid "You have made too many requests in a short time. Please slow down and try again."
+msgstr "Sie haben in kurzer Zeit zu viele Anfragen gestellt. Bitte verlangsamen Sie und versuchen Sie es erneut."
+
+msgid "This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist fehlerhaft oder nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "This form can be submitted only once."
+msgstr "Dieses Formular kann nur einmal abgesendet werden."
+
+msgid "This form can be submitted only by logged in users."
+msgstr "Dieses Formular kann nur von angemeldeten Benutzern abgesendet werden."
+
+msgid "There was an issue with form action. Check the form settings."
+msgstr "Es gab ein Problem mit der Formularaktion. Überprüfen Sie die Formulareinstellungen."
+
+msgid "There was an error with your form submission."
+msgstr "Beim Absenden Ihres Formulars ist ein Fehler aufgetreten."
+
+msgid "Form was successfully submitted."
+msgstr "Das Formular wurde erfolgreich abgesendet."
+
+msgid "Form was successfully submitted. Redirecting you now."
+msgstr "Das Formular wurde erfolgreich abgesendet. Sie werden jetzt weitergeleitet."
+
+msgid "Form is not configured correctly. Please try again."
+msgstr "Das Formular ist nicht korrekt konfiguriert. Bitte versuchen Sie es erneut."
+
+msgid "E-mail was not sent due to an unknown issue. Please try again."
+msgstr "Die E-Mail wurde aufgrund eines unbekannten Problems nicht gesendet. Bitte versuchen Sie es erneut."
+
+msgid "Confirmation e-mail was not sent due to unknown issue. Please try again."
+msgstr "Die Bestätigungs-E-Mail wurde aufgrund eines unbekannten Problems nicht gesendet. Bitte versuchen Sie es erneut."
+
+msgid "E-mail was sent successfully."
+msgstr "Die E-Mail wurde erfolgreich gesendet."
+
+msgid "Greenhouse integration is not configured correctly. Please try again."
+msgstr "Die Greenhouse-Integration ist nicht korrekt konfiguriert. Bitte versuchen Sie es erneut."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Mit der Bewerbung stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "Mailchimp integration is not configured correctly. Please try again."
+msgstr "Die Mailchimp-Integration ist nicht korrekt konfiguriert. Bitte versuchen Sie es erneut."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Mit dem Abonnement stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Die Newsletter-Anmeldung war erfolgreich. Vielen Dank!"
+
+msgid "Hubspot integration is not configured correctly. Please try again."
+msgstr "Die Hubspot-Integration ist nicht korrekt konfiguriert. Bitte versuchen Sie es erneut."
+
+msgid "Something is not with the application. Please check all the fields and try again."
+msgstr "Mit der Bewerbung stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "Something is not right with the application. Please check all the fields and try again."
+msgstr "Mit der Bewerbung stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Das Formular wurde erfolgreich abgesendet. Vielen Dank!"
+
+msgid "More than 1000 fields were included in the response. Please contact website administrator."
+msgstr "In der Antwort waren mehr als 1000 Felder enthalten. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "Enter a valid email address."
+msgstr "Geben Sie eine gültige E-Mail-Adresse ein."
+
+msgid "We are sorry but you email was blocked in our blacklist."
+msgstr "Es tut uns leid, aber Ihre E-Mail-Adresse wurde auf unserer Blacklist blockiert."
+
+msgid "Some of number fields are not a valid number value."
+msgstr "Einige der Zahlenfelder enthalten keinen gültigen Zahlenwert."
+
+msgid "The value in the field is too large for the type of field."
+msgstr "Der Wert im Feld ist für den Feldtyp zu groß."
+
+msgid "The field was included in the form submission but is not in the form definition."
+msgstr "Das Feld wurde in der Formularübermittlung angegeben, ist aber nicht in der Formulardefinition enthalten."
+
+msgid "The value of a number field outside the range specified in the field settings."
+msgstr "Der Wert eines Zahlenfeldes liegt außerhalb des in den Feldeinstellungen festgelegten Bereichs."
+
+msgid "The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options."
+msgstr "Der für ein Auswahlfeld (z. B. Checkbox, Dropdown, Radio) angegebene Wert ist keine der möglichen Optionen."
+
+msgid "The context object contains an unexpected attribute. Please contact website administrator."
+msgstr "Das Kontextobjekt enthält ein unerwartetes Attribut. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator."
+msgstr "Der Wert in goToWebinarWebinarKey im Kontextobjekt ist ungültig. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The hutk field in the context object is invalid. Please contact website administrator."
+msgstr "Das hutk-Feld im Kontextobjekt ist ungültig. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The ipAddress field in the context object is invalid. Please contact website administrator."
+msgstr "Das ipAddress-Feld im Kontextobjekt ist ungültig. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The pageUri field in the context object is invalid. Please contact website administrator."
+msgstr "Das pageUri-Feld im Kontextobjekt ist ungültig. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "LegalConsentOptions was empty or it contains both the consent and legitimateInterest fields. Please contact website administrator."
+msgstr "LegalConsentOptions war leer oder enthält sowohl das consent- als auch das legitimateInterest-Feld. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The consentToProcess field in consent or value field in legitimateInterest was false. Please contact website administrator."
+msgstr "Das consentToProcess-Feld in consent oder das value-Feld in legitimateInterest war false. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The text field for processing consent was missing. Please contact website administrator."
+msgstr "Das Textfeld für die Verarbeitung der Einwilligung fehlte. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The communication consent text was missing for a subscription. Please contact website administrator."
+msgstr "Der Text zur Einwilligung in die Kommunikation fehlte für ein Abonnement. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The legitimate interest consent text was missing. Please contact website administrator."
+msgstr "Der Text zur Einwilligung in das berechtigte Interesse fehlte. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator."
+msgstr "Die Kommunikationsliste enthält zwei oder mehr Elemente mit derselben subscriptionTypeId. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator."
+msgstr "Ihr Hubspot-Formular hat reCaptcha aktiviert und wir können die Anfrage nicht verarbeiten. Bitte deaktivieren Sie reCaptcha und versuchen Sie es erneut. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "The HubSpot account has reached the rate limit. Please contact website administrator."
+msgstr "Das HubSpot-Konto hat das Anfragelimit erreicht. Bitte wenden Sie sich an den Website-Administrator."
+
+msgid "MailerLite integration is not configured correctly. Please try again."
+msgstr "Die MailerLite-Integration ist nicht korrekt konfiguriert. Bitte versuchen Sie es erneut."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Mit dem Abonnement stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Die Newsletter-Anmeldung war erfolgreich. Vielen Dank!"
+
+msgid "Goodbits integration is not configured correctly. Please try again."
+msgstr "Die Goodbits-Integration ist nicht korrekt konfiguriert. Bitte versuchen Sie es erneut."
+
+msgid "Something is not right with the subscription. please check all the fields and try again."
+msgstr "Mit dem Abonnement stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "Die Newsletter-Anmeldung war erfolgreich. Vielen Dank!"
+
+msgid "Enter a valid email address."
+msgstr "Geben Sie eine gültige E-Mail-Adresse ein."
+
+msgid "Email address already exists in the system."
+msgstr "Die E-Mail-Adresse existiert bereits im System."
+
+msgid "There was an error with the service. Please try again."
+msgstr "Es ist ein Fehler mit dem Dienst aufgetreten. Bitte versuchen Sie es erneut."
+
+msgid "It looks like this API key is not authorized to make this request. Please check your API key and try again."
+msgstr "Es sieht so aus, als ob dieser API-Schlüssel nicht berechtigt ist, diese Anfrage zu stellen. Bitte überprüfen Sie Ihren API-Schlüssel und versuchen Sie es erneut."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Das Formular wurde erfolgreich abgesendet. Vielen Dank!"
+
+msgid "Spam prevention system encountered an error. Captcha \"request\" is invalid or malformed."
+msgstr "Das Spam-Präventionssystem ist auf einen Fehler gestoßen. Die Captcha-Anfrage ist ungültig oder fehlerhaft."
+
+msgid "Spam prevention system encountered an error. Captcha response \"action\" is not valid."
+msgstr "Das Spam-Präventionssystem ist auf einen Fehler gestoßen. Die Captcha-Antwort \"action\" ist ungültig."
+
+msgid "The request was marked as a potential spam request. Please try again."
+msgstr "Die Anfrage wurde als potenzieller Spam markiert. Bitte versuchen Sie es erneut."
+
+msgid "Spam prevention system encountered an error. Please try again."
+msgstr "Das Spam-Präventionssystem ist auf einen Fehler gestoßen. Bitte versuchen Sie es erneut."
+
+msgid "Airtable integration is not configured correctly. Please try again."
+msgstr "Die Airtable-Integration ist nicht korrekt konfiguriert. Bitte versuchen Sie es erneut."
+
+msgid "Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct."
+msgstr "Ungültige Berechtigungen oder das angeforderte Modell wurde nicht gefunden. Überprüfen Sie, ob Ihr Token die erforderlichen Berechtigungen hat und ob die Modellnamen und/oder IDs korrekt sind."
+
+msgid "You are not permitted to perform this operation."
+msgstr "Sie sind nicht berechtigt, diese Operation durchzuführen."
+
+msgid "Invalid request: parameter validation failed. Check your request data."
+msgstr "Ungültige Anfrage: Die Parameterüberprüfung ist fehlgeschlagen. Überprüfen Sie Ihre Anfragedaten."
+
+msgid "One or more fields are invalid. Please try again."
+msgstr "Ein oder mehrere Felder sind ungültig. Bitte versuchen Sie es erneut."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Das Formular wurde erfolgreich abgesendet. Vielen Dank!"
+
+msgid "Moments integration is not configured correctly. Please try again."
+msgstr "Die Moments-Integration ist nicht korrekt konfiguriert. Bitte versuchen Sie es erneut."
+
+msgid "Something is not right with the submission. Please check all the fields and try again."
+msgstr "Mit der Einreichung stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "Das Formular wurde erfolgreich abgesendet. Vielen Dank!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Mit der Bewerbung stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake."
+msgstr "Es tut uns leid, aber diese Stelle ist nicht mehr verfügbar. Bitte versuchen Sie es später erneut oder kontaktieren Sie uns, wenn Sie glauben, dass dies ein Fehler ist."
+
+msgid "One of your uploaded files has a filename that is too long. Please reduce the filename and try again."
+msgstr "Eine Ihrer hochgeladenen Dateien hat einen zu langen Dateinamen. Bitte kürzen Sie den Dateinamen und versuchen Sie es erneut."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Mit der Bewerbung stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "It looks like there are some issues with your form fields. Please check all the fields and try again."
+msgstr "Es sieht so aus, als gäbe es Probleme mit Ihren Formularfeldern. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "Your form is missing project key. Please try again."
+msgstr "Ihrem Formular fehlt der Projektschlüssel. Bitte versuchen Sie es erneut."
+
+msgid "Your form is missing issue type. Please try again."
+msgstr "Ihrem Formular fehlt der Problemtyp. Bitte versuchen Sie es erneut."
+
+msgid "Your form is missing issue summary. Please try again."
+msgstr "Ihrem Formular fehlt die Problemzusammenfassung. Bitte versuchen Sie es erneut."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Mit der Bewerbung stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "Payment submitted successfully. Thank you!"
+msgstr "Die Zahlung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "Organization ID is invalid."
+msgstr "Die Organisations-ID ist ungültig."
+
+msgid "Integration dataset is invalid."
+msgstr "Der Integrationsdatensatz ist ungültig."
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "Mit der Bewerbung stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Mit dem Abonnement stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "Dieses Formular ist nicht korrekt konfiguriert. Bitte wenden Sie sich an den Website-Administrator, um dieses Problem zu lösen."
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "Mit dem Abonnement stimmt etwas nicht. Bitte überprüfen Sie alle Felder und versuchen Sie es erneut."
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "Die Bewerbung wurde erfolgreich abgeschickt. Vielen Dank!"
+
+msgid "Missing one or more required parameters to process the request."
+msgstr "Un ou plusieurs paramètres requis pour traiter la demande sont manquants."
+
+msgid "File uploaded successfully."
+msgstr "Fichier téléchargé avec succès."
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "Captcha du formulaire ignoré en raison de la configuration de dépannage définie dans les paramètres."
+
 msgid "Afghanistan"
 msgstr "Afghanistan"
 

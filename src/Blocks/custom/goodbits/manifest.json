@@ -7,21 +7,20 @@
 	"icon": {
 		"src": "esf-form-goodbits"
 	},
-	"keywords": ["goodbits"],
-	"example": {},
+	"keywords": [
+		"goodbits"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"goodbitsIntegrationId": {
 			"type": "string"
-		},
-		"goodbitsAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

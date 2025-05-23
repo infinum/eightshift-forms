@@ -10,6 +10,5 @@
 	"keywords": ["phone", "text", "email", "e-mail", "number", "numbers", "url", "urls", "link", "links"],
 	"components": {
 		"phone": "phone"
-	},
-	"parent": ["eightshift-forms/form"]
+	}
 }

@@ -7,21 +7,20 @@
 	"icon": {
 		"src": "esf-form-greenhouse"
 	},
-	"keywords": ["greenhouse"],
-	"example": {},
+	"keywords": [
+		"greenhouse"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"greenhouseIntegrationId": {
 			"type": "string"
-		},
-		"greenhouseAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

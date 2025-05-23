@@ -9,16 +9,14 @@
 	},
 	"keywords": ["form"],
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
-	"parent": ["eightshift-forms/form-selector"],
 	"attributes": {
-		"mailerAllowedBlocks": {
-			"type": "array",
-			"default": []
-		},
 		"mailerFormPostId": {
 			"type": "string"
 		},

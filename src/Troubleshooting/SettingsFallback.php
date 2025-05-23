@@ -10,9 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Troubleshooting;
 
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Settings\SettingGlobalInterface;
-use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -49,6 +50,23 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 	 * Fallback Ignore key.
 	 */
 	public const SETTINGS_FALLBACK_IGNORE_KEY = 'fallback-ignore';
+
+	/**
+	 * Labels.
+	 *
+	 * @var LabelsInterface
+	 */
+	private LabelsInterface $labels;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param LabelsInterface $labels Labels.
+	 */
+	public function __construct(LabelsInterface $labels)
+	{
+		$this->labels = $labels;
+	}
 
 	/**
 	 * Register all the hooks
@@ -120,7 +138,8 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Ignore keys', 'eightshift-forms'),
-								'textareaFieldHelp' => \__("Don't send fallback email if any of these keys are present in the submission. One key per line.", 'eightshift-forms'),
+								// translators: %s is the list of keys.
+								'textareaFieldHelp' => \sprintf(\__("Don't send fallback email if any of these keys are present in the submission. One key per line. <br /> %s", 'eightshift-forms'), $this->getSettingsLabelsOutput()),
 								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_FALLBACK_IGNORE_KEY, 1),
 							],
 						],
@@ -161,5 +180,24 @@ class SettingsFallback implements ServiceInterface, SettingsFallbackDataInterfac
 				],
 			],
 		] : [];
+	}
+
+	/**
+	 * Get settings labels output.
+	 *
+	 * @return string
+	 */
+	private function getSettingsLabelsOutput(): string
+	{
+		$output = '';
+		$labels = $this->labels->getLabels();
+
+		foreach ($labels as $type => $typeLabels) {
+			foreach ($typeLabels as $key => $label) {
+				$output .= "<li><code>{$key}</code></li>";
+			}
+		}
+
+		return "<ul>$output</ul>";
 	}
 }

@@ -10,6 +10,5 @@
 	"keywords": ["input", "text", "email", "e-mail", "number", "numbers", "url", "urls", "link", "links"],
 	"components": {
 		"input": "input"
-	},
-	"parent": ["eightshift-forms/form"]
+	}
 }

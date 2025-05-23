@@ -11,5 +11,7 @@
 	"components": {
 		"radio": "radio"
 	},
-	"parent": ["eightshift-forms/radio"]
+	"parent": [
+		"eightshift-forms/radios"
+	]
 }

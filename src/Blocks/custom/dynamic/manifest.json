@@ -10,6 +10,5 @@
 	"keywords": ["dynamic"],
 	"components": {
 		"dynamic": "dynamic"
-	},
-	"parent": ["eightshift-forms/form"]
+	}
 }

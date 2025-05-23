@@ -8,20 +8,17 @@
 		"src": "esf-form-mailchimp"
 	},
 	"keywords": ["mailchimp"],
-	"example": {},
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"mailchimpIntegrationId": {
 			"type": "string"
-		},
-		"mailchimpAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

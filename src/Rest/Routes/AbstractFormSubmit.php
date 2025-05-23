@@ -173,7 +173,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
-								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
 								[
 									self::VALIDATION_ERROR_OUTPUT => $validate,
 									self::VALIDATION_ERROR_CODE => 'validationFileUploadMissingRequiredParams',
@@ -193,7 +193,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 					if ($isUploadError) {
 						throw new UnverifiedRequestException(
-							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+							$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
 							[
 								self::VALIDATION_ERROR_OUTPUT => [
 									$uploadFileId => $this->getValidatorLabels()->getLabel('validationFileUpload'),
@@ -210,7 +210,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 					if ($validate) {
 						throw new UnverifiedRequestException(
-							\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+							$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
 							[
 								self::VALIDATION_ERROR_OUTPUT => $validate,
 								self::VALIDATION_ERROR_CODE => 'validationSettingsMissingRequiredParams',
@@ -225,7 +225,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
-								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
 								[
 									self::VALIDATION_ERROR_OUTPUT => $validate,
 									self::VALIDATION_ERROR_CODE => 'validationStepMissingRequiredParams',
@@ -258,7 +258,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 						if ($validate) {
 							throw new UnverifiedRequestException(
-								\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+								$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
 								[
 									self::VALIDATION_ERROR_OUTPUT => $validate,
 									self::VALIDATION_ERROR_CODE => 'validationDefaultMissingRequiredParams',
@@ -277,7 +277,7 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 
 							if (!$captchaParams) {
 								throw new UnverifiedRequestException(
-									\esc_html__('Missing one or more required parameters to process the request.', 'eightshift-forms'),
+									$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
 									[
 										self::VALIDATION_ERROR_OUTPUT => $captchaParams,
 										self::VALIDATION_ERROR_CODE => 'validationDefaultCaptcha',

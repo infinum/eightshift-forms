@@ -13,14 +13,12 @@
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"talentlyftIntegrationId": {
 			"type": "string"
-		},
-		"talentlyftAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

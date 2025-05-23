@@ -7,21 +7,20 @@
 	"icon": {
 		"src": "esf-infobip"
 	},
-	"keywords": ["moments"],
-	"example": {},
+	"keywords": [
+		"moments"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"momentsIntegrationId": {
 			"type": "string"
-		},
-		"momentsAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

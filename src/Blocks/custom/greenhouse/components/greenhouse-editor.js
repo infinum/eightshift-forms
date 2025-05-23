@@ -14,7 +14,6 @@ export const GreenhouseEditor = ({ attributes, setAttributes, itemIdKey }) => {
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}
 				setAttributes={setAttributes}
-				allowedBlocks={checkAttr('greenhouseAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);

@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.7.0]
+
+### Added
+
+- Tab component now has no background option for settings.
+- Multilingual support for validation labels both in admin and frontend.
+- All frontend labels are now translatable
+- All frontend labels AI translations for 15 available languages.
+- Missing frontend facing labels.
+- Fallback email will ignore keys are now displayed in the settings.
+
+### Fixed
+
+- If you have geolocation alternatives on some forms you can now turn off the geolocation feature and the output will not break.
+
+### Removed
+
+- Caching for Validation labels.
+
+## [6.6.0]
+
+### Changed
+
+- Restructured the way how allowed blocks are handled and how form block limits work in WordPress 6.8+.
+
 ## [6.5.1]
 
 ### Added
@@ -1209,6 +1234,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.7.0]: https://github.com/infinum/eightshift-forms/compare/6.6.0...6.7.0
+[6.6.0]: https://github.com/infinum/eightshift-forms/compare/6.5.1...6.6.0
 [6.5.1]: https://github.com/infinum/eightshift-forms/compare/6.5.0...6.5.1
 [6.5.0]: https://github.com/infinum/eightshift-forms/compare/6.4.1...6.5.0
 [6.4.1]: https://github.com/infinum/eightshift-forms/compare/6.4.0...6.4.1

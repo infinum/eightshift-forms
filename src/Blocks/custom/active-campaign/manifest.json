@@ -7,24 +7,23 @@
 	"icon": {
 		"src": "esf-form-active-campaign"
 	},
-	"keywords": ["active-campaign"],
-	"example": {},
+	"keywords": [
+		"active-campaign"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"activeCampaignIntegrationId": {
 			"type": "string"
 		},
 		"activeCampaignIntegrationInnerId": {
 			"type": "string"
-		},
-		"activeCampaignAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

@@ -11,5 +11,5 @@
 	"components": {
 		"checkbox": "checkbox"
 	},
-	"parent": ["eightshift-forms/checkbox"]
+	"parent": ["eightshift-forms/checkboxes"]
 }

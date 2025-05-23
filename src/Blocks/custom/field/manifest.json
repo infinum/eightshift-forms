@@ -12,5 +12,5 @@
 		"field": "field",
 		"conditionalTags": "conditionalTags"
 	},
-	"parent": ["eightshift-forms/form"]
+	"parent": ["eightshift-forms/mailer"]
 }

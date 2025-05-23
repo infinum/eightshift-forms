@@ -7,10 +7,10 @@
 	"icon": {
 		"src": "esf-country"
 	},
-	"keywords": ["country"],
-	"hasInnerBlocks": true,
+	"keywords": [
+		"country"
+	],
 	"components": {
 		"country": "country"
-	},
-	"parent": ["eightshift-forms/form"]
+	}
 }

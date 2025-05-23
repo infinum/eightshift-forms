@@ -9,29 +9,8 @@
 	},
 	"keywords": ["forms"],
 	"hasInnerBlocks": true,
-	"attributes": {
-		"formSelectorAllowedBlocks": {
-			"type": "array",
-			"default": [
-				"eightshift-forms/form",
-				"eightshift-forms/mailchimp",
-				"eightshift-forms/greenhouse",
-				"eightshift-forms/hubspot",
-				"eightshift-forms/mailerlite",
-				"eightshift-forms/goodbits",
-				"eightshift-forms/active-campaign",
-				"eightshift-forms/airtable",
-				"eightshift-forms/moments",
-				"eightshift-forms/workable",
-				"eightshift-forms/talentlyft",
-				"eightshift-forms/jira",
-				"eightshift-forms/corvus",
-				"eightshift-forms/paycek",
-				"eightshift-forms/pipedrive",
-				"eightshift-forms/calculator",
-				"eightshift-forms/nationbuilder"
-			]
-		}
+	"supports": {
+		"inserter": false
 	},
 	"forms": [
 		{

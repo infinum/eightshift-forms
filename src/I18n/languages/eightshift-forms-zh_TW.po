@@ -1,3 +1,411 @@
+msgid "Something went wrong while submitting your form. Please try again."
+msgstr "提交表單時發生錯誤，請再試一次。"
+
+msgid "This field is required."
+msgstr "此欄位為必填。"
+
+msgid "This field is required, with at least %s items selected."
+msgstr "此欄位為必填，請至少選擇 %s 項。"
+
+msgid "This field is not valid."
+msgstr "此欄位無效。"
+
+msgid "This e-mail is not valid."
+msgstr "此電子郵件無效。"
+
+msgid "This e-mail already exists in our system."
+msgstr "此電子郵件已存在於我們的系統中。"
+
+msgid "This e-mails top level domain is not valid."
+msgstr "此電子郵件的頂級網域名稱無效。"
+
+msgid "This URL is not valid."
+msgstr "此網址無效。"
+
+msgid "This field value is less than expected. Minimal number should be %s."
+msgstr "此欄位的值低於預期，最小值應為 %s。"
+
+msgid "This field value is more than expected. Maximal number should be %s."
+msgstr "此欄位的值高於預期，最大值應為 %s。"
+
+msgid "This field value has less characters than expected. We expect minimum %s characters."
+msgstr "此欄位的值字元數少於預期，最少需要 %s 個字元。"
+
+msgid "This field value has more characters than expected. We expect maximum %s characters."
+msgstr "此欄位的值字元數多於預期，最多允許 %s 個字元。"
+
+msgid "This field value has less items than expected. We expect minimum %s items."
+msgstr "此欄位的值項目數少於預期，最少需要 %s 項。"
+
+msgid "This field value has more items than expected. We expect maximum %s items."
+msgstr "此欄位的值項目數多於預期，最多允許 %s 項。"
+
+msgid "This field should only contain numbers."
+msgstr "此欄位只能包含數字。"
+
+msgid "This field value should be in this format: %s."
+msgstr "此欄位的值應為此格式：%s。"
+
+msgid "The file type is not supported. Only %s files are allowed."
+msgstr "不支援此檔案類型，僅允許 %s 檔案。"
+
+msgid "The file seems to be corrupted or invalid format. Only %s are allowed."
+msgstr "檔案似乎損壞或格式無效，僅允許 %s。"
+
+msgid "One or more files seem to be corrupt or have invalid format. Only %s are allowed."
+msgstr "一個或多個檔案似乎損壞或格式無效，僅允許 %s。"
+
+msgid "One or more files seem to be uploaded using an unauthorized method."
+msgstr "一個或多個檔案以未授權的方式上傳。"
+
+msgid "It seems that one or more files were not uploaded to the server. Please remove the files and try again."
+msgstr "似乎有一個或多個檔案未上傳至伺服器，請移除檔案並再試一次。"
+
+msgid "There seems to be an error with the file upload. Please try again."
+msgstr "檔案上傳時發生錯誤，請再試一次。"
+
+msgid "You can only upload a single file in this field. If you have multiple files, please remove them and try again."
+msgstr "此欄位只能上傳一個檔案。如果您有多個檔案，請移除並再試一次。"
+
+msgid "The file is smaller than allowed. Minimum file size is %s MB."
+msgstr "檔案小於允許的最小值，最小檔案大小為 %s MB。"
+
+msgid "The file is larger than allowed. Maximum file size is %s MB."
+msgstr "檔案大於允許的最大值，最大檔案大小為 %s MB。"
+
+msgid "This phone number is not valid. It must contain a valid country/network prefix with only numbers."
+msgstr "此電話號碼無效，必須包含有效的國家/網路區碼且僅包含數字。"
+
+msgid "This date format is not valid."
+msgstr "此日期格式無效。"
+
+msgid "This date/time format is not valid."
+msgstr "此日期/時間格式無效。"
+
+msgid "This fields only allows dates in the past."
+msgstr "此欄位僅允許輸入過去的日期。"
+
+msgid "This field value has more characters than expected. We expect maximum 5 numbers."
+msgstr "此欄位的值字元數多於預期，最多允許 5 個數字。"
+
+msgid "The file seems to be corrupted or invalid format. Only pdf,doc,docx,txt,rtf are allowed."
+msgstr "檔案似乎損壞或格式無效，僅允許 pdf,doc,docx,txt,rtf。"
+
+msgid "This field has invalid length for phone number."
+msgstr "此欄位的長度不符合電話號碼要求。"
+
+msgid "This field contains forbidden special characters."
+msgstr "此欄位包含被禁止的特殊字元。"
+
+msgid "This field is too long. Max length is 127 characters."
+msgstr "此欄位過長，最大長度為 127 個字元。"
+
+msgid "This field is too long. Max length is 255 characters."
+msgstr "此欄位過長，最大長度為 255 個字元。"
+
+msgid "You have made too many requests in a short time. Please slow down and try again."
+msgstr "您在短時間內發送了過多請求，請稍後再試。"
+
+msgid "This form is malformed or not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單格式錯誤或設定不正確，請聯繫網站管理員解決此問題。"
+
+msgid "This form can be submitted only once."
+msgstr "此表單只能提交一次。"
+
+msgid "This form can be submitted only by logged in users."
+msgstr "此表單僅能由登入的使用者提交。"
+
+msgid "There was an issue with form action. Check the form settings."
+msgstr "表單操作出現問題，請檢查表單設定。"
+
+msgid "There was an error with your form submission."
+msgstr "表單提交時發生錯誤。"
+
+msgid "Form was successfully submitted."
+msgstr "表單已成功提交。"
+
+msgid "Form was successfully submitted. Redirecting you now."
+msgstr "表單已成功提交，正在跳轉。"
+
+msgid "Form is not configured correctly. Please try again."
+msgstr "表單未正確設定，請再試一次。"
+
+msgid "E-mail was not sent due to an unknown issue. Please try again."
+msgstr "由於未知問題，電子郵件未發送，請再試一次。"
+
+msgid "Confirmation e-mail was not sent due to unknown issue. Please try again."
+msgstr "由於未知問題，確認郵件未發送，請再試一次。"
+
+msgid "E-mail was sent successfully."
+msgstr "電子郵件已成功發送。"
+
+msgid "Greenhouse integration is not configured correctly. Please try again."
+msgstr "Greenhouse 整合未正確設定，請再試一次。"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "職位申請有問題，請檢查所有欄位並再試一次。"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "申請已成功提交，謝謝！"
+
+msgid "Mailchimp integration is not configured correctly. Please try again."
+msgstr "Mailchimp 整合未正確設定，請再試一次。"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "訂閱有問題，請檢查所有欄位並再試一次。"
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "電子報訂閱成功，謝謝！"
+
+msgid "Hubspot integration is not configured correctly. Please try again."
+msgstr "Hubspot 整合未正確設定，請再試一次。"
+
+msgid "Something is not with the application. Please check all the fields and try again."
+msgstr "申請有問題，請檢查所有欄位並再試一次。"
+
+msgid "Something is not right with the application. Please check all the fields and try again."
+msgstr "申請有問題，請檢查所有欄位並再試一次。"
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "表單已成功提交，謝謝！"
+
+msgid "More than 1000 fields were included in the response. Please contact website administrator."
+msgstr "回應中包含超過 1000 個欄位，請聯繫網站管理員。"
+
+msgid "Enter a valid email address."
+msgstr "請輸入有效的電子郵件地址。"
+
+msgid "We are sorry but you email was blocked in our blacklist."
+msgstr "很抱歉，您的電子郵件被列入黑名單。"
+
+msgid "Some of number fields are not a valid number value."
+msgstr "部分數字欄位的值無效。"
+
+msgid "The value in the field is too large for the type of field."
+msgstr "欄位的值對該欄位類型來說過大。"
+
+msgid "The field was included in the form submission but is not in the form definition."
+msgstr "欄位已包含在表單提交中，但不在表單定義中。"
+
+msgid "The value of a number field outside the range specified in the field settings."
+msgstr "數字欄位的值超出欄位設定中指定的範圍。"
+
+msgid "The value provided for an enumeration field (e.g. checkbox, dropdown, radio) is not one of the possible options."
+msgstr "為列舉欄位（如核取方塊、下拉選單、單選按鈕）提供的值不在可選範圍內。"
+
+msgid "The context object contains an unexpected attribute. Please contact website administrator."
+msgstr "上下文物件包含意外屬性，請聯繫網站管理員。"
+
+msgid "The value in goToWebinarWebinarKey in the context object is invalid. Please contact website administrator."
+msgstr "上下文物件中的 goToWebinarWebinarKey 值無效，請聯繫網站管理員。"
+
+msgid "The hutk field in the context object is invalid. Please contact website administrator."
+msgstr "上下文物件中的 hutk 欄位無效，請聯繫網站管理員。"
+
+msgid "The ipAddress field in the context object is invalid. Please contact website administrator."
+msgstr "上下文物件中的 ipAddress 欄位無效，請聯繫網站管理員。"
+
+msgid "The pageUri field in the context object is invalid. Please contact website administrator."
+msgstr "上下文物件中的 pageUri 欄位無效，請聯繫網站管理員。"
+
+msgid "LegalConsentOptions was empty or it contains both the consent and legitimateInterest fields. Please contact website administrator."
+msgstr "LegalConsentOptions 為空或同時包含 consent 和 legitimateInterest 欄位，請聯繫網站管理員。"
+
+msgid "The consentToProcess field in consent or value field in legitimateInterest was false. Please contact website administrator."
+msgstr "consent 中的 consentToProcess 欄位或 legitimateInterest 中的 value 欄位為 false，請聯繫網站管理員。"
+
+msgid "The text field for processing consent was missing. Please contact website administrator."
+msgstr "缺少用於處理同意的文字欄位，請聯繫網站管理員。"
+
+msgid "The communication consent text was missing for a subscription. Please contact website administrator."
+msgstr "訂閱中缺少通訊同意文字，請聯繫網站管理員。"
+
+msgid "The legitimate interest consent text was missing. Please contact website administrator."
+msgstr "缺少合法利益同意文字，請聯繫網站管理員。"
+
+msgid "The communications list contains two or more items with the same subscriptionTypeId. Please contact website administrator."
+msgstr "通訊清單包含兩個或多個具有相同 subscriptionTypeId 的項目，請聯繫網站管理員。"
+
+msgid "Your Hubspot form has reCaptcha enabled and we are not able to process the request. Please disable reCaptcha and try again. Please contact website administrator."
+msgstr "您的 Hubspot 表單啟用了 reCaptcha，我們無法處理請求。請停用 reCaptcha 並再試一次，請聯繫網站管理員。"
+
+msgid "The HubSpot account has reached the rate limit. Please contact website administrator."
+msgstr "HubSpot 帳戶已達到速率限制，請聯繫網站管理員。"
+
+msgid "MailerLite integration is not configured correctly. Please try again."
+msgstr "MailerLite 整合未正確設定，請再試一次。"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "訂閱有問題，請檢查所有欄位並再試一次。"
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "電子報訂閱成功，謝謝！"
+
+msgid "Goodbits integration is not configured correctly. Please try again."
+msgstr "Goodbits 整合未正確設定，請再試一次。"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "訂閱有問題，請檢查所有欄位並再試一次。"
+
+msgid "The newsletter subscription was successful. Thank you!"
+msgstr "電子報訂閱成功，謝謝！"
+
+msgid "Enter a valid email address."
+msgstr "請輸入有效的電子郵件地址。"
+
+msgid "Email address already exists in the system."
+msgstr "電子郵件地址已存在於系統中。"
+
+msgid "There was an error with the service. Please try again."
+msgstr "服務發生錯誤，請再試一次。"
+
+msgid "It looks like this API key is not authorized to make this request. Please check your API key and try again."
+msgstr "此 API 金鑰未獲授權執行此請求，請檢查您的 API 金鑰並再試一次。"
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "表單已成功提交，謝謝！"
+
+msgid "Spam prevention system encountered an error. Captcha \"request\" is invalid or malformed."
+msgstr "防垃圾郵件系統遇到錯誤，Captcha \"request\" 無效或格式錯誤。"
+
+msgid "Spam prevention system encountered an error. Captcha response \"action\" is not valid."
+msgstr "防垃圾郵件系統遇到錯誤，Captcha 回應 \"action\" 無效。"
+
+msgid "The request was marked as a potential spam request. Please try again."
+msgstr "請求被標記為潛在垃圾郵件請求，請再試一次。"
+
+msgid "Spam prevention system encountered an error. Please try again."
+msgstr "防垃圾郵件系統遇到錯誤，請再試一次。"
+
+msgid "Airtable integration is not configured correctly. Please try again."
+msgstr "Airtable 整合未正確設定，請再試一次。"
+
+msgid "Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct."
+msgstr "權限無效，或未找到請求的模型。請檢查您的 token 是否具有所需權限，以及模型名稱和/或 ID 是否正確。"
+
+msgid "You are not permitted to perform this operation."
+msgstr "您無權執行此操作。"
+
+msgid "Invalid request: parameter validation failed. Check your request data."
+msgstr "請求無效：參數驗證失敗，請檢查您的請求資料。"
+
+msgid "One or more fields are invalid. Please try again."
+msgstr "一個或多個欄位無效，請再試一次。"
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "表單已成功提交，謝謝！"
+
+msgid "Moments integration is not configured correctly. Please try again."
+msgstr "Moments 整合未正確設定，請再試一次。"
+
+msgid "Something is not right with the submission. Please check all the fields and try again."
+msgstr "提交有問題，請檢查所有欄位並再試一次。"
+
+msgid "The form was submitted successfully. Thank you!"
+msgstr "表單已成功提交，謝謝！"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "職位申請有問題，請檢查所有欄位並再試一次。"
+
+msgid "We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake."
+msgstr "很抱歉，此職位已不再可用。請稍後再試，如果您認為這是錯誤，請聯繫我們。"
+
+msgid "One of your uploaded files has a filename that is too long. Please reduce the filename and try again."
+msgstr "您上傳的檔案中有一個檔案名稱過長，請縮短檔案名稱並再試一次。"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "申請已成功提交，謝謝！"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "職位申請有問題，請檢查所有欄位並再試一次。"
+
+msgid "It looks like there are some issues with your form fields. Please check all the fields and try again."
+msgstr "您的表單欄位似乎有問題，請檢查所有欄位並再試一次。"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "申請已成功提交，謝謝！"
+
+msgid "Your form is missing project key. Please try again."
+msgstr "您的表單缺少專案金鑰，請再試一次。"
+
+msgid "Your form is missing issue type. Please try again."
+msgstr "您的表單缺少問題類型，請再試一次。"
+
+msgid "Your form is missing issue summary. Please try again."
+msgstr "您的表單缺少問題摘要，請再試一次。"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "職位申請有問題，請檢查所有欄位並再試一次。"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "申請已成功提交，謝謝！"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "申請已成功提交，謝謝！"
+
+msgid "This form is not configured correctly. please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "Payment submitted successfully. Thank you!"
+msgstr "付款已成功提交，謝謝！"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "Organization ID is invalid."
+msgstr "組織 ID 無效。"
+
+msgid "Integration dataset is invalid."
+msgstr "整合資料集無效。"
+
+msgid "Something is not right with the job application. Please check all the fields and try again."
+msgstr "職位申請有問題，請檢查所有欄位並再試一次。"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "申請已成功提交，謝謝！"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "訂閱有問題，請檢查所有欄位並再試一次。"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "申請已成功提交，謝謝！"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "This form is not configured correctly. Please get in touch with the website administrator to resolve this issue."
+msgstr "此表單未正確設定，請聯繫網站管理員解決此問題。"
+
+msgid "Something is not right with the subscription. Please check all the fields and try again."
+msgstr "訂閱有問題，請檢查所有欄位並再試一次。"
+
+msgid "Application submitted successfully. Thank you!"
+msgstr "申請已成功提交，謝謝！"
+
+msgid "Missing one or more required parameters to process the request."
+msgstr "缺少一個或多個處理請求所需的參數。"
+
+msgid "File uploaded successfully."
+msgstr "檔案上傳成功。"
+
+msgid "Form captcha skipped due to troubleshooting config set in settings."
+msgstr "由於設定中配置了故障排除，表單驗證碼被跳過。"
+
 msgid "Afghanistan"
 msgstr "阿富汗"
 

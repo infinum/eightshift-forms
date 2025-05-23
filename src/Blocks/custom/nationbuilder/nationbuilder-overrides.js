@@ -7,11 +7,5 @@ export const overrides = {
 	icon: {
 		src: getUtilsIcons('nationbuilder') ?? manifest.icon.src,
 	},
-	attributes: {
-		...manifest.attributes,
-		nationbuilderAllowedBlocks: {
-			...manifest.attributes.nationbuilderAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList,
-		},
-	},
+	parent: globalManifest.allowedBlocksList.formsCpt,
 };

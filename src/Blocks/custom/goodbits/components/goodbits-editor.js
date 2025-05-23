@@ -14,7 +14,6 @@ export const GoodbitsEditor = ({ attributes, setAttributes, itemIdKey }) => {
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}
 				setAttributes={setAttributes}
-				allowedBlocks={checkAttr('goodbitsAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);

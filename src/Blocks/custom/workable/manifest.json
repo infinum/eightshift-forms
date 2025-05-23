@@ -7,21 +7,20 @@
 	"icon": {
 		"src": "esf-form-workable"
 	},
-	"keywords": ["workable"],
-	"example": {},
+	"keywords": [
+		"workable"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"workableIntegrationId": {
 			"type": "string"
-		},
-		"workableAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

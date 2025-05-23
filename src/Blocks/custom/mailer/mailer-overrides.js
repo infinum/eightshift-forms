@@ -7,11 +7,5 @@ export const overrides = {
 	icon: {
 		src: getUtilsIcons('form') ?? manifest.icon.src,
 	},
-	attributes: {
-		...manifest.attributes,
-		mailerAllowedBlocks: {
-			...manifest.attributes.mailerAllowedBlocks,
-			default: globalManifest.allowedBlocksBuilderBlocksList,
-		},
-	},
+	parent: globalManifest.allowedBlocksList.formsCpt,
 };

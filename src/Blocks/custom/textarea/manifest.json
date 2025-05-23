@@ -10,6 +10,5 @@
 	"keywords": ["textarea"],
 	"components": {
 		"textarea": "textarea"
-	},
-	"parent": ["eightshift-forms/form"]
+	}
 }

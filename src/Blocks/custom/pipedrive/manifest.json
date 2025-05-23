@@ -7,21 +7,20 @@
 	"icon": {
 		"src": "esf-form-pipedrive"
 	},
-	"keywords": ["pipedrive"],
-	"example": {},
+	"keywords": [
+		"pipedrive"
+	],
 	"components": {
 		"form": "form",
 		"step": "step"
 	},
 	"hasInnerBlocks": true,
+	"supports": {
+		"inserter": false
+	},
 	"attributes": {
 		"pipedriveIntegrationId": {
 			"type": "string"
-		},
-		"pipedriveAllowedBlocks": {
-			"type": "array",
-			"default": []
 		}
-	},
-	"parent": ["eightshift-forms/form-selector"]
+	}
 }

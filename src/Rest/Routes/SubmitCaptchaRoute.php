@@ -84,7 +84,7 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiSuccessPublicOutput(
-					\esc_html__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
+					$this->labels->getLabel('captchaSkipCheck'),
 					[],
 					$debug
 				)

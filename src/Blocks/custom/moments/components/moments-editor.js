@@ -14,7 +14,6 @@ export const MomentsEditor = ({ attributes, setAttributes, itemIdKey }) => {
 				itemId={checkAttr(itemIdKey, attributes, manifest)}
 				attributes={attributes}
 				setAttributes={setAttributes}
-				allowedBlocks={checkAttr('momentsAllowedBlocks', attributes, manifest)}
 			/>
 		</div>
 	);
