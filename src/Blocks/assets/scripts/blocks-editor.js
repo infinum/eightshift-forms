@@ -11,7 +11,7 @@
  */
 
 import { unregisterBlockType } from '@wordpress/blocks';
-import { registerBlocks, outputCssVariablesGlobal } from '@eightshift/frontend-libs/scripts/editor';
+import { registerBlocks } from '@eightshift/frontend-libs-tailwind/scripts/editor';
 import globalManifest from '../../manifest.json';
 import './store';
 
@@ -27,9 +27,6 @@ registerBlocks(
 	require.context('./../../custom', true, /-deprecations.js$/),
 	require.context('./../../custom', true, /-overrides.js$/),
 );
-
-// Output global css variables.
-outputCssVariablesGlobal();
 
 if (esFormsLocalization?.currentPostType?.isForms) {
 	globalManifest?.unregisterBlocks?.forms?.forEach((block) => unregisterBlockType(block));

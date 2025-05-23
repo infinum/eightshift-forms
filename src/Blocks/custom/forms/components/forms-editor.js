@@ -1,6 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { checkAttr, props, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { __, sprintf } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { ConditionalTagsEditor } from '../../../components/conditional-tags/components/conditional-tags-editor';

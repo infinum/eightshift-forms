@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useState, useEffect } from '@wordpress/element';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { checkAttr, BlockInserter, selector } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, BlockInserter, selector } from '@eightshift/frontend-libs-tailwind/scripts';
 import manifest from '../manifest.json';
 import { CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from '../../../components/conditional-tags/components/conditional-tags-labels';
 import globalManifest from '../../../manifest.json';

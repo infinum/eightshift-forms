@@ -43,7 +43,7 @@ const esTwResponsiveCompiler = () => ({
 
 /**
  * This is a main entrypoint for Webpack config.
- * All the settings are pulled from node_modules/@eightshift/frontend-libs/webpack.
+ * All the settings are pulled from node_modules/@eightshift/frontend-libs-tailwind/webpack.
  * We are loading mostly used configuration but you can always override or turn off the default setup and provide your own.
  * Please referer to Eightshift-libs wiki for details.
  */
@@ -59,11 +59,9 @@ export default (_, argv) => {
 	const config = eightshiftConfig(argv.mode, projectConfig);
 
 	return {
-		// Load all projects config from eightshift-frontend-libs.
 		...config,
 
 		output: {
-			// Load all output config from eightshift-frontend-libs.
 			...config.output,
 			library: 'EightshiftForms',
 		},

@@ -5,10 +5,12 @@
  * Usage: `WordPress frontend screen`.
  */
 
-import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 
 // Images.
 import './images/blocks-frontend-mandatory';
+
+import '../../../tailwind.css';
 
 dynamicImport(require.context('./../components', true, /-frontend-mandatory\.css$/));
 dynamicImport(require.context('./../custom', true, /-frontend-mandatory\.css$/));

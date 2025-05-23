@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { BlockInserter, props } from '@eightshift/frontend-libs/scripts';
+import { BlockInserter, props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { additionalBlocksIntegration, FormEditor } from './../../form/components/form-editor';
 import { InvalidEditor } from './../../invalid/components/invalid-editor';
 

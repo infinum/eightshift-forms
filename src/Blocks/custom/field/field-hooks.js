@@ -3,7 +3,7 @@
 import { addFilter } from '@wordpress/hooks';
 import { select } from '@wordpress/data';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { STORE_NAME } from '@eightshift/frontend-libs/scripts/editor';
+import { STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts/editor';
 import { Field } from './field-block';
 
 // Wrap none forms block with field block.

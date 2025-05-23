@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, TextControl } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, Select } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, Select } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS, CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../../components/conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions, NameField } from './../../../components/utils';
 import manifest from '../manifest.json';

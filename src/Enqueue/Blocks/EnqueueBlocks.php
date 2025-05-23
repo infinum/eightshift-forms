@@ -70,7 +70,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
 		// Frontend only style.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
+		// TODO
+		// \add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyle'], 50);
 
 		// Frontend only script.

@@ -1,3 +1,5 @@
+@reference './../../../../tailwind.css';
+
 .es-select.choices {
 	@apply text-neutral-80 mb-0 text-sm;
 }

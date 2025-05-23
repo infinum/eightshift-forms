@@ -4,7 +4,7 @@ import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { TextControl, PanelBody, Button } from '@wordpress/components';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, STORE_NAME, NumberPicker, Control, Select } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, props, Section, IconToggle, STORE_NAME, NumberPicker, Control, Select } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';

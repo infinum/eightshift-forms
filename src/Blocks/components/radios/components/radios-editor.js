@@ -1,6 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { STORE_NAME, checkAttr, props, getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME, checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';

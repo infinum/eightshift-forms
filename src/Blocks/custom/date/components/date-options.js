@@ -1,5 +1,5 @@
 import React from 'react';
-import { props } from '@eightshift/frontend-libs/scripts';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { DateOptions as DateOptionsComponent } from '../../../components/date/components/date-options';
 
 export const DateOptions = ({ attributes, setAttributes }) => {

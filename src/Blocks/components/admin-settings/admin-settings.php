@@ -11,8 +11,6 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifestSection = Helpers::getComponent('admin-settings-section');
 
-echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
 $sectionClass = $manifestSection['componentClass'] ?? '';

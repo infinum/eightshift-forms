@@ -4,7 +4,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import { checkAttr, getAttrKey, IconLabel, IconToggle, Section, props, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, IconToggle, Section, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';

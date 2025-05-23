@@ -1,7 +1,7 @@
 import React from 'react';
 import { select } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FormEditor, additionalBlocksNoIntegration } from '../../../components/form/components/form-editor';
 
 export const JiraEditor = ({ attributes, setAttributes, clientId }) => {

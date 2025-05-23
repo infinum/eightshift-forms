@@ -6,7 +6,7 @@ import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { Tooltip, Button, TextControl } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import { IconLabel, STORE_NAME, Notification, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs/scripts';
+import { IconLabel, STORE_NAME, Notification, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
 import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';

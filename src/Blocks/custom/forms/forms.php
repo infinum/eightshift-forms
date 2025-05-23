@@ -20,8 +20,6 @@ if (!apply_filters(Form::FILTER_FORMS_BLOCK_SHOULD_RENDER, true, $attributes, $m
 	return;
 }
 
-echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-
 $blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
 
 // Check formPost ID prop.
@@ -148,7 +146,3 @@ $formsClass = Helpers::classnames([
 	);
 	?>
 </div>
-
-<?php
-
-echo Helpers::outputCssVariablesInline(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped

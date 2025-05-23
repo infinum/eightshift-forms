@@ -1,3 +1,5 @@
+@reference './../../../../tailwind.css';
+
 .flatpickr-calendar {
 	@apply text-neutral-80 mb-0 bg-white text-sm;
 }

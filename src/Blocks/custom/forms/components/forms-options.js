@@ -8,7 +8,7 @@ import { MediaPlaceholder } from '@wordpress/block-editor';
 import { PanelBody, TextControl, Button, Modal, ExternalLink } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { icons } from '@eightshift/ui-components/icons';
-import { IconLabel, getAttrKey, checkAttr, props, MultiSelect, IconToggle, Control, Section, STORE_NAME, Repeater, RepeaterItem, Toggle } from '@eightshift/frontend-libs/scripts';
+import { IconLabel, getAttrKey, checkAttr, props, MultiSelect, IconToggle, Control, Section, STORE_NAME, Repeater, RepeaterItem, Toggle } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ConditionalTagsFormsOptions } from '../../../components/conditional-tags/components/conditional-tags-forms-options';
 import { FormEditButton, LocationsButton, SettingsButton, outputFormSelectItemWithIcon } from '../../../components/utils';
 import { getRestUrl } from '../../../components/form/assets/state-init';

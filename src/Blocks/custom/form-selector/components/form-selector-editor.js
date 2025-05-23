@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { Button, Placeholder } from '@wordpress/components';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { createBlockFromTemplate, DashboardButton } from './../../../components/utils';
 import globalSettings from './../../../manifest.json';
 import { icons } from '@eightshift/ui-components/icons';

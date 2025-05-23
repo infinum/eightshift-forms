@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { PanelBody, Button } from '@wordpress/components';
-import { props, Section, Control } from '@eightshift/frontend-libs/scripts';
+import { props, Section, Control } from '@eightshift/frontend-libs-tailwind/scripts';
 import { LocationsButton, SettingsButton, resetInnerBlocks } from '../../utils';
 import { FormOptions } from '../../../components/form/components/form-options';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';

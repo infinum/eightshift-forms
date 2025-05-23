@@ -5,7 +5,9 @@
  * Usage: `WordPress frontend screen`.
  */
 
-import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
+
+import '../../../tailwind.css';
 
 dynamicImport(require.context('./../components', true, /-frontend\.css$/));
 

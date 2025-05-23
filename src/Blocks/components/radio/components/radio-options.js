@@ -5,7 +5,7 @@ import { select } from '@wordpress/data';
 import { PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import { icons } from '@eightshift/ui-components/icons';
-import { checkAttr, getAttrKey, IconLabel, IconToggle, props, Section, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, IconToggle, props, Section, AnimatedContentVisibility, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { isOptionDisabled, NameField } from './../../utils';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { select, useSelect } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { RadiosEditor as RadiosEditorComponent } from '../../../components/radios/components/radios-editor';
 import globalManifest from '../../../manifest.json';
 export const RadiosEditor = ({ attributes, setAttributes, clientId }) => {

@@ -5,7 +5,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { select, useDispatch, useSelect, dispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { Button, PanelBody, Modal } from '@wordpress/components';
-import { Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs/scripts';
+import { Select, Section, props, Control, IconLabel } from '@eightshift/frontend-libs-tailwind/scripts';
 import { icons } from '@eightshift/ui-components/icons';
 import { updateIntegrationBlocks, resetInnerBlocks, syncIntegrationBlocks, clearTransientCache, SettingsButton, LocationsButton } from '../../utils';
 import { getRestUrlByType } from '../../form/assets/state-init';

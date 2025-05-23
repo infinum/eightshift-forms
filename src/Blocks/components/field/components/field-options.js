@@ -16,7 +16,7 @@ import {
 	getDefaultBreakpointNames,
 	MultiSelect,
 	props,
-} from '@eightshift/frontend-libs/scripts';
+} from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../../components/conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';

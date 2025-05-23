@@ -4,7 +4,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, PanelBody, Button, Modal } from '@wordpress/components';
-import { getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { getAttrKey, checkAttr, IconToggle, props, Select, Control, Section, IconLabel, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CONDITIONAL_TAGS_OPERATORS_LABELS } from './../../conditional-tags/components/conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';

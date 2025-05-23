@@ -1,7 +1,7 @@
 import React from 'react';
 import { select, useSelect } from '@wordpress/data';
 import { InnerBlocks } from '@wordpress/block-editor';
-import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { props, BlockInserter, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CheckboxesEditor as CheckboxesEditorComponent } from '../../../components/checkboxes/components/checkboxes-editor';
 import globalManifest from '../../../manifest.json';
 export const CheckboxesEditor = ({ attributes, setAttributes, clientId }) => {

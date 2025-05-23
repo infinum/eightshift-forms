@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { selector, props, STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
+import { selector, props, STORE_NAME, checkAttr } from '@eightshift/frontend-libs-tailwind/scripts';
 import { clsx } from '@eightshift/ui-components/utilities';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 

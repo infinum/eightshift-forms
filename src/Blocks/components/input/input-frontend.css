@@ -1,3 +1,5 @@
+@reference './../../../../tailwind.css';
+
 /* Webkit */
 .es-input__range::-webkit-slider-runnable-track {
 	@apply h-full cursor-pointer rounded-sm p-0 border-none outline-none;

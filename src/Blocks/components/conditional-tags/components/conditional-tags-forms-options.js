@@ -4,7 +4,7 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { PanelBody, Button, Modal } from '@wordpress/components';
-import { getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector, STORE_NAME, Notification } from '@eightshift/frontend-libs/scripts';
+import { getAttrKey, checkAttr, IconToggle, Select, Control, Section, IconLabel, OptionSelector, STORE_NAME, Notification } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CONDITIONAL_TAGS_ACTIONS_LABELS } from './conditional-tags-labels';
 import { getConstantsOptions } from '../../utils';
 import { getRestUrl } from '../../form/assets/state-init';

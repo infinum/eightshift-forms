@@ -4,7 +4,7 @@ import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
 import { ResultOutputEditor } from './components/result-output-editor';
 import { ResultOutputOptions } from './components/result-output-options';
-import { fetchFromWpRest } from '@eightshift/frontend-libs/scripts';
+import { fetchFromWpRest } from '@eightshift/frontend-libs-tailwind/scripts';
 import { outputFormSelectItemWithIcon } from '../../components/utils';
 
 const dynamicItemSelectOptions = function (postType) {

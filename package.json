@@ -33,7 +33,6 @@
 		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
-		"@eightshift/frontend-libs": "^15.0.1",
 		"@eightshift/frontend-libs-tailwind": "^2.0.2",
 		"@eightshift/ui-components": "^5.0.1",
 		"@tailwindcss/postcss": "^4.1.7",
@@ -42,7 +41,9 @@
 		"dropzone": "^6.0.0-beta.2",
 		"flatpickr": "^4.6.13",
 		"media-blender": "^3.0.0",
-		"reactflow": "^11.11.4"
+		"reactflow": "^11.11.4",
+		"tailwindcss-motion": "^1.1.0",
+		"tailwindcss-react-aria-components": "^2.0.0"
 	},
 	"husky": {
 		"hooks": {

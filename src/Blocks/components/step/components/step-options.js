@@ -3,7 +3,7 @@ import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { TextControl, PanelBody } from '@wordpress/components';
-import { checkAttr, getAttrKey, IconLabel, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, IconLabel, Section, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { NameField } from './../../utils';
 import { icons } from '@eightshift/ui-components/icons';
 

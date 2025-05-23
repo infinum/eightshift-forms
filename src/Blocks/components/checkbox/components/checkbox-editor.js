@@ -1,7 +1,7 @@
 import React from 'react';
 import { select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { clsx } from '@eightshift/ui-components/utilities';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 import { MissingName, VisibilityHidden, preventSaveOnMissingProps } from './../../utils';

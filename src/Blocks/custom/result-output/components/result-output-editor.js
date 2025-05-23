@@ -1,6 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import { checkAttr, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { __ } from '@wordpress/i18n';
 import { Placeholder } from '@wordpress/components';
 import { outputFormSelectItemWithIcon } from '../../../components/utils';

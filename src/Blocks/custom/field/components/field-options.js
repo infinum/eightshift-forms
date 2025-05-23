@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
-import { props } from '@eightshift/frontend-libs/scripts';
+import { props } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsExternalBlocks, FieldOptionsLayout } from './../../../components/field/components/field-options';
 
 // This block is only used if you want to include custom external blocks to forms.

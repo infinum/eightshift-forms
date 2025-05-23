@@ -5,12 +5,13 @@
  * Usage: `WordPress admin editor`.
  */
 
-import { dynamicImport } from '@eightshift/frontend-libs/scripts/helpers';
+import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 
 // Images.
 import './images/blocks-editor';
 
 // Styles.
+import '../../../tailwind.css';
 import './styles/blocks-editor.css';
 
 dynamicImport(require.context('./../components', true, /-editor\.css$/));
