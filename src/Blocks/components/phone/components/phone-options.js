@@ -9,7 +9,7 @@ import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibil
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, Select, Toggle, BaseControl, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, Select, Toggle, BaseControl } from '@eightshift/ui-components';
 
 export const PhoneOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('phone');
@@ -39,7 +39,7 @@ export const PhoneOptions = (attributes) => {
 	}
 
 	return (
-		<ContainerPanel title={title}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -216,6 +216,6 @@ export const PhoneOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('phoneFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

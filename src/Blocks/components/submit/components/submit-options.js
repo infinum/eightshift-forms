@@ -5,7 +5,7 @@ import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-l
 import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, BaseControl, Toggle, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, BaseControl, Toggle } from '@eightshift/ui-components';
 
 export const SubmitOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('submit');
@@ -18,7 +18,7 @@ export const SubmitOptions = (attributes) => {
 	const submitDisabledOptions = checkAttr('submitDisabledOptions', attributes, manifest);
 
 	return (
-		<ContainerPanel title={__('Submit', 'eightshift-forms')}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -77,6 +77,6 @@ export const SubmitOptions = (attributes) => {
 					fieldDisabledOptions: submitDisabledOptions,
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

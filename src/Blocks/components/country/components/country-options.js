@@ -7,7 +7,7 @@ import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibil
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, BaseControl, Select, Toggle, NumberPicker, Button, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, BaseControl, Select, Toggle, NumberPicker, Button } from '@eightshift/ui-components';
 
 export const CountryOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('country');
@@ -33,7 +33,7 @@ export const CountryOptions = (attributes) => {
 	const countryValue = checkAttr('countryValue', attributes, manifest);
 
 	return (
-		<ContainerPanel title={__('Country', 'eightshift-forms')}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -241,6 +241,6 @@ export const CountryOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('countryFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

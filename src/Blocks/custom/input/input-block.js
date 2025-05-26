@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { InputEditor } from './components/input-editor';
 import { InputOptions } from './components/input-options';
 
 export const Input = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<InputOptions {...props} />
-			</InspectorControls>
-			<InputEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={InputOptions}
+			editor={InputEditor}
+		/>
 	);
 };

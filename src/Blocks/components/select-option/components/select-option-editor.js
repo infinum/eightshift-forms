@@ -19,7 +19,7 @@ export const SelectOptionEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('selectOptionValue', attributes, manifest), selectOptionValue);
 
 	return (
-		<div>
+		<div className={'es:p-3'}>
 			<VisibilityHidden
 				value={selectOptionIsHidden}
 				label={__('Option', 'eightshift-forms')}

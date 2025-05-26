@@ -18,7 +18,7 @@ export const RadioEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('radioValue', attributes, manifest), radioValue);
 
 	return (
-		<div>
+		<div className={'es:p-3'}>
 			<VisibilityHidden
 				value={radioIsHidden}
 				label={__('Radio', 'eightshift-forms')}

@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { NameField } from './../../utils';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, BaseControl, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, BaseControl } from '@eightshift/ui-components';
 
 export const StepOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('step');
@@ -21,7 +21,7 @@ export const StepOptions = (attributes) => {
 
 	return (
 		<>
-			<ContainerPanel title={__('Step', 'eightshift-forms')}>
+			<>
 				<BaseControl
 					icon={icons.options}
 					label={__('General', 'eightshift-forms')}
@@ -66,7 +66,7 @@ export const StepOptions = (attributes) => {
 						onChange={(value) => setAttributes({ [getAttrKey('stepNextLabel', attributes, manifest)]: value })}
 					/>
 				</BaseControl>
-			</ContainerPanel>
+			</>
 		</>
 	);
 };

@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { RadioEditor } from './components/radio-editor';
 import { RadioOptions } from './components/radio-options';
 
 export const Radio = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<RadioOptions {...props} />
-			</InspectorControls>
-			<RadioEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={RadioOptions}
+			editor={RadioEditor}
+		/>
 	);
 };

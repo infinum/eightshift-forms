@@ -8,9 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const CheckboxesEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('checkboxes');
 
-	const { componentName } = manifest;
-
-	const { additionalFieldClass, blockClientId } = attributes;
+	const { blockClientId } = attributes;
 
 	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
 	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
@@ -34,8 +32,6 @@ export const CheckboxesEditor = (attributes) => {
 					fieldContent: checkboxes,
 					fieldIsRequired: checkAttr('checkboxesIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

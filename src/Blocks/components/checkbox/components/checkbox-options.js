@@ -7,7 +7,7 @@ import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-l
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { AnimatedVisibility, InputField, RichLabel, Toggle, BaseControl, Button, ContainerPanel } from '@eightshift/ui-components';
+import { AnimatedVisibility, InputField, RichLabel, Toggle, BaseControl, Button } from '@eightshift/ui-components';
 
 export const CheckboxOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('checkbox');
@@ -28,7 +28,7 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxIsHidden = checkAttr('checkboxIsHidden', attributes, manifest);
 
 	return (
-		<ContainerPanel title={__('Checkbox', 'eightshift-forms')}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -160,6 +160,6 @@ export const CheckboxOptions = (attributes) => {
 					conditionalTagsIsHidden: checkboxIsHidden,
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

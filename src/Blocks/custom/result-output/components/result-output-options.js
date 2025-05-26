@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { checkAttr, getAttrKey, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { outputFormSelectItemWithIcon } from '../../../components/utils';
 import { icons } from '@eightshift/ui-components/icons';
-import { AsyncSelect, Toggle, ContainerPanel } from '@eightshift/ui-components';
+import { AsyncSelect, Toggle } from '@eightshift/ui-components';
 
 export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptions, resultSelectOptions }) => {
 	const manifest = select(STORE_NAME).getBlock('result-output');
@@ -16,7 +16,7 @@ export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptio
 	const resultOutputHide = checkAttr('resultOutputHide', attributes, manifest);
 
 	return (
-		<ContainerPanel title={__('Result Output', 'eightshift-forms')}>
+		<>
 			<AsyncSelect
 				label={__('Result Output', 'eightshift-forms')}
 				help={__("If you can't find your output item, try typing its name while the dropdown is open.", 'eightshift-forms')}
@@ -60,6 +60,6 @@ export const ResultOutputOptions = ({ attributes, setAttributes, formSelectOptio
 				checked={resultOutputHide}
 				onChange={(value) => setAttributes({ [getAttrKey('resultOutputHide', attributes, manifest)]: value })}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

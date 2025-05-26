@@ -7,7 +7,7 @@ import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-l
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { InputField, Select, BaseControl, Toggle, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, Select, BaseControl, Toggle } from '@eightshift/ui-components';
 
 export const RadiosOptions = (attributes) => {
 	const globalManifest = select(STORE_NAME).getSettings();
@@ -26,7 +26,7 @@ export const RadiosOptions = (attributes) => {
 	const radiosPlaceholder = checkAttr('radiosPlaceholder', attributes, manifest);
 
 	return (
-		<ContainerPanel title={__('Radio buttons', 'eightshift-forms')}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -145,6 +145,6 @@ export const RadiosOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('radiosFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

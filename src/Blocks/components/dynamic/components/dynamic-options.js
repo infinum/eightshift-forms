@@ -7,7 +7,7 @@ import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibil
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, Toggle, BaseControl, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, Toggle, BaseControl } from '@eightshift/ui-components';
 
 export const DynamicOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('dynamic');
@@ -25,7 +25,7 @@ export const DynamicOptions = (attributes) => {
 	const dynamicIsMultiple = checkAttr('dynamicIsMultiple', attributes, manifest);
 
 	return (
-		<ContainerPanel title={title}>
+		<>
 			<Toggle
 				icon={icons.cursorDisabled}
 				label={__('Deactivated', 'eightshift-forms')}
@@ -129,6 +129,6 @@ export const DynamicOptions = (attributes) => {
 					/>
 				</>
 			)}
-		</ContainerPanel>
+		</>
 	);
 };

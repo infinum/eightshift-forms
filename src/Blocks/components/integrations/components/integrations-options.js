@@ -12,7 +12,7 @@ import { FORMS_STORE_NAME } from './../../../assets/scripts/store';
 import { StepMultiflowOptions } from '../../step/components/step-multiflow-options';
 import { RichLabel, BaseControl, Select, Button, Modal, ContainerPanel } from '@eightshift/ui-components';
 
-export const IntegrationsOptions = ({ title, block, attributes, setAttributes, clientId, itemId, itemIdKey, innerId, innerIdKey }) => {
+export const IntegrationsOptions = ({ title, block, attributes, setAttributes, clientId, itemId, itemIdKey, innerId = null, innerIdKey = null }) => {
 	const postId = select('core/editor').getCurrentPostId();
 
 	// Check if form selector has inner blocks.

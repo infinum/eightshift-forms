@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { DynamicEditor } from './components/dynamic-editor';
 import { DynamicOptions } from './components/dynamic-options';
 
 export const Dynamic = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<DynamicOptions {...props} />
-			</InspectorControls>
-			<DynamicEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={DynamicOptions}
+			editor={DynamicEditor}
+		/>
 	);
 };

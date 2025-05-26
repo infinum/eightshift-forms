@@ -7,7 +7,7 @@ import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibil
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, Select, BaseControl, Toggle, AnimatedVisibility, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, Select, BaseControl, Toggle, AnimatedVisibility } from '@eightshift/ui-components';
 
 export const CheckboxesOptions = (attributes) => {
 	const globalManifest = select(STORE_NAME).getSettings();
@@ -42,7 +42,7 @@ export const CheckboxesOptions = (attributes) => {
 	}, [countInnerBlocksCheck]);
 
 	return (
-		<ContainerPanel title={__('Checkboxes', 'eightshift-forms')}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -168,6 +168,6 @@ export const CheckboxesOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('checkboxesFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

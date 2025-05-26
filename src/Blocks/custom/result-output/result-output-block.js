@@ -28,19 +28,22 @@ const dynamicItemSelectOptions = function (postType) {
 };
 
 export const ResultOutput = (props) => {
+	const formSelectOptions = dynamicItemSelectOptions(esFormsLocalization?.postTypes?.forms);
+	const resultSelectOptions = dynamicItemSelectOptions(esFormsLocalization?.postTypes?.results);
+
 	return (
 		<>
 			<InspectorControls>
 				<ResultOutputOptions
 					{...props}
-					formSelectOptions={dynamicItemSelectOptions(esFormsLocalization?.postTypes?.forms)}
-					resultSelectOptions={dynamicItemSelectOptions(esFormsLocalization?.postTypes?.results)}
+					formSelectOptions={formSelectOptions}
+					resultSelectOptions={resultSelectOptions}
 				/>
 			</InspectorControls>
 			<ResultOutputEditor
 				{...props}
-				formSelectOptions={dynamicItemSelectOptions(esFormsLocalization?.postTypes?.forms)}
-				resultSelectOptions={dynamicItemSelectOptions(esFormsLocalization?.postTypes?.results)}
+				formSelectOptions={formSelectOptions}
+				resultSelectOptions={resultSelectOptions}
 			/>
 		</>
 	);

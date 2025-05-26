@@ -9,7 +9,7 @@ export const SubmitEditor = (attributes) => {
 
 	const submitValue = checkAttr('submitValue', attributes, manifest);
 
-	const submitComponent = <button>{submitValue}</button>;
+	const submitComponent = <div className={'es:p-3 es:w-full es:text-center es:text-base es:font-medium es:bg-accent-600 es:text-white'}>{submitValue}</div>;
 
 	return (
 		<>

@@ -1,16 +1,2 @@
-/**
- * This is the main entry point for Admin styles used for the `WordPress admin`.
- * File names must follow naming convention to be able to run dynamically.
- *
- * `src/blocks/custom/block_name/block_name-admin.scss`.
- *
- * Usage: `WordPress admin`.
- *
- */
-
 @import '@eightshift/ui-components/dist/assets/style-admin.css';
-
-.es-form-is-hidden {
-	display: none;
-	user-select: none;
-}
+/* @import './../../../../tailwind.css'; */

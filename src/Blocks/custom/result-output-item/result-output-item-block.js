@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { ResultOutputItemEditor } from './components/result-output-item-editor';
 import { ResultOutputItemOptions } from './components/result-output-item-options';
 
 export const ResultOutputItem = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<ResultOutputItemOptions {...props} />
-			</InspectorControls>
-			<ResultOutputItemEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={ResultOutputItemOptions}
+			editor={ResultOutputItemEditor}
+		/>
 	);
 };

@@ -18,7 +18,7 @@ export const SelectEditor = (attributes) => {
 
 	const selectComponent = (
 		<>
-			<div>
+			<div className={'es:mb-5 es:border es:border-secondary-300 es:bg-white'}>
 				{selectContent}
 
 				<MissingName value={selectName} />

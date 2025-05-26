@@ -38,6 +38,7 @@ export const InputEditor = (attributes) => {
 				placeholder={inputPlaceholder}
 				type={inputType}
 				readOnly
+				className={'es:min-h-10 es:w-full es:border es:border-secondary-300 es:bg-white es:p-2 es:text-sm'}
 				{...additionalProps}
 			/>
 

@@ -34,8 +34,6 @@ export const RadiosEditor = (attributes) => {
 					fieldContent: radios,
 					fieldIsRequired: checkAttr('radiosIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

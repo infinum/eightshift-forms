@@ -9,7 +9,7 @@ import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibil
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, Select, Toggle, BaseControl, Button, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, Select, Toggle, BaseControl, Button } from '@eightshift/ui-components';
 
 export const DateOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('date');
@@ -34,12 +34,12 @@ export const DateOptions = (attributes) => {
 
 	let dateValidationPatternOptions = [];
 
-	if (typeof esFormsLocalization !== 'undefined' && isArray(esFormsLocalization?.validationPatternsOptions)) {
+	if (typeof esFormsLocalization !== 'undefined' && Array.isArray(esFormsLocalization?.validationPatternsOptions)) {
 		dateValidationPatternOptions = esFormsLocalization.validationPatternsOptions;
 	}
 
 	return (
-		<ContainerPanel title={title}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -233,6 +233,6 @@ export const DateOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('dateFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

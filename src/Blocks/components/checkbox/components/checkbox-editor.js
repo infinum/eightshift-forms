@@ -18,7 +18,7 @@ export const CheckboxEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('checkboxValue', attributes, manifest), checkboxValue);
 
 	return (
-		<div>
+		<div className={'es:p-3'}>
 			<VisibilityHidden
 				value={checkboxIsHidden}
 				label={__('Checkbox', 'eightshift-forms')}

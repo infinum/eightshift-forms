@@ -17,13 +17,14 @@ export const PhoneEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
 
 	const phone = (
-		<>
-			<select />
+		<div className={'es:flex es:items-center es:gap-2'}>
+			<div className={'es:text-sm es:bg-secondary-100 es:p-2 es:border es:border-secondary-300 es:text-secondary-400'}>Prefix</div>
 			<input
 				value={phoneValue}
 				placeholder={phonePlaceholder}
 				type={'tel'}
 				readOnly
+				className={'es:w-full es:p-2 es:border es:border-secondary-300 es:bg-white es:text-sm'}
 			/>
 
 			<MissingName
@@ -32,7 +33,7 @@ export const PhoneEditor = (attributes) => {
 			/>
 
 			<ConditionalTagsEditor {...props('conditionalTags', attributes)} />
-		</>
+		</div>
 	);
 
 	return (

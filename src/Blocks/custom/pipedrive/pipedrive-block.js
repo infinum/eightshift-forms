@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { PipedriveEditor } from './components/pipedrive-editor';
 import { PipedriveOptions } from './components/pipedrive-options';
 
 export const Pipedrive = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<PipedriveOptions {...props} />
-			</InspectorControls>
-			<PipedriveEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={PipedriveOptions}
+			editor={PipedriveEditor}
+		/>
 	);
 };

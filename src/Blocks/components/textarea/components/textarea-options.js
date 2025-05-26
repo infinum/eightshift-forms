@@ -9,7 +9,7 @@ import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-l
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { InputField, BaseControl, Select, Toggle, NumberPicker, Button, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, BaseControl, Select, Toggle, NumberPicker, Button } from '@eightshift/ui-components';
 
 export const TextareaOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('textarea');
@@ -45,7 +45,7 @@ export const TextareaOptions = (attributes) => {
 	}
 
 	return (
-		<ContainerPanel title={__('Multiline text', 'eightshift-forms')}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -245,6 +245,6 @@ export const TextareaOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('textareaFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

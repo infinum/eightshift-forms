@@ -7,7 +7,7 @@ import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibil
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { InputField, BaseControl, Toggle, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, BaseControl, Toggle } from '@eightshift/ui-components';
 
 export const FileOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('file');
@@ -29,7 +29,7 @@ export const FileOptions = (attributes) => {
 	const fileIsDisabled = checkAttr('fileIsDisabled', attributes, manifest);
 
 	return (
-		<ContainerPanel title={__('File', 'eightshift-forms')}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -193,6 +193,6 @@ export const FileOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('fileFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

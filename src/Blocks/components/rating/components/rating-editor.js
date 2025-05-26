@@ -17,7 +17,7 @@ export const RatingEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('ratingName', attributes, manifest), ratingName);
 
 	const rating = (
-		<div data-rating={ratingValue}>
+		<div className={'es:flex es:items-center es:gap-2'}>
 			{ratingAmount && (
 				<>
 					{[...Array(parseInt(ratingAmount, 10))].map((x, i) => {

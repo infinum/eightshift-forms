@@ -7,7 +7,7 @@ import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-l
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from '../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { InputField, BaseControl, Toggle, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, BaseControl, Toggle } from '@eightshift/ui-components';
 
 export const RatingOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('rating');
@@ -26,7 +26,7 @@ export const RatingOptions = (attributes) => {
 	const ratingAmount = checkAttr('ratingAmount', attributes, manifest);
 
 	return (
-		<ContainerPanel title={title}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -141,6 +141,6 @@ export const RatingOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('ratingFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

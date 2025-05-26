@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { SelectEditor } from './components/select-editor';
 import { SelectOptions } from './components/select-options';
 
 export const Select = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<SelectOptions {...props} />
-			</InspectorControls>
-			<SelectEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={SelectOptions}
+			editor={SelectEditor}
+		/>
 	);
 };

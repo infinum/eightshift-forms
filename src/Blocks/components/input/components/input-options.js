@@ -9,7 +9,7 @@ import { getOption, checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift
 import { FieldOptions, FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
-import { InputField, BaseControl, Select, Toggle, NumberPicker, Button, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, BaseControl, Select, Toggle, NumberPicker, Button } from '@eightshift/ui-components';
 
 export const InputOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('input');
@@ -80,7 +80,7 @@ export const InputOptions = (attributes) => {
 	const formatNumber = (number) => Number(Number.isInteger(number) ? number.toString() : number.toFixed(2));
 
 	return (
-		<ContainerPanel title={title}>
+		<>
 			<BaseControl
 				showIf={showInputPlaceholder || showInputType || showInputName}
 				icon={icons.options}
@@ -527,6 +527,6 @@ export const InputOptions = (attributes) => {
 					conditionalTagsIsHidden: checkAttr('inputFieldHidden', attributes, manifest),
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

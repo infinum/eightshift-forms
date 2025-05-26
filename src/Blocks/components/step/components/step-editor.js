@@ -14,12 +14,10 @@ export const StepEditor = (attributes) => {
 	preventSaveOnMissingProps(blockClientId, getAttrKey('stepName', attributes, manifest), stepName);
 
 	return (
-		<div>
-			<div>{stepLabel ? stepLabel : stepName}</div>
+		<div className={'es:flex es:items-center es:justify-between es:mb-5'}>
+			<div className={'es:p-5 es:text-lg es:text-center es:font-medium es:w-full es:bg-accent-600 es:text-white'}>{stepLabel ? stepLabel : stepName}</div>
 
-			<MissingName
-				value={stepName}
-			/>
+			<MissingName value={stepName} />
 		</div>
 	);
 };

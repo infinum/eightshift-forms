@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { SubmitEditor } from './components/submit-editor';
 import { SubmitOptions } from './components/submit-options';
 
 export const Submit = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<SubmitOptions {...props} />
-			</InspectorControls>
-			<SubmitEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={SubmitOptions}
+			editor={SubmitEditor}
+		/>
 	);
 };

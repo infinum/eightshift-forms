@@ -111,12 +111,6 @@ class Themes implements ServiceInterface
 					// Padding.
 					'[&.es-block-forms--has-inner-spacing]:p-24',
 					'[&.es-block-forms--has-inner-spacing]:sm:p-48',
-
-					// White background.
-					'[&.es-block-forms--background-white]:bg-white',
-
-					// Purple background (primary-5).
-					'[&.es-block-forms--background-primary-5]:bg-primary-5',
 				],
 			],
 			'form' => [

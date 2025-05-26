@@ -17,7 +17,9 @@ export const CountryEditor = (attributes) => {
 
 	const country = (
 		<>
-			<div>{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}</div>
+			<div className={'es:min-h-10 es:w-full es:border es:border-secondary-300 es:bg-white es:p-2 es:text-sm es:flex es:items-center'}>
+				{__('This data will be provided by an external source select in the sidebar!', 'eightshift-forms')}
+			</div>
 
 			<MissingName value={countryName} />
 

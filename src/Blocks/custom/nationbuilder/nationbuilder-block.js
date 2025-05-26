@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { NationbuilderEditor } from './components/nationbuilder-editor';
 import { NationbuilderOptions } from './components/nationbuilder-options';
 
 export const Nationbuilder = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<NationbuilderOptions {...props} />
-			</InspectorControls>
-			<NationbuilderEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={NationbuilderOptions}
+			editor={NationbuilderEditor}
+		/>
 	);
 };

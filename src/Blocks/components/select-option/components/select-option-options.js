@@ -6,7 +6,7 @@ import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-l
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
 import { icons } from '@eightshift/ui-components/icons';
-import { BaseControl, Toggle, ContainerPanel, InputField } from '@eightshift/ui-components';
+import { BaseControl, Toggle, InputField } from '@eightshift/ui-components';
 
 export const SelectOptionOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('select-option');
@@ -23,7 +23,7 @@ export const SelectOptionOptions = (attributes) => {
 	const selectOptionDisabledOptions = checkAttr('selectOptionDisabledOptions', attributes, manifest);
 
 	return (
-		<ContainerPanel title={__('Option', 'eightshift-forms')}>
+		<>
 			<BaseControl
 				icon={icons.options}
 				label={__('General', 'eightshift-forms')}
@@ -87,6 +87,6 @@ export const SelectOptionOptions = (attributes) => {
 					conditionalTagsIsHidden: selectOptionIsHidden,
 				})}
 			/>
-		</ContainerPanel>
+		</>
 	);
 };

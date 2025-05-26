@@ -20,11 +20,15 @@ export const FileEditor = (attributes) => {
 
 	const file = (
 		<>
-			<div>
-				{fileCustomInfoTextUse && fileCustomInfoText}
-				{!fileCustomInfoTextUse && __('Drag and drop files here', 'eightshift-forms')}
+			<div
+				className={'es:min-h-10 es:w-full es:p-4 es:border es:border-secondary-300 es:bg-white es:p-2 es:text-sm es:flex es:items-center es:justify-center es:gap-2 es:flex-col'}
+			>
+				{fileCustomInfoTextUse && <div className={'es:text-sm es:text-secondary-400'}>{fileCustomInfoText}</div>}
+				{!fileCustomInfoTextUse && <div className={'es:text-sm es:text-secondary-400'}>{__('Drag and drop files here', 'eightshift-forms')}</div>}
 
-				<div>{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}</div>
+				<div className={'es:px-3 es:py-1 es:text-center es:text-base es:font-medium es:bg-accent-600 es:text-white'}>
+					{fileCustomInfoButtonText?.length > 0 ? fileCustomInfoButtonText : __('Add files', 'eightshift-forms')}
+				</div>
 			</div>
 
 			<MissingName value={fileName} />

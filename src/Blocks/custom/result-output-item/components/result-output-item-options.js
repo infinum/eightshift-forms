@@ -6,7 +6,7 @@ import { CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS, CONDITIONAL_TAGS_OPERATORS_
 import { getConstantsOptions, NameField } from './../../../components/utils';
 import manifest from '../manifest.json';
 import globalManifest from '../../../manifest.json';
-import { InputField, Select, ContainerPanel } from '@eightshift/ui-components';
+import { InputField, Select } from '@eightshift/ui-components';
 import { icons } from '@eightshift/ui-components/icons';
 
 export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
@@ -20,7 +20,7 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 	const [showEndValue, setShowEndValue] = useState(resultOutputItemOperator.toUpperCase() in globalManifest.comparatorExtended);
 
 	return (
-		<ContainerPanel title={__('Result item', 'eightshift-forms')}>
+		<>
 			<NameField
 				value={resultOutputItemName}
 				attribute={getAttrKey('resultOutputItemName', attributes, manifest)}
@@ -63,6 +63,6 @@ export const ResultOutputItemOptions = ({ attributes, setAttributes }) => {
 					help={showEndValue && __('End value must be number.', 'eightshift-forms')}
 				/>
 			)}
-		</ContainerPanel>
+		</>
 	);
 };

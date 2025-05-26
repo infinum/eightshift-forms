@@ -5,7 +5,7 @@ import { checkAttr, STORE_NAME, props } from '@eightshift/frontend-libs-tailwind
 import { MissingName, VisibilityHidden } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
 
-export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fieldName }) => {
+export const FieldEditorExternalBlocks = ({ attributes, children, fieldName }) => {
 	const manifest = select(STORE_NAME).getComponent('field');
 
 	return (
@@ -37,8 +37,6 @@ export const FieldEditorExternalBlocks = ({ attributes, children, clientId, fiel
 export const FieldEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('field');
 
-	const { clientId } = attributes;
-
 	const fieldContent = checkAttr('fieldContent', attributes, manifest);
 	const fieldSkip = checkAttr('fieldSkip', attributes, manifest);
 	const fieldIsRequired = checkAttr('fieldIsRequired', attributes, manifest);
@@ -58,47 +56,19 @@ export const FieldEditor = (attributes) => {
 	const fieldStyle = checkAttr('fieldStyle', attributes, manifest);
 	const fieldHidden = checkAttr('fieldHidden', attributes, manifest);
 
-	const LabelDefault = () => (
-		<>
-			{!fieldHideLabel && (
-				<div>
-					<span dangerouslySetInnerHTML={{ __html: fieldLabel }} />
-				</div>
-			)}
-		</>
-	);
-
-	const LegendDefault = () => (
-		<>
-			{!fieldHideLabel && (
-				<div>
-					<span dangerouslySetInnerHTML={{ __html: fieldLabel }} />
-				</div>
-			)}
-		</>
-	);
-
-	const Content = () => (
-		<div>
-			{fieldBeforeContent && <div>{fieldBeforeContent}</div>}
-			<div>
-				{fieldContent}
-
-				{fieldSuffixContent && <div>{fieldSuffixContent}</div>}
-			</div>
-			{fieldAfterContent && <div>{fieldAfterContent}</div>}
-		</div>
-	);
-
-	const Help = () => <div>{fieldHelp}</div>;
-
 	const DivContent = () => {
 		return (
-			<div>
+			<div className={'es:mb-5'}>
 				<div>
-					{fieldLabel && <LabelDefault />}
-					<Content />
-					<Help />
+					{fieldLabel && !fieldHideLabel && <div className={'es:mb-1 es:text-base'}>{fieldLabel}</div>}
+					{fieldBeforeContent && <div className={'es:text-sm es:mb-1 es:text-secondary-400'}>{fieldBeforeContent}</div>}
+					<div>
+						{fieldContent}
+
+						{fieldSuffixContent && <div className={'es:text-sm es:mt-1 es:text-secondary-400'}>{fieldSuffixContent}</div>}
+					</div>
+					{fieldAfterContent && <div className={'es:text-sm es:mt-1 es:text-secondary-400'}>{fieldAfterContent}</div>}
+					{fieldHelp && <div className={'es:text-sm es:mt-1 es:text-secondary-400'}>{fieldHelp}</div>}
 				</div>
 
 				<VisibilityHidden
@@ -111,12 +81,13 @@ export const FieldEditor = (attributes) => {
 
 	const FieldsetContent = () => {
 		return (
-			<fieldset>
-				<div>
-					{fieldLabel && <LegendDefault />}
-					<Content />
-					<Help />
-				</div>
+			<fieldset className={'es:mb-5'}>
+				{fieldLabel && !fieldHideLabel && <div className={'es:mb-1 es:text-base'}>{fieldLabel}</div>}
+				{fieldBeforeContent && <div className={'es:text-sm es:mb-1 es:text-secondary-400'}>{fieldBeforeContent}</div>}
+				<div className={'es:border es:border-secondary-300 es:bg-white'}>{fieldContent}</div>
+				{fieldSuffixContent && <div className={'es:text-sm es:mt-1 es:text-secondary-400'}>{fieldSuffixContent}</div>}
+				{fieldAfterContent && <div className={'es:text-sm es:mt-1 es:text-secondary-400'}>{fieldAfterContent}</div>}
+				<div className={'es:text-sm es:mt-1 es:text-secondary-400'}>{fieldHelp}</div>
 
 				<VisibilityHidden
 					value={fieldHidden}

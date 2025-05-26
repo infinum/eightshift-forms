@@ -21,6 +21,7 @@ export const TextareaEditor = (attributes) => {
 			<textarea
 				placeholder={textareaPlaceholder}
 				readOnly
+				className={'es:min-h-10 es:w-full es:border es:border-secondary-300 es:bg-white es:p-2 es:text-sm'}
 			>
 				{textareaValue}
 			</textarea>

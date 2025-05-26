@@ -7,9 +7,16 @@
 
 import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 
-import '../../../tailwind.css';
+/* ------------------------------------------------------------ */
+/* Styles */
+/* ------------------------------------------------------------ */
 
-dynamicImport(require.context('./../components', true, /-frontend\.css$/));
+import './styles/frontend.css';
 
-// Scripts.
-import './scripts/blocks-frontend';
+// dynamicImport(require.context('./../components', true, /-frontend\.css$/));
+
+/* ------------------------------------------------------------ */
+/* Scripts */
+/* ------------------------------------------------------------ */
+
+dynamicImport(require.context('./../components', true, /assets\/index\.js$/));

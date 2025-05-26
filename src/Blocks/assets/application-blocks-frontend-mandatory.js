@@ -7,10 +7,15 @@
 
 import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 
-// Images.
-import './images/blocks-frontend-mandatory';
+/* ------------------------------------------------------------ */
+/* Images */
+/* ------------------------------------------------------------ */
 
-import '../../../tailwind.css';
+import './../components/country/images/flags.png';
 
-dynamicImport(require.context('./../components', true, /-frontend-mandatory\.css$/));
-dynamicImport(require.context('./../custom', true, /-frontend-mandatory\.css$/));
+/* ------------------------------------------------------------ */
+/* Styles */
+/* ------------------------------------------------------------ */
+
+// dynamicImport(require.context('./../components', true, /-frontend-mandatory\.css$/));
+// dynamicImport(require.context('./../custom', true, /-frontend-mandatory\.css$/));
