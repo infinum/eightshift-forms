@@ -43,7 +43,7 @@ jobs:
           rsync -r --exclude 'eightshift-forms' * eightshift-forms
           zip -rq release.zip eightshift-forms
 
-      - uses : actions/upload-artifact@v2
+      - uses : actions/upload-artifact@v4
         with:
           name: release
           path: release.zip
