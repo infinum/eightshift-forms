@@ -27,7 +27,7 @@ jobs:
       - name: Install plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
         with:
-          PROJECT_PATH: "wp-content/plugins/eightshift-forms"
+          PROJECT_PATH: "*"
           NODE_VERSION: ${{ matrix.node }}
           USE_BUN: true
 
