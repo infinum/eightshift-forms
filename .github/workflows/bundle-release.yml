@@ -24,11 +24,6 @@ jobs:
           PHP_VERSION: ${{ matrix.php }}
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
 
-      - name: Setup custom secrets as environment variables
-        shell: bash
-        run: |
-          wp config set WP_ENVIRONMENT_TYPE 'production'
-
       - name: Install plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
         with:

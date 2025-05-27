@@ -17,16 +17,17 @@ jobs:
         node: ["latest"]
         php: ["8.3"]
     steps:
+      - name: Checkout the project repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          submodules: true
+          
       - name: Setup WordPress
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/wordpress-plugins@main
         with:
           PHP_VERSION: ${{ matrix.php }}
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
-
-      - name: Setup custom secrets as environment variables
-        shell: bash
-        run: |
-          wp config set WP_ENVIRONMENT_TYPE 'production'
 
       - name: Install plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
