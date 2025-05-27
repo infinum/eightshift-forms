@@ -33,8 +33,10 @@ jobs:
           NODE_VERSION: ${{ matrix.node }}
           USE_BUN: true
   
-      - name: Post install cleanup - root
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/root@main
+      - name: Post install cleanup - project
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main
+        with:
+          PROJECT_PATH: '.'
   
       - name: Zip Folder
         shell: bash
