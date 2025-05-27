@@ -39,12 +39,12 @@ jobs:
       - name: Set cache
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
         with:
-          PROJECT_PATH: "wp-content/plugins/eightshift-forms"
+          PROJECT_PATH: "."
 
       - name: Post install cleanup - plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main
         with:
-          PROJECT_PATH: "wp-content/plugins/eightshift-forms"
+          PROJECT_PATH: "."
 
       - name: Setup correct folder/file permissions
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/permissions@main
@@ -52,7 +52,7 @@ jobs:
       - name: Zip Plugin
         shell: bash
         run: |
-          zip -rq release.zip wp-content/plugins/eightshift-forms
+          zip -rq release.zip .
 
       - name: Upload zip to artifact
         uses: actions/upload-artifact@v4
