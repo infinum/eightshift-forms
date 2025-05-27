@@ -1,3 +1,4 @@
+
 name: Bundle release
 
 on:
@@ -15,15 +16,44 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['latest']
-        php: ['8.3']
+        node: [ 'latest' ]
+        php: [ '8.3' ]
     steps:
-      - name: Bundle release
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle/release@main
+      - name: Checkout
+        uses: actions/checkout@v4
+  
+      - name: PHP setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+  
+      - name: Bundle theme/plugin
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
         with:
           PROJECT_PATH: '.'
-          REPO_NAME: 'eightshift-forms'
-          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
-          PHP_VERSION: ${{ matrix.php }}
-          NODE_VERSION: ${{ matrix.node }}
           USE_BUN: true
+          NODE_VERSION: ${{ matrix.node }}
+  
+      - name: Post install cleanup - project
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main
+        with:
+          PROJECT_PATH: '.'
+
+      - name: Setup correct folder/file permissions
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/set/permissions@main
+  
+      - name: Zip Folder
+        shell: bash
+        run: |
+          mkdir eightshift-forms
+          rsync -r --exclude 'eightshift-forms' * eightshift-forms
+          zip -rq release.zip eightshift-forms
+
+      - name: Upload zip to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          file: release.zip
+          tag: ${{ github.ref }}
+          overwrite: true
