@@ -54,6 +54,8 @@ jobs:
 
       - name: Setup correct folder/file permissions
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/permissions@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
 
       - name: Zip Plugin
         shell: bash
