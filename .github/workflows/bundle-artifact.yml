@@ -37,7 +37,10 @@ jobs:
         uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main
         with:
           PROJECT_PATH: '.'
-  
+
+      - name: Setup correct folder/file permissions
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/set/permissions@main
+
       - name: Zip Folder
         shell: bash
         run: |
