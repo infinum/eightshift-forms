@@ -86,6 +86,11 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		$permission = $this->checkUserPermission();
+		if ($permission) {
+			return \rest_ensure_response($permission);
+		}
+
 		$debug = [
 			'formDetails' => $formDetails,
 		];
