@@ -9,46 +9,52 @@ concurrency:
 
 jobs:
   bundle:
-    name: Add zip to release
+    name: Add zip to artifact
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        node: [ 'latest' ]
-        php: [ '8.3' ]
+        node: ["latest"]
+        php: ["8.3"]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-  
-      - name: PHP setup
-        uses: shivammathur/setup-php@v2
+      - name: Setup WordPress
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/wordpress@main
         with:
-          php-version: ${{ matrix.php }}
-          coverage: none
-  
-      - name: Bundle theme/plugin
+          PHP_VERSION: ${{ matrix.php }}
+          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+
+      - name: Setup custom secrets as environment variables
+        shell: bash
+        run: |
+          wp config set WP_ENVIRONMENT_TYPE 'production'
+
+      - name: Install plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
         with:
-          PROJECT_PATH: '.'
+          PROJECT_PATH: "wp-content/plugins/eightshift-forms"
           NODE_VERSION: ${{ matrix.node }}
           USE_BUN: true
-  
-      - name: Post install cleanup - project
+
+      - name: Set cache
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
+        with:
+          PROJECT_PATH: "wp-content/plugins/eightshift-forms"
+
+      - name: Post install cleanup - plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main
         with:
-          PROJECT_PATH: '.'
+          PROJECT_PATH: "wp-content/plugins/eightshift-forms"
 
       - name: Setup correct folder/file permissions
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/permissions@main
 
-      - name: Zip Folder
+      - name: Zip Plugin
         shell: bash
         run: |
-          mkdir eightshift-forms
-          rsync -r --exclude 'eightshift-forms' * eightshift-forms
-          zip -rq release.zip eightshift-forms
+          zip -rq release.zip wp-content/plugins/eightshift-forms
 
-      - uses : actions/upload-artifact@v4
+      - name: Upload zip to artifact
+        uses: actions/upload-artifact@v4
         with:
           name: release
           path: release.zip

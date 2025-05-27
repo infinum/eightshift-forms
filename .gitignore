@@ -5,6 +5,7 @@
 /node_modules
 /.vscode
 /eightshift-forms
+/eightshift
 
 # Tests
 tests/coverage/*
