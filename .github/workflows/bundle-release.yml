@@ -18,6 +18,12 @@ jobs:
         node: ["latest"]
         php: ["8.3"]
     steps:
+      - name: Checkout the project repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          path: 'wp-content/plugins/eightshift-forms'
+
       - name: Setup WordPress
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/wordpress-plugins@main
         with:
@@ -27,12 +33,17 @@ jobs:
       - name: Install plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
         with:
-          PROJECT_PATH: "*"
+          PROJECT_PATH: "wp-content/plugins/eightshift-forms"
           NODE_VERSION: ${{ matrix.node }}
           USE_BUN: true
 
       - name: Set cache
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
+        with:
+          PROJECT_PATH: "wp-content/plugins/eightshift-forms"
+        
+      - name: Post install cleanup - plugin
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/root@main
         with:
           PROJECT_PATH: "wp-content/plugins/eightshift-forms"
 
