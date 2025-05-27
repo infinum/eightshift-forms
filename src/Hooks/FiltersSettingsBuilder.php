@@ -59,6 +59,7 @@ use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Integrations\Nationbuilder\NationbuilderClient;
@@ -71,7 +72,6 @@ use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
