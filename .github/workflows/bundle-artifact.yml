@@ -18,7 +18,7 @@ jobs:
         php: ["8.3"]
     steps:
       - name: Setup WordPress
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/wordpress@main
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/wordpress-plugins@main
         with:
           PHP_VERSION: ${{ matrix.php }}
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
