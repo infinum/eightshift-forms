@@ -21,7 +21,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.WORDPRESS_GH_ACTIONS }}
-          path: 'wp-content/plugins'
+          # path: 'wp-content/plugins'
+        
+      - name: test
+        run: |
+          ls -la
 
       - name: Setup WordPress
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/wordpress-plugins@main
@@ -29,12 +33,21 @@ jobs:
           PHP_VERSION: ${{ matrix.php }}
           WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
 
+      - name: aaa
+        run: |
+          ls -la
+
       - name: Install plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
         with:
           PROJECT_PATH: "wp-content/plugins/eightshift-forms"
           NODE_VERSION: ${{ matrix.node }}
           USE_BUN: true
+
+      - name: ccc
+        run: |
+          ls -la
+
 
       - name: Set cache
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
