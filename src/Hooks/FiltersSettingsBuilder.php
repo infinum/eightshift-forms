@@ -71,7 +71,6 @@ use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -135,7 +134,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsValidation::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsValidation::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('Validation', 'eightshift-forms'),
 					'desc' => \__('Settings for all forms validation options.', 'eightshift-forms'),
