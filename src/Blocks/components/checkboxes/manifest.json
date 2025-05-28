@@ -54,9 +54,6 @@
 		"checkboxesUseLabelAsPlaceholder": {
 			"type": "boolean",
 			"default": false
-		},
-		"checkboxesTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"options": {

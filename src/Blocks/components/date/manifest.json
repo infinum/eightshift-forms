@@ -76,9 +76,6 @@
 		},
 		"dateOutputFormat": {
 			"type": "string"
-		},
-		"dateTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"options": {

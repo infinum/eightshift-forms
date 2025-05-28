@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -16,12 +15,8 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 $errorValue = Helpers::checkAttr('errorValue', $attributes, $manifest);
 $errorId = Helpers::checkAttr('errorId', $attributes, $manifest);
-$errorTwSelectorsData = Helpers::checkAttr('errorTwSelectorsData', $attributes, $manifest);
-
-$twClasses = FormsHelper::getTwSelectors($errorTwSelectorsData, ['error']);
 
 $errorClass = Helpers::classnames([
-	FormsHelper::getTwBase($twClasses, 'error', $componentClass),
 	Helpers::selector($selectorClass, $selectorClass, $componentClass),
 	Helpers::selector($additionalClass, $additionalClass),
 	UtilsHelper::getStateSelector('error'),

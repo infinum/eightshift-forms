@@ -1,178 +1,178 @@
-// stylelint-disable max-nesting-depth
+// // stylelint-disable max-nesting-depth
 
-@use '../../assets/styles/bootstrap-scss.scss' as theme;
+// @use '../../assets/styles/bootstrap-scss.scss' as theme;
 
-.es-tab {
-	$this: &;
+// .es-tab {
+// 	$this: &;
 
-	&__label {
-		border: 0;
-		appearance: none;
-		font-family: inherit;
+// 	&__label {
+// 		border: 0;
+// 		appearance: none;
+// 		font-family: inherit;
 
-		&:focus {
-			outline: none;
-		}
+// 		&:focus {
+// 			outline: none;
+// 		}
 
-		padding: 1rem 1.25rem;
+// 		padding: 1rem 1.25rem;
 
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		cursor: pointer;
-		font-size: 0.9rem;
+// 		display: flex;
+// 		align-items: center;
+// 		justify-content: space-between;
+// 		cursor: pointer;
+// 		font-size: 0.9rem;
 
-		transition: {
-			property: background-color, color;
-			timing-function: ease-in-out;
-			duration: 0.3s;
-		}
+// 		transition: {
+// 			property: background-color, color;
+// 			timing-function: ease-in-out;
+// 			duration: 0.3s;
+// 		}
 
-		@include theme.media(tablet down) {
-			inline-size: 100%;
-			background: var(--global-colors-esf-white);
+// 		@include theme.media(tablet down) {
+// 			inline-size: 100%;
+// 			background: var(--global-colors-esf-white);
 
-			border: 1px solid var(--global-colors-esf-border);
-			border-block-end-width: 0;
+// 			border: 1px solid var(--global-colors-esf-border);
+// 			border-block-end-width: 0;
 
-			border-radius: var(--global-esf-spacing-s);
+// 			border-radius: var(--global-esf-spacing-s);
 
-			box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
-		}
+// 			box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
+// 		}
 
-		@include theme.media(desktop up) {
-			order: 1;
-			display: block;
-			position: relative;
-			margin: 0;
+// 		@include theme.media(desktop up) {
+// 			order: 1;
+// 			display: block;
+// 			position: relative;
+// 			margin: 0;
 
-			padding: 0.5rem 0.3rem;
+// 			padding: 0.5rem 0.3rem;
 
-			background: none;
-		}
+// 			background: none;
+// 		}
 
-		&:not(:first-child) {
-			margin-block-start: var(--global-esf-spacing-l);
+// 		&:not(:first-child) {
+// 			margin-block-start: var(--global-esf-spacing-l);
 
-			@include theme.media(desktop up) {
-				margin-block-start: 0;
-			}
-		}
+// 			@include theme.media(desktop up) {
+// 				margin-block-start: 0;
+// 			}
+// 		}
 
-		// Hide if only 1 tab is visible.
-		&:only-of-type {
-			display: none;
-		}
+// 		// Hide if only 1 tab is visible.
+// 		&:only-of-type {
+// 			display: none;
+// 		}
 
-		// Line on the bottom for mask.
-		&::before {
-			@include theme.media(desktop up) {
-				content: '';
-				inline-size: 100%;
-				block-size: 0.125rem;
-				background-color: var(--global-colors-esf-admin-accent);
-				position: absolute;
-				inset-inline: 0;
-				inset-block-end: 0;
-				opacity: 0;
-				z-index: 1;
-				border-radius: 100rem;
+// 		// Line on the bottom for mask.
+// 		&::before {
+// 			@include theme.media(desktop up) {
+// 				content: '';
+// 				inline-size: 100%;
+// 				block-size: 0.125rem;
+// 				background-color: var(--global-colors-esf-admin-accent);
+// 				position: absolute;
+// 				inset-inline: 0;
+// 				inset-block-end: 0;
+// 				opacity: 0;
+// 				z-index: 1;
+// 				border-radius: 100rem;
 
-				box-shadow: 0 0 0.125rem var(--global-colors-esf-admin-accent-50);
-			}
-		}
+// 				box-shadow: 0 0 0.125rem var(--global-colors-esf-admin-accent-50);
+// 			}
+// 		}
 
-		// Down arrow on mobile only for accordion.
-		&::after {
-			content: '';
-			border: solid var(--global-colors-esf-gray);
-			border-width: 0 3px 3px 0;
-			display: inline-block;
-			padding: 3px;
-			transform: rotate(45deg);
-			transition: {
-				property: border-color, transform;
-				timing-function: ease-in-out;
-				duration: 0.3s;
-			}
+// 		// Down arrow on mobile only for accordion.
+// 		&::after {
+// 			content: '';
+// 			border: solid var(--global-colors-esf-gray);
+// 			border-width: 0 3px 3px 0;
+// 			display: inline-block;
+// 			padding: 3px;
+// 			transform: rotate(45deg);
+// 			transition: {
+// 				property: border-color, transform;
+// 				timing-function: ease-in-out;
+// 				duration: 0.3s;
+// 			}
 
-			@include theme.media(desktop up) {
-				display: none;
-				transition: none;
-			}
-		}
+// 			@include theme.media(desktop up) {
+// 				display: none;
+// 				transition: none;
+// 			}
+// 		}
 
-		&.es-form-is-active {
-			border-start-start-radius: var(--global-esf-spacing-s);
-			border-start-end-radius: var(--global-esf-spacing-s);
-			border-end-end-radius: 0;
-			border-end-start-radius: 0;
+// 		&.es-form-is-active {
+// 			border-start-start-radius: var(--global-esf-spacing-s);
+// 			border-start-end-radius: var(--global-esf-spacing-s);
+// 			border-end-end-radius: 0;
+// 			border-end-start-radius: 0;
 
-			&::before {
-				@include theme.media(desktop up) {
-					opacity: 1;
-				}
-			}
+// 			&::before {
+// 				@include theme.media(desktop up) {
+// 					opacity: 1;
+// 				}
+// 			}
 
-			& + #{$this}__content {
-				display: flex;
+// 			& + #{$this}__content {
+// 				display: flex;
 
-				margin-block-end: var(--global-esf-spacing-l);
+// 				margin-block-end: var(--global-esf-spacing-l);
 
-				@include theme.media(desktop up) {
-					margin-block-end: 0;
-				}
-			}
+// 				@include theme.media(desktop up) {
+// 					margin-block-end: 0;
+// 				}
+// 			}
 
-			&::after {
-				transform: rotate(-135deg);
+// 			&::after {
+// 				transform: rotate(-135deg);
 
-				@include theme.media(desktop up) {
-					transform: initial;
-				}
-			}
-		}
-	}
+// 				@include theme.media(desktop up) {
+// 					transform: initial;
+// 				}
+// 			}
+// 		}
+// 	}
 
-	&__content {
-		display: none;
-		padding: var(--global-esf-spacing-l);
-		border-block-start: 1px solid var(--global-colors-esf-gray-300);
-		border-block-end: 1px solid var(--global-colors-esf-gray-300);
-		margin-block-end: -1px;
-		row-gap: var(--global-esf-spacing-l);
+// 	&__content {
+// 		display: none;
+// 		padding: var(--global-esf-spacing-l);
+// 		border-block-start: 1px solid var(--global-colors-esf-gray-300);
+// 		border-block-end: 1px solid var(--global-colors-esf-gray-300);
+// 		margin-block-end: -1px;
+// 		row-gap: var(--global-esf-spacing-l);
 
-		background-color: var(--global-colors-esf-white);
-		border-start-start-radius: 0;
-		border-start-end-radius: 0;
-		border-end-end-radius: var(--global-esf-spacing-s);
-		border-end-start-radius: var(--global-esf-spacing-s);
-		border: 1px solid var(--global-colors-esf-border);
-		box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
+// 		background-color: var(--global-colors-esf-white);
+// 		border-start-start-radius: 0;
+// 		border-start-end-radius: 0;
+// 		border-end-end-radius: var(--global-esf-spacing-s);
+// 		border-end-start-radius: var(--global-esf-spacing-s);
+// 		border: 1px solid var(--global-colors-esf-border);
+// 		box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.04);
 
-		:only-of-type + & {
-			border-radius: var(--global-esf-spacing-s);
-		}
+// 		:only-of-type + & {
+// 			border-radius: var(--global-esf-spacing-s);
+// 		}
 
-		flex-direction: column;
+// 		flex-direction: column;
 
-		@include theme.media(desktop up) {
-			order: 99;
-			flex-grow: 1;
-			inline-size: 100%;
-			border-block-start: none;
-			margin: 0;
+// 		@include theme.media(desktop up) {
+// 			order: 99;
+// 			flex-grow: 1;
+// 			inline-size: 100%;
+// 			border-block-start: none;
+// 			margin: 0;
 
-			row-gap: 1rem;
+// 			row-gap: 1rem;
 
-			border-radius: var(--global-esf-spacing-s);
-		}
+// 			border-radius: var(--global-esf-spacing-s);
+// 		}
 
-		&--no-bg {
-			background-color: transparent;
-			border: none;
-			box-shadow: none;
-			padding: 0;
-		}
-	}
-}
+// 		&--no-bg {
+// 			background-color: transparent;
+// 			border: none;
+// 			box-shadow: none;
+// 			padding: 0;
+// 		}
+// 	}
+// }

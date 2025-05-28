@@ -26,9 +26,8 @@ $submitButtonComponent = Helpers::checkAttr('submitButtonComponent', $attributes
 $submitButtonAsLink = Helpers::checkAttr('submitButtonAsLink', $attributes, $manifest);
 $submitButtonAsLinkUrl = Helpers::checkAttr('submitButtonAsLinkUrl', $attributes, $manifest);
 $submitButtonTwParent = Helpers::checkAttr('submitButtonTwParent', $attributes, $manifest);
-$submitTwSelectorsData = Helpers::checkAttr('submitTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($submitTwSelectorsData, [$submitButtonTwParent]);
+$twClasses = FormsHelper::getTwSelectors($attributes, [$submitButtonTwParent]);
 
 $submitClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, $submitButtonTwParent, $componentClass),
@@ -78,7 +77,6 @@ echo Helpers::render(
 		Helpers::props('field', $attributes, [
 			'fieldContent' => $button,
 			'fieldId' => $submitName,
-			'fieldTwSelectorsData' => $submitTwSelectorsData,
 			'fieldUseError' => false,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('submit'),
 			'fieldDisabled' => !empty($submitIsDisabled),

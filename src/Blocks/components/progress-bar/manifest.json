@@ -21,9 +21,6 @@
 		},
 		"progressBarMultiflowInitCount": {
 			"type": "string"
-		},
-		"progressBarTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

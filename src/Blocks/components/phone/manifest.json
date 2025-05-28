@@ -90,9 +90,6 @@
 		"phoneViewType": {
 			"type": "string",
 			"default": "number"
-		},
-		"phoneTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"options": {

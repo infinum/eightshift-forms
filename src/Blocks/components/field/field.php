@@ -56,7 +56,6 @@ $fieldTypeCustom = Helpers::checkAttr('fieldTypeCustom', $attributes, $manifest)
 $fieldTracking = Helpers::checkAttr('fieldTracking', $attributes, $manifest);
 $fieldTypeInternal = Helpers::checkAttr('fieldTypeInternal', $attributes, $manifest);
 $fieldIsNoneFormBlock = Helpers::checkAttr('fieldIsNoneFormBlock', $attributes, $manifest);
-$fieldTwSelectorsData = Helpers::checkAttr('fieldTwSelectorsData', $attributes, $manifest);
 
 $fieldStyleOutput = [];
 $filterName = HooksHelpers::getFilterName(['block', 'field', 'styleClasses']);
@@ -78,7 +77,7 @@ if ($fieldStyle && gettype($fieldStyle) === 'array') {
 	);
 }
 
-$twClasses = FormsHelper::getTwSelectors($fieldTwSelectorsData, [
+$twClasses = FormsHelper::getTwSelectors($attributes, [
 	'field',
 	$fieldTypeInternal,
 	$selectorClass,

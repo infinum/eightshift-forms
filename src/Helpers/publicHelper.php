@@ -78,9 +78,7 @@ function esFormsGetComponentsRender(string $component, array $attributes = []): 
 {
 	return Helpers::render(
 		$component,
-		Helpers::props($component, $attributes, [
-			'twSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
-		])
+		Helpers::props($component, $attributes)
 	);
 }
 

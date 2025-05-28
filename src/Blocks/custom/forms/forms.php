@@ -90,8 +90,7 @@ if ($formAttrs) {
 	}
 }
 
-$twClassesData = FormsHelper::getTwSelectorsData($attributes);
-$twClasses = FormsHelper::getTwSelectors($twClassesData, ['forms']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['forms']);
 
 $formsClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'forms', $blockClass),
@@ -141,7 +140,6 @@ $formsClass = Helpers::classnames([
 		'loader',
 		Helpers::props('loader', $attributes, [
 			'loaderIsGeolocation' => true,
-			'loaderTwSelectorsData' => $twClassesData,
 		])
 	);
 	?>

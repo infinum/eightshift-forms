@@ -70,9 +70,6 @@
 		"fileIsDisabled": {
 			"type": "boolean",
 			"default": false
-		},
-		"fileTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

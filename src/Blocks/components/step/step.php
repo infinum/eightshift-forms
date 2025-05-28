@@ -24,9 +24,8 @@ $stepSubmit = Helpers::checkAttr('stepSubmit', $attributes, $manifest);
 $stepPrevLabel = Helpers::checkAttr('stepPrevLabel', $attributes, $manifest);
 $stepNextLabel = Helpers::checkAttr('stepNextLabel', $attributes, $manifest);
 $stepIsActive = Helpers::checkAttr('stepIsActive', $attributes, $manifest);
-$stepTwSelectorsData = Helpers::checkAttr('stepTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($stepTwSelectorsData, ['step']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['step']);
 
 $stepClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'step', $componentClass),

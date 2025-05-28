@@ -72,9 +72,6 @@
 			"type": "string",
 			"default": "countryName"
 		},
-		"countryTwSelectorsData": {
-			"type": "array"
-		},
 		"countryIsMultiple": {
 			"type": "boolean",
 			"default": false

@@ -30,14 +30,13 @@ $fileTypeCustom = Helpers::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Helpers::checkAttr('fileAttrs', $attributes, $manifest);
 $fileFieldAttrs = Helpers::checkAttr('fileFieldAttrs', $attributes, $manifest);
 $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
-$fileTwSelectorsData = Helpers::checkAttr('fileTwSelectorsData', $attributes, $manifest);
 
 $fileId = $fileName . '-' . Helpers::getUnique();
 
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['file']);
 
 $fileClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'file', $componentClass),
@@ -100,7 +99,6 @@ echo Helpers::render(
 			'fieldContent' => $file,
 			'fieldId' => $fileId,
 			'fieldName' => $fileName,
-			'fieldTwSelectorsData' => $fileTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('file'),
 			'fieldDisabled' => !empty($fileIsDisabled),
 			'fieldIsRequired' => $fileIsRequired,

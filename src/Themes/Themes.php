@@ -25,7 +25,267 @@ class Themes implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']), [$this, 'getBlockFormsTailwindSelectors']);
+		if (is_admin()) {
+			\add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']), [$this, 'getBlockFormsTailwindSelectorsAdmin']);
+		} else {
+			// \add_filter(HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']), [$this, 'getBlockFormsTailwindSelectors']);
+		}
+	}
+
+	/**
+	 * Get the block forms tailwind selectors - admin.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function getBlockFormsTailwindSelectorsAdmin(): array
+	{
+		return [
+			'forms' => [
+				'base' => '',
+			],
+			'form' => [
+				'base' => '',
+				'parts' => [
+					'fields' => '',
+				],
+			],
+			'form-edit-actions' => [
+				'base' => '',
+				'parts' => [
+					'link' => '',
+				],
+			],
+			'loader' => [
+				'base' => '',
+			],
+			'global-msg' => [
+				'base' => '',
+			],
+			'field' => [
+				'base' => '',
+				'parts' => [
+					'inner' => 'es:space-y-1',
+					'label' => 'es:flex es:items-center es:gap-1 es:pb-0.5',
+					'label-inner' => '',
+					'before-content' => '',
+					'content' => '',
+					'content-wrap' => '',
+					'after-content' => '',
+					'help' => '',
+					'error' => '',
+				],
+			],
+			'input' => [
+				'base' => 'es:min-h-10 es:w-full es:rounded-lg es:border es:border-secondary-300 es:p-2 es:text-sm es:shadow-xs es:transition es:selection:bg-accent-500/20 es:selection:text-accent-950 es:any-focus:outline-hidden es:focus-visible:ring-2 es:focus-visible:ring-accent-500/50 es:focus-visible:border-accent-500 es:inset-ring es:inset-ring-secondary-100 es:disabled:shadow-none! es:disabled:border-secondary-200 es:disabled:bg-secondary-50 es:disabled:text-secondary-500 es:disabled:cursor-default es:readonly:bg-secondary-50',
+				'parts' => [
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'range' => [
+				'base' => '',
+				'parts' => [
+					'min' => '',
+					'max' => '',
+					'current' => '',
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'rating' => [
+				'base' => '',
+				'parts' => [
+					'input' => '',
+					'star' => '',
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'radios' => [
+				'parts' => [
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'radio' => [
+				'base' => '',
+				'parts' => [
+					'input' => '',
+					'content' => '',
+					'label' => '',
+					'label-icon' => '',
+					'label-inner' => '',
+				],
+			],
+			'checkboxes' => [
+				'parts' => [
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'checkbox' => [
+				'base' => '',
+				'parts' => [
+					'input' => '',
+					'content' => '',
+					'label' => '',
+					'label-icon' => '',
+					'label-inner' => '',
+					'help' => '',
+				],
+			],
+			'file' => [
+				'base' => '',
+				'parts' => [
+					'button' => '',
+					'custom-wrap' => '',
+					'info' => '',
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'phone' => [
+				'base' => '',
+				'parts' => [
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'textarea' => [
+				'base' => 'es:min-h-10 es:w-full es:rounded-lg es:border es:border-secondary-300 es:p-2 es:text-sm es:shadow-xs es:transition es:selection:bg-accent-500/20 es:selection:text-accent-950 es:any-focus:outline-hidden es:focus-visible:ring-2 es:focus-visible:ring-accent-500/50 es:focus-visible:border-accent-500 es:inset-ring es:inset-ring-secondary-100 es:disabled:shadow-none! es:disabled:border-secondary-200 es:disabled:bg-secondary-50 es:disabled:text-secondary-500 es:disabled:cursor-default es:readonly:bg-secondary-50',
+				'parts' => [
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'date' => [
+				'base' => '',
+				'parts' => [
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'submit' => [
+				'base' => '',
+				'parts' => [
+					'inner' => '',
+					'field' => '',
+					'field-inner' => '',
+					'field-label' => '',
+					'field-label-inner' => '',
+					'field-before-content' => '',
+					'field-content' => '',
+					'field-content-wrap' => '',
+					'field-after-content' => '',
+					'field-help' => '',
+					'field-error' => '',
+				],
+			],
+			'step' => [
+				'base' => '',
+				'parts' => [
+					'debug-details' => '',
+					'inner' => '',
+					'navigation' => '',
+					'navigation-inner' => '',
+					'navigation-prev'	=> '',
+					'navigation-next'	=> '',
+				],
+			],
+			'step-navigation-prev' => [
+				'base' => '',
+				'parts' => [
+					'inner' => '',
+				],
+			],
+			'step-navigation-next' => [
+				'base' => '',
+				'parts' => [
+					'inner' => '',
+				],
+			],
+			'progress-bar' => [
+				'base' => '',
+				'parts' => [
+					'item' => '',
+					'item-inner' => '',
+					'multiflow' => '',
+					'multistep' => '',
+				],
+			],
+		];
 	}
 
 	/**

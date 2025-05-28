@@ -44,7 +44,6 @@ $inputRangeShowCurrent = Helpers::checkAttr('inputRangeShowCurrent', $attributes
 $inputRangeShowCurrentPrefix = Helpers::checkAttr('inputRangeShowCurrentPrefix', $attributes, $manifest);
 $inputRangeShowCurrentSuffix = Helpers::checkAttr('inputRangeShowCurrentSuffix', $attributes, $manifest);
 $inputRangeUseCustomField = Helpers::checkAttr('inputRangeUseCustomField', $attributes, $manifest);
-$inputTwSelectorsData = Helpers::checkAttr('inputTwSelectorsData', $attributes, $manifest);
 
 $inputId = $inputName . '-' . Helpers::getUnique();
 
@@ -52,7 +51,7 @@ $inputId = $inputName . '-' . Helpers::getUnique();
 $inputHideLabel = false;
 $inputFieldLabel = $attributes[Helpers::getAttrKey('inputFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($inputTwSelectorsData, ['input', 'range']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['input', 'range']);
 
 $inputClass = Helpers::classnames([
 	$inputType === 'range' ? FormsHelper::getTwBase($twClasses, 'range', "{$componentClass}__range") : FormsHelper::getTwBase($twClasses, 'input', $componentClass),
@@ -151,7 +150,6 @@ echo Helpers::render(
 			'fieldContent' => $input,
 			'fieldId' => $inputId,
 			'fieldName' => $inputName,
-			'fieldTwSelectorsData' => $inputTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType($inputType === 'range' ? 'range' : 'input'),
 			'fieldIsRequired' => $inputIsRequired,
 			'fieldDisabled' => !empty($inputIsDisabled),

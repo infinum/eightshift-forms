@@ -60,9 +60,6 @@
 		"submitButtonTwParent": {
 			"type": "string",
 			"default": "submit"
-		},
-		"submitTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

@@ -75,9 +75,6 @@
 		"radioIsHidden": {
 			"type": "boolean",
 			"default": false
-		},
-		"radioTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

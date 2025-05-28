@@ -39,9 +39,6 @@
 		},
 		"stepMultiflowRules": {
 			"type": "array"
-		},
-		"stepTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

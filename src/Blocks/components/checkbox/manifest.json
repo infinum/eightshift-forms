@@ -94,9 +94,6 @@
 		"checkboxIsHidden": {
 			"type": "boolean",
 			"default": false
-		},
-		"checkboxTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

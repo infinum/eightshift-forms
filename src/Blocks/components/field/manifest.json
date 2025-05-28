@@ -132,9 +132,6 @@
 		"fieldIsNoneFormBlock": {
 			"type": "boolean",
 			"default": false
-		},
-		"fieldTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"responsiveAttributes": {

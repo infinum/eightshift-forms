@@ -92,9 +92,6 @@
 		"textareaIsPreventSubmit": {
 			"type": "boolean",
 			"default": false
-		},
-		"textareaTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"options": {

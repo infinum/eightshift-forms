@@ -6,13 +6,10 @@
  * @package EightshiftForms
  */
 
-use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $stepName = $attributes['stepStepName'] ?? '';
-$props = [
-	'twSelectorsData' => FormsHelper::getTwSelectorsData($attributes),
-];
+$props = [];
 
 if (empty($stepName)) {
 	$props['stepName'] = Helpers::getUnique();

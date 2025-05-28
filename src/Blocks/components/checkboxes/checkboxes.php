@@ -21,7 +21,6 @@ $checkboxesTypeCustom = Helpers::checkAttr('checkboxesTypeCustom', $attributes, 
 $checkboxesFieldAttrs = Helpers::checkAttr('checkboxesFieldAttrs', $attributes, $manifest);
 $checkboxesUseLabelAsPlaceholder = Helpers::checkAttr('checkboxesUseLabelAsPlaceholder', $attributes, $manifest);
 $checkboxesPlaceholder = Helpers::checkAttr('checkboxesPlaceholder', $attributes, $manifest);
-$checkboxesTwSelectorsData = Helpers::checkAttr('checkboxesTwSelectorsData', $attributes, $manifest);
 
 $checkboxesId = $checkboxesName . '-' . Helpers::getUnique();
 
@@ -85,7 +84,6 @@ $fieldOutput = [
 	'fieldId' => $checkboxesId,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 	'fieldName' => $checkboxesName,
-	'fieldTwSelectorsData' => $checkboxesTwSelectorsData,
 	'fieldIsRequired' => $checkboxesIsRequired,
 	'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

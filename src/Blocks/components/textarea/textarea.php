@@ -34,7 +34,6 @@ $textareaSize = Helpers::checkAttr('textareaSize', $attributes, $manifest);
 $textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
-$textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attributes, $manifest);
 
 $textareaId = $textareaName . '-' . Helpers::getUnique();
 
@@ -42,7 +41,7 @@ $textareaId = $textareaName . '-' . Helpers::getUnique();
 $textareaHideLabel = false;
 $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['textarea']);
 
 $textareaClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),
@@ -98,7 +97,6 @@ echo Helpers::render(
 			'fieldContent' => $textarea,
 			'fieldId' => $textareaId,
 			'fieldName' => $textareaName,
-			'fieldTwSelectorsData' => $textareaTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),

@@ -30,12 +30,11 @@ $ratingAttrs = Helpers::checkAttr('ratingAttrs', $attributes, $manifest);
 $ratingFieldAttrs = Helpers::checkAttr('ratingFieldAttrs', $attributes, $manifest);
 $ratingAmount = Helpers::checkAttr('ratingAmount', $attributes, $manifest);
 $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $manifest);
-$ratingTwSelectorsData = Helpers::checkAttr('ratingTwSelectorsData', $attributes, $manifest);
 $ratingHideLabel = false;
 
 $ratingId = $ratingName . '-' . Helpers::getUnique();
 
-$twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['rating']);
 
 $ratingClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'rating', $componentClass),
@@ -107,7 +106,6 @@ echo Helpers::render(
 			'fieldContent' => $rating,
 			'fieldId' => $ratingId,
 			'fieldName' => $ratingName,
-			'fieldTwSelectorsData' => $ratingTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('rating'),
 			'fieldIsRequired' => $ratingIsRequired,
 			'fieldDisabled' => !empty($ratingIsDisabled),

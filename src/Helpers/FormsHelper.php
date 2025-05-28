@@ -171,25 +171,32 @@ final class FormsHelper
 			return [];
 		}
 
-		$filterName = HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']);
-		if (\has_filter($filterName)) {
-			return \apply_filters($filterName, [], $attributes);
+		static $output = [];
+
+		if ($output) {
+			return $output;
 		}
 
-		return [];
+		$filterName = HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']);
+		if (\has_filter($filterName)) {
+			$output = \apply_filters($filterName, [], $attributes);
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Return Tailwind selectors data filter output.
 	 *
-	 * @param array<string> $data Data to get data for.
+	 * @param array<string> $attributes Attributes to get data for.
 	 * @param array<string> $selectors Selectors to get data for.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function getTwSelectors(array $data, array $selectors): array
+	public static function getTwSelectors(array $attributes, array $selectors): array
 	{
 		$output = [];
+		$data = self::getTwSelectorsData($attributes);
 
 		if (!$data) {
 			return $output;

@@ -19,9 +19,8 @@ $componentClass = $manifest['componentClass'] ?? '';
 
 $formEditActionsFormPostId = Helpers::checkAttr('formEditActionsFormPostId', $attributes, $manifest);
 $formEditActionsFormHasSteps = Helpers::checkAttr('formEditActionsFormHasSteps', $attributes, $manifest);
-$formEditActionsTwSelectorsData = Helpers::checkAttr('formEditActionsTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form-edit-actions']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['form-edit-actions']);
 
 ?>
 

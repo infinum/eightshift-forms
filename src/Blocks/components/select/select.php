@@ -31,7 +31,6 @@ $selectTypeCustom = Helpers::checkAttr('selectTypeCustom', $attributes, $manifes
 $selectFieldAttrs = Helpers::checkAttr('selectFieldAttrs', $attributes, $manifest);
 $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
-$selectTwSelectorsData = Helpers::checkAttr('selectTwSelectorsData', $attributes, $manifest);
 
 $selectId = $selectName . '-' . Helpers::getUnique();
 
@@ -104,7 +103,6 @@ $fieldOutput = [
 	'fieldContent' => $select,
 	'fieldId' => $selectId,
 	'fieldName' => $selectName,
-	'fieldTwSelectorsData' => $selectTwSelectorsData,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),
 	'fieldIsRequired' => $selectIsRequired,
 	'fieldDisabled' => !empty($selectIsDisabled),

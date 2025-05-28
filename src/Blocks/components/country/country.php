@@ -36,7 +36,6 @@ $countryPlaceholder = Helpers::checkAttr('countryPlaceholder', $attributes, $man
 $countryUseLabelAsPlaceholder = Helpers::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
 $countrySingleSubmit = Helpers::checkAttr('countrySingleSubmit', $attributes, $manifest);
 $countryValueType = Helpers::checkAttr('countryValueType', $attributes, $manifest);
-$countryTwSelectorsData = Helpers::checkAttr('countryTwSelectorsData', $attributes, $manifest);
 $countryIsMultiple = Helpers::checkAttr('countryIsMultiple', $attributes, $manifest);
 $countryValue = Helpers::checkAttr('countryValue', $attributes, $manifest);
 
@@ -156,7 +155,6 @@ echo Helpers::render(
 			'fieldId' => $countryId,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
 			'fieldName' => $countryName,
-			'fieldTwSelectorsData' => $countryTwSelectorsData,
 			'fieldIsRequired' => $countryIsRequired,
 			'fieldDisabled' => !empty($countryIsDisabled),
 			'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

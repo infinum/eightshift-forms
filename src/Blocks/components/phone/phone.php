@@ -35,7 +35,6 @@ $phoneFormPostId = Helpers::checkAttr('phoneFormPostId', $attributes, $manifest)
 $phoneTypeCustom = Helpers::checkAttr('phoneTypeCustom', $attributes, $manifest);
 $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
-$phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
 $phoneSelectValue = Helpers::checkAttr('phoneSelectValue', $attributes, $manifest);
 $phoneViewType = Helpers::checkAttr('phoneViewType', $attributes, $manifest);
 
@@ -45,7 +44,7 @@ $phoneId = $phoneName . '-' . Helpers::getUnique();
 $phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['phone']);
 
 $phoneClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),
@@ -161,7 +160,6 @@ echo Helpers::render(
 			'fieldContent' => $phone,
 			'fieldId' => $phoneId,
 			'fieldName' => $phoneName,
-			'fieldTwSelectorsData' => $phoneTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),
