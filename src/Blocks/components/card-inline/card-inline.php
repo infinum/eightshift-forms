@@ -47,8 +47,8 @@ $cardInlineClass = Helpers::classnames([
 		}
 	}
 	?>>
-	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<div class="<?php echo esc_attr("{$componentClass}__left-wrap"); ?>">
+	<div class="es:flex es:items-center es:gap-1">
+		<div class="es:flex es:items-center es:gap-1.5 es:text-sm es:text-secondary-800 es:[&>span>svg]:text-slate-500">
 			<?php if ($cardInlineLeftContent) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__left"); ?>">
 					<?php echo wp_kses_post($cardInlineLeftContent); ?>
@@ -91,7 +91,7 @@ $cardInlineClass = Helpers::classnames([
 		</div>
 
 		<?php if ($cardInlineRightContent) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__right-wrap"); ?>">
+			<div class="es:ml-auto es:flex es:items-center es:gap-1">
 				<?php echo wp_kses_post($cardInlineRightContent); ?>
 			</div>
 		<?php } ?>
