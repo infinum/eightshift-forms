@@ -25,6 +25,23 @@ export const ResultOutputItemEditor = ({ attributes, clientId }) => {
 			...CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS,
 		}?.[resultOutputItemOperator] ?? CONDITIONAL_TAGS_OPERATORS_LABELS[globalManifest.comparator.IS];
 
+	let outputName = '';
+
+	if (resultOutputItemOperator === globalManifest.comparator.GT || resultOutputItemOperator === globalManifest.comparator.LT) {
+		outputName = `is ${operatorLabel} ${resultOutputItemValue}`;
+	} else if (resultOutputItemOperator === globalManifest.comparator.GTE || resultOutputItemOperator === globalManifest.comparator.LTE) {
+		outputName = `is ${operatorLabel} to ${resultOutputItemValue}`;
+	} else if (
+		resultOutputItemOperator === globalManifest.comparatorExtended.B ||
+		resultOutputItemOperator === globalManifest.comparatorExtended.BS ||
+		resultOutputItemOperator === globalManifest.comparatorExtended.BN ||
+		resultOutputItemOperator === globalManifest.comparatorExtended.BNS
+	) {
+		outputName = `is ${operatorLabel} between ${resultOutputItemValue} and ${resultOutputItemValueEnd}`;
+	} else {
+		outputName = `${operatorLabel} ${resultOutputItemValue}`;
+	}
+
 	return (
 		<div>
 			<div>
@@ -35,9 +52,9 @@ export const ResultOutputItemEditor = ({ attributes, clientId }) => {
 						<b>{__('SHOW', 'eightshift-forms')}</b>
 						{__(' if the variable name is ', 'eightshift-forms')}
 						<b>{resultOutputItemName}</b>
-						{__(' and variable value', 'eightshift-forms')}
+						{__(' and variable value ', 'eightshift-forms')}
 						<br />
-						<b>{resultOutputItemValueEnd ? `${resultOutputItemValue} is ${operatorLabel} ${resultOutputItemValueEnd}` : `${operatorLabel} ${resultOutputItemValue}`}</b>
+						<b>{outputName}</b>
 					</>
 				)}
 			</div>
