@@ -68,13 +68,13 @@ final class FormsHelper
 			case $operator['ISN']:
 				return $value !== $start;
 			case $operator['GT']:
-				return \floatval($start) > \floatval($value);
-			case $operator['GTE']:
-				return \floatval($start) >= \floatval($value);
-			case $operator['LT']:
 				return \floatval($start) < \floatval($value);
-			case $operator['LTE']:
+			case $operator['GTE']:
 				return \floatval($start) <= \floatval($value);
+			case $operator['LT']:
+				return \floatval($start) > \floatval($value);
+			case $operator['LTE']:
+				return \floatval($start) >= \floatval($value);
 			case $operator['C']:
 				return \strpos($start, $value) !== false;
 			case $operator['SW']:
