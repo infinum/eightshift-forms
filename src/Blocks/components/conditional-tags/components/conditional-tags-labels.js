@@ -15,9 +15,9 @@ export const CONDITIONAL_TAGS_OPERATORS_LABELS = {
 
 export const CONDITIONAL_TAGS_OPERATORS_EXTENDED_LABELS = {
 	[globalManifest.comparatorExtended.B]: __('in range', 'eightshift-forms'),
-	[globalManifest.comparatorExtended.BS]: __('in range (strict)', 'eightshift-forms'),
+	[globalManifest.comparatorExtended.BS]: __('in range (including value)', 'eightshift-forms'),
 	[globalManifest.comparatorExtended.BN]: __('not in range', 'eightshift-forms'),
-	[globalManifest.comparatorExtended.BNS]: __('not in range (strict)', 'eightshift-forms'),
+	[globalManifest.comparatorExtended.BNS]: __('not in range (including value)', 'eightshift-forms'),
 };
 
 export const CONDITIONAL_TAGS_ACTIONS_LABELS = {

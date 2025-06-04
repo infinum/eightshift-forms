@@ -80,13 +80,13 @@ final class FormsHelper
 			case $operator['EW']:
 				return \substr($start, -\strlen($value)) === $value;
 			case $operatorExtended['B']:
-				return \floatval($start) > \floatval($value) && \floatval($start) < \floatval($end);
+				return \floatval($start) < \floatval($value) && \floatval($value) < \floatval($end);
 			case $operatorExtended['BS']:
-				return \floatval($start) >= \floatval($value) && \floatval($start) <= \floatval($end);
+				return \floatval($start) <= \floatval($value) && \floatval($value) <= \floatval($end);
 			case $operatorExtended['BN']:
-				return \floatval($start) < \floatval($value) || \floatval($start) > \floatval($end);
+				return \floatval($start) < \floatval($value) || \floatval($value) > \floatval($end);
 			case $operatorExtended['BNS']:
-				return \floatval($start) <= \floatval($value) || \floatval($start) >= \floatval($end);
+				return \floatval($start) <= \floatval($value) || \floatval($value) >= \floatval($end);
 			default:
 				return false;
 		}
