@@ -27,9 +27,15 @@ export const ResultOutputItemEditor = ({ attributes, clientId }) => {
 
 	let outputName = '';
 
-	if (resultOutputItemOperator === globalManifest.comparator.GT || resultOutputItemOperator === globalManifest.comparator.LT) {
+	if (
+		resultOutputItemOperator === globalManifest.comparator.GT ||
+		resultOutputItemOperator === globalManifest.comparator.LT
+	) {
 		outputName = `is ${operatorLabel} ${resultOutputItemValue}`;
-	} else if (resultOutputItemOperator === globalManifest.comparator.GTE || resultOutputItemOperator === globalManifest.comparator.LTE) {
+	} else if (
+		resultOutputItemOperator === globalManifest.comparator.GTE ||
+		resultOutputItemOperator === globalManifest.comparator.LTE
+	) {
 		outputName = `is ${operatorLabel} to ${resultOutputItemValue}`;
 	} else if (
 		resultOutputItemOperator === globalManifest.comparatorExtended.B ||
@@ -54,7 +60,9 @@ export const ResultOutputItemEditor = ({ attributes, clientId }) => {
 						<b>{resultOutputItemName}</b>
 						{__(' and variable value ', 'eightshift-forms')}
 						<br />
-						<b>{outputName}</b>
+						<b>
+							{outputName}
+						</b>
 					</>
 				)}
 			</div>
