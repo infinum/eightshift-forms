@@ -1467,13 +1467,13 @@ export class Utils {
 			[globalManifest.comparator.SW]: (start, value) => start.startsWith(value),
 			[globalManifest.comparator.EW]: (start, value) => start.endsWith(value),
 			[globalManifest.comparatorExtended.B]: (start, value, end) => 
-				parseFloat(String(start)) > parseFloat(String(value)) && parseFloat(String(start)) < parseFloat(String(end)),
+				parseFloat(String(start)) < parseFloat(String(value)) && parseFloat(String(value)) < parseFloat(String(end)),
 			[globalManifest.comparatorExtended.BS]: (start, value, end) => 
-				parseFloat(String(start)) >= parseFloat(String(value)) && parseFloat(String(start)) <= parseFloat(String(end)),
+				parseFloat(String(start)) <= parseFloat(String(value)) && parseFloat(String(value)) <= parseFloat(String(end)),
 			[globalManifest.comparatorExtended.BN]: (start, value, end) => 
-				parseFloat(String(start)) < parseFloat(String(value)) || parseFloat(String(start)) > parseFloat(String(end)),
+				parseFloat(String(start)) < parseFloat(String(value)) || parseFloat(String(value)) > parseFloat(String(end)),
 			[globalManifest.comparatorExtended.BNS]: (start, value, end) => 
-				parseFloat(String(start)) <= parseFloat(String(value)) || parseFloat(String(start)) >= parseFloat(String(end)),
+				parseFloat(String(start)) <= parseFloat(String(value)) || parseFloat(String(value)) >= parseFloat(String(end)),
 		};
 	};
 
