@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.7.2]
+
+### Fixed
+
+- Broken deployment workflow.
+
 ## [6.7.1]
 
 ### Fixed
@@ -1240,6 +1246,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.7.2]: https://github.com/infinum/eightshift-forms/compare/6.7.1...6.7.2
 [6.7.1]: https://github.com/infinum/eightshift-forms/compare/6.7.0...6.7.1
 [6.7.0]: https://github.com/infinum/eightshift-forms/compare/6.6.0...6.7.0
 [6.6.0]: https://github.com/infinum/eightshift-forms/compare/6.5.1...6.6.0
