@@ -58,16 +58,16 @@
 		},
 		{
 			"name": "infinum/eightshift-libs",
-			"version": "10.4.2",
+			"version": "10.6.1",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/infinum/eightshift-libs.git",
-				"reference": "a346bb42a331dec6093ab0b608168fe7c59c9480"
+				"reference": "419e3a21c58edfca5f3051c4f28b9bbb979cc604"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/a346bb42a331dec6093ab0b608168fe7c59c9480",
-				"reference": "a346bb42a331dec6093ab0b608168fe7c59c9480",
+				"url": "https://api.github.com/repos/infinum/eightshift-libs/zipball/419e3a21c58edfca5f3051c4f28b9bbb979cc604",
+				"reference": "419e3a21c58edfca5f3051c4f28b9bbb979cc604",
 				"shasum": ""
 			},
 			"require": {
@@ -79,18 +79,25 @@
 				"php-di/php-di": "^7.0.9"
 			},
 			"require-dev": {
+				"brain/monkey": "^2.6",
 				"dealerdirect/phpcodesniffer-composer-installer": "v1.0.0",
 				"infinum/eightshift-coding-standards": "^3.0.0",
+				"mockery/mockery": "^1.6",
 				"php-parallel-lint/php-parallel-lint": "^v1.4.0",
-				"php-stubs/wordpress-stubs": "v6.8.0",
-				"szepeviktor/phpstan-wordpress": "v2.0.1",
+				"php-stubs/wordpress-stubs": "6.8.1",
+				"phpunit/phpunit": "^12.0",
+				"szepeviktor/phpstan-wordpress": "2.0.2",
 				"wp-cli/wp-cli": "^v2.11.0"
 			},
 			"type": "library",
 			"autoload": {
 				"psr-4": {
 					"EightshiftLibs\\": "src/"
-				}
+				},
+				"exclude-from-classmap": [
+					"src/*/*Example.php",
+					"src/*Example.php"
+				]
 			},
 			"notification-url": "https://packagist.org/downloads/",
 			"license": [
@@ -118,7 +125,7 @@
 				"issues": "https://github.com/infinum/eightshift-libs/issues",
 				"source": "https://github.com/infinum/eightshift-libs"
 			},
-			"time": "2025-05-27T09:39:12+00:00"
+			"time": "2025-06-05T13:41:06+00:00"
 		},
 		{
 			"name": "laravel/serializable-closure",

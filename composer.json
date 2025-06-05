@@ -37,7 +37,7 @@
 	"require": {
 		"php": ">=8.3",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-libs": "^10.3.1"
+		"infinum/eightshift-libs": "^10.6.1"
 	},
 	"autoload": {
 		"psr-4": {
