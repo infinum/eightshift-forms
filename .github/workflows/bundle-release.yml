@@ -2,7 +2,7 @@ name: Bundle release
 
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,15 +15,53 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [ '23.1' ]
-        php: [ '8.3' ]
+        node: ['latest']
+        php: ['8.3']
     steps:
-      - name: Bundle release
-        uses: infinum/eightshift-deploy-actions-public/.github/actions/bundle/release@main
+      - name: Checkout the project repo
+        uses: actions/checkout@v4
         with:
-          PROJECT_PATH: '.'
-          REPO_NAME: 'eightshift-forms'
-          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          token: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          path: 'wp-content/plugins/eightshift-forms'
+
+      - name: Setup WordPress
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/wordpress-plugins@main
+        with:
           PHP_VERSION: ${{ matrix.php }}
+          WORDPRESS_GH_ACTIONS: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+
+      - name: Install plugin
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/setup/theme-or-plugin@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
           NODE_VERSION: ${{ matrix.node }}
           USE_BUN: true
+
+      - name: Set cache
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
+
+      - name: Post install cleanup - plugin
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
+
+      - name: Setup correct folder/file permissions
+        uses: infinum/eightshift-deploy-actions-public/.github/actions/set/permissions@main
+        with:
+          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
+
+      - name: Zip Plugin
+        shell: bash
+        run: |
+          cd wp-content/plugins
+          zip -rq ../../release.zip eightshift-forms
+
+      - name: Upload zip to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.WORDPRESS_GH_ACTIONS }}
+          file: release.zip
+          tag: ${{ github.ref }}
+          overwrite: true
