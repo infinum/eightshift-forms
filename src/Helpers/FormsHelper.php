@@ -129,7 +129,7 @@ final class FormsHelper
 		$showOutput = false;
 
 		foreach ($variationData as $key => $value) {
-			if (!$key || !$value) {
+			if (!$key || !isset($value)) {
 				continue;
 			}
 
