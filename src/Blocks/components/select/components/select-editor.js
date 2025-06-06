@@ -1,13 +1,6 @@
 import React from 'react';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -15,16 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const SelectEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('select');
 
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId } = attributes;
 
 	const selectContent = checkAttr('selectContent', attributes, manifest);
 	const selectName = checkAttr('selectName', attributes, manifest);
@@ -32,25 +16,14 @@ export const SelectEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('selectName', attributes, manifest), selectName);
 
-	const selectClass = classnames([
-		selector(componentClass, componentClass),
-		selector(selectIsDisabled, componentClass, '', 'disabled'),
-		selector(additionalClass, additionalClass),
-	]);
-
 	const selectComponent = (
 		<>
-			<div className={selectClass}>
-
+			<div className={'es:mb-5 es:border es:border-secondary-300 es:bg-white'}>
 				{selectContent}
 
 				<MissingName value={selectName} />
 
-				{selectName &&
-					<ConditionalTagsEditor
-						{...props('conditionalTags', attributes)}
-					/>
-				}
+				{selectName && <ConditionalTagsEditor {...props('conditionalTags', attributes)} />}
 			</div>
 		</>
 	);
@@ -62,8 +35,6 @@ export const SelectEditor = (attributes) => {
 					fieldContent: selectComponent,
 					fieldIsRequired: checkAttr('selectIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

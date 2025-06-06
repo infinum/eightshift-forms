@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "country",
 	"title": "Country",
 	"componentClass": "es-country",
@@ -72,9 +72,6 @@
 			"type": "string",
 			"default": "countryName"
 		},
-		"countryTwSelectorsData": {
-			"type": "array"
-		},
 		"countryIsMultiple": {
 			"type": "boolean",
 			"default": false
@@ -88,11 +85,11 @@
 	},
 	"options": {
 		"countryMinCount": {
-			"min":  0,
+			"min": 0,
 			"step": 1
 		},
 		"countryMaxCount": {
-			"min":  1,
+			"min": 1,
 			"step": 1
 		}
 	}

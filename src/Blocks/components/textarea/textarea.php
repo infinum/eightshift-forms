@@ -7,11 +7,9 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -36,7 +34,6 @@ $textareaSize = Helpers::checkAttr('textareaSize', $attributes, $manifest);
 $textareaLimitHeight = Helpers::checkAttr('textareaLimitHeight', $attributes, $manifest);
 $textareaIsPreventSubmit = Helpers::checkAttr('textareaIsPreventSubmit', $attributes, $manifest);
 $textareaUseLabelAsPlaceholder = Helpers::checkAttr('textareaUseLabelAsPlaceholder', $attributes, $manifest);
-$textareaTwSelectorsData = Helpers::checkAttr('textareaTwSelectorsData', $attributes, $manifest);
 
 $textareaId = $textareaName . '-' . Helpers::getUnique();
 
@@ -44,7 +41,7 @@ $textareaId = $textareaName . '-' . Helpers::getUnique();
 $textareaHideLabel = false;
 $textareaFieldLabel = $attributes[Helpers::getAttrKey('textareaFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($textareaTwSelectorsData, ['textarea']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['textarea']);
 
 $textareaClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'textarea', $componentClass),
@@ -80,7 +77,7 @@ if ($textareaAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('textarea', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('textarea', $attributes);
 
 $textarea = '<textarea
 		class="' . esc_attr($textareaClass) . '"
@@ -100,7 +97,6 @@ echo Helpers::render(
 			'fieldContent' => $textarea,
 			'fieldId' => $textareaId,
 			'fieldName' => $textareaName,
-			'fieldTwSelectorsData' => $textareaTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('textarea'),
 			'fieldIsRequired' => $textareaIsRequired,
 			'fieldDisabled' => !empty($textareaIsDisabled),

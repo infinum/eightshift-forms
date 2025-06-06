@@ -103,7 +103,7 @@ abstract class AbstractFormBuilder
 			return '';
 		}
 
-		// Determin component name.
+		// Determine component name.
 		$component = $attributes['component'] ? Helpers::kebabToCamelCase($attributes['component']) : '';
 
 		// Check children components for specific components.

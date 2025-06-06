@@ -7,10 +7,8 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $radiosName = Helpers::checkAttr('radiosName', $attributes, $manifest);
 if (!$radiosName) {
@@ -24,7 +22,6 @@ $radiosFieldAttrs = Helpers::checkAttr('radiosFieldAttrs', $attributes, $manifes
 $radiosTracking = Helpers::checkAttr('radiosTracking', $attributes, $manifest);
 $radiosUseLabelAsPlaceholder = Helpers::checkAttr('radiosUseLabelAsPlaceholder', $attributes, $manifest);
 $radiosPlaceholder = Helpers::checkAttr('radiosPlaceholder', $attributes, $manifest);
-$radiosTwSelectorsData = Helpers::checkAttr('radiosTwSelectorsData', $attributes, $manifest);
 
 $radiosId = $radiosName . '-' . Helpers::getUnique();
 
@@ -46,7 +43,7 @@ $radiosContent = (string) preg_replace_callback('/for=""/', function () use (&$i
 }, $radiosContent);
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('radios', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('radios', $attributes);
 
 
 $placeholderLabel = '';
@@ -90,7 +87,6 @@ $fieldOutput = [
 	'fieldIsRequired' => $radiosIsRequired,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('radios'),
 	'fieldId' => $radiosId,
-	'fieldTwSelectorsData' => $radiosTwSelectorsData,
 	'fieldTracking' => $radiosTracking,
 	'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

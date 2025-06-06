@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -90,8 +90,8 @@ trait MigrationHelper
 			'data' => [],
 		];
 
-		$itemId = UtilsSettingsHelper::getSettingValue("{$type}-{$itemIdKey}", $id);
-		$innerId = UtilsSettingsHelper::getSettingValue("{$type}-{$innerIdKey}", $id);
+		$itemId = SettingsHelpers::getSettingValue("{$type}-{$itemIdKey}", $id);
+		$innerId = SettingsHelpers::getSettingValue("{$type}-{$innerIdKey}", $id);
 		$blocks = \parse_blocks($content);
 		$integrationFields = $this->prepareIntegrationFields2To3Forms($type, $id);
 
@@ -111,7 +111,7 @@ trait MigrationHelper
 
 		$syncForm = $this->integrationSyncDiff->createFormEditor($id, $type, $itemId, $innerId);
 		$syncFormOutput = $syncForm['data']['output'] ?? [];
-		$syncFormStatus = $syncForm['status'] ?? UtilsConfig::STATUS_ERROR;
+		$syncFormStatus = $syncForm['status'] ?? Config::STATUS_ERROR;
 		$syncFormDebugType = $syncForm['debugType'] ?? '';
 
 		if (!$itemId) {
@@ -132,7 +132,7 @@ trait MigrationHelper
 			return $output;
 		}
 
-		if ($syncFormStatus === UtilsConfig::STATUS_ERROR) {
+		if ($syncFormStatus === Config::STATUS_ERROR) {
 			// translators: %s will be replaced with the debug type.
 			$output['msg'][] = \sprintf(\__("Sync form status is error - %s", 'eightshift-forms'), $syncFormDebugType);
 			$output['fatal'] = true;
@@ -151,7 +151,7 @@ trait MigrationHelper
 		}
 
 		foreach ($syncFormOutput as $key => $block) {
-			$blockName = UtilsGeneralHelper::getBlockNameDetails($block['blockName'])['name'];
+			$blockName = GeneralHelpers::getBlockNameDetails($block['blockName'])['name'];
 			$prefix = Helpers::kebabToCamelCase("{$blockName}-{$blockName}");
 			$name = $block['attrs']["{$prefix}Name"] ?? '';
 			$label = $block['attrs']["{$prefix}FieldLabel"] ?? '';
@@ -225,14 +225,14 @@ trait MigrationHelper
 	{
 		$output = [];
 
-		$integrationFields = UtilsSettingsHelper::getSettingValueGroup("{$type}-integration-fields", $id);
+		$integrationFields = SettingsHelpers::getSettingValueGroup("{$type}-integration-fields", $id);
 
 		if (!$integrationFields) {
 			return [];
 		}
 
 		foreach ($integrationFields as $key => $value) {
-			$key = \explode(UtilsConfig::DELIMITER, $key);
+			$key = \explode(Config::DELIMITER, $key);
 			$name = $key[0] ?? '';
 			$innerKey = $key[1] ?? '';
 

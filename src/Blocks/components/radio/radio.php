@@ -7,10 +7,8 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentName = $manifest['componentName'] ?? '';
 $componentClass = $manifest['componentClass'] ?? '';
@@ -32,9 +30,8 @@ $radioAttrs = Helpers::checkAttr('radioAttrs', $attributes, $manifest);
 $radioFieldAttrs = Helpers::checkAttr('radioFieldAttrs', $attributes, $manifest);
 $radioIcon = Helpers::checkAttr('radioIcon', $attributes, $manifest);
 $radioIsHidden = Helpers::checkAttr('radioIsHidden', $attributes, $manifest);
-$radioTwSelectorsData = Helpers::checkAttr('radioTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($radioTwSelectorsData, ['radio']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['radio']);
 
 $radioClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'radio', $componentClass),
@@ -81,7 +78,10 @@ if ($radioFieldAttrs) {
 
 ?>
 
-<div class="<?php echo esc_attr($radioClass); ?>" <?php echo $radioFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
+<div
+	class="<?php echo esc_attr($radioClass); ?>"
+	<?php echo $radioFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'content', "{$componentClass}__content")); ?>">
 		<input
 			class="<?php echo esc_attr($radioInputClass); ?>"
@@ -90,13 +90,12 @@ if ($radioFieldAttrs) {
 			id="<?php echo esc_attr($radioName); ?>"
 			<?php checked($radioIsChecked); ?>
 			<?php disabled($radioIsDisabled); ?>
-			<?php echo $radioAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
-		/>
+			<?php echo $radioAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			?> />
 		<?php if (!$radioHideLabel) { ?>
 			<label
 				for="<?php echo esc_attr($radioName); ?>"
-				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label', "{$componentClass}__label")); ?>"
-			>
+				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label', "{$componentClass}__label")); ?>">
 				<?php if ($radioIcon) { ?>
 					<img class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'label-icon', "{$componentClass}__label-icon")); ?>" src="<?php echo esc_url($radioIcon); ?>" alt="<?php echo esc_attr($radioLabel); ?>" />
 				<?php } ?>

@@ -7,10 +7,8 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $checkboxesName = Helpers::checkAttr('checkboxesName', $attributes, $manifest);
 if (!$checkboxesName) {
@@ -23,7 +21,6 @@ $checkboxesTypeCustom = Helpers::checkAttr('checkboxesTypeCustom', $attributes, 
 $checkboxesFieldAttrs = Helpers::checkAttr('checkboxesFieldAttrs', $attributes, $manifest);
 $checkboxesUseLabelAsPlaceholder = Helpers::checkAttr('checkboxesUseLabelAsPlaceholder', $attributes, $manifest);
 $checkboxesPlaceholder = Helpers::checkAttr('checkboxesPlaceholder', $attributes, $manifest);
-$checkboxesTwSelectorsData = Helpers::checkAttr('checkboxesTwSelectorsData', $attributes, $manifest);
 
 $checkboxesId = $checkboxesName . '-' . Helpers::getUnique();
 
@@ -45,7 +42,7 @@ $checkboxesContent = (string) preg_replace_callback('/for=""/', function () use 
 }, $checkboxesContent);
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('checkboxes', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('checkboxes', $attributes);
 
 $placeholderLabel = '';
 $placeholder = '';
@@ -87,7 +84,6 @@ $fieldOutput = [
 	'fieldId' => $checkboxesId,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('checkboxes'),
 	'fieldName' => $checkboxesName,
-	'fieldTwSelectorsData' => $checkboxesTwSelectorsData,
 	'fieldIsRequired' => $checkboxesIsRequired,
 	'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),

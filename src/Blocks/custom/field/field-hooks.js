@@ -3,7 +3,7 @@
 import { addFilter } from '@wordpress/hooks';
 import { select } from '@wordpress/data';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { STORE_NAME } from '@eightshift/frontend-libs/scripts/editor';
+import { STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts/editor';
 import { Field } from './field-block';
 
 // Wrap none forms block with field block.
@@ -11,9 +11,7 @@ const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit)
 	const postType = select('core/editor').getCurrentPostType();
 
 	return (innerProps) => {
-		const {
-			name,
-		} = innerProps;
+		const { name } = innerProps;
 
 		// Change only none forms blocks in forms post type.
 		if (postType === esFormsLocalization?.postTypes?.forms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
@@ -29,10 +27,8 @@ const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit)
 	};
 }, 'setNoneEightshiftFormsBlocksField');
 
-
 // Add none forms block attributes from field block.
-function setNoneEightshiftBlocksFieldAttributes( settings, name ) {
-
+function setNoneEightshiftBlocksFieldAttributes(settings, name) {
 	// Change only none forms blocks in forms post type.
 	if (esFormsLocalization?.currentPostType === esFormsLocalization?.postTypes?.forms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
 		return {

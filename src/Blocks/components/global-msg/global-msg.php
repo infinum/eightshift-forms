@@ -7,20 +7,17 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $globalMsgAttrs = [];
 
 $globalMsgValue = Helpers::checkAttr('globalMsgValue', $attributes, $manifest);
-$globalMsgTwSelectorsData = Helpers::checkAttr('globalMsgTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($globalMsgTwSelectorsData, ['global-msg']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['global-msg']);
 
 $globalMsgClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'global-msg', $componentClass),
@@ -33,7 +30,7 @@ $headings = [
 	'error' => '',
 ];
 
-$filterName = UtilsHooksHelper::getFilterName(['block', 'form', 'globalMsgHeadings']);
+$filterName = HooksHelpers::getFilterName(['block', 'form', 'globalMsgHeadings']);
 
 if (has_filter($filterName) && !is_admin()) {
 	$headings = apply_filters($filterName, []);
@@ -58,7 +55,7 @@ if ($globalMsgAttrs) {
 
 <div
 	class="<?php echo esc_attr($globalMsgClass); ?>"
-	<?php echo $globalMsgAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
->
+	<?php echo $globalMsgAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 	<?php echo esc_html($globalMsgValue); ?>
 </div>

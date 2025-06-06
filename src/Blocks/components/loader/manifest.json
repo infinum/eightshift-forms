@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "loader",
 	"title": "Loader",
 	"componentClass": "es-loader",
@@ -7,9 +7,6 @@
 		"loaderIsGeolocation": {
 			"type": "boolean",
 			"default": false
-		},
-		"loaderTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

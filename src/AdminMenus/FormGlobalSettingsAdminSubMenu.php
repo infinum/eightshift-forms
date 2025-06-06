@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\AdminMenus;
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Dashboard\SettingsDashboard;
-use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Settings\SettingsBuilderInterface;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -40,41 +40,18 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	}
 
 	/**
-	 * Register all the hooks
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		\add_action(
-			'admin_menu',
-			function () {
-				\add_submenu_page(
-					$this->getParentMenu(),
-					$this->getTitle(),
-					$this->getMenuTitle(),
-					$this->getCapability(),
-					$this->getMenuSlug(),
-					[$this, 'processAdminSubmenu']
-				);
-			},
-			40
-		);
-	}
-
-	/**
 	 * Capability for this admin sub menu.
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = UtilsConfig::CAP_SETTINGS_GLOBAL;
+	public const ADMIN_MENU_CAPABILITY = Config::CAP_SETTINGS_GLOBAL;
 
 	/**
 	 * Menu slug for this admin sub menu.
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = UtilsConfig::SLUG_ADMIN_SETTINGS_GLOBAL;
+	public const ADMIN_MENU_SLUG = Config::SLUG_ADMIN_SETTINGS_GLOBAL;
 
 	/**
 	 * Parent menu slug for this admin sub menu.
@@ -82,6 +59,16 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 * @var string
 	 */
 	public const PARENT_MENU_SLUG = FormAdminMenu::ADMIN_MENU_SLUG;
+
+	/**
+	 * Return hook priority order.
+	 *
+	 * @return integer
+	 */
+	public function getPriorityOrder(): int
+	{
+		return 40;
+	}
 
 	/**
 	 * Get the title to use for the admin page.
@@ -141,24 +128,13 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Get the view component that will render correct view.
 	 *
-	 * @return string View URI.
-	 */
-	protected function getViewComponent(): string
-	{
-		return 'admin-settings';
-	}
-
-	/**
-	 * Render the current view.
-	 *
 	 * @param array<string, mixed> $attributes Array of attributes passed to the view.
-	 * @param string $innerBlockContent Not used here.
 	 *
-	 * @return string Rendered HTML.
+	 * @return string View uri.
 	 */
-	public function render(array $attributes = [], string $innerBlockContent = ''): string
+	protected function getViewComponent(array $attributes): string
 	{
-		return Helpers::render($this->getViewComponent(), $attributes);
+		return Helpers::render('admin-settings', $attributes);
 	}
 
 	/**
@@ -179,7 +155,7 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		return [
 			'adminSettingsPageTitle' => \esc_html__('Global settings', 'eightshift-forms'),
-			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
+			'adminSettingsBackLink' => GeneralHelpers::getListingPageUrl(),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar(),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, '0'),
 			'adminSettingsType' => $type,

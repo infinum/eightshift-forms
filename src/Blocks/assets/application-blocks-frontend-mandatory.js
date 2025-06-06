@@ -5,8 +5,17 @@
  * Usage: `WordPress frontend screen`.
  */
 
-// Images.
-import './images/blocks-frontend-mandatory';
+import { dynamicImport } from '@eightshift/frontend-libs-tailwind/scripts/helpers';
 
-// Styles.
-import './styles/blocks-frontend-mandatory.scss';
+/* ------------------------------------------------------------ */
+/* Images */
+/* ------------------------------------------------------------ */
+
+import './../components/country/images/flags.png';
+
+/* ------------------------------------------------------------ */
+/* Styles */
+/* ------------------------------------------------------------ */
+
+// dynamicImport(require.context('./../components', true, /-frontend-mandatory\.css$/));
+// dynamicImport(require.context('./../custom', true, /-frontend-mandatory\.css$/));

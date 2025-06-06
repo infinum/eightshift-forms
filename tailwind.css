@@ -1,0 +1,102 @@
+/* stylelint-disable at-rule-no-unknown, lightness-notation, hue-degree-notation, custom-property-empty-line-before, custom-property-pattern, at-rule-no-deprecated */
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-motion';
+@plugin 'tailwindcss-react-aria-components';
+
+@source './src/**/*.{html,js,php,json,css}';
+@source './*.php';
+
+@theme {
+	--breakpoint-*: initial;
+
+	--breakpoint-sm: 30rem; /* 480px, 23.4375rem/375px in the design */
+	--breakpoint-md: 80rem; /* 1280px, 64rem/1024px in the design */
+
+	--color-*: initial;
+
+	--color-black: oklch(0% 0 0);
+	--color-white: oklch(100% 0 0);
+
+	--color-primary-5: oklch(0.937 0.017 337.6);
+	--color-primary-10: oklch(0.871 0.036 337.5);
+	--color-primary-20: oklch(0.799 0.056 337.8);
+	--color-primary-30: oklch(0.702 0.086 338.8);
+	--color-primary-40: oklch(0.565 0.13 340.5);
+	--color-primary-50: oklch(0.487 0.153 342.3);
+	--color-primary-60: oklch(0.389 0.164 347.1);
+	--color-primary-70: oklch(0.357 0.151 347.1);
+	--color-primary-80: oklch(0.306 0.129 346.5);
+	--color-primary-90: oklch(0.258 0.109 345.1);
+
+	--color-secondary-5: oklch(0.953 0.027 337.1);
+	--color-secondary-10: oklch(0.918 0.053 336.8);
+	--color-secondary-20: oklch(0.856 0.084 338.1);
+	--color-secondary-30: oklch(0.791 0.127 338.8);
+	--color-secondary-40: oklch(0.708 0.183 340.6);
+	--color-secondary-50: oklch(0.664 0.214 341.8);
+	--color-secondary-60: oklch(0.612 0.243 344.3);
+	--color-secondary-70: oklch(0.571 0.226 344.2);
+	--color-secondary-80: oklch(0.478 0.187 344);
+	--color-secondary-90: oklch(0.397 0.153 343.8);
+
+	--color-neutral-5: oklch(0.982 0.01 87.5);
+	--color-neutral-20: oklch(0.911 0.01 81.8);
+	--color-neutral-30: oklch(0.839 0.01 87.5);
+	--color-neutral-40: oklch(0.691 0.012 84.6);
+	--color-neutral-50: oklch(0.53 0.012 76.5);
+	--color-neutral-60: oklch(0.36 0.016 75.1);
+	--color-neutral-80: oklch(0.164 0.02 76.9);
+
+	--color-error-10: oklch(0.972 0.014 6.7);
+	--color-error-30: oklch(0.642 0.186 14.8);
+	--color-error-50: oklch(0.532 0.216 25.1);
+	--color-error-80: oklch(0.357 0.144 23.2);
+
+	--text-*: initial;
+
+	--text-h1: 3rem;
+	--text-h1--line-height: 1.16;
+	--text-h1--font-weight: 500;
+
+	--text-h2: 2.25rem;
+	--text-h2--line-height: 1.18;
+	--text-h2--font-weight: 500;
+
+	--text-h3: 2rem;
+	--text-h3--line-height: 1.2;
+	--text-h3--font-weight: 500;
+
+	--text-h4: 1.5rem;
+	--text-h4--line-height: 1.48;
+	--text-h4--font-weight: 500;
+
+	--text-h5: 1.125rem;
+	--text-h5--line-height: 1.56;
+	--text-h5--font-weight: 500;
+
+	--text-h6: 1rem;
+	--text-h6--line-height: 1.6;
+	--text-h6--font-weight: 500;
+
+	--text-caption: 0.875rem;
+	--text-caption--line-height: 1.6;
+	--text-caption--font-weight: 500;
+
+	--text-xl: 1.25rem;
+	--text-xl--line-height: 1.8;
+
+	--text-lg: 1.125rem;
+	--text-lg--line-height: 1.77;
+
+	--text-base: 1rem;
+	--text-base--line-height: 1.5;
+
+	--text-sm: 0.875rem;
+	--text-sm--line-height: 1.43;
+
+	--text-xs: 0.75rem;
+	--text-xs--line-height: 1.5;
+
+	--default-transition-duration: 300ms;
+}

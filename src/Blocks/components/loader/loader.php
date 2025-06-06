@@ -7,19 +7,16 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
 $loaderIsGeolocation = Helpers::checkAttr('loaderIsGeolocation', $attributes, $manifest);
-$loaderTwSelectorsData = Helpers::checkAttr('loaderTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($loaderTwSelectorsData, ['loader']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['loader']);
 
 $loaderClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'loader', $componentClass),
@@ -37,7 +34,7 @@ $loaderOverlayClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, 'loader', 'overlay', "{$componentClass}__overlay"),
 ]);
 
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('loader', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('loader', $attributes);
 
 ?>
 

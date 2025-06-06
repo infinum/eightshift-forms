@@ -1,9 +1,10 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-field--file {
 	.es-file {
 		display: none;
 
 		&__custom-wrap {
-			@include input-styles-disabled;
 			padding: 20px;
 			border-radius: var(--global-esf-spacing-s);
 			border: 1px solid var(--es-input-border-color);
@@ -13,13 +14,16 @@
 			flex-direction: column;
 			color: var(--global-colors-esf-gray-500);
 			inline-size: 100%;
+
+			@include theme.input-styles-disabled;
 		}
 
 		&__button {
-			@include submit-styles($size: 'medium');
 			margin-block-start: 15px;
 			display: inline-flex;
 			inline-size: initial;
+
+			@include theme.submit-styles($size: 'medium');
 		}
 	}
 }

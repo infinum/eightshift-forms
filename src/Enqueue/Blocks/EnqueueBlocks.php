@@ -11,23 +11,22 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Blocks;
 
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Enrichment\SettingsEnrichment;
-use EightshiftForms\Settings\Settings\SettingsSettings;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Enqueue\SharedEnqueue;
 use EightshiftForms\Enqueue\Captcha\EnqueueCaptcha;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsIntegrationsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\IntegrationsHelpers;
+use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Validation\ValidationPatterns;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -49,23 +48,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	protected EnrichmentInterface $enrichment;
 
 	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
 	 * Create a new admin instance.
 	 *
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
 	public function __construct(
-		ManifestCacheInterface $manifestCache,
 		EnrichmentInterface $enrichment
 	) {
-		$this->manifestCache = $manifestCache;
 		$this->enrichment = $enrichment;
 	}
 
@@ -81,8 +70,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorStyle'], 50);
 
 		// Frontend only style.
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
-		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleLocal'], 50);
+		// TODO
+		// \add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyleMandatory'], 49);
+		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendStyle'], 50);
 
 		// Frontend only script.
 		\add_action('wp_enqueue_scripts', [$this, 'enqueueBlockFrontendScript'], 11);
@@ -95,7 +85,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
+		return Config::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**
@@ -113,58 +103,42 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	// -----------------------------------------------------
 
 	/**
-	 * Enqueue blocks style for editor only.
+	 * Get style dependencies
 	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return void
+	 * @return string[] List of all the style dependencies.
 	 */
-	public function enqueueBlockEditorStyle(string $hook): void
+	public function getBlockEditorStyleDependencies(): array
 	{
-		$handle = $this->getBlockEditorStyleHandle();
-
-		\wp_register_style(
-			$handle,
-			$this->setAssetsItem(static::BLOCKS_EDITOR_STYLE_URI),
-			[],
-			$this->getAssetsVersion(),
-			$this->getMedia()
-		);
-
-		\wp_enqueue_style($handle);
+		return [];
 	}
 
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Editor.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueBlockEditorScript(string $hook): void
+	public function enqueueBlockEditorScript(): void
 	{
 		// If not admin exit.
 		if (!\is_admin()) {
 			return;
 		}
 
-		parent::enqueueBlockEditorScript($hook);
+		parent::enqueueBlockEditorScript();
 
 		$output = $this->getEnqueueSharedInlineCommonItems(false);
 
-		$additionalBlocksFilterName = UtilsHooksHelper::getFilterName(['blocks', 'additionalBlocks']);
-		$formsStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'styleOptions']);
-		$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
-		$fieldStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleOptions']);
-		$breakpointsFilterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
-		$formSelectorTemplatesFilterName = UtilsHooksHelper::getFilterName(['block', 'formSelector', 'formTemplates']);
+		$additionalBlocksFilterName = HooksHelpers::getFilterName(['blocks', 'additionalBlocks']);
+		$formsStyleOptionsFilterName = HooksHelpers::getFilterName(['block', 'forms', 'styleOptions']);
+		$formsUseCustomResultOutputFeatureFilterName = HooksHelpers::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
+		$fieldStyleOptionsFilterName = HooksHelpers::getFilterName(['block', 'field', 'styleOptions']);
+		$formSelectorTemplatesFilterName = HooksHelpers::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
 		$output['formsBlockStyleOptions'] = \apply_filters($formsStyleOptionsFilterName, []);
 		$output['formsUseCustomResultOutputFeature'] = \apply_filters($formsUseCustomResultOutputFeatureFilterName, false);
 		$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
 		$output['validationPatternsOptions'] = ValidationPatterns::getValidationPatternsEditor();
-		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
 		$output['currentPostType'] = [
 			'isForms' => \get_post_type() === Forms::POST_TYPE_SLUG,
@@ -177,13 +151,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		];
 
 		$output['use'] = [
-			'activeIntegrations' => UtilsIntegrationsHelper::getActiveIntegrations(),
+			'activeIntegrations' => IntegrationsHelpers::getActiveIntegrations(),
 			'geolocation' => \apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false),
 		];
 
 		$output['wpAdminUrl'] = \get_admin_url();
 		$output['nonce'] = \wp_create_nonce('wp_rest');
-		$output['isDeveloperMode'] = UtilsDeveloperHelper::isDeveloperModeActive();
+		$output['isDeveloperMode'] = DeveloperHelpers::isDeveloperModeActive();
 		$output['isAdmin'] = true;
 
 		$output = \wp_json_encode($output);
@@ -192,13 +166,13 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
-	 * List of admin script dependencies
+	 * List block editor script dependencies.
 	 *
 	 * @return string[] List of all the admin dependencies.
 	 */
-	protected function getAdminScriptDependencies(): array
+	protected function getBlockEditorScriptDependencies(): array
 	{
-		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'blocksEditor']);
+		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'blocksEditor']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {
@@ -206,10 +180,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		}
 
 		return \array_merge(
-			parent::getAdminScriptDependencies(),
-			[
-				'lodash',
-			],
+			parent::getBlockEditorScriptDependencies(),
 			$scriptsDependencyOutput
 		);
 	}
@@ -230,7 +201,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\wp_register_style(
 			$handle,
 			$this->setAssetsItem('applicationBlocksFrontendMandatory.css'),
-			$this->getFrontendStyleDependencies(),
+			[],
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
@@ -245,68 +216,63 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Method that returns editor and frontend style with check.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendStyleLocal(string $hook): void
+	public function enqueueBlockFrontendStyle(): void
 	{
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return;
 		}
 
-
-		$this->enqueueBlockFrontendStyle($hook);
+		parent::enqueueBlockFrontendStyle();
 	}
 
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Frontend.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendScript(string $hook): void
+	public function enqueueBlockFrontendScript(): void
 	{
-		parent::enqueueBlockFrontendScript($hook);
+		parent::enqueueBlockFrontendScript();
 
 		$output = $this->getEnqueueSharedInlineCommonItems();
 
 		// Frontend part.
-		$hideGlobalMessageTimeout = UtilsHooksHelper::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
-		$redirectionTimeout = UtilsHooksHelper::getFilterName(['block', 'form', 'redirectionTimeout']);
-		$fileRemoveLabel = UtilsHooksHelper::getFilterName(['block', 'file', 'previewRemoveLabel']);
+		$hideGlobalMessageTimeout = HooksHelpers::getFilterName(['block', 'form', 'hideGlobalMsgTimeout']);
+		$redirectionTimeout = HooksHelpers::getFilterName(['block', 'form', 'redirectionTimeout']);
+		$fileRemoveLabel = HooksHelpers::getFilterName(['block', 'file', 'previewRemoveLabel']);
 
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
 		$output['fileRemoveLabel'] = \apply_filters($fileRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
-		$output['formDisableScrollToFieldOnError'] = UtilsSettingsHelper::isOptionCheckboxChecked(
+		$output['formDisableScrollToFieldOnError'] = SettingsHelpers::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableScrollToGlobalMessageOnSuccess'] = UtilsSettingsHelper::isOptionCheckboxChecked(
+		$output['formDisableScrollToGlobalMessageOnSuccess'] = SettingsHelpers::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_GLOBAL_MESSAGE_ON_SUCCESS,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY
 		);
-		$output['formDisableAutoInit'] = UtilsSettingsHelper::isOptionCheckboxChecked(
+		$output['formDisableAutoInit'] = SettingsHelpers::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_AUTOINIT_ENQUEUE_SCRIPT_KEY,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY
 		);
-		$output['formResetOnSuccess'] = !UtilsDeveloperHelper::isDeveloperSkipFormResetActive();
+		$output['formResetOnSuccess'] = !DeveloperHelpers::isDeveloperSkipFormResetActive();
 		$output['formServerErrorMsg'] = \esc_html__('A server error occurred while submitting your form. Please try again.', 'eightshift-forms');
-		$output['formCaptchaErrorMsg'] = \esc_html__('A ReCaptcha error has occured. Please try again.', 'eightshift-forms');
-		$output['formMisconfigured'] = \is_user_logged_in() ? \esc_html__('You form is missing forms block or it is missconfigured.', 'eightshift-forms') : '';
+		$output['formCaptchaErrorMsg'] = \esc_html__('A ReCaptcha error has occurred. Please try again.', 'eightshift-forms');
+		$output['formMisconfigured'] = \is_user_logged_in() ? \esc_html__('You form is missing forms block or it is misconfigured.', 'eightshift-forms') : '';
 
 		// Enrichment config.
 		if (\apply_filters(SettingsEnrichment::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output['enrichment'] = \array_merge(
 				[
 					'isUsed' => true,
-					'isUsedPrefill' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
-					'isUsedPrefillUrl' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
-					'allowedSmart' => \array_values(\array_filter(\explode(\PHP_EOL, UtilsSettingsHelper::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY, 1)))),
+					'isUsedPrefill' => SettingsHelpers::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
+					'isUsedPrefillUrl' => SettingsHelpers::isOptionCheckboxChecked(SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, SettingsEnrichment::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
+					'allowedSmart' => \array_values(\array_filter(\explode(\PHP_EOL, SettingsHelpers::getOptionValueAsJson(SettingsEnrichment::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY, 1)))),
 				],
-				FiltersOuputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
+				FiltersOutputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig())['config'] ?? [],
 			);
 		} else {
 			$output['enrichment'] = [
@@ -325,12 +291,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			$output['captcha'] = [
 				'isUsed' => true,
-				'isEnterprise' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
-				'siteKey' => UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
-				'submitAction' => UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'initAction' => UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-				'loadOnInit' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
-				'hideBadge' => UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
+				'isEnterprise' => SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_ENTERPRISE_KEY),
+				'siteKey' => SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY),
+				'submitAction' => SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SUBMIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				'initAction' => SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_INIT_ACTION_DEFAULT_KEY, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+				'loadOnInit' => SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_LOAD_ON_INIT_KEY),
+				'hideBadge' => SettingsHelpers::isOptionCheckboxChecked(SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY, SettingsCaptcha::SETTINGS_CAPTCHA_HIDE_BADGE_KEY),
 			];
 		} else {
 			$output['captcha'] = [
@@ -350,18 +316,29 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
+	 * Get front end style dependencies
+	 *
+	 * @return array<int, string> List of all the style dependencies.
+	 */
+	protected function getBlockFrontendStyleDependencies(): array
+	{
+		return [];
+	}
+
+	/**
 	 * Get frontend script dependencies.
 	 *
 	 * @return array<int, string> List of all the script dependencies.
 	 */
-	protected function getFrontendScriptDependencies(): array
+	protected function getBlockFrontendScriptDependencies(): array
 	{
+
 		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return [];
+			return parent::getBlockFrontendScriptDependencies();
 		}
 
-		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'blocksFrontend']);
-		$scriptsDependencyOutput = [];
+		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'blocksFrontend']);
+		$scriptsDependencyOutput = parent::getBlockFrontendScriptDependencies();
 
 		if (\has_filter($scriptsDependency)) {
 			$scriptsDependencyOutput = \apply_filters($scriptsDependency, []);

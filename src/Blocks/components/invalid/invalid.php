@@ -6,10 +6,7 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
+use EightshiftForms\Helpers\UtilsHelper;
 
 $componentClass = $manifest['componentClass'] ?? '';
 $heading = $attributes['heading'] ?? '';
@@ -20,7 +17,8 @@ $icon = $attributes['icon'] ?? '';
 
 <div class="<?php echo esc_attr($componentClass); ?>">
 	<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-		<?php echo $icon ? UtilsHelper::getUtilsIcons($icon) : UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+		<?php echo $icon ? UtilsHelper::getUtilsIcons($icon) : UtilsHelper::getUtilsIcons('warning'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		?>
 	</div>
 
 	<?php if ($heading) { ?>
