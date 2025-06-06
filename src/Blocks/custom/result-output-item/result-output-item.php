@@ -40,7 +40,7 @@ $resultClass = [
 	UtilsHelper::getStateSelector('resultOutputItem'),
 ];
 
-$resultOutputData = FormsHelper::checkResultOutputSuccess($resultOutputItemName, $resultOutputItemOperator, $resultOutputItemValue, $value, $resultOutputItemValueEnd);
+$resultOutputData = FormsHelper::checkResultOutputSuccess($resultOutputItemName, $resultOutputItemOperator, $resultOutputItemValue, $resultOutputItemValue, $resultOutputItemValueEnd);
 
 if ($resultOutputData['isRedirectPage']) {
 	if (!$resultOutputData['showOutput']) {
