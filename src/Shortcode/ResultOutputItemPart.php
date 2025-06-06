@@ -107,7 +107,7 @@ class ResultOutputItemPart implements ServiceInterface
 		$output = '';
 
 		foreach ($variationData as $key => $value) {
-			if (!$key || !$value) {
+			if (!$key || $value === '') {
 				continue;
 			}
 

@@ -17,7 +17,7 @@ $resultOutputItemValue = Helpers::checkAttr('resultOutputItemValue', $attributes
 $resultOutputItemValueEnd = Helpers::checkAttr('resultOutputItemValueEnd', $attributes, $manifest);
 $resultOutputItemOperator = Helpers::checkAttr('resultOutputItemOperator', $attributes, $manifest);
 
-if (!$resultOutputItemName || !$resultOutputItemValue) {
+if (!$resultOutputItemName || $resultOutputItemValue === '') {
 	return;
 }
 
