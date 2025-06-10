@@ -4,6 +4,57 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [5.6.16]
+
+### Fixed
+- Conditional tags attribute escaping
+
+## [5.6.15]
+
+Version bump.
+
+# [5.6.14]
+
+### Fixed
+- Result output item value can now be 0.
+
+## [5.6.13]
+
+### Fixed
+- Conditional logic for results and conditional tags
+
+## [5.6.12]
+
+### Fixed
+- Updating release process
+- Hotfix for settings
+
+## [5.6.11]
+
+### Added
+- new filter for modifying country list data set.
+
+## [5.6.10]
+
+### Fixed
+- Input custom range field will not be outputted if the field type has been changed.
+
+## [5.6.9]
+
+### Fixed
+- Range custom input now automatically changes
+
+## [5.6.8]
+
+### Added
+- Range custom input now supports single submit option.
+
+
+## [5.6.7]
+
+### Added
+- Ability for range slider to have a custom input value on the side.
+
 ## [5.6.6]
 
 ### Added
@@ -883,6 +934,16 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[5.6.16]: https://github.com/infinum/eightshift-forms/compare/5.6.15...5.6.16
+[5.6.15]: https://github.com/infinum/eightshift-forms/compare/5.6.14...5.6.15
+[5.6.14]: https://github.com/infinum/eightshift-forms/compare/5.6.13...5.6.14
+[5.6.13]: https://github.com/infinum/eightshift-forms/compare/5.6.12...5.6.13
+[5.6.12]: https://github.com/infinum/eightshift-forms/compare/5.6.11...5.6.12
+[5.6.11]: https://github.com/infinum/eightshift-forms/compare/5.6.10...5.6.11
+[5.6.10]: https://github.com/infinum/eightshift-forms/compare/5.6.9...5.6.10
+[5.6.9]: https://github.com/infinum/eightshift-forms/compare/5.6.8...5.6.9
+[5.6.8]: https://github.com/infinum/eightshift-forms/compare/5.6.7...5.6.8
+[5.6.7]: https://github.com/infinum/eightshift-forms/compare/5.6.6...5.6.7
 [5.6.6]: https://github.com/infinum/eightshift-forms/compare/5.6.5...5.6.6
 [5.6.5]: https://github.com/infinum/eightshift-forms/compare/5.6.4...5.6.5
 [5.6.4]: https://github.com/infinum/eightshift-forms/compare/5.6.3...5.6.4
