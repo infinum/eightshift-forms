@@ -17,6 +17,6 @@ if (!$conditionalTagsUse) {
 	return;
 }
 
-echo wp_json_encode([
+echo htmlspecialchars(wp_json_encode([
 	$conditionalTagsRules,
-]);
+]), ENT_QUOTES | ENT_HTML5);
