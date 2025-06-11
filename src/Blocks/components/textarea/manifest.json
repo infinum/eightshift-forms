@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "textarea",
 	"title": "Textarea",
 	"componentClass": "es-textarea",
@@ -92,18 +92,15 @@
 		"textareaIsPreventSubmit": {
 			"type": "boolean",
 			"default": false
-		},
-		"textareaTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"options": {
 		"textareaMinLength": {
-			"min":  0,
+			"min": 0,
 			"step": 1
 		},
 		"textareaMaxLength": {
-			"min":  1,
+			"min": 1,
 			"step": 1
 		}
 	}

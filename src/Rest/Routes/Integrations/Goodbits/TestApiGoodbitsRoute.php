@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Goodbits
+ * The class register route for public form submitting endpoint - Goodbits
  *
  * @package EightshiftForms\Rest\Route\Integrations\Goodbits
  */

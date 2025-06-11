@@ -1,17 +1,16 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import { TextControl, PanelBody } from '@wordpress/components';
-import { icons, checkAttr, getAttrKey, IconLabel, props, IconToggle, Section, STORE_NAME } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldOptionsMore, FieldOptionsLayout, FieldOptionsVisibility } from '../../field/components/field-options';
 import { isOptionDisabled } from './../../utils';
+import { icons } from '@eightshift/ui-components/icons';
+import { InputField, BaseControl, Toggle } from '@eightshift/ui-components';
 
 export const SubmitOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('submit');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const submitValue = checkAttr('submitValue', attributes, manifest);
 	const submitIsDisabled = checkAttr('submitIsDisabled', attributes, manifest);
@@ -19,15 +18,19 @@ export const SubmitOptions = (attributes) => {
 	const submitDisabledOptions = checkAttr('submitDisabledOptions', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Submit', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
-				<TextControl
-					label={<IconLabel icon={icons.titleGeneric} label={__('Button label', 'eightshift-forms')} />}
+		<>
+			<BaseControl
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
+				<InputField
+					icon={icons.titleGeneric}
+					label={__('Button label', 'eightshift-forms')}
 					value={submitValue}
 					onChange={(value) => setAttributes({ [getAttrKey('submitValue', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('submitValue', attributes, manifest), submitDisabledOptions)}
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsLayout
 				{...props('field', attributes, {
@@ -35,38 +38,45 @@ export const SubmitOptions = (attributes) => {
 				})}
 			/>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
+			<BaseControl
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
 				<FieldOptionsVisibility
 					{...props('field', attributes, {
 						fieldDisabledOptions: submitDisabledOptions,
 					})}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={submitIsDisabled}
 					onChange={(value) => setAttributes({ [getAttrKey('submitIsDisabled', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('submitIsDisabled', attributes, manifest), submitDisabledOptions)}
-					noBottomSpacing
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
-				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+			<BaseControl
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={submitTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('submitTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('submitTracking', attributes, manifest), submitDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<FieldOptionsMore
 				{...props('field', attributes, {
 					fieldDisabledOptions: submitDisabledOptions,
 				})}
 			/>
-		</PanelBody>
+		</>
 	);
 };

@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "date",
 	"title": "Date",
 	"componentClass": "es-date",
@@ -76,9 +76,6 @@
 		},
 		"dateOutputFormat": {
 			"type": "string"
-		},
-		"dateTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"options": {

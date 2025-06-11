@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\CustomPostType;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\CustomPostType\AbstractPostType;
 
 /**
@@ -23,35 +23,35 @@ class Result extends AbstractPostType
 	 *
 	 * @var string
 	 */
-	public const POST_TYPE_SLUG = UtilsConfig::SLUG_RESULT_POST_TYPE;
+	public const POST_TYPE_SLUG = Config::SLUG_RESULT_POST_TYPE;
 
 	/**
 	 * URL slug for the custom post type.
 	 *
 	 * @var string
 	 */
-	public const POST_TYPE_URL_SLUG = UtilsConfig::SLUG_RESULT_POST_TYPE;
+	public const POST_TYPE_URL_SLUG = Config::SLUG_RESULT_POST_TYPE;
 
 	/**
 	 * Rest API Endpoint slug constant.
 	 *
 	 * @var string
 	 */
-	public const REST_API_ENDPOINT_SLUG = UtilsConfig::SLUG_RESULT_POST_TYPE;
+	public const REST_API_ENDPOINT_SLUG = Config::SLUG_RESULT_POST_TYPE;
 
 	/**
 	 * Post type slug constant.
 	 *
 	 * @var string
 	 */
-	public const POST_CAPABILITY_TYPE = UtilsConfig::CAP_FORM_RESULT;
+	public const POST_CAPABILITY_TYPE = Config::CAP_FORM_RESULT;
 
 	/**
 	 * Browser url slug constant.
 	 *
 	 * @var string
 	 */
-	public const URL_SLUG = UtilsConfig::SLUG_RESULT_POST_TYPE;
+	public const URL_SLUG = Config::SLUG_RESULT_POST_TYPE;
 
 	/**
 	 * Location of menu in sidebar.

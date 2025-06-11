@@ -11,10 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Helpers;
 
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsI18nHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -172,25 +171,32 @@ final class FormsHelper
 			return [];
 		}
 
-		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'tailwindSelectors']);
-		if (\has_filter($filterName)) {
-			return \apply_filters($filterName, [], $attributes);
+		static $output = [];
+
+		if ($output) {
+			return $output;
 		}
 
-		return [];
+		$filterName = HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']);
+		if (\has_filter($filterName)) {
+			$output = \apply_filters($filterName, [], $attributes);
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Return Tailwind selectors data filter output.
 	 *
-	 * @param array<string> $data Data to get data for.
+	 * @param array<string> $attributes Attributes to get data for.
 	 * @param array<string> $selectors Selectors to get data for.
 	 *
 	 * @return array<mixed>
 	 */
-	public static function getTwSelectors(array $data, array $selectors): array
+	public static function getTwSelectors(array $attributes, array $selectors): array
 	{
 		$output = [];
+		$data = self::getTwSelectorsData($attributes);
 
 		if (!$data) {
 			return $output;
@@ -210,19 +216,19 @@ final class FormsHelper
 	 *
 	 * @param array<string, string> $data Data to get base from.
 	 * @param string $selector Selector to get data for.
-	 * @param string $sufix Sufix to add to the selector.
+	 * @param string $suffix Suffix to add to the selector.
 	 *
 	 * @return string
 	 */
-	public static function getTwBase(array $data, string $selector, string $sufix = ''): string
+	public static function getTwBase(array $data, string $selector, string $suffix = ''): string
 	{
 		$base = $data[$selector]['base'] ?? [];
 
 		if (!$base) {
-			return $sufix;
+			return $suffix;
 		}
 
-		return \implode(' ', !\is_array($base) ? [$base, $sufix] : \array_merge($base, [$sufix]));
+		return \implode(' ', !\is_array($base) ? [$base, $suffix] : \array_merge($base, [$suffix]));
 	}
 
 	/**
@@ -231,25 +237,25 @@ final class FormsHelper
 	 * @param array<string, string> $data Data to get part from.
 	 * @param string $parentSelector Parent selector to get data for.
 	 * @param string $selector Selector to get data for.
-	 * @param string $sufix Sufix to add to the selector.
+	 * @param string $suffix Suffix to add to the selector.
 	 *
 	 * @return string
 	 */
-	public static function getTwPart(array $data, string $parentSelector, string $selector, string $sufix = ''): string
+	public static function getTwPart(array $data, string $parentSelector, string $selector, string $suffix = ''): string
 	{
 		$parts = $data[$parentSelector]['parts'] ?? [];
 
 		if (!$parts) {
-			return $sufix;
+			return $suffix;
 		}
 
 		$part = $parts[$selector] ?? [];
 
 		if (!$part) {
-			return $sufix;
+			return $suffix;
 		}
 
-		return \implode(' ', !\is_array($part) ? [$part, $sufix] : \array_merge($part, [$sufix]));
+		return \implode(' ', !\is_array($part) ? [$part, $suffix] : \array_merge($part, [$suffix]));
 	}
 
 	/**
@@ -271,12 +277,12 @@ final class FormsHelper
 	 */
 	public static function getIncrement(string $formId): string
 	{
-		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
+		$value = SettingsHelpers::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
 		if (!$value) {
 			$value = 0;
 		}
 
-		$length = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_LENGTH_KEY, $formId);
+		$length = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_LENGTH_KEY, $formId);
 		if ($length) {
 			$value = \str_pad($value, (int) $length, '0', \STR_PAD_LEFT);
 		}
@@ -293,8 +299,8 @@ final class FormsHelper
 	 */
 	public static function setIncrement(string $formId): string
 	{
-		$start = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
-		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
+		$start = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
+		$value = SettingsHelpers::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
 
 		if (!$value) {
 			$value = $start;
@@ -306,7 +312,7 @@ final class FormsHelper
 
 		$value = (int) $value + 1;
 
-		\update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
+		\update_post_meta((int) $formId, SettingsHelpers::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
 
 		return static::getIncrement($formId);
 	}
@@ -320,13 +326,13 @@ final class FormsHelper
 	 */
 	public static function resetIncrement(string $formId): bool
 	{
-		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
+		$value = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
 
 		if (!$value) {
 			$value = 0;
 		}
 
-		$update = \update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
+		$update = \update_post_meta((int) $formId, SettingsHelpers::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
 
 		return (bool) $update;
 	}
@@ -351,7 +357,7 @@ final class FormsHelper
 	 */
 	public static function getLocaleFromCountryCode(): string
 	{
-		$locale = UtilsI18nHelper::getLocale();
+		$locale = I18nHelpers::getLocale();
 
 		$languages = \apply_filters('wpml_active_languages', []);
 

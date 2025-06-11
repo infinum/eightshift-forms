@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Transfer;
 
 use EightshiftForms\CustomPostType\Forms;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
+use EightshiftForms\Helpers\UploadHelpers;
 use WP_Query;
 
 /**
@@ -116,7 +116,7 @@ class Transfer implements TransferInterface
 	 * @param string $item Specify item id to query.
 	 * @param string $postType Specify post type to query.
 	 *
-	 * @return array<int, mixed>
+	 * @return array<mixed>
 	 */
 	public function getExportCpt(string $item, string $postType = Forms::POST_TYPE_SLUG): array
 	{
@@ -165,9 +165,9 @@ class Transfer implements TransferInterface
 	 */
 	public function getImport(string $upload, bool $override): bool
 	{
-		$filePath = UtilsUploadHelper::getFilePath($upload);
+		$filePath = UploadHelpers::getFilePath($upload);
 
-		if (UtilsUploadHelper::isUploadError($filePath)) {
+		if (UploadHelpers::isUploadError($filePath)) {
 			return false;
 		}
 
@@ -371,7 +371,7 @@ class Transfer implements TransferInterface
 	}
 
 	/**
-	 * Get formated meta/options output.
+	 * Get formatted meta/options output.
 	 *
 	 * @param array<int, object> $items Query output items.
 	 *

@@ -22,7 +22,7 @@ export class Captcha {
 
 	/**
 	 * Init all actions.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	init() {
@@ -53,7 +53,7 @@ export class Captcha {
 		if (this.state.getStateCaptchaIsEnterprise()) {
 			grecaptcha?.enterprise?.ready(async () => {
 				try {
-					const token = await grecaptcha?.enterprise?.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.enterprise?.execute(siteKey, { action: actionName });
 
 					this.formSubmitCaptchaInvisible(token, true, actionName);
 				} catch (error) {
@@ -63,7 +63,7 @@ export class Captcha {
 		} else {
 			grecaptcha?.ready(async () => {
 				try {
-					const token = await grecaptcha?.execute(siteKey, {action: actionName});
+					const token = await grecaptcha?.execute(siteKey, { action: actionName });
 
 					this.formSubmitCaptchaInvisible(token, false, actionName);
 				} catch (error) {
@@ -75,7 +75,7 @@ export class Captcha {
 
 	/**
 	 * Handle form submit and all logic in case we have captcha in place for init load.
-	 * 
+	 *
 	 * @param {string} token Captcha token from api.
 	 * @param {bool} isEnterprise Is enterprise setup.
 	 * @param {string} action Action to use.
@@ -102,20 +102,20 @@ export class Captcha {
 		};
 
 		fetch(this.state.getRestUrl('captcha'), body)
-		.then((response) => {
-			this.utils.formSubmitErrorContentType(response, 'invisibleCaptcha', null);
+			.then((response) => {
+				this.utils.formSubmitErrorContentType(response, 'invisibleCaptcha', null);
 
-			return response.text();
-		})
-		.then((responseData) => {
-			const response = this.utils.formSubmitIsJsonString(responseData, 'invisibleCaptcha', null);
+				return response.text();
+			})
+			.then((responseData) => {
+				const response = this.utils.formSubmitIsJsonString(responseData, 'invisibleCaptcha', null);
 
-			if (response?.status === 'error' && !response?.data?.isSpam) {
-				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response.message} Action: ${action}`);
-			}
+				if (response?.status === 'error' && !response?.data?.isSpam) {
+					throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response.message} Action: ${action}`);
+				}
 
-			this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), response);
-		});
+				this.utils.dispatchFormEventWindow(this.state.getStateEvent('afterCaptchaInit'), response);
+			});
 	}
 
 	/**
@@ -137,7 +137,7 @@ export class Captcha {
 
 	/**
 	 * Set all public methods.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	publicMethods() {

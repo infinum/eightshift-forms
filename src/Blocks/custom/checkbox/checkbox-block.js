@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CheckboxEditor } from './components/checkbox-editor';
 import { CheckboxOptions } from './components/checkbox-options';
 
 export const Checkbox = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<CheckboxOptions {...props} />
-			</InspectorControls>
-			<CheckboxEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={CheckboxOptions}
+			editor={CheckboxEditor}
+		/>
 	);
 };

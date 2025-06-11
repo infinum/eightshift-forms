@@ -4,11 +4,7 @@ import { setStateWindow, prefix } from './state-init';
  * PaymentGateways class.
  */
 export class PaymentGateways {
-	constructor({
-		utils,
-		state,
-		response,
-	}) {
+	constructor({ utils, state, response }) {
 		/** @type {import('./utils').Utils} */
 		this.utils = utils;
 		/** @type {import('./state').State} */
@@ -25,11 +21,7 @@ export class PaymentGateways {
 	 * @returns {void}
 	 */
 	init(formId) {
-		const {
-			type,
-			url,
-			params,
-		} = this.response;
+		const { type, url, params } = this.response;
 
 		this.utils.showLoader(formId);
 
@@ -90,7 +82,6 @@ export class PaymentGateways {
 		form.submit();
 		document.body.removeChild(form);
 	}
-
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.

@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "select",
 	"title": "Select",
 	"componentClass": "es-select",
@@ -78,18 +78,15 @@
 		},
 		"selectShowAs": {
 			"type": "string"
-		},
-		"selectTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"options": {
 		"selectMinCount": {
-			"min":  0,
+			"min": 0,
 			"step": 1
 		},
 		"selectMaxCount": {
-			"min":  1,
+			"min": 1,
 			"step": 1
 		}
 	}

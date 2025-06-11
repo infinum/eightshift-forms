@@ -7,12 +7,10 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -32,12 +30,11 @@ $ratingAttrs = Helpers::checkAttr('ratingAttrs', $attributes, $manifest);
 $ratingFieldAttrs = Helpers::checkAttr('ratingFieldAttrs', $attributes, $manifest);
 $ratingAmount = Helpers::checkAttr('ratingAmount', $attributes, $manifest);
 $ratingSingleSubmit = Helpers::checkAttr('ratingSingleSubmit', $attributes, $manifest);
-$ratingTwSelectorsData = Helpers::checkAttr('ratingTwSelectorsData', $attributes, $manifest);
 $ratingHideLabel = false;
 
 $ratingId = $ratingName . '-' . Helpers::getUnique();
 
-$twClasses = FormsHelper::getTwSelectors($ratingTwSelectorsData, ['rating']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['rating']);
 
 $ratingClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'rating', $componentClass),
@@ -64,11 +61,11 @@ if ($ratingAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('rating', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('rating', $attributes);
 
 $stars = '';
 
-$iconFilterName = UtilsHooksHelper::getFilterName(['block', 'rating', 'starIcon']);
+$iconFilterName = HooksHelpers::getFilterName(['block', 'rating', 'starIcon']);
 
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
@@ -109,7 +106,6 @@ echo Helpers::render(
 			'fieldContent' => $rating,
 			'fieldId' => $ratingId,
 			'fieldName' => $ratingName,
-			'fieldTwSelectorsData' => $ratingTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('rating'),
 			'fieldIsRequired' => $ratingIsRequired,
 			'fieldDisabled' => !empty($ratingIsDisabled),

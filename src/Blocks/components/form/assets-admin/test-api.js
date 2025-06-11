@@ -50,10 +50,7 @@ export class TestApi {
 			.then((responseData) => {
 				const response = this.utils.formSubmitIsJsonString(responseData, 'testApi', formId);
 
-				const {
-					message,
-					status,
-				} = response;
+				const { message, status } = response;
 
 				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);

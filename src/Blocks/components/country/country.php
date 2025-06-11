@@ -6,14 +6,13 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestSelect = Helpers::getComponent('select');
 
 $componentName = $manifest['componentName'] ?? '';
@@ -37,7 +36,6 @@ $countryPlaceholder = Helpers::checkAttr('countryPlaceholder', $attributes, $man
 $countryUseLabelAsPlaceholder = Helpers::checkAttr('countryUseLabelAsPlaceholder', $attributes, $manifest);
 $countrySingleSubmit = Helpers::checkAttr('countrySingleSubmit', $attributes, $manifest);
 $countryValueType = Helpers::checkAttr('countryValueType', $attributes, $manifest);
-$countryTwSelectorsData = Helpers::checkAttr('countryTwSelectorsData', $attributes, $manifest);
 $countryIsMultiple = Helpers::checkAttr('countryIsMultiple', $attributes, $manifest);
 $countryValue = Helpers::checkAttr('countryValue', $attributes, $manifest);
 
@@ -76,7 +74,7 @@ if ($countryAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('country', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('country', $attributes);
 
 $placeholder = $countryPlaceholder ? Helpers::render(
 	'select-option',
@@ -87,7 +85,7 @@ $placeholder = $countryPlaceholder ? Helpers::render(
 ) : '';
 
 $options = [];
-$filterName = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
+$filterName = apply_filters(Config::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $countryFormPostId);
@@ -157,7 +155,6 @@ echo Helpers::render(
 			'fieldId' => $countryId,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
 			'fieldName' => $countryName,
-			'fieldTwSelectorsData' => $countryTwSelectorsData,
 			'fieldIsRequired' => $countryIsRequired,
 			'fieldDisabled' => !empty($countryIsDisabled),
 			'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

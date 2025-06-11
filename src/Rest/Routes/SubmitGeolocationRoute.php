@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Captcha
+ * The class register route for public form submitting endpoint - Captcha
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -12,11 +12,10 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\EncryptionHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use Throwable;
 use WP_REST_Request;
@@ -24,7 +23,7 @@ use WP_REST_Request;
 /**
  * Class SubmitGeolocationRoute
  */
-class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
+class SubmitGeolocationRoute extends AbstractBaseRoute
 {
 	/**
 	 * Route slug.
@@ -87,7 +86,7 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 		// Bailout if geolocation setting is off.
 		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
+				ApiHelpers::getApiSuccessPublicOutput(
 					$this->labels->getLabel('geolocationSkipCheck'),
 					[],
 					$debug
@@ -101,7 +100,7 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 			$data = $params['data'] ?? '';
 			if (!\is_string($data)) {
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorPublicOutput(
+					ApiHelpers::getApiErrorPublicOutput(
 						$this->labels->getLabel('geolocationMalformedOrNotValid'),
 						[],
 						$debug
@@ -109,11 +108,11 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 				);
 			}
 
-			$params = UtilsEncryption::decryptor($data);
+			$params = EncryptionHelpers::decryptor($data);
 
 			if (!Helpers::isJson($params)) {
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorPublicOutput(
+					ApiHelpers::getApiErrorPublicOutput(
 						$this->labels->getLabel('geolocationMalformedOrNotValid'),
 						[],
 						$debug
@@ -125,7 +124,7 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 
 			if (!\is_array($params) && !$params) {
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorPublicOutput(
+					ApiHelpers::getApiErrorPublicOutput(
 						$this->labels->getLabel('geolocationMalformedOrNotValid'),
 						[],
 						$debug
@@ -140,7 +139,7 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 			$geolocation = $this->geolocation->isUserGeolocated($formId, $geo, $alt);
 
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
+				ApiHelpers::getApiSuccessPublicOutput(
 					$this->labels->getLabel('geolocationSuccess'),
 					[
 						UtilsHelper::getStateResponseOutputKey('geoId') => $geolocation,
@@ -150,13 +149,13 @@ class SubmitGeolocationRoute extends AbstractUtilsBaseRoute
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('geolocationMalformedOrNotValid'),
 					[],
 					\array_merge(
 						$debug,
 						[
-							'exeption' => $t,
+							'exception' => $t,
 						]
 					)
 				)

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - OAuth Callback for Nationbuilder.
+ * The class register route for public form submitting endpoint - OAuth Callback for Nationbuilder.
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Nationbuilder
  */

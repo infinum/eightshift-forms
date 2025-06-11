@@ -50,11 +50,7 @@ export class DebugEncrypt {
 			.then((responseData) => {
 				const response = this.utils.formSubmitIsJsonString(responseData, 'debugEncrypt', formId);
 
-				const {
-					message,
-					data,
-					status,
-				} = response;
+				const { message, data, status } = response;
 
 				this.utils.hideLoader(formId);
 				this.utils.setGlobalMsg(formId, message, status);
@@ -66,6 +62,6 @@ export class DebugEncrypt {
 				setTimeout(() => {
 					this.utils.unsetGlobalMsg(formId);
 				}, 6000);
-		});
+			});
 	};
 }

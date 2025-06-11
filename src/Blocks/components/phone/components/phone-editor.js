@@ -1,13 +1,6 @@
 import React from 'react';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
-import {
-	selector,
-	checkAttr,
-	props,
-	STORE_NAME,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -15,18 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const PhoneEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('phone');
 
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
-
-	const manifestSelect = select(STORE_NAME).getComponent('select');
+	const { blockClientId } = attributes;
 
 	const phoneValue = checkAttr('phoneValue', attributes, manifest);
 	const phonePlaceholder = checkAttr('phonePlaceholder', attributes, manifest);
@@ -34,33 +16,24 @@ export const PhoneEditor = (attributes) => {
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('phoneName', attributes, manifest), phoneName);
 
-	const phoneClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
-
-	const selectClass = classnames([
-		selector(manifestSelect.componentClass, manifestSelect.componentClass),
-		selector(additionalClass, additionalClass),
-	]);
-
 	const phone = (
-		<>
-			<select className={selectClass} />
+		<div className={'es:flex es:items-center es:gap-2'}>
+			<div className={'es:text-sm es:bg-secondary-100 es:p-2 es:border es:border-secondary-300 es:text-secondary-400'}>Prefix</div>
 			<input
-				className={phoneClass}
 				value={phoneValue}
 				placeholder={phonePlaceholder}
 				type={'tel'}
 				readOnly
+				className={'es:w-full es:p-2 es:border es:border-secondary-300 es:bg-white es:text-sm'}
 			/>
 
-			<MissingName value={phoneName} isEditor={true} />
-
-			<ConditionalTagsEditor
-				{...props('conditionalTags', attributes)}
+			<MissingName
+				value={phoneName}
+				isEditor={true}
 			/>
-		</>
+
+			<ConditionalTagsEditor {...props('conditionalTags', attributes)} />
+		</div>
 	);
 
 	return (
@@ -70,8 +43,6 @@ export const PhoneEditor = (attributes) => {
 					fieldContent: phone,
 					fieldIsRequired: checkAttr('phoneIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

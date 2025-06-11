@@ -1,7 +1,6 @@
 import React from 'react';
-import classnames from 'classnames';
 import { select } from '@wordpress/data';
-import { selector, checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs/scripts';
+import { checkAttr, props, STORE_NAME, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../../components/field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -9,16 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const InputEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('input');
 
-	const {
-		componentClass,
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		additionalClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId } = attributes;
 
 	const inputName = checkAttr('inputName', attributes, manifest);
 	const inputValue = checkAttr('inputValue', attributes, manifest);
@@ -29,11 +19,6 @@ export const InputEditor = (attributes) => {
 	const inputStep = checkAttr('inputStep', attributes, manifest);
 
 	preventSaveOnMissingProps(blockClientId, getAttrKey('inputName', attributes, manifest), inputName);
-
-	const inputClass = classnames([
-		selector(componentClass, componentClass),
-		selector(additionalClass, additionalClass),
-	]);
 
 	let additionalProps = {};
 
@@ -49,21 +34,17 @@ export const InputEditor = (attributes) => {
 	const input = (
 		<>
 			<input
-				className={inputClass}
 				value={inputValue}
 				placeholder={inputPlaceholder}
 				type={inputType}
 				readOnly
+				className={'es:min-h-10 es:w-full es:border es:border-secondary-300 es:bg-white es:p-2 es:text-sm'}
 				{...additionalProps}
 			/>
 
 			<MissingName value={inputName} />
 
-			{inputName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
+			{inputName && <ConditionalTagsEditor {...props('conditionalTags', attributes)} />}
 		</>
 	);
 
@@ -74,8 +55,6 @@ export const InputEditor = (attributes) => {
 					fieldContent: input,
 					fieldIsRequired: checkAttr('inputIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

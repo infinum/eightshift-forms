@@ -6,14 +6,13 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftForms\Blocks\SettingsBlocks;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestSelect = Helpers::getComponent('select');
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -36,7 +35,6 @@ $phoneFormPostId = Helpers::checkAttr('phoneFormPostId', $attributes, $manifest)
 $phoneTypeCustom = Helpers::checkAttr('phoneTypeCustom', $attributes, $manifest);
 $phoneFieldAttrs = Helpers::checkAttr('phoneFieldAttrs', $attributes, $manifest);
 $phoneUseLabelAsPlaceholder = Helpers::checkAttr('phoneUseLabelAsPlaceholder', $attributes, $manifest);
-$phoneTwSelectorsData = Helpers::checkAttr('phoneTwSelectorsData', $attributes, $manifest);
 $phoneSelectValue = Helpers::checkAttr('phoneSelectValue', $attributes, $manifest);
 $phoneViewType = Helpers::checkAttr('phoneViewType', $attributes, $manifest);
 
@@ -46,7 +44,7 @@ $phoneId = $phoneName . '-' . Helpers::getUnique();
 $phoneHideLabel = false;
 $phoneFieldLabel = $attributes[Helpers::getAttrKey('phoneFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($phoneTwSelectorsData, ['phone']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['phone']);
 
 $phoneClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'phone', $componentClass),
@@ -79,11 +77,11 @@ if ($phoneAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('phone', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('phone', $attributes);
 $phoneSelectUseSearchAttr = UtilsHelper::getStateAttribute('selectAllowSearch');
 
 $options = [];
-$filterName = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
+$filterName = apply_filters(Config::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
 
 if (has_filter($filterName)) {
 	$settings = apply_filters($filterName, $phoneFormPostId);
@@ -162,7 +160,6 @@ echo Helpers::render(
 			'fieldContent' => $phone,
 			'fieldId' => $phoneId,
 			'fieldName' => $phoneName,
-			'fieldTwSelectorsData' => $phoneTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('phone'),
 			'fieldIsRequired' => $phoneIsRequired,
 			'fieldDisabled' => !empty($phoneIsDisabled),

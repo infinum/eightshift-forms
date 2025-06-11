@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { CalculatorEditor } from './components/calculator-editor';
 import { CalculatorOptions } from './components/calculator-options';
 
 export const Calculator = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<CalculatorOptions {...props} />
-			</InspectorControls>
-			<CalculatorEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={CalculatorOptions}
+			editor={CalculatorEditor}
+		/>
 	);
 };

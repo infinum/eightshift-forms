@@ -6,10 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestTabs = Helpers::getComponent('tabs');
 $componentClass = $manifest['componentClass'] ?? '';
 

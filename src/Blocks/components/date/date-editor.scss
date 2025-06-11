@@ -1,5 +1,6 @@
-@import './date-style';
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+@use './date-style';
 
 input.es-date {
-	@include input-styles-editor;
+	@include theme.input-styles-editor;
 }

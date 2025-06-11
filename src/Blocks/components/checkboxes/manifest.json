@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "checkboxes",
 	"title": "checkboxes",
 	"componentClass": "es-checkboxes",
@@ -54,14 +54,11 @@
 		"checkboxesUseLabelAsPlaceholder": {
 			"type": "boolean",
 			"default": false
-		},
-		"checkboxesTwSelectorsData": {
-			"type": "array"
 		}
 	},
 	"options": {
 		"checkboxesIsRequiredCount": {
-			"min":  1,
+			"min": 1,
 			"step": 1
 		}
 	}

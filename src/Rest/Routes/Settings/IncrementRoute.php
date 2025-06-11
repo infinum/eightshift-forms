@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use WP_REST_Request;
 
 /**
  * Class IncrementRoute
  */
-class IncrementRoute extends AbstractUtilsBaseRoute
+class IncrementRoute extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -30,24 +30,13 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 	protected $validator;
 
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
 	 * Create a new instance that injects classes.
 	 *
 	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache interface.
 	 */
-	public function __construct(
-		ValidatorInterface $validator,
-		ManifestCacheInterface $manifestCache
-	) {
+	public function __construct(ValidatorInterface $validator)
+	{
 		$this->validator = $validator;
-		$this->manifestCache = $manifestCache;
 	}
 
 	/**
@@ -76,9 +65,9 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$premission = $this->checkUserPermission();
-		if ($premission) {
-			return \rest_ensure_response($premission);
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
+		if ($permission) {
+			return \rest_ensure_response($permission);
 		}
 
 		$debug = [
@@ -90,7 +79,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 		$formId = $params['formId'] ?? '';
 		if (!$formId) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Form ID key was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -101,7 +90,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 		FormsHelper::resetIncrement($formId);
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				\esc_html__('Increment reset successful.', 'eightshift-forms'),
 				[],
 				$debug

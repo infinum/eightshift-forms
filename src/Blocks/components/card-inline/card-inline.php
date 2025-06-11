@@ -8,8 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
@@ -48,10 +46,9 @@ $cardInlineClass = Helpers::classnames([
 			echo wp_kses_post(" {$key}='" . $value . "'");
 		}
 	}
-	?>
->
-	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
-		<div class="<?php echo esc_attr("{$componentClass}__left-wrap"); ?>">
+	?>>
+	<div class="es:flex es:items-center es:gap-1">
+		<div class="es:flex es:items-center es:gap-1.5 es:text-sm es:text-secondary-800 es:[&>span>svg]:text-slate-500">
 			<?php if ($cardInlineLeftContent) { ?>
 				<div class="<?php echo esc_attr("{$componentClass}__left"); ?>">
 					<?php echo wp_kses_post($cardInlineLeftContent); ?>
@@ -61,11 +58,13 @@ $cardInlineClass = Helpers::classnames([
 			<?php if ($cardInlineIcon) { ?>
 				<?php if ($cardInlineTitleLink) { ?>
 					<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+						?>
 					</a>
 				<?php } else { ?>
 					<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+						?>
 					</div>
 				<?php } ?>
 			<?php } ?>
@@ -74,7 +73,7 @@ $cardInlineClass = Helpers::classnames([
 				<?php if ($cardInlineTitle) { ?>
 					<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
 						<?php if ($cardInlineTitleLink) { ?>
-							<a href="<?php echo esc_url($cardInlineTitleLink); ?>"  class="<?php echo esc_attr("{$componentClass}__title-link"); ?>">
+							<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__title-link"); ?>">
 								<?php echo wp_kses_post($cardInlineTitle); ?>
 							</a>
 						<?php } else { ?>
@@ -92,7 +91,7 @@ $cardInlineClass = Helpers::classnames([
 		</div>
 
 		<?php if ($cardInlineRightContent) { ?>
-			<div class="<?php echo esc_attr("{$componentClass}__right-wrap"); ?>">
+			<div class="es:ml-auto es:flex es:items-center es:gap-1">
 				<?php echo wp_kses_post($cardInlineRightContent); ?>
 			</div>
 		<?php } ?>
