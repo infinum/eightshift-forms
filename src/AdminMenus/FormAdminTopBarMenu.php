@@ -84,7 +84,7 @@ class FormAdminTopBarMenu implements ServiceInterface
 
 		$version = Helpers::getPluginVersion();
 
-		$mainLabel = \esc_html__('Eightshift Forms', 'eightshift-forms');
+		$mainLabel = \esc_html__('ES Forms', 'eightshift-forms');
 
 		// Add main menu item.
 		$adminBar->add_menu(

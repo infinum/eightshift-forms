@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.8.0]
+
+### Added
+
+- New CloudFront feature for geolocation.
+
 ## [6.7.4]
 
 ### Fixed
@@ -1258,6 +1264,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.8.0]: https://github.com/infinum/eightshift-forms/compare/6.7.4...6.8.0
 [6.7.4]: https://github.com/infinum/eightshift-forms/compare/6.7.3...6.7.4
 [6.7.3]: https://github.com/infinum/eightshift-forms/compare/6.7.2...6.7.3
 [6.7.2]: https://github.com/infinum/eightshift-forms/compare/6.7.1...6.7.2
