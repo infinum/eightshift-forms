@@ -150,6 +150,39 @@ class EntriesHelper
 	}
 
 	/**
+	 * Get all entries.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function getEntriesAll(): array
+	{
+		global $wpdb;
+
+		$tableName = self::getFullTableName();
+
+		$output = \wp_cache_get('all', self::TABLE_NAME . 'entry');
+
+		if (!$output) {
+			$output = $wpdb->get_results(
+				"SELECT * FROM {$tableName}", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				\ARRAY_A
+			);
+
+			\wp_cache_add('all', $output, self::TABLE_NAME . 'entry');
+		}
+
+		if (\is_wp_error($output) || !$output) {
+			return [];
+		}
+
+		foreach ($output as $key => $value) {
+			$output[$key] = self::prepareEntryOutput($value);
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Get entries by form ID.
 	 *
 	 * @param string $formId Form Id.

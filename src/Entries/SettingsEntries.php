@@ -292,6 +292,25 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 								'introIsHighlighted' => true,
 								'introIsHighlightedImportant' => true,
 							],
+							[
+								'component' => 'layout',
+								'layoutType' => 'layout-v-stack-clean',
+								'layoutContent' => [
+									[
+										'component' => 'card-inline',
+										'cardInlineTitle' => \__('View all entries in database', 'eightshift-forms'),
+										'cardInlineRightContent' => [
+											[
+												'component' => 'submit',
+												'submitVariant' => 'ghost',
+												'submitButtonAsLink' => true,
+												'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES),
+												'submitValue' => \__('View all entries', 'eightshift-forms'),
+											],
+										],
+									],
+								],
+							]
 						],
 					],
 				],
