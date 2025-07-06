@@ -40,8 +40,8 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 			return;
 		}
 
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueStyles'], 50);
-		\add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminStyles'], 50);
+		\add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
 	}
 
 	/**
@@ -67,13 +67,11 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only admin.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueScripts(string $hook): void
+	public function enqueueAdminScripts(): void
 	{
-		parent::enqueueScripts($hook);
+		parent::enqueueAdminScripts();
 
 		$output = [];
 

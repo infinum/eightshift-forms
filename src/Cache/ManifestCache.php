@@ -56,19 +56,13 @@ class ManifestCache extends AbstractManifestCache
 	}
 
 	/**
-	 * Set the cache for the entire project.
+	 * Get cache for geolocation
 	 *
-	 * @param array<string> $ignoreCache Array of cache to ignore.
-	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function setProjectCache($ignoreCache = []): void
+	public function useGeolocation(): bool
 	{
-		$this->setAllCache($ignoreCache);
-
-		if (!isset($ignoreCache[self::TYPE_FORMS])) {
-			$this->setCache(self::TYPE_FORMS);
-		}
+		return true;
 	}
 
 	/**
@@ -85,8 +79,8 @@ class ManifestCache extends AbstractManifestCache
 			[
 				self::TYPE_FORMS => [
 					self::TLD_KEY => [
+						'path' => 'src',
 						'fileName' => "Validation{$sep}manifest.json",
-						'path' => 'srcDestination',
 					]
 				],
 			]

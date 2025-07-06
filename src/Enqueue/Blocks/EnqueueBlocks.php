@@ -115,11 +115,9 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Enqueue blocks style for editor only.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueBlockEditorStyle(string $hook): void
+	public function enqueueBlockEditorStyle(): void
 	{
 		$handle = $this->getBlockEditorStyleHandle();
 
@@ -137,18 +135,16 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Editor.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueBlockEditorScript(string $hook): void
+	public function enqueueBlockEditorScript(): void
 	{
 		// If not admin exit.
 		if (!\is_admin()) {
 			return;
 		}
 
-		parent::enqueueBlockEditorScript($hook);
+		parent::enqueueBlockEditorScript();
 
 		$output = $this->getEnqueueSharedInlineCommonItems(false);
 
@@ -192,11 +188,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	}
 
 	/**
-	 * List of admin script dependencies
+	 * List block editor script dependencies.
 	 *
 	 * @return string[] List of all the admin dependencies.
 	 */
-	protected function getAdminScriptDependencies(): array
+	protected function getBlockEditorScriptDependencies(): array
 	{
 		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'blocksEditor']);
 		$scriptsDependencyOutput = [];
@@ -206,7 +202,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		}
 
 		return \array_merge(
-			parent::getAdminScriptDependencies(),
+			parent::getBlockEditorScriptDependencies(),
 			[
 				'lodash',
 			],
@@ -230,7 +226,7 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		\wp_register_style(
 			$handle,
 			$this->setAssetsItem('applicationBlocksFrontendMandatory.css'),
-			$this->getFrontendStyleDependencies(),
+			[],
 			$this->getAssetsVersion(),
 			$this->getMedia()
 		);
@@ -245,30 +241,26 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	/**
 	 * Method that returns editor and frontend style with check.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendStyleLocal(string $hook): void
+	public function enqueueBlockFrontendStyleLocal(): void
 	{
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_STYLE_KEY, SettingsSettings::SETTINGS_GENERAL_DISABLE_DEFAULT_ENQUEUE_KEY)) {
 			return;
 		}
 
 
-		$this->enqueueBlockFrontendStyle($hook);
+		$this->enqueueBlockFrontendStyle();
 	}
 
 	/**
 	 * Enqueue scripts from AbstractEnqueueBlocks, extended to expose additional data. Only Frontend.
 	 *
-	 * @param string $hook Hook name.
-	 *
 	 * @return void
 	 */
-	public function enqueueBlockFrontendScript(string $hook): void
+	public function enqueueBlockFrontendScript(): void
 	{
-		parent::enqueueBlockFrontendScript($hook);
+		parent::enqueueBlockFrontendScript();
 
 		$output = $this->getEnqueueSharedInlineCommonItems();
 
