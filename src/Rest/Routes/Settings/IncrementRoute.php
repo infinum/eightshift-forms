@@ -15,7 +15,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use WP_REST_Request;
 
 /**
@@ -31,24 +30,14 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 	protected $validator;
 
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
 	 * Create a new instance that injects classes.
 	 *
 	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache interface.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
-		ManifestCacheInterface $manifestCache
 	) {
 		$this->validator = $validator;
-		$this->manifestCache = $manifestCache;
 	}
 
 	/**

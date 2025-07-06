@@ -27,7 +27,6 @@ use EightshiftForms\Validation\ValidationPatterns;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -49,23 +48,12 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	protected EnrichmentInterface $enrichment;
 
 	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
 	 * Create a new admin instance.
 	 *
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
-	public function __construct(
-		ManifestCacheInterface $manifestCache,
-		EnrichmentInterface $enrichment
-	) {
-		$this->manifestCache = $manifestCache;
+	public function __construct(EnrichmentInterface $enrichment)
+	{
 		$this->enrichment = $enrichment;
 	}
 
@@ -152,7 +140,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$formsStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'styleOptions']);
 		$formsUseCustomResultOutputFeatureFilterName = UtilsHooksHelper::getFilterName(['block', 'forms', 'useCustomResultOutputFeature']);
 		$fieldStyleOptionsFilterName = UtilsHooksHelper::getFilterName(['block', 'field', 'styleOptions']);
-		$breakpointsFilterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
 		$formSelectorTemplatesFilterName = UtilsHooksHelper::getFilterName(['block', 'formSelector', 'formTemplates']);
 
 		$output['additionalBlocks'] = \apply_filters($additionalBlocksFilterName, []);
@@ -160,7 +147,6 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 		$output['formsUseCustomResultOutputFeature'] = \apply_filters($formsUseCustomResultOutputFeatureFilterName, false);
 		$output['fieldBlockStyleOptions'] = \apply_filters($fieldStyleOptionsFilterName, []);
 		$output['validationPatternsOptions'] = ValidationPatterns::getValidationPatternsEditor();
-		$output['mediaBreakpoints'] = \apply_filters($breakpointsFilterName, []);
 		$output['formsSelectorTemplates'] = \apply_filters($formSelectorTemplatesFilterName, []);
 		$output['currentPostType'] = [
 			'isForms' => \get_post_type() === Forms::POST_TYPE_SLUG,

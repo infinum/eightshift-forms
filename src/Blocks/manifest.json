@@ -10,37 +10,18 @@
 	"locationsPageUrl": "admin.php?page=es-forms&type=locations",
 	"editFormUrl": "post.php?action=edit",
 	"config": {
-		"outputCssGlobally": true,
-		"outputCssOptimize": true,
 		"outputCssSelectorName": "esFormsCssVariables",
-		"outputCssGloballyAdditionalStyles": [],
 		"useWrapper": false,
-		"useBlocks": true,
-		"useComponents": true,
 		"useVariations": false
 	},
 	"unregisterBlocks": {
-		"forms": [
-			"eightshift-forms/result-output-item"
-		],
-		"results": [
-			"eightshift-forms/form-selector",
-			"eightshift-forms/result-output"
-		],
-		"common": [
-			"eightshift-forms/form-selector",
-			"eightshift-forms/result-output-item"
-		]
+		"forms": ["eightshift-forms/result-output-item"],
+		"results": ["eightshift-forms/form-selector", "eightshift-forms/result-output"],
+		"common": ["eightshift-forms/form-selector", "eightshift-forms/result-output-item"]
 	},
 	"allowedBlocksList": {
-		"formsCpt": [
-			"eightshift-forms/form-selector"
-		],
-		"other": [
-			"eightshift-forms/forms",
-			"eightshift-forms/result-output",
-			"eightshift-forms/result-output-item"
-		],
+		"formsCpt": ["eightshift-forms/form-selector"],
+		"other": ["eightshift-forms/forms", "eightshift-forms/result-output", "eightshift-forms/result-output-item"],
 		"fieldsNoIntegration": [
 			"eightshift-forms/file",
 			"eightshift-forms/input",
@@ -59,9 +40,7 @@
 			"eightshift-forms/rating",
 			"eightshift-forms/dynamic"
 		],
-		"fieldsIntegration": [
-			"eightshift-forms/step"
-		],
+		"fieldsIntegration": ["eightshift-forms/step"],
 		"integrationsNoBuilder": [
 			"eightshift-forms/mailer",
 			"eightshift-forms/jira",
@@ -100,7 +79,7 @@
 			}
 		],
 		"checkboxes-select": {
-			"names" : {
+			"names": {
 				"checkboxes": {
 					"top": "select",
 					"children": "select-option"
@@ -110,7 +89,7 @@
 					"children": "checkbox"
 				}
 			},
-			"prefix" : {
+			"prefix": {
 				"checkboxes": {
 					"from": "checkboxesCheckboxes",
 					"to": "selectSelect"
@@ -148,7 +127,7 @@
 			}
 		},
 		"checkboxes-radios": {
-			"names" : {
+			"names": {
 				"checkboxes": {
 					"top": "radios",
 					"children": "radio"
@@ -158,7 +137,7 @@
 					"children": "checkbox"
 				}
 			},
-			"prefix" : {
+			"prefix": {
 				"checkboxes": {
 					"from": "checkboxesCheckboxes",
 					"to": "radiosRadios"
@@ -189,7 +168,7 @@
 			}
 		},
 		"radios-select": {
-			"names" : {
+			"names": {
 				"select": {
 					"top": "radios",
 					"children": "radio"
@@ -199,7 +178,7 @@
 					"children": "select-option"
 				}
 			},
-			"prefix" : {
+			"prefix": {
 				"select": {
 					"from": "selectSelect",
 					"to": "radiosRadios"
@@ -210,16 +189,16 @@
 				}
 			},
 			"top": {
-				 "radiosRadiosContent": "selectSelectContent",
-				 "radiosRadiosName": "selectSelectName",
-				 "radiosRadiosIsRequired": "selectSelectIsRequired",
-				 "radiosRadiosMeta": "selectSelectMeta",
-				 "radiosRadiosDisabledOptions": "selectSelectDisabledOptions",
-				 "radiosRadiosTypeCustom": "selectSelectTypeCustom",
-				 "radiosRadiosShowAs": "selectSelectShowAs",
-				 "radiosRadiosFieldAttrs": "selectSelectFieldAttrs",
-				 "radiosRadiosPlaceholder": "selectSelectPlaceholder",
-				 "radiosRadiosUseLabelAsPlaceholder": "selectSelectUseLabelAsPlaceholder"
+				"radiosRadiosContent": "selectSelectContent",
+				"radiosRadiosName": "selectSelectName",
+				"radiosRadiosIsRequired": "selectSelectIsRequired",
+				"radiosRadiosMeta": "selectSelectMeta",
+				"radiosRadiosDisabledOptions": "selectSelectDisabledOptions",
+				"radiosRadiosTypeCustom": "selectSelectTypeCustom",
+				"radiosRadiosShowAs": "selectSelectShowAs",
+				"radiosRadiosFieldAttrs": "selectSelectFieldAttrs",
+				"radiosRadiosPlaceholder": "selectSelectPlaceholder",
+				"radiosRadiosUseLabelAsPlaceholder": "selectSelectUseLabelAsPlaceholder"
 			},
 			"children": {
 				"radioRadioLabel": "selectOptionSelectOptionLabel",

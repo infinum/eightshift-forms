@@ -8,8 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $componentClass = $manifest['componentClass'] ?? '';
 
 $stepsTitle = Helpers::checkAttr('stepsTitle', $attributes, $manifest);

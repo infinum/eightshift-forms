@@ -163,7 +163,7 @@ class EntriesHelper
 		$output = \wp_cache_get('all', self::TABLE_NAME . 'entry');
 
 		if (!$output) {
-			$output = $wpdb->get_results(
+			$output = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				"SELECT * FROM {$tableName}", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				\ARRAY_A
 			);

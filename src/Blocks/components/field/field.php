@@ -12,8 +12,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $fieldUse = Helpers::checkAttr('fieldUse', $attributes, $manifest);
 if (!$fieldUse) {
 	return;
@@ -32,25 +30,6 @@ $componentClass = $manifest['componentClass'] ?? '';
 $additionalFieldClass = $attributes['additionalFieldClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $blockName = $attributes['blockName'] ?? '';
-
-// Update media breakpoints from the filter.
-$filterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
-
-if (has_filter($filterName)) {
-	$customMediaBreakpoints = apply_filters($filterName, []);
-
-	if (
-		is_array($customMediaBreakpoints) &&
-		isset($customMediaBreakpoints['mobile']) &&
-		isset($customMediaBreakpoints['tablet']) &&
-		isset($customMediaBreakpoints['desktop']) &&
-		isset($customMediaBreakpoints['large'])
-	) {
-		dump($customMediaBreakpoints);
-		dump($glo);
-		Helpers::setSettingsGlobalVariablesBreakpoints($customMediaBreakpoints);
-	}
-}
 
 $unique = Helpers::getUnique();
 
@@ -211,7 +190,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 	?>>
 
 	<?php
-	echo Helpers::outputCssVariables($attributes, $manifest, $unique);
+	echo Helpers::outputCssVariables($attributes, $manifest, $unique, '', FormsHelper::getProjectSettings());
 
 	echo Helpers::render(
 		'debug-field-details',

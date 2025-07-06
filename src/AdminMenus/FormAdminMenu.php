@@ -206,8 +206,8 @@ class FormAdminMenu extends AbstractAdminMenu
 				$count = \count($items);
 
 				$output = [
-					// Translators: %s is the form title.
 					'adminListingPageTitle' => $formId ?
+						// Translators: %s is the form title.
 						$this->getMultilangTitle(\sprintf(\__('Entries for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
 						$this->getMultilangTitle(\__('All entries', 'eightshift-forms')),
 					'adminListingPageSubTitle' => $formId ?

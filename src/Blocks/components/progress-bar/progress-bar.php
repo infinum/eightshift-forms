@@ -10,8 +10,6 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 
@@ -53,6 +51,7 @@ $progressBarClass = Helpers::classnames([
 				'componentClass' => $componentClass,
 				'jsClass' => UtilsHelper::getStateSelector('stepProgressBar'),
 				'hideLabels' => Helpers::checkAttr('progressBarHideLabels', $attributes, $manifest),
+				'manifest' => $manifest,
 			],
 			'components',
 			false,
@@ -64,6 +63,7 @@ $progressBarClass = Helpers::classnames([
 			[
 				'count' => Helpers::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest),
 				'twClasses' => $twClasses,
+				'manifest' => $manifest,
 			],
 			'components',
 			false,
@@ -72,5 +72,3 @@ $progressBarClass = Helpers::classnames([
 	}
 	?>
 </div>
-
-

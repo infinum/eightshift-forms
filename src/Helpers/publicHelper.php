@@ -6,7 +6,6 @@
  * @package EightshiftForms\Helpers
  */
 
-use EightshiftForms\Cache\ManifestCache;
 use EightshiftForms\Countries\Countries;
 use EightshiftForms\Entries\EntriesHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
@@ -50,8 +49,7 @@ function esFormsDecryptor(string $value)
  */
 function esFormsGeolocationCountriesList(): array
 {
-	$cache = new ManifestCache();
-	return (new Geolocation($cache))->getCountriesList();
+	return (new Geolocation())->getCountriesList();
 }
 
 /**

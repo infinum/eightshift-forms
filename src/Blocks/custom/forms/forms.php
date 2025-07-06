@@ -13,9 +13,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestInvalid = Helpers::getComponent('invalid');
-$manifestSettings = Helpers::getSettings();
 
 // Check if there is any reason not to render forms block.
 if (!apply_filters(Form::FILTER_FORMS_BLOCK_SHOULD_RENDER, true, $attributes, $manifest)) {
@@ -24,7 +22,7 @@ if (!apply_filters(Form::FILTER_FORMS_BLOCK_SHOULD_RENDER, true, $attributes, $m
 
 echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
-$blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$manifestSettings['blockClassPrefix']}-{$manifest['blockName']}";
+$blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
 
 // Check formPost ID prop.
 $formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
