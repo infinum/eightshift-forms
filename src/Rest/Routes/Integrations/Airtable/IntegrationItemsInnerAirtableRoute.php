@@ -75,9 +75,9 @@ class IntegrationItemsInnerAirtableRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$premission = $this->checkUserPermission();
-		if ($premission) {
-			return \rest_ensure_response($premission);
+		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
+		if ($permission) {
+			return \rest_ensure_response($permission);
 		}
 
 		$debug = [

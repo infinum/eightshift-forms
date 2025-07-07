@@ -8,8 +8,6 @@
 
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $additionalAttributes = $attributes['additionalAttributes'] ?? [];
@@ -48,8 +46,7 @@ $cardInlineClass = Helpers::classnames([
 			echo wp_kses_post(" {$key}='" . $value . "'");
 		}
 	}
-	?>
->
+	?>>
 	<div class="<?php echo esc_attr("{$componentClass}__wrap"); ?>">
 		<div class="<?php echo esc_attr("{$componentClass}__left-wrap"); ?>">
 			<?php if ($cardInlineLeftContent) { ?>
@@ -61,11 +58,13 @@ $cardInlineClass = Helpers::classnames([
 			<?php if ($cardInlineIcon) { ?>
 				<?php if ($cardInlineTitleLink) { ?>
 					<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+						?>
 					</a>
 				<?php } else { ?>
 					<div class="<?php echo esc_attr("{$componentClass}__icon"); ?>">
-						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+						<?php echo $cardInlineIcon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+						?>
 					</div>
 				<?php } ?>
 			<?php } ?>
@@ -74,7 +73,7 @@ $cardInlineClass = Helpers::classnames([
 				<?php if ($cardInlineTitle) { ?>
 					<div class="<?php echo esc_attr("{$componentClass}__title"); ?>">
 						<?php if ($cardInlineTitleLink) { ?>
-							<a href="<?php echo esc_url($cardInlineTitleLink); ?>"  class="<?php echo esc_attr("{$componentClass}__title-link"); ?>">
+							<a href="<?php echo esc_url($cardInlineTitleLink); ?>" class="<?php echo esc_attr("{$componentClass}__title-link"); ?>">
 								<?php echo wp_kses_post($cardInlineTitle); ?>
 							</a>
 						<?php } else { ?>

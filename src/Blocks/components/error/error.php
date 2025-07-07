@@ -10,8 +10,6 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
@@ -33,5 +31,4 @@ $errorClass = Helpers::classnames([
 ?>
 <div
 	class="<?php echo esc_attr($errorClass); ?>"
-	data-id="<?php echo esc_attr($errorId); ?>"
-><?php echo esc_html($errorValue); ?></div>
+	data-id="<?php echo esc_attr($errorId); ?>"><?php echo esc_html($errorValue); ?></div>

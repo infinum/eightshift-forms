@@ -141,24 +141,13 @@ class FormGlobalSettingsAdminSubMenu extends AbstractAdminSubMenu
 	/**
 	 * Get the view component that will render correct view.
 	 *
-	 * @return string View URI.
-	 */
-	protected function getViewComponent(): string
-	{
-		return 'admin-settings';
-	}
-
-	/**
-	 * Render the current view.
-	 *
 	 * @param array<string, mixed> $attributes Array of attributes passed to the view.
-	 * @param string $innerBlockContent Not used here.
 	 *
-	 * @return string Rendered HTML.
+	 * @return string View uri.
 	 */
-	public function render(array $attributes = [], string $innerBlockContent = ''): string
+	protected function getViewComponent(array $attributes): string
 	{
-		return Helpers::render($this->getViewComponent(), $attributes);
+		return Helpers::render('admin-settings', $attributes);
 	}
 
 	/**

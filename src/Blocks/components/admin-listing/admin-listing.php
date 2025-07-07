@@ -9,7 +9,6 @@
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestSection = Helpers::getComponent('admin-settings-section');
 
 echo Helpers::outputCssVariablesGlobal(); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
@@ -70,8 +69,8 @@ $help = Helpers::render('container', [
 						]),
 					]),
 					$adminListingShowNoItems ?
-					Helpers::ensureString($adminListingNoItems) :
-					Helpers::ensureString($adminListingItems),
+						Helpers::ensureString($adminListingNoItems) :
+						Helpers::ensureString($adminListingItems),
 				]),
 			]),
 			$help,
@@ -96,8 +95,7 @@ $formClasses = Helpers::classnames([
 <form
 	class="<?php echo esc_attr($formClasses); ?>"
 	<?php echo esc_attr(UtilsHelper::getStateAttribute('formId')); ?>="0"
-	novalidate
->
+	novalidate>
 	<?php echo Helpers::render('global-msg', Helpers::props('globalMsg', $attributes)); ?>
 	<?php echo Helpers::render('loader', Helpers::props('loader', $attributes)); ?>
 </form>

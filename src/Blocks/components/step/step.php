@@ -11,7 +11,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
 $manifestField = Helpers::getComponent('field');
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -57,7 +56,10 @@ $nextButtonComponent = '';
 
 ?>
 
-<div class="<?php echo esc_attr($stepClass); ?>" <?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
+<div
+	class="<?php echo esc_attr($stepClass); ?>"
+	<?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'debug-details', "{$componentClass}__debug-details")); ?>">
 		<?php
@@ -67,7 +69,8 @@ $nextButtonComponent = '';
 	</div>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'inner', "{$componentClass}__inner")); ?>">
-		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+		<?php echo $stepContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		?>
 
 		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'navigation', "{$componentClass}__navigation {$componentFieldClass}")); ?>">
 			<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'navigation-inner', "{$componentClass}__navigation-inner")); ?>">

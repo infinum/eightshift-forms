@@ -155,24 +155,13 @@ class FormAdminMenu extends AbstractAdminMenu
 	/**
 	 * Get the view component that will render correct view.
 	 *
+	 * @param array<string, mixed> $attributes Array of attributes passed to the view.
+	 *
 	 * @return string View uri.
 	 */
-	protected function getViewComponent(): string
+	protected function getViewComponent(array $attributes): string
 	{
-		return 'admin-listing';
-	}
-
-	/**
-	 * Render the current view.
-	 *
-	 * @param array<string, mixed> $attributes Array of attributes passed to the view.
-	 * @param string $innerBlockContent Not used here.
-	 *
-	 * @return string Rendered HTML.
-	 */
-	public function render(array $attributes = [], string $innerBlockContent = ''): string
-	{
-		return Helpers::render($this->getViewComponent(), $attributes);
+		return Helpers::render('admin-listing', $attributes);
 	}
 
 	/**
@@ -217,8 +206,8 @@ class FormAdminMenu extends AbstractAdminMenu
 				$count = \count($items);
 
 				$output = [
-					// Translators: %s is the form title.
 					'adminListingPageTitle' => $formId ?
+						// Translators: %s is the form title.
 						$this->getMultilangTitle(\sprintf(\__('Entries for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
 						$this->getMultilangTitle(\__('All entries', 'eightshift-forms')),
 					'adminListingPageSubTitle' => $formId ?

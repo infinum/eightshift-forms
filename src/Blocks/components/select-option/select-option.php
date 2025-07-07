@@ -9,8 +9,6 @@
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $selectOptionValue = Helpers::checkAttr('selectOptionValue', $attributes, $manifest);
 $selectOptionAsPlaceholder = Helpers::checkAttr('selectOptionAsPlaceholder', $attributes, $manifest);
 $selectOptionLabel = Helpers::checkAttr('selectOptionLabel', $attributes, $manifest);
@@ -52,7 +50,7 @@ if ($selectOptionAttrs) {
 	value="<?php echo esc_attr($selectOptionValue); ?>"
 	<?php selected($selectOptionIsSelected); ?>
 	<?php disabled($selectOptionIsDisabled); ?>
-	<?php echo $selectOptionAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
->
+	<?php echo $selectOptionAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

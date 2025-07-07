@@ -26,7 +26,6 @@
 		"issues": "https://github.com/infinum/eightshift-forms/issues",
 		"source": "https://github.com/infinum/eightshift-forms"
 	},
-
 	"require-dev": {
 		"brain/faker": "dev-master",
 		"brain/monkey": "^2.6.2",
@@ -42,7 +41,7 @@
 	"require": {
 		"php": ">=8.3",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^3.2.0"
+		"infinum/eightshift-forms-utils": "^3.4.0"
 	},
 	"autoload": {
 		"psr-4": {
@@ -94,7 +93,9 @@
 		"strauss": {
 			"namespace_prefix": "EightshiftFormsVendor",
 			"exclude_from_prefix": {
-				"file_patterns": ["/Example.php$/"]
+				"file_patterns": [
+					"/Example.php$/"
+				]
 			}
 		}
 	}

@@ -10,8 +10,6 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
-
 $blockClass = $attributes['blockClass'] ?? '';
 
 $resultOutputItemName = Helpers::checkAttr('resultOutputItemName', $attributes, $manifest);
@@ -54,6 +52,10 @@ $resultClassOutput = Helpers::classnames($resultClass);
 
 ?>
 
-<div class="<?php echo esc_attr($resultClassOutput); ?>" <?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>>
-	<?php echo $renderContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+<div
+	class="<?php echo esc_attr($resultClassOutput); ?>"
+	<?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>>
+	<?php echo $renderContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	?>
 </div>

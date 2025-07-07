@@ -25,7 +25,6 @@ use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -39,13 +38,6 @@ class Validator extends AbstractValidation
 	 * @var LabelsInterface
 	 */
 	protected $labels;
-
-	/**
-	 * Instance variable for manifest cache.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
 
 	/**
 	 * Validation Fields to check.
@@ -95,14 +87,10 @@ class Validator extends AbstractValidation
 	 * Create a new instance.
 	 *
 	 * @param LabelsInterface $labels Inject documentsData which holds labels data.
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache.
 	 */
-	public function __construct(
-		LabelsInterface $labels,
-		ManifestCacheInterface $manifestCache
-	) {
+	public function __construct(LabelsInterface $labels)
+	{
 		$this->labels = $labels;
-		$this->manifestCache = $manifestCache;
 	}
 
 	/**
@@ -238,7 +226,9 @@ class Validator extends AbstractValidation
 							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						} else {
 							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
-								if (!$this->isEmailTldValid($inputValue, \array_values($this->manifestCache->getManifestCacheTopItem(ManifestCache::TLD_KEY, ManifestCache::TYPE_FORMS)))) {
+								$tldList = Helpers::getCache()[ManifestCache::TYPE_FORMS][ManifestCache::TLD_KEY];
+
+								if (!$this->isEmailTldValid($inputValue, \array_values($tldList))) {
 									$output[$paramKey] = $this->labels->getLabel('validationEmailTld', $formId);
 								}
 							}

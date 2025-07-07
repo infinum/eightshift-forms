@@ -15,7 +15,6 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Cache\ManifestCacheInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_REST_Request;
 
@@ -32,24 +31,13 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 	protected $validator;
 
 	/**
-	 * Instance variable for listing data.
-	 *
-	 * @var ManifestCacheInterface
-	 */
-	protected $manifestCache;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject validation methods.
-	 * @param ManifestCacheInterface $manifestCache Inject manifest cache interface.
 	 */
-	public function __construct(
-		ValidatorInterface $validator,
-		ManifestCacheInterface $manifestCache
-	) {
+	public function __construct(ValidatorInterface $validator)
+	{
 		$this->validator = $validator;
-		$this->manifestCache = $manifestCache;
 	}
 
 	/**
@@ -78,9 +66,9 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$premission = $this->checkUserPermission();
-		if ($premission) {
-			return \rest_ensure_response($premission);
+		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
+		if ($permission) {
+			return \rest_ensure_response($permission);
 		}
 
 		$debug = [
@@ -123,7 +111,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 				break;
 			case 'allInteral':
 				$outputTitle = \esc_html__('All internal', 'eightshift-forms');
-				$this->manifestCache->deleteAllCache();
+				Helpers::clearAllCache();
 				break;
 			default:
 				$cacheTypes = $data[$type]['cache'] ?? [];
