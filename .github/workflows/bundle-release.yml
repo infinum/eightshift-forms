@@ -40,7 +40,7 @@ jobs:
       - name: Set cache
         uses: infinum/eightshift-deploy-actions-public/.github/actions/set/cache@main
         with:
-          PROJECT_PATH: 'wp-content/plugins/eightshift-forms'
+          PROJECT_PATH: 'wp-content/plugins/eightshift-utils'
 
       - name: Post install cleanup - plugin
         uses: infinum/eightshift-deploy-actions-public/.github/actions/cleanup/project@main

@@ -68,6 +68,7 @@ use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\PipedriveClient;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Misc\SettingsCloudFront;
 use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
@@ -573,6 +574,15 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'labels' => [
 					'title' => \__('Cloudflare', 'eightshift-forms'),
 					'desc' => \__('Cloudflare is a content delivery network (CDN) and cloud security platform that provides website optimization, security, and performance services.', 'eightshift-forms'),
+				],
+			],
+			SettingsCloudFront::SETTINGS_TYPE_KEY => [
+				'settingsGlobal' => SettingsCloudFront::FILTER_SETTINGS_GLOBAL_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
+				'use' => SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY,
+				'labels' => [
+					'title' => \__('CloudFront', 'eightshift-forms'),
+					'desc' => \__('Amazon CloudFront is a content delivery network (CDN) service provided by Amazon Web Services (AWS). It speeds up the delivery of static and dynamic web content, like HTML, CSS, and JavaScript files, to users by caching content at multiple data centers called edge locations around the world.', 'eightshift-forms'),
 				],
 			],
 			// ------------------------------

@@ -111,7 +111,7 @@ class CacheDeleteRoute extends AbstractBaseRoute
 				break;
 			case 'allInternal':
 				$outputTitle = \esc_html__('All internal', 'eightshift-forms');
-				Helpers::deleteAllCache();
+				Helpers::clearAllCache();
 				break;
 			default:
 				$cacheTypes = $data[$type]['cache'] ?? [];

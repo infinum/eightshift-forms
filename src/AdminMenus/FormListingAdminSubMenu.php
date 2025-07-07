@@ -144,7 +144,6 @@ class FormListingAdminSubMenu extends AbstractAdminSubMenu
 	{
 		return '';
 	}
-
 	/**
 	 * Process the admin menu attributes.
 	 *

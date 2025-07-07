@@ -37,8 +37,7 @@ if (!$tableContent) {
 					<?php foreach ($tableHead as $head) { ?>
 						<th>
 							<?php
-							// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-							echo $head;
+							echo $head; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 							?>
 						</th>
 					<?php } ?>
@@ -49,12 +48,11 @@ if (!$tableContent) {
 			<?php foreach ($tableContent as $row) { ?>
 				<tr>
 					<?php foreach ($tableHead as $headKey => $headValue) { ?>
-						<th>
+						<td>
 							<?php
-							// phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
-							echo $row[$headKey] ?? '';
+							echo $row[$headKey] ?? ''; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 							?>
-						</th>
+						</td>
 					<?php } ?>
 				</tr>
 			<?php } ?>

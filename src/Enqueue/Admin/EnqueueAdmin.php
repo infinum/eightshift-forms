@@ -69,9 +69,9 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 *
 	 * @return void
 	 */
-	public function enqueueAdminStyles(): void
+	public function enqueueAdminScripts(): void
 	{
-		parent::enqueueAdminStyles();
+		parent::enqueueAdminScripts();
 
 		$output = [];
 

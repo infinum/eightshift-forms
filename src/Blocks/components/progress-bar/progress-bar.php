@@ -50,6 +50,7 @@ $progressBarClass = Helpers::classnames([
 				'componentClass' => $componentClass,
 				'jsClass' => UtilsHelper::getStateSelector('stepProgressBar'),
 				'hideLabels' => Helpers::checkAttr('progressBarHideLabels', $attributes, $manifest),
+				'manifest' => $manifest,
 			],
 			'components',
 			false,
@@ -61,6 +62,7 @@ $progressBarClass = Helpers::classnames([
 			[
 				'count' => Helpers::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest),
 				'twClasses' => $twClasses,
+				'manifest' => $manifest,
 			],
 			'components',
 			false,

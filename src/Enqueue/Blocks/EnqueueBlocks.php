@@ -52,9 +52,8 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 	 *
 	 * @param EnrichmentInterface $enrichment Inject enrichment which holds data about for storing to enrichment.
 	 */
-	public function __construct(
-		EnrichmentInterface $enrichment
-	) {
+	public function __construct(EnrichmentInterface $enrichment)
+	{
 		$this->enrichment = $enrichment;
 	}
 

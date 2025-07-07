@@ -39,6 +39,7 @@ use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Misc\SettingsCloudFront;
 use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
@@ -438,6 +439,7 @@ final class Filters
 			OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY,
 
 			SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
+			SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY,
 
 			SettingsWpml::SETTINGS_WPML_USE_KEY,
 

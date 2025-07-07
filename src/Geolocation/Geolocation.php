@@ -14,6 +14,7 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Misc\SettingsCloudFront;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use Exception;
@@ -292,6 +293,15 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 
 			if ($outputCloudflare) {
 				return $outputCloudflare;
+			}
+		}
+
+		// Use CloudFront header if that feature is used.
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
+			$outputCloudFront = isset($_SERVER['CloudFront-Viewer-Country']) ? $this->cleanCookieValue($_SERVER['CloudFront-Viewer-Country']) : ''; // phpcs:ignore
+
+			if ($outputCloudFront) {
+				return $outputCloudFront;
 			}
 		}
 

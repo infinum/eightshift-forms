@@ -22,6 +22,8 @@ if (!apply_filters(Form::FILTER_FORMS_BLOCK_SHOULD_RENDER, true, $attributes, $m
 
 $blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
 
+$blockClass = isset($attributes['blockClass']) ? $attributes['blockClass'] : "{$globalManifest['blockClassPrefix']}-{$manifest['blockName']}";
+
 // Check formPost ID prop.
 $formsFormPostId = Helpers::checkAttr('formsFormPostId', $attributes, $manifest);
 $formsStyle = Helpers::checkAttr('formsStyle', $attributes, $manifest);

@@ -198,23 +198,40 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
-				$items = EntriesHelper::getEntries($formId);
+				if ($formId) {
+					$items = EntriesHelper::getEntries($formId);
+				} else {
+					$items = EntriesHelper::getEntriesAll();
+				}
+
 				$count = \count($items);
-				$formTitle = \get_the_title((int) $formId);
 
 				$output = [
-					// Translators: %s is the form title.
-					'adminListingPageTitle' => $this->getMultiLangTitle(\sprintf(\__('Entries for %s form', 'eightshift-forms'), $formTitle)),
-					'adminListingPageSubTitle' => \sprintf(
-						// Translators: %s is the number of forms.
-						\_n(
-							'Showing %d form entry.',
-							'Showing %d form entries.',
-							$count,
-							'eightshift-forms'
+					'adminListingPageTitle' => $formId ?
+						// Translators: %s is the form title.
+						$this->getMultilangTitle(\sprintf(\__('Entries for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
+						$this->getMultilangTitle(\__('All entries', 'eightshift-forms')),
+					'adminListingPageSubTitle' => $formId ?
+						\sprintf(
+							// Translators: %s is the number of forms.
+							\_n(
+								'Showing %d form entry.',
+								'Showing %d form entries.',
+								$count,
+								'eightshift-forms'
+							),
+							$count
+						) :
+						\sprintf(
+							// Translators: %s is the number of forms.
+							\_n(
+								'Showing %d entry.',
+								'Showing %d entries.',
+								$count,
+								'eightshift-forms'
+							),
+							$count
 						),
-						$count
-					),
 				];
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:

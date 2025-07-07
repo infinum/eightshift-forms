@@ -79,7 +79,6 @@ class IntegrationItemsGreenhouseRoute extends AbstractBaseRoute
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}
-
 		$debug = [
 			'request' => $request,
 		];

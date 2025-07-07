@@ -27,7 +27,8 @@ $progressBarItemClass = Helpers::classnames([
 	Helpers::selector($jsClass, $jsClass),
 ]);
 
-foreach ($steps as $step) {
+foreach ($steps as $step) { ?>
+	<?php
 	$name = $step['name'] ?? '';
 	$label = $step['label'] ?? '';
 

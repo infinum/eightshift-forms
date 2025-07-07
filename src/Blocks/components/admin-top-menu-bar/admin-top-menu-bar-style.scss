@@ -1,7 +1,11 @@
-// stylelint-disable selector-max-specificity
+#wpadminbar #wp-admin-bar-es-forms > a {
+	display: flex;
+	align-items: center;
 
-#wpadminbar #wp-admin-bar-es-forms > a > svg {
-	color: var(--global-colors-esf-red-800);
-	margin-inline-start: 0.625rem;
-	vertical-align: middle;
+	> svg {
+		// stylelint-disable-line selector-max-specificity
+		color: #ff6900;
+		margin-inline-start: 0.625rem;
+		vertical-align: middle;
+	}
 }

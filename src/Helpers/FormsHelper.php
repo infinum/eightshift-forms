@@ -363,4 +363,33 @@ final class FormsHelper
 
 		return \array_values(\array_filter($languages, fn($language) => $language['code'] === $locale))[0]['default_locale'] ?? 'en_US';
 	}
+
+	/**
+	 * Get project settings with filters applied.
+	 *
+	 * @return array<mixed>
+	 */
+	public static function getProjectSettings(): array
+	{
+		$settings = Helpers::getSettings();
+
+		// Update media breakpoints from the filter.
+		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
+
+		if (\has_filter($filterName)) {
+			$customMediaBreakpoints = \apply_filters($filterName, []);
+
+			if (
+				\is_array($customMediaBreakpoints) &&
+				isset($customMediaBreakpoints['mobile']) &&
+				isset($customMediaBreakpoints['tablet']) &&
+				isset($customMediaBreakpoints['desktop']) &&
+				isset($customMediaBreakpoints['large'])
+			) {
+				$settings['globalVariables']['breakpoints'] = $customMediaBreakpoints;
+			}
+		}
+
+		return $settings;
+	}
 }
