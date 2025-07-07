@@ -1,5 +1,11 @@
-#wpadminbar #wp-admin-bar-es-forms > a > svg { // stylelint-disable-line selector-max-specificity
-	color: #FF6900;
-	margin-inline-start: 0.625rem;
-	vertical-align: middle;
+#wpadminbar #wp-admin-bar-es-forms > a {
+	display: flex;
+	align-items: center;
+
+	> svg {
+		// stylelint-disable-line selector-max-specificity
+		color: #ff6900;
+		margin-inline-start: 0.625rem;
+		vertical-align: middle;
+	}
 }
