@@ -6,7 +6,6 @@
  * @package EightshiftForms
  */
 
-$manifest = $attributes['manifest'] ?? [];
 $count = $attributes['count'] ? (int) $attributes['count'] : 0;
 
 if (!$count) {

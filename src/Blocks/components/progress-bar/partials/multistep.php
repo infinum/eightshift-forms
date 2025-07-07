@@ -10,7 +10,6 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
-$manifest = $attributes['manifest'] ?? [];
 $steps = $attributes['steps'] ?? [];
 $twClasses = $attributes['twClasses'] ?? [];
 
