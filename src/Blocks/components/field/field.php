@@ -48,6 +48,7 @@ $fieldDisabled = Helpers::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldHidden = Helpers::checkAttr('fieldHidden', $attributes, $manifest);
 $fieldStyle = Helpers::checkAttr('fieldStyle', $attributes, $manifest);
 $fieldAttrs = Helpers::checkAttr('fieldAttrs', $attributes, $manifest);
+$fieldAttrsLabel = Helpers::checkAttr('fieldAttrsLabel', $attributes, $manifest);
 $fieldIsRequired = Helpers::checkAttr('fieldIsRequired', $attributes, $manifest);
 $fieldConditionalTags = Helpers::checkAttr('fieldConditionalTags', $attributes, $manifest);
 $fieldInlineBeforeAfterContent = Helpers::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
@@ -144,12 +145,14 @@ $contentWrapClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
 ]);
 
-$fieldTag = 'div';
-$labelTag = 'label';
-
 if ($fieldType === 'fieldset') {
 	$fieldTag = 'fieldset';
 	$labelTag = 'legend';
+	$fieldAttrsLabel['id'] = $fieldId;
+} else {
+	$fieldTag = 'div';
+	$labelTag = 'label';
+	$fieldAttrsLabel['for'] = $fieldId;
 }
 
 if ($fieldConditionalTags) {
@@ -172,13 +175,6 @@ if ($fieldTracking) {
 	$fieldAttrs[UtilsHelper::getStateAttribute('tracking')] = $fieldTracking;
 }
 
-$fieldAttrsOutput = '';
-if ($fieldAttrs) {
-	foreach ($fieldAttrs as $key => $value) {
-		$fieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('field', $attributes);
 ?>
@@ -186,7 +182,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 <<?php echo esc_attr($fieldTag); ?>
 	class="<?php echo esc_attr($fieldClass); ?>"
 	data-id="<?php echo esc_attr($unique); ?>"
-	<?php echo $fieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($fieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 
 	<?php
@@ -203,74 +199,76 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 	);
 
 	?>
-	<div class="<?php echo esc_attr($innerClass); ?>">
-		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
-			<<?php echo esc_attr($labelTag); ?>
-				class="<?php echo esc_attr($labelClass); ?>"
-				for="<?php echo esc_attr($fieldId); ?>">
-				<span class="<?php echo esc_attr($labelInnerClass); ?>">
-					<?php echo wp_kses_post($fieldLabel); ?>
+	<!-- <div class="<?php echo esc_attr($innerClass); ?>"> -->
+	<?php if ($fieldLabel && !$fieldHideLabel) { ?>
+		<<?php echo esc_attr($labelTag); ?>
+			class="<?php echo esc_attr($labelClass); ?>"
+			<?php
+			echo Helpers::getAttrsOutput($fieldAttrsLabel); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			?>>
+			<span class="<?php echo esc_attr($labelInnerClass); ?>">
+				<?php echo wp_kses_post($fieldLabel); ?>
 
-					<?php
-					if ($fieldUseTooltip) {
-						echo Helpers::render(
-							'tooltip',
-							Helpers::props('tooltip', $attributes, [
-								'selectorClass' => $componentClass
-							])
-						);
-					}
-					?>
-				</span>
-			</<?php echo esc_attr($labelTag); ?>>
-		<?php } ?>
-		<div class="<?php echo esc_attr($contentClass); ?>">
-			<?php if ($fieldBeforeContent) { ?>
-				<div class="<?php echo esc_attr($beforeContentClass); ?>">
-					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-					?>
-				</div>
-			<?php } ?>
-			<div class="<?php echo esc_attr($contentWrapClass); ?>">
-				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				<?php
+				if ($fieldUseTooltip) {
+					echo Helpers::render(
+						'tooltip',
+						Helpers::props('tooltip', $attributes, [
+							'selectorClass' => $componentClass
+						])
+					);
+				}
 				?>
-
-				<?php if ($fieldSuffixContent) { ?>
-					<div class="<?php echo esc_attr($suffixContentClass); ?>">
-						<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-						?>
-					</div>
-				<?php } ?>
+			</span>
+		</<?php echo esc_attr($labelTag); ?>>
+	<?php } ?>
+	<div class="<?php echo esc_attr($contentClass); ?>">
+		<?php if ($fieldBeforeContent) { ?>
+			<div class="<?php echo esc_attr($beforeContentClass); ?>">
+				<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				?>
 			</div>
-			<?php if ($fieldAfterContent) { ?>
-				<div class="<?php echo esc_attr($afterContentClass); ?>">
-					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<?php } ?>
+		<div class="<?php echo esc_attr($contentWrapClass); ?>">
+			<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			?>
+
+			<?php if ($fieldSuffixContent) { ?>
+				<div class="<?php echo esc_attr($suffixContentClass); ?>">
+					<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 					?>
 				</div>
 			<?php } ?>
 		</div>
-		<?php if ($fieldHelp) { ?>
-			<div class="<?php echo esc_attr($helpClass); ?>">
-				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<?php if ($fieldAfterContent) { ?>
+			<div class="<?php echo esc_attr($afterContentClass); ?>">
+				<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 				?>
 			</div>
 		<?php } ?>
-		<?php
-		if ($fieldUseError) {
-			echo Helpers::render(
-				'error',
-				Helpers::props('error', $attributes, [
-					'errorId' => $fieldId,
-					'selectorClass' => $componentClass,
-					'additionalClass' => Helpers::classnames([
-						FormsHelper::getTwPart($twClasses, 'field', 'error'),
-						FormsHelper::getTwPart($twClasses, $selectorClass, 'field-error'),
-					]),
-				]),
-			);
-		}
-		?>
 	</div>
+	<?php if ($fieldHelp) { ?>
+		<div class="<?php echo esc_attr($helpClass); ?>">
+			<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			?>
+		</div>
+	<?php } ?>
+	<?php
+	if ($fieldUseError) {
+		echo Helpers::render(
+			'error',
+			Helpers::props('error', $attributes, [
+				'errorId' => $fieldId,
+				'selectorClass' => $componentClass,
+				'additionalClass' => Helpers::classnames([
+					FormsHelper::getTwPart($twClasses, 'field', 'error'),
+					FormsHelper::getTwPart($twClasses, $selectorClass, 'field-error'),
+				]),
+			]),
+		);
+	}
+	?>
+	<!-- </div> -->
 
 	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>

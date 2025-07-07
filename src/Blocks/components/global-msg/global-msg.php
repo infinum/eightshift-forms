@@ -45,18 +45,11 @@ if (has_filter($filterName) && !is_admin()) {
 	}
 }
 
-$globalMsgAttrsOutput = '';
-if ($globalMsgAttrs) {
-	foreach ($globalMsgAttrs as $key => $value) {
-		$globalMsgAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 ?>
 
 <div
 	class="<?php echo esc_attr($globalMsgClass); ?>"
-	<?php echo $globalMsgAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($globalMsgAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<?php echo esc_html($globalMsgValue); ?>
 </div>

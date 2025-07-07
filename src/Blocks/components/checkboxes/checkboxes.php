@@ -104,6 +104,10 @@ echo Helpers::render(
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',
+			'fieldAttrs' => [
+				'role' => 'group',
+				'aria-labelledby' => $checkboxesId,
+			],
 		]
 	)
 );

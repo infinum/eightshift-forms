@@ -69,12 +69,6 @@ $customFile = '
 	</div>
 ';
 
-$fileAttrsOutput = '';
-if ($fileAttrs) {
-	foreach ($fileAttrs as $key => $value) {
-		$fileAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
 
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('file', $attributes);
@@ -87,7 +81,7 @@ $file = '
 		' . disabled($fileIsDisabled, true, false) . '
 		type="file"
 		' . $fileIsMultiple . '
-		' . $fileAttrsOutput . '
+		' . Helpers::getAttrsOutput($fileAttrs) . '
 	/>
 	' . $customFile . '
 	' . $additionalContent . '
@@ -110,7 +104,9 @@ echo Helpers::render(
 				'conditional-tags',
 				Helpers::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => $fileFieldAttrs,
+			'fieldAttrs' => array_merge($fileFieldAttrs, [
+				'aria-labelledby' => $fileId,
+			]),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

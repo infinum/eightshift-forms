@@ -38,14 +38,10 @@ foreach ($steps as $step) { ?>
 
 	$progressBarAttrs[UtilsHelper::getStateAttribute('stepId')] = esc_attr($name);
 
-	$progressBarAttrsOutput = '';
-	foreach ($progressBarAttrs as $key => $value) {
-		$progressBarAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
 	?>
 	<div
 		class="<?php echo esc_attr($progressBarItemClass); ?>"
-		<?php echo $progressBarAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<?php echo Helpers::getAttrsOutput($progressBarAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 		?>>
 		<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'progress-bar', 'item-inner', "{$componentClass}__item-inner")); ?>">
 			<?php

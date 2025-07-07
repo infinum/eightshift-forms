@@ -130,18 +130,11 @@ if ($formMethod) {
 $formAttrs[UtilsHelper::getStateAttribute('blockSsr')] = wp_json_encode($blockSsr);
 $formAttrs[UtilsHelper::getStateAttribute('disabledDefaultStyles')] = wp_json_encode($formDisabledDefaultStyles);
 
-$formAttrsOutput = '';
-if ($formAttrs) {
-	foreach ($formAttrs as $key => $value) {
-		$formAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 ?>
 
 <form
 	class="<?php echo esc_attr($formClass); ?>"
-	<?php echo $formAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($formAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>
 	novalidate
 	onsubmit="event.preventDefault();">

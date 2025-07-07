@@ -63,13 +63,6 @@ if ($dateUseLabelAsPlaceholder) {
 	$dateHideLabel = true;
 }
 
-$dateAttrsOutput = '';
-if ($dateAttrs) {
-	foreach ($dateAttrs as $key => $value) {
-		$dateAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('date', $attributes);
 
@@ -81,7 +74,7 @@ $date = '
 		type="' . esc_attr($dateType) . '"
 		' . disabled($dateIsDisabled, true, false) . '
 		' . wp_readonly($dateIsReadOnly, true, false) . '
-		' . $dateAttrsOutput . '
+		' . Helpers::getAttrsOutput($dateAttrs) . '
 	/>
 	' . $additionalContent . '
 ';

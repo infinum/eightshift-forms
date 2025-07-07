@@ -76,13 +76,6 @@ $placeholder = Helpers::render(
 	]
 );
 
-$selectAttrsOutput = '';
-if ($selectAttrs) {
-	foreach ($selectAttrs as $key => $value) {
-		$selectAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('select', $attributes);
 
@@ -92,7 +85,7 @@ $select = '
 		name="' . esc_attr($selectName) . '"
 		id="' . esc_attr($selectId) . '"
 		' . disabled($selectIsDisabled, true, false) . '
-		' . $selectAttrsOutput . '
+		' . Helpers::getAttrsOutput($selectAttrs) . '
 	>
 		' . $placeholder . '
 		' . $selectContent . '

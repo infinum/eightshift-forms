@@ -70,13 +70,6 @@ if ($phoneUseLabelAsPlaceholder) {
 	$phoneHideLabel = true;
 }
 
-$phoneAttrsOutput = '';
-if ($phoneAttrs) {
-	foreach ($phoneAttrs as $key => $value) {
-		$phoneAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('phone', $attributes);
 $phoneSelectUseSearchAttr = UtilsHelper::getStateAttribute('selectAllowSearch');
@@ -128,28 +121,22 @@ if (has_filter($filterName)) {
 
 $phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
 
-$phoneAttrsSelectOutput = '';
-if ($phoneAttrsSelect) {
-	foreach ($phoneAttrsSelect as $key => $value) {
-		$phoneAttrsSelectOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
-		' . $phoneAttrsSelectOutput . '
+		' . Helpers::getAttrsOutput($phoneAttrsSelect) . '
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
 		name="' . esc_attr($phoneName) . '"
 		id="' . esc_attr($phoneId) . '"
 		type="tel"
+		autocomplete="tel"
 		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_readonly($phoneIsReadOnly, true, false) . '
-		' . $phoneAttrsOutput . '
+		' . Helpers::getAttrsOutput($phoneAttrs) . '
 	/>
 	' . $additionalContent . '
 ';

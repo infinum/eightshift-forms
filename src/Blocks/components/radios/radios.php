@@ -107,6 +107,10 @@ echo Helpers::render(
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',
+			'fieldAttrs' => [
+				'role' => 'radiogroup',
+				'aria-labelledby' => $radiosId,
+			],
 		]
 	)
 );

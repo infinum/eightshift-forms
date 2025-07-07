@@ -44,13 +44,6 @@ if ($stepName) {
 	$stepAttrs[UtilsHelper::getStateAttribute('stepId')] = esc_attr($stepName);
 }
 
-$stepAttrsOutput = '';
-if ($stepAttrs) {
-	foreach ($stepAttrs as $key => $value) {
-		$stepAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 $prevButtonComponent = '';
 $nextButtonComponent = '';
 
@@ -58,7 +51,7 @@ $nextButtonComponent = '';
 
 <div
 	class="<?php echo esc_attr($stepClass); ?>"
-	<?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($stepAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'debug-details', "{$componentClass}__debug-details")); ?>">

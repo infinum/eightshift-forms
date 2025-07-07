@@ -111,11 +111,13 @@ if ($inputType === 'range') {
 	}
 }
 
-$inputAttrsOutput = '';
-if ($inputAttrs) {
-	foreach ($inputAttrs as $key => $value) {
-		$inputAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
+$inputAutocomplete = 'on';
+if ($inputType === 'hidden') {
+	$inputAutocomplete = 'off';
+}
+
+if ($inputType === 'email') {
+	$inputAutocomplete = 'email';
 }
 
 $input = '
@@ -126,7 +128,8 @@ $input = '
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
-		' . $inputAttrsOutput . '
+		' . Helpers::getAttrsOutput($inputAttrs) . '
+		autocomplete="' . esc_attr($inputAutocomplete) . '"
 	/>
 ';
 
@@ -136,7 +139,7 @@ if ($inputRangeUseCustomField && $inputType === 'range') {
 		type="number"
 		' . disabled($inputIsDisabled, true, false) . '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
-		' . $inputAttrsOutput . '
+		' . Helpers::getAttrsOutput($inputAttrs) . '
 	/>';
 }
 

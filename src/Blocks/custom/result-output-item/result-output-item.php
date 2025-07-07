@@ -28,11 +28,6 @@ $resultAttrs = [
 	UtilsHelper::getStateAttribute('resultOutputItemOperator') => esc_attr($resultOutputItemOperator),
 ];
 
-$resultAttrsOutput = '';
-foreach ($resultAttrs as $key => $value) {
-	$resultAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-}
-
 $resultClass = [
 	Helpers::selector($blockClass, $blockClass),
 	UtilsHelper::getStateSelector('resultOutputItem'),
@@ -54,7 +49,7 @@ $resultClassOutput = Helpers::classnames($resultClass);
 
 <div
 	class="<?php echo esc_attr($resultClassOutput); ?>"
-	<?php echo $resultAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($resultAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<?php echo $renderContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>

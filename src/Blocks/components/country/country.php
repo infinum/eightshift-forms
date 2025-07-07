@@ -67,13 +67,6 @@ if ($countryUseLabelAsPlaceholder) {
 	$countryHideLabel = true;
 }
 
-$countryAttrsOutput = '';
-if ($countryAttrs) {
-	foreach ($countryAttrs as $key => $value) {
-		$countryAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('country', $attributes);
 
@@ -140,7 +133,7 @@ $country = '
 		name="' . esc_attr($countryName) . '"
 		id="' . esc_attr($countryId) . '"
 		' . disabled($countryIsDisabled, true, false) . '
-		' . $countryAttrsOutput . '
+		' . Helpers::getAttrsOutput($countryAttrs) . '
 	>
 	' . $placeholder . '
 	' . implode('', $options) . '

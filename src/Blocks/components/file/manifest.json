@@ -73,6 +73,10 @@
 		},
 		"fileTwSelectorsData": {
 			"type": "array"
+		},
+		"fileFieldType": {
+			"type": "string",
+			"default": "fieldset"
 		}
 	}
 }
