@@ -10,16 +10,16 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Migration;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMigration class.
  */
-class SettingsMigration implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsMigration implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -79,7 +79,7 @@ class SettingsMigration implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -95,12 +95,12 @@ class SettingsMigration implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MIGRATION_USE_KEY, self::SETTINGS_MIGRATION_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'intro',
 				'introIsHighlighted' => true,

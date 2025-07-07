@@ -28,8 +28,8 @@ use EightshiftForms\Rest\Routes\SubmitCaptchaRoute;
 use EightshiftForms\Rest\Routes\SubmitFilesRoute;
 use EightshiftForms\Rest\Routes\SubmitGeolocationRoute;
 use EightshiftForms\Rest\Routes\SubmitValidateStepRoute;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * Trait SharedEnqueue
@@ -37,7 +37,7 @@ use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 trait SharedEnqueue
 {
 	/**
-	 * Get enqueue shared inline varables.
+	 * Get enqueue shared inline variables.
 	 *
 	 * @param boolean $isPublic If enqueue is public or not.
 	 *
@@ -45,7 +45,7 @@ trait SharedEnqueue
 	 */
 	public function getEnqueueSharedInlineCommonItems(bool $isPublic = true): array
 	{
-		$restPrefixProject = UtilsConfig::ROUTE_NAMESPACE . '/' . UtilsConfig::ROUTE_VERSION;
+		$restPrefixProject = Config::ROUTE_NAMESPACE . '/' . Config::ROUTE_VERSION;
 
 		$outputPublicFilter = [];
 		$outputPrivateFilter = [];
@@ -54,7 +54,7 @@ trait SharedEnqueue
 			// Common.
 			'prefix' => \get_rest_url(\get_current_blog_id()) . $restPrefixProject,
 			'prefixProject' => $restPrefixProject,
-			'prefixSubmit' => UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT,
+			'prefixSubmit' => Config::ROUTE_PREFIX_FORM_SUBMIT,
 			'prefixTestApi' => AbstractTestApi::ROUTE_PREFIX_TEST_API,
 			'files' => SubmitFilesRoute::ROUTE_SLUG,
 
@@ -65,7 +65,7 @@ trait SharedEnqueue
 		];
 
 		// Public routes filter.
-		$filterName = UtilsHooksHelper::getFilterName(['scripts', 'routes', 'public']);
+		$filterName = HooksHelpers::getFilterName(['scripts', 'routes', 'public']);
 		if (\has_filter($filterName)) {
 			$outputPublicFilter = \apply_filters($filterName, []);
 		}
@@ -86,9 +86,9 @@ trait SharedEnqueue
 				'debugEncrypt' => DebugEncryptRoute::ROUTE_SLUG,
 
 				// Editor.
-				'prefixIntegrationItemsInner' => UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
-				'prefixIntegrationItems' => UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS,
-				'prefixIntegrationEditor' => UtilsConfig::ROUTE_PREFIX_INTEGRATION_EDITOR,
+				'prefixIntegrationItemsInner' => Config::ROUTE_PREFIX_INTEGRATION_ITEMS_INNER,
+				'prefixIntegrationItems' => Config::ROUTE_PREFIX_INTEGRATION_ITEMS,
+				'prefixIntegrationEditor' => Config::ROUTE_PREFIX_INTEGRATION_EDITOR,
 				'integrationsEditorSync' => IntegrationEditorSyncRoute::ROUTE_SLUG,
 				'integrationsEditorCreate' => IntegrationEditorCreateRoute::ROUTE_SLUG,
 				'formFields' => FormFieldsRoute::ROUTE_SLUG,
@@ -96,7 +96,7 @@ trait SharedEnqueue
 			];
 
 			// Private routes filter.
-			$filterName = UtilsHooksHelper::getFilterName(['scripts', 'routes', 'private']);
+			$filterName = HooksHelpers::getFilterName(['scripts', 'routes', 'private']);
 			if (\has_filter($filterName)) {
 				$outputPrivateFilter = \apply_filters($filterName, []);
 			}

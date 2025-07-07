@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "radios",
 	"title": "radios",
 	"componentClass": "es-radios",
@@ -49,9 +49,6 @@
 		"radiosUseLabelAsPlaceholder": {
 			"type": "boolean",
 			"default": false
-		},
-		"radiosTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

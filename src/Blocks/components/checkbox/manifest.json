@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/component.json",
 	"componentName": "checkbox",
 	"title": "Checkbox",
 	"componentClass": "es-checkbox",
@@ -94,9 +94,6 @@
 		"checkboxIsHidden": {
 			"type": "boolean",
 			"default": false
-		},
-		"checkboxTwSelectorsData": {
-			"type": "array"
 		}
 	}
 }

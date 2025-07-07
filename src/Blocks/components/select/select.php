@@ -8,10 +8,8 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -33,7 +31,6 @@ $selectTypeCustom = Helpers::checkAttr('selectTypeCustom', $attributes, $manifes
 $selectFieldAttrs = Helpers::checkAttr('selectFieldAttrs', $attributes, $manifest);
 $selectUseLabelAsPlaceholder = Helpers::checkAttr('selectUseLabelAsPlaceholder', $attributes, $manifest);
 $selectIsMultiple = Helpers::checkAttr('selectIsMultiple', $attributes, $manifest);
-$selectTwSelectorsData = Helpers::checkAttr('selectTwSelectorsData', $attributes, $manifest);
 
 $selectId = $selectName . '-' . Helpers::getUnique();
 
@@ -86,7 +83,7 @@ if ($selectAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('select', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('select', $attributes);
 
 $select = '
 	<select
@@ -106,7 +103,6 @@ $fieldOutput = [
 	'fieldContent' => $select,
 	'fieldId' => $selectId,
 	'fieldName' => $selectName,
-	'fieldTwSelectorsData' => $selectTwSelectorsData,
 	'fieldTypeInternal' => FormsHelper::getStateFieldType('select'),
 	'fieldIsRequired' => $selectIsRequired,
 	'fieldDisabled' => !empty($selectIsDisabled),

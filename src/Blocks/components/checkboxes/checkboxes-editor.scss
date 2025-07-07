@@ -1,6 +1,8 @@
+@use '../../assets/styles/bootstrap-scss.scss' as theme;
+
 .es-field--checkboxes {
 	.es-field__content-wrap {
-		@include input-styles-disabled;
+		@include theme.input-styles-disabled;
 
 		padding: var(--es-input-spacing);
 		border: 1px solid var(--es-input-border-color);

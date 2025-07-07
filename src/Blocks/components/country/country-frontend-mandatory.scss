@@ -1,3 +1,5 @@
+@use 'sass:list';
+
 .choices__item {
 	$countries: (
 		ac,
@@ -257,7 +259,7 @@
 		yt,
 		za,
 		zm,
-		zw,
+		zw
 	);
 
 	$width: 20px;
@@ -265,7 +267,7 @@
 
 	&::before {
 		content: '';
-		background-image: url('../public/flags.png');
+		background-image: url('./images/flags.png');
 		background-repeat: no-repeat;
 		inline-size: $width;
 		block-size: $height;
@@ -277,7 +279,7 @@
 	$i: 0;
 
 	@each $country in $countries {
-		&[data-country-code="#{$country}"]::before {
+		&[data-country-code='#{$country}']::before {
 			background-position: -#{$i * $width} 0;
 		}
 

@@ -10,20 +10,20 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Moments;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMoments class.
  */
-class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -114,9 +114,9 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY);
-		$url = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyMoments(), self::SETTINGS_MOMENTS_API_KEY_KEY);
+		$url = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUrlMoments(), self::SETTINGS_MOMENTS_API_URL_KEY);
 
 		if (!$isUsed || !$apiKey || !$url) {
 			return false;
@@ -134,18 +134,18 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 	 */
 	public function getSettingsData(string $formId): array
 	{
-		$useEvents = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MOMENTS_USE_EVENTS_KEY, self::SETTINGS_MOMENTS_USE_EVENTS_KEY, $formId);
+		$useEvents = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MOMENTS_USE_EVENTS_KEY, self::SETTINGS_MOMENTS_USE_EVENTS_KEY, $formId);
 
-		$formFields = UtilsGeneralHelper::getFormDetails($formId)[UtilsConfig::FD_FIELD_NAMES] ?? [];
+		$formFields = GeneralHelpers::getFormDetails($formId)[Config::FD_FIELD_NAMES] ?? [];
 
 		$eventsMap = \array_fill(1, \count($formFields) - 1, 'question');
 
-		$eventsMapValue = UtilsSettingsHelper::getSettingValueGroup(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
-		$eventsEmailFieldValue = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
-		$eventsEventNameValue = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY, $formId);
+		$eventsMapValue = SettingsHelpers::getSettingValueGroup(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
+		$eventsEmailFieldValue = SettingsHelpers::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
+		$eventsEventNameValue = SettingsHelpers::getSettingValue(self::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY, $formId);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -156,7 +156,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_USE_EVENTS_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_MOMENTS_USE_EVENTS_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -176,7 +176,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 								],
 								[
 									'component' => 'select',
-									'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY),
+									'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY),
 									'selectFieldHelp' => \__('You must select what field is used as an e-mail.', 'eightshift-forms'),
 									'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
 									'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
@@ -195,7 +195,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 								],
 								[
 									'component' => 'input',
-									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY),
+									'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY),
 									'inputFieldLabel' => \__('Event name', 'eightshift-forms'),
 									'inputFieldHelp' => \__('Set event name used in the Moments integrations.', 'eightshift-forms'),
 									'inputType' => 'text',
@@ -209,7 +209,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 									],
 									[
 										'component' => 'group',
-										'groupName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY),
+										'groupName' => SettingsHelpers::getSettingName(self::SETTINGS_MOMENTS_EVENTS_MAP_KEY),
 										'groupSaveOneField' => true,
 										'groupStyle' => 'default-listing',
 										'groupContent' => [
@@ -269,14 +269,14 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_USE_KEY, self::SETTINGS_MOMENTS_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -287,12 +287,12 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -303,7 +303,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -312,7 +312,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyMoments(),
 									self::SETTINGS_MOMENTS_API_KEY_KEY,
 									'ES_API_KEY_MOMENTS',
@@ -322,7 +322,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUrlMoments(),
 									self::SETTINGS_MOMENTS_API_URL_KEY,
 									'ES_API_URL_MOMENTS',
@@ -332,7 +332,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements UtilsSetti
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
+								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],

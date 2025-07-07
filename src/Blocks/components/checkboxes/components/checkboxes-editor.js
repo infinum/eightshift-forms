@@ -1,11 +1,6 @@
 import React from 'react';
 import { select } from '@wordpress/data';
-import {
-	STORE_NAME,
-	checkAttr,
-	props,
-	getAttrKey,
-} from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME, checkAttr, props, getAttrKey } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FieldEditor } from '../../field/components/field-editor';
 import { MissingName, preventSaveOnMissingProps } from './../../utils';
 import { ConditionalTagsEditor } from '../../conditional-tags/components/conditional-tags-editor';
@@ -13,14 +8,7 @@ import { ConditionalTagsEditor } from '../../conditional-tags/components/conditi
 export const CheckboxesEditor = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('checkboxes');
 
-	const {
-		componentName
-	} = manifest;
-
-	const {
-		additionalFieldClass,
-		blockClientId,
-	} = attributes;
+	const { blockClientId } = attributes;
 
 	const checkboxesContent = checkAttr('checkboxesContent', attributes, manifest);
 	const checkboxesName = checkAttr('checkboxesName', attributes, manifest);
@@ -33,11 +21,7 @@ export const CheckboxesEditor = (attributes) => {
 
 			<MissingName value={checkboxesName} />
 
-			{checkboxesName &&
-				<ConditionalTagsEditor
-					{...props('conditionalTags', attributes)}
-				/>
-			}
+			{checkboxesName && <ConditionalTagsEditor {...props('conditionalTags', attributes)} />}
 		</>
 	);
 
@@ -48,8 +32,6 @@ export const CheckboxesEditor = (attributes) => {
 					fieldContent: checkboxes,
 					fieldIsRequired: checkAttr('checkboxesIsRequired', attributes, manifest),
 				})}
-				additionalFieldClass={additionalFieldClass}
-				selectorClass={componentName}
 			/>
 		</>
 	);

@@ -91,10 +91,7 @@ export class Bulk {
 			.then((responseData) => {
 				const response = this.utils.formSubmitIsJsonString(responseData, 'bulk', null);
 
-				const {
-					message,
-					status,
-				} = response;
+				const { message, status } = response;
 
 				this.utils.hideLoader(this.FORM_ID);
 				this.utils.setGlobalMsg(this.FORM_ID, message, status);
@@ -122,7 +119,7 @@ export class Bulk {
 		}
 	}
 
-	selectItem(formId, status=false) {
+	selectItem(formId, status = false) {
 		const itemsElement = document.querySelector(this.itemsSelector);
 		const items = itemsElement?.getAttribute(this.state.getStateAttribute('bulkItems'));
 
@@ -157,7 +154,7 @@ export class Bulk {
 	}
 
 	onGlobalMsgFocus = () => {
-		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
 			clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 		}
 	};

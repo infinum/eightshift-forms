@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { TextareaEditor } from './components/textarea-editor';
 import { TextareaOptions } from './components/textarea-options';
 
 export const Textarea = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<TextareaOptions {...props} />
-			</InspectorControls>
-			<TextareaEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={TextareaOptions}
+			editor={TextareaEditor}
+		/>
 	);
 };

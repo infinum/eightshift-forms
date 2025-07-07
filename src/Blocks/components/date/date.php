@@ -7,11 +7,9 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -34,7 +32,6 @@ $datePreviewFormat = Helpers::checkAttr('datePreviewFormat', $attributes, $manif
 $dateOutputFormat = Helpers::checkAttr('dateOutputFormat', $attributes, $manifest);
 $dateFieldAttrs = Helpers::checkAttr('dateFieldAttrs', $attributes, $manifest);
 $dateUseLabelAsPlaceholder = Helpers::checkAttr('dateUseLabelAsPlaceholder', $attributes, $manifest);
-$dateTwSelectorsData = Helpers::checkAttr('dateTwSelectorsData', $attributes, $manifest);
 
 $dateId = $dateName . '-' . Helpers::getUnique();
 
@@ -42,7 +39,7 @@ $dateId = $dateName . '-' . Helpers::getUnique();
 $dateHideLabel = false;
 $dateFieldLabel = $attributes[Helpers::getAttrKey('dateFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($dateTwSelectorsData, ['date']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['date']);
 
 $dateClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'date', $componentClass),
@@ -73,7 +70,7 @@ if ($dateAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('date', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('date', $attributes);
 
 $date = '
 	<input
@@ -96,7 +93,6 @@ echo Helpers::render(
 			'fieldId' => $dateId,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType($dateType === 'date' ? 'date' : 'dateTime'),
 			'fieldName' => $dateName,
-			'fieldTwSelectorsData' => $dateTwSelectorsData,
 			'fieldIsRequired' => $dateIsRequired,
 			'fieldDisabled' => !empty($dateIsDisabled),
 			'fieldTypeCustom' => $dateTypeCustom ?: $dateType, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found

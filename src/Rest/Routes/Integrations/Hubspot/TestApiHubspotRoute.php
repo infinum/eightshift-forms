@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Hubspot
+ * The class register route for public form submitting endpoint - Hubspot
  *
  * @package EightshiftForms\Rest\Route\Integrations\Hubspot
  */

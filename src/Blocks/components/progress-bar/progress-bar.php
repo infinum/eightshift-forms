@@ -7,10 +7,8 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -28,9 +26,8 @@ if (!$progressBarSteps) {
 }
 
 $progressBarMultiflowUse = Helpers::checkAttr('progressBarMultiflowUse', $attributes, $manifest);
-$progressBarTwSelectorsData = Helpers::checkAttr('progressBarTwSelectorsData', $attributes, $manifest);
 
-$twClasses = FormsHelper::getTwSelectors($progressBarTwSelectorsData, ['progress-bar']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['progress-bar']);
 
 $progressBarClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'progress-bar', $componentClass),
@@ -53,6 +50,7 @@ $progressBarClass = Helpers::classnames([
 				'componentClass' => $componentClass,
 				'jsClass' => UtilsHelper::getStateSelector('stepProgressBar'),
 				'hideLabels' => Helpers::checkAttr('progressBarHideLabels', $attributes, $manifest),
+				'manifest' => $manifest,
 			],
 			'components',
 			false,
@@ -64,6 +62,7 @@ $progressBarClass = Helpers::classnames([
 			[
 				'count' => Helpers::checkAttr('progressBarMultiflowInitCount', $attributes, $manifest),
 				'twClasses' => $twClasses,
+				'manifest' => $manifest,
 			],
 			'components',
 			false,
@@ -72,5 +71,3 @@ $progressBarClass = Helpers::classnames([
 	}
 	?>
 </div>
-
-

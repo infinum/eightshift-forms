@@ -1,19 +1,15 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/block.json",
 	"blockName": "checkbox",
 	"title": "Checkbox",
-	"description" : "Simple true/false toggle",
+	"description": "Simple true/false toggle",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-checkbox"
 	},
-	"keywords": [
-		"checkbox"
-	],
+	"keywords": ["checkbox"],
 	"components": {
 		"checkbox": "checkbox"
 	},
-	"parent": [
-		"eightshift-forms/checkboxes"
-	]
+	"parent": ["eightshift-forms/checkboxes"]
 }

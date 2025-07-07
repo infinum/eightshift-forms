@@ -8,12 +8,10 @@
 
 use EightshiftForms\Form\Form;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -26,8 +24,8 @@ $attributes = apply_filters(
 	$attributes
 );
 
-$twClassesData = FormsHelper::getTwSelectorsData($attributes);
-$twClasses = FormsHelper::getTwSelectors($twClassesData, ['form']);
+
+$twClasses = FormsHelper::getTwSelectors($attributes, ['form']);
 
 $formName = Helpers::checkAttr('formName', $attributes, $manifest);
 $formAction = Helpers::checkAttr('formAction', $attributes, $manifest);
@@ -47,7 +45,7 @@ $formConditionalTags = $formParentSettings['conditionalTags'] ?? '';
 $formDisabledDefaultStyles = $formParentSettings['disabledDefaultStyles'] ?? false;
 $formType = $formParentSettings['formType'] ?? '';
 
-$formDataTypeSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'dataTypeSelector']);
+$formDataTypeSelectorFilterName = HooksHelpers::getFilterName(['block', 'form', 'dataTypeSelector']);
 $formDataTypeSelector = apply_filters(
 	$formDataTypeSelectorFilterName,
 	$formParentSettings['dataTypeSelector'] ?? '',
@@ -56,7 +54,7 @@ $formDataTypeSelector = apply_filters(
 
 $formAttrs = Helpers::checkAttr('formAttrs', $attributes, $manifest);
 
-$customClassSelectorFilterName = UtilsHooksHelper::getFilterName(['block', 'form', 'customClassSelector']);
+$customClassSelectorFilterName = HooksHelpers::getFilterName(['block', 'form', 'customClassSelector']);
 $customClassSelector = apply_filters($customClassSelectorFilterName, '', $attributes, $formId);
 
 $formClass = Helpers::classnames([
@@ -154,23 +152,18 @@ if ($formAttrs) {
 			Helpers::props('formEditActions', $attributes, [
 				'formPostId' => $formPostId,
 				'formHasSteps' => $formHasSteps,
-				'formEditActionsTwSelectorsData' => $twClassesData,
 			])
 		);
 	}
 
 	echo Helpers::render(
 		'global-msg',
-		Helpers::props('globalMsg', $attributes, [
-			'globalMsgTwSelectorsData' => $twClassesData,
-		])
+		Helpers::props('globalMsg', $attributes)
 	);
 
 	echo Helpers::render(
 		'progress-bar',
-		Helpers::props('progressBar', $attributes, [
-			'progressBarTwSelectorsData' => $twClassesData,
-		])
+		Helpers::props('progressBar', $attributes)
 	);
 	?>
 
@@ -178,16 +171,14 @@ if ($formAttrs) {
 		<?php echo $formContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 		?>
 
-		<?php echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<?php echo GeneralHelpers::getBlockAdditionalContentViaFilter('form', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 		?>
 	</div>
 
 	<?php
 	echo Helpers::render(
 		'loader',
-		Helpers::props('loader', $attributes, [
-			'loaderTwSelectorsData' => $twClassesData,
-		])
+		Helpers::props('loader', $attributes)
 	);
 	?>
 </form>

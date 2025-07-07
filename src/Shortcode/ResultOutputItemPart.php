@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Shortcode;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -120,7 +120,7 @@ class ResultOutputItemPart implements ServiceInterface
 		}
 
 		if (!$output) {
-			[
+			return [
 				'isRedirectPage' => true,
 				'value' => '',
 			];

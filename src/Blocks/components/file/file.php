@@ -7,11 +7,9 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-
-$manifest = Helpers::getManifestByDir(__DIR__);
 
 $componentClass = $manifest['componentClass'] ?? '';
 $additionalClass = $attributes['additionalClass'] ?? '';
@@ -32,14 +30,13 @@ $fileTypeCustom = Helpers::checkAttr('fileTypeCustom', $attributes, $manifest);
 $fileAttrs = Helpers::checkAttr('fileAttrs', $attributes, $manifest);
 $fileFieldAttrs = Helpers::checkAttr('fileFieldAttrs', $attributes, $manifest);
 $fileIsDisabled = Helpers::checkAttr('fileIsDisabled', $attributes, $manifest);
-$fileTwSelectorsData = Helpers::checkAttr('fileTwSelectorsData', $attributes, $manifest);
 
 $fileId = $fileName . '-' . Helpers::getUnique();
 
 // Fix for getting attribute that is part of the child component.
 $fileFieldLabel = $attributes[Helpers::getAttrKey('fileFieldLabel', $attributes, $manifest)] ?? '';
 
-$twClasses = FormsHelper::getTwSelectors($fileTwSelectorsData, ['file']);
+$twClasses = FormsHelper::getTwSelectors($attributes, ['file']);
 
 $fileClass = Helpers::classnames([
 	FormsHelper::getTwBase($twClasses, 'file', $componentClass),
@@ -58,7 +55,7 @@ if ($fileCustomInfoTextUse) {
 	$infoTextContent .= '<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'info', "{$componentClass}__info")) . '">' . wp_kses_post($infoText) . '</div>';
 }
 
-$filter = UtilsHooksHelper::getFilterName(['block', 'file', 'infoAdditionalContent']);
+$filter = HooksHelpers::getFilterName(['block', 'file', 'infoAdditionalContent']);
 if (has_filter($filter)) {
 	$infoTextContent .= apply_filters($filter, '', $attributes);
 }
@@ -79,7 +76,7 @@ if ($fileAttrs) {
 }
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('file', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('file', $attributes);
 
 $file = '
 	<input
@@ -102,7 +99,6 @@ echo Helpers::render(
 			'fieldContent' => $file,
 			'fieldId' => $fileId,
 			'fieldName' => $fileName,
-			'fieldTwSelectorsData' => $fileTwSelectorsData,
 			'fieldTypeInternal' => FormsHelper::getStateFieldType('file'),
 			'fieldDisabled' => !empty($fileIsDisabled),
 			'fieldIsRequired' => $fileIsRequired,

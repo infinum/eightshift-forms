@@ -2,26 +2,16 @@
 
 import React, { useEffect } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
-import { select, dispatch } from "@wordpress/data";
+import { select, dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { Tooltip, Button, TextControl } from '@wordpress/components';
 import { createBlock, createBlocksFromInnerBlocksTemplate } from '@wordpress/blocks';
-import {
-	AnimatedContentVisibility,
-	camelize,
-	classnames,
-	IconLabel,
-	icons,
-	STORE_NAME,
-	Notification,
-	lockPostEditing,
-	unlockPostEditing,
-	unescapeHTML,
-	getUnique,
-} from '@eightshift/frontend-libs/scripts';
+import { STORE_NAME, lockPostEditing, unlockPostEditing, getUnique } from '@eightshift/frontend-libs-tailwind/scripts';
+import { icons } from '@eightshift/ui-components/icons';
 import { FORMS_STORE_NAME } from './../../assets/scripts/store';
-import { getRestUrl, getRestUrlByType, getUtilsIcons } from '../form/assets/state-init';
-import utilsManifest from '../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
+import { getRestUrl, getRestUrlByType } from '../form/assets/state-init';
+import globalManifest from '../../manifest.json';
+import { camelCase, clsx, unescapeHTML } from '@eightshift/ui-components/utilities';
+import { AnimatedVisibility, RichLabel, Notice, InputField, Button, Tooltip } from '@eightshift/ui-components';
 
 /**
  * check if block options is disabled by integration or other component.
@@ -155,11 +145,7 @@ export const clearTransientCache = (type) => {
  * @returns {void}
  */
 export const createBlockFromTemplate = (clientId, name, templates) => {
-	const {
-		blockName,
-		attributes = {},
-		innerBlocks = [],
-	} = templates.filter((form) => form.slug === name)[0];
+	const { blockName, attributes = {}, innerBlocks = [] } = templates.filter((form) => form.slug === name)[0];
 
 	// Build all inner blocks.
 	const inner = innerBlocks.map((item) => createBlock(item[0], item[1] ?? {}, item[2] ?? []));
@@ -221,30 +207,30 @@ export const getFormFields = () => {
 			value: '',
 			label: '',
 		},
-		...fields.map((item) => {
-			const {
-				attributes,
-				attributes: {
-					blockName,
+		...fields
+			.map((item) => {
+				const {
+					attributes,
+					attributes: { blockName },
+				} = item;
+
+				const value = attributes[camelCase(`${blockName}-${blockName}-name`)];
+				let label = attributes[camelCase(`${blockName}-${blockName}-field-label`)];
+
+				if (value === 'submit') {
+					return null;
 				}
-			} = item;
 
-			const value = attributes[camelize(`${blockName}-${blockName}-name`)];
-			let label = attributes[camelize(`${blockName}-${blockName}-field-label`)];
+				if (label === 'Label') {
+					label = value;
+				}
 
-			if (value === 'submit') {
-				return null;
-			}
-
-			if (label === 'Label') {
-				label = value;
-			}
-
-			return {
-				'label': label,
-				'value': value,
-			};
-		}).filter((elm) => elm),
+				return {
+					label: label,
+					value: value,
+				};
+			})
+			.filter((elm) => elm),
 	];
 };
 
@@ -290,8 +276,8 @@ export const getConstantsOptions = (options, useEmpty = false) => {
 	if (options) {
 		for (const [key, value] of Object.entries(options)) {
 			items.push({
-				'value': key,
-				'label': value
+				value: key,
+				label: value,
 			});
 		}
 	}
@@ -317,8 +303,8 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
 	if (options) {
 		options.map((item) => {
 			items.push({
-				'value': item[0],
-				'label': item[1],
+				value: item[0],
+				label: item[1],
 			});
 		});
 	}
@@ -329,23 +315,17 @@ export const getSettingsJsonOptions = (options, useEmpty = false) => {
 /**
  * Outputs notification if name is missing.
  *
- * @param {string} value Field name value.
- * @param {bool} asPlaceholder If this is a placeholder.
+ * @param {any} value Field name value.
  * @param {string} className Additional class name to add.
  *
  * @returns Component
  */
-export const MissingName = ({
-	value,
-	asPlaceholder,
-	className = '',
-	isOptional = false,
-}) => {
-	if (value || asPlaceholder) {
+export const MissingName = ({ value, className = '', isOptional = false }) => {
+	if (value) {
 		return null;
 	}
 
-	const style = classnames(
+	const style = clsx(
 		'es-position-absolute es-right-0 es-top-0 es-nested-color-pure-white es-nested-w-5 es-nested-h-5 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center',
 		isOptional ? 'es-bg-yellow-500' : 'es-bg-red-500',
 		className,
@@ -354,7 +334,7 @@ export const MissingName = ({
 	return (
 		<div className={style}>
 			<Tooltip text={!isOptional ? __('Name not set!', 'eightshift-forms') : __('If you are using conditional tags you must set name on this field.', 'eightshift-forms')}>
-				{React.cloneElement(icons.warning, {className: 'es-mb-0.5'})}
+				{React.cloneElement(icons.warning, { className: 'es-mb-0.5' })}
 			</Tooltip>
 		</div>
 	);
@@ -375,9 +355,7 @@ export const VisibilityHidden = ({ value, label }) => {
 
 	return (
 		<div className='es-position-absolute es-right-7 es-top-0 es-nested-color-pure-white es-bg-cool-gray-650 es-nested-w-6 es-nested-h-6 es-w-8 es-h-8 es-rounded-full es-has-enhanced-contrast-icon es-display-flex es-items-center es-content-center'>
-			<Tooltip text={__(`${label} is hidden`, 'eightshift-forms')}>
-				{icons.hide}
-			</Tooltip>
+			<Tooltip text={__(`${label} is hidden`, 'eightshift-forms')}>{icons.hide}</Tooltip>
 		</div>
 	);
 };
@@ -385,7 +363,7 @@ export const VisibilityHidden = ({ value, label }) => {
 /**
  * "Name" option with optional "Required" notification.
  *
- * @param {string} value Field name value.
+ * @param {any} value Field name value.
  * @param {string} attribute Field name attribute.
  * @param {string} help Field help text.
  * @param {array} disabledOptions Array of disabled options.
@@ -396,56 +374,52 @@ export const VisibilityHidden = ({ value, label }) => {
  *
  * @returns Component
  */
-export const NameField = ({
-	value,
-	attribute,
-	help = '',
-	disabledOptions = [],
-	label,
-	setAttributes,
-	show = true,
-	type,
-	isChanged = false,
-	isOptional = false,
-	setIsChanged,
-}) => {
-
+export const NameField = ({ value, attribute, help = '', disabledOptions = [], label, setAttributes, show = true, type, isChanged = false, isOptional = false, setIsChanged }) => {
 	const isDisabled = isOptionDisabled(attribute, disabledOptions);
 
 	const NameFieldLabel = () => {
-		let labelTipText = !isOptional ? __('The form may not work correctly.', 'eightshift-forms') : __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms');
+		let labelTipText = !isOptional
+			? __('The form may not work correctly.', 'eightshift-forms')
+			: __('Name field is required only if you are using conditional tags on this field.', 'eightshift-forms');
 
 		if (type === 'resultOutputItem') {
-			labelTipText = __(`Variable name you can use is "${utilsManifest.enums.successRedirectUrlKeys.variation}" or any other provided by the plugins' add-on.`, 'eightshift-forms');
+			labelTipText = __(
+				`Variable name you can use is "${globalManifest.enums.successRedirectUrlKeys.variation}" or any other provided by the plugins' add-on.`,
+				'eightshift-forms',
+			);
 		}
 
 		return (
 			<div className='es-h-between es-w-full'>
-				<IconLabel icon={icons.idCard} label={label ? label : __('Name', 'eightshift-forms')} additionalClasses={classnames(!value && 'es-nested-color-red-500!')} standalone />
+				<RichLabel
+					icon={icons.idCard}
+					label={label ? label : __('Name', 'eightshift-forms')}
+					standalone
+				/>
 
-				<AnimatedContentVisibility showIf={!value}>
+				<AnimatedVisibility visible={!value}>
 					<Tooltip text={labelTipText}>
-						{
-							!isOptional ? 
-							<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span> :
+						{!isOptional ? (
+							<span className='es-color-pure-white es-bg-red-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Required', 'eightshift-forms')}</span>
+						) : (
 							<span className='es-color-pure-white es-bg-yellow-500 es-px-1.5 es-py-1 es-rounded-1 es-text-3 es-font-weight-500'>{__('Optional', 'eightshift-forms')}</span>
-						}
+						)}
 					</Tooltip>
-				</AnimatedContentVisibility>
+				</AnimatedVisibility>
 
-				{(!value && !isDisabled) &&
+				{!value && !isDisabled && (
 					<Button
 						className='es-rounded-1.5 es-border-cool-gray-300 es-hover-border-cool-gray-400 es-transition'
 						onClick={() => {
 							setIsChanged(true);
 
-							const valueName = type === 'resultOutputItem' ? utilsManifest.enums.successRedirectUrlKeys.variation : `${type}-${getUnique()}`;
+							const valueName = type === 'resultOutputItem' ? globalManifest.enums.successRedirectUrlKeys.variation : `${type}-${getUnique()}`;
 							setAttributes({ [attribute]: valueName });
 						}}
 					>
 						{type === 'resultOutputItem' ? __('Set name', 'eightshift-forms') : __('Generate name', 'eightshift-forms')}
 					</Button>
-				}
+				)}
 			</div>
 		);
 	};
@@ -458,9 +432,9 @@ export const NameField = ({
 
 	return (
 		<>
-			{show &&
+			{show && (
 				<>
-					<TextControl
+					<InputField
 						label={<NameFieldLabel />}
 						help={helpText}
 						value={value}
@@ -471,9 +445,12 @@ export const NameField = ({
 						disabled={isDisabled}
 					/>
 
-					<NameChangeWarning isChanged={isChanged} type={type} />
+					<NameChangeWarning
+						isChanged={isChanged}
+						type={type}
+					/>
 				</>
-			}
+			)}
 		</>
 	);
 };
@@ -492,7 +469,7 @@ export const preventSaveOnMissingProps = (blockClientId, key, value) => {
 		// Allows triggering this action only when the block is inserted in the editor.
 		if (select('core/block-editor').getBlock(blockClientId)) {
 			// Lock/unlock depending on the value.
-			(value === '') ? lockPostEditing(blockClientId, key) : unlockPostEditing(blockClientId, key);
+			value === '' ? lockPostEditing(blockClientId, key) : unlockPostEditing(blockClientId, key);
 		}
 
 		// Use this method to detect if the block has been deleted from the block editor.
@@ -510,10 +487,7 @@ export const preventSaveOnMissingProps = (blockClientId, key, value) => {
  *
  * @returns Component
  */
-export const NameChangeWarning = ({
-		isChanged = false,
-		type = 'default'
-	}) => {
+export const NameChangeWarning = ({ isChanged = false, type = 'default' }) => {
 	let text = '';
 
 	if (!isChanged) {
@@ -536,8 +510,8 @@ export const NameChangeWarning = ({
 	}
 
 	return (
-		<Notification
-			text={text}
+		<Notice
+			label={text}
 			type={'warning'}
 		/>
 	);
@@ -548,12 +522,10 @@ export const NameChangeWarning = ({
  *
  * @returns Component
  */
-export const FormEditButton = ({formId}) => {
+export const FormEditButton = ({ formId }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const {
-		editFormUrl,
-	} = select(STORE_NAME).getSettings();
+	const { editFormUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
@@ -571,15 +543,13 @@ export const FormEditButton = ({formId}) => {
  *
  * @returns Component
  */
-export const SettingsButton = ({formId}) => {
+export const SettingsButton = ({ formId }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 	const postId = select('core/editor').getCurrentPostId();
 
 	const id = formId ?? postId;
 
-	const {
-		settingsPageUrl,
-	} = select(STORE_NAME).getSettings();
+	const { settingsPageUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
@@ -600,9 +570,7 @@ export const SettingsButton = ({formId}) => {
 export const GlobalSettingsButton = () => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const {
-		globalSettingsPageUrl,
-	} = select(STORE_NAME).getSettings();
+	const { globalSettingsPageUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
@@ -620,15 +588,13 @@ export const GlobalSettingsButton = () => {
  *
  * @returns Component
  */
-export const LocationsButton = ({formId}) => {
+export const LocationsButton = ({ formId }) => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 	const postId = select('core/editor').getCurrentPostId();
 
 	const id = formId ?? postId;
 
-	const {
-		locationsPageUrl,
-	} = select(STORE_NAME).getSettings();
+	const { locationsPageUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
@@ -649,9 +615,7 @@ export const LocationsButton = ({formId}) => {
 export const DashboardButton = () => {
 	const wpAdminUrl = esFormsLocalization.wpAdminUrl;
 
-	const {
-		dashboardPageUrl,
-	} = select(STORE_NAME).getSettings();
+	const { dashboardPageUrl } = select(STORE_NAME).getSettings();
 
 	return (
 		<Button
@@ -664,21 +628,26 @@ export const DashboardButton = () => {
 	);
 };
 
+////////////////////////////////////////////////////////////////
+// Block editor only.
+////////////////////////////////////////////////////////////////
+
+/**
+ * Get utils icons, used in the block editor only.
+ *
+ * @returns {string}
+ */
+export const getUtilsIcons = (name) => {
+	return globalManifest?.icons?.[name];
+};
+
 /**
  * Returns output select item with icon.
  *
  * @returns object
  */
 export const outputFormSelectItemWithIcon = (props) => {
-	const {
-		label,
-		id,
-		metadata,
-	} = props;
-
-	if (!id) {
-		return '';
-	}
+	const { label, id, metadata } = props;
 
 	let outputLabel = unescapeHTML(label);
 	let icon = getUtilsIcons('post');
@@ -697,7 +666,7 @@ export const outputFormSelectItemWithIcon = (props) => {
 
 	return {
 		id,
-		label: <span dangerouslySetInnerHTML={{ __html: `<span class="es-display-inline-flex es-vertical-align-middle es-mr-2">${icon}</span>${outputLabel}`}} />,
+		label: outputLabel,
 		value: id,
 		metadata,
 	};

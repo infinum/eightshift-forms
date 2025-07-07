@@ -2,28 +2,17 @@ import React from 'react';
 import { select } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { TextControl, PanelBody, Button, TextareaControl } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
-import {
-	checkAttr,
-	getAttrKey,
-	icons,
-	IconLabel,
-	IconToggle,
-	Section,
-	props,
-	AnimatedContentVisibility,
-	STORE_NAME,
-} from '@eightshift/frontend-libs/scripts';
+import { checkAttr, getAttrKey, props, STORE_NAME } from '@eightshift/frontend-libs-tailwind/scripts';
 import { isOptionDisabled, NameField } from './../../utils';
 import { ConditionalTagsOptions } from '../../conditional-tags/components/conditional-tags-options';
+import { icons } from '@eightshift/ui-components/icons';
+import { AnimatedVisibility, InputField, RichLabel, Toggle, BaseControl, Button } from '@eightshift/ui-components';
 
 export const CheckboxOptions = (attributes) => {
 	const manifest = select(STORE_NAME).getComponent('checkbox');
 
-	const {
-		setAttributes,
-	} = attributes;
+	const { setAttributes } = attributes;
 
 	const [isNameChanged, setIsNameChanged] = useState(false);
 
@@ -39,8 +28,11 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxIsHidden = checkAttr('checkboxIsHidden', attributes, manifest);
 
 	return (
-		<PanelBody title={__('Checkbox', 'eightshift-forms')}>
-			<Section icon={icons.options} label={__('General', 'eightshift-forms')}>
+		<>
+			<BaseControl
+				icon={icons.options}
+				label={__('General', 'eightshift-forms')}
+			>
 				<NameField
 					value={checkboxValue}
 					attribute={getAttrKey('checkboxValue', attributes, manifest)}
@@ -51,31 +43,41 @@ export const CheckboxOptions = (attributes) => {
 					isChanged={isNameChanged}
 					setIsChanged={setIsNameChanged}
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section icon={icons.tag} label={__('Label', 'eightshift-forms')}>
-				<IconToggle
+			<BaseControl
+				icon={icons.tag}
+				label={__('Label', 'eightshift-forms')}
+			>
+				<Toggle
 					label={__('Use label', 'eightshift-forms')}
 					checked={!checkboxHideLabelText}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxHideLabelText', attributes, manifest)]: !value })}
 					reducedBottomSpacing
 				/>
 
-				{!checkboxHideLabelText &&
-					<TextareaControl
+				{!checkboxHideLabelText && (
+					<InputField
+						type={'multiline'}
 						value={checkboxLabel}
 						onChange={(value) => setAttributes({ [getAttrKey('checkboxLabel', attributes, manifest)]: value })}
 						disabled={isOptionDisabled(getAttrKey('checkboxLabel', attributes, manifest), checkboxDisabledOptions)}
 					/>
-				}
+				)}
 
-				<AnimatedContentVisibility showIf={checkboxHideLabelText}>
-					<IconLabel label={__('Might impact accessibility', 'eightshift-forms')} icon={icons.a11yWarning} additionalClasses='es-nested-color-yellow-500! es-line-h-1 es-color-cool-gray-500 es-mb-5' standalone />
-				</AnimatedContentVisibility>
-			</Section>
+				<AnimatedVisibility visible={checkboxHideLabelText}>
+					<RichLabel
+						label={__('Might impact accessibility', 'eightshift-forms')}
+						icon={icons.a11yWarning}
+					/>
+				</AnimatedVisibility>
+			</BaseControl>
 
-			<Section icon={icons.tools} label={__('Advanced', 'eightshift-forms')}>
-				<IconToggle
+			<BaseControl
+				icon={icons.tools}
+				label={__('Advanced', 'eightshift-forms')}
+			>
+				<Toggle
 					icon={icons.checkSquare}
 					label={__('Checked', 'eightshift-forms')}
 					checked={checkboxIsChecked}
@@ -83,7 +85,7 @@ export const CheckboxOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('checkboxIsChecked', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.readOnly}
 					label={__('Read-only', 'eightshift-forms')}
 					checked={checkboxIsReadOnly}
@@ -91,7 +93,7 @@ export const CheckboxOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('checkboxIsReadOnly', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.cursorDisabled}
 					label={__('Disabled', 'eightshift-forms')}
 					checked={checkboxIsDisabled}
@@ -99,24 +101,26 @@ export const CheckboxOptions = (attributes) => {
 					disabled={isOptionDisabled(getAttrKey('checkboxIsDisabled', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
-				<IconToggle
+				<Toggle
 					icon={icons.hide}
 					label={__('Hidden', 'eightshift-forms')}
 					checked={checkboxIsHidden}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsHidden', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('checkboxIsHidden', attributes, manifest), checkboxDisabledOptions)}
-					noBottomSpacing
 				/>
-			</Section>
+			</BaseControl>
 
-			<Section
+			<BaseControl
 				icon={icons.image}
 				label={__('Field icon', 'eightshift-forms')}
 				collapsable
 			>
-				{checkboxIcon ? 
+				{checkboxIcon ? (
 					<>
-						<img src={checkboxIcon} alt='' />
+						<img
+							src={checkboxIcon}
+							alt=''
+						/>
 						<Button
 							onClick={() => {
 								setAttributes({ [getAttrKey('checkboxIcon', attributes, manifest)]: undefined });
@@ -124,25 +128,31 @@ export const CheckboxOptions = (attributes) => {
 							icon={icons.trash}
 							className='es-button-icon-24 es-button-square-28 es-rounded-1 es-hover-color-red-500 es-nested-color-current es-transition-colors'
 						/>
-					</> :
+					</>
+				) : (
 					<MediaPlaceholder
 						accept={'image/*'}
-						multiple = {false}
+						multiple={false}
 						allowedTypes={['image']}
 						onSelect={({ url }) => setAttributes({ [getAttrKey('checkboxIcon', attributes, manifest)]: url })}
 					/>
-				}
-			</Section>
+				)}
+			</BaseControl>
 
-			<Section icon={icons.alignHorizontalVertical} label={__('Tracking', 'eightshift-forms')} collapsable>
-				<TextControl
-					label={<IconLabel icon={icons.googleTagManager} label={__('GTM tracking code', 'eightshift-forms')} />}
+			<BaseControl
+				icon={icons.alignHorizontalVertical}
+				label={__('Tracking', 'eightshift-forms')}
+				collapsable
+			>
+				<InputField
+					icon={icons.googleTagManager}
+					label={__('GTM tracking code', 'eightshift-forms')}
 					value={checkboxTracking}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxTracking', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('checkboxTracking', attributes, manifest), checkboxDisabledOptions)}
 					className='es-no-field-spacing'
 				/>
-			</Section>
+			</BaseControl>
 
 			<ConditionalTagsOptions
 				{...props('conditionalTags', attributes, {
@@ -150,6 +160,6 @@ export const CheckboxOptions = (attributes) => {
 					conditionalTagsIsHidden: checkboxIsHidden,
 				})}
 			/>
-		</PanelBody>
+		</>
 	);
 };

@@ -1,15 +1,13 @@
 {
-	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs-tailwind/main/schemas/block.json",
 	"blockName": "calculator",
 	"title": "Calculator form",
-	"description" : "A form with calculator",
+	"description": "A form with calculator",
 	"category": "eightshift-forms",
 	"icon": {
 		"src": "esf-form"
 	},
-	"keywords": [
-		"calculator"
-	],
+	"keywords": ["calculator"],
 	"hasInnerBlocks": true,
 	"supports": {
 		"inserter": false

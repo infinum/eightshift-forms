@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [6.9.0]
+
+### Changed
+
+- Updated dependencies to the latest version.
+- Bundle flow to prebuild cache.
+- Fixing all migration issues.
+
 ## [6.8.1]
 
 ### Added
@@ -1142,7 +1150,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - filter for setting http request from `httpRequestArgs ` to `httpRequestTimeout` because it is used only to set timeout.
 - Greenhouse integration from `wp_remote_post ` to regular `Curl` because of the issues while sending the attachments. You are now only limited on the amount of memory your server can send.
 - form will now throw an error if form-ID or type is missing in the request.
-- all remote requests are now outputed via helper for easier and more predictable output.
+- all remote requests are now outputted via helper for easier and more predictable output.
 - converting from internal geolocation logic to libs abstract class logic.
 - updating libs.
 - `ES_GEOLOCAITON` global constant to `ES_GEOLOCAITON_IP`.
@@ -1270,6 +1278,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[6.9.0]: https://github.com/infinum/eightshift-forms/compare/6.8.1...6.9.0
 [6.8.1]: https://github.com/infinum/eightshift-forms/compare/6.8.0...6.8.1
 [6.8.0]: https://github.com/infinum/eightshift-forms/compare/6.7.4...6.8.0
 [6.7.4]: https://github.com/infinum/eightshift-forms/compare/6.7.3...6.7.4

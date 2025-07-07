@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Captcha
+ * The class register route for public form submitting endpoint - Captcha
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -12,16 +12,15 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\DeveloperHelpers;
 use Throwable;
 use WP_REST_Request;
 
 /**
  * Class SubmitCaptchaRoute
  */
-class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
+class SubmitCaptchaRoute extends AbstractBaseRoute
 {
 	/**
 	 * Route slug.
@@ -82,9 +81,9 @@ class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 		];
 
 		// Bailout if troubleshooting skip captcha is on.
-		if (UtilsDeveloperHelper::isDeveloperSkipCaptchaActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
+				ApiHelpers::getApiSuccessPublicOutput(
 					$this->labels->getLabel('captchaSkipCheck'),
 					[],
 					$debug
@@ -104,13 +103,13 @@ class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('captchaBadRequest'),
 					[],
 					\array_merge(
 						$debug,
 						[
-							'exeption' => $t,
+							'exception' => $t,
 						]
 					)
 				)

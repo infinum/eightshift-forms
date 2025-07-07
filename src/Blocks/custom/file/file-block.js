@@ -1,15 +1,14 @@
 import React from 'react';
-import { InspectorControls } from '@wordpress/block-editor';
+import { GutenbergBlock } from '@eightshift/frontend-libs-tailwind/scripts';
 import { FileEditor } from './components/file-editor';
 import { FileOptions } from './components/file-options';
 
 export const File = (props) => {
 	return (
-		<>
-			<InspectorControls>
-				<FileOptions {...props} />
-			</InspectorControls>
-			<FileEditor {...props} />
-		</>
+		<GutenbergBlock
+			{...props}
+			options={FileOptions}
+			editor={FileEditor}
+		/>
 	);
 };

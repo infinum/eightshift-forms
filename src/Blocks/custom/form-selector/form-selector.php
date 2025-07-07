@@ -6,9 +6,9 @@
  * @package EightshiftForms
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 
 // Add custom additional content filter.
-echo UtilsGeneralHelper::getBlockAdditionalContentViaFilter('formSelector', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+echo GeneralHelpers::getBlockAdditionalContentViaFilter('formSelector', $attributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 
 echo $renderContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
