@@ -1349,14 +1349,14 @@ export class Form {
 	setupTextareaField(formId, name) {
 		const input = this.state.getStateElementInput(name, formId);
 
-		// import('autosize').then((autosize) => {
-		// 	input.setAttribute('rows', '1');
-		// 	input.setAttribute('cols', '');
+		import('autosize').then((autosize) => {
+			input.setAttribute('rows', '1');
+			input.setAttribute('cols', '');
 
-		// 	this.state.setStateElementCustom(name, autosize?.default, formId);
+			this.state.setStateElementCustom(name, autosize?.default, formId);
 
-		// 	autosize.default(input);
-		// });
+			autosize.default(input);
+		});
 
 		this.state.setStateElementLoaded(name, true, formId);
 

@@ -199,76 +199,76 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 	);
 
 	?>
-	<!-- <div class="<?php echo esc_attr($innerClass); ?>"> -->
-	<?php if ($fieldLabel && !$fieldHideLabel) { ?>
-		<<?php echo esc_attr($labelTag); ?>
-			class="<?php echo esc_attr($labelClass); ?>"
-			<?php
-			echo Helpers::getAttrsOutput($fieldAttrsLabel); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-			?>>
-			<span class="<?php echo esc_attr($labelInnerClass); ?>">
-				<?php echo wp_kses_post($fieldLabel); ?>
-
+	<div class="<?php echo esc_attr($innerClass); ?>">
+		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
+			<<?php echo esc_attr($labelTag); ?>
+				class="<?php echo esc_attr($labelClass); ?>"
 				<?php
-				if ($fieldUseTooltip) {
-					echo Helpers::render(
-						'tooltip',
-						Helpers::props('tooltip', $attributes, [
-							'selectorClass' => $componentClass
-						])
-					);
-				}
-				?>
-			</span>
-		</<?php echo esc_attr($labelTag); ?>>
-	<?php } ?>
-	<div class="<?php echo esc_attr($contentClass); ?>">
-		<?php if ($fieldBeforeContent) { ?>
-			<div class="<?php echo esc_attr($beforeContentClass); ?>">
-				<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-				?>
-			</div>
-		<?php } ?>
-		<div class="<?php echo esc_attr($contentWrapClass); ?>">
-			<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-			?>
+				echo Helpers::getAttrsOutput($fieldAttrsLabel); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				?>>
+				<span class="<?php echo esc_attr($labelInnerClass); ?>">
+					<?php echo wp_kses_post($fieldLabel); ?>
 
-			<?php if ($fieldSuffixContent) { ?>
-				<div class="<?php echo esc_attr($suffixContentClass); ?>">
-					<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+					<?php
+					if ($fieldUseTooltip) {
+						echo Helpers::render(
+							'tooltip',
+							Helpers::props('tooltip', $attributes, [
+								'selectorClass' => $componentClass
+							])
+						);
+					}
+					?>
+				</span>
+			</<?php echo esc_attr($labelTag); ?>>
+		<?php } ?>
+		<div class="<?php echo esc_attr($contentClass); ?>">
+			<?php if ($fieldBeforeContent) { ?>
+				<div class="<?php echo esc_attr($beforeContentClass); ?>">
+					<?php echo $fieldBeforeContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+					?>
+				</div>
+			<?php } ?>
+			<div class="<?php echo esc_attr($contentWrapClass); ?>">
+				<?php echo $fieldContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				?>
+
+				<?php if ($fieldSuffixContent) { ?>
+					<div class="<?php echo esc_attr($suffixContentClass); ?>">
+						<?php echo $fieldSuffixContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+						?>
+					</div>
+				<?php } ?>
+			</div>
+			<?php if ($fieldAfterContent) { ?>
+				<div class="<?php echo esc_attr($afterContentClass); ?>">
+					<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 					?>
 				</div>
 			<?php } ?>
 		</div>
-		<?php if ($fieldAfterContent) { ?>
-			<div class="<?php echo esc_attr($afterContentClass); ?>">
-				<?php echo $fieldAfterContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+		<?php if ($fieldHelp) { ?>
+			<div class="<?php echo esc_attr($helpClass); ?>">
+				<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 				?>
 			</div>
 		<?php } ?>
-	</div>
-	<?php if ($fieldHelp) { ?>
-		<div class="<?php echo esc_attr($helpClass); ?>">
-			<?php echo $fieldHelp; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
-			?>
-		</div>
-	<?php } ?>
-	<?php
-	if ($fieldUseError) {
-		echo Helpers::render(
-			'error',
-			Helpers::props('error', $attributes, [
-				'errorId' => $fieldId,
-				'selectorClass' => $componentClass,
-				'additionalClass' => Helpers::classnames([
-					FormsHelper::getTwPart($twClasses, 'field', 'error'),
-					FormsHelper::getTwPart($twClasses, $selectorClass, 'field-error'),
+		<?php
+		if ($fieldUseError) {
+			echo Helpers::render(
+				'error',
+				Helpers::props('error', $attributes, [
+					'errorId' => $fieldId,
+					'selectorClass' => $componentClass,
+					'additionalClass' => Helpers::classnames([
+						FormsHelper::getTwPart($twClasses, 'field', 'error'),
+						FormsHelper::getTwPart($twClasses, $selectorClass, 'field-error'),
+					]),
 				]),
-			]),
-		);
-	}
-	?>
-	<!-- </div> -->
+			);
+		}
+		?>
+	</div>
 
 	<?php echo $additionalContent; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>
