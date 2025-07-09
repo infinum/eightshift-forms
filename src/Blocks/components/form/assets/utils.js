@@ -225,8 +225,6 @@ export class Utils {
 			return;
 		}
 
-		console.log(this.state.getStateElementInput(name, formId));
-
 		const input = this.state.getStateElementInput(name, formId);
 
 		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelector('hasError'));

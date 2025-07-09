@@ -518,8 +518,6 @@ export class Enrichment {
 	onUrlParamsPrefillEvent = (event) => {
 		const { formId } = event.detail;
 
-		console.log(window.location.search);
-
 		// Bailout if nothing is set in the url.
 		if (!window.location.search) {
 			return;
@@ -529,8 +527,6 @@ export class Enrichment {
 		const searchParams = new URLSearchParams(window.location.search);
 
 		let params = searchParams.get(`form-${this.state.getStateFormFid(formId)}`);
-
-		console.log(params);
 
 		if (!params) {
 			return;
