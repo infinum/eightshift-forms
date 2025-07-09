@@ -1764,7 +1764,7 @@ export class Form {
 
 		this.state.setState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], event.target, formId);
 
-		const options = [...custom?.passedElement?.element?.selectedOptions].map((option) => option?.value);
+		const options = [...custom?.passedElement?.element?.selectedOptions].map((option) => option?.value).filter((option) => option !== '');
 
 		switch (this.state.getStateElementTypeField(name, formId)) {
 			case 'phone':

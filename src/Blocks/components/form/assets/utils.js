@@ -597,6 +597,7 @@ export class Utils {
 					break;
 				case 'country':
 					this.setManualCountryValue(formId, name, initial);
+
 					break;
 				case 'select':
 					this.setManualSelectValue(formId, name, initial);
@@ -953,7 +954,11 @@ export class Utils {
 				const custom = this.state.getStateElementCustom(name, formId);
 
 				if (custom) {
-					custom.setChoiceByValue(value?.prefix);
+					if (value?.prefix) {
+						custom.setChoiceByValue(value?.prefix);
+					} else {
+						custom.removeActiveItems();
+					}
 				}
 			}
 

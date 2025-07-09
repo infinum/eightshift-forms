@@ -85,7 +85,7 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['phone']['dataset'];
 	}
 
-	$preselectedValue = $settings['phone']['preselectedValue'] ?: $phoneSelectValue; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	$preselectedValue = strtolower($settings['phone']['preselectedValue'] ?: $phoneSelectValue); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
@@ -94,13 +94,13 @@ if (has_filter($filterName)) {
 
 		switch ($phoneViewType) {
 			case 'number-country-code':
-				$value = "+{$value} (" . strtoupper($code) . ")";
+				$optionLabel = "+{$value} (" . strtoupper($code) . ")";
 				break;
 			case 'number-country-label':
-				$value = "(+{$value}) {$label}";
+				$optionLabel = "(+{$value}) {$label}";
 				break;
 			default:
-				$value = "+{$value}";
+				$optionLabel = "+{$value}";
 				break;
 		}
 
@@ -119,7 +119,7 @@ if (has_filter($filterName)) {
 				value="' . $value . '"
 				' .  Helpers::getAttrsOutput($optionAttrs) . '
 				' . selected($code, $preselectedValue, false) . '
-			>' . $value . '</option>';
+			>' . $optionLabel . '</option>';
 	}
 }
 

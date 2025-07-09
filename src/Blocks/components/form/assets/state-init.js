@@ -398,10 +398,7 @@ export function setStateFormInitial(formId) {
 				break;
 			case 'select-one':
 			case 'select-multiple':
-				const selectedValues = [...item.options]
-					.filter((option) => option?.selected)
-					.map((option) => option?.value)
-					.filter((option) => option.value);
+				const selectedValues = [...item.selectedOptions].map((option) => option?.value).filter((option) => option !== '');
 
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], selectedValues, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], selectedValues, formId);
