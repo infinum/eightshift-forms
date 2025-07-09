@@ -338,7 +338,7 @@ export function setStateFormInitial(formId) {
 	// Conditional tags
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
-	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(formElement?.getAttribute(getStateAttribute('conditionalTags')) ?? '{}'), formId);
+	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(simpleDecode(formElement?.getAttribute(getStateAttribute('conditionalTags')) ?? '{}')), formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_HIDE], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_SHOW], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_CT], {}, formId);
@@ -400,12 +400,7 @@ export function setStateFormInitial(formId) {
 			case 'select-multiple':
 				const selectedValues = [...item.options]
 					.filter((option) => option?.selected)
-					.map((option) => {
-						return {
-							value: option?.value,
-							meta: JSON.parse(option?.getAttribute(getStateAttribute('selectCustomProperties'))),
-						};
-					})
+					.map((option) => option?.value)
 					.filter((option) => option.value);
 
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], selectedValues, formId);
@@ -423,9 +418,8 @@ export function setStateFormInitial(formId) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], { value: value }, formId);
 				} else {
 					const newPhoneValue = {
-						prefix: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.value ?? '',
+						prefix: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0] ?? '',
 						value: value,
-						meta: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.meta ?? {},
 					};
 
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], newPhoneValue, formId);
@@ -495,6 +489,12 @@ export function setStateFormInitial(formId) {
 
 		if (type === 'radio' || type === 'checkbox') {
 			setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
+		}
+
+		if (type === 'select-one' || type === 'select-multiple') {
+			[...item?.options]?.map((option) => {
+				setStateConditionalTagsItems(option.getAttribute(getStateAttribute('conditionalTags')), name, option.value, formId);
+			});
 		}
 
 		// Conditional tags.
@@ -614,7 +614,7 @@ export function setStateValues(name, value, formId) {
  * @returns {void}
  */
 export function setStateConditionalTags(field, name, isNoneFormBlock = false, formId) {
-	const conditionalTags = field.getAttribute(getStateAttribute('conditionalTags'));
+	const conditionalTags = field?.getAttribute(getStateAttribute('conditionalTags'));
 
 	const parentStorage = isNoneFormBlock ? StateEnum.ELEMENTS_FIELDS : StateEnum.ELEMENTS;
 
@@ -626,7 +626,7 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 		return;
 	}
 
-	const tag = JSON.parse(conditionalTags)?.[0];
+	const tag = JSON.parse(simpleDecode(conditionalTags));
 
 	// Check if fields exist and remove conditional tags if not.
 	// This can happend if the user deletes a field and the conditional tag is still there on other field.
@@ -673,7 +673,7 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 		return;
 	}
 
-	const tag = JSON.parse(conditionalTags)?.[0];
+	const tag = JSON.parse(simpleDecode(conditionalTags));
 
 	// Check if fields exist and remove conditional tags if not.
 	// This can happend if the user deletes a field and the conditional tag is still there on other field.
@@ -973,6 +973,22 @@ export function getRestUrlByType(type, value, isPartial = false, checkRef = fals
 	const typePrefix = ROUTES?.[type].replace(/^\/|\/$/g, ''); // Remove leading and trailing slash.
 
 	return `${url}/${typePrefix}/${sufix}`;
+}
+
+/**
+ * Simple decode.
+ *
+ * @param {string} str String to decode.
+ *
+ * @returns {string}
+ */
+export function simpleDecode(str) {
+	return str
+		.replace(/&quot;/g, '"')
+		.replace(/&apos;/g, "'")
+		.replace(/&amp;/g, '&')
+		.replace(/&lt;/g, '<')
+		.replace(/&gt;/g, '>');
 }
 
 ////////////////////////////////////////////////////////////////

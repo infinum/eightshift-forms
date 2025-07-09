@@ -391,10 +391,9 @@ export class Utils {
 						}
 					}
 					break;
-				case 'select':
-				case 'country':
-					output[trackingName] = value?.map((item) => item.value);
-					break;
+				// case 'select':
+				// case 'country':
+				// 	output[trackingName] = value?.map((item) => item.value);
 				case 'file':
 					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? [];
 					output[trackingName] = fileList?.map((file) => file?.upload?.uuid);
@@ -943,6 +942,11 @@ export class Utils {
 			return;
 		}
 
+		const newValue = {
+			prefix: value?.prefix,
+			value: value?.value,
+		};
+
 		// For manual setting.
 		if (set) {
 			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
@@ -960,14 +964,74 @@ export class Utils {
 			}
 		}
 
-		setStateValues(name, value, formId);
+		setStateValues(name, newValue, formId);
 		this.setFieldFilledState(formId, name);
 
 		this.enrichment.setLocalStorageFormPrefillField(formId, name);
 
 		this.conditionalTags.setField(formId, name);
 
-		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, newValue);
+	}
+
+	/**
+	 * Set manual field value - Phone by attribute value.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {string} value Field value.
+	 * @param {string} attribute Attribute name.
+	 * @param {bool} set Set value.
+	 *
+	 * Expected value format:
+	 * {
+	 *  prefix: 'hr',
+	 *  value: '1234567890'
+	 * }
+	 *
+	 * @returns {void}
+	 */
+	setManualPhoneByAttributeValue(formId, name, value, attribute, set = true) {
+		if (typeof value !== 'object') {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
+		const newValue = {
+			prefix: value?.prefix ?? '',
+			value: value?.value ?? '',
+		};
+
+		// For manual setting.
+		if (set) {
+			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
+				const custom = this.state.getStateElementCustom(name, formId);
+
+				const options = custom?.passedElement?.element?.options;
+
+				if (options) {
+					const option = [...options].find((option) => option.getAttribute(attribute) === value);
+
+					if (option) {
+						custom.setChoiceByValue(option.value);
+
+						newValue.prefix = option.value;
+					}
+				}
+			}
+		}
+
+		setStateValues(name, newValue, formId);
+		this.setFieldFilledState(formId, name);
+
+		this.enrichment.setLocalStorageFormPrefillField(formId, name);
+
+		this.conditionalTags.setField(formId, name);
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, newValue);
 	}
 
 	/**
@@ -1022,10 +1086,7 @@ export class Utils {
 	 * @param {bool} set Set value.
 	 *
 	 * Expected value format:
-	 * [
-	 *  { value: '1' },
-	 *  { value: '2' },
-	 * ]
+	 * ['option-1', 'option-2']
 	 *
 	 * @returns {void}
 	 */
@@ -1044,7 +1105,7 @@ export class Utils {
 
 			if (custom) {
 				if (value.length) {
-					custom.setChoiceByValue(value?.map((item) => item.value));
+					custom.setChoiceByValue(value);
 				} else {
 					custom.removeActiveItems();
 				}
@@ -1063,6 +1124,68 @@ export class Utils {
 	}
 
 	/**
+	 * Set manual field value - Select by attribute value.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {array} value Field value.
+	 * @param {string} attribute Attribute name.
+	 * @param {bool} set Set value.
+	 *
+	 * Expected value format:
+	 * ['hr', 'de']
+	 *
+	 * @returns {void}
+	 */
+	setManualSelectByAttributeValue(formId, name, value, attribute, set = true) {
+		if (!Array.isArray(value)) {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
+		let newValue = value;
+
+		// For manual setting.
+		if (set) {
+			const custom = this.state.getStateElementCustom(name, formId);
+
+			const options = custom?.passedElement?.element?.options;
+
+			if (options) {
+				let output = [];
+
+				value.forEach((item) => {
+					const option = [...options].find((option) => option.getAttribute(attribute) === item);
+
+					if (option) {
+						output.push(option.value);
+					}
+				});
+
+				if (output.length) {
+					custom.setChoiceByValue(output);
+					newValue = output;
+				} else {
+					custom.removeActiveItems();
+				}
+			}
+		}
+
+		setStateValues(name, newValue, formId);
+
+		this.setFieldFilledState(formId, name);
+
+		this.enrichment.setLocalStorageFormPrefillField(formId, name);
+
+		this.conditionalTags.setField(formId, name);
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, newValue);
+	}
+
+	/**
 	 * Set manual field value - Country.
 	 *
 	 * @param {string} formId Form Id.
@@ -1071,10 +1194,7 @@ export class Utils {
 	 * @param {bool} set Set value.
 	 *
 	 * Expected value format:
-	 * [
-	 *  { value: 'hr' },
-	 *  { value: 'de' },
-	 * ]
+	 * ['hr', 'de']
 	 *
 	 * @returns {void}
 	 */
@@ -1455,9 +1575,9 @@ export class Utils {
 			[globalManifest.comparator.CN]: (start, value) => !start.includes(value),
 			[globalManifest.comparator.SW]: (start, value) => start.startsWith(value),
 			[globalManifest.comparator.EW]: (start, value) => start.endsWith(value),
-			[globalManifest.comparatorExtended.B]: (start, value, end) => parseFloat(String(start)) < parseFloat(String(value)) && parseFloat(String(value)) < parseFloat(String(end)),
-			[globalManifest.comparatorExtended.BS]: (start, value, end) => parseFloat(String(start)) <= parseFloat(String(value)) && parseFloat(String(value)) <= parseFloat(String(end)),
-			[globalManifest.comparatorExtended.BN]: (start, value, end) => parseFloat(String(start)) < parseFloat(String(value)) || parseFloat(String(value)) > parseFloat(String(end)),
+			[globalManifest.comparatorExtended.B]: (start, value, end) => parseFloat(String(start)) < parseFloat(String(value)) && parseFloat(String(value)) < parseFloat(String(end)), // eslint-disable-line max-len
+			[globalManifest.comparatorExtended.BS]: (start, value, end) => parseFloat(String(start)) <= parseFloat(String(value)) && parseFloat(String(value)) <= parseFloat(String(end)), // eslint-disable-line max-len
+			[globalManifest.comparatorExtended.BN]: (start, value, end) => parseFloat(String(start)) < parseFloat(String(value)) || parseFloat(String(value)) > parseFloat(String(end)), // eslint-disable-line max-len
 			[globalManifest.comparatorExtended.BNS]: (start, value, end) =>
 				parseFloat(String(start)) <= parseFloat(String(value)) || parseFloat(String(value)) >= parseFloat(String(end)),
 		};

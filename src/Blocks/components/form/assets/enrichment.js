@@ -390,9 +390,7 @@ export class Enrichment {
 						break;
 					}
 
-					const newSelectValue = selectValue.map((item) => ({ value: item }));
-
-					this.utils.setManualSelectValue(formId, name, newSelectValue);
+					this.utils.setManualSelectValue(formId, name, selectValue);
 					break;
 				case 'checkbox':
 					const checkboxValue = value.split('---');

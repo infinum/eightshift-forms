@@ -124,10 +124,14 @@ if (has_filter($filterName)) {
 			UtilsHelper::getStateAttribute('selectCountryNumber') => $value,
 		];
 
+		$optionAttrs = array_merge([
+			UtilsHelper::getStateAttribute('selectCustomProperties') => wp_json_encode($customProperties),
+		], $customProperties);
+
 		$options[] = '
 			<option
 				value="' . $optionValue . '"
-				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
+				' .  Helpers::getAttrsOutput($optionAttrs) . '
 				' . selected($optionValue, $preselectedValue, false) . '
 			>' . $label . '</option>';
 	}

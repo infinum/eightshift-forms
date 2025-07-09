@@ -71,15 +71,18 @@ for ($i = 1; $i < $ratingAmount + 1; $i++) {
 			type="radio"
 			name="' . esc_attr($ratingName) . '"
 			id="' . esc_attr($ratingId . $i) . '"
-			value="' . esc_attr($i) . '"
+			value="' . $i . '"
 			' . disabled($ratingIsDisabled, true, false) . '
 			' . checked($ratingValue, $i, false) . '
 		/>';
 
+	// translators: %s is the star rating number.
+	$ariaLabel = sprintf(__('Star rating %s', 'eightshift-forms'), $i);
+
 	$stars .= '
 		<label
 			for="' . esc_attr($ratingId . $i) . '"
-			aria-label="' . esc_attr(sprintf(__('Star rating %s', 'eightshift-forms'), $i)) . '"
+			aria-label="' . esc_attr($ariaLabel) . '"
 		>
 		' . apply_filters($iconFilterName, UtilsHelper::getUtilsIcons('rating'), $attributes) . '
 		</label>

@@ -2,7 +2,7 @@
 
 import { cookies, debounce } from '@eightshift/frontend-libs/scripts/helpers';
 import selectManifest from './../../select/manifest.json';
-import { StateEnum, prefix, setStateFormInitial, setStateWindow, removeStateForm, setStateConditionalTagsItems } from './state-init';
+import { StateEnum, prefix, setStateFormInitial, setStateWindow, removeStateForm } from './state-init';
 
 /**
  * Main Forms class.
@@ -713,16 +713,6 @@ export class Form {
 
 					this.FORM_DATA.append(name, JSON.stringify(data));
 					break;
-				case 'select':
-				case 'country':
-					if (disabled) {
-						break;
-					}
-
-					data.value = data.value.map((item) => item.value);
-
-					this.FORM_DATA.append(name, JSON.stringify(data));
-					break;
 				case 'phone':
 					if (disabled) {
 						break;
@@ -1236,108 +1226,82 @@ export class Form {
 		const typeInternal = this.state.getStateElementTypeField(name, formId);
 
 		if (typeInternal === 'phone') {
-			// input = this.state.getStateElementInputSelect(name, formId);
+			input = this.state.getStateElementInputSelect(name, formId);
 		}
 
-		// import('choices.js').then((Choices) => {
-		// 	const state = this.state;
+		import('choices.js').then((Choices) => {
+			const customProperties = [
+				this.state.getStateAttribute('selectCountryCode'),
+				this.state.getStateAttribute('selectCountryLabel'),
+				this.state.getStateAttribute('selectCountryNumber'),
+				this.state.getStateAttribute('conditionalTags'),
+				this.state.getStateAttribute('selectOptionIsHidden'),
+			];
 
-		// 	const customProperties = [
-		// 		this.state.getStateAttribute('selectCountryCode'),
-		// 		this.state.getStateAttribute('selectCountryLabel'),
-		// 		this.state.getStateAttribute('selectCountryNumber'),
-		// 		this.state.getStateAttribute('conditionalTags'),
-		// 		this.state.getStateAttribute('selectOptionIsHidden'),
-		// 	];
+			const choices = new Choices.default(input, {
+				searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
+				shouldSort: false,
+				position: 'bottom',
+				allowHTML: true,
+				searchResultLimit: 50,
+				removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
+				duplicateItemsAllowed: false,
+				searchFields: [
+					'label',
+					'value',
+					`customProperties.${this.state.getStateAttribute('selectCountryCode')}`,
+					`customProperties.${this.state.getStateAttribute('selectCountryLabel')}`,
+					`customProperties.${this.state.getStateAttribute('selectCountryNumber')}`,
+				],
+				itemSelectText: '',
+				classNames: {
+					containerOuter: ['choices', `${selectManifest.componentClass}`],
+				},
+				callbackOnCreateTemplates: function () {
+					return {
+						// Dropdown items.
+						choice: (...args) => {
+							const element = Choices.default.defaults.templates.choice.call(this, ...args);
 
-		// 	const choices = new Choices.default(input, {
-		// 		searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
-		// 		shouldSort: false,
-		// 		position: 'bottom',
-		// 		allowHTML: true,
-		// 		searchResultLimit: 50,
-		// 		removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
-		// 		duplicateItemsAllowed: false,
-		// 		searchFields: [
-		// 			'label',
-		// 			'value',
-		// 			`customProperties.${this.state.getStateAttribute('selectCountryCode')}`,
-		// 			`customProperties.${this.state.getStateAttribute('selectCountryLabel')}`,
-		// 			`customProperties.${this.state.getStateAttribute('selectCountryNumber')}`,
-		// 		],
-		// 		itemSelectText: '',
-		// 		classNames: {
-		// 			containerOuter: `choices ${selectManifest.componentClass}`,
-		// 		},
-		// 		callbackOnCreateTemplates: function () {
-		// 			return {
-		// 				// Fake select option.
-		// 				option: (...args) => {
-		// 					const element = Choices.default.defaults.templates.option.call(this, ...args);
-		// 					const properties = args?.[0]?.customProperties;
+							customProperties.forEach((property) => {
+								const attr = args?.[1]?.element?.getAttribute(property);
 
-		// 					if (properties) {
-		// 						element.setAttribute(state.getStateAttribute('selectCustomProperties'), JSON.stringify(properties));
-		// 					}
+								if (attr) {
+									element.setAttribute(property, attr);
+								}
+							});
 
-		// 					return element;
-		// 				},
-		// 				// Dropdown items.
-		// 				choice: (...args) => {
-		// 					const element = Choices.default.defaults.templates.choice.call(this, ...args);
-		// 					const properties = !state.getStateElementLoaded(name, formId) ? args?.[1]?.customProperties : this.config?.choices[args?.[1]?.id - 1]?.customProperties;
+							return element;
+						},
+						// Selected item.
+						item: (...args) => {
+							const element = Choices.default.defaults.templates.item.call(this, ...args);
 
-		// 					if (properties) {
-		// 						customProperties.forEach((property) => {
-		// 							const check = properties?.[property];
+							customProperties.forEach((property) => {
+								const attr = args?.[1]?.element?.getAttribute(property);
 
-		// 							if (check) {
-		// 								element.setAttribute(property, check);
-		// 							}
-		// 						});
-		// 					}
+								if (attr) {
+									element.setAttribute(property, attr);
+								}
+							});
 
-		// 					return element;
-		// 				},
-		// 				// Selected item.
-		// 				item: (...args) => {
-		// 					const element = Choices.default.defaults.templates.item.call(this, ...args);
-		// 					const properties = args?.[1]?.customProperties;
+							return element;
+						},
+					};
+				},
+			});
 
-		// 					if (properties) {
-		// 						customProperties.forEach((property) => {
-		// 							const check = properties?.[property];
+			this.state.setStateElementLoaded(name, true, formId);
+			this.state.setStateElementCustom(name, choices, formId);
 
-		// 							if (check) {
-		// 								element.setAttribute(property, check);
-		// 							}
-		// 						});
-		// 					}
+			this.utils.setFieldFilledState(formId, name);
 
-		// 					return element;
-		// 				},
-		// 			};
-		// 		},
-		// 	});
-
-		// 	this.state.setStateElementLoaded(name, true, formId);
-		// 	this.state.setStateElementCustom(name, choices, formId);
-
-		// 	choices.config.choices.map((item) => {
-		// 		setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
-		// 	});
-
-		// 	this.utils.setFieldFilledState(formId, name);
-
-		// 	choices?.passedElement?.element.addEventListener('showDropdown', this.onFocusEvent);
-		// 	choices?.passedElement?.element.addEventListener('hideDropdown', this.onBlurEvent);
-		// 	choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
-		// 	choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
-		// 	choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
-		// });
-
-		//TMP
-		this.state.setStateElementLoaded(name, true, formId);
+			choices?.passedElement?.element.addEventListener('showDropdown', this.onFocusEvent);
+			choices?.passedElement?.element.addEventListener('hideDropdown', this.onBlurEvent);
+			choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
+			choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
+			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
+		});
 	}
 
 	/**
@@ -1796,18 +1760,11 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		const custom = this.state.getStateElementCustom(name, formId);
 
 		this.state.setState([StateEnum.ELEMENTS, name, StateEnum.INPUT_SELECT], event.target, formId);
 
-		const options =
-			event.detail.value !== ''
-				? [...event.target.options].map((option) => {
-						return {
-							value: option?.value,
-							meta: JSON.parse(option?.getAttribute(this.state.getStateAttribute('selectCustomProperties')) || '{}'),
-						};
-					})
-				: [];
+		const options = [...custom?.passedElement?.element?.selectedOptions].map((option) => option?.value);
 
 		switch (this.state.getStateElementTypeField(name, formId)) {
 			case 'phone':
@@ -1817,8 +1774,7 @@ export class Form {
 					formId,
 					name,
 					{
-						prefix: options?.[0]?.value || '',
-						meta: options?.[0]?.meta || {},
+						prefix: options?.[0] || '',
 						value: phoneValue?.value || '',
 					},
 					false,
@@ -1888,7 +1844,6 @@ export class Form {
 					name,
 					{
 						prefix: phoneValue?.prefix || '',
-						meta: phoneValue?.meta || {},
 						value: value || '',
 					},
 					false,
