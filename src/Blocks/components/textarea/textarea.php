@@ -70,6 +70,12 @@ if ($textareaUseLabelAsPlaceholder) {
 	$textareaHideLabel = true;
 }
 
+if ($textareaIsRequired) {
+	$textareaAttrs['aria-required'] = 'true';
+}
+
+$textareaAttrs['aria-invalid'] = 'false';
+
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('textarea', $attributes);
 

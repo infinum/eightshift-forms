@@ -121,6 +121,14 @@ if (has_filter($filterName)) {
 
 $phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
 
+if ($phoneIsRequired) {
+	$phoneAttrs['aria-required'] = 'true';
+}
+
+$phoneAttrs['aria-invalid'] = 'false';
+$phoneAttrs['autocomplete'] = 'tel';
+
+
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
@@ -132,7 +140,6 @@ $phone = '
 		name="' . esc_attr($phoneName) . '"
 		id="' . esc_attr($phoneId) . '"
 		type="tel"
-		autocomplete="tel"
 		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_readonly($phoneIsReadOnly, true, false) . '

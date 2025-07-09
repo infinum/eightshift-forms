@@ -111,14 +111,19 @@ if ($inputType === 'range') {
 	}
 }
 
-$inputAutocomplete = 'on';
 if ($inputType === 'hidden') {
-	$inputAutocomplete = 'off';
+	$inputAttrs['autocomplete'] = 'off';
 }
 
 if ($inputType === 'email') {
-	$inputAutocomplete = 'email';
+	$inputAttrs['autocomplete'] = 'email';
 }
+
+if ($inputIsRequired) {
+	$inputAttrs['aria-required'] = 'true';
+}
+
+$inputAttrs['aria-invalid'] = 'false';
 
 $input = '
 	<input
@@ -129,7 +134,6 @@ $input = '
 		' . disabled($inputIsDisabled, true, false) . '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
 		' . Helpers::getAttrsOutput($inputAttrs) . '
-		autocomplete="' . esc_attr($inputAutocomplete) . '"
 	/>
 ';
 

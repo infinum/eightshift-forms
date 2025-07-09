@@ -55,7 +55,7 @@ export class Enrichment {
 		// Get storage from backend this is considered new by the page request.
 		const newStorage = {
 			...this.getUrlAllowedParams(allowedTags),
-			...this.getCookiesAllowedParams(allowedTags)
+			...this.getCookiesAllowedParams(allowedTags),
 		};
 
 		this.setLocalStorage(newStorage, this.state.getStateEnrichmentStorageName());
@@ -72,10 +72,7 @@ export class Enrichment {
 			return;
 		}
 
-		window.addEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onLocalstoragePrefillEvent
-		);
+		window.addEventListener(this.state.getStateEvent('formJsLoaded'), this.onLocalstoragePrefillEvent);
 	}
 
 	/**
@@ -83,16 +80,13 @@ export class Enrichment {
 	 *
 	 * @returns {void}
 	 */
-	setUrlParamsFormPrefill(formId) {
+	setUrlParamsFormPrefill() {
 		// Check if enrichment is used.
 		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsPrefillUrlUsed()) {
 			return;
 		}
 
-		window.addEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onUrlParamsPrefillEvent
-		);
+		window.addEventListener(this.state.getStateEvent('formJsLoaded'), this.onUrlParamsPrefillEvent);
 	}
 
 	/**
@@ -126,11 +120,7 @@ export class Enrichment {
 			[name]: typeof valueData === 'undefined' ? '' : valueData,
 		};
 
-		this.setLocalStorage(
-			newStorage,
-			this.state.getStateEnrichmentFormPrefillStorageName(formId),
-			this.state.getStateEnrichmentExpirationPrefill()
-		);
+		this.setLocalStorage(newStorage, this.state.getStateEnrichmentFormPrefillStorageName(formId), this.state.getStateEnrichmentExpirationPrefill());
 	}
 
 	/**
@@ -185,23 +175,20 @@ export class Enrichment {
 		if (this.getLocalStorage(storageName) === null) {
 			newStorage.timestamp = newStorage.timestamp.toString();
 
-			localStorage?.setItem(
-				storageName,
-				JSON.stringify(newStorage)
-			);
+			localStorage?.setItem(storageName, JSON.stringify(newStorage));
 
 			return;
 		}
 
 		// Store in a new variable for later usage.
-		const newStorageFinal = {...newStorage};
+		const newStorageFinal = { ...newStorage };
 		delete newStorageFinal.timestamp;
 
 		// Current storage is got from localStorage.
 		const currentStorage = JSON.parse(this.getLocalStorage(storageName));
 
 		// Store in a new variable for later usage.
-		const currentStorageFinal = {...currentStorage};
+		const currentStorageFinal = { ...currentStorage };
 		delete currentStorageFinal.timestamp;
 
 		currentStorage.timestamp = parseInt(currentStorage?.timestamp, 10);
@@ -365,7 +352,7 @@ export class Enrichment {
 		data.forEach((param) => {
 			const paramItem = param.split('==');
 
-			if(!paramItem.length) {
+			if (!paramItem.length) {
 				return;
 			}
 
@@ -386,7 +373,7 @@ export class Enrichment {
 
 					const newPhoneValue = {
 						prefix: phoneValue[0] || '',
-						value: phoneValue[1] ,
+						value: phoneValue[1],
 					};
 
 					this.utils.setManualPhoneValue(formId, name, newPhoneValue);
@@ -403,7 +390,7 @@ export class Enrichment {
 						break;
 					}
 
-					const newSelectValue = selectValue.map((item) => ({value: item}));
+					const newSelectValue = selectValue.map((item) => ({ value: item }));
 
 					this.utils.setManualSelectValue(formId, name, newSelectValue);
 					break;
@@ -424,11 +411,7 @@ export class Enrichment {
 							newCheckboxValue[item] = item;
 						} else {
 							if (inputCheckbox) {
-								this.utils.setManualInputValue(
-									formId,
-									inputCheckbox.name,
-									item,
-								);
+								this.utils.setManualInputValue(formId, inputCheckbox.name, item);
 							}
 						}
 					});
@@ -436,24 +419,16 @@ export class Enrichment {
 					this.utils.setManualCheckboxValue(formId, name, newCheckboxValue);
 					break;
 				case 'radio':
+				case 'rating':
 					const innerRadio = this.state.getStateElementItems(name, formId);
 					const inputRadio = this.state.getStateElementCustom(name, formId);
 
 					// If we have input part of the radio, and the value is not in the radio group add it to the input.
 					if (value !== '' && !innerRadio?.[value] && inputRadio) {
-						this.utils.setManualInputValue(
-							formId,
-							inputRadio.name,
-							value,
-							true,
-							true
-						);
+						this.utils.setManualInputValue(formId, inputRadio.name, value, true, true);
 					}
 
 					this.utils.setManualRadioValue(formId, name, value, true, true);
-					break;
-				case 'rating':
-					this.utils.setManualRatingValue(formId, name, value);
 					break;
 				case 'range':
 					this.utils.setManualRangeValue(formId, name, value);
@@ -472,7 +447,7 @@ export class Enrichment {
 	 *
 	 * @param {string} formId Form ID.
 	 * @param {object} data Field data.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	prefillByLocalstorageData(formId, data) {
@@ -499,10 +474,8 @@ export class Enrichment {
 					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
 				case 'radio':
-					this.utils.setManualRadioValue(formId, name, value, true, true);
-					break;
 				case 'rating':
-					this.utils.setManualRatingValue(formId, name, value);
+					this.utils.setManualRadioValue(formId, name, value, true, true);
 					break;
 				case 'range':
 					this.utils.setManualRangeValue(formId, name, value);
@@ -522,19 +495,13 @@ export class Enrichment {
 
 	/**
 	 * Remove all event listeners from elements.
-	 * 
+	 *
 	 * @returns {vodi}
 	 */
 	removeEvents() {
-		window?.removeEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onLocalstoragePrefillEvent
-		);
+		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onLocalstoragePrefillEvent);
 
-		window?.removeEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onUrlParamsPrefillEvent
-		);
+		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onUrlParamsPrefillEvent);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -551,6 +518,8 @@ export class Enrichment {
 	onUrlParamsPrefillEvent = (event) => {
 		const { formId } = event.detail;
 
+		console.log(window.location.search);
+
 		// Bailout if nothing is set in the url.
 		if (!window.location.search) {
 			return;
@@ -561,13 +530,15 @@ export class Enrichment {
 
 		let params = searchParams.get(`form-${this.state.getStateFormFid(formId)}`);
 
-		if(!params) {
+		console.log(params);
+
+		if (!params) {
 			return;
 		}
 
 		params = params.split('/');
 
-		if(!params.length) {
+		if (!params.length) {
 			return;
 		}
 

@@ -63,6 +63,12 @@ if ($dateUseLabelAsPlaceholder) {
 	$dateHideLabel = true;
 }
 
+if ($dateIsRequired) {
+	$dateAttrs['aria-required'] = 'true';
+}
+
+$dateAttrs['aria-invalid'] = 'false';
+
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('date', $attributes);
 

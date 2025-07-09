@@ -62,6 +62,12 @@ if ($countryIsMultiple) {
 	$countryAttrs['multiple'] = 'true';
 }
 
+if ($countryIsRequired) {
+	$countryAttrs['aria-required'] = 'true';
+}
+
+$countryAttrs['aria-invalid'] = 'false';
+
 if ($countryUseLabelAsPlaceholder) {
 	$countryPlaceholder = esc_attr($countryFieldLabel) ?: esc_html__('Select country', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	$countryHideLabel = true;

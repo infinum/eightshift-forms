@@ -76,6 +76,13 @@ $placeholder = Helpers::render(
 	]
 );
 
+if ($selectIsRequired) {
+	$selectAttrs['aria-required'] = 'true';
+}
+
+$selectAttrs['aria-invalid'] = 'false';
+
+
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('select', $attributes);
 

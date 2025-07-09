@@ -34,14 +34,14 @@
 		"php-parallel-lint/php-parallel-lint": "v1.4.0",
 		"pestphp/pest": "^v1.23.1",
 		"php-stubs/wordpress-stubs": "v6.6.2",
-		"phpunit/phpunit": "^9.6.21",
+		"phpunit/phpunit": "^9.6.23",
 		"szepeviktor/phpstan-wordpress": "^v1.3.5",
 		"wp-cli/wp-cli": "^v2.11.0"
 	},
 	"require": {
 		"php": ">=8.3",
 		"erusev/parsedown": "^1.7.4",
-		"infinum/eightshift-forms-utils": "^3.4.2"
+		"infinum/eightshift-forms-utils": "^3.4.4"
 	},
 	"autoload": {
 		"psr-4": {

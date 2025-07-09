@@ -247,7 +247,9 @@ export class Form {
 
 		// Rating.
 		[...this.state.getStateElementByTypeField('rating', formId)].forEach((rating) => {
-			this.setupRatingField(formId, rating.name);
+			[...Object.values(rating.items)].forEach((ratingItem) => {
+				this.setupRatingField(formId, ratingItem.value, ratingItem.name);
+			});
 		});
 
 		// Form loaded.
@@ -684,6 +686,7 @@ export class Form {
 					}
 					break;
 				case 'radio':
+				case 'rating':
 					let indexRadio = 0;
 
 					for (const [radioName, radioValue] of Object.entries(items)) {
@@ -1128,12 +1131,8 @@ export class Form {
 	 *
 	 * @returns {void}
 	 */
-	setupRatingField(formId, name) {
-		[...this.state.getStateElementCustom(name, formId).children].forEach((star) => {
-			star.addEventListener('click', this.onRatingEvent);
-		});
-
-		this.setupInputField(formId, name);
+	setupRatingField(formId, value, name) {
+		this.setupRadioCheckboxField(formId, value, name);
 	}
 
 	/**
@@ -1237,105 +1236,108 @@ export class Form {
 		const typeInternal = this.state.getStateElementTypeField(name, formId);
 
 		if (typeInternal === 'phone') {
-			input = this.state.getStateElementInputSelect(name, formId);
+			// input = this.state.getStateElementInputSelect(name, formId);
 		}
 
-		import('choices.js').then((Choices) => {
-			const state = this.state;
+		// import('choices.js').then((Choices) => {
+		// 	const state = this.state;
 
-			const customProperties = [
-				this.state.getStateAttribute('selectCountryCode'),
-				this.state.getStateAttribute('selectCountryLabel'),
-				this.state.getStateAttribute('selectCountryNumber'),
-				this.state.getStateAttribute('conditionalTags'),
-				this.state.getStateAttribute('selectOptionIsHidden'),
-			];
+		// 	const customProperties = [
+		// 		this.state.getStateAttribute('selectCountryCode'),
+		// 		this.state.getStateAttribute('selectCountryLabel'),
+		// 		this.state.getStateAttribute('selectCountryNumber'),
+		// 		this.state.getStateAttribute('conditionalTags'),
+		// 		this.state.getStateAttribute('selectOptionIsHidden'),
+		// 	];
 
-			const choices = new Choices.default(input, {
-				searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
-				shouldSort: false,
-				position: 'bottom',
-				allowHTML: true,
-				searchResultLimit: 50,
-				removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
-				duplicateItemsAllowed: false,
-				searchFields: [
-					'label',
-					'value',
-					`customProperties.${this.state.getStateAttribute('selectCountryCode')}`,
-					`customProperties.${this.state.getStateAttribute('selectCountryLabel')}`,
-					`customProperties.${this.state.getStateAttribute('selectCountryNumber')}`,
-				],
-				itemSelectText: '',
-				classNames: {
-					containerOuter: `choices ${selectManifest.componentClass}`,
-				},
-				callbackOnCreateTemplates: function () {
-					return {
-						// Fake select option.
-						option: (...args) => {
-							const element = Choices.default.defaults.templates.option.call(this, ...args);
-							const properties = args?.[0]?.customProperties;
+		// 	const choices = new Choices.default(input, {
+		// 		searchEnabled: this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_SEARCH, formId),
+		// 		shouldSort: false,
+		// 		position: 'bottom',
+		// 		allowHTML: true,
+		// 		searchResultLimit: 50,
+		// 		removeItemButton: typeInternal !== 'phone', // Phone should not be able to remove prefix!
+		// 		duplicateItemsAllowed: false,
+		// 		searchFields: [
+		// 			'label',
+		// 			'value',
+		// 			`customProperties.${this.state.getStateAttribute('selectCountryCode')}`,
+		// 			`customProperties.${this.state.getStateAttribute('selectCountryLabel')}`,
+		// 			`customProperties.${this.state.getStateAttribute('selectCountryNumber')}`,
+		// 		],
+		// 		itemSelectText: '',
+		// 		classNames: {
+		// 			containerOuter: `choices ${selectManifest.componentClass}`,
+		// 		},
+		// 		callbackOnCreateTemplates: function () {
+		// 			return {
+		// 				// Fake select option.
+		// 				option: (...args) => {
+		// 					const element = Choices.default.defaults.templates.option.call(this, ...args);
+		// 					const properties = args?.[0]?.customProperties;
 
-							if (properties) {
-								element.setAttribute(state.getStateAttribute('selectCustomProperties'), JSON.stringify(properties));
-							}
+		// 					if (properties) {
+		// 						element.setAttribute(state.getStateAttribute('selectCustomProperties'), JSON.stringify(properties));
+		// 					}
 
-							return element;
-						},
-						// Dropdown items.
-						choice: (...args) => {
-							const element = Choices.default.defaults.templates.choice.call(this, ...args);
-							const properties = !state.getStateElementLoaded(name, formId) ? args?.[1]?.customProperties : this.config?.choices[args?.[1]?.id - 1]?.customProperties;
+		// 					return element;
+		// 				},
+		// 				// Dropdown items.
+		// 				choice: (...args) => {
+		// 					const element = Choices.default.defaults.templates.choice.call(this, ...args);
+		// 					const properties = !state.getStateElementLoaded(name, formId) ? args?.[1]?.customProperties : this.config?.choices[args?.[1]?.id - 1]?.customProperties;
 
-							if (properties) {
-								customProperties.forEach((property) => {
-									const check = properties?.[property];
+		// 					if (properties) {
+		// 						customProperties.forEach((property) => {
+		// 							const check = properties?.[property];
 
-									if (check) {
-										element.setAttribute(property, check);
-									}
-								});
-							}
+		// 							if (check) {
+		// 								element.setAttribute(property, check);
+		// 							}
+		// 						});
+		// 					}
 
-							return element;
-						},
-						// Selected item.
-						item: (...args) => {
-							const element = Choices.default.defaults.templates.item.call(this, ...args);
-							const properties = args?.[1]?.customProperties;
+		// 					return element;
+		// 				},
+		// 				// Selected item.
+		// 				item: (...args) => {
+		// 					const element = Choices.default.defaults.templates.item.call(this, ...args);
+		// 					const properties = args?.[1]?.customProperties;
 
-							if (properties) {
-								customProperties.forEach((property) => {
-									const check = properties?.[property];
+		// 					if (properties) {
+		// 						customProperties.forEach((property) => {
+		// 							const check = properties?.[property];
 
-									if (check) {
-										element.setAttribute(property, check);
-									}
-								});
-							}
+		// 							if (check) {
+		// 								element.setAttribute(property, check);
+		// 							}
+		// 						});
+		// 					}
 
-							return element;
-						},
-					};
-				},
-			});
+		// 					return element;
+		// 				},
+		// 			};
+		// 		},
+		// 	});
 
-			this.state.setStateElementLoaded(name, true, formId);
-			this.state.setStateElementCustom(name, choices, formId);
+		// 	this.state.setStateElementLoaded(name, true, formId);
+		// 	this.state.setStateElementCustom(name, choices, formId);
 
-			choices.config.choices.map((item) => {
-				setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
-			});
+		// 	choices.config.choices.map((item) => {
+		// 		setStateConditionalTagsItems(item.customProperties[this.state.getStateAttribute('conditionalTags')], name, item.value, formId);
+		// 	});
 
-			this.utils.setFieldFilledState(formId, name);
+		// 	this.utils.setFieldFilledState(formId, name);
 
-			choices?.passedElement?.element.addEventListener('showDropdown', this.onFocusEvent);
-			choices?.passedElement?.element.addEventListener('hideDropdown', this.onBlurEvent);
-			choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
-			choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
-			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
-		});
+		// 	choices?.passedElement?.element.addEventListener('showDropdown', this.onFocusEvent);
+		// 	choices?.passedElement?.element.addEventListener('hideDropdown', this.onBlurEvent);
+		// 	choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
+		// 	choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
+		// 	choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
+		// });
+
+		//TMP
+		this.state.setStateElementLoaded(name, true, formId);
 	}
 
 	/**
@@ -1626,8 +1628,13 @@ export class Form {
 
 			// Rating.
 			[...this.state.getStateElementByTypeField('rating', formId)].forEach((rating) => {
-				[...this.state.getStateElementCustom(rating.name, formId).children].forEach((star) => {
-					star?.removeEventListener('click', this.onRatingEvent);
+				[...Object.values(rating.items)].forEach((ratingItem) => {
+					const input = this.state.getStateElementItemsInput(ratingItem.name, ratingItem.value, formId);
+
+					input?.removeEventListener('keydown', this.onFocusEvent);
+					input?.removeEventListener('focus', this.onFocusEvent);
+					input?.removeEventListener('blur', this.onBlurEvent);
+					input?.removeEventListener('input', this.onInputEvent);
 				});
 			});
 
@@ -1870,6 +1877,9 @@ export class Form {
 			case 'radio':
 				this.utils.setManualRadioValue(formId, name, value, false);
 				break;
+			case 'rating':
+				this.utils.setManualRatingValue(formId, name, value, false);
+				break;
 			case 'phone':
 				const phoneValue = this.state.getStateElementValue(name, formId);
 
@@ -1947,42 +1957,6 @@ export class Form {
 
 		target.value = value;
 		this.utils.setManualRangeValue(formId, name, value.toString());
-
-		// Used only on frontend for single submit.
-		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
-			debounce(this.formSubmit(formId), 100);
-		}
-	};
-
-	/**
-	 * On rating event.
-	 *
-	 * @param {object} event Event callback.
-	 *
-	 * @returns {void}
-	 */
-	onRatingEvent = (event) => {
-		const formId = this.state.getFormIdByElement(event.target);
-		const field = this.state.getFormFieldElementByChild(event.target);
-		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
-		const value = event.target.getAttribute(this.state.getStateAttribute('ratingValue'));
-		const disabled = this.state.getStateElementIsDisabled(name, formId);
-
-		if (disabled) {
-			return;
-		}
-
-		this.utils.setManualRatingValue(formId, name, value, false);
-
-		// Used only for admin single submit.
-		if (this.state.getStateConfigIsAdmin() && this.state.getStateElementIsSingleSubmit(name, formId)) {
-			debounce(
-				this.formSubmit(formId, {
-					[this.FILTER_USE_ONLY_FIELDS]: [name],
-				}),
-				100,
-			);
-		}
 
 		// Used only on frontend for single submit.
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
@@ -2141,9 +2115,6 @@ export class Form {
 			},
 			onInputEvent: (event) => {
 				this.onInputEvent(event);
-			},
-			onRatingEvent: (event) => {
-				this.onRatingEvent(event);
 			},
 			onBlurEvent: (event) => {
 				this.onBlurEvent(event);

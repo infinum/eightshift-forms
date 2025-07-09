@@ -369,6 +369,7 @@ export function setStateFormInitial(formId) {
 		switch (type) {
 			case 'radio':
 			case 'checkbox':
+			case 'rating':
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], '', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.FIELD], item.parentNode.parentNode, formId);
@@ -376,7 +377,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.NAME], name, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED, value], disabled, formId);
 
-				if (type === 'radio') {
+				if (type === 'radio' || type === 'rating') {
 					if (!getState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], formId)) {
 						setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], item.checked ? value : '', formId);
 					}
@@ -397,12 +398,15 @@ export function setStateFormInitial(formId) {
 				break;
 			case 'select-one':
 			case 'select-multiple':
-				const selectedValues = [...item.options].filter((option) => option?.selected).map((option) => {
-					return {
-						value: option?.value,
-						meta: JSON.parse(option?.getAttribute(getStateAttribute('selectCustomProperties')))
-					};
-				}).filter((option) => option.value);
+				const selectedValues = [...item.options]
+					.filter((option) => option?.selected)
+					.map((option) => {
+						return {
+							value: option?.value,
+							meta: JSON.parse(option?.getAttribute(getStateAttribute('selectCustomProperties'))),
+						};
+					})
+					.filter((option) => option.value);
 
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], selectedValues, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], selectedValues, formId);
@@ -459,10 +463,6 @@ export function setStateFormInitial(formId) {
 					setState([StateEnum.ELEMENTS, fieldset.getAttribute(getStateAttribute('fieldName')), StateEnum.CUSTOM], item, formId);
 				}
 
-				if (fieldType === 'rating') {
-					setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], field.querySelector(getStateSelector('rating', true)), formId);
-				}
-
 				if (field?.getAttribute(getStateAttribute('fieldPreventSubmit'))) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], Boolean(field.getAttribute(getStateAttribute('fieldPreventSubmit'))), formId);
 				}
@@ -485,11 +485,7 @@ export function setStateFormInitial(formId) {
 
 	// Loop all fields for conditional tags later because we need to have all state set.
 	for (const item of Object.values(formFields)) {
-		const {
-			value,
-			name,
-			type,
-		} = item;
+		const { value, name, type } = item;
 
 		if (name === 'search_terms') {
 			continue;
@@ -497,7 +493,7 @@ export function setStateFormInitial(formId) {
 
 		const field = formElement.querySelector(`${getStateSelector('field', true)}[${getStateAttribute('fieldName')}="${name}"]`);
 
-		if (type ==='radio' || type ==='checkbox') {
+		if (type === 'radio' || type === 'checkbox') {
 			setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
 		}
 
@@ -511,7 +507,6 @@ export function setStateFormInitial(formId) {
 
 	// Loop all fields for conditional tags later because we need to have all state set beforehand.
 	[...customFields].forEach((field) => {
-			
 		const name = field.getAttribute(getStateAttribute('fieldName'));
 
 		// Conditional tags.
@@ -635,11 +630,15 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 
 	// Check if fields exist and remove conditional tags if not.
 	// This can happend if the user deletes a field and the conditional tag is still there on other field.
-	const output = tag[1].map((item) => item.filter((inner) => {
-		const itemName = inner[0] ?? '';
+	const output = tag[1]
+		.map((item) =>
+			item.filter((inner) => {
+				const itemName = inner[0] ?? '';
 
-		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
-	})).filter(outputInner => outputInner.length > 0);
+				return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
+			}),
+		)
+		.filter((outputInner) => outputInner.length > 0);
 
 	if (!output.length) {
 		return;
@@ -650,7 +649,6 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 
 	setStateConditionalTagsInner(name, formId, output, isNoneFormBlock);
 }
-
 
 /**
  * Set state conditional tags inner items on one field.
@@ -679,11 +677,15 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 
 	// Check if fields exist and remove conditional tags if not.
 	// This can happend if the user deletes a field and the conditional tag is still there on other field.
-	const output = tag[1].map((item) => item.filter((inner) => {
-		const itemName = inner[0] ?? '';
+	const output = tag[1]
+		.map((item) =>
+			item.filter((inner) => {
+				const itemName = inner[0] ?? '';
 
-		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
-	})).filter(outputInner => outputInner.length > 0);
+				return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
+			}),
+		)
+		.filter((outputInner) => outputInner.length > 0);
 
 	if (!output.length) {
 		return;
@@ -716,7 +718,7 @@ export function setStateConditionalTagsInner(name, formId, tags, isNoneFormBlock
 	const events = isInner ? getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], formId) : getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], formId);
 
 	const eventsOutput = {
-		...events ?? {},
+		...(events ?? {}),
 	};
 
 	tags.forEach((item) => {
@@ -724,10 +726,7 @@ export function setStateConditionalTagsInner(name, formId, tags, isNoneFormBlock
 
 		// Loop inner fields.
 		item.forEach((inner) => {
-			eventsOutput[inner[0]] = [
-				...eventsOutput[inner[0]] ?? [],
-				(isInner) ? `${name}---${innerName}` : name,
-			];
+			eventsOutput[inner[0]] = [...(eventsOutput[inner[0]] ?? []), isInner ? `${name}---${innerName}` : name];
 		});
 	});
 
@@ -769,7 +768,7 @@ export function setState(keyArray, value, formId) {
 	if (keyArray.length > 1) {
 		window[prefix].state[formKey] = {
 			...window[prefix].state[formKey],
-			...stateObject[keyArray[0]]
+			...stateObject[keyArray[0]],
 		};
 	} else {
 		window[prefix].state[formKey] = {
@@ -802,9 +801,7 @@ export function removeStateForm(formId) {
 	if (index > -1) {
 		forms.splice(index, 1);
 
-		window[prefix].state[StateEnum.FORMS] = [
-			...forms,
-		];
+		window[prefix].state[StateEnum.FORMS] = [...forms];
 	}
 }
 
@@ -870,7 +867,7 @@ export function getStateRoute(name) {
 
 /**
  * Get state selector.
- * 
+ *
  * @param {string} name Name key to get.
  *
  * @returns {string}
@@ -881,7 +878,7 @@ export function getStateResponseOutputKey(name) {
 
 /**
  * Get state selector.
- * 
+ *
  * @param {string} name Name key to get.
  * @param {boolean} usePrefix Use prefix.
  *
@@ -893,7 +890,7 @@ export function getStateSelector(name, usePrefix = false) {
 
 /**
  * Get state selector admin.
- * 
+ *
  * @param {string} name Name key to get.
  * @param {boolean} usePrefix Use prefix.
  *
@@ -1008,7 +1005,7 @@ function isLocalStorageAvailable() {
 		localStorage.removeItem(test);
 
 		return true;
-	} catch(e) {
+	} catch (e) {
 		return false;
 	}
 }

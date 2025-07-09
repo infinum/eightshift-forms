@@ -69,6 +69,11 @@ $customFile = '
 	</div>
 ';
 
+if ($fileIsRequired) {
+	$fileAttrs['aria-required'] = 'true';
+}
+
+$fileAttrs['aria-invalid'] = 'false';
 
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('file', $attributes);
