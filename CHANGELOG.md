@@ -14,7 +14,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - all form field are now tab-able and you can pass the full flow without any mouse interaction
 - Select/country/phone, choices are now updated to the latest version with better A11y.
-- File filed is now full tab-able and can be used with only keyboard.
+- File field is now tab-able and can be used with only keyboard.
 - Rating field is fully new and re-built with a different approach using radio buttons.
 - Country and Phone fields can now be preselected from admin using country code
 - Select field will now auto open a dropdown if you focus on it.
