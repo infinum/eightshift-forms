@@ -89,7 +89,10 @@ $fieldOutput = [
 	'fieldIsRequired' => $checkboxesIsRequired,
 	'fieldTypeCustom' => $checkboxesTypeCustom ?: 'checkbox', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),
-	'fieldAttrs' => $checkboxesFieldAttrs,
+	'fieldAttrs' => array_merge($checkboxesFieldAttrs, [
+		'role' => 'group',
+		'aria-labelledby' => $checkboxesId,
+	]),
 ];
 
 // Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
@@ -104,10 +107,6 @@ echo Helpers::render(
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',
-			'fieldAttrs' => [
-				'role' => 'group',
-				'aria-labelledby' => $checkboxesId,
-			],
 		]
 	)
 );
