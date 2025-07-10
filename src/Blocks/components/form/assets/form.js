@@ -1222,14 +1222,15 @@ export class Form {
 	 * @returns {void}
 	 */
 	setupSelectField(formId, name) {
-		let input = this.state.getStateElementInput(name, formId);
-		const typeInternal = this.state.getStateElementTypeField(name, formId);
-
-		if (typeInternal === 'phone') {
-			input = this.state.getStateElementInputSelect(name, formId);
-		}
-
 		import('choices.js').then((Choices) => {
+			let input = this.state.getStateElementInput(name, formId);
+			const typeInternal = this.state.getStateElementTypeField(name, formId);
+			const labels = this.state.getStateSettingsLabels();
+
+			if (typeInternal === 'phone') {
+				input = this.state.getStateElementInputSelect(name, formId);
+			}
+
 			const customProperties = [
 				this.state.getStateAttribute('selectCountryCode'),
 				this.state.getStateAttribute('selectCountryLabel'),
@@ -1277,6 +1278,8 @@ export class Form {
 						item: (...args) => {
 							const element = Choices.default.defaults.templates.item.call(this, ...args);
 
+							element.setAttribute('aria-label', labels?.selectOptionAria);
+
 							customProperties.forEach((property) => {
 								const attr = args?.[1]?.element?.getAttribute(property);
 
@@ -1296,10 +1299,8 @@ export class Form {
 
 			this.utils.setFieldFilledState(formId, name);
 
-			choices?.passedElement?.element.addEventListener('showDropdown', this.onFocusEvent);
-			choices?.passedElement?.element.addEventListener('hideDropdown', this.onBlurEvent);
 			choices?.passedElement?.element.addEventListener('change', this.onSelectChangeEvent);
-			choices?.containerOuter?.element.addEventListener('focus', this.onFocusEvent);
+			choices?.containerOuter?.element.addEventListener('focus', this.onSelectFocusEvent);
 			choices?.containerOuter?.element.addEventListener('blur', this.onBlurEvent);
 		});
 	}
@@ -1343,10 +1344,12 @@ export class Form {
 	 * @returns {void}
 	 */
 	setupFileField(formId, name) {
-		const input = this.state.getStateElementInput(name, formId);
-		const field = this.state.getStateElementField(name, formId);
-
 		import('dropzone').then((Dropzone) => {
+			const input = this.state.getStateElementInput(name, formId);
+			const field = this.state.getStateElementField(name, formId);
+			const button = this.state.getStateElementFileButton(name, formId);
+			const labels = this.state.getStateSettingsLabels();
+
 			// Prevent double init.
 			if (field.dropzone) {
 				return;
@@ -1359,7 +1362,7 @@ export class Form {
 				parallelUploads: 1,
 				maxFiles: !input.multiple ? 1 : null,
 				dictMaxFilesExceeded: '',
-				dictRemoveFile: this.state.getStateSettingsFileRemoveLabel(formId),
+				dictRemoveFile: labels?.fileRemoveContent,
 			});
 
 			// Set data to internal state.
@@ -1368,6 +1371,8 @@ export class Form {
 
 			// On add one file add selectors for UX.
 			dropzone.on('addedfile', (file) => {
+				file.previewTemplate.querySelector('.dz-remove').setAttribute('aria-label', labels?.fileRemoveAria);
+
 				setTimeout(() => {
 					file?.previewTemplate?.classList?.add(this.state.getStateSelector('isActive'));
 				}, 200);
@@ -1393,6 +1398,9 @@ export class Form {
 
 				// Remove main filed validation error.
 				this.utils.unsetFieldError(formId, name);
+
+				button.focus();
+				this.utils.setOnFocus(button);
 			});
 
 			// Add data formData to the api call for the file upload.
@@ -1440,6 +1448,9 @@ export class Form {
 					}
 
 					field?.classList?.add(this.state.getStateSelector('isFilled'));
+
+					button.focus();
+					this.utils.setOnFocus(button);
 				} catch (e) {
 					file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 
@@ -1462,13 +1473,16 @@ export class Form {
 
 				file.previewTemplate.querySelector('.dz-error-message span').innerHTML = this.state.getStateSettingsFormServerErrorMsg();
 
+				button.focus();
+				this.utils.setOnFocus(button);
+
 				throw new Error(`API response returned JSON but it was malformed for this request. Function used: "fileUploadError" with code: "${status}" and message: "${msg}"`);
 			});
 
 			// Trigger on wrap click.
-			field.addEventListener('click', this.onFileWrapClickEvent);
-			input.addEventListener('focus', this.onFocusEvent);
-			input.addEventListener('blur', this.onBlurEvent);
+			button.addEventListener('click', this.onFileWrapClickEvent);
+			button.addEventListener('focus', this.onFocusEvent);
+			button.addEventListener('blur', this.onBlurEvent);
 		});
 	}
 
@@ -1497,8 +1511,6 @@ export class Form {
 			[...this.state.getStateElementByTypeField('select', formId), ...this.state.getStateElementByTypeField('country', formId)].forEach((select) => {
 				const choices = this.state.getStateElementCustom(select.name, formId);
 
-				choices?.passedElement?.element?.removeEventListener('showDropdown', this.onFocusEvent);
-				choices?.passedElement?.element?.removeEventListener('hideDropdown', this.onBlurEvent);
 				choices?.passedElement?.element?.removeEventListener('change', this.onSelectChangeEvent);
 				choices?.containerOuter?.element.removeEventListener('focus', this.onFocusEvent);
 				choices?.containerOuter?.element.removeEventListener('blur', this.onBlurEvent);
@@ -1507,11 +1519,12 @@ export class Form {
 
 			// File.
 			[...this.state.getStateElementByTypeField('file', formId)].forEach((file) => {
+				const button = this.state.getStateElementFileButton(select.name, formId);
+
 				this.state.getStateElementCustom(file.name, formId)?.destroy();
-				this.state.getStateElementField(file.name, formId)?.removeEventListener('click', this.onFileWrapClickEvent);
-				const input = this.state.getStateElementInput(file.name, formId);
-				input?.removeEventListener('focus', this.onFocusEvent);
-				input?.removeEventListener('blur', this.onBlurEvent);
+				button?.removeEventListener('click', this.onFileWrapClickEvent);
+				button?.removeEventListener('focus', this.onFocusEvent);
+				button?.removeEventListener('blur', this.onBlurEvent);
 			});
 
 			// Textarea.
@@ -1706,12 +1719,20 @@ export class Form {
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const formId = this.state.getFormIdByElement(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'), formId);
+		const custom = this.state.getStateElementCustom(name, formId);
 
 		if (this.state.getStateElementIsDisabled(name, formId)) {
 			return;
 		}
 
-		this.state.getStateElementCustom(name, formId).hiddenFileInput.click();
+		if (custom.options.maxFiles !== null && custom.files.length >= custom.options.maxFiles) {
+			return;
+		}
+
+		const input = this.state.getStateElementCustom(name, formId).hiddenFileInput;
+
+		input.click();
+		input.blur();
 
 		field?.classList?.add(this.state.getStateSelector('isActive'));
 	};
@@ -1802,6 +1823,22 @@ export class Form {
 		if (!this.state.getStateConfigIsAdmin() && this.state.getStateFormConfigUseSingleSubmit(formId)) {
 			debounce(this.formSubmit(formId), 100);
 		}
+	};
+
+	/**
+	 * On Select focus event.
+	 *
+	 * @param {object} event Event callback.
+	 *
+	 * @returns {void}
+	 */
+	onSelectFocusEvent = (event) => {
+		const formId = this.state.getFormIdByElement(event.target);
+		const field = this.state.getFormFieldElementByChild(event.target);
+		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
+		this.state.getStateElementCustom(name, formId)?.showDropdown();
+
+		this.utils.setOnFocus(event.target);
 	};
 
 	/**

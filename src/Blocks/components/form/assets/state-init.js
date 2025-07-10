@@ -29,6 +29,7 @@ export const StateEnum = {
 	FIELD: 'field',
 	FIELDSET: 'fieldset',
 	RANGE_CURRENT: 'rangeCurrent',
+	FILE_BUTTON: 'fileButton',
 	VALUE: 'value',
 	INITIAL: 'initial',
 	VALUES: 'values',
@@ -82,12 +83,12 @@ export const StateEnum = {
 	CONFIG_USE_SINGLE_SUBMIT: 'useSingleSubmit',
 
 	SETTINGS: 'settings',
+	SETTINGS_LABELS: 'labels',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
 	SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR: 'disableScrollToFieldOnError',
 	SETTINGS_FORM_RESET_ON_SUCCESS: 'formResetOnSuccess',
 	SETTINGS_REDIRECTION_TIMEOUT: 'redirectionTimeout',
 	SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT: 'hideGlobalMessageTimeout',
-	SETTINGS_FILE_REMOVE_LABEL: 'fileRemoveLabel',
 	SETTINGS_FORM_DISABLE_AUTO_INIT: 'formDisableAutoInit',
 	SETTINGS_FORM_SERVER_ERROR_MSG: 'formServerErrorMsg',
 	SETTINGS_FORM_CAPTCHA_ERROR_MSG: 'formCaptchaErrorMsg',
@@ -243,7 +244,7 @@ export function setStateInitial() {
 	setState([StateEnum.SETTINGS_FORM_RESET_ON_SUCCESS], Boolean(esFormsLocalization.formResetOnSuccess), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_REDIRECTION_TIMEOUT], esFormsLocalization.redirectionTimeout ?? 600, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT], esFormsLocalization.hideGlobalMessageTimeout ?? 6000, StateEnum.SETTINGS);
-	setState([StateEnum.SETTINGS_FILE_REMOVE_LABEL], esFormsLocalization.fileRemoveLabel ?? '', StateEnum.SETTINGS);
+	setState([StateEnum.SETTINGS_LABELS], esFormsLocalization.labels ?? {}, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_DISABLE_AUTO_INIT], Boolean(esFormsLocalization.formDisableAutoInit), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_SERVER_ERROR_MSG], esFormsLocalization.formServerErrorMsg ?? '', StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_CAPTCHA_ERROR_MSG], esFormsLocalization.formCaptchaErrorMsg ?? '', StateEnum.SETTINGS);
@@ -444,11 +445,19 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], field.querySelectorAll(getStateSelector('inputRangeCurrent', true)), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
+			case 'file':
+				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.FILE_BUTTON], field.querySelector(getStateSelector('fileButton', true)), formId);
+				break;
 			default:
 				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field?.getAttribute(getStateAttribute('tracking')), formId);
 
 				if (fieldset) {
 					setState([StateEnum.ELEMENTS, fieldset.getAttribute(getStateAttribute('fieldName')), StateEnum.CUSTOM], item, formId);
@@ -457,7 +466,6 @@ export function setStateFormInitial(formId) {
 				if (field?.getAttribute(getStateAttribute('fieldPreventSubmit'))) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], Boolean(field.getAttribute(getStateAttribute('fieldPreventSubmit'))), formId);
 				}
-				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field?.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 		}
 

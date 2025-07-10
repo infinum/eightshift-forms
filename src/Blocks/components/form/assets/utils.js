@@ -172,7 +172,38 @@ export class Utils {
 	 * @returns {void}
 	 */
 	scrollToElement(formId, name) {
-		this.state.getStateElementField(name, formId).scrollIntoView({ block: 'start', behavior: 'smooth' });
+		const field = this.state.getStateElementField(name, formId);
+		const type = this.state.getStateElementTypeField(name, formId);
+
+		if (field) {
+			field.scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+			switch (type) {
+				case 'file':
+					this.state.getStateElementFileButton(name, formId)?.focus();
+					break;
+				case 'select':
+				case 'country':
+					this.state.getStateElementCustom(name, formId)?.showDropdown();
+					break;
+				case 'date':
+				case 'dateTime':
+					this.state.getStateElementCustom(name, formId)?.open();
+					break;
+				case 'file':
+					this.state.getStateElementFileButton(name, formId)?.focus();
+					break;
+				case 'checkbox':
+				case 'radio':
+				case 'rating':
+					const firstKey = Object.keys(this.state.getStateElementItems(name, formId))?.[0];
+
+					this.state.getStateElementItems(name, formId)?.[firstKey]?.input?.focus();
+					break;
+				default:
+					this.state.getStateElementInput(name, formId).focus();
+			}
+		}
 	}
 
 	/**
@@ -597,7 +628,6 @@ export class Utils {
 					break;
 				case 'country':
 					this.setManualCountryValue(formId, name, initial);
-
 					break;
 				case 'select':
 					this.setManualSelectValue(formId, name, initial);

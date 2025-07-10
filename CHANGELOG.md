@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [7.0.0]
+
+### Updated
+
+- Updated dependencies to the latest version.
+
+### Changed
+
+- all form field are now tab-able and you can pass the full flow without any mouse interaction
+- Select/country/phone, choices are now updated to the latest version with better A11y.
+- File filed is now full tab-able and can be used with only keyboard.
+- Rating field is fully new and re-built with a different approach using radio buttons.
+- Country and Phone fields can now be preselected from admin using country code
+- Select field will now auto open a dropdown if you focus on it.
+- Once you submit a form and you get an error, the form will scroll up to the first error (nothing new here), but what is new is that it will focus your cursor on the field so you can start typing (no necessary steps needed), or it will open a dropdown.
+- All field have necessary aria tags.
+
 ## [6.9.0]
 
 ### Changed
@@ -1278,6 +1295,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[7.0.0]: https://github.com/infinum/eightshift-forms/compare/6.9.0...7.0.0
 [6.9.0]: https://github.com/infinum/eightshift-forms/compare/6.8.1...6.9.0
 [6.8.1]: https://github.com/infinum/eightshift-forms/compare/6.8.0...6.8.1
 [6.8.0]: https://github.com/infinum/eightshift-forms/compare/6.7.4...6.8.0
