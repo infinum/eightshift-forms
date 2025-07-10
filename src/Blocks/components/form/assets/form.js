@@ -1761,7 +1761,7 @@ export class Form {
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
 
 		if (this.state.getStateElementTypeCustom(name, formId) === 'number') {
-			const allowedKeys = ['Backspace', 'Enter', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-', 'Tab'];
+			const allowedKeys = ['Backspace', 'Enter', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-', 'Tab', 'Delete'];
 
 			// Prevent the default action if the key is not allowed
 			if (!allowedKeys.includes(event.key)) {
