@@ -54,12 +54,8 @@ if ($ratingAmount < $ratingValue) {
 
 $ratingAttrs[UtilsHelper::getStateAttribute('ratingValue')] = $ratingValue;
 
-$ratingAttrsOutput = '';
-if ($ratingAttrs) {
-	foreach ($ratingAttrs as $key => $value) {
-		$ratingAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
+$ratingAttrs['role'] = 'radiogroup';
+
 
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('rating', $attributes);
@@ -70,30 +66,32 @@ $iconFilterName = UtilsHooksHelper::getFilterName(['block', 'rating', 'starIcon'
 
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '
-		<div
+		<input
 			class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'star', "{$componentClass}__star")) . '"
-			' . UtilsHelper::getStateAttribute('ratingValue') . '="' . $i . '"
+			type="radio"
+			name="' . esc_attr($ratingName) . '"
+			id="' . esc_attr($ratingId . $i) . '"
+			value="' . $i . '"
+			' . disabled($ratingIsDisabled, true, false) . '
+			' . checked($ratingValue, $i, false) . '
+		/>';
+
+	// translators: %s is the star rating number.
+	$ariaLabel = sprintf(__('Star rating %s', 'eightshift-forms'), $i);
+
+	$stars .= '
+		<label
+			for="' . esc_attr($ratingId . $i) . '"
+			aria-label="' . esc_attr($ariaLabel) . '"
 		>
-		' . apply_filters($iconFilterName, UtilsHelper::getUtilsIcons('rating'), $attributes) .
-		'</div>';
+		' . apply_filters($iconFilterName, UtilsHelper::getUtilsIcons('rating'), $attributes) . '
+		</label>
+	';
 }
 
 $rating = '
-	<input
-		class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'rating', 'input', "{$componentClass}__input")) . '"
-		name="' . esc_attr($ratingName) . '"
-		id="' . esc_attr($ratingId) . '"
-		value="' . esc_attr($ratingValue) . '"
-		step="1"
-		min="0"
-		max="' . esc_attr($ratingAmount) . '"
-		type="number"
-		' . disabled($ratingIsDisabled, true, false) . '
-		' . wp_readonly($ratingIsReadOnly, true, false) . '
-	/>
-	<div
-	class="' . esc_attr($ratingClass) . '"
-		' . $ratingAttrsOutput . '
+	<div class="' . esc_attr($ratingClass) . '"
+		' . Helpers::getAttrsOutput($ratingAttrs) . '
 	>
 	' . $stars . '
 	</div>
@@ -118,7 +116,7 @@ echo Helpers::render(
 				'conditional-tags',
 				Helpers::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => $ratingFieldAttrs,
+			'fieldAttrs' => array_merge($ratingFieldAttrs, ['role' => 'radiogroup']),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

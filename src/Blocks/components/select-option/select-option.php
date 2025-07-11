@@ -35,22 +35,13 @@ if ($conditionalTags) {
 	$customAttributes[UtilsHelper::getStateAttribute('conditionalTags')] = $conditionalTags;
 }
 
-$selectOptionAttrs[UtilsHelper::getStateAttribute('selectCustomProperties')] = wp_json_encode($customAttributes);
-
-$selectOptionAttrsOutput = '';
-if ($selectOptionAttrs) {
-	foreach ($selectOptionAttrs as $key => $value) {
-		$selectOptionAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 ?>
 
 <option
 	value="<?php echo esc_attr($selectOptionValue); ?>"
 	<?php selected($selectOptionIsSelected); ?>
 	<?php disabled($selectOptionIsDisabled); ?>
-	<?php echo $selectOptionAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($customAttributes); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<?php echo esc_attr($selectOptionLabel); ?>
 </option>

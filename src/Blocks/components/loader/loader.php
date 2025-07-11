@@ -39,7 +39,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('loa
 
 ?>
 
-<div class="<?php echo esc_attr($loaderClass); ?>">
+<div class="<?php echo esc_attr($loaderClass); ?>" role="none" aria-hidden="true" tabindex="-1">
 	<div class="<?php echo esc_attr($loaderSpinnerClass); ?>"></div>
 	<div class="<?php echo esc_attr($loaderOverlayClass); ?>"></div>
 	<?php if ($additionalContent) { ?>

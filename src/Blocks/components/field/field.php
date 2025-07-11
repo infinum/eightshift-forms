@@ -48,6 +48,7 @@ $fieldDisabled = Helpers::checkAttr('fieldDisabled', $attributes, $manifest);
 $fieldHidden = Helpers::checkAttr('fieldHidden', $attributes, $manifest);
 $fieldStyle = Helpers::checkAttr('fieldStyle', $attributes, $manifest);
 $fieldAttrs = Helpers::checkAttr('fieldAttrs', $attributes, $manifest);
+$fieldAttrsLabel = Helpers::checkAttr('fieldAttrsLabel', $attributes, $manifest);
 $fieldIsRequired = Helpers::checkAttr('fieldIsRequired', $attributes, $manifest);
 $fieldConditionalTags = Helpers::checkAttr('fieldConditionalTags', $attributes, $manifest);
 $fieldInlineBeforeAfterContent = Helpers::checkAttr('fieldInlineBeforeAfterContent', $attributes, $manifest);
@@ -144,12 +145,14 @@ $contentWrapClass = Helpers::classnames([
 	FormsHelper::getTwPart($twClasses, $selectorClass, 'field-content-wrap'),
 ]);
 
-$fieldTag = 'div';
-$labelTag = 'label';
-
 if ($fieldType === 'fieldset') {
 	$fieldTag = 'fieldset';
 	$labelTag = 'legend';
+	$fieldAttrsLabel['id'] = $fieldId;
+} else {
+	$fieldTag = 'div';
+	$labelTag = 'label';
+	$fieldAttrsLabel['for'] = $fieldId;
 }
 
 if ($fieldConditionalTags) {
@@ -172,13 +175,6 @@ if ($fieldTracking) {
 	$fieldAttrs[UtilsHelper::getStateAttribute('tracking')] = $fieldTracking;
 }
 
-$fieldAttrsOutput = '';
-if ($fieldAttrs) {
-	foreach ($fieldAttrs as $key => $value) {
-		$fieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('field', $attributes);
 ?>
@@ -186,7 +182,7 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 <<?php echo esc_attr($fieldTag); ?>
 	class="<?php echo esc_attr($fieldClass); ?>"
 	data-id="<?php echo esc_attr($unique); ?>"
-	<?php echo $fieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($fieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 
 	<?php
@@ -207,7 +203,9 @@ $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('fie
 		<?php if ($fieldLabel && !$fieldHideLabel) { ?>
 			<<?php echo esc_attr($labelTag); ?>
 				class="<?php echo esc_attr($labelClass); ?>"
-				for="<?php echo esc_attr($fieldId); ?>">
+				<?php
+				echo Helpers::getAttrsOutput($fieldAttrsLabel); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+				?>>
 				<span class="<?php echo esc_attr($labelInnerClass); ?>">
 					<?php echo wp_kses_post($fieldLabel); ?>
 

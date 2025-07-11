@@ -48,13 +48,6 @@ $radioInputClass = Helpers::classnames([
 
 $radioAttrs['value'] = esc_attr($radioValue);
 
-$radioAttrsOutput = '';
-if ($radioAttrs) {
-	foreach ($radioAttrs as $key => $value) {
-		$radioAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 $conditionalTags = Helpers::render(
 	'conditional-tags',
 	Helpers::props('conditionalTags', $attributes)
@@ -70,18 +63,11 @@ if ($componentName) {
 	$radioFieldAttrs[UtilsHelper::getStateAttribute('fieldType')] = 'radio';
 }
 
-$radioFieldAttrsOutput = '';
-if ($radioFieldAttrs) {
-	foreach ($radioFieldAttrs as $key => $value) {
-		$radioFieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 ?>
 
 <div
 	class="<?php echo esc_attr($radioClass); ?>"
-	<?php echo $radioFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($radioFieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'radio', 'content', "{$componentClass}__content")); ?>">
 		<input
@@ -91,7 +77,7 @@ if ($radioFieldAttrs) {
 			id="<?php echo esc_attr($radioName); ?>"
 			<?php checked($radioIsChecked); ?>
 			<?php disabled($radioIsDisabled); ?>
-			<?php echo $radioAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			<?php echo Helpers::getAttrsOutput($radioAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?> />
 		<?php if (!$radioHideLabel) { ?>
 			<label

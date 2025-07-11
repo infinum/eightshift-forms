@@ -43,7 +43,7 @@ export const ConditionalTagsOptions = (attributes) => {
 				setFormFields(response.data.fields);
 			}
 		});
-	}, [isModalOpen, postId]);
+	}, [postId]);
 
 	const conditionalTagsUse = !useCustom ? checkAttr('conditionalTagsUse', attributes, manifest) : attributes?.conditionalTagsUse;
 	const conditionalTagsRules = !useCustom ? checkAttr('conditionalTagsRules', attributes, manifest) : attributes?.conditionalTagsRules;
