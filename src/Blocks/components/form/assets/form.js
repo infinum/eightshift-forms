@@ -1422,7 +1422,7 @@ export class Form {
 							value: this.state.getStateConfigIsAdmin() ? 'fileUploadAdmin' : 'fileUpload',
 						},
 						{
-							// Add field name to know where whas this file upload to.
+							// Add field name to know where was this file uploaded to.
 							name: this.state.getStateParam('name'),
 							value: name,
 						},
