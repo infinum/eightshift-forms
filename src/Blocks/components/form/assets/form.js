@@ -1200,8 +1200,9 @@ export class Form {
 
 					utils.setFieldFilledState(formId, name);
 				},
-				onOpen: function () {
+				onOpen: function (selectedDates, dateStr, instance) {
 					utils.setActiveState(formId, name);
+					instance?.altInput?.scrollIntoView({ behavior: 'smooth' });
 				},
 				onClose: function () {
 					utils.unsetActiveState(formId, name);
@@ -1836,7 +1837,11 @@ export class Form {
 		const formId = this.state.getFormIdByElement(event.target);
 		const field = this.state.getFormFieldElementByChild(event.target);
 		const name = field.getAttribute(this.state.getStateAttribute('fieldName'));
-		this.state.getStateElementCustom(name, formId)?.showDropdown();
+
+		const custom = this.state.getStateElementCustom(name, formId);
+
+		custom?.showDropdown();
+		custom?.containerOuter?.element?.scrollIntoView({ behavior: 'smooth' });
 
 		this.utils.setOnFocus(event.target);
 	};
