@@ -63,6 +63,7 @@ class TalentlyftClient implements ClientInterface
 						'id' => (string) $id,
 						'title' => $item['Title'] ?? '',
 						'fields' => [],
+						'compliance' => [],
 					];
 				}
 
@@ -105,6 +106,7 @@ class TalentlyftClient implements ClientInterface
 				$customFields = $items['CustomFields'] ?? [];
 
 				$output[$itemId]['fields'] = \array_merge($fields, $questions, $customFields);
+				$output[$itemId]['compliance'] = $items['Compliance'] ?? [];
 
 				\set_transient(self::CACHE_TALENTLYFT_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
@@ -364,6 +366,7 @@ class TalentlyftClient implements ClientInterface
 
 		$output = [];
 		$outputCustom = [];
+		$outputCompliance = false;
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -400,6 +403,11 @@ class TalentlyftClient implements ClientInterface
 						'address' => $value,
 					];
 					break;
+				case 'compliancePrivacy':
+				case 'complianceStorage':
+				case 'complianceShare':
+					$outputCompliance = true;
+					break;
 				default:
 					$output[$name] = $value;
 					break;
@@ -410,6 +418,14 @@ class TalentlyftClient implements ClientInterface
 			// Due to poor API design we need to send custom fields in two different ways.
 			$output['CustomFieldAnswers'] = $outputCustom;
 			$output['Answers'] = $outputCustom;
+		}
+
+		if ($outputCompliance) {
+			$output['Compliance']['Gdpr'] = [
+				'PrivacyPolicyConsent' => \boolval($params['compliancePrivacy']['value'] ?? false),
+				'RetentionConsent' => \boolval($params['complianceStorage']['value'] ?? false),
+				'ShareConsent' => \boolval($params['complianceShare']['value'] ?? false),
+			];
 		}
 
 		return $output;
