@@ -21,6 +21,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Once you submit a form and you get an error, the form will scroll up to the first error (nothing new here), but what is new is that it will focus your cursor on the field so you can start typing (no necessary steps needed), or it will open a dropdown.
 - All field have necessary aria tags.
 
+### Added
+
+- New compliance fields for Talentlyft integration.
+
 ## [6.9.0]
 
 ### Changed
