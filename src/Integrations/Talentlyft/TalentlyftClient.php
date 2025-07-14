@@ -118,15 +118,17 @@ class TalentlyftClient implements ClientInterface
 	/**
 	 * API request to post application.
 	 *
-	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
-	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(string $itemId, array $params, array $files, string $formId): array
+	public function postApplication(array $formDetails): array
 	{
+		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID];
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$files = $formDetails[UtilsConfig::FD_FILES];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+
 		$paramsPrepared = $this->prepareParams($params);
 		$paramsFiles = $this->prepareFiles($files);
 
@@ -268,8 +270,7 @@ class TalentlyftClient implements ClientInterface
 	private function getTalentlyftItems(): array
 	{
 		$statuses = \array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_LIST_TYPE_KEY)));
-
-		\array_unshift($statuses, 'published');
+		$statuses = \array_merge(['published'], $statuses);
 
 		$output = [];
 

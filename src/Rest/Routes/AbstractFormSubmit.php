@@ -337,6 +337,9 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 					// Map enrichment data.
 					$formDetails[UtilsConfig::FD_PARAMS] = $this->enrichment->mapEnrichmentFields($formDetails[UtilsConfig::FD_PARAMS]);
 
+					// TODO: ADD TO CONSTANTS IN VERSION 8.0.0.
+					$formDetails['country'] = $this->getRequestCountryCookie($request);
+
 					// Filter params.
 					$filterName = UtilsHooksHelper::getFilterName(['integrations', $formDetails[UtilsConfig::FD_TYPE], 'prePostParams']);
 					if (\has_filter($filterName)) {
@@ -1033,5 +1036,38 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 		);
 
 		return $output;
+	}
+
+	/**
+	 * Get country from request.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 *
+	 * @return string
+	 */
+	protected function getRequestCountryCookie(WP_REST_Request $request): string
+	{
+		$country = $request->get_header('cookie');
+		if (!$country) {
+			return '';
+		}
+
+		$countries = \explode('; ', $country);
+
+		$country = \array_values(\array_filter($countries, static function (string $country) {
+			return \str_contains($country, 'esForms-country');
+		}))[0] ?? '';
+
+		if (!$country) {
+			return '';
+		}
+
+		$country = \explode('=', $country)[1] ?? '';
+
+		if (!$country) {
+			return '';
+		}
+
+		return $country;
 	}
 }

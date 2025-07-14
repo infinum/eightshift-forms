@@ -24,6 +24,9 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 ### Added
 
 - New compliance fields for Talentlyft integration.
+- Workable integration now supports multiple tags based on the country code.
+- Workable integration now supports multiple statuses.
+- Talentlyft integration now supports multiple statuses.
 
 ## [6.9.0]
 

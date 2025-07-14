@@ -973,14 +973,19 @@ export class Utils {
 			return;
 		}
 
-		const newValue = {
-			prefix: value?.prefix,
+		const phoneDisablePicker = this.state.getStateFormConfigPhoneDisablePicker(formId);
+
+		let newValue = {
 			value: value?.value,
 		};
 
+		if (!phoneDisablePicker) {
+			newValue.prefix = value?.prefix ?? '';
+		}
+
 		// For manual setting.
 		if (set) {
-			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
+			if (!phoneDisablePicker) {
 				const custom = this.state.getStateElementCustom(name, formId);
 
 				if (custom) {
@@ -1010,7 +1015,7 @@ export class Utils {
 	}
 
 	/**
-	 * Set manual field value - Phone by attribute value.
+	 * Set manual field value - Phone prefix by attribute value.
 	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
@@ -1019,15 +1024,12 @@ export class Utils {
 	 * @param {bool} set Set value.
 	 *
 	 * Expected value format:
-	 * {
-	 *  prefix: 'hr',
-	 *  value: '1234567890'
-	 * }
+	 * 'hr'
 	 *
 	 * @returns {void}
 	 */
-	setManualPhoneByAttributeValue(formId, name, value, attribute, set = true) {
-		if (typeof value !== 'object') {
+	setManualPhonePrefixByAttributeValue(formId, name, value, attribute, set = true) {
+		if (typeof value !== 'string') {
 			return;
 		}
 
@@ -1035,26 +1037,29 @@ export class Utils {
 			return;
 		}
 
-		const newValue = {
-			prefix: value?.prefix ?? '',
-			value: value?.value ?? '',
+		const phoneDisablePicker = this.state.getStateFormConfigPhoneDisablePicker(formId);
+
+		if (phoneDisablePicker) {
+			return;
+		}
+
+		let newValue = {
+			value: this.state.getStateElementValue(name, formId)?.value ?? '',
 		};
 
 		// For manual setting.
 		if (set) {
-			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
-				const custom = this.state.getStateElementCustom(name, formId);
+			const custom = this.state.getStateElementCustom(name, formId);
 
-				const options = custom?.passedElement?.element?.options;
+			const options = custom?.passedElement?.element?.options;
 
-				if (options) {
-					const option = [...options].find((option) => option.getAttribute(attribute) === value);
+			if (options) {
+				const option = [...options].find((option) => option.getAttribute(attribute) === value);
 
-					if (option) {
-						custom.setChoiceByValue(option.value);
+				if (option) {
+					custom.setChoiceByValue(option.value);
 
-						newValue.prefix = option.value;
-					}
+					newValue.prefix = option.value;
 				}
 			}
 		}

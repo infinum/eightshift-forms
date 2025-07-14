@@ -76,14 +76,7 @@ export class Geolocation {
 					this.utils.setManualSelectByAttributeValue(formId, name, [countryCookie], this.state.getStateAttribute('selectCountryCode'));
 					break;
 				case 'phone':
-					this.utils.setManualPhoneByAttributeValue(
-						formId,
-						name,
-						{
-							prefix: countryCookie,
-						},
-						this.state.getStateAttribute('selectCountryCode'),
-					);
+					this.utils.setManualPhonePrefixByAttributeValue(formId, name, countryCookie, this.state.getStateAttribute('selectCountryCode'));
 					break;
 			}
 		});

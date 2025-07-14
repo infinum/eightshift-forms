@@ -144,15 +144,17 @@ class MailchimpClient implements MailchimpClientInterface
 	/**
 	 * API request to post application.
 	 *
-	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
-	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(string $itemId, array $params, array $files, string $formId): array
+	public function postApplication(array $formDetails): array
 	{
+		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID];
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$files = $formDetails[UtilsConfig::FD_FILES];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+
 		// Filter override post request.
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {

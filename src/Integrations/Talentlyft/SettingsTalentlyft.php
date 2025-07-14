@@ -286,7 +286,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 								'selectIsMultiple' => true,
 								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_TALENTLYFT_LIST_TYPE_KEY),
 								'selectFieldLabel' => \__('Additional statuses list', 'eightshift-forms'),
-								'selectPlaceholder' => \__('Get additional jobs from other statuses. Use with caution!', 'eightshift-forms'),
+								'selectFieldHelp' => \__('Get additional jobs from other statuses. Published is always included. Use with caution!', 'eightshift-forms'),
 								'selectContent' => [
 									[
 										'component' => 'select-option',
