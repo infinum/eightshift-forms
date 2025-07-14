@@ -422,9 +422,6 @@ export class Utils {
 						}
 					}
 					break;
-				// case 'select':
-				// case 'country':
-				// 	output[trackingName] = value?.map((item) => item.value);
 				case 'file':
 					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? [];
 					output[trackingName] = fileList?.map((file) => file?.upload?.uuid);

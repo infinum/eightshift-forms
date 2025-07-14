@@ -269,15 +269,14 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldLabel' => \__('Geolocation tags', 'eightshift-forms'),
-									// translators: %s will be replaced with the example.
-									'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
+									'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\__("
 										Enter one tag per line, in the following format:<br />
 										<code>country-code : tag-value</code><br /><br />
 										Example:
 										<ul>
 											<li>US : disabled</li>
 											<li>DE : disabled, test</li>
-										</ul>", 'eightshift-forms'))),
+										</ul>", 'eightshift-forms')),
 									'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY, 2),
 								],
 							],
