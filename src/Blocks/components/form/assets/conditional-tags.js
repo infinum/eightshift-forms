@@ -84,6 +84,8 @@ export class ConditionalTags {
 				if (!tagInner) {
 					// Push to top state if no inner items.
 					outputHide.top.push(tagName);
+
+					this.removeActiveFieldsOnHide(formId, tagName);
 				} else {
 					// Create a new inner state if not existing.
 					if (outputHide?.inner?.[tagName] === undefined) {
