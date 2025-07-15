@@ -213,6 +213,8 @@ export class ConditionalTags {
 
 			if (check) {
 				output.top.push(name);
+
+				this.removeActiveFieldsOnHide(formId, name);
 			}
 		}
 
@@ -771,6 +773,61 @@ export class ConditionalTags {
 		return [...new Set([...ct, ...form])];
 	}
 
+	/**
+	 * Remove active fields on hide.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	removeActiveFieldsOnHide(formId, name) {
+		const type = this.state.getStateElementTypeField(name, formId);
+
+		switch (type) {
+			case 'range':
+				this.utils.setManualRangeValue(formId, name, '', true, false);
+				break;
+			case 'rating':
+				this.utils.setManualRatingValue(formId, name, '', true, false);
+				break;
+			case 'radio':
+				this.utils.setManualRadioValue(formId, name, '', true, false);
+
+				const inputRadio = this.state.getStateElementCustom(name, formId);
+
+				if (inputRadio) {
+					this.utils.setManualInputValue(formId, inputRadio.name, '', true, false);
+				}
+				break;
+			case 'checkbox':
+				this.utils.setManualCheckboxValue(formId, name, {}, true, false);
+
+				const inputCheckbox = this.state.getStateElementCustom(name, formId);
+
+				if (inputCheckbox) {
+					this.utils.setManualInputValue(formId, inputCheckbox.name, '', true, false);
+				}
+				break;
+			case 'select':
+				this.utils.setManualSelectValue(formId, name, [], true, false);
+				break;
+			case 'country':
+				this.utils.setManualCountryValue(formId, name, [], true, false);
+				break;
+			case 'phone':
+				this.utils.setManualPhoneValue(formId, name, {}, true, false);
+				break;
+			case 'date':
+			case 'dateTime':
+				this.utils.setManualDateValue(formId, name, '', true, false);
+				break;
+			default:
+				this.utils.setManualInputValue(formId, name, '', true, false);
+				break;
+		}
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Other
 	////////////////////////////////////////////////////////////////
@@ -778,7 +835,7 @@ export class ConditionalTags {
 	/**
 	 * Remove all event listeners from elements.
 	 *
-	 * @returns {vodi}
+	 * @returns {void}
 	 */
 	removeEvents() {
 		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onInitEvent);

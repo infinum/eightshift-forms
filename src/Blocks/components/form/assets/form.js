@@ -171,18 +171,20 @@ export class Form {
 		// Init all form elements.
 		this.initOne(formId);
 
-		// Init conditional tags.
-		this.conditionalTags.initOne(formId);
+		// Order is important here due to logic of prefilling the form!
 
-		// Init steps.
-		this.steps.initOne(formId);
+		// Init geolocation.
+		this.geolocation.initOne(formId);
 
 		// Init enrichment prefill.
 		this.enrichment.setLocalStorageFormPrefill(formId);
 		this.enrichment.setUrlParamsFormPrefill(formId);
 
-		// Init geolocation.
-		this.geolocation.initOne(formId);
+		// Init conditional tags.
+		this.conditionalTags.initOne(formId);
+
+		// Init steps.
+		this.steps.initOne(formId);
 	}
 
 	/**
@@ -1208,7 +1210,7 @@ export class Form {
 					utils.unsetActiveState(formId, name);
 				},
 				onChange: function (selectedDates, dateStr) {
-					utils.setManualDateValue(formId, name, dateStr, false);
+					utils.setManualDateValue(formId, name, dateStr, false, false);
 				},
 			});
 		});

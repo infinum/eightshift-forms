@@ -24,7 +24,7 @@ export class Geolocation {
 	 *
 	 * @returns {void}
 	 */
-	initOne(formId) {
+	initOne() {
 		// Check if enrichment is used.
 		if (!this.state.getStateGeolocationIsUsed()) {
 			return;
@@ -41,7 +41,7 @@ export class Geolocation {
 	/**
 	 * Remove all event listeners from elements.
 	 *
-	 * @returns {vodi}
+	 * @returns {void}
 	 */
 	removeEvents() {
 		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onSetSelectField);

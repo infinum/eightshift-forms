@@ -66,7 +66,7 @@ export class Enrichment {
 	 *
 	 * @returns {void}
 	 */
-	setLocalStorageFormPrefill(formId) {
+	setLocalStorageFormPrefill() {
 		// Check if enrichment is used.
 		if (!this.state.getStateEnrichmentIsUsed() || !this.state.getStateEnrichmentIsLocalStorageUsed()) {
 			return;
@@ -382,7 +382,6 @@ export class Enrichment {
 				case 'dateTime':
 					this.utils.setManualDateValue(formId, name, value);
 					break;
-				case 'country':
 				case 'select':
 					const selectValue = value.split('---');
 
@@ -391,6 +390,15 @@ export class Enrichment {
 					}
 
 					this.utils.setManualSelectValue(formId, name, selectValue);
+					break;
+				case 'country':
+					const countryValue = value.split('---');
+
+					if (!countryValue.length) {
+						break;
+					}
+
+					this.utils.setManualCountryValue(formId, name, selectValue);
 					break;
 				case 'checkbox':
 					const checkboxValue = value.split('---');
@@ -417,22 +425,24 @@ export class Enrichment {
 					this.utils.setManualCheckboxValue(formId, name, newCheckboxValue);
 					break;
 				case 'radio':
-				case 'rating':
 					const innerRadio = this.state.getStateElementItems(name, formId);
 					const inputRadio = this.state.getStateElementCustom(name, formId);
 
 					// If we have input part of the radio, and the value is not in the radio group add it to the input.
 					if (value !== '' && !innerRadio?.[value] && inputRadio) {
-						this.utils.setManualInputValue(formId, inputRadio.name, value, true, true);
+						this.utils.setManualInputValue(formId, inputRadio.name, value, true, true, true);
 					}
 
-					this.utils.setManualRadioValue(formId, name, value, true, true);
+					this.utils.setManualRadioValue(formId, name, value, true, true, true);
+					break;
+				case 'rating':
+					this.utils.setManualRatingValue(formId, name, value);
 					break;
 				case 'range':
 					this.utils.setManualRangeValue(formId, name, value);
 					break;
 				default:
-					this.utils.setManualInputValue(formId, name, value);
+					this.utils.setManualInputValue(formId, name, value, true, true, true);
 					break;
 			}
 		});
@@ -464,22 +474,26 @@ export class Enrichment {
 				case 'dateTime':
 					this.utils.setManualDateValue(formId, name, value);
 					break;
-				case 'country':
 				case 'select':
 					this.utils.setManualSelectValue(formId, name, value);
+					break;
+				case 'country':
+					this.utils.setManualCountryValue(formId, name, value);
 					break;
 				case 'checkbox':
 					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
 				case 'radio':
+					this.utils.setManualRadioValue(formId, name, value, true, true, true);
+					break;
 				case 'rating':
-					this.utils.setManualRadioValue(formId, name, value, true, true);
+					this.utils.setManualRatingValue(formId, name, value);
 					break;
 				case 'range':
 					this.utils.setManualRangeValue(formId, name, value);
 					break;
 				default:
-					this.utils.setManualInputValue(formId, name, value);
+					this.utils.setManualInputValue(formId, name, value, true, true, true);
 					break;
 			}
 		});
