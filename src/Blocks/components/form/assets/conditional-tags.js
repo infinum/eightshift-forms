@@ -432,6 +432,8 @@ export class ConditionalTags {
 			if (inner) {
 				// Push to inner state if existing.
 				output.inner.push(inner);
+
+				this.removeActiveFieldsOnHide(formId, name);
 			}
 		});
 
