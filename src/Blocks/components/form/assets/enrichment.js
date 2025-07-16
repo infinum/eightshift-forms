@@ -338,7 +338,7 @@ export class Enrichment {
 	 * - date (date==2021-01-01).
 	 * - datetime (datetime==2021-01-01 12:00).
 	 * - select (select==option-1---option-2).
-	 * - phone (phone==385---123456789). Prefix and value.
+	 * - phone (phone==123456789---385). Value and prefix.
 	 * - country (country==hr---de). Country code.
 	 *
 	 * Example:
@@ -372,8 +372,8 @@ export class Enrichment {
 					}
 
 					const newPhoneValue = {
-						prefix: phoneValue[0] || '',
-						value: phoneValue[1],
+						prefix: phoneValue[1] || '',
+						value: phoneValue[0],
 					};
 
 					this.utils.setManualPhoneValue(formId, name, newPhoneValue);
@@ -398,7 +398,7 @@ export class Enrichment {
 						break;
 					}
 
-					this.utils.setManualCountryValue(formId, name, selectValue);
+					this.utils.setManualCountryValue(formId, name, countryValue);
 					break;
 				case 'checkbox':
 					const checkboxValue = value.split('---');
@@ -407,33 +407,10 @@ export class Enrichment {
 						break;
 					}
 
-					const innerCheckbox = this.state.getStateElementItems(name, formId);
-					const inputCheckbox = this.state.getStateElementCustom(name, formId);
-
-					const newCheckboxValue = {};
-
-					checkboxValue.forEach((item) => {
-						if (item in innerCheckbox) {
-							newCheckboxValue[item] = item;
-						} else {
-							if (inputCheckbox) {
-								this.utils.setManualInputValue(formId, inputCheckbox.name, item);
-							}
-						}
-					});
-
-					this.utils.setManualCheckboxValue(formId, name, newCheckboxValue);
+					this.utils.setManualCheckboxValue(formId, name, checkboxValue);
 					break;
 				case 'radio':
-					const innerRadio = this.state.getStateElementItems(name, formId);
-					const inputRadio = this.state.getStateElementCustom(name, formId);
-
-					// If we have input part of the radio, and the value is not in the radio group add it to the input.
-					if (value !== '' && !innerRadio?.[value] && inputRadio) {
-						this.utils.setManualInputValue(formId, inputRadio.name, value, true, true, true);
-					}
-
-					this.utils.setManualRadioValue(formId, name, value, true, true, true);
+					this.utils.setManualRadioValue(formId, name, value);
 					break;
 				case 'rating':
 					this.utils.setManualRatingValue(formId, name, value);
@@ -442,7 +419,7 @@ export class Enrichment {
 					this.utils.setManualRangeValue(formId, name, value);
 					break;
 				default:
-					this.utils.setManualInputValue(formId, name, value, true, true, true);
+					this.utils.setManualInputValue(formId, name, value);
 					break;
 			}
 		});
@@ -484,7 +461,7 @@ export class Enrichment {
 					this.utils.setManualCheckboxValue(formId, name, value);
 					break;
 				case 'radio':
-					this.utils.setManualRadioValue(formId, name, value, true, true, true);
+					this.utils.setManualRadioValue(formId, name, value);
 					break;
 				case 'rating':
 					this.utils.setManualRatingValue(formId, name, value);
@@ -493,7 +470,7 @@ export class Enrichment {
 					this.utils.setManualRangeValue(formId, name, value);
 					break;
 				default:
-					this.utils.setManualInputValue(formId, name, value, true, true, true);
+					this.utils.setManualInputValue(formId, name, value);
 					break;
 			}
 		});

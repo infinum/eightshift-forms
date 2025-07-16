@@ -1792,23 +1792,21 @@ export class Form {
 
 		switch (this.state.getStateElementTypeField(name, formId)) {
 			case 'phone':
-				const phoneValue = this.state.getStateElementValue(name, formId);
-
 				this.utils.setManualPhoneValue(
 					formId,
 					name,
 					{
 						prefix: options?.[0] || '',
-						value: phoneValue?.value || '',
 					},
+					true,
 					false,
 				);
 				break;
 			case 'country':
-				this.utils.setManualCountryValue(formId, name, options, false);
+				this.utils.setManualCountryValue(formId, name, options, true, false);
 				break;
 			case 'select':
-				this.utils.setManualSelectValue(formId, name, options, false);
+				this.utils.setManualSelectValue(formId, name, options, true, false);
 				break;
 		}
 
@@ -1865,39 +1863,22 @@ export class Form {
 
 		switch (type) {
 			case 'checkbox':
-				this.utils.setManualCheckboxValue(
-					formId,
-					name,
-					{
-						[value]: checked ? value : '',
-					},
-					false,
-				);
+				this.utils.setManualCheckboxValue(formId, name, {[value]: checked ? value : ''});
 				break;
 			case 'radio':
-				this.utils.setManualRadioValue(formId, name, value, false);
+				this.utils.setManualRadioValue(formId, name, value);
 				break;
 			case 'rating':
-				this.utils.setManualRatingValue(formId, name, value, false);
+				this.utils.setManualRatingValue(formId, name, value);
 				break;
 			case 'phone':
-				const phoneValue = this.state.getStateElementValue(name, formId);
-
-				this.utils.setManualPhoneValue(
-					formId,
-					name,
-					{
-						prefix: phoneValue?.prefix || '',
-						value: value || '',
-					},
-					false,
-				);
+				this.utils.setManualPhoneValue(formId, name, { value: value });
 				break;
 			case 'range':
-				this.utils.setManualRangeValue(formId, name, value, false);
+				this.utils.setManualRangeValue(formId, name, value, true, false);
 				break;
 			default:
-				this.utils.setManualInputValue(formId, name, value, false);
+				this.utils.setManualInputValue(formId, name, value, true, false);
 				break;
 		}
 

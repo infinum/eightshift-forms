@@ -84,8 +84,6 @@ export class ConditionalTags {
 				if (!tagInner) {
 					// Push to top state if no inner items.
 					outputHide.top.push(tagName);
-
-					this.removeActiveFieldsOnHide(formId, tagName);
 				} else {
 					// Create a new inner state if not existing.
 					if (outputHide?.inner?.[tagName] === undefined) {
@@ -215,8 +213,6 @@ export class ConditionalTags {
 
 			if (check) {
 				output.top.push(name);
-
-				this.removeActiveFieldsOnHide(formId, name);
 			}
 		}
 
@@ -313,6 +309,8 @@ export class ConditionalTags {
 
 		// Set styles to DOM.
 		this.ouputStyles(formId, output, stateName);
+
+		this.removeActiveFieldsOnHide(formId, data, stateName);
 
 		// Set state for conditional tags.
 		this.state.setState(
@@ -428,12 +426,23 @@ export class ConditionalTags {
 		// Loop inner items.
 		items.forEach((innerName) => {
 			const inner = this.getFieldInnerByName(formId, name, innerName);
+			const type = this.state.getStateElementTypeField(name, formId);
 
 			if (inner) {
 				// Push to inner state if existing.
 				output.inner.push(inner);
 
-				this.removeActiveFieldsOnHide(formId, name);
+				if (type === 'checkbox') {
+					// this.utils.setManualCheckboxValue(formId, name, {
+					// 	[innerName]: '',
+					// }, true, false);
+				}
+
+				if (type === 'radio') {
+					// this.utils.setManualRadioValue(formId, name, {
+					// 	[innerName]: '',
+					// }, true, false);
+				}
 			}
 		});
 
@@ -785,49 +794,85 @@ export class ConditionalTags {
 	 *
 	 * @returns {void}
 	 */
-	removeActiveFieldsOnHide(formId, name) {
-		const type = this.state.getStateElementTypeField(name, formId);
+	removeActiveFieldsOnHide(formId, data, stateName) {
+		if (stateName === StateEnum.CONDITIONAL_TAGS_STATE_FORM_SHOW) {
+			return;
+		}
 
-		switch (type) {
+		// console.log(data);
+
+		Object.entries(data.inner).forEach(([key, items]) => {
+			const type = this.state.getStateElementTypeField(key, formId);
+
+			if (!data.top.includes(key)) {
+				switch (type) {
+					case 'select':
+						this.removeManualSelectActiveValue(formId, key, items);
+						break;
+					case 'checkbox':
+						// this.utils.setManualCheckboxValue(formId, key, {}, false);
+				}
+			}
+		});
+
+		[...data.top, ...data.innerParents].forEach((name) => {
+			this.removeActiveFieldsOnHideItem(formId, name);
+		});
+	}
+
+	removeManualSelectActiveValue(formId, name, value) {
+		if (!Array.isArray(value)) {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
+		const custom = this.state.getStateElementCustom(name, formId);
+
+		if (custom) {
+			custom.removeActiveItemsByValue(value);
+		}
+
+		const selectedValues = [...custom?.passedElement?.element?.selectedOptions].map((option) => option?.value).filter((option) => option !== '');
+		
+		console.log(selectedValues, 'ivan');
+		
+
+		this.utils.setStateValues(name, newValue, formId);
+		this.utils.setMandatoryFieldState(formId, name, newValue, fullSet);
+	}
+
+	removeActiveFieldsOnHideItem(formId, name) {
+		switch (this.state.getStateElementTypeField(name, formId)) {
 			case 'range':
-				this.utils.setManualRangeValue(formId, name, '', true, false);
+				this.utils.setManualRangeValue(formId, name, '', false);
 				break;
 			case 'rating':
-				this.utils.setManualRatingValue(formId, name, '', true, false);
+				this.utils.setManualRatingValue(formId, name, '', false);
 				break;
 			case 'radio':
-				this.utils.setManualRadioValue(formId, name, '', true, false);
-
-				const inputRadio = this.state.getStateElementCustom(name, formId);
-
-				if (inputRadio) {
-					this.utils.setManualInputValue(formId, inputRadio.name, '', true, false);
-				}
+				this.utils.setManualRadioValue(formId, name, '', false);
 				break;
 			case 'checkbox':
-				this.utils.setManualCheckboxValue(formId, name, {}, true, false);
-
-				const inputCheckbox = this.state.getStateElementCustom(name, formId);
-
-				if (inputCheckbox) {
-					this.utils.setManualInputValue(formId, inputCheckbox.name, '', true, false);
-				}
+				this.utils.setManualCheckboxValue(formId, name, {}, false);
 				break;
 			case 'select':
-				this.utils.setManualSelectValue(formId, name, [], true, false);
+				this.utils.setManualSelectValue(formId, name, [], false);
 				break;
 			case 'country':
-				this.utils.setManualCountryValue(formId, name, [], true, false);
+				this.utils.setManualCountryValue(formId, name, [], false);
 				break;
 			case 'phone':
-				this.utils.setManualPhoneValue(formId, name, {}, true, false);
+				this.utils.setManualPhoneValue(formId, name, {}, false);
 				break;
 			case 'date':
 			case 'dateTime':
-				this.utils.setManualDateValue(formId, name, '', true, false);
+				this.utils.setManualDateValue(formId, name, '', false);
 				break;
 			default:
-				this.utils.setManualInputValue(formId, name, '', true, false);
+				this.utils.setManualInputValue(formId, name, '', false);
 				break;
 		}
 	}

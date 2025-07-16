@@ -412,8 +412,8 @@ export function setStateFormInitial(formId) {
 				break;
 			case 'tel':
 				if (getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], formId)) {
-					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], { value: value }, formId);
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], { value: value }, formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], { prefix: '', value: value }, formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], { prefix: '', value: value }, formId);
 				} else {
 					const newPhoneValue = {
 						prefix: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0] ?? '',
