@@ -13,8 +13,8 @@ export const prefix = 'esForms';
 // Enum object for all state items.
 export const StateEnum = {
 	// State names.
-	ISLOADED: 'isLoaded',
-	ISPROCESSING: 'isProcessing',
+	IS_LOADED: 'isLoaded',
+	IS_PROCESSING: 'isProcessing',
 	ELEMENTS: 'elements',
 	ELEMENTS_FIELDS: 'elementsFields',
 	FORM: 'form',
@@ -137,7 +137,7 @@ export const StateEnum = {
 };
 
 /**
- * Routes enum connected to enqueu object.
+ * Routes enum connected to enqueued object.
  * Used as a constant to be able to be reused on block editor because we don't have this state there.
  */
 export const ROUTES = esFormsLocalization?.restRoutes ?? {};
@@ -314,8 +314,8 @@ export function setStateFormInitial(formId) {
 
 	setState([StateEnum.FORM, StateEnum.POST_ID], formElement?.getAttribute(getStateAttribute('postId')), formId);
 	setState([StateEnum.FORM, StateEnum.FORM_FID], formElement?.getAttribute(getStateAttribute('formFid')), formId);
-	setState([StateEnum.FORM, StateEnum.ISLOADED], false, formId);
-	setState([StateEnum.FORM, StateEnum.ISPROCESSING], false, formId);
+	setState([StateEnum.FORM, StateEnum.IS_LOADED], false, formId);
+	setState([StateEnum.FORM, StateEnum.IS_PROCESSING], false, formId);
 	setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], false, formId);
 	setState([StateEnum.FORM, StateEnum.ELEMENT], formElement, formId);
 	setState([StateEnum.FORM, StateEnum.TYPE], formElement?.getAttribute(getStateAttribute('formType')), formId);
@@ -634,7 +634,7 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 	const tag = JSON.parse(simpleDecode(conditionalTags));
 
 	// Check if fields exist and remove conditional tags if not.
-	// This can happend if the user deletes a field and the conditional tag is still there on other field.
+	// This can happen if the user deletes a field and the conditional tag is still there on other field.
 	const output = tag[1]
 		.map((item) =>
 			item.filter((inner) => {
@@ -681,7 +681,7 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 	const tag = JSON.parse(simpleDecode(conditionalTags));
 
 	// Check if fields exist and remove conditional tags if not.
-	// This can happend if the user deletes a field and the conditional tag is still there on other field.
+	// This can happen if the user deletes a field and the conditional tag is still there on other field.
 	const output = tag[1]
 		.map((item) =>
 			item.filter((inner) => {
@@ -953,9 +953,9 @@ export function getRestUrl(value, isPartial = false) {
 	const prefix = isPartial ? ROUTES?.prefixProject : ROUTES?.prefix;
 
 	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
-	const sufix = ROUTES?.[value].replace(/^\/+/, ''); // Remove leading slash.
+	const suffix = ROUTES?.[value].replace(/^\/+/, ''); // Remove leading slash.
 
-	return `${url}/${sufix}`;
+	return `${url}/${suffix}`;
 }
 
 /**
@@ -974,10 +974,10 @@ export function getRestUrlByType(type, value, isPartial = false, checkRef = fals
 	const newVal = checkRef ? ROUTES?.[value] : value;
 
 	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
-	const sufix = newVal.replace(/^\/+/, ''); // Remove leading slash.
+	const suffix = newVal.replace(/^\/+/, ''); // Remove leading slash.
 	const typePrefix = ROUTES?.[type].replace(/^\/|\/$/g, ''); // Remove leading and trailing slash.
 
-	return `${url}/${typePrefix}/${sufix}`;
+	return `${url}/${typePrefix}/${suffix}`;
 }
 
 /**

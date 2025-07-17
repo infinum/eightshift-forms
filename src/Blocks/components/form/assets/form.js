@@ -73,7 +73,7 @@ export class Form {
 				// Find all forms elements that have have geolocation data attribute.
 				if (formsItems?.getAttribute(this.state.getStateAttribute('formGeolocation'))) {
 					// If forms element have geolocation data attribute, init geolocation via ajax.
-					this.initGolocationForm(formsItems);
+					this.initGeolocationForm(formsItems);
 				} else {
 					const formId = formsItems?.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0';
 
@@ -95,7 +95,7 @@ export class Form {
 	 * Init only geolocation forms by ajax.
 	 * @param {object} formsElement Forms element.
 	 */
-	initGolocationForm(formsElement) {
+	initGeolocationForm(formsElement) {
 		// If you have geolocation configured on the form but global setting is turned off. Return first form.
 		if (!this.state.getStateGeolocationIsUsed()) {
 			const formId = formsElement?.querySelector(this.state.getStateSelector('form', true))?.getAttribute(this.state.getStateAttribute('formId')) || '0';
@@ -1496,7 +1496,7 @@ export class Form {
 	/**
 	 * Remove all event listeners from elements.
 	 *
-	 * @returns {vodi}
+	 * @returns {void}
 	 */
 	removeEvents() {
 		const formIds = this.state.getStateForms();
@@ -1985,8 +1985,8 @@ export class Form {
 			initOnlyForms: () => {
 				this.initOnlyForms();
 			},
-			initGolocationForm: (formsElement) => {
-				this.initGolocationForm(formsElement);
+			initGeolocationForm: (formsElement) => {
+				this.initGeolocationForm(formsElement);
 			},
 			initOnlyFormsInner: (formId) => {
 				this.initOnlyFormsInner(formId);
@@ -2090,11 +2090,14 @@ export class Form {
 			onSelectChangeEvent: (event) => {
 				this.onSelectChangeEvent(event);
 			},
-			onSelectRemoveEvent: (event) => {
-				this.onSelectRemoveEvent(event);
+			onSelectFocusEvent: (event) => {
+				this.onSelectFocusEvent(event);
 			},
 			onInputEvent: (event) => {
 				this.onInputEvent(event);
+			},
+			onRangeCustom: (event) => {
+				this.onRangeCustom(event);
 			},
 			onBlurEvent: (event) => {
 				this.onBlurEvent(event);

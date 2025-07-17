@@ -485,7 +485,7 @@ export class Enrichment {
 	/**
 	 * Remove all event listeners from elements.
 	 *
-	 * @returns {vodi}
+	 * @returns {void}
 	 */
 	removeEvents() {
 		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onLocalstoragePrefillEvent);
@@ -584,8 +584,8 @@ export class Enrichment {
 			setLocalStorageEnrichment: () => {
 				this.setLocalStorageEnrichment();
 			},
-			setLocalStorageFormPrefill: (formId) => {
-				this.setLocalStorageFormPrefill(formId);
+			setLocalStorageFormPrefill: () => {
+				this.setLocalStorageFormPrefill();
 			},
 			setUrlParamsFormPrefill: (formId) => {
 				this.setUrlParamsFormPrefill(formId);
@@ -611,17 +611,17 @@ export class Enrichment {
 			getUrlAllowedParams: (allowedTags) => {
 				return this.getUrlAllowedParams(allowedTags);
 			},
+			getCookiesAllowedParams: (allowedTags) => {
+				return this.getCookiesAllowedParams(allowedTags);
+			},
 			prefillByUrlData: (formId, data) => {
 				this.prefillByUrlData(formId, data);
 			},
 			prefillByLocalstorageData: (formId, data) => {
 				this.prefillByLocalstorageData(formId, data);
 			},
-			getCookiesAllowedParams: (allowedTags) => {
-				return this.getCookiesAllowedParams(allowedTags);
-			},
-			removeEvents: (formId) => {
-				this.removeEvents(formId);
+			removeEvents: () => {
+				this.removeEvents();
 			},
 			onUrlParamsPrefillEvent: (event) => {
 				this.onUrlParamsPrefillEvent(event);

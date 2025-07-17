@@ -594,7 +594,7 @@ export class Utils {
 	}
 
 	/**
-	 *  Reset form values to the initi state.
+	 *  Reset form values to the initial state.
 	 *
 	 * @param {string} formId Form Id.
 	 *
@@ -702,7 +702,7 @@ export class Utils {
 
 				this.state.setStateFormIsLoaded(true, formId);
 
-				// Triger event that form is fully loaded.
+				// Trigger event that form is fully loaded.
 				this.dispatchFormEventForm(this.state.getStateEvent('formJsLoaded'), formId);
 			}
 			iterations++;
@@ -819,7 +819,7 @@ export class Utils {
 	}
 
 	/**
-	 * Actions to run if api response returns JSON but not formated correct.
+	 * Actions to run if api response returns JSON but not formatted correctly.
 	 *
 	 * This can happen if the API returns JSON but it was malformed for this request like containing debug log or PHP warnings.
 	 *
@@ -1281,7 +1281,7 @@ export class Utils {
 
 		const isValueEmpty = isEmpty(initValue);
 
-		const newValue = this.state.getStateElementValue(name, formId);
+		let newValue = this.state.getStateElementValue(name, formId);
 		const custom = this.state.getStateElementCustom(name, formId);
 
 		let hasCustomChanged = false;
@@ -1765,13 +1765,13 @@ export class Utils {
 				this.resetErrors(formId);
 			},
 			createCustomEvent: (eventName, formId = null, additional = null) => {
-				return this.createCustomEvent(eventName, (formId = null), (additional = null));
+				return this.createCustomEvent(eventName, formId, additional);
 			},
 			dispatchFormEventWindow: (eventName, additional = null) => {
-				this.dispatchFormEventWindow(eventName, (additional = null));
+				this.dispatchFormEventWindow(eventName, additional);
 			},
 			dispatchFormEventForm: (eventName, formId, additional = null) => {
-				this.dispatchFormEventForm(eventName, formId, (additional = null));
+				this.dispatchFormEventForm(eventName, formId, additional);
 			},
 			dispatchFormEventField: (eventName, formId, name, value) => {
 				this.dispatchFormEventField(eventName, formId, name, value);
@@ -1860,32 +1860,41 @@ export class Utils {
 			setOnBlur: (target) => {
 				this.setOnBlur(target);
 			},
-			setManualPhoneValue: (formId, name, value) => {
-				this.setManualPhoneValue(formId, name, value);
+			setMandatoryFieldState: (formId, name, value, fullSet = true) => {
+				this.setMandatoryFieldState(formId, name, value, fullSet);
 			},
-			setManualDateValue: (formId, name, value) => {
-				this.setManualDateValue(formId, name, value);
+			setManualPhoneValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualPhoneValue(formId, name, value, fullSet, set);
 			},
-			setManualSelectValue: (formId, name, value) => {
-				this.setManualSelectValue(formId, name, value);
+			setManualPhonePrefixByAttributeValue: (formId, name, value, attribute, fullSet = true) => {
+				this.setManualPhonePrefixByAttributeValue(formId, name, value, attribute, fullSet);
 			},
-			setManualCountryValue: (formId, name, value) => {
-				this.setManualCountryValue(formId, name, value);
+			setManualDateValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualDateValue(formId, name, value, fullSet, set);
 			},
-			setManualCheckboxValue: (formId, name, value) => {
-				this.setManualCheckboxValue(formId, name, value);
+			setManualSelectValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualSelectValue(formId, name, value, fullSet, set);
 			},
-			setManualRadioValue: (formId, name, value) => {
-				this.setManualRadioValue(formId, name, value);
+			setManualSelectByAttributeValue: (formId, name, value, attribute, fullSet = true) => {
+				this.setManualSelectByAttributeValue(formId, name, value, attribute, fullSet);
 			},
-			setManualInputValue: (formId, name, value) => {
-				this.setManualInputValue(formId, name, value);
+			setManualCountryValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualCountryValue(formId, name, value, fullSet, set);
 			},
-			setManualRatingValue: (formId, name, value) => {
-				this.setManualRatingValue(formId, name, value);
+			setManualCheckboxValue: (formId, name, value, fullSet = true) => {
+				this.setManualCheckboxValue(formId, name, value, fullSet);
 			},
-			setManualRangeValue: (formId, name, value) => {
-				this.setManualRangeValue(formId, name, value);
+			setManualRadioValue: (formId, name, value, fullSet = true) => {
+				this.setManualRadioValue(formId, name, value, fullSet);
+			},
+			setManualInputValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualInputValue(formId, name, value, fullSet, set);
+			},
+			setManualRatingValue: (formId, name, value, fullSet = true) => {
+				this.setManualRatingValue(formId, name, value, fullSet);
+			},
+			setManualRangeValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualRangeValue(formId, name, value, fullSet, set);
 			},
 			setRangeCurrentValue: (formId, name) => {
 				this.setRangeCurrentValue(formId, name);
@@ -1901,6 +1910,9 @@ export class Utils {
 			},
 			getPhoneCombinedValue: (formId, name) => {
 				return this.getPhoneCombinedValue(formId, name);
+			},
+			onFormShowEvent: (e) => {
+				this.onFormShowEvent(e);
 			},
 		};
 	}

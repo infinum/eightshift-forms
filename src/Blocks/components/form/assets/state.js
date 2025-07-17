@@ -92,14 +92,14 @@ export class State {
 		return getState([StateEnum.FORM, StateEnum.LOADER], formId);
 	};
 	getStateFormIsProcessing = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.ISPROCESSING], formId);
+		return getState([StateEnum.FORM, StateEnum.IS_PROCESSING], formId);
 	};
 
 	setStateFormIsLoaded = (value, formId) => {
-		setState([StateEnum.FORM, StateEnum.ISLOADED], value, formId);
+		setState([StateEnum.FORM, StateEnum.IS_LOADED], value, formId);
 	};
 	setStateFormIsProcessing = (value, formId) => {
-		setState([StateEnum.FORM, StateEnum.ISPROCESSING], value, formId);
+		setState([StateEnum.FORM, StateEnum.IS_PROCESSING], value, formId);
 	};
 	setStateFormIsAdminSingleSubmit = (value, formId) => {
 		setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], value, formId);
@@ -265,13 +265,13 @@ export class State {
 	getStateElementByTypeField = (type, formId) => {
 		const intType = this.getStateFieldType(type);
 
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_FIELD, intType, formId);
+		return this.getStateFilteredByKey(StateEnum.ELEMENTS, StateEnum.TYPE_FIELD, intType, formId);
 	};
 	getStateElementByHasError = (type, formId) => {
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.HAS_ERROR, type, formId);
+		return this.getStateFilteredByKey(StateEnum.ELEMENTS, StateEnum.HAS_ERROR, type, formId);
 	};
 	getStateElementByLoaded = (type, formId) => {
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.LOADED, type, formId);
+		return this.getStateFilteredByKey(StateEnum.ELEMENTS, StateEnum.LOADED, type, formId);
 	};
 	getStateElementsObject = (formId) => {
 		return getState([StateEnum.ELEMENTS], formId);
@@ -543,7 +543,7 @@ export class State {
 	// Other getters.
 	////////////////////////////////////////////////////////////////
 
-	getStateFilteredBykey = (obj, targetKey, findItem, formId) => {
+	getStateFilteredByKey = (obj, targetKey, findItem, formId) => {
 		return Object?.values(Object?.fromEntries(Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem)));
 	};
 	getFormElementByChild = (element) => {
