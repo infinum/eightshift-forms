@@ -27,6 +27,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Workable integration now supports multiple tags based on the country code.
 - Workable integration now supports multiple statuses.
 - Talentlyft integration now supports multiple statuses.
+- On conditional tags when field is hidden, the value will be reset to empty.
 
 ## [6.9.0]
 
