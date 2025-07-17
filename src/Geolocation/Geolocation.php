@@ -49,6 +49,24 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function setNormalLocationCookie(): void
 	{
+		if (\is_admin()) {
+			return;
+		}
+
+		if (\wp_doing_ajax()) {
+			return;
+		}
+
+		if (\defined('DOING_CRON')) {
+			return;
+		}
+
+		$requestUri = isset($_SERVER['REQUEST_URI']) ? \sanitize_text_field(\wp_unslash($_SERVER['REQUEST_URI'])) : '';
+
+		if (\str_contains($requestUri, 'wp-json')) {
+			return;
+		}
+
 		// Bailout if geolocation feature is not used.
 		if (!$this->useGeolocation()) {
 			return;
@@ -65,7 +83,11 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		try {
-			$cookieValue = $this->getUsersGeolocation();
+			static $cookieValue = '';
+
+			if (!$cookieValue) {
+				$cookieValue = $this->getUsersGeolocation();
+			}
 
 			// Set cookie if we have a value.
 			if ($cookieValue) {

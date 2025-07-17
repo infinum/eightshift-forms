@@ -1,12 +1,8 @@
-import {
-	prefix,
-	setStateWindow,
-	StateEnum,
-} from './state-init';
+import { prefix, setStateValues, setStateWindow, StateEnum } from './state-init';
 import globalManifest from './../../../manifest.json';
 
 /**
- * Main conditon tags class.
+ * Main condition tags class.
  */
 export class ConditionalTags {
 	constructor(utils) {
@@ -37,7 +33,7 @@ export class ConditionalTags {
 	////////////////////////////////////////////////////////////////
 	/**
 	 * Init one form by element after the loaded event is fired.
-	 * 
+	 *
 	 * @param {string} fromId Form Id.
 	 *
 	 * @returns {void}
@@ -49,10 +45,7 @@ export class ConditionalTags {
 		}
 
 		// Listen to every field element change.
-		window.addEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onInitEvent
-		);
+		window.addEventListener(this.state.getStateEvent('formJsLoaded'), this.onInitEvent);
 	}
 
 	/**
@@ -139,12 +132,12 @@ export class ConditionalTags {
 	 */
 	initFields(formId) {
 		// Set all rules for all form fields.
-		for(const [name] of this.state.getStateElements(formId)) {
+		for (const [name] of this.state.getStateElements(formId)) {
 			this.setFieldsRulesAll(formId, name);
 		}
 
 		// Set all rules for all non-form fields.
-		for(const [name] of this.state.getStateElementsFields(formId)) {
+		for (const [name] of this.state.getStateElementsFields(formId)) {
 			this.setFieldsRulesAll(formId, name);
 		}
 
@@ -185,24 +178,20 @@ export class ConditionalTags {
 		};
 
 		// Loop all fields.
-		for(const [name] of this.state.getStateElements(formId)) {
+		for (const [name] of this.state.getStateElements(formId)) {
 			// Get element type.
 			const type = this.state.getStateElementTypeField(name, formId);
 
 			// Only select, checkbox and radio fields can have inner items.
-			if (
-				type === 'select' ||
-				type === 'checkbox' ||
-				type === 'radio'
-			) {
+			if (type === 'select' || type === 'checkbox' || type === 'radio') {
 				// Prepare inner level outputs.
 				let innerOutput = {};
 
 				// Select fields can have multiple or single select inner options.
 				if (type === 'select') {
-					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId) ?
-					this.getFieldInnerSelectMultiple(formId, name) :
-					this.getFieldInnerSelectSingle(formId, name);
+					innerOutput = this.state.getStateElementConfig(name, StateEnum.CONFIG_SELECT_USE_MULTIPLE, formId)
+						? this.getFieldInnerSelectMultiple(formId, name)
+						: this.getFieldInnerSelectSingle(formId, name);
 				} else {
 					// Checkbox and radio inner fields.
 					innerOutput = this.getFieldInner(formId, name);
@@ -228,7 +217,7 @@ export class ConditionalTags {
 		}
 
 		// Loop all non-form fields.
-		for(const [name] of this.state.getStateElementsFields(formId)) {
+		for (const [name] of this.state.getStateElementsFields(formId)) {
 			// Set top level fields state.
 			const check = this.getFieldTopLevel(formId, name, true);
 
@@ -319,13 +308,19 @@ export class ConditionalTags {
 		}
 
 		// Set styles to DOM.
-		this.ouputStyles(formId, output, stateName);
+		this.outputStyles(formId, output, stateName);
+
+		this.removeActiveFieldsOnHide(formId, data, stateName);
 
 		// Set state for conditional tags.
-		this.state.setState([StateEnum.FORM, stateName], {
-			...data,
-			topFinal: [...new Set(topFinalOutput)],
-		}, formId);
+		this.state.setState(
+			[StateEnum.FORM, stateName],
+			{
+				...data,
+				topFinal: [...new Set(topFinalOutput)],
+			},
+			formId,
+		);
 	}
 
 	/**
@@ -337,7 +332,7 @@ export class ConditionalTags {
 	 *
 	 * @returns {void}
 	 */
-	ouputStyles(formId, data, stateName) {
+	outputStyles(formId, data, stateName) {
 		// Get form element.
 		const form = this.state.getStateFormElement(formId);
 
@@ -367,7 +362,7 @@ export class ConditionalTags {
 		const styleTag = document.getElementById(`${styleSelector}`);
 
 		// Set style output.
-		const styleOutput = data.length ? `${data.join(',')}{display:${type} !important;}`: '';
+		const styleOutput = data.length ? `${data.join(',')}{display:${type} !important;}` : '';
 
 		// Set style to DOM.
 		if (!styleTag) {
@@ -390,13 +385,9 @@ export class ConditionalTags {
 	 */
 	getFieldTopLevel(formId, name, isNoneFormBlock = false) {
 		// Find defaults to know what direction to use.
-		const defaultState = !isNoneFormBlock ?
-		this.state.getStateElementConditionalTagsDefaults(name, formId) :
-		this.state.getStateElementFieldConditionalTagsDefaults(name, formId);
+		const defaultState = !isNoneFormBlock ? this.state.getStateElementConditionalTagsDefaults(name, formId) : this.state.getStateElementFieldConditionalTagsDefaults(name, formId); // eslint-disable-line max-len
 
-		const ref = !isNoneFormBlock ?
-		this.state.getStateElementConditionalTagsRef(name, formId) :
-		this.state.getStateElementFieldConditionalTagsRef(name, formId);
+		const ref = !isNoneFormBlock ? this.state.getStateElementConditionalTagsRef(name, formId) : this.state.getStateElementFieldConditionalTagsRef(name, formId);
 
 		// Check if conditions are valid or not. This is where the magic happens.
 		const isValid = ref?.map((validItem) => validItem.every(Boolean)).some(Boolean);
@@ -461,7 +452,10 @@ export class ConditionalTags {
 	 */
 	getFieldInnerByName(formId, name, innerName) {
 		// Check if conditions are valid or not. This is where the magic happens.
-		const isValid = this.state.getStateElementConditionalTagsRefInner(name, innerName, formId)?.map((validItem) => validItem.every(Boolean)).some(Boolean);
+		const isValid = this.state
+			.getStateElementConditionalTagsRefInner(name, innerName, formId)
+			?.map((validItem) => validItem.every(Boolean))
+			.some(Boolean);
 
 		// Find defaults to know what direction to use.
 		const defaultState = this.state.getStateElementConditionalTagsDefaultsInner(name, innerName, formId);
@@ -495,9 +489,9 @@ export class ConditionalTags {
 		};
 
 		// Loop all options.
-		[...this.state.getStateElementCustom(name, formId)?.choiceList?.element?.children ?? []].forEach((option) => {
+		[...(this.state.getStateElementCustom(name, formId)?.passedElement?.element?.options ?? [])].forEach((option) => {
 			// Find item value.
-			const innerName = option.getAttribute(this.state.getStateAttribute('selectValue'));
+			const innerName = option.value;
 
 			// Bailout if placeholder.
 			if (!innerName) {
@@ -529,7 +523,6 @@ export class ConditionalTags {
 	 * @returns {object}
 	 */
 	getFieldInnerSelectSingle(formId, name) {
-
 		// Get choices object.
 		const custom = this.state.getStateElementCustom(name, formId);
 
@@ -582,7 +575,7 @@ export class ConditionalTags {
 	getToggleParent(formId, name, currentState) {
 		if (this.state.getStateElementTypeField(name, formId) === 'select') {
 			// Get choices object.
-			const items = this.state.getStateElementCustom(name, formId)?.config?.choices;
+			const items = this.state.getStateElementCustom(name, formId)?.passedElement?.element?.options;
 
 			// Get total items.
 			let totalItems = items?.length - 1;
@@ -616,14 +609,14 @@ export class ConditionalTags {
 		// Explode name because we can have inner items that have parent prefix.
 		const [topName, innerName] = name.split('---');
 
-		// Opulate current ref state.
+		// Populate current ref state.
 		let output = this.state.getStateElementConditionalTagsRefInner(topName, innerName, formId);
 
 		// Loop all conditional tags.
 		this.state.getStateElementConditionalTagsTagsInner(topName, innerName, formId).forEach((items, parent) => {
 			// Loop all inner fields.
 			items.forEach(([innerName, innerCondition, innerValue], index) => {
-				// Placeholder value to chack later.
+				// Placeholder value to check later.
 				let value = '';
 
 				// Get element type.
@@ -636,10 +629,14 @@ export class ConditionalTags {
 
 				switch (type) {
 					case 'checkbox':
-						// If check box inner items are missing this applys to parent element not children.
+						// If check box inner items are missing this applies to parent element not children.
 						if (innerValue === '') {
 							// If all inner items are empty and not set this will output value to empty.
-							if (Object.values(this.state.getStateElementValue(innerName, formId)).map((inner) => !inner).every(Boolean)) {
+							if (
+								Object.values(this.state.getStateElementValue(innerName, formId))
+									.map((inner) => !inner)
+									.every(Boolean)
+							) {
 								value = '';
 							} else {
 								// If we don't care about value just need to have not empty any item, value is set to something random.
@@ -652,7 +649,7 @@ export class ConditionalTags {
 						break;
 					case 'select':
 					case 'country':
-						value = this.state.getStateElementValue(innerName, formId).map((item) => item?.value);
+						value = this.state.getStateElementValue(innerName, formId);
 
 						if (value.length === 0) {
 							value = '';
@@ -700,7 +697,7 @@ export class ConditionalTags {
 		data.forEach((items, parent) => {
 			// Loop all inner fields.
 			items.forEach((inner, index) => {
-				// Placeholder value to chack later.
+				// Placeholder value to check later.
 				let value = '';
 
 				// Get element type.
@@ -713,10 +710,14 @@ export class ConditionalTags {
 
 				switch (type) {
 					case 'checkbox':
-						// If check box inner items are missing this applys to parent element not children.
+						// If check box inner items are missing this applies to parent element not children.
 						if (inner[2] === '') {
 							// If all inner items are empty and not set this will output value to empty.
-							if (Object.values(this.state.getStateElementValue(inner[0], formId)).map((inner) => !inner).every(Boolean)) {
+							if (
+								Object.values(this.state.getStateElementValue(inner[0], formId))
+									.map((inner) => !inner)
+									.every(Boolean)
+							) {
 								value = '';
 							} else {
 								// If we don't care about value just need to have not empty any item, value is set to something random.
@@ -729,7 +730,7 @@ export class ConditionalTags {
 						break;
 					case 'select':
 					case 'country':
-						value = this.state.getStateElementValue(inner[0], formId).map((item) => item?.value);
+						value = this.state.getStateElementValue(inner[0], formId);
 
 						if (value.length === 0) {
 							value = '';
@@ -772,20 +773,197 @@ export class ConditionalTags {
 		return [...new Set([...ct, ...form])];
 	}
 
+	/**
+	 * Remove active fields on hide.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	removeActiveFieldsOnHide(formId, data, stateName) {
+		if (stateName === StateEnum.CONDITIONAL_TAGS_STATE_FORM_SHOW) {
+			return;
+		}
+
+		Object.entries(data.inner).forEach(([key, items]) => {
+			const type = this.state.getStateElementTypeField(key, formId);
+
+			if (!items.length) {
+				return;
+			}
+
+			if (!data.top.includes(key)) {
+				switch (type) {
+					case 'select':
+						this.removeManualSelectActiveValue(formId, key, items);
+						break;
+					case 'checkbox':
+						this.removeManualCheckboxActiveValue(formId, key, items);
+						break;
+					case 'radio':
+						this.removeManualRadioActiveValue(formId, key, items);
+						break;
+				}
+			}
+		});
+
+		[...data.top, ...data.innerParents].forEach((name) => {
+			this.removeActiveFieldsOnHideItem(formId, name);
+		});
+	}
+
+	/**
+	 * Remove active value from radio field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {array} value Value to remove.
+	 *
+	 * @returns {void}
+	 */
+	removeManualRadioActiveValue(formId, name, value) {
+		if (!Array.isArray(value)) {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
+		let newValue = this.state.getStateElementValue(name, formId);
+		const inner = this.state.getStateElementItems(name, formId);
+
+		if (inner) {
+			Object.values(inner).forEach((item) => {
+				if (value.includes(item.value)) {
+					item.input.checked = false;
+					newValue = '';
+				}
+			});
+		}
+
+		setStateValues(name, newValue, formId);
+		this.utils.setMandatoryFieldState(formId, name, newValue, false);
+	}
+
+	/**
+	 * Remove active value from select field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {array} value Value to remove.
+	 *
+	 * @returns {void}
+	 */
+	removeManualSelectActiveValue(formId, name, value) {
+		if (!Array.isArray(value)) {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
+		const custom = this.state.getStateElementCustom(name, formId);
+		const currentValue = this.state.getStateElementValue(name, formId);
+
+		if (custom) {
+			custom.removeActiveItemsByValue(value);
+		}
+
+		const newValue = currentValue.filter((item) => !value.includes(item));
+
+		setStateValues(name, newValue, formId);
+		this.utils.setMandatoryFieldState(formId, name, newValue, false);
+	}
+
+	/**
+	 * Remove active value from checkbox field.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {array} value Value to remove.
+	 *
+	 * @returns {void}
+	 */
+	removeManualCheckboxActiveValue(formId, name, value) {
+		if (!Array.isArray(value)) {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
+		let newValue = this.state.getStateElementValue(name, formId);
+		const inner = this.state.getStateElementItems(name, formId);
+
+		if (inner) {
+			Object.values(inner).forEach((item) => {
+				if (value.includes(item.value)) {
+					item.input.checked = false;
+					newValue[item.value] = '';
+				}
+			});
+		}
+
+		setStateValues(name, newValue, formId);
+		this.utils.setMandatoryFieldState(formId, name, newValue, false);
+	}
+
+	/**
+	 * Remove active fields on hide item.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 *
+	 * @returns {void}
+	 */
+	removeActiveFieldsOnHideItem(formId, name) {
+		switch (this.state.getStateElementTypeField(name, formId)) {
+			case 'range':
+				this.utils.setManualRangeValue(formId, name, '', false);
+				break;
+			case 'rating':
+				this.utils.setManualRatingValue(formId, name, '', false);
+				break;
+			case 'radio':
+				this.utils.setManualRadioValue(formId, name, '', false);
+				break;
+			case 'checkbox':
+				this.utils.setManualCheckboxValue(formId, name, {}, false);
+				break;
+			case 'select':
+				this.utils.setManualSelectValue(formId, name, [], false);
+				break;
+			case 'country':
+				this.utils.setManualCountryValue(formId, name, [], false);
+				break;
+			case 'phone':
+				this.utils.setManualPhoneValue(formId, name, {}, false);
+				break;
+			case 'date':
+			case 'dateTime':
+				this.utils.setManualDateValue(formId, name, '', false);
+				break;
+			default:
+				this.utils.setManualInputValue(formId, name, '', false);
+				break;
+		}
+	}
+
 	////////////////////////////////////////////////////////////////
 	// Other
 	////////////////////////////////////////////////////////////////
 
 	/**
 	 * Remove all event listeners from elements.
-	 * 
-	 * @returns {vodi}
+	 *
+	 * @returns {void}
 	 */
 	removeEvents() {
-		window?.removeEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onInitEvent
-		);
+		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onInitEvent);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -814,7 +992,7 @@ export class ConditionalTags {
 
 	/**
 	 * Set all public methods.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	publicMethods() {
@@ -846,14 +1024,14 @@ export class ConditionalTags {
 			setFields: (formId) => {
 				this.setFields(formId);
 			},
-			setFieldsRulesAll: (formId, name) => {
-				this.setFieldsRulesAll(formId, name);
+			setFieldsRulesAll: (formId, fieldName) => {
+				this.setFieldsRulesAll(formId, fieldName);
 			},
 			setStyles: (formId, data, stateName) => {
 				this.setStyles(formId, data, stateName);
 			},
-			ouputStyles: (formId, data, stateName) => {
-				this.ouputStyles(formId, data, stateName);
+			outputStyles: (formId, data, stateName) => {
+				this.outputStyles(formId, data, stateName);
 			},
 			getFieldTopLevel: (formId, name, isNoneFormBlock = false) => {
 				return this.getFieldTopLevel(formId, name, isNoneFormBlock);
@@ -863,6 +1041,9 @@ export class ConditionalTags {
 			},
 			getFieldInnerByName: (formId, name, innerName) => {
 				return this.getFieldInnerByName(formId, name, innerName);
+			},
+			getFieldInnerSelect: (formId, name) => {
+				return this.getFieldInnerSelect(formId, name);
 			},
 			getFieldInnerSelectSingle: (formId, name) => {
 				return this.getFieldInnerSelectSingle(formId, name);
@@ -881,6 +1062,21 @@ export class ConditionalTags {
 			},
 			getIgnoreFields: (formId) => {
 				return this.getIgnoreFields(formId);
+			},
+			removeActiveFieldsOnHide: (formId, data, stateName) => {
+				this.removeActiveFieldsOnHide(formId, data, stateName);
+			},
+			removeManualRadioActiveValue: (formId, name, value) => {
+				this.removeManualRadioActiveValue(formId, name, value);
+			},
+			removeManualSelectActiveValue: (formId, data, stateName) => {
+				this.removeManualSelectActiveValue(formId, data, stateName);
+			},
+			removeManualCheckboxActiveValue: (formId, data, stateName) => {
+				this.removeManualCheckboxActiveValue(formId, data, stateName);
+			},
+			removeActiveFieldsOnHideItem: (formId, name) => {
+				this.removeActiveFieldsOnHideItem(formId, name);
 			},
 			removeEvents: (formId) => {
 				this.removeEvents(formId);

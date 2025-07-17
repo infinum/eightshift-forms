@@ -62,28 +62,35 @@ if ($countryIsMultiple) {
 	$countryAttrs['multiple'] = 'true';
 }
 
-if ($countryUseLabelAsPlaceholder) {
-	$countryPlaceholder = esc_attr($countryFieldLabel) ?: esc_html__('Select country', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-	$countryHideLabel = true;
+if ($countryIsRequired) {
+	$countryAttrs['aria-required'] = 'true';
 }
 
-$countryAttrsOutput = '';
-if ($countryAttrs) {
-	foreach ($countryAttrs as $key => $value) {
-		$countryAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
+$countryAttrs['aria-invalid'] = 'false';
+
+$placeholderLabel = '';
+
+// Placeholder input value.
+if ($countryPlaceholder) {
+	$placeholderLabel = $countryPlaceholder;
 }
+
+if ($countryUseLabelAsPlaceholder) {
+	$countryHideLabel = true;
+	$placeholderLabel = esc_attr($countryFieldLabel) ?: esc_html__('Select country', 'eightshift-forms'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+}
+
+$placeholder = Helpers::render(
+	'select-option',
+	[
+		'selectOptionLabel' => $placeholderLabel, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		'selectOptionAsPlaceholder' => true,
+		'selectOptionIsHidden' => true,
+	]
+);
 
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('country', $attributes);
-
-$placeholder = $countryPlaceholder ? Helpers::render(
-	'select-option',
-	[
-		'selectOptionLabel' => $countryPlaceholder, // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-		'selectOptionAsPlaceholder' => true,
-	]
-) : '';
 
 $options = [];
 $filterName = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsBlocks::SETTINGS_TYPE_KEY]['countryOutput'] ?? '';
@@ -96,7 +103,7 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['country']['dataset'];
 	}
 
-	$preselectedValue = $settings['country']['preselectedValue'] ?: $countryValue; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	$preselectedValue = strtolower($settings['country']['preselectedValue'] ?: $countryValue); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
@@ -125,11 +132,15 @@ if (has_filter($filterName)) {
 			UtilsHelper::getStateAttribute('selectCountryNumber') => $value,
 		];
 
+		$optionAttrs = array_merge([
+			UtilsHelper::getStateAttribute('selectCustomProperties') => wp_json_encode($customProperties),
+		], $customProperties);
+
 		$options[] = '
 			<option
 				value="' . $optionValue . '"
-				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
-				' . selected($optionValue, $preselectedValue, false) . '
+				' .  Helpers::getAttrsOutput($optionAttrs) . '
+				' . selected($code, $preselectedValue, false) . '
 			>' . $label . '</option>';
 	}
 }
@@ -140,7 +151,7 @@ $country = '
 		name="' . esc_attr($countryName) . '"
 		id="' . esc_attr($countryId) . '"
 		' . disabled($countryIsDisabled, true, false) . '
-		' . $countryAttrsOutput . '
+		' . Helpers::getAttrsOutput($countryAttrs) . '
 	>
 	' . $placeholder . '
 	' . implode('', $options) . '
@@ -148,26 +159,33 @@ $country = '
 	' . $additionalContent . '
 ';
 
+$fieldOutput = [
+	'fieldContent' => $country,
+	'fieldId' => $countryId,
+	'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
+	'fieldName' => $countryName,
+	'fieldTwSelectorsData' => $countryTwSelectorsData,
+	'fieldIsRequired' => $countryIsRequired,
+	'fieldDisabled' => !empty($countryIsDisabled),
+	'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	'fieldTracking' => $countryTracking,
+	'fieldHideLabel' => $countryHideLabel,
+	'fieldConditionalTags' => Helpers::render(
+		'conditional-tags',
+		Helpers::props('conditionalTags', $attributes)
+	),
+	'fieldAttrs' => $countryFieldAttrs,
+];
+
+// Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.
+if ($countryHideLabel) {
+	$fieldOutput['fieldHideLabel'] = true;
+}
+
 echo Helpers::render(
 	'field',
 	array_merge(
-		Helpers::props('field', $attributes, [
-			'fieldContent' => $country,
-			'fieldId' => $countryId,
-			'fieldTypeInternal' => FormsHelper::getStateFieldType('country'),
-			'fieldName' => $countryName,
-			'fieldTwSelectorsData' => $countryTwSelectorsData,
-			'fieldIsRequired' => $countryIsRequired,
-			'fieldDisabled' => !empty($countryIsDisabled),
-			'fieldTypeCustom' => $countryTypeCustom ?: 'country', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
-			'fieldTracking' => $countryTracking,
-			'fieldHideLabel' => $countryHideLabel,
-			'fieldConditionalTags' => Helpers::render(
-				'conditional-tags',
-				Helpers::props('conditionalTags', $attributes)
-			),
-			'fieldAttrs' => $countryFieldAttrs,
-		]),
+		Helpers::props('field', $attributes, $fieldOutput),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',
 			'selectorClass' => $manifest['componentName'] ?? '',

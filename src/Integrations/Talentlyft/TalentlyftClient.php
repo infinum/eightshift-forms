@@ -63,6 +63,7 @@ class TalentlyftClient implements ClientInterface
 						'id' => (string) $id,
 						'title' => $item['Title'] ?? '',
 						'fields' => [],
+						'compliance' => [],
 					];
 				}
 
@@ -105,6 +106,7 @@ class TalentlyftClient implements ClientInterface
 				$customFields = $items['CustomFields'] ?? [];
 
 				$output[$itemId]['fields'] = \array_merge($fields, $questions, $customFields);
+				$output[$itemId]['compliance'] = $items['Compliance'] ?? [];
 
 				\set_transient(self::CACHE_TALENTLYFT_ITEMS_TRANSIENT_NAME, $output, SettingsCache::CACHE_TRANSIENTS_TIMES['integration']);
 			}
@@ -116,15 +118,17 @@ class TalentlyftClient implements ClientInterface
 	/**
 	 * API request to post application.
 	 *
-	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
-	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(string $itemId, array $params, array $files, string $formId): array
+	public function postApplication(array $formDetails): array
 	{
+		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID];
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$files = $formDetails[UtilsConfig::FD_FILES];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+
 		$paramsPrepared = $this->prepareParams($params);
 		$paramsFiles = $this->prepareFiles($files);
 
@@ -266,8 +270,7 @@ class TalentlyftClient implements ClientInterface
 	private function getTalentlyftItems(): array
 	{
 		$statuses = \array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_LIST_TYPE_KEY)));
-
-		\array_unshift($statuses, 'published');
+		$statuses = \array_merge(['published'], $statuses);
 
 		$output = [];
 
@@ -364,6 +367,7 @@ class TalentlyftClient implements ClientInterface
 
 		$output = [];
 		$outputCustom = [];
+		$outputCompliance = false;
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -400,6 +404,11 @@ class TalentlyftClient implements ClientInterface
 						'address' => $value,
 					];
 					break;
+				case 'compliancePrivacy':
+				case 'complianceStorage':
+				case 'complianceShare':
+					$outputCompliance = true;
+					break;
 				default:
 					$output[$name] = $value;
 					break;
@@ -410,6 +419,14 @@ class TalentlyftClient implements ClientInterface
 			// Due to poor API design we need to send custom fields in two different ways.
 			$output['CustomFieldAnswers'] = $outputCustom;
 			$output['Answers'] = $outputCustom;
+		}
+
+		if ($outputCompliance) {
+			$output['Compliance']['Gdpr'] = [
+				'PrivacyPolicyConsent' => \boolval($params['compliancePrivacy']['value'] ?? false),
+				'RetentionConsent' => \boolval($params['complianceStorage']['value'] ?? false),
+				'ShareConsent' => \boolval($params['complianceShare']['value'] ?? false),
+			];
 		}
 
 		return $output;

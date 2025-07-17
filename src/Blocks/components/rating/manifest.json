@@ -70,6 +70,10 @@
 		},
 		"ratingTwSelectorsData": {
 			"type": "array"
+		},
+		"ratingFieldType": {
+			"type": "string",
+			"default": "fieldset"
 		}
 	}
 }

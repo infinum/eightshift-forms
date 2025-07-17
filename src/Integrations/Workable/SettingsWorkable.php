@@ -10,12 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Workable;
 
+use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
+use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -62,6 +65,16 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 	 * Skip integration.
 	 */
 	public const SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY = 'workable-skip-integration';
+
+	/**
+	 * Geolocation tags.
+	 */
+	public const SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY = 'workable-geolocation-tags';
+
+	/**
+	 * List type key.
+	 */
+	public const SETTINGS_WORKABLE_LIST_TYPE_KEY = 'workable-list-type';
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -121,6 +134,10 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 		}
 
 		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY);
+
+		$isGeolocationEnabled = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY);
+
+		$selectedListType = \array_flip(\array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(self::SETTINGS_WORKABLE_LIST_TYPE_KEY))));
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -203,8 +220,68 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 								'inputMax' => 25,
 								'inputStep' => 1,
 							],
+							[
+								'component' => 'divider',
+								'dividerExtraVSpacing' => true,
+							],
+							[
+								'component' => 'select',
+								'selectIsMultiple' => true,
+								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_WORKABLE_LIST_TYPE_KEY),
+								'selectFieldLabel' => \__('Additional statuses list', 'eightshift-forms'),
+								'selectFieldHelp' => \__('Get additional jobs from other statuses. Published is always included. Use with caution!', 'eightshift-forms'),
+								'selectContent' => [
+									[
+										'component' => 'select-option',
+										'selectOptionLabel' => \__('Draft', 'eightshift-forms'),
+										'selectOptionValue' => 'draft',
+										'selectOptionIsSelected' => isset($selectedListType['draft']),
+									],
+									[
+										'component' => 'select-option',
+										'selectOptionLabel' => \__('Closed', 'eightshift-forms'),
+										'selectOptionValue' => 'closed',
+										'selectOptionIsSelected' => isset($selectedListType['closed']),
+									],
+									[
+										'component' => 'select-option',
+										'selectOptionLabel' => \__('Archived', 'eightshift-forms'),
+										'selectOptionValue' => 'archived',
+										'selectOptionIsSelected' => isset($selectedListType['archived']),
+									],
+								],
+							],
 						],
 					],
+					...($isGeolocationEnabled ? [
+						[
+							'component' => 'tab',
+							'tabLabel' => \__('Geolocation Tags', 'eightshift-forms'),
+							'tabContent' => [
+								[
+									'component' => 'intro',
+									'introSubtitle' => \__('Make sure you have added the tags in your Workable account.', 'eightshift-forms'),
+									'introIsHighlighted' => true,
+								],
+								[
+									'component' => 'textarea',
+									'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY),
+									'textareaIsMonospace' => true,
+									'textareaSaveAsJson' => true,
+									'textareaFieldLabel' => \__('Geolocation tags', 'eightshift-forms'),
+									'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\__("
+										Enter one tag per line, in the following format:<br />
+										<code>country-code : tag-value</code><br /><br />
+										Example:
+										<ul>
+											<li>US : disabled</li>
+											<li>DE : disabled, test</li>
+										</ul>", 'eightshift-forms')),
+									'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY, 2),
+								],
+							],
+						]
+					] : []),
 					$this->settingsFallback->getOutputGlobalFallback(SettingsWorkable::SETTINGS_TYPE_KEY),
 					[
 						'component' => 'tab',

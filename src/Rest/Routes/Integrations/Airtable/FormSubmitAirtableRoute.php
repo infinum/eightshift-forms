@@ -81,15 +81,8 @@ class FormSubmitAirtableRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-
 		// Send application to Airtable.
-		$response = $this->airtableClient->postApplication(
-			$formDetails[UtilsConfig::FD_ITEM_ID] . UtilsConfig::DELIMITER . $formDetails[UtilsConfig::FD_INNER_ID],
-			$formDetails[UtilsConfig::FD_PARAMS],
-			$formDetails[UtilsConfig::FD_FILES],
-			$formId
-		);
+		$response = $this->airtableClient->postApplication($formDetails);
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
 

@@ -15,6 +15,6 @@ if (!$conditionalTagsUse) {
 	return;
 }
 
-echo htmlspecialchars(wp_json_encode([ // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
+echo htmlspecialchars(wp_json_encode( // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped
 	$conditionalTagsRules,
-]), ENT_QUOTES | ENT_HTML5);
+), ENT_QUOTES | ENT_HTML5);

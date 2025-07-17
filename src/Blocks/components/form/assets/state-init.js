@@ -13,8 +13,8 @@ export const prefix = 'esForms';
 // Enum object for all state items.
 export const StateEnum = {
 	// State names.
-	ISLOADED: 'isLoaded',
-	ISPROCESSING: 'isProcessing',
+	IS_LOADED: 'isLoaded',
+	IS_PROCESSING: 'isProcessing',
 	ELEMENTS: 'elements',
 	ELEMENTS_FIELDS: 'elementsFields',
 	FORM: 'form',
@@ -29,6 +29,7 @@ export const StateEnum = {
 	FIELD: 'field',
 	FIELDSET: 'fieldset',
 	RANGE_CURRENT: 'rangeCurrent',
+	FILE_BUTTON: 'fileButton',
 	VALUE: 'value',
 	INITIAL: 'initial',
 	VALUES: 'values',
@@ -82,12 +83,12 @@ export const StateEnum = {
 	CONFIG_USE_SINGLE_SUBMIT: 'useSingleSubmit',
 
 	SETTINGS: 'settings',
+	SETTINGS_LABELS: 'labels',
 	SETTINGS_DISABLE_SCROLL_TO_GLOBAL_MSG_ON_SUCCESS: 'disableScrollToGlobalMsgOnSuccess',
 	SETTINGS_DISABLE_SCROLL_TO_FIELD_ON_ERROR: 'disableScrollToFieldOnError',
 	SETTINGS_FORM_RESET_ON_SUCCESS: 'formResetOnSuccess',
 	SETTINGS_REDIRECTION_TIMEOUT: 'redirectionTimeout',
 	SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT: 'hideGlobalMessageTimeout',
-	SETTINGS_FILE_REMOVE_LABEL: 'fileRemoveLabel',
 	SETTINGS_FORM_DISABLE_AUTO_INIT: 'formDisableAutoInit',
 	SETTINGS_FORM_SERVER_ERROR_MSG: 'formServerErrorMsg',
 	SETTINGS_FORM_CAPTCHA_ERROR_MSG: 'formCaptchaErrorMsg',
@@ -136,7 +137,7 @@ export const StateEnum = {
 };
 
 /**
- * Routes enum connected to enqueu object.
+ * Routes enum connected to enqueued object.
  * Used as a constant to be able to be reused on block editor because we don't have this state there.
  */
 export const ROUTES = esFormsLocalization?.restRoutes ?? {};
@@ -243,7 +244,7 @@ export function setStateInitial() {
 	setState([StateEnum.SETTINGS_FORM_RESET_ON_SUCCESS], Boolean(esFormsLocalization.formResetOnSuccess), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_REDIRECTION_TIMEOUT], esFormsLocalization.redirectionTimeout ?? 600, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT], esFormsLocalization.hideGlobalMessageTimeout ?? 6000, StateEnum.SETTINGS);
-	setState([StateEnum.SETTINGS_FILE_REMOVE_LABEL], esFormsLocalization.fileRemoveLabel ?? '', StateEnum.SETTINGS);
+	setState([StateEnum.SETTINGS_LABELS], esFormsLocalization.labels ?? {}, StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_DISABLE_AUTO_INIT], Boolean(esFormsLocalization.formDisableAutoInit), StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_SERVER_ERROR_MSG], esFormsLocalization.formServerErrorMsg ?? '', StateEnum.SETTINGS);
 	setState([StateEnum.SETTINGS_FORM_CAPTCHA_ERROR_MSG], esFormsLocalization.formCaptchaErrorMsg ?? '', StateEnum.SETTINGS);
@@ -313,8 +314,8 @@ export function setStateFormInitial(formId) {
 
 	setState([StateEnum.FORM, StateEnum.POST_ID], formElement?.getAttribute(getStateAttribute('postId')), formId);
 	setState([StateEnum.FORM, StateEnum.FORM_FID], formElement?.getAttribute(getStateAttribute('formFid')), formId);
-	setState([StateEnum.FORM, StateEnum.ISLOADED], false, formId);
-	setState([StateEnum.FORM, StateEnum.ISPROCESSING], false, formId);
+	setState([StateEnum.FORM, StateEnum.IS_LOADED], false, formId);
+	setState([StateEnum.FORM, StateEnum.IS_PROCESSING], false, formId);
 	setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], false, formId);
 	setState([StateEnum.FORM, StateEnum.ELEMENT], formElement, formId);
 	setState([StateEnum.FORM, StateEnum.TYPE], formElement?.getAttribute(getStateAttribute('formType')), formId);
@@ -338,7 +339,7 @@ export function setStateFormInitial(formId) {
 	// Conditional tags
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], {}, formId);
-	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(formElement?.getAttribute(getStateAttribute('conditionalTags')) ?? '{}'), formId);
+	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_FORM], JSON.parse(simpleDecode(formElement?.getAttribute(getStateAttribute('conditionalTags')) ?? '{}')), formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_HIDE], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_FORM_SHOW], {}, formId);
 	setState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_STATE_CT], {}, formId);
@@ -369,6 +370,7 @@ export function setStateFormInitial(formId) {
 		switch (type) {
 			case 'radio':
 			case 'checkbox':
+			case 'rating':
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], '', formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.FIELD], item.parentNode.parentNode, formId);
@@ -376,7 +378,7 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.ITEMS, value, StateEnum.NAME], name, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED, value], disabled, formId);
 
-				if (type === 'radio') {
+				if (type === 'radio' || type === 'rating') {
 					if (!getState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], formId)) {
 						setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], item.checked ? value : '', formId);
 					}
@@ -397,12 +399,7 @@ export function setStateFormInitial(formId) {
 				break;
 			case 'select-one':
 			case 'select-multiple':
-				const selectedValues = [...item.options].filter((option) => option?.selected).map((option) => {
-					return {
-						value: option?.value,
-						meta: JSON.parse(option?.getAttribute(getStateAttribute('selectCustomProperties')))
-					};
-				}).filter((option) => option.value);
+				const selectedValues = [...item.selectedOptions].map((option) => option?.value).filter((option) => option !== '');
 
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], selectedValues, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], selectedValues, formId);
@@ -415,13 +412,12 @@ export function setStateFormInitial(formId) {
 				break;
 			case 'tel':
 				if (getState([StateEnum.FORM, StateEnum.CONFIG, StateEnum.CONFIG_PHONE_DISABLE_PICKER], formId)) {
-					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], { value: value }, formId);
-					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], { value: value }, formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], { prefix: '', value: value }, formId);
+					setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], { prefix: '', value: value }, formId);
 				} else {
 					const newPhoneValue = {
-						prefix: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.value ?? '',
+						prefix: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0] ?? '',
 						value: value,
-						meta: getState([StateEnum.ELEMENTS, name, StateEnum.VALUE], formId)?.[0]?.meta ?? {},
 					};
 
 					setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], newPhoneValue, formId);
@@ -449,24 +445,27 @@ export function setStateFormInitial(formId) {
 				setState([StateEnum.ELEMENTS, name, StateEnum.RANGE_CURRENT], field.querySelectorAll(getStateSelector('inputRangeCurrent', true)), formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field.getAttribute(getStateAttribute('tracking')), formId);
 				break;
+			case 'file':
+				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.FILE_BUTTON], field.querySelector(getStateSelector('fileButton', true)), formId);
+				break;
 			default:
 				setState([StateEnum.ELEMENTS, name, StateEnum.INITIAL], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.INPUT], item, formId);
 				setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], disabled, formId);
+				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field?.getAttribute(getStateAttribute('tracking')), formId);
 
 				if (fieldset) {
 					setState([StateEnum.ELEMENTS, fieldset.getAttribute(getStateAttribute('fieldName')), StateEnum.CUSTOM], item, formId);
 				}
 
-				if (fieldType === 'rating') {
-					setState([StateEnum.ELEMENTS, name, StateEnum.CUSTOM], field.querySelector(getStateSelector('rating', true)), formId);
-				}
-
 				if (field?.getAttribute(getStateAttribute('fieldPreventSubmit'))) {
 					setState([StateEnum.ELEMENTS, name, StateEnum.IS_DISABLED], Boolean(field.getAttribute(getStateAttribute('fieldPreventSubmit'))), formId);
 				}
-				setState([StateEnum.ELEMENTS, name, StateEnum.TRACKING], field?.getAttribute(getStateAttribute('tracking')), formId);
 				break;
 		}
 
@@ -485,11 +484,7 @@ export function setStateFormInitial(formId) {
 
 	// Loop all fields for conditional tags later because we need to have all state set.
 	for (const item of Object.values(formFields)) {
-		const {
-			value,
-			name,
-			type,
-		} = item;
+		const { value, name, type } = item;
 
 		if (name === 'search_terms') {
 			continue;
@@ -497,8 +492,14 @@ export function setStateFormInitial(formId) {
 
 		const field = formElement.querySelector(`${getStateSelector('field', true)}[${getStateAttribute('fieldName')}="${name}"]`);
 
-		if (type ==='radio' || type ==='checkbox') {
+		if (type === 'radio' || type === 'checkbox') {
 			setStateConditionalTagsItems(item.parentNode.parentNode.getAttribute(getStateAttribute('conditionalTags')), name, value, formId);
+		}
+
+		if (type === 'select-one' || type === 'select-multiple') {
+			[...item?.options]?.map((option) => {
+				setStateConditionalTagsItems(option.getAttribute(getStateAttribute('conditionalTags')), name, option.value, formId);
+			});
 		}
 
 		// Conditional tags.
@@ -511,7 +512,6 @@ export function setStateFormInitial(formId) {
 
 	// Loop all fields for conditional tags later because we need to have all state set beforehand.
 	[...customFields].forEach((field) => {
-			
 		const name = field.getAttribute(getStateAttribute('fieldName'));
 
 		// Conditional tags.
@@ -619,7 +619,7 @@ export function setStateValues(name, value, formId) {
  * @returns {void}
  */
 export function setStateConditionalTags(field, name, isNoneFormBlock = false, formId) {
-	const conditionalTags = field.getAttribute(getStateAttribute('conditionalTags'));
+	const conditionalTags = field?.getAttribute(getStateAttribute('conditionalTags'));
 
 	const parentStorage = isNoneFormBlock ? StateEnum.ELEMENTS_FIELDS : StateEnum.ELEMENTS;
 
@@ -631,15 +631,19 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 		return;
 	}
 
-	const tag = JSON.parse(conditionalTags)?.[0];
+	const tag = JSON.parse(simpleDecode(conditionalTags));
 
 	// Check if fields exist and remove conditional tags if not.
-	// This can happend if the user deletes a field and the conditional tag is still there on other field.
-	const output = tag[1].map((item) => item.filter((inner) => {
-		const itemName = inner[0] ?? '';
+	// This can happen if the user deletes a field and the conditional tag is still there on other field.
+	const output = tag[1]
+		.map((item) =>
+			item.filter((inner) => {
+				const itemName = inner[0] ?? '';
 
-		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
-	})).filter(outputInner => outputInner.length > 0);
+				return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
+			}),
+		)
+		.filter((outputInner) => outputInner.length > 0);
 
 	if (!output.length) {
 		return;
@@ -650,7 +654,6 @@ export function setStateConditionalTags(field, name, isNoneFormBlock = false, fo
 
 	setStateConditionalTagsInner(name, formId, output, isNoneFormBlock);
 }
-
 
 /**
  * Set state conditional tags inner items on one field.
@@ -675,15 +678,19 @@ export function setStateConditionalTagsItems(conditionalTags, name, innerName, f
 		return;
 	}
 
-	const tag = JSON.parse(conditionalTags)?.[0];
+	const tag = JSON.parse(simpleDecode(conditionalTags));
 
 	// Check if fields exist and remove conditional tags if not.
-	// This can happend if the user deletes a field and the conditional tag is still there on other field.
-	const output = tag[1].map((item) => item.filter((inner) => {
-		const itemName = inner[0] ?? '';
+	// This can happen if the user deletes a field and the conditional tag is still there on other field.
+	const output = tag[1]
+		.map((item) =>
+			item.filter((inner) => {
+				const itemName = inner[0] ?? '';
 
-		return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
-	})).filter(outputInner => outputInner.length > 0);
+				return itemName !== '' && getState([StateEnum.ELEMENTS, itemName], formId);
+			}),
+		)
+		.filter((outputInner) => outputInner.length > 0);
 
 	if (!output.length) {
 		return;
@@ -716,7 +723,7 @@ export function setStateConditionalTagsInner(name, formId, tags, isNoneFormBlock
 	const events = isInner ? getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_INNER_EVENTS], formId) : getState([StateEnum.FORM, StateEnum.CONDITIONAL_TAGS_EVENTS], formId);
 
 	const eventsOutput = {
-		...events ?? {},
+		...(events ?? {}),
 	};
 
 	tags.forEach((item) => {
@@ -724,10 +731,7 @@ export function setStateConditionalTagsInner(name, formId, tags, isNoneFormBlock
 
 		// Loop inner fields.
 		item.forEach((inner) => {
-			eventsOutput[inner[0]] = [
-				...eventsOutput[inner[0]] ?? [],
-				(isInner) ? `${name}---${innerName}` : name,
-			];
+			eventsOutput[inner[0]] = [...(eventsOutput[inner[0]] ?? []), isInner ? `${name}---${innerName}` : name];
 		});
 	});
 
@@ -769,7 +773,7 @@ export function setState(keyArray, value, formId) {
 	if (keyArray.length > 1) {
 		window[prefix].state[formKey] = {
 			...window[prefix].state[formKey],
-			...stateObject[keyArray[0]]
+			...stateObject[keyArray[0]],
 		};
 	} else {
 		window[prefix].state[formKey] = {
@@ -802,9 +806,7 @@ export function removeStateForm(formId) {
 	if (index > -1) {
 		forms.splice(index, 1);
 
-		window[prefix].state[StateEnum.FORMS] = [
-			...forms,
-		];
+		window[prefix].state[StateEnum.FORMS] = [...forms];
 	}
 }
 
@@ -870,7 +872,7 @@ export function getStateRoute(name) {
 
 /**
  * Get state selector.
- * 
+ *
  * @param {string} name Name key to get.
  *
  * @returns {string}
@@ -881,7 +883,7 @@ export function getStateResponseOutputKey(name) {
 
 /**
  * Get state selector.
- * 
+ *
  * @param {string} name Name key to get.
  * @param {boolean} usePrefix Use prefix.
  *
@@ -893,7 +895,7 @@ export function getStateSelector(name, usePrefix = false) {
 
 /**
  * Get state selector admin.
- * 
+ *
  * @param {string} name Name key to get.
  * @param {boolean} usePrefix Use prefix.
  *
@@ -951,9 +953,9 @@ export function getRestUrl(value, isPartial = false) {
 	const prefix = isPartial ? ROUTES?.prefixProject : ROUTES?.prefix;
 
 	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
-	const sufix = ROUTES?.[value].replace(/^\/+/, ''); // Remove leading slash.
+	const suffix = ROUTES?.[value].replace(/^\/+/, ''); // Remove leading slash.
 
-	return `${url}/${sufix}`;
+	return `${url}/${suffix}`;
 }
 
 /**
@@ -972,10 +974,26 @@ export function getRestUrlByType(type, value, isPartial = false, checkRef = fals
 	const newVal = checkRef ? ROUTES?.[value] : value;
 
 	const url = prefix.replace(/\/$/, ''); // Remove trailing slash.
-	const sufix = newVal.replace(/^\/+/, ''); // Remove leading slash.
+	const suffix = newVal.replace(/^\/+/, ''); // Remove leading slash.
 	const typePrefix = ROUTES?.[type].replace(/^\/|\/$/g, ''); // Remove leading and trailing slash.
 
-	return `${url}/${typePrefix}/${sufix}`;
+	return `${url}/${typePrefix}/${suffix}`;
+}
+
+/**
+ * Simple decode.
+ *
+ * @param {string} str String to decode.
+ *
+ * @returns {string}
+ */
+export function simpleDecode(str) {
+	return str
+		.replace(/&quot;/g, '"')
+		.replace(/&apos;/g, "'")
+		.replace(/&amp;/g, '&')
+		.replace(/&lt;/g, '<')
+		.replace(/&gt;/g, '>');
 }
 
 ////////////////////////////////////////////////////////////////
@@ -1008,7 +1026,7 @@ function isLocalStorageAvailable() {
 		localStorage.removeItem(test);
 
 		return true;
-	} catch(e) {
+	} catch (e) {
 		return false;
 	}
 }

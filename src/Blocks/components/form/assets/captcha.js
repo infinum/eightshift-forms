@@ -34,7 +34,7 @@ export class Captcha {
 	}
 
 	/**
-	 * Initi captcha on load.
+	 * Initialize captcha on load.
 	 *
 	 * @returns {void}
 	 */

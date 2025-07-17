@@ -114,7 +114,7 @@ export class Steps {
 			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
 		}
 
-		// Hide next button direted from the api.
+		// Hide next button directed from the api.
 		if (disableNextButton) {
 			this.state.getStateFormStepsElement(nextStep, formId).querySelector(`${this.state.getStateSelector('field', true)}[${this.state.getStateAttribute('submitStepDirection')}="${this.STEP_DIRECTION_NEXT}"]`)?.classList?.add(this.state.getStateSelector('isHidden'));
 		}
@@ -321,7 +321,7 @@ export class Steps {
 	/**
 	 * Remove all event listeners from elements.
 	 * 
-	 * @returns {vodi}
+	 * @returns {void}
 	 */
 	removeEvents() {
 		window?.removeEventListener(
@@ -330,6 +330,11 @@ export class Steps {
 		);
 	}
 
+	/**
+	 * Toggle debug preview.
+	 *
+	 * @returns {void}
+	 */
 	toggleDebugPreview() {
 		const debug = document.querySelectorAll(this.state.getStateSelector('stepDebugPreview', true));
 
@@ -429,8 +434,14 @@ export class Steps {
 			removeEvents: (formId) => {
 				this.removeEvents(formId);
 			},
+			toggleDebugPreview: () => {
+				this.toggleDebugPreview();
+			},
 			onInitEvent: (event) => {
 				this.onInitEvent(event);
+			},
+			onToggleDebugPreview: (event) => {
+				this.onToggleDebugPreview(event);
 			},
 		};
 	}

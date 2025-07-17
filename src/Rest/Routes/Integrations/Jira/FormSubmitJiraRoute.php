@@ -82,15 +82,8 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-
 		// Send application to Hubspot.
-		$response = $this->jiraClient->postApplication(
-			$formDetails[UtilsConfig::FD_PARAMS],
-			$formDetails[UtilsConfig::FD_FILES],
-			$formId
-		);
+		$response = $this->jiraClient->postApplication($formDetails);
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
 

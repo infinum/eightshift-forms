@@ -81,16 +81,10 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
 		$params = $formDetails[UtilsConfig::FD_PARAMS];
 
 		// Send application to ActiveCampaign.
-		$response = $this->activeCampaignClient->postApplication(
-			$formDetails[UtilsConfig::FD_ITEM_ID],
-			$params,
-			$formDetails[UtilsConfig::FD_FILES],
-			$formId
-		);
+		$response = $this->activeCampaignClient->postApplication($formDetails);
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
 

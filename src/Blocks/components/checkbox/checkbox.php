@@ -60,16 +60,9 @@ $checkboxInputClass = Helpers::classnames([
 
 $checkboxAttrs['value'] = esc_attr($checkboxValue);
 
-$checkboxAttrsOutput = '';
-if ($checkboxAttrs) {
-	foreach ($checkboxAttrs as $key => $value) {
-		$checkboxAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 // strlen used because we can have 0 as string.
 if (strlen($checkboxUncheckedValue) !== 0) {
-	$checkboxAttrsOutput .= wp_kses_post(" data-unchecked-value='" . $checkboxUncheckedValue . "'");
+	$checkboxAttrs['data-unchecked-value'] = $checkboxUncheckedValue;
 }
 
 $conditionalTags = Helpers::render(
@@ -91,18 +84,11 @@ if ($checkboxTracking) {
 	$checkboxFieldAttrs[UtilsHelper::getStateAttribute('tracking')] = esc_attr($checkboxTracking);
 }
 
-$checkboxFieldAttrsOutput = '';
-if ($checkboxFieldAttrs) {
-	foreach ($checkboxFieldAttrs as $key => $value) {
-		$checkboxFieldAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 ?>
 
 <div
 	class="<?php echo esc_attr($checkboxClass); ?>"
-	<?php echo $checkboxFieldAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($checkboxFieldAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'checkbox', 'content', "{$componentClass}__content")); ?>">
 		<input
@@ -110,7 +96,7 @@ if ($checkboxFieldAttrs) {
 			type="checkbox"
 			name="<?php echo esc_attr($checkboxName); ?>"
 			id="<?php echo esc_attr($checkboxName); ?>"
-			<?php echo $checkboxAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+			<?php echo Helpers::getAttrsOutput($checkboxAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?>
 			<?php checked($checkboxIsChecked); ?>
 			<?php disabled($checkboxIsDisabled); ?>

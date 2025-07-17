@@ -85,13 +85,6 @@ if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 	]));
 }
 
-$formsAttrsOutput = '';
-if ($formAttrs) {
-	foreach ($formAttrs as $key => $value) {
-		$formsAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 $twClassesData = FormsHelper::getTwSelectorsData($attributes);
 $twClasses = FormsHelper::getTwSelectors($twClassesData, ['forms']);
 
@@ -108,7 +101,7 @@ $formsClass = Helpers::classnames([
 <div
 	class="<?php echo esc_attr($formsClass); ?>"
 	<?php
-	echo $formsAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	echo Helpers::getAttrsOutput($formAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 	<?php
 	foreach ($allForms as $formId) {

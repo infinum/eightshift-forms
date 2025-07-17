@@ -81,15 +81,8 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-
 		// Send application to Mailerlite.
-		$response = $this->mailerliteClient->postApplication(
-			$formDetails[UtilsConfig::FD_ITEM_ID],
-			$formDetails[UtilsConfig::FD_PARAMS],
-			$formDetails[UtilsConfig::FD_FILES],
-			$formId
-		);
+		$response = $this->mailerliteClient->postApplication($formDetails);
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
 

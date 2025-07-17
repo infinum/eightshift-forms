@@ -30,7 +30,8 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 		<a
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
 			href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formEditActionsFormPostId)) ?>"
-			title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>">
+			title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>"
+			tabindex="-1">
 			<?php echo UtilsHelper::getUtilsIcons('edit'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?>
 		</a>
@@ -40,7 +41,8 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 		<a
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
 			href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formEditActionsFormPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
-			title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>">
+			title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>"
+			tabindex="-1">
 			<?php echo UtilsHelper::getUtilsIcons('settings'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?>
 		</a>
@@ -50,7 +52,8 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 		<a
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
 			href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
-			title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>">
+			title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>"
+			tabindex="-1">
 			<?php echo UtilsHelper::getUtilsIcons('dashboard'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?>
 		</a>
@@ -59,7 +62,8 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 			<a
 				href="#"
 				class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link " . UtilsHelper::getStateSelector('stepDebugPreview'))); ?>"
-				title="<?php esc_html_e('Debug form', 'eightshift-forms'); ?>">
+				title="<?php esc_html_e('Debug form', 'eightshift-forms'); ?>"
+				tabindex="-1">
 				<?php echo UtilsHelper::getUtilsIcons('debug'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 				?>
 			</a>

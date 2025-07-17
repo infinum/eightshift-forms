@@ -1,12 +1,9 @@
+import { isEmpty } from '@eightshift/ui-components/utilities';
 import { ConditionalTags } from './conditional-tags';
 import { Enrichment } from './enrichment';
 import { Geolocation } from './geolocation';
 import { State } from './state';
-import { StateEnum,
-	prefix,
-	setStateWindow,
-	setStateValues,
-} from './state-init';
+import { StateEnum, prefix, setStateWindow, setStateValues } from './state-init';
 import { Steps } from './step';
 import globalManifest from './../../../manifest.json';
 
@@ -106,7 +103,7 @@ export class Utils {
 	 * @param {string} eventName Event name.
 	 * @param {string} formId Form Id.
 	 * @param {object} additional Additional data to add to event.
-	*
+	 *
 	 * @returns {Event}
 	 */
 	createCustomEvent(eventName, formId = null, additional = null) {
@@ -114,7 +111,7 @@ export class Utils {
 			bubbles: true,
 			detail: {
 				[prefix]: window?.[prefix],
-			}
+			},
 		};
 
 		if (formId) {
@@ -133,7 +130,7 @@ export class Utils {
 	 *
 	 * @param {string} eventName Event name.
 	 * @param {object} additional Additional data to add to event.
-	*
+	 *
 	 * @returns {void}
 	 */
 	dispatchFormEventWindow(eventName, additional = null) {
@@ -146,7 +143,7 @@ export class Utils {
 	 * @param {string} eventName Event name.
 	 * @param {string} formId Form Id.
 	 * @param {object} additional Additional data to add to event.
-	*
+	 *
 	 * @returns {void}
 	 */
 	dispatchFormEventForm(eventName, formId, additional = null) {
@@ -160,7 +157,7 @@ export class Utils {
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {object|string|array} value Field value.
-	*
+	 *
 	 * @returns {void}
 	 */
 	dispatchFormEventField(eventName, formId, name, value) {
@@ -176,7 +173,38 @@ export class Utils {
 	 * @returns {void}
 	 */
 	scrollToElement(formId, name) {
-		this.state.getStateElementField(name, formId).scrollIntoView({block: 'start', behavior: 'smooth'});
+		const field = this.state.getStateElementField(name, formId);
+		const type = this.state.getStateElementTypeField(name, formId);
+
+		if (field) {
+			field.scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+			switch (type) {
+				case 'file':
+					this.state.getStateElementFileButton(name, formId)?.focus();
+					break;
+				case 'select':
+				case 'country':
+					this.state.getStateElementCustom(name, formId)?.showDropdown();
+					break;
+				case 'date':
+				case 'dateTime':
+					this.state.getStateElementCustom(name, formId)?.open();
+					break;
+				case 'file':
+					this.state.getStateElementFileButton(name, formId)?.focus();
+					break;
+				case 'checkbox':
+				case 'radio':
+				case 'rating':
+					const firstKey = Object.keys(this.state.getStateElementItems(name, formId))?.[0];
+
+					this.state.getStateElementItems(name, formId)?.[firstKey]?.input?.focus();
+					break;
+				default:
+					this.state.getStateElementInput(name, formId).focus();
+			}
+		}
 	}
 
 	/**
@@ -187,7 +215,7 @@ export class Utils {
 	 * @returns {void}
 	 */
 	scrollToGlobalMsg(formId) {
-		this.state.getStateFormGlobalMsgElement(formId).scrollIntoView({block: 'start', behavior: 'smooth'});
+		this.state.getStateFormGlobalMsgElement(formId).scrollIntoView({ block: 'start', behavior: 'smooth' });
 	}
 
 	/**
@@ -229,9 +257,15 @@ export class Utils {
 			return;
 		}
 
+		const input = this.state.getStateElementInput(name, formId);
+
 		this.state.getStateElementField(name, formId)?.classList?.remove(this.state.getStateSelector('hasError'));
 		this.state.setStateElementHasError(name, false, formId);
 		error.innerHTML = '';
+
+		if (input) {
+			input.setAttribute('aria-invalid', 'false');
+		}
 	}
 
 	/**
@@ -250,9 +284,15 @@ export class Utils {
 			return;
 		}
 
+		const input = this.state.getStateElementInput(name, formId);
+
 		this.state.getStateElementField(name, formId)?.classList?.add(this.state.getStateSelector('hasError'));
 		this.state.setStateElementHasError(name, true, formId);
 		error.innerHTML = msg;
+
+		if (input) {
+			input.setAttribute('aria-invalid', 'true');
+		}
 	}
 
 	/**
@@ -367,14 +407,14 @@ export class Utils {
 
 			switch (this.state.getStateElementTypeField(name, formId)) {
 				case 'checkbox':
-					for(const [checkName, checkValue] of Object.entries(value)) {
+					for (const [checkName, checkValue] of Object.entries(value)) {
 						const trackingCheckName = trackingName?.[checkName];
 
 						if (!trackingCheckName) {
 							continue;
 						}
 
-						if(!(trackingCheckName in output)) {
+						if (!(trackingCheckName in output)) {
 							output[trackingCheckName] = '';
 						}
 
@@ -382,10 +422,6 @@ export class Utils {
 							output[trackingCheckName] = checkValue;
 						}
 					}
-					break;
-				case 'select':
-				case 'country':
-					output[trackingName] = value?.map((item) => item.value);
 					break;
 				case 'file':
 					const fileList = this.state.getStateElementCustom(name, formId)?.files ?? [];
@@ -456,16 +492,12 @@ export class Utils {
 		}
 
 		if (window?.dataLayer && gtmData?.event) {
-			window.dataLayer.push({...gtmData, ...additionalDataItems});
+			window.dataLayer.push({ ...gtmData, ...additionalDataItems });
 
-			this.dispatchFormEventForm(
-				this.state.getStateEvent('afterGtmDataPush'),
-				formId,
-				{
-					gtmData,
-					additionalDataItems,
-				}
-			);
+			this.dispatchFormEventForm(this.state.getStateEvent('afterGtmDataPush'), formId, {
+				gtmData,
+				additionalDataItems,
+			});
 		}
 	}
 
@@ -485,11 +517,7 @@ export class Utils {
 
 		switch (type) {
 			case 'checkbox':
-				this.setFieldFilledStateByName(
-					formId,
-					name,
-					Object.values(value).filter((item) => item !== '').length > 0
-				);
+				this.setFieldFilledStateByName(formId, name, Object.values(value).filter((item) => item !== '').length > 0);
 				break;
 			case 'phone':
 				this.setFieldFilledStateByName(formId, name, value?.value);
@@ -502,11 +530,11 @@ export class Utils {
 
 	/**
 	 * Prefill inputs active/filled.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {bool} condition Condition.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	setFieldFilledStateByName(formId, name, condition) {
@@ -566,7 +594,7 @@ export class Utils {
 	}
 
 	/**
-	 *  Reset form values to the initi state.
+	 *  Reset form values to the initial state.
 	 *
 	 * @param {string} formId Form Id.
 	 *
@@ -618,7 +646,7 @@ export class Utils {
 					this.state.getStateElementCustom(name, formId)?.removeAllFiles();
 					break;
 				default:
-					this.setManualInputValue(formId, name, initial, true, true);
+					this.setManualInputValue(formId, name, initial);
 					break;
 			}
 		}
@@ -643,13 +671,16 @@ export class Utils {
 		this.dispatchFormEventForm(this.state.getStateEvent('afterFormSubmitSuccessBeforeRedirect'), formId, redirectUrl);
 
 		// Do the actual redirect after some time.
-		setTimeout(() => {
-			window.location = redirectUrl;
+		setTimeout(
+			() => {
+				window.location = redirectUrl;
 
-			if (reload) {
-				window.location.reload();
-			}
-		}, parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10));
+				if (reload) {
+					window.location.reload();
+				}
+			},
+			parseInt(this.state.getStateSettingsRedirectionTimeout(formId), 10),
+		);
 	}
 
 	/**
@@ -671,7 +702,7 @@ export class Utils {
 
 				this.state.setStateFormIsLoaded(true, formId);
 
-				// Triger event that form is fully loaded.
+				// Trigger event that form is fully loaded.
 				this.dispatchFormEventForm(this.state.getStateEvent('formJsLoaded'), formId);
 			}
 			iterations++;
@@ -757,26 +788,25 @@ export class Utils {
 			if (formId !== null) {
 				// Clear all errors.
 				this.resetErrors(formId);
-	
+
 				// Remove loader.
 				this.hideLoader(formId);
-	
+
 				// Set global msg.
-				this.setGlobalMsg(
-					formId,
-					this.state.getStateSettingsFormServerErrorMsg(),
-					'error'
-				);
-	
+				this.setGlobalMsg(formId, this.state.getStateSettingsFormServerErrorMsg(), 'error');
+
 				// Reset timeout for after each submit.
-				if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+				if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
 					clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 				}
-	
+
 				// Hide global msg in any case after some time.
-				this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
-					this.unsetGlobalMsg(formId);
-				}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+				this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
+					() => {
+						this.unsetGlobalMsg(formId);
+					},
+					parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
+				);
 			}
 
 			// Throw error.
@@ -789,7 +819,7 @@ export class Utils {
 	}
 
 	/**
-	 * Actions to run if api response returns JSON but not formated correct.
+	 * Actions to run if api response returns JSON but not formatted correctly.
 	 *
 	 * This can happen if the API returns JSON but it was malformed for this request like containing debug log or PHP warnings.
 	 *
@@ -813,21 +843,20 @@ export class Utils {
 				this.hideLoader(formId);
 
 				// Set global msg.
-				this.setGlobalMsg(
-					formId,
-					this.state.getStateSettingsFormServerErrorMsg(),
-					'error'
-				);
+				this.setGlobalMsg(formId, this.state.getStateSettingsFormServerErrorMsg(), 'error');
 
 				// Reset timeout after each submit.
-				if (typeof this.GLOBAL_MSG_TIMEOUT_ID === "number") {
+				if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
 					clearTimeout(this.GLOBAL_MSG_TIMEOUT_ID);
 				}
 
 				// Hide global msg in any case after some time.
-				this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
-					this.unsetGlobalMsg(formId);
-				}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+				this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
+					() => {
+						this.unsetGlobalMsg(formId);
+					},
+					parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
+				);
 			}
 
 			throw new Error(`API response returned JSON but it was malformed for this request. Function used: "${type}"`);
@@ -854,11 +883,7 @@ export class Utils {
 		this.hideLoader(formId);
 
 		// Set global msg.
-		this.setGlobalMsg(
-			formId,
-			msg ?? this.state.getStateSettingsFormServerErrorMsg(),
-			'error'
-		);
+		this.setGlobalMsg(formId, msg ?? this.state.getStateSettingsFormServerErrorMsg(), 'error');
 
 		// Reset timeout for after each submit.
 		if (typeof this.GLOBAL_MSG_TIMEOUT_ID === 'number') {
@@ -866,9 +891,12 @@ export class Utils {
 		}
 
 		// Hide global msg in any case after some time.
-		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(() => {
-			this.unsetGlobalMsg(formId);
-		}, parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10));
+		this.GLOBAL_MSG_TIMEOUT_ID = setTimeout(
+			() => {
+				this.unsetGlobalMsg(formId);
+			},
+			parseInt(this.state.getStateSettingsHideGlobalMessageTimeout(formId), 10),
+		);
 
 		throw new Error(`API response returned fatal error. Function used: "${type}. ${error}"`);
 	}
@@ -919,11 +947,34 @@ export class Utils {
 	}
 
 	/**
+	 * Set mandatory field state.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {string} value Field value.
+	 * @param {bool} fullSet Full set value.
+	 *
+	 * @returns {void}
+	 */
+	setMandatoryFieldState(formId, name, value, fullSet = true) {
+		this.setFieldFilledState(formId, name);
+
+		this.enrichment.setLocalStorageFormPrefillField(formId, name);
+
+		if (fullSet) {
+			this.conditionalTags.setField(formId, name);
+		}
+
+		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
+	}
+
+	/**
 	 * Set manual field value - Phone.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {object} value Field value.
+	 * @param {bool} fullSet Full set value.
 	 * @param {bool} set Set value.
 	 *
 	 * Expected value format:
@@ -931,10 +982,10 @@ export class Utils {
 	 *  prefix: '1',
 	 *  value: '1234567890'
 	 * }
-	 * 
+	 *
 	 * @returns {void}
 	 */
-	setManualPhoneValue(formId, name, value, set = true) {
+	setManualPhoneValue(formId, name, value, fullSet = true, set = true) {
 		if (typeof value !== 'object') {
 			return;
 		}
@@ -943,48 +994,117 @@ export class Utils {
 			return;
 		}
 
+		const phoneDisablePicker = this.state.getStateFormConfigPhoneDisablePicker(formId);
+
+		let newValue = value?.value ?? this.state.getStateElementValue(name, formId)?.value ?? '';
+		let newPrefix = value?.prefix ?? (this.state.getStateElementValue(name, formId)?.prefix ?? '');
+
+		const isValueEmpty = isEmpty(value);
+
 		// For manual setting.
-		if (set) {
-			if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
+			if (!phoneDisablePicker) {
 				const custom = this.state.getStateElementCustom(name, formId);
 
 				if (custom) {
-					custom.setChoiceByValue(value?.prefix);
+					if (isValueEmpty || newPrefix === '') {
+						custom.removeActiveItems();
+					} else {
+						if (set) {
+							custom.setChoiceByValue(newPrefix);
+						}
+					}
 				}
 			}
 
 			const input = this.state.getStateElementInput(name, formId);
 
 			if (input) {
-				input.value = value?.value;
+				if (isValueEmpty) {
+					input.value = '';
+					newValue = '';
+					newPrefix = '';
+				} else {
+					if (set) {
+						input.value = newValue;
+					}
+				}
 			}
+
+		const outputValue = {
+			value: newValue,
+			prefix: newPrefix,
+		};
+
+		setStateValues(name, outputValue, formId);
+		this.setMandatoryFieldState(formId, name, outputValue, fullSet);
+	}
+
+	/**
+	 * Set manual field value - Phone prefix by attribute value.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {string} value Field value.
+	 * @param {string} attribute Attribute name.
+	 * @param {bool} fullSet Full set value.
+	 *
+	 * Expected value format:
+	 * 'hr'
+	 *
+	 * @returns {void}
+	 */
+	setManualPhonePrefixByAttributeValue(formId, name, value, attribute, fullSet = true) {
+		if (typeof value !== 'string') {
+			return;
 		}
 
-		setStateValues(name, value, formId);
-		this.setFieldFilledState(formId, name);
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
 
-		this.enrichment.setLocalStorageFormPrefillField(formId, name);
+		const phoneDisablePicker = this.state.getStateFormConfigPhoneDisablePicker(formId);
 
-		this.conditionalTags.setField(formId, name);
+		if (phoneDisablePicker) {
+			return;
+		}
 
-		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
+		let newPrefix = value ?? '';
+
+		const custom = this.state.getStateElementCustom(name, formId);
+
+		const option = [...custom?.passedElement?.element?.options].find((option) => option.getAttribute(attribute) === value);
+
+		if (option) {
+			custom.setChoiceByValue(option.value);
+
+			newPrefix = option.value;
+		}
+
+		const outputValue = {
+			value: this.state.getStateElementValue(name, formId)?.value ?? '',
+			prefix: newPrefix,
+		};
+
+		setStateValues(name, outputValue, formId);
+		this.setMandatoryFieldState(formId, name, outputValue, fullSet);
 	}
 
 	/**
 	 * Set manual field value - Date.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {string} value Field value.
+	 * @param {bool} fullSet Full set value.
 	 * @param {bool} set Set value.
 	 *
 	 * Expected value format:
 	 * '2021-01-01'
 	 * '2021-01-01 12:00'
-	 * 
+	 *
 	 * @returns {void}
 	 */
-	setManualDateValue(formId, name, value, set = true) {
+	setManualDateValue(formId, name, value, fullSet = true, set = true) {
 		if (typeof value !== 'string') {
 			return;
 		}
@@ -994,42 +1114,33 @@ export class Utils {
 		}
 
 		// For manual setting.
-		if (set) {
-			const custom = this.state.getStateElementCustom(name, formId);
+		const custom = this.state.getStateElementCustom(name, formId);
 
-			if (custom) {
+		if (custom) {
+			if (set) {
 				custom.setDate(value, true, custom?.config?.dateFormat);
 			}
 		}
 
 		setStateValues(name, value, formId);
-
-		this.enrichment.setLocalStorageFormPrefillField(formId, name);
-
-		this.conditionalTags.setField(formId, name);
-
-		this.setFieldFilledState(formId, name);
-
-		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
+		this.setMandatoryFieldState(formId, name, value, fullSet);
 	}
 
 	/**
 	 * Set manual field value - Select.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {array} value Field value.
+	 * @param {bool} fullSet Full set value.
 	 * @param {bool} set Set value.
-	 * 
+	 *
 	 * Expected value format:
-	 * [
-	 *  { value: '1' },
-	 *  { value: '2' },
-	 * ]
-	 * 
+	 * ['option-1', 'option-2']
+	 *
 	 * @returns {void}
 	 */
-	setManualSelectValue(formId, name, value, set = true) {
+	setManualSelectValue(formId, name, value, fullSet = true, set = true) {
 		if (!Array.isArray(value)) {
 			return;
 		}
@@ -1038,68 +1149,129 @@ export class Utils {
 			return;
 		}
 
-			// For manual setting.
+		const newValue = value;
+
+		// For manual setting.
 		if (set) {
 			const custom = this.state.getStateElementCustom(name, formId);
 
 			if (custom) {
-				if (value.length) {
-					custom.setChoiceByValue(value?.map((item) => item.value));
+				if (newValue.length) {
+					newValue.forEach((item, index) => {
+						const option = [...custom.passedElement?.element?.options].find((option) => option.value === item);
+
+						if (option) {
+							custom.setChoiceByValue(item);
+						} else {
+							newValue.splice(index, 1);
+						}
+					});
 				} else {
 					custom.removeActiveItems();
 				}
 			}
 		}
 
-		setStateValues(name, value, formId);
+		setStateValues(name, newValue, formId);
+		this.setMandatoryFieldState(formId, name, newValue, fullSet);
+	}
 
-		this.setFieldFilledState(formId, name);
+	/**
+	 * Set manual field value - Select by attribute value.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {array} value Field value.
+	 * @param {string} attribute Attribute name.
+	 * @param {bool} fullSet Full set value.
+	 *
+	 * Expected value format:
+	 * ['hr', 'de']
+	 *
+	 * @returns {void}
+	 */
+	setManualSelectByAttributeValue(formId, name, value, attribute, fullSet = true) {
+		if (!Array.isArray(value)) {
+			return;
+		}
 
-		this.enrichment.setLocalStorageFormPrefillField(formId, name);
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
 
-		this.conditionalTags.setField(formId, name);
+		let newValue = value;
 
-		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
+		// For manual setting.
+		const custom = this.state.getStateElementCustom(name, formId);
+
+		if (custom) {
+			if (newValue.length) {
+				newValue.forEach((item, index) => {
+					const option = [...custom.passedElement?.element?.options].find((option) => option.getAttribute(attribute) === item);
+
+					if (option) {
+						custom.setChoiceByValue(option.value);
+						newValue[index] = option.value;
+					} else {
+						newValue.splice(index, 1);
+					}
+				});
+			} else {
+				custom.removeActiveItems();
+			}
+		}
+
+		setStateValues(name, newValue, formId);
+		this.setMandatoryFieldState(formId, name, newValue, fullSet);
 	}
 
 	/**
 	 * Set manual field value - Country.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {array} value Field value.
+	 * @param {bool} fullSet Full set value.
 	 * @param {bool} set Set value.
-	 * 
+	 *
 	 * Expected value format:
-	 * [
-	 *  { value: 'hr' },
-	 *  { value: 'de' },
-	 * ]
-	 * 
+	 * ['hr', 'de']
+	 *
 	 * @returns {void}
 	 */
-	setManualCountryValue(formId, name, value, set = true) {
-		this.setManualSelectValue(formId, name, value, set);
+	setManualCountryValue(formId, name, value, fullSet = true, set = true) {
+		this.setManualSelectValue(formId, name, value, fullSet, set);
 	}
 
 	/**
 	 * Set manual field value - Checkboxes.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {array} value Field value.
-	 * @param {bool} set Set value.
+	 * @param {bool} fullSet Full set value.
 	 *
 	 * Expected value format:
 	 * {
 	 *  checkbox-1: checkbox-1,
 	 *  checkbox-2: checkbox-2,
 	 * }
-	 * 
+	 *
 	 * @returns {void}
 	 */
-	setManualCheckboxValue(formId, name, value, set = true) {
-		if (typeof value !== 'object') {
+	setManualCheckboxValue(formId, name, value, fullSet = true) {
+
+		let initValue = value;
+
+		if (Array.isArray(value)) {
+			initValue = value.reduce((acc, item) => {
+				acc[item] = item;
+
+				return acc;
+			}, {});
+		}
+
+		if (typeof initValue !== 'object') {
 			return;
 		}
 
@@ -1107,107 +1279,80 @@ export class Utils {
 			return;
 		}
 
-		if (set) {
-			const inner = this.state.getStateElementItems(name, formId);
+		const isValueEmpty = isEmpty(initValue);
 
-			if (inner) {
+		let newValue = this.state.getStateElementValue(name, formId);
+		const custom = this.state.getStateElementCustom(name, formId);
+
+		let hasCustomChanged = false;
+
+		const inner = this.state.getStateElementItems(name, formId);
+
+		if (inner) {
+			if (isValueEmpty) {
 				Object.values(inner).forEach((item) => {
-					item.input.checked = value?.[item.input.value] ?? false;
+					item.input.checked = false;
+
+					newValue[item.value] = '';
 				});
-			}
-		}
 
-		const newValue = this.state.getStateElementValue(name, formId);
+				if (custom) {
+					custom.value = '';
+					hasCustomChanged = true;
+				}
+			} else {
+				let customValue = '';
+				
+				Object.values(inner).forEach((item) => {
+					if (initValue?.[item.value]) {
+						item.input.checked = true;
 
-		setStateValues(name, { ...newValue, ...value }, formId);
-		this.setFieldFilledState(formId, name);
+						newValue[item.value] = item.value;
+					}
 
-		this.enrichment.setLocalStorageFormPrefillField(formId, name);
-
-		this.conditionalTags.setField(formId, name);
-
-		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, { ...newValue, ...value });
-	}
-
-	/**
-	 * Set manual field value - Radios.
-	 * 
-	 * @param {string} formId Form Id.
-	 * @param {string} name Field name.
-	 * @param {string} value Field value.
-	 * @param {bool} set Set value.
-	 * @param {bool} ignoreCustomRadio Ignore custom radio.
-	 * 
-	 * Expected value format:
-	 * 'radio-1'
-	 * 
-	 * @returns {void}
-	 */
-	setManualRadioValue(formId, name, value, set = true, ignoreCustomRadio = false) {
-		if (typeof value !== 'string') {
-			return;
-		}
-
-		if (!(name in this.state.getStateElementsObject(formId))) {
-			return;
-		}
-
-		if (set) {
-			const inner = this.state.getStateElementItems(name, formId);
-
-			if (inner) {
-				if (value !== '' && inner?.[value]) {
-					inner[value].input.checked = true;
-				} else {
-					Object.values(inner).forEach((item) => {
+					if (initValue?.[item.value] === '') {
 						item.input.checked = false;
-					});
 
-					// If sent value that doesn't exist in radio group, clear it.
-					value = '';
+						newValue[item.value] = '';
+					}
+				});
+
+				Object.values(initValue).forEach((item) => {
+					if (!inner[item]) {
+						customValue = item;
+					}
+				});
+
+				if (custom && customValue !== '') {
+					custom.value = customValue;
+					hasCustomChanged = true;
 				}
 			}
 		}
 
-		setStateValues(name, value, formId);
-		this.setFieldFilledState(formId, name);
+		setStateValues(name, newValue, formId);
+		this.setMandatoryFieldState(formId, name, newValue, fullSet);
 
-		if (!ignoreCustomRadio) {
-			const customRadioInputField = this.state.getStateElementFieldset(name, formId)?.querySelector(this.state.getStateSelector('field', true));
-
-			if (customRadioInputField) {
-				this.setManualInputValue(
-					formId,
-					customRadioInputField?.getAttribute(this.state.getStateAttribute('fieldName')),
-					'',
-					true,
-					true
-				);
-			}
+		if (hasCustomChanged && custom) {
+			setStateValues(custom.name, custom.value, formId);
+			this.setMandatoryFieldState(formId, custom.name, custom.value, fullSet);
 		}
-
-		this.enrichment.setLocalStorageFormPrefillField(formId, name);
-
-		this.conditionalTags.setField(formId, name);
-
-		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
 	}
 
 	/**
-	 * Set manual field value - Input/Textarea/Email/Text/Tel/Number/Password/Hidden.
-	 * 
+	 * Set manual field value - Radios.
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {string} value Field value.
-	 * @param {bool} set Set value.
-	 * @param {bool} ignoreCustomRadio Ignore custom radio.
+	 * @param {bool} fullSet Full set value.
 	 *
 	 * Expected value format:
-	 * 'value'
-	 * 
+	 * 'radio-1'
+	 *
 	 * @returns {void}
 	 */
-	setManualInputValue(formId, name, value, set = true, ignoreCustomRadio = false) {
+	setManualRadioValue(formId, name, value, fullSet = true) {
 		if (typeof value !== 'string') {
 			return;
 		}
@@ -1216,66 +1361,135 @@ export class Utils {
 			return;
 		}
 
-		if (set) {
-			const input = this.state.getStateElementInput(name, formId);
+		const custom = this.state.getStateElementCustom(name, formId);
 
-			if (input) {
+		let newValue = this.state.getStateElementValue(name, formId);
+
+		let hasCustomChanged = false;
+
+		const inner = this.state.getStateElementItems(name, formId);
+
+		if (inner) {
+			if (value === '') {
+				Object.values(inner).forEach((item) => {
+					item.input.checked = false;
+
+					newValue = '';
+				});
+
+				if (custom) {
+					custom.value = '';
+					hasCustomChanged = true;
+				}
+			} else {
+				Object.values(inner).forEach((item) => {
+					item.input.checked = false;
+				});
+
+				if (inner[value]) {
+					inner[value].input.checked = true;
+					newValue = value;
+
+					if (custom) {
+						custom.value = '';
+						hasCustomChanged = true;
+					}
+				} else {
+					if (custom) {
+						custom.value = value;
+						newValue = '';
+						hasCustomChanged = true;
+					}
+				}
+			}
+		}
+
+		setStateValues(name, newValue, formId);
+		this.setMandatoryFieldState(formId, name, newValue, fullSet);
+
+		if (hasCustomChanged && custom) {
+			setStateValues(custom.name, custom.value, formId);
+			this.setMandatoryFieldState(formId, custom.name, custom.value, fullSet);
+		}
+	}
+
+	/**
+	 * Set manual field value - Input/Textarea/Email/Text/Tel/Number/Password/Hidden.
+	 *
+	 * @param {string} formId Form Id.
+	 * @param {string} name Field name.
+	 * @param {string} value Field value.
+	 * @param {bool} fullSet Full set value.
+	 * @param {bool} set Set value.
+	 *
+	 * Expected value format:
+	 * 'value'
+	 *
+	 * @returns {void}
+	 */
+	setManualInputValue(formId, name, value, fullSet = true, set = true) {
+		if (typeof value !== 'string') {
+			return;
+		}
+
+		if (!(name in this.state.getStateElementsObject(formId))) {
+			return;
+		}
+
+		const input = this.state.getStateElementInput(name, formId);
+
+		if (input) {
+			if (set) {
 				input.value = value;
 			}
 		}
 
 		setStateValues(name, value, formId);
-		this.setFieldFilledState(formId, name);
+		this.setMandatoryFieldState(formId, name, value, fullSet);
 
-		if (!ignoreCustomRadio) {
-			const fieldset = this.state.getStateElementFieldset(name, formId);
-			const customRadioInputName = fieldset?.getAttribute(this.state.getStateAttribute('fieldName'));
-			const customRadioInputType = fieldset?.getAttribute(this.state.getStateAttribute('fieldType'));
+		const fieldset = this.state.getStateElementFieldset(name, formId);
 
-			if (customRadioInputName && customRadioInputType === 'radio') {
-				this.setManualRadioValue(formId, customRadioInputName, '', true, true);
+		if (fieldset) {
+			const customRadioInputName = fieldset.getAttribute(this.state.getStateAttribute('fieldName'));
+			const customRadioInputType = fieldset.getAttribute(this.state.getStateAttribute('fieldType'));
+
+			if (customRadioInputName && customRadioInputType === 'radio' && value !== '') {
+				const inner = this.state.getStateElementItems(customRadioInputName, formId);
+
+				Object.values(inner).forEach((item) => {
+					item.input.checked = false;
+				});
+
+				setStateValues(customRadioInputName, '', formId);
+				this.setMandatoryFieldState(formId, customRadioInputName, '', fullSet);
 			}
 		}
-
-		this.enrichment.setLocalStorageFormPrefillField(formId, name);
-
-		this.conditionalTags.setField(formId, name);
-
-		this.dispatchFormEventField(this.state.getStateEvent('onFieldChange'), formId, name, value);
 	}
 
 	/**
 	 * Set manual field value - Rating.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {string} value Field value.
-	 * @param {bool} set Set value.
+	 * @param {bool} fullSet Full set value.
 	 *
 	 * Expected value format:
 	 * '5'
 	 *
 	 * @returns {void}
 	 */
-	setManualRatingValue(formId, name, value, set = true) {
-		if (typeof value !== 'string') {
-			return;
-		}
-
-		if (!(name in this.state.getStateElementsObject(formId))) {
-			return;
-		}
-
-		this.state.getStateElementCustom(name, formId)?.setAttribute(this.state.getStateAttribute('ratingValue'), value);
-		this.setManualInputValue(formId, name, value, set);
+	setManualRatingValue(formId, name, value, fullSet = true) {
+		this.setManualRadioValue(formId, name, value, fullSet);
 	}
 
 	/**
 	 * Set manual field value - Range
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
 	 * @param {string} value Field value.
+	 * @param {bool} fullSet Full set value.
 	 * @param {bool} set Set value.
 	 *
 	 * Expected value format:
@@ -1283,7 +1497,7 @@ export class Utils {
 	 *
 	 * @returns {void}
 	 */
-	setManualRangeValue(formId, name, value, set = true) {
+	setManualRangeValue(formId, name, value, fullSet = true, set = true) {
 		if (typeof value !== 'string') {
 			return;
 		}
@@ -1292,16 +1506,16 @@ export class Utils {
 			return;
 		}
 
-		this.setManualInputValue(formId, name, value, set);
+		this.setManualInputValue(formId, name, value, fullSet, set);
 		this.setRangeCurrentValue(formId, name);
 	}
 
 	/**
 	 * Set range current value.
-	 * 
+	 *
 	 * @param {string} formId Form Id.
 	 * @param {string} name Field name.
-	 * 
+	 *
 	 * @returns {void}
 	 */
 	setRangeCurrentValue(formId, name) {
@@ -1314,7 +1528,7 @@ export class Utils {
 		if (input) {
 			const min = input.min || 0;
 			const max = input.max || 100;
-			const parsedProgress = (Number(((value - min) * 100) / (max - min))).toFixed(2);
+			const parsedProgress = Number(((value - min) * 100) / (max - min)).toFixed(2);
 
 			input.style.setProperty('--es-form-range-progress', `${parsedProgress}%`);
 
@@ -1354,8 +1568,10 @@ export class Utils {
 		const outputItems = data?.[this.state.getStateResponseOutputKey('variation')] ?? {};
 
 		if (Object.keys(outputItems).length) {
-			for(const [key, value] of Object.entries(outputItems)) {
-				const itemElements = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"]`);
+			for (const [key, value] of Object.entries(outputItems)) {
+				const itemElements = outputElement.querySelectorAll(
+					`${this.state.getStateSelector('resultOutputItem', true)}[${this.state.getStateAttribute('resultOutputItemKey')}="${key}"]`,
+				);
 
 				itemElements.forEach((item) => {
 					const operator = item.getAttribute(this.state.getStateAttribute('resultOutputItemOperator')) || globalManifest.comparator.IS;
@@ -1367,7 +1583,9 @@ export class Utils {
 					}
 				});
 
-				const partElement = outputElement.querySelectorAll(`${this.state.getStateSelector('resultOutputPart', true)}[${this.state.getStateAttribute('resultOutputPart')}="${key}"]`);
+				const partElement = outputElement.querySelectorAll(
+					`${this.state.getStateSelector('resultOutputPart', true)}[${this.state.getStateAttribute('resultOutputPart')}="${key}"]`,
+				);
 
 				if (partElement.length && value) {
 					partElement.forEach((item) => {
@@ -1466,16 +1684,13 @@ export class Utils {
 			[globalManifest.comparator.CN]: (start, value) => !start.includes(value),
 			[globalManifest.comparator.SW]: (start, value) => start.startsWith(value),
 			[globalManifest.comparator.EW]: (start, value) => start.endsWith(value),
-			[globalManifest.comparatorExtended.B]: (start, value, end) => 
-				parseFloat(String(start)) < parseFloat(String(value)) && parseFloat(String(value)) < parseFloat(String(end)),
-			[globalManifest.comparatorExtended.BS]: (start, value, end) => 
-				parseFloat(String(start)) <= parseFloat(String(value)) && parseFloat(String(value)) <= parseFloat(String(end)),
-			[globalManifest.comparatorExtended.BN]: (start, value, end) => 
-				parseFloat(String(start)) < parseFloat(String(value)) || parseFloat(String(value)) > parseFloat(String(end)),
-			[globalManifest.comparatorExtended.BNS]: (start, value, end) => 
+			[globalManifest.comparatorExtended.B]: (start, value, end) => parseFloat(String(start)) < parseFloat(String(value)) && parseFloat(String(value)) < parseFloat(String(end)), // eslint-disable-line max-len
+			[globalManifest.comparatorExtended.BS]: (start, value, end) => parseFloat(String(start)) <= parseFloat(String(value)) && parseFloat(String(value)) <= parseFloat(String(end)), // eslint-disable-line max-len
+			[globalManifest.comparatorExtended.BN]: (start, value, end) => parseFloat(String(start)) < parseFloat(String(value)) || parseFloat(String(value)) > parseFloat(String(end)), // eslint-disable-line max-len
+			[globalManifest.comparatorExtended.BNS]: (start, value, end) =>
 				parseFloat(String(start)) <= parseFloat(String(value)) || parseFloat(String(value)) >= parseFloat(String(end)),
 		};
-	};
+	}
 
 	/**
 	 * Get phone combined value.
@@ -1495,7 +1710,7 @@ export class Utils {
 		if (!this.state.getStateFormConfigPhoneDisablePicker(formId)) {
 			return data?.prefix === '' ? '' : `${data?.prefix}${data?.value}`;
 		}
-		
+
 		return data?.value;
 	}
 
@@ -1526,7 +1741,7 @@ export class Utils {
 			}
 
 			form?.classList?.remove(this.state.getStateSelector('isHidden'));
-		};
+		}
 	};
 
 	////////////////////////////////////////////////////////////////
@@ -1550,13 +1765,13 @@ export class Utils {
 				this.resetErrors(formId);
 			},
 			createCustomEvent: (eventName, formId = null, additional = null) => {
-				return this.createCustomEvent(eventName, formId = null, additional = null);
+				return this.createCustomEvent(eventName, formId, additional);
 			},
 			dispatchFormEventWindow: (eventName, additional = null) => {
-				this.dispatchFormEventWindow(eventName, additional = null);
+				this.dispatchFormEventWindow(eventName, additional);
 			},
 			dispatchFormEventForm: (eventName, formId, additional = null) => {
-				this.dispatchFormEventForm(eventName, formId, additional = null);
+				this.dispatchFormEventForm(eventName, formId, additional);
 			},
 			dispatchFormEventField: (eventName, formId, name, value) => {
 				this.dispatchFormEventField(eventName, formId, name, value);
@@ -1645,32 +1860,41 @@ export class Utils {
 			setOnBlur: (target) => {
 				this.setOnBlur(target);
 			},
-			setManualPhoneValue: (formId, name, value) => {
-				this.setManualPhoneValue(formId, name, value);
+			setMandatoryFieldState: (formId, name, value, fullSet = true) => {
+				this.setMandatoryFieldState(formId, name, value, fullSet);
 			},
-			setManualDateValue: (formId, name, value) => {
-				this.setManualDateValue(formId, name, value);
+			setManualPhoneValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualPhoneValue(formId, name, value, fullSet, set);
 			},
-			setManualSelectValue: (formId, name, value) => {
-				this.setManualSelectValue(formId, name, value);
+			setManualPhonePrefixByAttributeValue: (formId, name, value, attribute, fullSet = true) => {
+				this.setManualPhonePrefixByAttributeValue(formId, name, value, attribute, fullSet);
 			},
-			setManualCountryValue: (formId, name, value) => {
-				this.setManualCountryValue(formId, name, value);
+			setManualDateValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualDateValue(formId, name, value, fullSet, set);
 			},
-			setManualCheckboxValue: (formId, name, value) => {
-				this.setManualCheckboxValue(formId, name, value);
+			setManualSelectValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualSelectValue(formId, name, value, fullSet, set);
 			},
-			setManualRadioValue: (formId, name, value) => {
-				this.setManualRadioValue(formId, name, value);
+			setManualSelectByAttributeValue: (formId, name, value, attribute, fullSet = true) => {
+				this.setManualSelectByAttributeValue(formId, name, value, attribute, fullSet);
 			},
-			setManualInputValue: (formId, name, value) => {
-				this.setManualInputValue(formId, name, value);
+			setManualCountryValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualCountryValue(formId, name, value, fullSet, set);
 			},
-			setManualRatingValue: (formId, name, value) => {
-				this.setManualRatingValue(formId, name, value);
+			setManualCheckboxValue: (formId, name, value, fullSet = true) => {
+				this.setManualCheckboxValue(formId, name, value, fullSet);
 			},
-			setManualRangeValue: (formId, name, value) => {
-				this.setManualRangeValue(formId, name, value);
+			setManualRadioValue: (formId, name, value, fullSet = true) => {
+				this.setManualRadioValue(formId, name, value, fullSet);
+			},
+			setManualInputValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualInputValue(formId, name, value, fullSet, set);
+			},
+			setManualRatingValue: (formId, name, value, fullSet = true) => {
+				this.setManualRatingValue(formId, name, value, fullSet);
+			},
+			setManualRangeValue: (formId, name, value, fullSet = true, set = true) => {
+				this.setManualRangeValue(formId, name, value, fullSet, set);
 			},
 			setRangeCurrentValue: (formId, name) => {
 				this.setRangeCurrentValue(formId, name);
@@ -1686,6 +1910,9 @@ export class Utils {
 			},
 			getPhoneCombinedValue: (formId, name) => {
 				return this.getPhoneCombinedValue(formId, name);
+			},
+			onFormShowEvent: (e) => {
+				this.onFormShowEvent(e);
 			},
 		};
 	}

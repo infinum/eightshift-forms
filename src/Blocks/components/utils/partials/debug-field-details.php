@@ -34,7 +34,7 @@ if (!array_filter(array_values($output))) {
 
 ?>
 
-<div class="<?php echo esc_attr($componentClass); ?>">
+<div class="<?php echo esc_attr($componentClass); ?>" role="none" aria-hidden="true" tabindex="-1">
 	<?php
 	foreach ($output as $key => $value) {
 		if (!$value) {

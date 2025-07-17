@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Workable;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
@@ -115,15 +116,18 @@ class WorkableClient implements ClientInterface
 	/**
 	 * API request to post application.
 	 *
-	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
-	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(string $itemId, array $params, array $files, string $formId): array
+	public function postApplication(array $formDetails): array
 	{
+		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID];
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$files = $formDetails[UtilsConfig::FD_FILES];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$country = $formDetails['country'] ?? '';
+
 		// Filter override post request.
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
@@ -136,12 +140,14 @@ class WorkableClient implements ClientInterface
 
 		$paramsPrepared = $this->prepareParams($params);
 		$paramsFiles = $this->prepareFiles($files);
+		$tags = $this->prepareTags($country);
 
 		$body = [
 			'sourced' => false,
 			'candidate' => \array_merge_recursive(
 				$paramsPrepared,
-				$paramsFiles
+				$paramsFiles,
+				$tags
 			),
 		];
 
@@ -289,31 +295,38 @@ class WorkableClient implements ClientInterface
 	 */
 	private function getWorkableItems(): array
 	{
-		$url = "{$this->getBaseUrl()}jobs?limit=1000&state=closed,published";
+		$statuses = \array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(SettingsWorkable::SETTINGS_WORKABLE_LIST_TYPE_KEY)));
+		$statuses = \array_merge(['published'], $statuses);
 
-		$response = \wp_remote_get(
-			$url,
-			[
-				'headers' => $this->getHeaders(),
-			]
-		);
+		$output = [];
 
-		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
-			SettingsWorkable::SETTINGS_TYPE_KEY,
-			$response,
-			$url,
-		);
+		foreach ($statuses as $status) {
+			$url = "{$this->getBaseUrl()}jobs?limit=1000&state={$status}";
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+			$response = \wp_remote_get(
+				$url,
+				[
+					'headers' => $this->getHeaders(),
+				]
+			);
 
-		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return $body['jobs'] ?? [];
+			// Structure response details.
+			$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+				SettingsWorkable::SETTINGS_TYPE_KEY,
+				$response,
+				$url,
+			);
+
+			$code = $details[UtilsConfig::IARD_CODE];
+			$body = $details[UtilsConfig::IARD_BODY];
+
+			// On success return output.
+			if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+				$output = \array_merge($output, $body['jobs'] ?? []);
+			}
 		}
 
-		return [];
+		return $output;
 	}
 
 	/**
@@ -527,5 +540,58 @@ class WorkableClient implements ClientInterface
 		$server = $this->getSubdomain();
 
 		return "https://{$server}.workable.com/spi/v3/";
+	}
+
+	/**
+	 * Prepare tags.
+	 *
+	 * @param string $country Country.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function prepareTags(string $country): array
+	{
+		if (!$country) {
+			return [];
+		}
+
+		$isGeolocationEnabled = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY);
+
+		if (!$isGeolocationEnabled) {
+			return [];
+		}
+
+		$tags = UtilsSettingsHelper::getOptionValueGroup(SettingsWorkable::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY);
+
+		if (!$tags) {
+			return [];
+		}
+
+		$output = [];
+
+		foreach ($tags as $tag) {
+			$code = $tag[0] ?? '';
+			$value = $tag[1] ?? '';
+
+			if (!$code || !$value) {
+				continue;
+			}
+
+			if (\strtolower($code) !== \strtolower($country)) {
+				continue;
+			}
+
+			$values = \explode(',', $value);
+
+			foreach ($values as $value) {
+				$output[] = \trim($value);
+			}
+		}
+
+		if (!$output) {
+			return [];
+		}
+
+		return ['tags' => $output];
 	}
 }
