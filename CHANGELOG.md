@@ -29,6 +29,10 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 - Talentlyft integration now supports multiple statuses.
 - On conditional tags when field is hidden, the value will be reset to empty.
 
+### Removed
+
+- Read-only checkbox field.
+
 ## [6.9.0]
 
 ### Changed
