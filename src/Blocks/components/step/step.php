@@ -28,7 +28,7 @@ $stepTwSelectorsData = Helpers::checkAttr('stepTwSelectorsData', $attributes, $m
 
 $twClasses = FormsHelper::getTwSelectors($stepTwSelectorsData, ['step']);
 
-$stepClass = Helpers::classnames([
+$stepClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'step', $componentClass),
 	UtilsHelper::getStateSelector('step'),
 	Helpers::selector($stepIsActive, UtilsHelper::getStateSelector('isActive')),
@@ -38,7 +38,13 @@ if (!$stepContent) {
 	return;
 }
 
-$stepAttrs = [];
+$stepAttrs = [
+	'aria-hidden' => 'true',
+];
+
+if ($stepIsActive) {
+	$stepAttrs['aria-hidden'] = 'false';
+}
 
 if ($stepName) {
 	$stepAttrs[UtilsHelper::getStateAttribute('stepId')] = esc_attr($stepName);
@@ -91,10 +97,7 @@ $nextButtonComponent = '';
 							],
 						]),
 						[
-							'additionalFieldClass' => Helpers::classnames([
-								FormsHelper::getTwPart($twClasses, 'step', 'navigation-prev', "{$componentFieldClass}--submit-prev"),
-							]),
-							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
+							'additionalFieldClass' => FormsHelper::getTwPart($twClasses, 'step', 'navigation-prev', "{$componentFieldClass}--submit-prev"),
 						]
 					)
 				);
@@ -121,10 +124,7 @@ $nextButtonComponent = '';
 							],
 						]),
 						[
-							'additionalFieldClass' => Helpers::classnames([
-								FormsHelper::getTwPart($twClasses, 'step', 'navigation-next', "{$componentFieldClass}--submit-next"),
-							]),
-							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
+							'additionalFieldClass' => FormsHelper::getTwPart($twClasses, 'step', 'navigation-next', "{$componentFieldClass}--submit-next"),
 						]
 					)
 				);

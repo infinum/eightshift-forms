@@ -208,10 +208,17 @@ export class Steps {
 		const currentStep = this.state.getStateFormStepsCurrent(formId);
 
 		// Remove active from current step.
-		this.state.getStateFormStepsElement(currentStep, formId)?.classList?.remove(this.state.getStateSelector('isActive'));
+		const currentStepElement = this.state.getStateFormStepsElement(currentStep, formId);
+		currentStepElement?.classList?.remove(this.state.getStateSelector('isActive'));
+		currentStepElement?.setAttribute('aria-hidden', 'true');
 
 		// Add active to new step.
-		this.state.getStateFormStepsElement(nextStep, formId)?.classList?.add(this.state.getStateSelector('isActive'));
+		const nextStepElement = this.state.getStateFormStepsElement(nextStep, formId);
+		nextStepElement?.classList?.add(this.state.getStateSelector('isActive'));
+		nextStepElement?.setAttribute('aria-hidden', 'false');
+
+		// Scroll to the next step.
+		nextStepElement?.scrollIntoView({ behavior: 'smooth' });
 
 		// Reset filled steps.
 		this.state.getStateFormStepsElements(formId).forEach((item) => item?.classList?.remove(this.state.getStateSelector('isFilled')));
