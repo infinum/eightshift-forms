@@ -14,7 +14,6 @@
 			"checkboxName": "Name",
 			"checkboxIsChecked": false,
 			"checkboxIsDisabled": false,
-			"checkboxIsReadOnly": false,
 			"checkboxIsRequired": false
 		}
 	},
@@ -44,10 +43,6 @@
 			"default": false
 		},
 		"checkboxIsDisabled": {
-			"type": "boolean",
-			"default": false
-		},
-		"checkboxIsReadOnly": {
 			"type": "boolean",
 			"default": false
 		},

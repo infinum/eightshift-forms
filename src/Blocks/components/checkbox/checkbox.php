@@ -25,7 +25,6 @@ $checkboxName = Helpers::checkAttr('checkboxName', $attributes, $manifest);
 $checkboxUncheckedValue = Helpers::checkAttr('checkboxUncheckedValue', $attributes, $manifest);
 $checkboxIsChecked = Helpers::checkAttr('checkboxIsChecked', $attributes, $manifest);
 $checkboxIsDisabled = Helpers::checkAttr('checkboxIsDisabled', $attributes, $manifest);
-$checkboxIsReadOnly = Helpers::checkAttr('checkboxIsReadOnly', $attributes, $manifest);
 $checkboxTracking = Helpers::checkAttr('checkboxTracking', $attributes, $manifest);
 $checkboxSingleSubmit = Helpers::checkAttr('checkboxSingleSubmit', $attributes, $manifest);
 $checkboxAttrs = Helpers::checkAttr('checkboxAttrs', $attributes, $manifest);
@@ -99,8 +98,7 @@ if ($checkboxTracking) {
 			<?php echo Helpers::getAttrsOutput($checkboxAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 			?>
 			<?php checked($checkboxIsChecked); ?>
-			<?php disabled($checkboxIsDisabled); ?>
-			<?php wp_readonly($checkboxIsReadOnly); ?> />
+			<?php disabled($checkboxIsDisabled); ?> />
 		<?php if (!$checkboxHideLabel) { ?>
 			<label
 				for="<?php echo esc_attr($checkboxName); ?>"
