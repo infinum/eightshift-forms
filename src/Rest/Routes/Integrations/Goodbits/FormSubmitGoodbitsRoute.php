@@ -81,15 +81,8 @@ class FormSubmitGoodbitsRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-
 		// Send application to Goodbits.
-		$response = $this->goodbitsClient->postApplication(
-			$formDetails[UtilsConfig::FD_ITEM_ID],
-			$formDetails[UtilsConfig::FD_PARAMS],
-			$formDetails[UtilsConfig::FD_FILES],
-			$formId
-		);
+		$response = $this->goodbitsClient->postApplication($formDetails);
 
 		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
 

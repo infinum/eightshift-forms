@@ -8,15 +8,13 @@ import { Field } from './field-block';
 
 // Wrap none forms block with field block.
 const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit) => {
-	const postType = select('core/editor').getCurrentPostType();
-
 	return (innerProps) => {
 		const {
 			name,
 		} = innerProps;
 
 		// Change only none forms blocks in forms post type.
-		if (postType === esFormsLocalization?.postTypes?.forms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
+		if (esFormsLocalization?.currentPostType.isForms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
 			return (
 				<Field {...innerProps}>
 					<BlockEdit {...innerProps} />
@@ -32,9 +30,8 @@ const setNoneEightshiftFormsBlocksField = createHigherOrderComponent((BlockEdit)
 
 // Add none forms block attributes from field block.
 function setNoneEightshiftBlocksFieldAttributes( settings, name ) {
-
 	// Change only none forms blocks in forms post type.
-	if (esFormsLocalization?.currentPostType === esFormsLocalization?.postTypes?.forms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
+	if (esFormsLocalization?.currentPostType.isForms && !name.includes(esFormsLocalization?.postTypes?.forms)) {
 		return {
 			...settings,
 			attributes: {

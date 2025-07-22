@@ -92,7 +92,10 @@ $fieldOutput = [
 	'fieldTracking' => $radiosTracking,
 	'fieldTypeCustom' => $radiosTypeCustom ?: 'radio', // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 	'fieldConditionalTags' => Helpers::render('conditional-tags', Helpers::props('conditionalTags', $attributes)),
-	'fieldAttrs' => $radiosFieldAttrs,
+	'fieldAttrs' => array_merge($radiosFieldAttrs, [
+		'role' => 'radiogroup',
+		'aria-labelledby' => $radiosId,
+	]),
 ];
 
 // Hide label if needed but separated like this so we can utilize normal fieldHideLabel attribute from field component.

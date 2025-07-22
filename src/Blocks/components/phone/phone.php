@@ -70,13 +70,6 @@ if ($phoneUseLabelAsPlaceholder) {
 	$phoneHideLabel = true;
 }
 
-$phoneAttrsOutput = '';
-if ($phoneAttrs) {
-	foreach ($phoneAttrs as $key => $value) {
-		$phoneAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
-
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('phone', $attributes);
 $phoneSelectUseSearchAttr = UtilsHelper::getStateAttribute('selectAllowSearch');
@@ -92,12 +85,24 @@ if (has_filter($filterName)) {
 		$datasetList = $settings['phone']['dataset'];
 	}
 
-	$preselectedValue = $settings['phone']['preselectedValue'] ?: $phoneSelectValue; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+	$preselectedValue = strtolower($settings['phone']['preselectedValue'] ?: $phoneSelectValue); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 	foreach ($settings['countries'][$datasetList]['items'] as $option) {
 		$label = $option[0] ?? '';
 		$code = $option[1] ?? '';
 		$value = $option[2] ?? '';
+
+		switch ($phoneViewType) {
+			case 'number-country-code':
+				$optionLabel = "+{$value} (" . strtoupper($code) . ")";
+				break;
+			case 'number-country-label':
+				$optionLabel = "(+{$value}) {$label}";
+				break;
+			default:
+				$optionLabel = "+{$value}";
+				break;
+		}
 
 		$customProperties = [
 			UtilsHelper::getStateAttribute('selectCountryCode') => $code,
@@ -105,41 +110,34 @@ if (has_filter($filterName)) {
 			UtilsHelper::getStateAttribute('selectCountryNumber') => $value,
 		];
 
-		switch ($phoneViewType) {
-			case 'number-country-code':
-				$value = "+{$value} (" . strtoupper($code) . ")";
-				break;
-			case 'number-country-label':
-				$value = "(+{$value}) {$label}";
-				break;
-			default:
-				$value = "+{$value}";
-				break;
-		}
+		$optionAttrs = array_merge([
+			UtilsHelper::getStateAttribute('selectCustomProperties') => wp_json_encode($customProperties),
+		], $customProperties);
 
 		$options[] = '
 			<option
 				value="' . $value . '"
-				' . UtilsHelper::getStateAttribute('selectCustomProperties') . '=\'' . htmlspecialchars(wp_json_encode($customProperties), ENT_QUOTES, 'UTF-8') . '\'
+				' .  Helpers::getAttrsOutput($optionAttrs) . '
 				' . selected($code, $preselectedValue, false) . '
-			>' . $value . '</option>';
+			>' . $optionLabel . '</option>';
 	}
 }
 
 $phoneAttrsSelect[UtilsHelper::getStateAttribute('selectAllowSearch')] = $phoneUseSearch;
 
-$phoneAttrsSelectOutput = '';
-if ($phoneAttrsSelect) {
-	foreach ($phoneAttrsSelect as $key => $value) {
-		$phoneAttrsSelectOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
+if ($phoneIsRequired) {
+	$phoneAttrs['aria-required'] = 'true';
 }
+
+$phoneAttrs['aria-invalid'] = 'false';
+$phoneAttrs['autocomplete'] = 'tel';
+
 
 $phone = '
 	<select
 		class="' . esc_attr($phoneSelectClass) . '"
 		name="' . esc_attr($phoneName) . '"
-		' . $phoneAttrsSelectOutput . '
+		' . Helpers::getAttrsOutput($phoneAttrsSelect) . '
 	>' . implode('', $options) . '</select>
 	<input
 		class="' . esc_attr($phoneClass) . '"
@@ -149,7 +147,7 @@ $phone = '
 		min="1"
 		' . disabled($phoneIsDisabled, true, false) . '
 		' . wp_readonly($phoneIsReadOnly, true, false) . '
-		' . $phoneAttrsOutput . '
+		' . Helpers::getAttrsOutput($phoneAttrs) . '
 	/>
 	' . $additionalContent . '
 ';

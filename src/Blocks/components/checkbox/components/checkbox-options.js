@@ -31,7 +31,6 @@ export const CheckboxOptions = (attributes) => {
 	const checkboxValue = checkAttr('checkboxValue', attributes, manifest);
 	const checkboxIsChecked = checkAttr('checkboxIsChecked', attributes, manifest);
 	const checkboxIsDisabled = checkAttr('checkboxIsDisabled', attributes, manifest);
-	const checkboxIsReadOnly = checkAttr('checkboxIsReadOnly', attributes, manifest);
 	const checkboxTracking = checkAttr('checkboxTracking', attributes, manifest);
 	const checkboxDisabledOptions = checkAttr('checkboxDisabledOptions', attributes, manifest);
 	const checkboxIcon = checkAttr('checkboxIcon', attributes, manifest);
@@ -81,14 +80,6 @@ export const CheckboxOptions = (attributes) => {
 					checked={checkboxIsChecked}
 					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsChecked', attributes, manifest)]: value })}
 					disabled={isOptionDisabled(getAttrKey('checkboxIsChecked', attributes, manifest), checkboxDisabledOptions)}
-				/>
-
-				<IconToggle
-					icon={icons.readOnly}
-					label={__('Read-only', 'eightshift-forms')}
-					checked={checkboxIsReadOnly}
-					onChange={(value) => setAttributes({ [getAttrKey('checkboxIsReadOnly', attributes, manifest)]: value })}
-					disabled={isOptionDisabled(getAttrKey('checkboxIsReadOnly', attributes, manifest), checkboxDisabledOptions)}
 				/>
 
 				<IconToggle

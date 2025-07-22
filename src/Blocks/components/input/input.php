@@ -111,12 +111,19 @@ if ($inputType === 'range') {
 	}
 }
 
-$inputAttrsOutput = '';
-if ($inputAttrs) {
-	foreach ($inputAttrs as $key => $value) {
-		$inputAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
+if ($inputType === 'hidden') {
+	$inputAttrs['autocomplete'] = 'off';
 }
+
+if ($inputType === 'email') {
+	$inputAttrs['autocomplete'] = 'email';
+}
+
+if ($inputIsRequired) {
+	$inputAttrs['aria-required'] = 'true';
+}
+
+$inputAttrs['aria-invalid'] = 'false';
 
 $input = '
 	<input
@@ -126,7 +133,7 @@ $input = '
 		type="' . esc_attr($inputType) . '"
 		' . disabled($inputIsDisabled, true, false) . '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
-		' . $inputAttrsOutput . '
+		' . Helpers::getAttrsOutput($inputAttrs) . '
 	/>
 ';
 
@@ -136,7 +143,7 @@ if ($inputRangeUseCustomField && $inputType === 'range') {
 		type="number"
 		' . disabled($inputIsDisabled, true, false) . '
 		' . wp_readonly($inputIsReadOnly, true, false) . '
-		' . $inputAttrsOutput . '
+		' . Helpers::getAttrsOutput($inputAttrs) . '
 	/>';
 }
 

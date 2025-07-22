@@ -92,6 +92,9 @@
 			},
 			"default": []
 		},
+		"fieldAttrsLabel": {
+			"type": "object"
+		},
 		"fieldAttrs": {
 			"type": "object"
 		},
@@ -167,8 +170,8 @@
 	},
 	"options": {
 		"fieldWidth": {
-			"min":  1,
-			"max":  12,
+			"min": 1,
+			"max": 12,
 			"step": 1
 		}
 	}

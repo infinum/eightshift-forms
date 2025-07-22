@@ -257,7 +257,11 @@ class EnqueueBlocks extends AbstractEnqueueBlocks
 
 		$output['hideGlobalMessageTimeout'] = \apply_filters($hideGlobalMessageTimeout, 6000);
 		$output['redirectionTimeout'] = \apply_filters($redirectionTimeout, 300);
-		$output['fileRemoveLabel'] = \apply_filters($fileRemoveLabel, \esc_html__('Remove', 'eightshift-forms'));
+		$output['labels'] = [
+			'selectOptionAria' => \esc_html__('Select option', 'eightshift-forms'),
+			'fileRemoveContent' => \apply_filters($fileRemoveLabel, \esc_html__('Remove file', 'eightshift-forms')),
+			'fileRemoveAria' => \esc_html__('Remove file', 'eightshift-forms'),
+		];
 		$output['formDisableScrollToFieldOnError'] = UtilsSettingsHelper::isOptionCheckboxChecked(
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_TO_FIELD_ON_ERROR,
 			SettingsSettings::SETTINGS_GENERAL_DISABLE_SCROLL_KEY

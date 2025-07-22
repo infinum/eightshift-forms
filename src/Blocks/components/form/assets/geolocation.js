@@ -24,19 +24,15 @@ export class Geolocation {
 	 *
 	 * @returns {void}
 	 */
-	initOne(formId) {
+	initOne() {
 		// Check if enrichment is used.
 		if (!this.state.getStateGeolocationIsUsed()) {
 			return;
 		}
 
 		// Set select fields based on geolocation.
-		window?.addEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onSetSelectField
-		);
+		window?.addEventListener(this.state.getStateEvent('formJsLoaded'), this.onSetSelectField);
 	}
-
 
 	////////////////////////////////////////////////////////////////
 	// Other
@@ -44,14 +40,11 @@ export class Geolocation {
 
 	/**
 	 * Remove all event listeners from elements.
-	 * 
-	 * @returns {vodi}
+	 *
+	 * @returns {void}
 	 */
 	removeEvents() {
-		window?.removeEventListener(
-			this.state.getStateEvent('formJsLoaded'),
-			this.onSetSelectField
-		);
+		window?.removeEventListener(this.state.getStateEvent('formJsLoaded'), this.onSetSelectField);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -73,55 +66,21 @@ export class Geolocation {
 			return;
 		}
 
-		[
-			...this.state.getStateElementByTypeField('select', formId),
-			...this.state.getStateElementByTypeField('country', formId),
-		].forEach((select) => {
+		[...this.state.getStateElementByTypeField('country', formId), ...this.state.getStateElementByTypeField('phone', formId)].forEach((select) => {
 			const name = select.name;
 
-			const custom = this.state.getStateElementCustom(name, formId);
+			const type = this.state.getStateElementTypeField(name, formId);
 
-			const selectValue = this.getSelectSelectedValueByCustomData(countryCookie, custom);
-
-			if (selectValue) {
-				this.utils.setManualSelectValue(formId, name, [
-					{
-						value: selectValue?.value ?? '',
-						meta: selectValue?.customProperties ?? {},
-					}
-				]);
-			}
-		});
-
-		[...this.state.getStateElementByTypeField('phone', formId)].forEach((phone) => {
-			const name = phone.name;
-
-			const custom = this.state.getStateElementCustom(name, formId);
-
-			const selectValue = this.getSelectSelectedValueByCustomData(countryCookie, custom);
-
-			if (selectValue) {
-				this.utils.setManualPhoneValue(formId, name, {
-					prefix: selectValue?.value ?? '',
-					value: '',
-					meta: selectValue?.customProperties ?? {},
-				});
+			switch (type) {
+				case 'country':
+					this.utils.setManualSelectByAttributeValue(formId, name, [countryCookie], this.state.getStateAttribute('selectCountryCode'));
+					break;
+				case 'phone':
+					this.utils.setManualPhonePrefixByAttributeValue(formId, name, countryCookie, this.state.getStateAttribute('selectCountryCode'));
+					break;
 			}
 		});
 	};
-
-	/**
-	 * Get selected value by custom data of select for country and phone.
-	 *
-	 * @param {string} type Type for field.
-	 * @param {string} value Value to check.
-	 * @param {object} choices Choices object.
-	 *
-	 * @returns {string}
-	 */
-	getSelectSelectedValueByCustomData(value, choices) {
-		return choices?.config?.choices?.find((item) => item?.customProperties?.[this.state.getStateAttribute('selectCountryCode')] === value);
-	}
 
 	////////////////////////////////////////////////////////////////
 	// Private methods - not shared to the public window object.

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Shortcode;
 
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -68,12 +69,7 @@ class ResultOutputItemPart implements ServiceInterface
 			'class' => UtilsHelper::getStateSelector('resultOutputPart'),
 		];
 
-		$attrsOutput = '';
-		foreach ($attrs as $key => $value) {
-			$attrsOutput .= \wp_kses_post(" {$key}='" . $value . "'");
-		}
-
-		return "<span {$attrsOutput}>{$content}</span>";
+		return "<span " . Helpers::getAttrsOutput($attrs) . ">{$content}</span>";
 	}
 
 	/**

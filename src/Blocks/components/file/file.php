@@ -8,6 +8,7 @@
 
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -61,33 +62,43 @@ if (has_filter($filter)) {
 	$infoTextContent .= apply_filters($filter, '', $attributes);
 }
 
-$infoTextContent .= '<a tabindex="-1" href="#" class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'button', "{$componentClass}__button")) . '">' . esc_html($infoButton) . '</a>';
+$infoTextContent .= '<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'button', "{$componentClass}__button")) . '">' . esc_html($infoButton) . '</div>';
+
+$jsSelector = UtilsHelper::getStateSelector('fileButton');
+
+$fileButtonAttrs['role'] = 'button';
 
 $customFile = '
-	<div class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'custom-wrap', "{$componentClass}__custom-wrap")) . '">
+	<a
+		href="#"
+		class="' . esc_attr(FormsHelper::getTwPart($twClasses, 'file', 'custom-wrap', "{$componentClass}__custom-wrap {$jsSelector}")) . '"
+		' . Helpers::getAttrsOutput($fileButtonAttrs) . '
+	>
 		' . $infoTextContent . '
-	</div>
+	</a>
 ';
-
-$fileAttrsOutput = '';
-if ($fileAttrs) {
-	foreach ($fileAttrs as $key => $value) {
-		$fileAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
-}
 
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('file', $attributes);
+
+if ($fileIsRequired) {
+	$fileAttrs['aria-required'] = 'true';
+}
+
+$fileAttrs['aria-invalid'] = 'false';
+
 
 $file = '
 	<input
 		class="' . esc_attr($fileClass) . '"
 		name="' . esc_attr($fileName) . '"
+		aria-hidden="true"
+		tabindex="-1"
 		id="' . esc_attr($fileId) . '"
 		' . disabled($fileIsDisabled, true, false) . '
 		type="file"
 		' . $fileIsMultiple . '
-		' . $fileAttrsOutput . '
+		' . Helpers::getAttrsOutput($fileAttrs) . '
 	/>
 	' . $customFile . '
 	' . $additionalContent . '
@@ -110,7 +121,9 @@ echo Helpers::render(
 				'conditional-tags',
 				Helpers::props('conditionalTags', $attributes)
 			),
-			'fieldAttrs' => $fileFieldAttrs,
+			'fieldAttrs' => array_merge($fileFieldAttrs, [
+				'aria-labelledby' => $fileId,
+			]),
 		]),
 		[
 			'additionalFieldClass' => $attributes['additionalFieldClass'] ?? '',

@@ -12,7 +12,7 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $button = '';
 
-// With this filder you can override default submit component and provide your own.
+// With this filter you can override default submit component and provide your own.
 $filterNameComponent = UtilsHooksHelper::getFilterName(['block', 'submit', 'component']);
 if (has_filter($filterNameComponent)) {
 	$button = apply_filters($filterNameComponent, [

@@ -28,7 +28,7 @@ $stepTwSelectorsData = Helpers::checkAttr('stepTwSelectorsData', $attributes, $m
 
 $twClasses = FormsHelper::getTwSelectors($stepTwSelectorsData, ['step']);
 
-$stepClass = Helpers::classnames([
+$stepClass = Helpers::clsx([
 	FormsHelper::getTwBase($twClasses, 'step', $componentClass),
 	UtilsHelper::getStateSelector('step'),
 	Helpers::selector($stepIsActive, UtilsHelper::getStateSelector('isActive')),
@@ -38,17 +38,16 @@ if (!$stepContent) {
 	return;
 }
 
-$stepAttrs = [];
+$stepAttrs = [
+	'aria-hidden' => 'true',
+];
+
+if ($stepIsActive) {
+	$stepAttrs['aria-hidden'] = 'false';
+}
 
 if ($stepName) {
 	$stepAttrs[UtilsHelper::getStateAttribute('stepId')] = esc_attr($stepName);
-}
-
-$stepAttrsOutput = '';
-if ($stepAttrs) {
-	foreach ($stepAttrs as $key => $value) {
-		$stepAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
 }
 
 $prevButtonComponent = '';
@@ -58,7 +57,7 @@ $nextButtonComponent = '';
 
 <div
 	class="<?php echo esc_attr($stepClass); ?>"
-	<?php echo $stepAttrsOutput; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+	<?php echo Helpers::getAttrsOutput($stepAttrs); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
 	?>>
 
 	<div class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'step', 'debug-details', "{$componentClass}__debug-details")); ?>">
@@ -98,10 +97,7 @@ $nextButtonComponent = '';
 							],
 						]),
 						[
-							'additionalFieldClass' => Helpers::classnames([
-								FormsHelper::getTwPart($twClasses, 'step', 'navigation-prev', "{$componentFieldClass}--submit-prev"),
-							]),
-							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
+							'additionalFieldClass' => FormsHelper::getTwPart($twClasses, 'step', 'navigation-prev', "{$componentFieldClass}--submit-prev"),
 						]
 					)
 				);
@@ -128,10 +124,7 @@ $nextButtonComponent = '';
 							],
 						]),
 						[
-							'additionalFieldClass' => Helpers::classnames([
-								FormsHelper::getTwPart($twClasses, 'step', 'navigation-next', "{$componentFieldClass}--submit-next"),
-							]),
-							'additionalClass' => UtilsHelper::getStateSelector('stepSubmit'),
+							'additionalFieldClass' => FormsHelper::getTwPart($twClasses, 'step', 'navigation-next', "{$componentFieldClass}--submit-next"),
 						]
 					)
 				);

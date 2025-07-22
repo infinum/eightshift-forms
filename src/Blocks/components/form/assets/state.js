@@ -92,14 +92,14 @@ export class State {
 		return getState([StateEnum.FORM, StateEnum.LOADER], formId);
 	};
 	getStateFormIsProcessing = (formId) => {
-		return getState([StateEnum.FORM, StateEnum.ISPROCESSING], formId);
+		return getState([StateEnum.FORM, StateEnum.IS_PROCESSING], formId);
 	};
 
 	setStateFormIsLoaded = (value, formId) => {
-		setState([StateEnum.FORM, StateEnum.ISLOADED], value, formId);
+		setState([StateEnum.FORM, StateEnum.IS_LOADED], value, formId);
 	};
 	setStateFormIsProcessing = (value, formId) => {
-		setState([StateEnum.FORM, StateEnum.ISPROCESSING], value, formId);
+		setState([StateEnum.FORM, StateEnum.IS_PROCESSING], value, formId);
 	};
 	setStateFormIsAdminSingleSubmit = (value, formId) => {
 		setState([StateEnum.FORM, StateEnum.IS_ADMIN_SINGLE_SUBMIT], value, formId);
@@ -243,8 +243,8 @@ export class State {
 	getStateSettingsHideGlobalMessageTimeout = () => {
 		return getState([StateEnum.SETTINGS_HIDE_GLOBAL_MESSAGE_TIMEOUT], StateEnum.SETTINGS);
 	};
-	getStateSettingsFileRemoveLabel = () => {
-		return getState([StateEnum.SETTINGS_FILE_REMOVE_LABEL], StateEnum.SETTINGS);
+	getStateSettingsLabels = () => {
+		return getState([StateEnum.SETTINGS_LABELS], StateEnum.SETTINGS);
 	};
 	getStateSettingsFormDisableAutoInit = () => {
 		return getState([StateEnum.SETTINGS_FORM_DISABLE_AUTO_INIT], StateEnum.SETTINGS);
@@ -265,13 +265,13 @@ export class State {
 	getStateElementByTypeField = (type, formId) => {
 		const intType = this.getStateFieldType(type);
 
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.TYPE_FIELD, intType, formId);
+		return this.getStateFilteredByKey(StateEnum.ELEMENTS, StateEnum.TYPE_FIELD, intType, formId);
 	};
 	getStateElementByHasError = (type, formId) => {
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.HAS_ERROR, type, formId);
+		return this.getStateFilteredByKey(StateEnum.ELEMENTS, StateEnum.HAS_ERROR, type, formId);
 	};
 	getStateElementByLoaded = (type, formId) => {
-		return this.getStateFilteredBykey(StateEnum.ELEMENTS, StateEnum.LOADED, type, formId);
+		return this.getStateFilteredByKey(StateEnum.ELEMENTS, StateEnum.LOADED, type, formId);
 	};
 	getStateElementsObject = (formId) => {
 		return getState([StateEnum.ELEMENTS], formId);
@@ -379,6 +379,9 @@ export class State {
 	getStateElementHasChanged = (name, formId) => {
 		return getState([StateEnum.ELEMENTS, name, StateEnum.HAS_CHANGED], formId);
 	};
+	getStateElementFileButton = (name, formId) => {
+		return getState([StateEnum.ELEMENTS, name, StateEnum.FILE_BUTTON], formId);
+	};
 
 	setStateElementValue = (name, value, formId) => {
 		setState([StateEnum.ELEMENTS, name, StateEnum.VALUE], value, formId);
@@ -395,7 +398,6 @@ export class State {
 	setStateElementHasError = (name, value, formId) => {
 		setState([StateEnum.ELEMENTS, name, StateEnum.HAS_ERROR], value, formId);
 	};
-
 
 	////////////////////////////////////////////////////////////////
 	// Captcha getters.
@@ -439,19 +441,17 @@ export class State {
 		return getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
 	};
 	getStateEnrichmentIsLocalStorageUsed = () => {
-		return getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) &&
-		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
-		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return (
+			getState([StateEnum.IS_USED_LOCALSTORAGE], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG) // eslint-disable-line max-len
+		);
 	};
 	getStateEnrichmentIsPrefillUsed = () => {
-		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) &&
-		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
-		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return getState([StateEnum.IS_USED_PREFILL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG); // eslint-disable-line max-len
 	};
 	getStateEnrichmentIsPrefillUrlUsed = () => {
-		return getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) &&
-		getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) &&
-		!getState([StateEnum.IS_ADMIN], StateEnum.CONFIG);
+		return (
+			getState([StateEnum.IS_USED_PREFILL_URL], StateEnum.ENRICHMENT) && getState([StateEnum.IS_USED], StateEnum.ENRICHMENT) && !getState([StateEnum.IS_ADMIN], StateEnum.CONFIG) // eslint-disable-line max-len
+		);
 	};
 	getStateEnrichmentExpiration = () => {
 		return getState([StateEnum.ENRICHMENT_EXPIRATION], StateEnum.ENRICHMENT);
@@ -543,14 +543,8 @@ export class State {
 	// Other getters.
 	////////////////////////////////////////////////////////////////
 
-	getStateFilteredBykey = (obj, targetKey, findItem, formId) => {
-		return Object?.values(
-			Object?.fromEntries(
-				Object?.entries(
-					getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem
-				)
-			)
-		);
+	getStateFilteredByKey = (obj, targetKey, findItem, formId) => {
+		return Object?.values(Object?.fromEntries(Object?.entries(getState([obj], formId) ?? {})?.filter(([key, value]) => value[targetKey] === findItem)));
 	};
 	getFormElementByChild = (element) => {
 		return element?.closest(this.getStateSelector('form', true));

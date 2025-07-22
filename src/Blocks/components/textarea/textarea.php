@@ -70,12 +70,11 @@ if ($textareaUseLabelAsPlaceholder) {
 	$textareaHideLabel = true;
 }
 
-$textareaAttrsOutput = '';
-if ($textareaAttrs) {
-	foreach ($textareaAttrs as $key => $value) {
-		$textareaAttrsOutput .= wp_kses_post(" {$key}='" . $value . "'");
-	}
+if ($textareaIsRequired) {
+	$textareaAttrs['aria-required'] = 'true';
 }
+
+$textareaAttrs['aria-invalid'] = 'false';
 
 // Additional content filter.
 $additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('textarea', $attributes);
@@ -86,7 +85,7 @@ $textarea = '<textarea
 		id="' . esc_attr($textareaId) . '"
 		' . disabled($textareaIsDisabled, true, false) . '
 		' . wp_readonly($textareaIsReadOnly, true, false) . '
-		' . $textareaAttrsOutput . '
+		' . Helpers::getAttrsOutput($textareaAttrs) . '
 	>' . wp_kses_post($textareaValue) . '</textarea>
 	' . $additionalContent . '
 ';

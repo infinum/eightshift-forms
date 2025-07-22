@@ -39,14 +39,11 @@ interface ClientInterface
 	/**
 	 * API request to post application.
 	 *
-	 * @param string $itemId Item id to search.
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
-	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(string $itemId, array $params, array $files, string $formId): array;
+	public function postApplication(array $formDetails): array;
 
 	/**
 	 * Get test api.

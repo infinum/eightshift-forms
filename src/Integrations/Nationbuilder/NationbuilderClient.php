@@ -204,14 +204,16 @@ class NationbuilderClient implements NationbuilderClientInterface
 	/**
 	 * API request to post application.
 	 *
-	 * @param array<string, mixed> $params Params array.
-	 * @param array<string, array<int, array<string, mixed>>> $files Files array.
-	 * @param string $formId FormId value.
+	 * @param array<string, mixed> $formDetails Form details.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function postApplication(array $params, array $files, string $formId): array
+	public function postApplication(array $formDetails): array
 	{
+		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$files = $formDetails[UtilsConfig::FD_FILES];
+		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+
 		// Filter override post request.
 		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsNationbuilder::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
@@ -257,7 +259,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
 
 			if ($refreshToken) {
-				return $this->postApplication($params, $files, $formId);
+				return $this->postApplication($formDetails);
 			}
 		}
 

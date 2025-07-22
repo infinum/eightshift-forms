@@ -226,18 +226,18 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 					];
 					break;
 				case 'textarea':
-						$output[] = [
-							'component' => 'textarea',
-							'textareaName' => $name,
-							'textareaTracking' => $tracking,
-							'textareaFieldLabel' => $label,
-							'textareaIsRequired' => $required,
-							'textareaTypeCustom' => $internalType,
-							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
-								$required ? 'textareaIsRequired' : '',
-								'textareaTypeCustom',
-							]),
-						];
+					$output[] = [
+						'component' => 'textarea',
+						'textareaName' => $name,
+						'textareaTracking' => $tracking,
+						'textareaFieldLabel' => $label,
+						'textareaIsRequired' => $required,
+						'textareaTypeCustom' => $internalType,
+						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
+							$required ? 'textareaIsRequired' : '',
+							'textareaTypeCustom',
+						]),
+					];
 					break;
 				case 'select':
 					// Salutation is a special case as it expects a different format.
@@ -400,6 +400,10 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 			}
 		}
 
+		$compliance = $this->getComplianceFields($data['compliance']['Gdpr'] ?? []);
+
+		$output = \array_merge($output, $compliance);
+
 		$output[] = [
 			'component' => 'submit',
 			'submitName' => 'submit',
@@ -414,5 +418,164 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Get compliance fields.
+	 *
+	 * @param array<string, mixed> $compliance Compliance data.
+	 *
+	 * @return array<mixed>
+	 */
+	private function getComplianceFields(array $compliance): array
+	{
+		if (!$compliance) {
+			return [];
+		}
+
+		$complianceIsEnabled = $compliance['IsEnabled'] ?? false;
+		if (!$complianceIsEnabled) {
+			return [];
+		}
+
+		$privacy = $this->getCompliancePrivacy($compliance);
+		$storage = $this->getComplianceStorage($compliance);
+		$companies = $this->getComplianceShare($compliance);
+
+		return [$privacy, $storage, $companies];
+	}
+
+	/**
+	 * Get compliance privacy field.
+	 *
+	 * @param array<string, mixed> $compliance Compliance data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getCompliancePrivacy(array $compliance): array
+	{
+		$text = UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_PRIVACY_KEY);
+
+		if (!$text) {
+			return [];
+		}
+
+		$required = \boolval($compliance['RequirePrivacyPolicyConsent'] ?? false);
+
+		return [
+			'component' => 'checkboxes',
+			'checkboxesName' => 'compliancePrivacy',
+			'checkboxesIsRequired' => true,
+			'checkboxesTypeCustom' => 'compliancePrivacy',
+			'checkboxesContent' => [
+				[
+					'component' => 'checkbox',
+					'checkboxValue' => 'compliancePrivacy',
+					'checkboxLabel' => $text,
+					'checkboxTracking' => 'compliancePrivacy',
+					'checkboxIsDisabled' => !$required,
+					'checkboxIsChecked' => !$required,
+					'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+						'checkboxValue',
+						'checkboxIsDisabled',
+						'checkboxIsChecked',
+						'checkboxLabel'
+					], false),
+				]
+			],
+			'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+				'checkboxesIsRequired',
+				'checkboxesTypeCustom',
+			]),
+		];
+	}
+
+	/**
+	 * Get compliance storage field.
+	 *
+	 * @param array<string, mixed> $compliance Compliance data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getComplianceStorage(array $compliance): array
+	{
+		$text = UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_STORAGE_KEY);
+
+		if (!$text) {
+			return [];
+		}
+
+		$period = $compliance['RetentionPeriod'] ?? '1';
+
+		$text = \str_replace('{period}', (string) $period, $text);
+		$text = \str_replace('{company}', $compliance['CompanyLegalName'] ?? '', $text);
+
+		return [
+			'component' => 'checkboxes',
+			'checkboxesName' => 'complianceStorage',
+			'checkboxesIsRequired' => false,
+			'checkboxesTypeCustom' => 'complianceStorage',
+			'checkboxesContent' => [
+				[
+					'component' => 'checkbox',
+					'checkboxValue' => 'complianceStorage',
+					'checkboxLabel' => \esc_html($text),
+					'checkboxTracking' => 'complianceStorage',
+					'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+						'checkboxValue',
+						'checkboxLabel',
+					], false),
+				]
+			],
+			'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+				'checkboxesTypeCustom',
+			]),
+		];
+	}
+
+	/**
+	 * Get compliance share field.
+	 *
+	 * @param array<string, mixed> $compliance Compliance data.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getComplianceShare(array $compliance): array
+	{
+		$required = \boolval($compliance['RequireShareCompliance'] ?? false);
+
+		if (!$required) {
+			return [];
+		}
+
+		$text = UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_SHARE_KEY);
+
+		if (!$text) {
+			return [];
+		}
+
+		$text = \str_replace('{companies}', $compliance['ShareComplianceText'] ?? '', $text);
+
+		return [
+			'component' => 'checkboxes',
+			'checkboxesName' => 'complianceShare',
+			'checkboxesIsRequired' => false,
+			'checkboxesTypeCustom' => 'complianceShare',
+			'checkboxesContent' => [
+				[
+					'component' => 'checkbox',
+					'checkboxValue' => 'complianceShare',
+					'checkboxLabel' => \esc_html($text),
+					'checkboxTracking' => 'complianceShare',
+					'checkboxDisabledOptions' => $this->prepareDisabledOptions('checkbox', [
+						'checkboxValue',
+						'checkboxLabel',
+					], false),
+				]
+			],
+			'checkboxesDisabledOptions' => $this->prepareDisabledOptions('checkboxes', [
+				'checkboxesTypeCustom',
+			]),
+		];
 	}
 }
