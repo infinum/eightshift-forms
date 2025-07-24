@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\AdminMenus;
 
+use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\CustomPostType\Result;
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Entries\EntriesHelper;
@@ -233,6 +234,43 @@ class FormAdminMenu extends AbstractAdminMenu
 						),
 				];
 				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
+				if ($formId) {
+					$items = ActivityLogHelper::getActivityLogs($formId);
+				} else {
+					$items = ActivityLogHelper::getActivityLogsAll();
+				}
+
+				$count = \count($items);
+
+				$output = [
+					'adminListingPageTitle' => $formId ?
+						// Translators: %s is the form title.
+						$this->getMultilangTitle(\sprintf(\__('Activity logs for %s form', 'eightshift-forms'), \get_the_title((int) $formId))) :
+						$this->getMultilangTitle(\__('All activity logs', 'eightshift-forms')),
+					'adminListingPageSubTitle' => $formId ?
+						\sprintf(
+							// Translators: %s is the number of forms.
+							\_n(
+								'Showing %d form activity log.',
+								'Showing %d form activity logs.',
+								$count,
+								'eightshift-forms'
+							),
+							$count
+						) :
+						\sprintf(
+							// Translators: %s is the number of forms.
+							\_n(
+								'Showing %d activity log.',
+								'Showing %d activity logs.',
+								$count,
+								'eightshift-forms'
+							),
+							$count
+						),
+				];
+				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
 				$items = $this->formsListing->getFormsList($type, $parent);
 				$count = \count($items);
@@ -400,10 +438,22 @@ class FormAdminMenu extends AbstractAdminMenu
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
 				$output = [
 					Helpers::render('highlighted-content', [
-						'highlightedContentTitle' => \__('Entrie list is empty', 'eightshift-forms'),
+						'highlightedContentTitle' => \__('Entry list is empty', 'eightshift-forms'),
 						// Translators: %s is the link to the forms listing page.
 						'highlightedContentSubtitle' => \sprintf(\__('
 							You don\'t have any form entries on this form.<br />
+							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(UtilsGeneralHelper::getListingPageUrl())),
+						'highlightedContentIcon' => 'emptyStateEntries',
+					]),
+				];
+				break;
+			case UtilsConfig::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
+				$output = [
+					Helpers::render('highlighted-content', [
+						'highlightedContentTitle' => \__('Activity log list is empty', 'eightshift-forms'),
+						// Translators: %s is the link to the forms listing page.
+						'highlightedContentSubtitle' => \sprintf(\__('
+							You don\'t have any activity logs on this form.<br />
 							<br /><a class="es-submit es-submit--outline" href="%s">Go to your forms</a>', 'eightshift-forms'), \esc_url(UtilsGeneralHelper::getListingPageUrl())),
 						'highlightedContentIcon' => 'emptyStateEntries',
 					]),
@@ -507,6 +557,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
+			case UtilsConfig::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$left = [
 					Helpers::render('checkbox', [
 						'checkboxValue' => 'all',
@@ -611,7 +662,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						'submitIsDisabled' => true,
 						'additionalClass' => $bulkSelector,
 						'submitAttrs' => [
-							UtilsHelper::getStateAttribute('bulkType') => 'delete-perminentely',
+							UtilsHelper::getStateAttribute('bulkType') => 'delete-permanently',
 						],
 					]),
 				];
@@ -743,6 +794,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				}
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
+			case UtilsConfig::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$i = 0;
 
 				$tableHead = [];
@@ -1003,6 +1055,7 @@ class FormAdminMenu extends AbstractAdminMenu
 				];
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES:
+			case UtilsConfig::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$output = [];
 				break;
 			case UtilsConfig::SLUG_ADMIN_LISTING_TRASH:
