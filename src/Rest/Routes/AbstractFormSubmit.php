@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
+use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\Exception\UnverifiedRequestException;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
 use EightshiftForms\Captcha\SettingsCaptcha;
@@ -150,10 +151,18 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			}
 		}
 
+		static $ip = '';
+
+		if (!$ip) {
+			$ip = $this->getSecurity()->getIpAddress('anonymize');
+		}
+
 		// Try catch request.
 		try {
 			// Prepare all data.
 			$formDetails = $this->getFormDetailsApi($request);
+
+			$activityLogId = ActivityLogHelper::setActivityLog($formDetails, ActivityLogHelper::REQUEST_STATUS_INIT, $ip);
 
 			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
 			if (!$this->getValidator()->validateFormManadatoryProperies($formDetails)) {
@@ -368,21 +377,29 @@ abstract class AbstractFormSubmit extends AbstractUtilsBaseRoute
 			}
 
 			// Die if any of the validation fails.
+			$return = [
+				'message' => $e->getMessage(),
+				'data' => [
+					UtilsHelper::getStateResponseOutputKey('validation') => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? [],
+				],
+				'debug' => [
+					'exception' => $e,
+					'request' => $request,
+					self::VALIDATION_ERROR_CODE => \esc_html($e->getData()[self::VALIDATION_ERROR_CODE] ?? ''),
+					self::VALIDATION_ERROR_MSG => \esc_html($e->getMessage()),
+					self::VALIDATION_ERROR_OUTPUT => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? '',
+					self::VALIDATION_ERROR_DATA => $e->getData()[self::VALIDATION_ERROR_DATA] ?? '',
+					'formDetails' => $formDetails,
+				]
+			];
+
+			ActivityLogHelper::setActivityLog($return, ActivityLogHelper::REQUEST_STATUS_INIT_ERROR, $ip);
+
 			return \rest_ensure_response(
 				UtilsApiHelper::getApiErrorPublicOutput(
-					$e->getMessage(),
-					[
-						UtilsHelper::getStateResponseOutputKey('validation') => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? [],
-					],
-					[
-						'exception' => $e,
-						'request' => $request,
-						self::VALIDATION_ERROR_CODE => \esc_html($e->getData()[self::VALIDATION_ERROR_CODE] ?? ''),
-						self::VALIDATION_ERROR_MSG => \esc_html($e->getMessage()),
-						self::VALIDATION_ERROR_OUTPUT => $e->getData()[self::VALIDATION_ERROR_OUTPUT] ?? '',
-						self::VALIDATION_ERROR_DATA => $e->getData()[self::VALIDATION_ERROR_DATA] ?? '',
-						'formDetails' => $formDetails,
-					]
+					$return['message'],
+					$return['data'],
+					$return['debug']
 				)
 			);
 		}

@@ -124,8 +124,8 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			case 'restore':
 				$output = $this->restore($ids);
 				break;
-			case 'delete-perminentely':
-				$output = $this->deletePerminently($ids);
+			case 'delete-permanently':
+				$output = $this->deletePermanently($ids);
 				break;
 			case 'duplicate':
 				$output = $this->duplicate($ids);
@@ -181,36 +181,36 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		$skip = $details['skip'] ?? [];
 
 		$msg = '';
-		$intrernaType = 'forms';
+		$internalType = 'forms';
 
 		switch ($type) {
 			case 'sync':
 				$msg = \esc_html__('synced', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'delete':
 				$msg = \esc_html__('deleted', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'restore':
 				$msg = \esc_html__('restored', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
-			case 'delete-perminentely':
-				$msg = \esc_html__('deleted perminently', 'eightshift-forms');
-				$intrernaType = 'forms';
+			case 'delete-permanently':
+				$msg = \esc_html__('deleted permanently', 'eightshift-forms');
+				$internalType = 'forms';
 				break;
 			case 'duplicate':
 				$msg = \esc_html__('duplicate', 'eightshift-forms');
-				$intrernaType = 'forms';
+				$internalType = 'forms';
 				break;
 			case 'delete-entry':
 				$msg = \esc_html__('deleted', 'eightshift-forms');
-				$intrernaType = 'entries';
+				$internalType = 'entries';
 				break;
 			case 'duplicate-entry':
 				$msg = \esc_html__('duplicate', 'eightshift-forms');
-				$intrernaType = 'entries';
+				$internalType = 'entries';
 				break;
 		}
 
@@ -218,14 +218,14 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			return [
 				'status' => 'error',
 				// translators: %s replaces form msg type.
-				'msg' => \sprintf(\esc_html__('There are no %1$s in your list to %2$s.', 'eightshift-forms'), $intrernaType, $msg),
+				'msg' => \sprintf(\esc_html__('There are no %1$s in your list to %2$s.', 'eightshift-forms'), $internalType, $msg),
 			];
 		}
 
 		if (\count($details) > 1) {
 			$msgOutput = [
 				// translators: %s replaces type.
-				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $intrernaType),
+				\sprintf(\esc_html__('Not all items were %s with success. Please check the following log.', 'eightshift-forms'), $internalType),
 			];
 
 			if ($error) {
@@ -289,7 +289,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 				$title = \sprintf(\esc_html__('Form %s', 'eightshift-forms'), $id);
 			}
 
-			// Prevent non syncahble forms from syncing like mailer.
+			// Prevent non sync forms from syncing like mailer.
 			if (!UtilsGeneralHelper::canIntegrationUseSync(UtilsGeneralHelper::getFormTypeById((string) $id))) {
 				$output['skip'][] = $title;
 				continue;
@@ -335,13 +335,13 @@ class BulkRoute extends AbstractUtilsBaseRoute
 	}
 
 	/**
-	 * Delete perminently forms by Ids.
+	 * Delete permanently forms by Ids.
 	 *
 	 * @param array<int> $ids Form Ids.
 	 *
 	 * @return array<int>
 	 */
-	private function deletePerminently(array $ids): array
+	private function deletePermanently(array $ids): array
 	{
 		$output = [];
 
@@ -362,7 +362,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			}
 		}
 
-		return $this->output($output, 'delete-perminentely');
+		return $this->output($output, 'delete-permanently');
 	}
 
 	/**
