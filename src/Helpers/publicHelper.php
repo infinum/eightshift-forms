@@ -99,6 +99,7 @@ function esFormRenderForm(string $formId, array $attributes = []): string
 			'formsStyle' => $attributes['style'] ?? [],
 			'formsFormGeolocation' => $attributes['geolocation'] ?? [],
 			'formsFormGeolocationAlternatives' => $attributes['geolocationAlternatives'] ?? [],
+			'formsVariation' => $attributes['variation'] ?? [],
 		],
 		'blocks'
 	);
