@@ -11,17 +11,17 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Misc\SettingsRocketCache;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_REST_Request;
 
 /**
  * Class CacheDeleteRoute
  */
-class CacheDeleteRoute extends AbstractUtilsBaseRoute
+class CacheDeleteRoute extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -66,7 +66,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}
@@ -80,7 +80,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Type key was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -88,7 +88,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 			);
 		}
 
-		$data = \apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
+		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 		switch ($type) {
 			case 'allOperational':
@@ -117,7 +117,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 				$cacheTypes = $data[$type]['cache'] ?? [];
 				if (!$cacheTypes) {
 					return \rest_ensure_response(
-						UtilsApiHelper::getApiErrorPublicOutput(
+						ApiHelpers::getApiErrorPublicOutput(
 							\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
 							[],
 							$debug
@@ -140,7 +140,7 @@ class CacheDeleteRoute extends AbstractUtilsBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				// translators: %s will be replaced with the form type.
 				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), $outputTitle),
 				[],

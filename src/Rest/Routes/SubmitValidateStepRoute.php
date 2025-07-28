@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - validating step
+ * The class register route for public form submitting endpoint - validating step
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -10,10 +10,9 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftForms\ActivityLog\ActivityLogHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 
 /**
  * Class SubmitValidateStepRoute
@@ -58,10 +57,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			'formDetails' => $formDetails,
 		];
 
-		$currentStep = $formDetails[UtilsConfig::FD_API_STEPS]['current'] ?? '';
+		$currentStep = $formDetails[Config::FD_API_STEPS]['current'] ?? '';
 		if (!$currentStep) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('validationStepsCurrentStepProblem'),
 					[],
 					$debug
@@ -69,10 +68,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$submittedNames = $formDetails[UtilsConfig::FD_API_STEPS]['fields'] ?? [];
+		$submittedNames = $formDetails[Config::FD_API_STEPS]['fields'] ?? [];
 		if (!$submittedNames) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('validationStepsCurrentStepProblem'),
 					[],
 					$debug
@@ -80,10 +79,10 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$steps = $formDetails[UtilsConfig::FD_STEPS_SETUP]['steps'] ?? [];
+		$steps = $formDetails[Config::FD_STEPS_SETUP]['steps'] ?? [];
 		if (!$steps) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('validationStepsNextStepProblem'),
 					[],
 					$debug
@@ -91,7 +90,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 			);
 		}
 
-		$multiflow = $formDetails[UtilsConfig::FD_STEPS_SETUP]['multiflow'] ?? [];
+		$multiflow = $formDetails[Config::FD_STEPS_SETUP]['multiflow'] ?? [];
 
 		$nextStep = '';
 		$progressBarItems = 0;
@@ -100,11 +99,11 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		if ($multiflow) {
 			$type = 'multiflow';
 
-			$params = $formDetails[UtilsConfig::FD_PARAMS] ?? [];
+			$params = $formDetails[Config::FD_PARAMS] ?? [];
 
 			if (!$params) {
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorPublicOutput(
+					ApiHelpers::getApiErrorPublicOutput(
 						$this->labels->getLabel('validationStepsParametersProblem'),
 						[],
 						$debug
@@ -144,7 +143,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		}
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				$this->labels->getLabel('validationStepsSuccess'),
 				[
 					UtilsHelper::getStateResponseOutputKey('stepType') => $type,
@@ -179,7 +178,7 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 	}
 
 	/**
-	 * Check if conditons are met to go to next step.
+	 * Check if conditions are met to go to next step.
 	 *
 	 * @param array<int, mixed> $flowConditions Flow conditions that we need to check.
 	 * @param array<string, mixed> $params Params array.
@@ -213,8 +212,8 @@ class SubmitValidateStepRoute extends AbstractFormSubmit
 		}
 
 		return \array_reduce($output, function ($carry, $validItem) {
-			return $carry || (bool) \array_reduce($validItem, function ($subcarry, $item) {
-				return $subcarry && (bool) $item;
+			return $carry || (bool) \array_reduce($validItem, function ($subCarry, $item) {
+				return $subCarry && (bool) $item;
 			}, true);
 		}, false);
 	}

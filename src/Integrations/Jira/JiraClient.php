@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Jira;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * JiraClient integration class.
@@ -43,7 +43,7 @@ class JiraClient implements JiraClientInterface
 	/**
 	 * Return projects.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -53,7 +53,7 @@ class JiraClient implements JiraClientInterface
 		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -104,7 +104,7 @@ class JiraClient implements JiraClientInterface
 		$output = \get_transient(self::CACHE_JIRA_PROJECTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -144,12 +144,12 @@ class JiraClient implements JiraClientInterface
 	 */
 	public function postApplication(array $formDetails): array
 	{
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
-		$files = $formDetails[UtilsConfig::FD_FILES];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$params = $formDetails[Config::FD_PARAMS];
+		$files = $formDetails[Config::FD_FILES];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		// Filter override post request.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsJira::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsJira::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
 			$filterValue = \apply_filters($filterName, [], $params, $files, $formId) ?? [];
 
@@ -172,7 +172,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -180,22 +180,22 @@ class JiraClient implements JiraClientInterface
 			[],
 			'',
 			$formId,
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)
+			SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
-		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
-		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+		$details[Config::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -205,7 +205,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	public function getBaseUrlOutputPrefix(): string
 	{
-		$output = UtilsSettingsHelper::getOptionValue(SettingsJira::SETTINGS_JIRA_API_BOARD_URL_KEY);
+		$output = SettingsHelpers::getOptionValue(SettingsJira::SETTINGS_JIRA_API_BOARD_URL_KEY);
 
 		if (!$output) {
 			$output = $this->getApiBoard();
@@ -264,7 +264,7 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		return UtilsApiHelper::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -278,7 +278,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	public function isSelfHosted(): bool
 	{
-		return (bool) UtilsSettingsHelper::getOptionValue(SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY);
+		return (bool) SettingsHelpers::getOptionValue(SettingsJira::SETTINGS_JIRA_SELF_HOSTED_KEY);
 	}
 
 	/**
@@ -294,7 +294,7 @@ class JiraClient implements JiraClientInterface
 	}
 
 	/**
-	 * Return base url claned from user input.
+	 * Return base url cleaned from user input.
 	 *
 	 * @param string $output Output to clean.
 	 *
@@ -320,11 +320,11 @@ class JiraClient implements JiraClientInterface
 	{
 		$details = $this->getTestApi();
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			if ($this->isSelfHosted()) {
 				return $body ?? [];
 			} else {
@@ -358,17 +358,17 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			if ($this->isSelfHosted()) {
 				return $body['issueTypes'] ?? [];
 			} else {
@@ -400,17 +400,17 @@ class JiraClient implements JiraClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsJira::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return \array_map(
 				static function ($item) {
 					return [
@@ -455,30 +455,30 @@ class JiraClient implements JiraClientInterface
 	{
 		$output = [];
 
-		$selectedProject = UtilsSettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_PROJECT_KEY, $formId);
+		$selectedProject = SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PROJECT_KEY, $formId);
 
 		if (!$selectedProject) {
 			return $output;
 		}
 
-		$selectedIssueType = UtilsSettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
+		$selectedIssueType = SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_ISSUE_TYPE_KEY, $formId);
 		if (!$selectedIssueType) {
 			return $output;
 		}
 
-		$title = UtilsSettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_TITLE_KEY, $formId);
+		$title = SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_TITLE_KEY, $formId);
 		if (!$title) {
 			return $output;
 		}
 
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		$params = \array_merge($params, $files);
 
 		$formTitle = \get_the_title((int) $formId);
 
-		$additionalDescription = UtilsSettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
+		$additionalDescription = SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_DESC_KEY, $formId);
 
 		$output = [
 			'project' => [
@@ -498,7 +498,7 @@ class JiraClient implements JiraClientInterface
 			];
 
 			// Standard fields output.
-			if (!UtilsSettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			if (!SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
 				$contentOutput = [];
 
 				$i = 0;
@@ -642,7 +642,7 @@ class JiraClient implements JiraClientInterface
 			}
 
 			// Custom fields maps output.
-			$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
+			$mapParams = SettingsHelpers::getSettingValueGroup(SettingsJira::SETTINGS_JIRA_PARAMS_MAP_KEY, $formId);
 			if ($mapParams) {
 				foreach ($mapParams as $key => $value) {
 					if (!$value) {
@@ -658,7 +658,7 @@ class JiraClient implements JiraClientInterface
 			$descriptionOutput = \sprintf(\__('Data populated from the WordPress "%1$s" form: %2$s %2$s', 'eightshift-forms'), \esc_html($formTitle), \PHP_EOL);
 
 			// Standard fields output.
-			if (!UtilsSettingsHelper::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
+			if (!SettingsHelpers::getSettingValue(SettingsJira::SETTINGS_JIRA_PARAMS_MANUAL_MAP_KEY, $formId)) {
 				$i = 0;
 				foreach ($params as $param) {
 					$value = $param['value'] ?? '';
@@ -694,7 +694,7 @@ class JiraClient implements JiraClientInterface
 					$descriptionOutput .= \PHP_EOL . \PHP_EOL . \esc_html($additionalDescription);
 				}
 
-				// Custom fields maps is not suported.
+				// Custom fields maps is not supported.
 			}
 
 			// Populate output desc.
@@ -800,7 +800,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyJira(), SettingsJira::SETTINGS_JIRA_API_KEY_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiKeyJira(), SettingsJira::SETTINGS_JIRA_API_KEY_KEY);
 	}
 
 	/**
@@ -810,7 +810,7 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiBoard(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiBoardJira(), SettingsJira::SETTINGS_JIRA_API_BOARD_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiBoardJira(), SettingsJira::SETTINGS_JIRA_API_BOARD_KEY);
 	}
 
 	/**
@@ -820,6 +820,6 @@ class JiraClient implements JiraClientInterface
 	 */
 	private function getApiUser(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUserJira(), SettingsJira::SETTINGS_JIRA_API_USER_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiUserJira(), SettingsJira::SETTINGS_JIRA_API_USER_KEY);
 	}
 }

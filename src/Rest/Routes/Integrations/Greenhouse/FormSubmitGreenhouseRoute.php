@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Greenhouse
+ * The class register route for public form submitting endpoint - Greenhouse
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Greenhouse
  */
@@ -19,7 +19,7 @@ use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 
 /**
  * Class FormSubmitGreenhouseRoute
@@ -69,7 +69,7 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -84,7 +84,7 @@ class FormSubmitGreenhouseRoute extends AbstractFormSubmit
 		// Send application to Greenhouse.
 		$response = $this->greenhouseClient->postApplication($formDetails);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
 		return \rest_ensure_response(

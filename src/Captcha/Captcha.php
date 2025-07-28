@@ -12,8 +12,8 @@ namespace EightshiftForms\Captcha;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\SettingsHelpers;
 use Throwable;
 
 /**
@@ -56,11 +56,12 @@ class Captcha implements CaptchaInterface
 		];
 
 		if (!$token) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('captchaBadRequest'),
-				[],
-				$debug
-			);
+			return [
+				'status' => Config::STATUS_ERROR,
+				'message' => $this->labels->getLabel('captchaBadRequest'),
+				'msgKey' => 'captchaBadRequest',
+				'debug' => $debug,
+			];
 		}
 
 		if ($isEnterprise) {
@@ -71,22 +72,24 @@ class Captcha implements CaptchaInterface
 
 		// Generic error msg from WP.
 		if (\is_wp_error($response)) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('submitWpError'),
-				[],
-				$debug
-			);
+			return [
+				'status' => Config::STATUS_ERROR,
+				'message' => $this->labels->getLabel('submitWpError'),
+				'msgKey' => 'submitWpError',
+				'debug' => $debug,
+			];
 		}
 
 		// Get body from the response.
 		try {
 			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 		} catch (Throwable $t) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('captchaBadRequest'),
-				[],
-				$debug
-			);
+			return [
+				'status' => Config::STATUS_ERROR,
+				'message' => $this->labels->getLabel('captchaBadRequest'),
+				'msgKey' => 'captchaBadRequest',
+				'debug' => $debug,
+			];
 		}
 
 		if ($isEnterprise) {
@@ -106,9 +109,9 @@ class Captcha implements CaptchaInterface
 	 */
 	private function onEnterprise(string $token, string $action)
 	{
-		$siteKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
-		$apiKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
-		$projectIdKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
+		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		$apiKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
+		$projectIdKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
 
 		return \wp_remote_post(
 			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
@@ -137,7 +140,7 @@ class Captcha implements CaptchaInterface
 	 */
 	private function onFree(string $token)
 	{
-		$secretKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
+		$secretKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
 
 		return \wp_remote_post(
 			"https://www.google.com/recaptcha/api/siteverify",
@@ -170,14 +173,15 @@ class Captcha implements CaptchaInterface
 
 		// If error status returns error.
 		if ($error) {
-			// Bailout on error.
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$error['message'] ?? '',
-				[
+			return [
+				'status' => Config::STATUS_ERROR,
+				'message' => $error['message'] ?? '',
+				'msgKey' => 'captchaEnterpriseError',
+				'debug' => $debug,
+				'data' => [
 					'response' => $responseBody,
 				],
-				$debug
-			);
+			];
 		}
 
 		return $this->validate($responseBody, $action, $responseBody['tokenProperties']['action'] ?? '', $responseBody['riskAnalysis']['score'] ?? 0.0);
@@ -203,14 +207,15 @@ class Captcha implements CaptchaInterface
 
 		// If error status returns error.
 		if (!$success) {
-			// Bailout on error.
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('captchaError'),
-				[
+			return [
+				'status' => Config::STATUS_ERROR,
+				'message' => $error['message'] ?? '',
+				'msgKey' => 'captchaFreeError',
+				'debug' => $debug,
+				'data' => [
 					'response' => $responseBody,
 				],
-				$debug
-			);
+			];
 		}
 
 		return $this->validate($responseBody, $action, $responseBody['action'] ?? '', $responseBody['score'] ?? 0.0);
@@ -237,35 +242,41 @@ class Captcha implements CaptchaInterface
 
 		// Bailout if action is not correct.
 		if ($actionResponse !== $action) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('captchaWrongAction'),
-				[
+			return [
+				'status' => Config::STATUS_ERROR,
+				'message' => $this->labels->getLabel('captchaWrongAction'),
+				'msgKey' => 'captchaWrongAction',
+				'debug' => $debug,
+				'data' => [
 					'response' => $responseBody,
 				],
-				$debug
-			);
+			];
 		}
 
-		$setScore = UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$setScore = SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('captchaScoreSpam'),
-				[
+			return [
+				'status' => Config::STATUS_ERROR,
+				'message' => $this->labels->getLabel('captchaScoreSpam'),
+				'msgKey' => 'captchaScoreSpam',
+				'debug' => $debug,
+				'data' => [
 					'response' => $responseBody,
 					'isSpam' => true,
 				],
-				$debug
-			);
+			];
 		}
 
-		return UtilsApiHelper::getApiSuccessPublicOutput(
-			'Success',
-			[
+		return [
+			'status' => Config::STATUS_SUCCESS,
+			'message' => \esc_html__('Success', 'eightshift-forms'),
+			'msgKey' => 'captchaSuccess',
+			'debug' => $debug,
+			'data' => [
 				'response' => $responseBody,
 			],
-			$debug
-		);
+		];
 	}
 }

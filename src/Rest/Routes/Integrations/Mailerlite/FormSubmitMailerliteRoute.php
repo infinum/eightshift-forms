@@ -19,7 +19,7 @@ use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 
 /**
  * Class FormSubmitMailerliteRoute
@@ -69,7 +69,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -84,7 +84,7 @@ class FormSubmitMailerliteRoute extends AbstractFormSubmit
 		// Send application to Mailerlite.
 		$response = $this->mailerliteClient->postApplication($formDetails);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
 		return \rest_ensure_response(

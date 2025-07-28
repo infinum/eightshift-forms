@@ -11,16 +11,16 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IncrementRoute
  */
-class IncrementRoute extends AbstractUtilsBaseRoute
+class IncrementRoute extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -66,7 +66,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}
@@ -80,7 +80,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 		$formId = $params['formId'] ?? '';
 		if (!$formId) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Form ID key was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -91,7 +91,7 @@ class IncrementRoute extends AbstractUtilsBaseRoute
 		FormsHelper::resetIncrement($formId);
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				\esc_html__('Increment reset successful.', 'eightshift-forms'),
 				[],
 				$debug

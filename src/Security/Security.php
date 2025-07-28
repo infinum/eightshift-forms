@@ -12,7 +12,7 @@ namespace EightshiftForms\Security;
 
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Misc\SettingsCloudflare;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -48,12 +48,12 @@ class Security implements SecurityInterface
 			return true;
 		}
 
-		$keyName = UtilsSettingsHelper::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
-		$data = UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
+		$keyName = SettingsHelpers::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
+		$data = SettingsHelpers::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
 		$time = \time();
 
 		// Bailout if the IP is in the ignore list.
-		$ignoreIps = Helpers::flattenArray(UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_IP_IGNORE_KEY));
+		$ignoreIps = Helpers::flattenArray(SettingsHelpers::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_IP_IGNORE_KEY));
 
 		if (isset(\array_flip($ignoreIps)[$this->getIpAddress()])) {
 			return true;
@@ -78,15 +78,15 @@ class Security implements SecurityInterface
 		$count = $user['count'] ?? 0;
 
 		// Reset the count if the time window has passed.
-		if (($time - $timestamp) > \intval(UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
+		if (($time - $timestamp) > \intval(SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
 			unset($data[$ip]);
 			\update_option($keyName, $data);
 			return true;
 		}
 
 		// Check if the request count exceeds the rate limit.
-		$rateLimitGeneral = UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
-		$rateLimitCalculator = UtilsSettingsHelper::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
+		$rateLimitGeneral = SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
+		$rateLimitCalculator = SettingsHelpers::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
 
 		// Different rate limit for calculator.
 		if ($rateLimitCalculator && $formType === SettingsCalculator::SETTINGS_TYPE_KEY) {
@@ -118,7 +118,7 @@ class Security implements SecurityInterface
 	{
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_CONNECTING_IP'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 

@@ -7,9 +7,9 @@
  */
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -58,11 +58,11 @@ $ratingAttrs['role'] = 'radiogroup';
 
 
 // Additional content filter.
-$additionalContent = UtilsGeneralHelper::getBlockAdditionalContentViaFilter('rating', $attributes);
+$additionalContent = GeneralHelpers::getBlockAdditionalContentViaFilter('rating', $attributes);
 
 $stars = '';
 
-$iconFilterName = UtilsHooksHelper::getFilterName(['block', 'rating', 'starIcon']);
+$iconFilterName = HooksHelpers::getFilterName(['block', 'rating', 'starIcon']);
 
 for ($i = 1; $i < $ratingAmount + 1; $i++) {
 	$stars .= '

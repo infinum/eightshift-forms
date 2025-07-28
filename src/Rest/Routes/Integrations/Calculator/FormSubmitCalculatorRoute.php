@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Calculator
+ * The class register route for public form submitting endpoint - Calculator
  *
  * @package EightshiftForms\Rest\Route\Integrations\Calculator
  */
@@ -12,8 +12,8 @@ namespace EightshiftForms\Rest\Routes\Integrations\Calculator;
 
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
 
 /**
  * Class FormSubmitCalculatorRoute
@@ -32,7 +32,7 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -44,16 +44,16 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		$debug = [
 			'formDetails' => $formDetails,
 		];
 
 		// Set validation submit once.
-		$this->validator->setValidationSubmitOnce($formId);
+		$this->getValidator()->setValidationSubmitOnce($formId);
 
-		// Located before the sendEmail mentod so we can utilize common email response tags.
+		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.
@@ -69,7 +69,7 @@ class FormSubmitCalculatorRoute extends AbstractFormSubmit
 		);
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				$this->labels->getLabel('calculatorSuccess', $formId),
 				\array_merge(
 					$successAdditionalData['public'],

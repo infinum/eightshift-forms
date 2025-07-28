@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\EncryptionHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class DebugEncryptRoute
  */
-class DebugEncryptRoute extends AbstractUtilsBaseRoute
+class DebugEncryptRoute extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -66,7 +66,7 @@ class DebugEncryptRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}
@@ -80,7 +80,7 @@ class DebugEncryptRoute extends AbstractUtilsBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Type key was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -91,7 +91,7 @@ class DebugEncryptRoute extends AbstractUtilsBaseRoute
 		$data = $params['data'] ?? '';
 		if (!$data) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Data key was not provided.', 'eightshift-forms'),
 					[],
 					$debug
@@ -100,14 +100,14 @@ class DebugEncryptRoute extends AbstractUtilsBaseRoute
 		}
 
 		if ($type === 'encrypt') {
-			$output = UtilsEncryption::encryptor($data);
+			$output = EncryptionHelpers::encryptor($data);
 		} else {
-			$output = UtilsEncryption::decryptor($data);
+			$output = EncryptionHelpers::decryptor($data);
 		}
 
 		if (!$output) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					// translators: %s will be replaced with the action type.
 					\sprintf(\esc_html__('%s failed!', 'eightshift-forms'), \ucfirst($type)),
 					[],
@@ -118,7 +118,7 @@ class DebugEncryptRoute extends AbstractUtilsBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				// translators: %s will be replaced with the action type.
 				\sprintf(\esc_html__('%s finished successfully!', 'eightshift-forms'), \ucfirst($type)),
 				[

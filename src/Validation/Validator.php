@@ -12,8 +12,8 @@ namespace EightshiftForms\Validation;
 
 use EightshiftForms\Cache\ManifestCache;
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsUploadHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -23,8 +23,8 @@ use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -104,21 +104,21 @@ class Validator extends AbstractValidation
 	public function validateParams(array $formDetails, bool $strictValidation = true): array
 	{
 		$output = [];
-		$formType = $formDetails[UtilsConfig::FD_TYPE];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY];
-		$stepFields = isset($formDetails[UtilsConfig::FD_API_STEPS]['fields']) ? \array_flip($formDetails[UtilsConfig::FD_API_STEPS]['fields']) : [];
+		$formType = $formDetails[Config::FD_TYPE];
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$fieldsOnly = $formDetails[Config::FD_FIELDS_ONLY];
+		$stepFields = isset($formDetails[Config::FD_API_STEPS]['fields']) ? \array_flip($formDetails[Config::FD_API_STEPS]['fields']) : [];
 		$params = \array_merge(
-			$formDetails[UtilsConfig::FD_PARAMS],
-			$formDetails[UtilsConfig::FD_FILES]
+			$formDetails[Config::FD_PARAMS],
+			$formDetails[Config::FD_FILES]
 		);
 
-		// Manualy build fields from settings components.
-		if ($formType === UtilsConfig::SETTINGS_TYPE_NAME || $formType === UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME) {
+		// Manually build fields from settings components.
+		if ($formType === Config::SETTINGS_TYPE_NAME || $formType === Config::SETTINGS_GLOBAL_TYPE_NAME) {
 			$fieldsOnly = $this->getValidationReferenceManual($fieldsOnly);
 		}
 
-		// Find refference fields in admin config.
+		// Find reference fields in admin config.
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
 		// Define order of validation.
@@ -168,13 +168,13 @@ class Validator extends AbstractValidation
 
 					// Check if wrong upload path.
 					foreach ($inputValue as $value) {
-						if (UtilsUploadHelper::isUploadError($value)) {
+						if (UploadHelpers::isUploadError($value)) {
 							$output[$paramKey] = $this->labels->getLabel('validationFileNotLocated', $formId);
 							$isFilesError = true;
 							break;
 						}
 
-						// Expolode and remove empty files.
+						// Explode and remove empty files.
 						$fileName = \array_filter(\explode(\DIRECTORY_SEPARATOR, $value));
 						if (!$fileName) {
 							continue;
@@ -183,7 +183,7 @@ class Validator extends AbstractValidation
 						$fileName = \array_flip($fileName);
 
 						// Bailout if file is ok.
-						if (isset($fileName[UtilsConfig::TEMP_UPLOAD_DIR])) {
+						if (isset($fileName[Config::TEMP_UPLOAD_DIR])) {
 							continue;
 						}
 
@@ -225,7 +225,7 @@ class Validator extends AbstractValidation
 						if (!$this->isEmail($inputValue) && !empty($inputValue)) {
 							$output[$paramKey] = $this->labels->getLabel('validationEmail', $formId);
 						} else {
-							if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
+							if (SettingsHelpers::isOptionCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_EMAIL_TLD_KEY)) {
 								$tldList = Helpers::getCache()[ManifestCache::TYPE_FORMS][ManifestCache::TLD_KEY];
 
 								if (!$this->isEmailTldValid($inputValue, \array_values($tldList))) {
@@ -340,9 +340,9 @@ class Validator extends AbstractValidation
 	public function validateFiles(array $formDetails): array
 	{
 		$output = [];
-		$file = $formDetails[UtilsConfig::FD_FILES_UPLOAD];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$fieldsOnly = $formDetails[UtilsConfig::FD_FIELDS_ONLY];
+		$file = $formDetails[Config::FD_FILES_UPLOAD];
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$fieldsOnly = $formDetails[Config::FD_FIELDS_ONLY];
 		$validationReference = $this->getValidationReference($fieldsOnly);
 
 		$fieldName = $file['fieldName'];
@@ -386,30 +386,30 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Validate all manadatory fields that are passed from the `getFormDetailsApi` function.
+	 * Validate all mandatory fields that are passed from the `getFormDetailsApi` function.
 	 * If these fields are missing it can be that the forme is not configured correctly or it could be a unauthorized request.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 *
 	 * @return boolean
 	 */
-	public function validateFormManadatoryProperies(array $formDetails): bool
+	public function validateFormMandatoryProperties(array $formDetails): bool
 	{
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$postId = $formDetails[UtilsConfig::FD_POST_ID] ?? '';
-		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID] ?? '';
-		$innerId = $formDetails[UtilsConfig::FD_INNER_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$postId = $formDetails[Config::FD_POST_ID] ?? '';
+		$itemId = $formDetails[Config::FD_ITEM_ID] ?? '';
+		$innerId = $formDetails[Config::FD_INNER_ID] ?? '';
 
 		if (!$type) {
 			return false;
 		}
 
 		switch ($type) {
-			case UtilsConfig::SETTINGS_GLOBAL_TYPE_NAME:
-			case UtilsConfig::FILE_UPLOAD_ADMIN_TYPE_NAME:
+			case Config::SETTINGS_GLOBAL_TYPE_NAME:
+			case Config::FILE_UPLOAD_ADMIN_TYPE_NAME:
 				return true;
-			case UtilsConfig::SETTINGS_TYPE_NAME:
+			case Config::SETTINGS_TYPE_NAME:
 				if (!$formId) {
 					return false;
 				}
@@ -465,8 +465,8 @@ class Validator extends AbstractValidation
 	 */
 	public function setValidationSubmitOnce(string $formId): bool
 	{
-		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
-		$submitOnce = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
+		$onlyLoggedIn = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$submitOnce = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
 		if (!$onlyLoggedIn || !$submitOnce) {
 			return false;
 		}
@@ -495,7 +495,7 @@ class Validator extends AbstractValidation
 	 */
 	public function validateSubmitOnlyLoggedIn(string $formId): bool
 	{
-		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$onlyLoggedIn = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
 		if (!$onlyLoggedIn) {
 			return false;
 		}
@@ -512,8 +512,8 @@ class Validator extends AbstractValidation
 	 */
 	public function validateSubmitOnlyOnce(string $formId): bool
 	{
-		$onlyLoggedIn = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
-		$submitOnce = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
+		$onlyLoggedIn = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONLY_LOGGED_IN_KEY, $formId);
+		$submitOnce = SettingsHelpers::isSettingCheckboxChecked(SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, SettingsValidation::SETTINGS_VALIDATION_USE_SUBMIT_ONCE_KEY, $formId);
 
 		if (!$onlyLoggedIn || !$submitOnce) {
 			return false;
@@ -558,7 +558,7 @@ class Validator extends AbstractValidation
 	{
 		$output = [];
 
-		$blockDetails = UtilsGeneralHelper::getBlockNameDetails($block['blockName']);
+		$blockDetails = GeneralHelpers::getBlockNameDetails($block['blockName']);
 
 		$name = $blockDetails['name'];
 		$namespace = $blockDetails['namespace'];

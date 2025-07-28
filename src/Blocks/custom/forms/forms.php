@@ -9,8 +9,8 @@
 use EightshiftForms\Form\Form;
 use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsEncryption;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\EncryptionHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifestInvalid = Helpers::getComponent('invalid');
@@ -78,7 +78,7 @@ $hasGeolocation = false;
 
 if ($formsFormGeolocation || $formsFormGeolocationAlternatives) {
 	$hasGeolocation = true;
-	$formAttrs[UtilsHelper::getStateAttribute('formGeolocation')] = UtilsEncryption::encryptor(wp_json_encode([
+	$formAttrs[UtilsHelper::getStateAttribute('formGeolocation')] = EncryptionHelpers::encryptor(wp_json_encode([
 		'id' => $formsFormPostId,
 		'geo' => $formsFormGeolocation,
 		'alt' => $formsFormGeolocationAlternatives,

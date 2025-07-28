@@ -12,11 +12,11 @@ namespace EightshiftForms\AdminMenus;
 
 use EightshiftForms\CustomPostType\Forms;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftForms\Settings\Settings\SettingsBuilderInterface;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Settings\SettingsBuilderInterface;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftFormsVendor\EightshiftLibs\AdminMenus\AbstractAdminSubMenu;
 
 /**
@@ -72,14 +72,14 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_CAPABILITY = UtilsConfig::CAP_SETTINGS;
+	public const ADMIN_MENU_CAPABILITY = Config::CAP_SETTINGS;
 
 	/**
 	 * Menu slug for this admin sub menu
 	 *
 	 * @var string
 	 */
-	public const ADMIN_MENU_SLUG = UtilsConfig::SLUG_ADMIN_SETTINGS;
+	public const ADMIN_MENU_SLUG = Config::SLUG_ADMIN_SETTINGS;
 
 	/**
 	 * Parent menu slug for this admin sub menu
@@ -178,7 +178,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 
 		$formTitle = \get_the_title((int) $formId);
 
-		if (UtilsDeveloperHelper::isDeveloperModeActive()) {
+		if (DeveloperHelpers::isDeveloperModeActive()) {
 			$formTitle = "{$formId} - {$formTitle}";
 		}
 
@@ -186,15 +186,15 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 			$formTitle = \esc_html__('No form title', 'eightshift-forms');
 		}
 
-		$integrationTypeUsed = UtilsGeneralHelper::getFormTypeById($formId);
-		$formEditLink = UtilsGeneralHelper::getFormEditPageUrl($formId);
+		$integrationTypeUsed = GeneralHelpers::getFormTypeById($formId);
+		$formEditLink = GeneralHelpers::getFormEditPageUrl($formId);
 
 		return [
 			// translators: %s replaces the form name.
 			'adminSettingsPageTitle' => \sprintf(\esc_html__('Form settings: %s', 'eightshift-forms'), $formTitle),
-			'adminSettingsBackLink' => UtilsGeneralHelper::getListingPageUrl(),
+			'adminSettingsBackLink' => GeneralHelpers::getListingPageUrl(),
 			'adminSettingsFormEditLink' => $formEditLink,
-			'adminSettingsFormLocationsLink' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_LOCATIONS, $formId),
+			'adminSettingsFormLocationsLink' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_LOCATIONS, $formId),
 			'adminSettingsSidebar' => $this->settings->getSettingsSidebar($formId, $integrationTypeUsed),
 			'adminSettingsForm' => $this->settings->getSettingsForm($type, $formId),
 			'adminSettingsType' => $type,
@@ -214,7 +214,7 @@ class FormSettingsAdminSubMenu extends AbstractAdminSubMenu
 	{
 		global $plugin_page; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 
-		if ($plugin_page === UtilsConfig::SLUG_ADMIN_SETTINGS) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+		if ($plugin_page === Config::SLUG_ADMIN_SETTINGS) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
 			$plugin_page = Forms::POST_TYPE_SLUG; // phpcs:ignore
 		}
 		return $parentFile ?? '';

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * Labels class.
@@ -93,9 +93,9 @@ class Labels implements LabelsInterface
 			$local = \array_flip(self::ALL_LOCAL_LABELS);
 
 			if (isset($local[$key])) {
-				$dbLabel = UtilsSettingsHelper::getSettingValue($key, $formId);
+				$dbLabel = SettingsHelpers::getSettingValue($key, $formId);
 			} else {
-				$dbLabel = UtilsSettingsHelper::getOptionValue($key);
+				$dbLabel = SettingsHelpers::getOptionValue($key);
 			}
 
 			// If there is an override in the DB use that.

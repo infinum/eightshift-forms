@@ -11,10 +11,8 @@ declare(strict_types=1);
 namespace EightshiftForms\Helpers;
 
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsI18nHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -172,7 +170,7 @@ final class FormsHelper
 			return [];
 		}
 
-		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'tailwindSelectors']);
+		$filterName = HooksHelpers::getFilterName(['blocks', 'tailwindSelectors']);
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, [], $attributes);
 		}
@@ -271,12 +269,12 @@ final class FormsHelper
 	 */
 	public static function getIncrement(string $formId): string
 	{
-		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
+		$value = SettingsHelpers::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
 		if (!$value) {
 			$value = 0;
 		}
 
-		$length = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_LENGTH_KEY, $formId);
+		$length = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_LENGTH_KEY, $formId);
 		if ($length) {
 			$value = \str_pad($value, (int) $length, '0', \STR_PAD_LEFT);
 		}
@@ -293,8 +291,8 @@ final class FormsHelper
 	 */
 	public static function setIncrement(string $formId): string
 	{
-		$start = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
-		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
+		$start = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
+		$value = SettingsHelpers::getSettingValue(SettingsGeneral::INCREMENT_META_KEY, $formId);
 
 		if (!$value) {
 			$value = $start;
@@ -306,7 +304,7 @@ final class FormsHelper
 
 		$value = (int) $value + 1;
 
-		\update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
+		\update_post_meta((int) $formId, SettingsHelpers::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
 
 		return static::getIncrement($formId);
 	}
@@ -320,13 +318,13 @@ final class FormsHelper
 	 */
 	public static function resetIncrement(string $formId): bool
 	{
-		$value = UtilsSettingsHelper::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
+		$value = SettingsHelpers::getSettingValue(SettingsGeneral::SETTINGS_INCREMENT_START_KEY, $formId);
 
 		if (!$value) {
 			$value = 0;
 		}
 
-		$update = \update_post_meta((int) $formId, UtilsSettingsHelper::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
+		$update = \update_post_meta((int) $formId, SettingsHelpers::getSettingName(SettingsGeneral::INCREMENT_META_KEY), $value);
 
 		return (bool) $update;
 	}
@@ -351,7 +349,7 @@ final class FormsHelper
 	 */
 	public static function getLocaleFromCountryCode(): string
 	{
-		$locale = UtilsI18nHelper::getLocale();
+		$locale = I18nHelpers::getLocale();
 
 		$languages = \apply_filters('wpml_active_languages', []);
 
@@ -368,7 +366,7 @@ final class FormsHelper
 		$settings = Helpers::getSettings();
 
 		// Update media breakpoints from the filter.
-		$filterName = UtilsHooksHelper::getFilterName(['blocks', 'mediaBreakpoints']);
+		$filterName = HooksHelpers::getFilterName(['blocks', 'mediaBreakpoints']);
 
 		if (\has_filter($filterName)) {
 			$customMediaBreakpoints = \apply_filters($filterName, []);

@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace EightshiftForms\Enqueue\Admin;
 
 use EightshiftForms\Enqueue\SharedEnqueue;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Enqueue\Admin\AbstractEnqueueAdmin;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -36,7 +36,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function register(): void
 	{
-		if (!UtilsGeneralHelper::isEightshiftFormsAdminPages()) {
+		if (!GeneralHelpers::isEightshiftFormsAdminPages()) {
 			return;
 		}
 
@@ -51,7 +51,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	public function getAssetsPrefix(): string
 	{
-		return UtilsConfig::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
+		return Config::MAIN_PLUGIN_ENQUEUE_ASSETS_PREFIX;
 	}
 
 	/**
@@ -79,8 +79,8 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 			$this->getEnqueueSharedInlineCommonItems(false),
 			[
 				'nonce' => \wp_create_nonce('wp_rest'),
-				'confirmMsg' => \__('Are you sure you want to continue?', 'eighshift-forms'),
-				'importErrorMsg' => \__('There is an error with your data, please try again.', 'eighshift-forms'),
+				'confirmMsg' => \__('Are you sure you want to continue?', 'eightshift-forms'),
+				'importErrorMsg' => \__('There is an error with your data, please try again.', 'eightshift-forms'),
 				'isAdmin' => true,
 				'redirectionTimeout' => 100,
 			],
@@ -97,7 +97,7 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 	 */
 	protected function getAdminScriptDependencies(): array
 	{
-		$scriptsDependency = UtilsHooksHelper::getFilterName(['scripts', 'dependency', 'admin']);
+		$scriptsDependency = HooksHelpers::getFilterName(['scripts', 'dependency', 'admin']);
 		$scriptsDependencyOutput = [];
 
 		if (\has_filter($scriptsDependency)) {

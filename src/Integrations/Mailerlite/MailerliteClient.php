@@ -11,15 +11,15 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailerlite;
 
 use EightshiftForms\Cache\SettingsCache;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * MailerliteClient integration class.
@@ -41,7 +41,7 @@ class MailerliteClient implements ClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -50,7 +50,7 @@ class MailerliteClient implements ClientInterface
 		$output = \get_transient(self::CACHE_MAILERLITE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -121,13 +121,13 @@ class MailerliteClient implements ClientInterface
 	 */
 	public function postApplication(array $formDetails): array
 	{
-		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID];
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
-		$files = $formDetails[UtilsConfig::FD_FILES];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$itemId = $formDetails[Config::FD_ITEM_ID];
+		$params = $formDetails[Config::FD_PARAMS];
+		$files = $formDetails[Config::FD_FILES];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		// Filter override post request.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
 			$filterValue = \apply_filters($filterName, [], $itemId, $params, $files, $formId) ?? [];
 
@@ -146,7 +146,7 @@ class MailerliteClient implements ClientInterface
 			'fields' => $this->prepareParams($params),
 		];
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMailerlite::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
@@ -162,7 +162,7 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -170,22 +170,22 @@ class MailerliteClient implements ClientInterface
 			$files,
 			$itemId,
 			$formId,
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)
+			SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
-		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body);
-		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+		$details[Config::IARD_VALIDATION] = $this->getFieldsErrors($body);
+		$details[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -266,17 +266,17 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body ?? [];
 		}
 
@@ -300,7 +300,7 @@ class MailerliteClient implements ClientInterface
 		);
 
 		// Structure response details.
-		return UtilsApiHelper::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsMailerlite::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -316,11 +316,11 @@ class MailerliteClient implements ClientInterface
 	{
 		$details = $this->getTestApi();
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body ?? [];
 		}
 
@@ -336,19 +336,19 @@ class MailerliteClient implements ClientInterface
 	 */
 	private function prepareParams(array $params): array
 	{
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
-		return UtilsGeneralHelper::prepareGenericParamsOutput($params, ['email']);
+		return GeneralHelpers::prepareGenericParamsOutput($params, ['email']);
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyMailerlite(), SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiKeyMailerlite(), SettingsMailerlite::SETTINGS_MAILERLITE_API_KEY_KEY);
 	}
 }

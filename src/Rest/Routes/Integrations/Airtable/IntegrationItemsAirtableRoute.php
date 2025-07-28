@@ -12,15 +12,15 @@ namespace EightshiftForms\Rest\Routes\Integrations\Airtable;
 
 use EightshiftForms\Integrations\Airtable\AirtableClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class IntegrationItemsAirtableRoute
  */
-class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
+class IntegrationItemsAirtableRoute extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable for Airtable data.
@@ -41,7 +41,7 @@ class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_INTEGRATION_ITEMS . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -75,7 +75,7 @@ class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}
@@ -89,7 +89,7 @@ class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
 
 		if (!$isGlobalSettingsValid) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Global not configured', 'eightshift-forms'),
 					[],
 					$debug
@@ -101,7 +101,7 @@ class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
 
 		if (!$items) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\esc_html__('Items missing', 'eightshift-forms'),
 					[],
 					$debug
@@ -125,7 +125,7 @@ class IntegrationItemsAirtableRoute extends AbstractUtilsBaseRoute
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				$items,
 				$debug

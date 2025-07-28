@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsFallback;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms_Parsedown as Parsedown;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -57,7 +57,7 @@ class Mailer implements MailerInterface
 
 		$body = '<html><body>' . $this->getTemplate($params, true, $template) . '</body></html>';
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'bodyTemplate']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMailer::SETTINGS_TYPE_KEY, 'bodyTemplate']);
 		if (\has_filter($filterName)) {
 			$body = \apply_filters($filterName, $body, $formId, $template, $params);
 		}
@@ -68,8 +68,8 @@ class Mailer implements MailerInterface
 			$this->getTemplate($params, false, $subject),
 			$body,
 			$this->getHeader(
-				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
-				UtilsSettingsHelper::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
+				SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+				SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
 			),
 			$this->prepareFiles($files)
 		);
@@ -93,8 +93,8 @@ class Mailer implements MailerInterface
 	): bool {
 
 		// Check if the email should be ignored.
-		$shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, UtilsSettingsHelper::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
-		if (isset($shouldIgnoreKeys[$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA][UtilsConfig::IARD_MSG]])) {
+		$shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, SettingsHelpers::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
+		if (isset($shouldIgnoreKeys[$formDetails[Config::FD_RESPONSE_OUTPUT_DATA][Config::IARD_MSG]])) {
 			return false;
 		}
 
@@ -104,12 +104,12 @@ class Mailer implements MailerInterface
 			return false;
 		}
 
-		$response = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] ?? [];
+		$response = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA] ?? [];
 
-		$type = $response[UtilsConfig::IARD_TYPE] ?? '';
-		$files = $response[UtilsConfig::IARD_FILES] ?? [];
-		$formId = $response[UtilsConfig::IARD_FORM_ID] ?? '';
-		$isDisabled = $response[UtilsConfig::IARD_IS_DISABLED] ?? false;
+		$type = $response[Config::IARD_TYPE] ?? '';
+		$files = $response[Config::IARD_FILES] ?? [];
+		$formId = $response[Config::IARD_FORM_ID] ?? '';
+		$isDisabled = $response[Config::IARD_IS_DISABLED] ?? false;
 
 		$customDebugData = $customData['debug'] ?? [];
 		if ($customDebugData) {
@@ -117,17 +117,17 @@ class Mailer implements MailerInterface
 		}
 
 		$output = [
-			UtilsConfig::IARD_STATUS => $response[UtilsConfig::IARD_STATUS] ?? UtilsConfig::STATUS_ERROR,
-			UtilsConfig::IARD_MSG => $response[UtilsConfig::IARD_MSG] ?? '',
-			UtilsConfig::IARD_TYPE => $type,
-			UtilsConfig::IARD_PARAMS => $response[UtilsConfig::IARD_PARAMS] ?? [],
-			UtilsConfig::IARD_RESPONSE => $response[UtilsConfig::IARD_RESPONSE] ?? [],
-			UtilsConfig::IARD_CODE => $response[UtilsConfig::IARD_CODE] ?? 0,
-			UtilsConfig::IARD_BODY => $response[UtilsConfig::IARD_BODY] ?? [],
-			UtilsConfig::IARD_URL => $response[UtilsConfig::IARD_URL] ?? '',
-			UtilsConfig::IARD_ITEM_ID => $response[UtilsConfig::IARD_ITEM_ID] ?? '',
-			UtilsConfig::IARD_FORM_ID => $formId,
-			UtilsConfig::FD_POST_ID => $formDetails[UtilsConfig::FD_POST_ID] ?? '',
+			Config::IARD_STATUS => $response[Config::IARD_STATUS] ?? Config::STATUS_ERROR,
+			Config::IARD_MSG => $response[Config::IARD_MSG] ?? '',
+			Config::IARD_TYPE => $type,
+			Config::IARD_PARAMS => $response[Config::IARD_PARAMS] ?? [],
+			Config::IARD_RESPONSE => $response[Config::IARD_RESPONSE] ?? [],
+			Config::IARD_CODE => $response[Config::IARD_CODE] ?? 0,
+			Config::IARD_BODY => $response[Config::IARD_BODY] ?? [],
+			Config::IARD_URL => $response[Config::IARD_URL] ?? '',
+			Config::IARD_ITEM_ID => $response[Config::IARD_ITEM_ID] ?? '',
+			Config::IARD_FORM_ID => $formId,
+			Config::FD_POST_ID => $formDetails[Config::FD_POST_ID] ?? '',
 			'customData' => $customData,
 			'debug' => $this->getDebugOptions($customDebugData, $formDetails),
 			'formDetails' => $this->cleanUpFormDetails($formDetails),
@@ -172,8 +172,8 @@ class Mailer implements MailerInterface
 			}
 		}
 
-		$to = UtilsSettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
-		$cc = UtilsSettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
+		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
 		$headers = [
 			$this->getType()
 		];
@@ -214,9 +214,9 @@ class Mailer implements MailerInterface
 			return false;
 		}
 
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID] ?? '';
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
-		$files = $formDetails[UtilsConfig::FD_FILES] ?? [];
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
+		$files = $formDetails[Config::FD_FILES] ?? [];
 
 		$customDebugData = $customData['debug'] ?? [];
 		if ($customDebugData) {
@@ -258,7 +258,7 @@ class Mailer implements MailerInterface
 			}
 		}
 
-		$to = UtilsSettingsHelper::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
 
 		$headers = [
 			$this->getType()
@@ -282,7 +282,7 @@ class Mailer implements MailerInterface
 	 */
 	private function getDebugOptions(array $customData, array $formDetails): array
 	{
-		$customDebugData['originalParams'] = $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL] ?? '';
+		$customDebugData['originalParams'] = $formDetails[Config::FD_PARAMS_ORIGINAL] ?? '';
 
 		return \array_merge(
 			[
@@ -293,7 +293,7 @@ class Mailer implements MailerInterface
 				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
 				'time' => \wp_date('Y-m-d H:i:s'),
 				'requestUrl' => Helpers::getCurrentUrl(),
-				'originalParams' => $formDetails[UtilsConfig::FD_PARAMS_ORIGINAL] ?? '',
+				'originalParams' => $formDetails[Config::FD_PARAMS_ORIGINAL] ?? '',
 			],
 			$customData
 		);
@@ -387,10 +387,10 @@ class Mailer implements MailerInterface
 	{
 		$output = [];
 
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
-		$shouldSendEmptyFields = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, SettingsMailer::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, $formId);
+		$shouldSendEmptyFields = SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, SettingsMailer::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, $formId);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -463,10 +463,10 @@ class Mailer implements MailerInterface
 	private function cleanUpFormDetails(array $formDetails): array
 	{
 		$list = [
-			UtilsConfig::FD_FIELDS,
-			UtilsConfig::FD_FIELDS_ONLY,
-			UtilsConfig::FD_ICON,
-			UtilsConfig::FD_PARAMS_ORIGINAL,
+			Config::FD_FIELDS,
+			Config::FD_FIELDS_ONLY,
+			Config::FD_ICON,
+			Config::FD_PARAMS_ORIGINAL,
 		];
 
 		return \array_diff_key($formDetails, \array_flip($list));

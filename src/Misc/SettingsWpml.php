@@ -10,16 +10,16 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsWpml class.
  */
-class SettingsWpml implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsWpml implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -50,7 +50,7 @@ class SettingsWpml implements UtilsSettingGlobalInterface, ServiceInterface
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
 		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
-		\add_filter(UtilsHooksHelper::getFilterName(['general', 'locale']), [$this, 'getWpmlLocale']);
+		\add_filter(HooksHelpers::getFilterName(['general', 'locale']), [$this, 'getWpmlLocale']);
 	}
 
 	/**
@@ -79,7 +79,7 @@ class SettingsWpml implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -95,13 +95,13 @@ class SettingsWpml implements UtilsSettingGlobalInterface, ServiceInterface
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_WPML_USE_KEY, self::SETTINGS_WPML_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			UtilsSettingsOutputHelper::getMiscDisclaimer(\__('WPML', 'eightshift-forms')),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getMiscDisclaimer(\__('WPML', 'eightshift-forms')),
 			[
 				'component' => 'intro',
 				'introSubtitle' => \__('All po/mo translation files were translated using AI. Please check the translations and correct and if you find any issues, please contact us.', 'eightshift-forms'),

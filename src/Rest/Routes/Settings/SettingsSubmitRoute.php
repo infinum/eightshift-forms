@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 
 /**
  * Class SettingsSubmitRoute
@@ -67,11 +67,11 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 		$debug = [
 			'formDetails' => $formDetails,
 		];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$params = $formDetails[Config::FD_PARAMS];
 
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		// If form ID is not set this is considered an global setting.
 		// Save all fields in the settings.
@@ -80,7 +80,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 			$fieldType = $value['type'] ?? '';
 
 			if ($fieldType === 'checkbox' || $fieldType === 'select' || $fieldType === 'country') {
-				$fieldValue = \implode(UtilsConfig::DELIMITER, $fieldValue);
+				$fieldValue = \implode(Config::DELIMITER, $fieldValue);
 			}
 
 			// Check if key needs updating or deleting.
@@ -101,7 +101,7 @@ class SettingsSubmitRoute extends AbstractFormSubmit
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				\esc_html__('Changes saved!', 'eightshift-forms'),
 				[],
 				$debug

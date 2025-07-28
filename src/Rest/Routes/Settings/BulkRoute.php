@@ -11,18 +11,18 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Entries\EntriesHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
 use EightshiftForms\Transfer\TransferInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use WP_REST_Request;
 
 /**
  * Class BulkRoute
  */
-class BulkRoute extends AbstractUtilsBaseRoute
+class BulkRoute extends AbstractBaseRoute
 {
 	/**
 	 * Route slug.
@@ -78,7 +78,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}
@@ -93,7 +93,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 
 		if (!$ids) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\__('There are no selected forms.', 'eightshift-forms'),
 					[],
 					$debug
@@ -104,7 +104,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		$type = $params['type'] ?? '';
 		if (!$type) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					\__('Action type is missing.', 'eightshift-forms'),
 					[],
 					$debug
@@ -141,7 +141,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 		switch ($output['status']) {
 			case 'success':
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiSuccessPublicOutput(
+					ApiHelpers::getApiSuccessPublicOutput(
 						$output['msg'] ?? \esc_html__('Success', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -149,7 +149,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 				);
 			case 'warning':
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiWarningPublicOutput(
+					ApiHelpers::getApiWarningPublicOutput(
 						$output['msg'] ?? \esc_html__('Warning', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -157,7 +157,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 				);
 			default:
 				return \rest_ensure_response(
-					UtilsApiHelper::getApiErrorPublicOutput(
+					ApiHelpers::getApiErrorPublicOutput(
 						$output['msg'] ?? \esc_html__('Error', 'eightshift-forms'),
 						$output['data'] ?? [],
 						$debug
@@ -290,7 +290,7 @@ class BulkRoute extends AbstractUtilsBaseRoute
 			}
 
 			// Prevent non sync forms from syncing like mailer.
-			if (!UtilsGeneralHelper::canIntegrationUseSync(UtilsGeneralHelper::getFormTypeById((string) $id))) {
+			if (!GeneralHelpers::canIntegrationUseSync(GeneralHelpers::getFormTypeById((string) $id))) {
 				$output['skip'][] = $title;
 				continue;
 			}

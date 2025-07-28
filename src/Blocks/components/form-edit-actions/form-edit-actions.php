@@ -11,8 +11,8 @@ use EightshiftForms\CustomPostType\Forms;
 use EightshiftForms\Dashboard\SettingsDashboard;
 use EightshiftForms\General\SettingsGeneral;
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $componentClass = $manifest['componentClass'] ?? '';
@@ -29,7 +29,7 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 	<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
 		<a
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
-			href="<?php echo esc_url(UtilsGeneralHelper::getFormEditPageUrl($formEditActionsFormPostId)) ?>"
+			href="<?php echo esc_url(GeneralHelpers::getFormEditPageUrl($formEditActionsFormPostId)) ?>"
 			title="<?php esc_html_e('Edit form', 'eightshift-forms'); ?>"
 			tabindex="-1">
 			<?php echo UtilsHelper::getUtilsIcons('edit'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
@@ -40,7 +40,7 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 	<?php if (current_user_can(FormSettingsAdminSubMenu::ADMIN_MENU_CAPABILITY)) { ?>
 		<a
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
-			href="<?php echo esc_url(UtilsGeneralHelper::getSettingsPageUrl($formEditActionsFormPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
+			href="<?php echo esc_url(GeneralHelpers::getSettingsPageUrl($formEditActionsFormPostId, SettingsGeneral::SETTINGS_TYPE_KEY)) ?>"
 			title="<?php esc_html_e('Edit settings', 'eightshift-forms'); ?>"
 			tabindex="-1">
 			<?php echo UtilsHelper::getUtilsIcons('settings'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
@@ -51,7 +51,7 @@ $twClasses = FormsHelper::getTwSelectors($formEditActionsTwSelectorsData, ['form
 	<?php if (current_user_can(Forms::POST_CAPABILITY_TYPE)) { ?>
 		<a
 			class="<?php echo esc_attr(FormsHelper::getTwPart($twClasses, 'form-edit-actions', 'link', "{$componentClass}__edit-link")) ?>"
-			href="<?php echo esc_url(UtilsGeneralHelper::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
+			href="<?php echo esc_url(GeneralHelpers::getSettingsGlobalPageUrl(SettingsDashboard::SETTINGS_TYPE_KEY)) ?>"
 			title="<?php esc_html_e('Edit global settings', 'eightshift-forms'); ?>"
 			tabindex="-1">
 			<?php echo UtilsHelper::getUtilsIcons('dashboard'); // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 

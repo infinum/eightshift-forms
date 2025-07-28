@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Captcha
+ * The class register route for public form submitting endpoint - Captcha
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -11,17 +11,17 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
 use Throwable;
 use WP_REST_Request;
 
 /**
  * Class SubmitCaptchaRoute
  */
-class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
+class SubmitCaptchaRoute extends AbstractBaseRoute
 {
 	/**
 	 * Route slug.
@@ -81,30 +81,57 @@ class SubmitCaptchaRoute extends AbstractUtilsBaseRoute
 			'request' => $request,
 		];
 
-		// Bailout if troubleshooting skip captcha is on.
-		if (UtilsDeveloperHelper::isDeveloperSkipCaptchaActive()) {
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
-					$this->labels->getLabel('captchaSkipCheck'),
-					[],
-					$debug
-				)
-			);
-		}
-
 		try {
+			// Bailout if troubleshooting skip captcha is on.
+			if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
+				return \rest_ensure_response(
+					ApiHelpers::getApiSuccessPublicOutput(
+						$this->labels->getLabel('captchaSkipCheck'),
+						[],
+						$debug
+					)
+				);
+			}
+
 			$params = $this->prepareSimpleApiParams($request);
 
 			$token = $params['token'];
 			$action = $params['action'];
 			$isEnterprise = $params['isEnterprise'];
 
+			$check = $this->captcha->check($token, $action, $isEnterprise === 'true');
+
+			$checkStatus = $check['status'] ?? '';
+			$checkMessage = $check['message'] ?? '';
+			$checkDebug = $check['debug'] ?? [];
+			$checkData = $check['data'] ?? [];
+
+			if ($checkStatus === Config::STATUS_ERROR) {
+				return \rest_ensure_response(
+					ApiHelpers::getApiErrorPublicOutput(
+						$checkMessage,
+						$checkData,
+						\array_merge(
+							$debug,
+							$checkDebug
+						)
+					)
+				);
+			}
+
 			return \rest_ensure_response(
-				$this->captcha->check($token, $action, $isEnterprise === 'true')
+				ApiHelpers::getApiSuccessPublicOutput(
+					$checkMessage,
+					$checkData,
+					\array_merge(
+						$debug,
+						$checkDebug
+					)
+				)
 			);
 		} catch (Throwable $t) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('captchaBadRequest'),
 					[],
 					\array_merge(

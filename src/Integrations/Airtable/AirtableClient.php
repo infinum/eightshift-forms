@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Airtable;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * AirtableClient integration class.
@@ -40,7 +40,7 @@ class AirtableClient implements AirtableClientInterface
 	/**
 	 * Return items.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -49,7 +49,7 @@ class AirtableClient implements AirtableClientInterface
 		$output = \get_transient(self::CACHE_AIRTABLE_ITEMS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -164,13 +164,13 @@ class AirtableClient implements AirtableClientInterface
 	 */
 	public function postApplication(array $formDetails): array
 	{
-		$itemId = $formDetails[UtilsConfig::FD_ITEM_ID] . UtilsConfig::DELIMITER . $formDetails[UtilsConfig::FD_INNER_ID];
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
-		$files = $formDetails[UtilsConfig::FD_FILES];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$itemId = $formDetails[Config::FD_ITEM_ID] . Config::DELIMITER . $formDetails[Config::FD_INNER_ID];
+		$params = $formDetails[Config::FD_PARAMS];
+		$files = $formDetails[Config::FD_FILES];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		// Filter override post request.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
 			$filterValue = \apply_filters($filterName, [], $itemId, $params, $files, $formId) ?? [];
 
@@ -183,12 +183,12 @@ class AirtableClient implements AirtableClientInterface
 			'fields' => $this->prepareParams($params),
 		];
 
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostId']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsAirtable::SETTINGS_TYPE_KEY, 'prePostId']);
 		if (\has_filter($filterName)) {
 			$itemId = \apply_filters($filterName, $itemId, $body, $formId) ?? $itemId;
 		}
 
-		$itemIdExploded = \explode(UtilsConfig::DELIMITER, $itemId);
+		$itemIdExploded = \explode(Config::DELIMITER, $itemId);
 
 		$itemIdReal = $itemIdExploded[0] ?? '';
 		$itemInnerIdReal = $itemIdExploded[1] ?? '';
@@ -204,7 +204,7 @@ class AirtableClient implements AirtableClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -212,21 +212,21 @@ class AirtableClient implements AirtableClientInterface
 			$files,
 			$itemId,
 			$formId,
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)
+			SettingsHelpers::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
-		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+		$details[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -290,17 +290,17 @@ class AirtableClient implements AirtableClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body ?? [];
 		}
 
@@ -332,17 +332,17 @@ class AirtableClient implements AirtableClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			$data = $body['records'] ?? [];
 			$offset = $body['offset'] ?? '';
 
@@ -375,7 +375,7 @@ class AirtableClient implements AirtableClientInterface
 		);
 
 		// Structure response details.
-		return UtilsApiHelper::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsAirtable::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -391,11 +391,11 @@ class AirtableClient implements AirtableClientInterface
 	{
 		$details = $this->getTestApi();
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return $body['bases'] ?? [];
 		}
 
@@ -413,8 +413,8 @@ class AirtableClient implements AirtableClientInterface
 	{
 		$output = [];
 
-		// Remove unecesery params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		// Remove unnecessary params.
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
 		foreach ($params as $param) {
 			$value = $param['value'] ?? '';
@@ -443,12 +443,12 @@ class AirtableClient implements AirtableClientInterface
 	}
 
 	/**
-	 * Return Api Key from settings or global vairaible.
+	 * Return Api Key from settings or global variable.
 	 *
 	 * @return string
 	 */
 	private function getApiKey(): string
 	{
-		return UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY);
+		return SettingsHelpers::getOptionWithConstant(Variables::getApiKeyAirtable(), SettingsAirtable::SETTINGS_AIRTABLE_API_KEY_KEY);
 	}
 }

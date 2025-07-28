@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - ActiveCampaign
+ * The class register route for public form submitting endpoint - ActiveCampaign
  *
  * @package EightshiftForms\Rest\Route\Integrations\ActiveCampaign
  */

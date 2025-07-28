@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Airtable
+ * The class register route for public form submitting endpoint - Airtable
  *
  * @package EightshiftForms\Rest\Route\Integrations\Airtable
  */

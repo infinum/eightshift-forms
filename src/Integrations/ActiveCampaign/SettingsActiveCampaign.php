@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\ActiveCampaign;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -21,7 +21,7 @@ use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 /**
  * SettingsActiveCampaign class.
  */
-class SettingsActiveCampaign extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsActiveCampaign extends AbstractSettingsIntegrations implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -87,9 +87,9 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
-		$url = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiUrlActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY);
+		$url = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiUrlActiveCampaign(), self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY);
 
 		if (!$isUsed || !$apiKey || !$url) {
 			return false;
@@ -106,14 +106,14 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -124,12 +124,12 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -140,7 +140,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -149,7 +149,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyActiveCampaign(),
 									self::SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY,
 									'ES_API_KEY_ACTIVE_CAMPAIGN',
@@ -159,7 +159,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getApiUrlActiveCampaign(),
 									self::SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY,
 									'ES_API_URL_ACTIVE_CAMPAIGN',
@@ -169,7 +169,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Uti
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
+								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],

@@ -11,19 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\General;
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingInterface;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Hooks\FiltersOutputMock;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsGeneral class.
  */
-class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
+class SettingsGeneral implements SettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -127,20 +127,20 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 			static function ($item, $key) {
 				return "<li><code>{$key}</code> - {$item}</li>";
 			},
-			UtilsGeneralHelper::getSpecialConstants('tracking'),
-			\array_keys(UtilsGeneralHelper::getSpecialConstants('tracking'))
+			GeneralHelpers::getSpecialConstants('tracking'),
+			\array_keys(GeneralHelpers::getSpecialConstants('tracking'))
 		);
 
-		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
-		$formType = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formDetails = GeneralHelpers::getFormDetails($formId);
+		$formType = $formDetails[Config::FD_TYPE] ?? '';
 
-		$successRedirectUrl = FiltersOuputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
-		$variation = FiltersOuputMock::getVariationFilterValue($formType, $formId, []);
-		$trackingEventName = FiltersOuputMock::getTrackingEventNameFilterValue($formType, $formId);
-		$trackingAdditionalData = FiltersOuputMock::getTrackingAditionalDataFilterValue($formType, $formId);
+		$successRedirectUrl = FiltersOutputMock::getSuccessRedirectUrlFilterValue($formType, $formId);
+		$variation = FiltersOutputMock::getVariationFilterValue($formType, $formId, []);
+		$trackingEventName = FiltersOutputMock::getTrackingEventNameFilterValue($formType, $formId);
+		$trackingAdditionalData = FiltersOutputMock::getTrackingAdditionalDataFilterValue($formType, $formId);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -150,7 +150,7 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_SUCCESS_REDIRECT_URL_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_SUCCESS_REDIRECT_URL_KEY),
 								'inputFieldLabel' => \__('Redirect to URL', 'eightshift-forms'),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'inputFieldHelp' => \sprintf(\__('
@@ -165,7 +165,7 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 										<br />
 										Tag missing? Make sure its field has a <b>Name</b> set!
 									</details>
-									%2$s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFormFieldNames($formDetails[UtilsConfig::FD_FIELD_NAMES]), $successRedirectUrl['settingsLocal']),
+									%2$s', 'eightshift-forms'), SettingsOutputHelpers::getPartialFormFieldNames($formDetails[Config::FD_FIELD_NAMES]), $successRedirectUrl['settingsLocal']),
 								'inputType' => 'url',
 								'inputIsUrl' => true,
 								'inputIsDisabled' => $successRedirectUrl['filterUsed'],
@@ -176,24 +176,24 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 								'textareaFieldLabel' => \__('Variation', 'eightshift-forms'),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
-								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VARIATION_KEY),
+								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_VARIATION_KEY),
 								// translators: %s will be replaced with forms field name and filter output copy.
 								'textareaFieldHelp' => \sprintf(\__('
 									Define redirection values that you can use in Result output items.<br/>
 									Each key must be in a separate line.
 									%s', 'eightshift-forms'), $variation['settingsLocal']),
-								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_VARIATION_KEY, $formId, 2),
+								'textareaValue' => SettingsHelpers::getSettingValueAsJson(self::SETTINGS_VARIATION_KEY, $formId, 2),
 							],
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Append on global variations', 'eightshift-forms'),
 										'checkboxHelp' => \__('By default form variations will override the global variations. With this option you can append form-specific variations to global.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_VARIATION_SHOULD_APPEND_ON_GLOBAL_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -207,13 +207,13 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Hide global message on success', 'eightshift-forms'),
-										'checkboxHelp' => \__('Usualy used in combination with single submit for calculators.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
+										'checkboxHelp' => \__('Usually used in combination with single submit for calculators.', 'eightshift-forms'),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_HIDE_GLOBAL_MSG_ON_SUCCESS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -223,12 +223,12 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Hide form on success', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_HIDE_FORM_ON_SUCCESS_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -243,10 +243,10 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_EVENT_NAME_KEY),
 								'inputFieldLabel' => \__('Event name', 'eightshift-forms'),
 								// translators: %s will be replaced with th filter output copy.
-								'inputFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__('
+								'inputFieldHelp' => GeneralHelpers::minifyString(\sprintf(\__('
 									If blank, the event is not sent to the tracking platform.%s', 'eightshift-forms'), $trackingEventName['settings'])),
 								'inputType' => 'text',
 								'inputIsDisabled' => $trackingEventName['filterUsed'],
@@ -258,17 +258,17 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY),
+								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters', 'eightshift-forms'),
 								// translators: %s will be list example keys.
-								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => GeneralHelpers::minifyString(\sprintf(\__("
 									These parameters are always sent to the tracking platform.<br /><br />
 									Provide one key-value pair per line, following this format: %1\$s
 									<br />
 									%2\$s", 'eightshift-forms'), '<code>keyName : keyValue</code>', $trackingAdditionalData['settings']['general'] ?? '')),
-								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId, 2),
+								'textareaValue' => SettingsHelpers::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_KEY, $formId, 2),
 							],
 							[
 								'component' => 'divider',
@@ -276,18 +276,18 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY),
+								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters on successful submit', 'eightshift-forms'),
 								// translators: %s will be list example keys.
-								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => GeneralHelpers::minifyString(\sprintf(\__("
 									These parameters are sent to the tracking platform when a form is submitted successfully.<br /><br />
 									Provide one key-value pair per line, following this format: %1\$s
 									<br />
 									%2\$s
 									", 'eightshift-forms'), '<code>keyName : keyValue</code>', $trackingAdditionalData['settings']['success'] ?? '')),
-								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId, 2),
+								'textareaValue' => SettingsHelpers::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_SUCCESS_KEY, $formId, 2),
 							],
 							[
 								'component' => 'divider',
@@ -295,12 +295,12 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY),
+								'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
 								'textareaFieldLabel' => \__('Additional parameters on error', 'eightshift-forms'),
 								// translators: %s will be list example keys.
-								'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\sprintf(\__("
+								'textareaFieldHelp' => GeneralHelpers::minifyString(\sprintf(\__("
 									These parameters are sent to the tracking platform when a form submission fails.<br /><br />
 									Provide one key-value pair per line, following this format: %1\$s
 									<br /><br />
@@ -310,7 +310,7 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 									</ul>
 									%3\$s
 									", 'eightshift-forms'), '<code>keyName : keyValue</code>', \implode('', $specialConstants), $trackingAdditionalData['settings']['error'] ?? '')),
-								'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId, 2),
+								'textareaValue' => SettingsHelpers::getSettingValueAsJson(self::SETTINGS_GENERAL_TRACKING_ADDITIONAL_DATA_ERROR_KEY, $formId, 2),
 							],
 						],
 					],
@@ -320,12 +320,12 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_FORM_CUSTOM_NAME_KEY),
-								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_FORM_CUSTOM_NAME_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_FORM_CUSTOM_NAME_KEY),
+								'inputId' => SettingsHelpers::getSettingName(self::SETTINGS_FORM_CUSTOM_NAME_KEY),
 								'inputFieldLabel' => \__('Form custom name', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Target a form (or a set of forms) and apply changes through filters, in code.', 'eightshift-forms'),
 								'inputType' => 'text',
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_FORM_CUSTOM_NAME_KEY, $formId),
 							],
 						],
 					],
@@ -336,12 +336,12 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_USE_SINGLE_SUBMIT_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_USE_SINGLE_SUBMIT_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Use single submit', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_USE_SINGLE_SUBMIT_KEY, self::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_USE_SINGLE_SUBMIT_KEY, self::SETTINGS_USE_SINGLE_SUBMIT_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_USE_SINGLE_SUBMIT_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -384,27 +384,27 @@ class SettingsGeneral implements UtilsSettingInterface, ServiceInterface
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_INCREMENT_START_KEY),
-								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_INCREMENT_START_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_INCREMENT_START_KEY),
+								'inputId' => SettingsHelpers::getSettingName(self::SETTINGS_INCREMENT_START_KEY),
 								'inputFieldLabel' => \__('Increment start number', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Set the starting increment number of each successful form submission.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 1,
 								'inputStep' => 1,
 								'inputIsNumber' => true,
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_INCREMENT_START_KEY, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_INCREMENT_START_KEY, $formId),
 							],
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_INCREMENT_LENGTH_KEY),
-								'inputId' => UtilsSettingsHelper::getSettingName(self::SETTINGS_INCREMENT_LENGTH_KEY),
+								'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_INCREMENT_LENGTH_KEY),
+								'inputId' => SettingsHelpers::getSettingName(self::SETTINGS_INCREMENT_LENGTH_KEY),
 								'inputFieldLabel' => \__('Increment length number', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Define minimal increment length you want to use. If the number is less than starting number, increment will have leading zeros.', 'eightshift-forms'),
 								'inputType' => 'number',
 								'inputMin' => 1,
 								'inputStep' => 1,
 								'inputIsNumber' => true,
-								'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_INCREMENT_LENGTH_KEY, $formId),
+								'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_INCREMENT_LENGTH_KEY, $formId),
 							],
 							[
 								'component' => 'divider',

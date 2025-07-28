@@ -15,8 +15,8 @@ use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -123,8 +123,8 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	public function getJobCallback()
 	{
 		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-		$useCron = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY);
-		$jobs = UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY);
+		$useCron = SettingsHelpers::isOptionCheckboxChecked(SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY);
+		$jobs = SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY);
 
 		if (!$use || !$useCron || !$jobs) {
 			return;
@@ -146,11 +146,11 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 					// Get Clearbit data.
 					$clearbitResponse = $this->clearbitClient->getApplication(
 						$email,
-						UtilsSettingsHelper::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_MAP_HUBSPOT_KEYS_KEY . '-' . $type),
+						SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_MAP_HUBSPOT_KEYS_KEY . '-' . $type),
 						(string) $formId
 					);
 
-					if ($clearbitResponse[UtilsConfig::IARD_CODE] >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $clearbitResponse[UtilsConfig::IARD_CODE] <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+					if ($clearbitResponse[Config::IARD_CODE] >= Config::API_RESPONSE_CODE_SUCCESS && $clearbitResponse[Config::IARD_CODE] <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 						if ($type === SettingsHubspot::SETTINGS_TYPE_KEY) {
 							$this->hubspotClient->postContactProperty(
 								$clearbitResponse['email'] ?? '',
@@ -159,8 +159,8 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 						}
 					} else {
 						// Send fallback email if error but ignore for unknown entry.
-						if ($clearbitResponse[UtilsConfig::IARD_CODE] !== UtilsConfig::API_RESPONSE_CODE_ERROR_MISSING) {
-							$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
+						if ($clearbitResponse[Config::IARD_CODE] !== Config::API_RESPONSE_CODE_ERROR_MISSING) {
+							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
 
 							$this->formSubmitMailer->sendFallbackIntegrationEmail($formDetails);
 						}
@@ -168,7 +168,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 
 					unset($jobs[$type][$formId][$key]);
 
-					\update_option(UtilsSettingsHelper::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), $jobs);
+					\update_option(SettingsHelpers::getOptionName(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY), $jobs);
 				}
 			}
 		}

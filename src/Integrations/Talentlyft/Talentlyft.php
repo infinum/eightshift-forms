@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Talentlyft;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -202,7 +202,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 					];
 					break;
 				case 'file':
-					$maxFileSize = UtilsSettingsHelper::getOptionValueWithFallback(SettingsTalentlyft::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY, (string) SettingsTalentlyft::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT);
+					$maxFileSize = SettingsHelpers::getOptionValueWithFallback(SettingsTalentlyft::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY, (string) SettingsTalentlyft::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT);
 
 					$accept = $item['SupportedTypes'] ?? [];
 
@@ -411,8 +411,8 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
-		// Change the final output if necesery.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'data']);
+		// Change the final output if necessary.
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsTalentlyft::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
@@ -454,7 +454,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	private function getCompliancePrivacy(array $compliance): array
 	{
-		$text = UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_PRIVACY_KEY);
+		$text = SettingsHelpers::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_PRIVACY_KEY);
 
 		if (!$text) {
 			return [];
@@ -499,7 +499,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 	 */
 	private function getComplianceStorage(array $compliance): array
 	{
-		$text = UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_STORAGE_KEY);
+		$text = SettingsHelpers::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_STORAGE_KEY);
 
 		if (!$text) {
 			return [];
@@ -548,7 +548,7 @@ class Talentlyft extends AbstractFormBuilder implements MapperInterface, Service
 			return [];
 		}
 
-		$text = UtilsSettingsHelper::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_SHARE_KEY);
+		$text = SettingsHelpers::getOptionValue(SettingsTalentlyft::SETTINGS_TALENTLYFT_CONSENT_SHARE_KEY);
 
 		if (!$text) {
 			return [];

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - ActiveCampaign
+ * The class register route for public form submitting endpoint - ActiveCampaign
  *
  * @package EightshiftForms\Rest\Routes\Integrations\ActiveCampaign
  */
@@ -19,7 +19,7 @@ use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 
 /**
  * Class FormSubmitActiveCampaignRoute
@@ -69,7 +69,7 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -81,17 +81,17 @@ class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
+		$params = $formDetails[Config::FD_PARAMS];
 
 		// Send application to ActiveCampaign.
 		$response = $this->activeCampaignClient->postApplication($formDetails);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		$contactId = $response['contactId'] ?? '';
 
 		// Make an additional requests to the API.
-		if ($response['status'] === UtilsConfig::STATUS_SUCCESS && $contactId) {
+		if ($response['status'] === Config::STATUS_SUCCESS && $contactId) {
 			// If form has action to save tags.
 			$actionTags = $params['actionTags']['value'] ?? [];
 

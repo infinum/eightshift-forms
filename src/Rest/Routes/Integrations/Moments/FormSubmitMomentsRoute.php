@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Moments
+ * The class register route for public form submitting endpoint - Moments
  *
  * @package EightshiftForms\Rest\Rout\Integrations\Momentses
  */
@@ -20,8 +20,8 @@ use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * Class FormSubmitMomentsRoute
@@ -81,7 +81,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -96,7 +96,7 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 		// Send application to Moments.
 		$response = $this->momentsClient->postApplication($formDetails);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
 		return \rest_ensure_response(
@@ -126,18 +126,18 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 	 */
 	private function sendEvent(array $formDetails): void
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$type = $formDetails[UtilsConfig::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$type = $formDetails[Config::FD_TYPE] ?? '';
 
-		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_EVENTS_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_EVENTS_KEY, $formId);
+		$isUsed = SettingsHelpers::isSettingCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_USE_EVENTS_KEY, SettingsMoments::SETTINGS_MOMENTS_USE_EVENTS_KEY, $formId);
 
 		if (!$isUsed) {
 			return;
 		}
 
-		$emailKey = UtilsSettingsHelper::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
-		$eventName = UtilsSettingsHelper::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY, $formId);
-		$map = UtilsSettingsHelper::getSettingValueGroup(SettingsMoments::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
+		$emailKey = SettingsHelpers::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EMAIL_FIELD_KEY, $formId);
+		$eventName = SettingsHelpers::getSettingValue(SettingsMoments::SETTINGS_MOMENTS_EVENTS_EVENT_NAME_KEY, $formId);
+		$map = SettingsHelpers::getSettingValueGroup(SettingsMoments::SETTINGS_MOMENTS_EVENTS_MAP_KEY, $formId);
 
 		if (!$emailKey || !$eventName) {
 			return;
@@ -145,14 +145,14 @@ class FormSubmitMomentsRoute extends AbstractFormSubmit
 
 		// Post event if needed.
 		$response = $this->momentsEvents->postEvent(
-			$formDetails[UtilsConfig::FD_PARAMS],
+			$formDetails[Config::FD_PARAMS],
 			$emailKey,
 			$eventName,
 			$map,
 			$formId
 		);
 
-		if ($response[UtilsConfig::IARD_CODE] >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $response[UtilsConfig::IARD_CODE] <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if ($response[Config::IARD_CODE] >= Config::API_RESPONSE_CODE_SUCCESS && $response[Config::IARD_CODE] <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
 			return;
 		}
 

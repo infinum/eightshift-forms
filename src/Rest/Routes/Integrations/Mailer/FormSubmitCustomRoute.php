@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - custom
+ * The class register route for public form submitting endpoint - custom
  *
  * @package EightshiftForms\Rest\Routes\Integrations\Mailer
  */
@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\UtilsHelper;
 
 /**
  * Class FormSubmitCustomRoute
@@ -33,7 +33,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -45,10 +45,10 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
-		$action = $formDetails[UtilsConfig::FD_ACTION];
-		$actionExternal = $formDetails[UtilsConfig::FD_ACTION_EXTERNAL];
+		$formId = $formDetails[Config::FD_FORM_ID];
+		$params = $formDetails[Config::FD_PARAMS];
+		$action = $formDetails[Config::FD_ACTION];
+		$actionExternal = $formDetails[Config::FD_ACTION_EXTERNAL];
 
 		$debug = [
 			'formDetails' => $formDetails,
@@ -57,7 +57,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If form action is not set or empty.
 		if (!$action) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('customNoAction', $formId),
 					[],
 					$debug
@@ -69,10 +69,10 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 
 		if ($actionExternal) {
 			// Set validation submit once.
-			$this->validator->setValidationSubmitOnce($formId);
+			$this->getValidator()->setValidationSubmitOnce($formId);
 
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
+				ApiHelpers::getApiSuccessPublicOutput(
 					$this->labels->getLabel('customSuccessRedirect', $formId),
 					\array_merge(
 						$successAdditionalData['public'],
@@ -89,7 +89,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		}
 
 		// Prepare params for output.
-		$params = UtilsGeneralHelper::prepareGenericParamsOutput($params);
+		$params = GeneralHelpers::prepareGenericParamsOutput($params);
 
 		// Create a custom form action request.
 		$customResponse = \wp_remote_post(
@@ -107,7 +107,7 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		// If custom action request fails we'll return the generic error message.
 		if (!$customResponseCode || $customResponseCode > 399) {
 			return \rest_ensure_response(
-				UtilsApiHelper::getApiErrorPublicOutput(
+				ApiHelpers::getApiErrorPublicOutput(
 					$this->labels->getLabel('customError', $formId),
 					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 					$debug
@@ -116,11 +116,11 @@ class FormSubmitCustomRoute extends AbstractFormSubmit
 		}
 
 		// Set validation submit once.
-		$this->validator->setValidationSubmitOnce($formId);
+		$this->getValidator()->setValidationSubmitOnce($formId);
 
 		// Finish.
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				$this->labels->getLabel('customSuccess', $formId),
 				\array_merge(
 					$successAdditionalData['public'],

@@ -10,15 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Calculator;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCalculator class.
  */
-class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsCalculator implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -58,7 +58,7 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		return UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CALCULATOR_USE_KEY, self::SETTINGS_CALCULATOR_USE_KEY);
+		return SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CALCULATOR_USE_KEY, self::SETTINGS_CALCULATOR_USE_KEY);
 	}
 
 	/**
@@ -70,11 +70,11 @@ class SettingsCalculator implements UtilsSettingGlobalInterface, ServiceInterfac
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [

@@ -1659,7 +1659,7 @@ export class Form {
 			// Steps flow.
 			let direction = field.getAttribute(this.state.getStateAttribute('submitStepDirection'));
 
-			// If button is hidden prevent submiting the form.
+			// If button is hidden prevent submitting the form.
 			if (field?.classList?.contains(this.state.getStateSelector('isHidden'))) {
 				return;
 			}

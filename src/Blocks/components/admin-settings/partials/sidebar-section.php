@@ -6,7 +6,7 @@
  * @package EightshiftForms\Blocks.
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $items = $attributes['items'] ?? [];
@@ -17,14 +17,12 @@ if (!$items) {
 	return $output;
 }
 
-$data = apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, []);
+$data = apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
 $sectionClass = $attributes['sectionClass'] ?? '';
 $adminSettingsType = $attributes['adminSettingsType'] ?? '';
 
-foreach ($items as $key => $innerItems) {
-	?>
-
+foreach ($items as $key => $innerItems) { ?>
 	<div class="<?php echo esc_attr("{$sectionClass}__section"); ?>">
 		<div class="<?php echo esc_attr("{$sectionClass}__content"); ?>">
 			<div class="<?php echo esc_attr("{$sectionClass}__sidebar-label"); ?>">
@@ -44,10 +42,10 @@ foreach ($items as $key => $innerItems) {
 						<a
 							href="<?php echo esc_url($url); ?>"
 							class="<?php echo esc_attr("{$sectionClass}__menu-link " . Helpers::selector($internalKey === $adminSettingsType, $sectionClass, 'menu-link', 'active')); ?>"
-							title="<?php echo esc_html($desc); ?>"
-						>
+							title="<?php echo esc_html($desc); ?>">
 							<span class="<?php echo esc_attr("{$sectionClass}__menu-link-wrap"); ?>">
-								<?php echo $icon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped ?>
+								<?php echo $icon; // phpcs:ignore Eightshift.Security.HelpersEscape.OutputNotEscaped 
+								?>
 								<?php echo esc_html($label); ?>
 							</span>
 						</a>

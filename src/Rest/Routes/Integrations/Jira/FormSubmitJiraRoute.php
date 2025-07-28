@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public form submiting endpoint - Jira
+ * The class register route for public form submitting endpoint - Jira
  *
  * @package EightshiftForms\Rest\Route\Integrations\Jira
  */
@@ -19,7 +19,7 @@ use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 
 /**
  * Class FormSubmitJiraRoute
@@ -69,7 +69,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 
@@ -85,7 +85,7 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 		// Send application to Hubspot.
 		$response = $this->jiraClient->postApplication($formDetails);
 
-		$formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA] = $response;
+		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
 		return \rest_ensure_response(
@@ -102,14 +102,14 @@ class FormSubmitJiraRoute extends AbstractFormSubmit
 	 */
 	protected function getEmailResponseTags(array $formDetails): array
 	{
-		$body = $formDetails[UtilsConfig::FD_RESPONSE_OUTPUT_DATA]['body'] ?? [];
+		$body = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA]['body'] ?? [];
 		$output = [];
 
 		if (!$body) {
 			return $output;
 		}
 
-		foreach (\apply_filters(UtilsConfig::FILTER_SETTINGS_DATA, [])[SettingsJira::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
+		foreach (\apply_filters(Config::FILTER_SETTINGS_DATA, [])[SettingsJira::SETTINGS_TYPE_KEY]['emailTemplateTags'] ?? [] as $key => $value) {
 			$item = $body[$value] ?? '';
 
 			if ($key === 'jiraIssueUrl') {

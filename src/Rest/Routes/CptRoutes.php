@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Config\Config;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_REST_Request;
 use WP_REST_Server;
@@ -43,8 +43,8 @@ class CptRoutes implements ServiceInterface
 	public function getCptLimits($results, WP_REST_Server $server, WP_REST_Request $request)
 	{
 		$disableRoutes = [
-			'/wp/v2/' . UtilsConfig::SLUG_POST_TYPE,
-			'/wp/v2/' . UtilsConfig::SLUG_RESULT_POST_TYPE,
+			'/wp/v2/' . Config::SLUG_POST_TYPE,
+			'/wp/v2/' . Config::SLUG_RESULT_POST_TYPE,
 		];
 
 		$find = false;
@@ -55,8 +55,10 @@ class CptRoutes implements ServiceInterface
 			}
 		}
 
-		if ($find && !\current_user_can(UtilsConfig::CAP_SETTINGS)) {
-			return UtilsApiHelper::getApiPermissionsErrorPublicOutput();
+		if ($find && !\current_user_can(Config::CAP_SETTINGS)) {
+			return Helpers::getApiErrorPublicOutput(
+				\__('You don\'t have enough permissions to perform this action!', 'eightshift-libs'),
+			);
 		}
 
 		return $results;

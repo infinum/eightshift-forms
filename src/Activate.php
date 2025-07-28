@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace EightshiftForms;
 
+use EightshiftForms\Config\Config;
 use EightshiftForms\Db\CreateActivityLogsTable;
 use EightshiftForms\Db\CreateEntriesTable;
 use EightshiftForms\Permissions\Permissions;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
 use EightshiftFormsVendor\EightshiftLibs\Plugin\HasActivationInterface;
 use WP_Role;
 
@@ -32,7 +32,7 @@ class Activate implements HasActivationInterface
 			$role = \get_role($roleName);
 
 			if ($role instanceof WP_Role) {
-				foreach (UtilsConfig::CAPS as $item) {
+				foreach (Config::CAPS as $item) {
 					$role->add_cap($item);
 				}
 			}

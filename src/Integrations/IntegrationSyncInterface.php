@@ -25,7 +25,7 @@ interface IntegrationSyncInterface
 	public function syncFormDirect(string $formId): array;
 
 	/**
-	 * Sync content and integration form and provide the otuput for block editor route to manualy sync forms.
+	 * Sync content and integration form and provide the output for block editor route to manually sync forms.
 	 *
 	 * @param string $formId Form Id.
 	 * @param boolean $editorOutput Change output keys depending on the output type.

@@ -10,16 +10,16 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enrichment;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftForms\Hooks\FiltersOuputMock;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsEnrichment class.
  */
-class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsEnrichment implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -112,7 +112,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_USE_KEY, self::SETTINGS_ENRICHMENT_USE_KEY)) {
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_USE_KEY, self::SETTINGS_ENRICHMENT_USE_KEY)) {
 			return false;
 		}
 
@@ -128,16 +128,16 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$enrichment = FiltersOuputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
+		$enrichment = FiltersOutputMock::getEnrichmentManualMapFilterValue($this->enrichment->getEnrichmentConfig());
 
-		$isUsedPrefill = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY);
-		$isUsedPrefillUrl = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY);
+		$isUsedPrefill = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY, self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY);
+		$isUsedPrefillUrl = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY, self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -147,7 +147,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 						'tabContent' => [
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 								'inputFieldLabel' => \__('Clear enrichment storage after', 'eightshift-forms'),
 								'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -157,7 +157,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 								'inputPlaceholder' => Enrichment::ENRICHMENT_EXPIRATION,
 								'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
 								'inputFieldInlineBeforeAfterContent' => true,
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_EXPIRATION_TIME_KEY),
 							],
 							[
 								'component' => 'divider',
@@ -165,7 +165,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY),
 								'textareaFieldLabel' => \__('Add custom enrichment parameters', 'eightshift-forms'),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
@@ -175,7 +175,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 									<br/><br />
 									Parameters are stored in browser storage for optional additional processing later.<br />
 									Some commonly used parameters are included by default.%s', 'eightshift-forms'), $enrichment['settings']),
-								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1),
+								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_KEY, 1),
 							],
 							[
 								'component' => 'divider',
@@ -196,9 +196,9 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 								function ($item) {
 									return [
 										'component' => 'input',
-										'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+										'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 										'inputFieldLabel' => $item,
-										'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
+										'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_ALLOWED_TAGS_MAP_KEY . '-' . $item),
 										'inputFieldIsFiftyFiftyHorizontal' => true,
 										'inputFieldBeforeContent' => '&rarr;',
 									];
@@ -214,7 +214,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENRICHMENT_PREFILL_USE_KEY),
 								'checkboxesFieldHelp' => \__("
 									If a user doesn't finish submitting a form, the enrichment prefill feature remembers their inputs in localStorage.
 									When they visit the form again, the prefill feature will automatically input the previous data.
@@ -239,7 +239,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 								],
 								[
 									'component' => 'input',
-									'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
+									'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
 									'inputFieldLabel' => \__('Clear form prefill storage after', 'eightshift-forms'),
 									'inputFieldHelp' => \__('The amount of time data is stored on the user\'s computer.', 'eightshift-forms'),
 									'inputType' => 'number',
@@ -249,7 +249,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 									'inputPlaceholder' => Enrichment::ENRICHMENT_PREFILL_EXPIRATION,
 									'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
 									'inputFieldInlineBeforeAfterContent' => true,
-									'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
+									'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_ENRICHMENT_PREFILL_EXPIRATION_TIME_KEY),
 								],
 							] : []),
 						],
@@ -261,7 +261,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_ENRICHMENT_PREFILL_URL_USE_KEY),
 								'checkboxesFieldHelp' => \__("Allow all your forms to be prefilled using URL params.", 'eightshift-forms'),
 								'checkboxesContent' => [
 									[
@@ -282,7 +282,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 						'tabContent' => [
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY),
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY),
 								'textareaFieldLabel' => \__('Add custom enrichment smart parameters', 'eightshift-forms'),
 								'textareaIsMonospace' => true,
 								'textareaSaveAsJson' => true,
@@ -292,7 +292,7 @@ class SettingsEnrichment implements UtilsSettingGlobalInterface, ServiceInterfac
 									<br/><br />
 									Parameters are stored in browser storage for optional additional processing later.<br />
 									These parameters will be automatically set on every form you have.', 'eightshift-forms'), $enrichment['settings']),
-								'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY, 1),
+								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_ENRICHMENT_ALLOWED_SMART_TAGS_KEY, 1),
 							],
 						],
 					],

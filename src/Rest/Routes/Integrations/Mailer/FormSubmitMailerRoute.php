@@ -10,10 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
+use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractFormSubmit;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
 
 /**
  * Class FormSubmitMailerRoute
@@ -32,7 +33,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function getRouteName(): string
 	{
-		return '/' . UtilsConfig::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
+		return '/' . Config::ROUTE_PREFIX_FORM_SUBMIT . '/' . self::ROUTE_SLUG;
 	}
 
 	/**
@@ -44,7 +45,7 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
@@ -61,28 +62,37 @@ class FormSubmitMailerRoute extends AbstractFormSubmit
 			)
 		);
 
-		$status = $mailerResponse['status'] ?? UtilsConfig::STATUS_ERROR;
+		$status = $mailerResponse['status'] ?? Config::STATUS_ERROR;
 		$label = $mailerResponse['label'] ?? 'mailerErrorEmailSend';
 		$debug = $mailerResponse['debug'] ?? [];
 
-		if ($status === UtilsConfig::STATUS_SUCCESS) {
+		if ($status == Config::STATUS_SUCCESS) {
 			// Set validation submit once.
-			$this->validator->setValidationSubmitOnce($formId);
+			$this->getValidator()->setValidationSubmitOnce($formId);
 
-			return \rest_ensure_response(
-				UtilsApiHelper::getApiSuccessPublicOutput(
-					$this->labels->getLabel($label, $formId),
-					\array_merge(
-						$successAdditionalData['public'],
-						$successAdditionalData['additional']
-					),
-					$debug
-				)
-			);
+			// return \rest_ensure_response(
+			// 	ApiHelpers::getApiSuccessPublicOutput(
+			// 		$this->labels->getLabel($label, $formId),
+			// 		\array_merge(
+			// 			$successAdditionalData['public'],
+			// 			$successAdditionalData['additional']
+			// 		),
+			// 		$debug
+			// 	)
+			// );
 		}
 
+		throw new ValidationFailedException(
+			$this->getValidatorLabels()->getLabel($label, $formId),
+			[
+				self::RESPONSE_SEND_FALLBACK_KEY => true,
+				self::RESPONSE_OUTPUT_KEY => $this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
+				self::RESPONSE_INTERNAL_KEY => 'mailerErrorEmailSend',
+			]
+		);
+
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiErrorPublicOutput(
+			ApiHelpers::getApiErrorPublicOutput(
 				$this->labels->getLabel($label, $formId),
 				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 				$debug

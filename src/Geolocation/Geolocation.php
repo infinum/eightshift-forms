@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Geolocation;
 
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Misc\SettingsCloudflare;
 use EightshiftForms\Misc\SettingsCloudFront;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDataHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Geolocation\AbstractGeolocation;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use Exception;
 
 /**
@@ -25,7 +25,7 @@ use Exception;
 class Geolocation extends AbstractGeolocation implements GeolocationInterface
 {
 	/**
-	 * Geolocation check if user is geolocated constant.
+	 * Geolocation check if user is geolocate constant.
 	 *
 	 * @var string
 	 */
@@ -73,7 +73,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Bailout if we use cookieless setup.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY)) {
 			return;
 		}
 
@@ -141,10 +141,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationPharLocation(): string
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = UtilsDataHelper::getDataManifestPath("geolocation{$sep}geoip.phar");
+		$path = Helpers::getProjectPaths('', ['data', 'geolocation', 'geoip.phar']);
 
-		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'pharLocation']);
+		$filterName = HooksHelpers::getFilterName(['geolocation', 'pharLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -166,10 +165,9 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getGeolocationDbLocation(): string
 	{
-		$sep = \DIRECTORY_SEPARATOR;
-		$path = UtilsDataHelper::getDataManifestPath("geolocation{$sep}geoip.mmdb");
+		$path = Helpers::getProjectPaths('', ['data', 'geolocation', 'geoip.mmdb']);
 
-		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'dbLocation']);
+		$filterName = HooksHelpers::getFilterName(['geolocation', 'dbLocation']);
 		if (\has_filter($filterName)) {
 			$path = \apply_filters($filterName, null);
 		}
@@ -189,7 +187,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 	 */
 	public function getCountriesList(): array
 	{
-		$filterName = UtilsHooksHelper::getFilterName(['geolocation', 'countriesList']);
+		$filterName = HooksHelpers::getFilterName(['geolocation', 'countriesList']);
 
 		if (\has_filter($filterName)) {
 			return \apply_filters($filterName, $this->getCountries());
@@ -309,7 +307,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Use Cloudflare header if that feature is used.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$outputCloudflare = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? $this->cleanCookieValue($_SERVER['HTTP_CF_IPCOUNTRY']) : ''; // phpcs:ignore
 
 			if ($outputCloudflare) {
@@ -318,7 +316,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Use CloudFront header if that feature is used.
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
 			$outputCloudFront = isset($_SERVER['CloudFront-Viewer-Country']) ? $this->cleanCookieValue($_SERVER['CloudFront-Viewer-Country']) : ''; // phpcs:ignore
 
 			if ($outputCloudFront) {
@@ -327,7 +325,7 @@ class Geolocation extends AbstractGeolocation implements GeolocationInterface
 		}
 
 		// Check if cookie is set and return that value.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY) && isset($_COOKIE[$this->getGeolocationCookieName()])) {
+		if (!SettingsHelpers::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_COOKIELESS_USE_KEY) && isset($_COOKIE[$this->getGeolocationCookieName()])) {
 			$outputCookie = $this->cleanCookieValue($_COOKIE[$this->getGeolocationCookieName()]); // phpcs:ignore
 
 			if ($outputCookie) {

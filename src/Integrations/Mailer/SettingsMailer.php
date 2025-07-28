@@ -10,19 +10,19 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Mailer;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Settings\SettingInterface;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsMailer class.
  */
-class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsMailer extends AbstractSettingsIntegrations implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -150,12 +150,12 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 			return false;
 		}
 
-		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
-		$name = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
-		$email = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
-		$to = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId);
-		$subject = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
-		$template = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
+		$isUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
+		$name = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
+		$email = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
+		$to = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId);
+		$subject = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId);
+		$template = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId);
 
 		if (!$isUsed || !$name || !$email || !$to || !$subject || !$template) {
 			return false;
@@ -177,12 +177,12 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 			return false;
 		}
 
-		$emailField = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
-		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
-		$name = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
-		$email = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
-		$subject = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
-		$template = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
+		$emailField = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
+		$isUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
+		$name = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId);
+		$email = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId);
+		$subject = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId);
+		$template = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId);
 
 		if (!$isUsed || !$name || !$email || !$subject || !$template || !$emailField) {
 			return false;
@@ -198,7 +198,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -218,24 +218,24 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$formDetails = UtilsGeneralHelper::getFormDetails($formId);
-		$fieldNames = $formDetails[UtilsConfig::FD_FIELD_NAMES];
-		$fieldNameTags = UtilsSettingsOutputHelper::getPartialFormFieldNames($fieldNames);
-		$formResponseTags = UtilsSettingsOutputHelper::getPartialFormResponseTags($formDetails[UtilsConfig::FD_TYPE]);
+		$formDetails = GeneralHelpers::getFormDetails($formId);
+		$fieldNames = $formDetails[Config::FD_FIELD_NAMES];
+		$fieldNameTags = SettingsOutputHelpers::getPartialFormFieldNames($fieldNames);
+		$formResponseTags = SettingsOutputHelpers::getPartialFormResponseTags($formDetails[Config::FD_TYPE]);
 
-		if ($formDetails[UtilsConfig::FD_TYPE] !== self::SETTINGS_TYPE_KEY) {
-			$formResponseTags .= UtilsSettingsOutputHelper::getPartialFormResponseTags(self::SETTINGS_TYPE_KEY);
+		if ($formDetails[Config::FD_TYPE] !== self::SETTINGS_TYPE_KEY) {
+			$formResponseTags .= SettingsOutputHelpers::getPartialFormResponseTags(self::SETTINGS_TYPE_KEY);
 		}
 
-		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
-		$isSenderUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
-		$emailField = UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
+		$isUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MAILER_SETTINGS_USE_KEY, self::SETTINGS_MAILER_SETTINGS_USE_KEY, $formId);
+		$isSenderUsed = SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MAILER_SENDER_USE_KEY, self::SETTINGS_MAILER_SENDER_USE_KEY, $formId);
+		$emailField = SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId);
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -246,7 +246,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SETTINGS_USE_KEY),
+								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SETTINGS_USE_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
@@ -265,25 +265,25 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 								],
 								[
 									'component' => 'input',
-									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_TO_KEY),
+									'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_TO_KEY),
 									'inputFieldLabel' => \__('Recipient e-mail', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
 									'inputFieldHelp' => \sprintf(\__('
 										This e-mail address will be used to sent the form data to.<br />
 										You can use multiple e-mails here by separating them by comma.<br /><br />
-										%s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags)),
+										%s', 'eightshift-forms'), SettingsOutputHelpers::getPartialFieldTags($fieldNameTags)),
 									'inputType' => 'text',
 									'inputPlaceholder' => 'info@infinum.com',
 									'inputIsRequired' => true,
-									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId),
+									'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TO_KEY, $formId),
 								],
 								[
 									'component' => 'textarea',
-									'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_KEY),
+									'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_KEY),
 									'textareaFieldLabel' => \__('Recipient e-mail advanced', 'eightshift-forms'),
 									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
-									'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\__("
+									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
 										Specify additional emails based on field values.<br />
 										Provide one key-value pair per line, following this format: <code>email : conditions</code><br/>
 										Conditions can be separated by <code>|</code> for OR and <code>&</code> for AND operators.<br/>
@@ -297,18 +297,18 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 										<li>test3@infinum.com : rating!=3|select=option-2</li>
 										<li>test4@infinum.com : rating=4</li>
 										</ul>", 'eightshift-forms')),
-									'textareaValue' => UtilsSettingsHelper::getSettingValueAsJson(self::SETTINGS_MAILER_TO_ADVANCED_KEY, $formId),
+									'textareaValue' => SettingsHelpers::getSettingValueAsJson(self::SETTINGS_MAILER_TO_ADVANCED_KEY, $formId),
 								],
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Append to recipient e-mail', 'eightshift-forms'),
 											'checkboxHelp' => \__('If checked, the advanced recipient e-mail will be appended to the default recipient email otherwise it will replace it.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
@@ -321,15 +321,15 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 								],
 								[
 									'component' => 'input',
-									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SUBJECT_KEY),
+									'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SUBJECT_KEY),
 									'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
 									// translators: %s will be replaced with forms field name.
 									'inputFieldHelp' => \sprintf(\__('
 										Specify e-mail subject with this field.<br /><br />
-										%s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags)),
+										%s', 'eightshift-forms'), SettingsOutputHelpers::getPartialFieldTags($fieldNameTags)),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
-									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+									'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SUBJECT_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -337,14 +337,14 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 								],
 								[
 									'component' => 'textarea',
-									'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_TEMPLATE_KEY),
+									'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_TEMPLATE_KEY),
 									'textareaFieldLabel' => \__('Content', 'eightshift-forms'),
 									// translators: %1$s will be replaced with forms field name, %2$s will be replaced with response tags, %3$s will be replaced with field names tags.
 									'textareaFieldHelp' => \sprintf(\__('
 										Specify e-mail body template with this field. You can use plain text or markdown.<br /><br />
-										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags), UtilsSettingsOutputHelper::getPartialResponseTags($formResponseTags)),
+										%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsOutputHelpers::getPartialFieldTags($fieldNameTags), SettingsOutputHelpers::getPartialResponseTags($formResponseTags)),
 									'textareaIsRequired' => true,
-									'textareaValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
+									'textareaValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
 								],
 							] : []),
 						]
@@ -356,12 +356,12 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 							'tabContent' => [
 								[
 									'component' => 'input',
-									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
+									'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SENDER_NAME_KEY),
 									'inputFieldLabel' => \__('E-mail client sender name', 'eightshift-forms'),
 									'inputFieldHelp' => \__('Most e-mail clients will show this instead of the real address in the list of e-mails. Make this something related to your brand that will distinguish you from the rest.', 'eightshift-forms'),
 									'inputType' => 'text',
 									'inputIsRequired' => true,
-									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
+									'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_NAME_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -369,13 +369,13 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 								],
 								[
 									'component' => 'input',
-									'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
+									'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SENDER_EMAIL_KEY),
 									'inputFieldLabel' => \__('E-mail client from e-mail', 'eightshift-forms'),
 									'inputFieldHelp' => \__('Most e-mail clients will us this as field as the sender e-mail (displayed as <i>From:</i>). It will also be used as a reply-to destination. Example: `info@infinum.com`.', 'eightshift-forms'),
 									'inputType' => 'text',
 									'inputIsEmail' => true,
 									'inputIsRequired' => true,
-									'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
+									'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_EMAIL_KEY, $formId),
 								],
 								[
 									'component' => 'divider',
@@ -384,13 +384,13 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
 											'checkboxLabel' => \__('Send empty fields', 'eightshift-forms'),
 											'checkboxHelp' => \__('If checked, all fields will be sent, even if they are empty.', 'eightshift-forms'),
-											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, $formId),
+											'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY, $formId),
 											'checkboxValue' => self::SETTINGS_MAILER_SEND_EMPTY_FIELDS_KEY,
 											'checkboxSingleSubmit' => true,
 											'checkboxAsToggle' => true,
@@ -414,7 +414,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 								[
 									'component' => 'checkboxes',
 									'checkboxesFieldLabel' => '',
-									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SENDER_USE_KEY),
+									'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SENDER_USE_KEY),
 									'checkboxesContent' => [
 										[
 											'component' => 'checkbox',
@@ -434,7 +434,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 									[
 										'component' => 'select',
 										'selectSingleSubmit' => true,
-										'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
+										'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_EMAIL_FIELD_KEY),
 										'selectFieldHelp' => \__('You must select what field is used as an e-mail.', 'eightshift-forms'),
 										'selectFieldLabel' => \__('E-mail field', 'eightshift-forms'),
 										'selectPlaceholder' => \__('Select email field', 'eightshift-forms'),
@@ -456,15 +456,15 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 									],
 									[
 										'component' => 'input',
-										'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
+										'inputName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY),
 										'inputFieldLabel' => \__('Subject', 'eightshift-forms'),
 										// translators: %s will be replaced with forms field name.
 										'inputFieldHelp' => \sprintf(\__('
 											Specify confirmation e-mail subject with this field.<br /><br />
-											%s', 'eightshift-forms'), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags)),
+											%s', 'eightshift-forms'), SettingsOutputHelpers::getPartialFieldTags($fieldNameTags)),
 										'inputType' => 'text',
 										'inputIsRequired' => true,
-										'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+										'inputValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
 									],
 									[
 										'component' => 'divider',
@@ -472,14 +472,14 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 									],
 									[
 										'component' => 'textarea',
-										'textareaName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
+										'textareaName' => SettingsHelpers::getSettingName(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY),
 										'textareaFieldLabel' => \__('E-mail content', 'eightshift-forms'),
 										// translators: %s will be replaced with forms field name.
 										'textareaFieldHelp' => \sprintf(\__('
 											Specify confirmation e-mail body template with this field. You can use plain text or markdown.<br /><br />
-											%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), UtilsSettingsOutputHelper::getPartialFieldTags($fieldNameTags), UtilsSettingsOutputHelper::getPartialResponseTags($formResponseTags)),
+											%1$s %2$s %3$s', 'eightshift-forms'), $this->getContentHelpOutput(), SettingsOutputHelpers::getPartialFieldTags($fieldNameTags), SettingsOutputHelpers::getPartialResponseTags($formResponseTags)),
 										'textareaIsRequired' => true,
-										'textareaValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+										'textareaValue' => SettingsHelpers::getSettingValue(self::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
 									],
 								] : []),
 							],
@@ -498,12 +498,12 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_MAILER_USE_KEY, self::SETTINGS_MAILER_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'layout',
 				'layoutType' => 'layout-v-stack-card',
@@ -536,7 +536,7 @@ class SettingsMailer extends AbstractSettingsIntegrations implements UtilsSettin
 	 */
 	private function getContentHelpOutput(): string
 	{
-		return UtilsGeneralHelper::minifyString(\sprintf(\__("
+		return GeneralHelpers::minifyString(\sprintf(\__("
 			You can use markdown to provide additional styling to your email.
 			If you need help with writing markdown, <a href='%1\$s' target='_blank' rel='noopener noreferrer'>take a look at this cheatsheet</a>.
 			You can also use <a href='%2\$s' target='_blank' rel='noopener noreferrer'>this helper</a> to preview how your email will look like and is it valid.<br /><br />

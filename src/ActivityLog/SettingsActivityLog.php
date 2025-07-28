@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace EightshiftForms\ActivityLog;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsActivityLog class.
  */
-class SettingsActivityLog implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsActivityLog implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -91,7 +91,7 @@ class SettingsActivityLog implements UtilsSettingGlobalInterface, ServiceInterfa
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ACTIVITY_LOG_USE_KEY, self::SETTINGS_ACTIVITY_LOG_USE_KEY)) {
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ACTIVITY_LOG_USE_KEY, self::SETTINGS_ACTIVITY_LOG_USE_KEY)) {
 			return false;
 		}
 
@@ -105,12 +105,12 @@ class SettingsActivityLog implements UtilsSettingGlobalInterface, ServiceInterfa
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_ACTIVITY_LOG_USE_KEY, self::SETTINGS_ACTIVITY_LOG_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_ACTIVITY_LOG_USE_KEY, self::SETTINGS_ACTIVITY_LOG_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -134,7 +134,7 @@ class SettingsActivityLog implements UtilsSettingGlobalInterface, ServiceInterfa
 												'component' => 'submit',
 												'submitVariant' => 'ghost',
 												'submitButtonAsLink' => true,
-												'submitButtonAsLinkUrl' => UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ACTIVITY_LOGS),
+												'submitButtonAsLinkUrl' => GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS),
 												'submitValue' => \__('View all activity logs', 'eightshift-forms'),
 											],
 										],

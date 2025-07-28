@@ -11,18 +11,18 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\CustomPostType\Result;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Rest\Routes\AbstractUtilsBaseRoute;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use WP_REST_Request;
 
 /**
  * Class LocationsRoute
  */
-class LocationsRoute extends AbstractUtilsBaseRoute
+class LocationsRoute extends AbstractBaseRoute
 {
 	/**
 	 * Route slug.
@@ -50,7 +50,7 @@ class LocationsRoute extends AbstractUtilsBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		$permission = $this->checkUserPermission(UtilsConfig::CAP_SETTINGS);
+		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
 		if ($permission) {
 			return \rest_ensure_response($permission);
 		}
@@ -73,16 +73,16 @@ class LocationsRoute extends AbstractUtilsBaseRoute
 				break;
 		}
 
-		$type = UtilsGeneralHelper::getFormTypeById($id);
+		$type = GeneralHelpers::getFormTypeById($id);
 
 		return \rest_ensure_response(
-			UtilsApiHelper::getApiSuccessPublicOutput(
+			ApiHelpers::getApiSuccessPublicOutput(
 				\esc_html__('Success', 'eightshift-forms'),
 				[
 					'output' => Helpers::render(
 						'item-details',
 						[
-							'items' => UtilsGeneralHelper::getBlockLocations($id, $usageType),
+							'items' => GeneralHelpers::getBlockLocations($id, $usageType),
 							'type' => $type,
 							'sectionClass' => Helpers::getComponent('admin-listing')['componentClass'],
 							'emptyContent' => $errorMsg,
