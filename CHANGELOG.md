@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [7.0.2]
+
+### Added
+
+- Auto-delete entries with retention interval.
+
 ## [7.0.1]
 
 ### Added
@@ -18,7 +24,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ### Changed
 
-- all form field are now tab-able and you can pass the full flow without any mouse interaction
+- All form field are now tab-able and you can pass the full flow without any mouse interaction
 - Select/country/phone, choices are now updated to the latest version with better A11y.
 - File field is now tab-able and can be used with only keyboard.
 - Rating field is fully new and re-built with a different approach using radio buttons.
@@ -1313,6 +1319,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[7.0.2]: https://github.com/infinum/eightshift-forms/compare/7.0.1...7.0.2
 [7.0.1]: https://github.com/infinum/eightshift-forms/compare/7.0.0...7.0.1
 [7.0.0]: https://github.com/infinum/eightshift-forms/compare/6.9.0...7.0.0
 [6.9.0]: https://github.com/infinum/eightshift-forms/compare/6.8.1...6.9.0

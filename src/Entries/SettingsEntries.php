@@ -72,6 +72,12 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 	public const SETTINGS_ENTRIES_SAVE_ADDITONAL_VALUES_INCREMENT_ID_KEY = 'increment-id';
 
 	/**
+	 * Entries settings auto delete key.
+	 */
+	public const SETTINGS_ENTRIES_AUTO_DELETE_KEY = 'entries-auto-delete-use';
+	public const SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY = 'entries-auto-delete-retention';
+
+	/**
 	 * Data data key.
 	 */
 	public const SETTINGS_ENTRIES_DATA_KEY = 'entries-data';
@@ -150,6 +156,7 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 		}
 
 		$isUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, self::SETTINGS_ENTRIES_SETTINGS_USE_KEY, $formId);
+		$autoDeleteIsUsed = UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_AUTO_DELETE_KEY, self::SETTINGS_ENTRIES_AUTO_DELETE_KEY, $formId);
 
 		return [
 			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
@@ -254,6 +261,42 @@ class SettingsEntries implements UtilsSettingGlobalInterface, UtilsSettingInterf
 										],
 									],
 								],
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
+								],
+								[
+									'component' => 'checkboxes',
+									'checkboxesName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_AUTO_DELETE_KEY),
+									'checkboxesContent' => [
+										[
+											'component' => 'checkbox',
+											'checkboxLabel' => \__('Auto-delete old entries', 'eightshift-forms'),
+											'checkboxHelp' => \__('Entries older than the retention interval will be automatically deleted.', 'eightshift-forms'),
+											'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_ENTRIES_AUTO_DELETE_KEY, self::SETTINGS_ENTRIES_AUTO_DELETE_KEY, $formId),
+											'checkboxValue' => self::SETTINGS_ENTRIES_AUTO_DELETE_KEY,
+											'checkboxSingleSubmit' => true,
+											'checkboxAsToggle' => true,
+										],
+									],
+								],
+								...($autoDeleteIsUsed ? [
+									[
+										'component' => 'input',
+										'inputName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY),
+										'inputFieldLabel' => \__('Retention interval', 'eightshift-forms'),
+										'inputFieldHelp' => \__('Duration of time in days an entry should be retained in the CMS.', 'eightshift-forms'),
+										'inputType' => 'number',
+										'inputMin' => 1,
+										'inputMax' => 365,
+										'inputStep' => 1,
+										'inputIsNumber' => true,
+										'inputPlaceholder' => 160,
+										'inputFieldAfterContent' => \__('days', 'eightshift-forms'),
+										'inputFieldInlineBeforeAfterContent' => true,
+										'inputValue' => UtilsSettingsHelper::getSettingValue(self::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY, $formId),
+									],
+								] : [])
 							] : []),
 						],
 					],
