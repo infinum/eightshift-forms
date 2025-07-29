@@ -12,14 +12,14 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 
 /**
  * Class FormSubmitMailerRoute
  */
-class FormSubmitMailerRoute extends AbstractFormSubmit
+class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

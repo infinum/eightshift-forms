@@ -10,16 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Editor\Options;
 
-use EightshiftForms\Exception\UnverifiedRequestException;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
-use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use WP_REST_Request;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class GeolocationCountriesRoute
  */
-class GeolocationCountriesRoute extends AbstractBaseRoute
+class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug
@@ -38,10 +40,17 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param ValidatorInterface $validator Inject validator methods.
+	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param GeolocationInterface $geolocation Inject GeolocationInterface which holds Geolocation data.
 	 */
-	public function __construct(GeolocationInterface $geolocation)
-	{
+	public function __construct(
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
+		GeolocationInterface $geolocation
+	) {
+		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->geolocation = $geolocation;
 	}
 
@@ -66,41 +75,43 @@ class GeolocationCountriesRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$debug = [
-			'request' => $request,
-		];
+		return false;
+	}
 
-		try {
-			return \rest_ensure_response(
-				ApiHelpers::getApiSuccessPublicOutput(
-					\esc_html__('Success.', 'eightshift-forms'),
-					$this->geolocation->getCountriesList(),
-					$debug
-				)
-			);
-		} catch (UnverifiedRequestException $e) {
-			// Die if any of the validation fails.
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$e->getMessage(),
-					\array_merge(
-						$debug,
-						[
-							'exception' => $e->getMessage(),
-						]
-					)
-				)
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
+		$countries = $this->geolocation->getCountriesList();
+
+		if (!$countries) {
+			throw new BadRequestException(
+				$this->labels->getLabel('geolocationCountriesMissing'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesMissing',
+				]
 			);
 		}
+
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('geolocationCountriesSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('geolocationCountries') => $countries,
+			],
+		];
 	}
 }

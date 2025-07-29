@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\UploadHelpers;
@@ -23,6 +24,21 @@ use WP_REST_Request;
  */
 abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteInterface
 {
+	public const R_MSG = 'message';
+	public const R_CODE = 'code';
+	public const R_STATUS = 'status';
+	public const R_DATA = 'data';
+	public const R_DEBUG = 'debug';
+	public const R_DEBUG_KEY = 'debugKey';
+	public const R_DEBUG_REQUEST = 'debugRequest';
+
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	abstract protected function isRouteAdminProtected(): bool;
+
 	/**
 	 * Method that returns project Route namespace
 	 *
@@ -534,5 +550,62 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	private function getParamsOriginal($request): string
 	{
 		return \sanitize_text_field(\wp_json_encode($this->getRequestParams($request)));
+	}
+
+	/**
+	 * Get debug output.
+	 *
+	 * @param array<string, mixed> $data Data to use.
+	 * @param array<string, mixed> $debug Debug data to use.
+	 * @param WP_REST_Request $request Request to use.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getResponseDataOutput(
+		array $data,
+		array $debug,
+		WP_REST_Request $request
+	): array {
+		$output = [];
+
+		$isDeveloperMode = DeveloperHelpers::isDeveloperModeActive();
+
+		if ($isDeveloperMode) {
+			$output[self::R_DEBUG] = [
+				self::R_DEBUG => $debug[self::R_DEBUG] ?? [],
+				self::R_DEBUG_KEY => $debug[self::R_DEBUG_KEY] ?? '',
+				self::R_DEBUG_REQUEST => [
+					'body' => $request->get_body(),
+					'params' => $request->get_params(),
+					'method' => $request->get_method(),
+					'headers' => $request->get_headers(),
+					'bodyParams' => $request->get_body_params(),
+					'queryParams' => $request->get_query_params(),
+					'urlParams' => $request->get_url_params(),
+					'route' => $request->get_route(),
+				],
+			];
+		}
+
+		// Check if there are any response output keys in the data and allowed to be returned.
+		foreach (UtilsHelper::getStateResponseOutputKeys() as $key) {
+			if (isset($data[$key])) {
+				$output[$key] = $data[$key];
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Check user permission for route action.
+	 *
+	 * @param string $permission Permission to check.
+	 *
+	 * @return bool
+	 */
+	protected function checkPermission(string $permission): bool
+	{
+		return \current_user_can($permission);
 	}
 }

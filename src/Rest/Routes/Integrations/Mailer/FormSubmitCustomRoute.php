@@ -12,14 +12,14 @@ namespace EightshiftForms\Rest\Routes\Integrations\Mailer;
 
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\ApiHelpers;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\UtilsHelper;
 
 /**
  * Class FormSubmitCustomRoute
  */
-class FormSubmitCustomRoute extends AbstractFormSubmit
+class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

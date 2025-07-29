@@ -115,28 +115,6 @@ class SettingsCache implements SettingGlobalInterface, ServiceInterface
 							],
 						],
 					],
-					[
-						'component' => 'divider',
-						'dividerExtraVSpacing' => true,
-					],
-					[
-						'component' => 'card-inline',
-						'cardInlineTitle' => \__('All internal cache', 'eightshift-forms'),
-						'cardInlineSubTitle' => \__('Delete all forms internal cache at once!', 'eightshift-forms'),
-						'cardInlineIcon' => UtilsHelper::getUtilsIcons('allChecked'),
-						'cardInlineRightContent' => [
-							[
-								'component' => 'submit',
-								'submitValue' => \__('Clear', 'eightshift-forms'),
-								'submitVariant' => 'ghost',
-								'submitAttrs' => [
-									UtilsHelper::getStateAttribute('cacheType') => 'allInteral',
-									UtilsHelper::getStateAttribute('reload') => 'false',
-								],
-								'additionalClass' => UtilsHelper::getStateSelectorAdmin('cacheDelete'),
-							],
-						],
-					],
 				]
 			],
 			...($outputIntegrations ? [

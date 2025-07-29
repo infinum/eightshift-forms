@@ -45,6 +45,16 @@ interface ValidatorInterface
 	public function validateFormMandatoryProperties(array $formDetails): bool;
 
 	/**
+	 * Validate mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params to validate.
+	 * @param array<string, mixed> $mandatoryParams Mandatory params to validate.
+	 *
+	 * @return boolean
+	 */
+	public function validateMandatoryParams(array $params, array $mandatoryParams): bool;
+
+	/**
 	 * Get validation label from cache or db on multiple items.
 	 *
 	 * @param array<string, string> $items Array of items to get label.

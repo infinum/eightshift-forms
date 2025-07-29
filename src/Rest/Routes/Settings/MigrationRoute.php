@@ -33,15 +33,19 @@ use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use WP_Query;
 use WP_REST_Request;
 
 /**
  * Class MigrationRoute
  */
-class MigrationRoute extends AbstractBaseRoute
+class MigrationRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Use Migration helper trait.
@@ -66,13 +70,16 @@ class MigrationRoute extends AbstractBaseRoute
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
+		LabelsInterface $labels,
 		IntegrationSyncInterface $integrationSyncDiff
 	) {
 		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
@@ -92,27 +99,36 @@ class MigrationRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(): array
+	{
+		return [
+			'type' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$type = $params['type'] ?? '';
 
 		switch ($type) {
@@ -125,10 +141,11 @@ class MigrationRoute extends AbstractBaseRoute
 			case SettingsMigration::VERSION_CLEARBIT:
 				return $this->getMigrationClearbit();
 			default:
-				return ApiHelpers::getApiErrorPublicOutput(
-					\__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
-					[],
-					$debug
+				throw new BadRequestException(
+					$this->labels->getLabel('migrationTypeNotFound'),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
+					]
 				);
 		}
 	}
@@ -195,7 +212,12 @@ class MigrationRoute extends AbstractBaseRoute
 			\do_action($actionName, SettingsMigration::VERSION_2_3_GENERAL);
 		}
 
-		return ApiHelpers::getApiSuccessPublicOutput(\__('Migration version 2 to 3 finished with success.', 'eightshift-forms'));
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3General',
+			],
+		];
 	}
 
 	/**
@@ -382,10 +404,15 @@ class MigrationRoute extends AbstractBaseRoute
 			);
 		}
 
-		return ApiHelpers::getApiSuccessPublicOutput(
-			\__('Migration version 2 to 3 forms finished with success.', 'eightshift-forms'),
-			$outputFinal
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Forms',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminMigration') => $outputFinal,
+			],
+		];
 	}
 
 	/**
@@ -491,10 +518,15 @@ class MigrationRoute extends AbstractBaseRoute
 			\do_action($actionName, SettingsMigration::VERSION_2_3_LOCALE);
 		}
 
-		return ApiHelpers::getApiSuccessPublicOutput(
-			\__('Migration version 2 to 3 locale finished with success.', 'eightshift-forms'),
-			$output
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Locale',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,
+			],
+		];
 	}
 
 	/**
@@ -577,9 +609,14 @@ class MigrationRoute extends AbstractBaseRoute
 			\do_action($actionName, SettingsMigration::VERSION_CLEARBIT);
 		}
 
-		return ApiHelpers::getApiSuccessPublicOutput(
-			\__('Migration version 5.5.1 to 5.6 Clearbit finished with success.', 'eightshift-forms'),
-			$output
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccessClearbit',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminMigration') => $output,
+			],
+		];
 	}
 }

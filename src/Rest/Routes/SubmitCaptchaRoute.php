@@ -11,29 +11,19 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Captcha\CaptchaInterface;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
-use Throwable;
-use WP_REST_Request;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class SubmitCaptchaRoute
  */
-class SubmitCaptchaRoute extends AbstractBaseRoute
+class SubmitCaptchaRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
 	 */
 	public const ROUTE_SLUG = 'captcha';
-
-	/**
-	 * Instance variable of LabelsInterface data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected $labels;
 
 	/**
 	 * Instance variable of CaptchaInterface data.
@@ -45,13 +35,16 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
 	 */
 	public function __construct(
+		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha
 	) {
+		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
 	}
@@ -67,81 +60,52 @@ class SubmitCaptchaRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Get mandatory params.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return array<string, string>
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function getMandatoryParams(): array
 	{
-		$debug = [
-			'request' => $request,
+		return [
+			'token' => 'string',
+			'action' => 'string',
+			'isEnterprise' => 'string',
 		];
+	}
 
-		try {
-			// Bailout if troubleshooting skip captcha is on.
-			if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
-				return \rest_ensure_response(
-					ApiHelpers::getApiSuccessPublicOutput(
-						$this->labels->getLabel('captchaSkipCheck'),
-						[],
-						$debug
-					)
-				);
-			}
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
+	}
 
-			$params = $this->prepareSimpleApiParams($request);
-
-			$token = $params['token'];
-			$action = $params['action'];
-			$isEnterprise = $params['isEnterprise'];
-
-			$check = $this->captcha->check($token, $action, $isEnterprise === 'true');
-
-			$checkStatus = $check['status'] ?? '';
-			$checkMessage = $check['message'] ?? '';
-			$checkDebug = $check['debug'] ?? [];
-			$checkData = $check['data'] ?? [];
-
-			if ($checkStatus === Config::STATUS_ERROR) {
-				return \rest_ensure_response(
-					ApiHelpers::getApiErrorPublicOutput(
-						$checkMessage,
-						$checkData,
-						\array_merge(
-							$debug,
-							$checkDebug
-						)
-					)
-				);
-			}
-
-			return \rest_ensure_response(
-				ApiHelpers::getApiSuccessPublicOutput(
-					$checkMessage,
-					$checkData,
-					\array_merge(
-						$debug,
-						$checkDebug
-					)
-				)
-			);
-		} catch (Throwable $t) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('captchaBadRequest'),
-					[],
-					\array_merge(
-						$debug,
-						[
-							'exeption' => $t,
-						]
-					)
-				)
-			);
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
+		// Bailout if troubleshooting skip captcha is on.
+		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
+			return [
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSkipCheck'),
+				AbstractBaseRoute::R_DEBUG => [
+					AbstractBaseRoute::R_DEBUG_KEY => 'captchaDebugSkipCheck',
+				],
+			];
 		}
+
+		$token = $params['token'] ?? '';
+		$action = $params['action'] ?? '';
+		$isEnterprise = $params['isEnterprise'] ?? 'false';
+
+		return $this->captcha->check($token, $action, $isEnterprise === 'true');
 	}
 }

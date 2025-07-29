@@ -10,18 +10,21 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Editor;
 
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-use WP_REST_Request;
 
 /**
  * Class FormFieldsRoute
  */
-class FormFieldsRoute extends AbstractBaseRoute
+class FormFieldsRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
@@ -38,10 +41,17 @@ class FormFieldsRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance.
 	 *
+	 * @param ValidatorInterface $validator Inject validator methods.
+	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
-	public function __construct(IntegrationSyncInterface $integrationSyncDiff)
-	{
+	public function __construct(
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
+		IntegrationSyncInterface $integrationSyncDiff
+	) {
+		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
@@ -66,56 +76,48 @@ class FormFieldsRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(): array
+	{
+		return [
+			'id' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
 
-		$formId = $params['id'] ?? '';
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
+		$formDetails = GeneralHelpers::getFormDetails($params['id'] ?? '');
 
-		if (!$formId) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					\esc_html__('Form Id was not provided.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
-
-		$formDetails = GeneralHelpers::getFormDetails($formId);
 		$fieldsOnly = $formDetails[Config::FD_FIELDS_ONLY] ?? [];
 
-		$debug = \array_merge(
-			$debug,
-			[
-				'data' => $formDetails,
-			]
-		);
-
 		if (!$fieldsOnly) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					\esc_html__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
-					[],
-					$debug
-				)
+			throw new BadRequestException(
+				$this->labels->getLabel('formFieldsMissing'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsMissing',
+				]
 			);
 		}
 
@@ -123,18 +125,19 @@ class FormFieldsRoute extends AbstractBaseRoute
 
 		$steps = $formDetails[Config::FD_STEPS_SETUP] ?? [];
 
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				\esc_html__('Success.', 'eightshift-forms'),
-				[
-					'fields' => \array_values($fieldsOutput),
-					'steps' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], false)) : [],
-					'stepsFull' => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], true)) : [],
-					'names' => $formDetails[Config::FD_FIELD_NAMES_FULL],
-				],
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('formFieldsSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $fieldsOutput,
+				AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('editorFormFields') => $fieldsOutput,
+				UtilsHelper::getStateResponseOutputKey('editorFormFieldsSteps') => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], false)) : [],
+				UtilsHelper::getStateResponseOutputKey('editorFormFieldsStepsFull') => $steps ? \array_values($this->getSteps($fieldsOutput, $steps['steps'], true)) : [],
+				UtilsHelper::getStateResponseOutputKey('editorFormFieldsNames') => $formDetails[Config::FD_FIELD_NAMES_FULL],
+			],
+		];
 	}
 
 	/**

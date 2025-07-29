@@ -63,8 +63,10 @@ export class Export {
 					data,
 				} = response;
 
-				if (data?.output) {
-					const csv = this.downloadCSVFromJson(JSON.parse(data?.output));
+				const exportContent = data?.[this.state.getStateResponseOutputKey('adminExportContent')];
+
+				if (exportContent) {
+					const csv = this.downloadCSVFromJson(JSON.parse(exportContent));
 					this.createDownloadLink('export.csv', csv);
 				}
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class register route for public/admin form submitting endpoint
+ * The class register route for for integration submitting endpoint.
  *
  * @package EightshiftForms\Rest\Routes
  */
@@ -44,9 +44,9 @@ use WP_REST_Request;
 use WP_REST_Response;
 
 /**
- * Class AbstractFormSubmit
+ * Class AbstractIntegrationFormSubmit
  */
-abstract class AbstractFormSubmit extends AbstractBaseRoute
+abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 {
 	/**
 	 * Instance variable of ValidatorInterface data.
@@ -379,8 +379,8 @@ abstract class AbstractFormSubmit extends AbstractBaseRoute
 					// Map enrichment data.
 					$formDetails[Config::FD_PARAMS] = $this->enrichment->mapEnrichmentFields($formDetails[Config::FD_PARAMS]);
 
-					// TODO: ADD TO CONSTANTS IN VERSION 8.0.0.
-					$formDetails['country'] = $this->getRequestCountryCookie($request);
+					// Add country to the form details.
+					$formDetails[Config::FD_COUNTRY] = $this->getRequestCountryCookie($request);
 
 					// Filter params.
 					$filterName = HooksHelpers::getFilterName(['integrations', $formDetails[Config::FD_TYPE], 'prePostParams']);

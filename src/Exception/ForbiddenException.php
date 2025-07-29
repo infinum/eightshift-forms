@@ -27,18 +27,28 @@ final class ForbiddenException extends Exception implements GeneralExceptionInte
 	private $data = [];
 
 	/**
+	 * Internal debug data.
+	 *
+	 * @var array<int|string, mixed>
+	 */
+	private $debug = [];
+
+	/**
 	 * Throws error if user has no permission.
 	 *
 	 * @param string $message Message to show.
+	 * @param array<int|string, mixed> $debug Debug data.
 	 * @param array<int|string, mixed> $data Data that is wrong.
 	 * @param int $code The code.
 	 */
 	public function __construct(
 		string $message,
+		array $debug = [],
 		array $data = [],
 		int $code = AbstractRoute::API_RESPONSE_CODE_FORBIDDEN
 	) {
 		$this->data = $data;
+		$this->debug = $debug;
 		parent::__construct($message, $code);
 	}
 
@@ -50,5 +60,15 @@ final class ForbiddenException extends Exception implements GeneralExceptionInte
 	public function getData(): array
 	{
 		return $this->data;
+	}
+
+	/**
+	 * Get exception debug data
+	 *
+	 * @return array<int|string, mixed>
+	 */
+	public function getDebug(): array
+	{
+		return $this->debug;
 	}
 }

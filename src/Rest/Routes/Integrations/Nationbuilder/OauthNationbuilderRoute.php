@@ -72,6 +72,16 @@ class OauthNationbuilderRoute extends AbstractOauth
 	}
 
 	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param string $code The code.

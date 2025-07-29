@@ -11,27 +11,21 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\CustomPostType\Result;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Transfer\Transfer;
 use EightshiftForms\Transfer\TransferInterface;
 use EightshiftForms\Validation\ValidatorInterface;
-use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use WP_REST_Request;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 
 /**
  * Class TransferRoute
  */
-class TransferRoute extends AbstractBaseRoute
+class TransferRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
 	/**
 	 * Instance variable of TransferInterface data.
 	 *
@@ -43,13 +37,16 @@ class TransferRoute extends AbstractBaseRoute
 	 * Create a new instance that injects classes
 	 *
 	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param LabelsInterface $labels Inject labels.
 	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
 	public function __construct(
 		ValidatorInterface $validator,
+		LabelsInterface $labels,
 		TransferInterface $transfer
 	) {
 		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->transfer = $transfer;
 	}
 
@@ -69,27 +66,36 @@ class TransferRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(): array
+	{
+		return [
+			'type' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$type = $params['type'] ?? '';
 
 		$output = [
@@ -107,12 +113,11 @@ class TransferRoute extends AbstractBaseRoute
 				$items = $params['items'] ?? [];
 
 				if (!$items) {
-					return \rest_ensure_response(
-						ApiHelpers::getApiErrorPublicOutput(
-							\esc_html__('Please click on the forms you want to export.', 'eightshift-forms'),
-							[],
-							$debug
-						)
+					throw new BadRequestException(
+						$this->labels->getLabel('transferExportMissingForms'),
+						[
+							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingForms',
+						]
 					);
 				}
 
@@ -125,12 +130,11 @@ class TransferRoute extends AbstractBaseRoute
 				$items = $params['items'] ?? [];
 
 				if (!$items) {
-					return \rest_ensure_response(
-						ApiHelpers::getApiErrorPublicOutput(
-							\esc_html__('Please click on the Result outputs you want to export.', 'eightshift-forms'),
-							[],
-							$debug
-						)
+					throw new BadRequestException(
+						$this->labels->getLabel('transferExportMissingResultOutputs'),
+						[
+							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingResultOutputs',
+						]
 					);
 				}
 
@@ -149,12 +153,11 @@ class TransferRoute extends AbstractBaseRoute
 				$upload = $params['upload'] ?? '';
 
 				if (!$upload) {
-					return \rest_ensure_response(
-						ApiHelpers::getApiErrorPublicOutput(
-							\esc_html__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
-							[],
-							$debug
-						)
+					throw new BadRequestException(
+						$this->labels->getLabel('transferUploadMissingFile'),
+						[
+							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingFile',
+						]
 					);
 				}
 
@@ -164,40 +167,37 @@ class TransferRoute extends AbstractBaseRoute
 				);
 
 				if (!$uploadStatus) {
-					return \rest_ensure_response(
-						ApiHelpers::getApiErrorPublicOutput(
-							\esc_html__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
-							[],
-							$debug
-						)
+					throw new BadRequestException(
+						$this->labels->getLabel('transferUploadError'),
+						[
+							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadError',
+						]
 					);
 				}
 
 				$internalType = 'import';
 				break;
 			default:
-				return \rest_ensure_response(
-					ApiHelpers::getApiErrorPublicOutput(
-						\esc_html__('Transfer version type key was not provided.', 'eightshift-forms'),
-						[],
-						$debug
-					)
+				throw new BadRequestException(
+					$this->labels->getLabel('transferUploadMissingType'),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingType',
+					]
 				);
 		}
 
 		$date = \current_datetime()->format('Y-m-d-H-i-s-u');
 
-		// Finish.
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				// translators: %s will be replaced with the transfer internal type.
-				\sprintf(\esc_html__('%s successfully done!', 'eightshift-forms'), \ucfirst($internalType)),
-				[
-					'name' => "eightshift-forms-{$type}-{$date}",
-					'content' => \wp_json_encode($output),
-				],
-				$debug
-			)
-		);
+
+		return [
+			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%s %s', 'eightshift-forms'), \ucfirst($internalType), $this->labels->getLabel('transferSuccess')),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'transferSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('adminTransferName') => "eightshift-forms-{$type}-{$date}",
+				UtilsHelper::getStateResponseOutputKey('adminTransferContent') => \wp_json_encode($output),
+			],
+		];
 	}
 }

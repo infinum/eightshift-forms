@@ -17,7 +17,7 @@ use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
@@ -25,7 +25,7 @@ use EightshiftForms\Config\Config;
 /**
  * Class FormSubmitHubspotRoute
  */
-class FormSubmitHubspotRoute extends AbstractFormSubmit
+class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

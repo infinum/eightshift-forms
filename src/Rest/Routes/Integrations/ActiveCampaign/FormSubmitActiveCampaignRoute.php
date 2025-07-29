@@ -15,7 +15,7 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
@@ -24,7 +24,7 @@ use EightshiftForms\Config\Config;
 /**
  * Class FormSubmitActiveCampaignRoute
  */
-class FormSubmitActiveCampaignRoute extends AbstractFormSubmit
+class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

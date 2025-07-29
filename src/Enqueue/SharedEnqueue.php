@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Enqueue;
 
-use EightshiftForms\Rest\Routes\AbstractTestApi;
 use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
@@ -55,7 +54,7 @@ trait SharedEnqueue
 			'prefix' => \get_rest_url(\get_current_blog_id()) . $restPrefixProject,
 			'prefixProject' => $restPrefixProject,
 			'prefixSubmit' => Config::ROUTE_PREFIX_FORM_SUBMIT,
-			'prefixTestApi' => AbstractTestApi::ROUTE_PREFIX_TEST_API,
+			'prefixTestApi' => Config::ROUTE_PREFIX_TEST_API,
 			'files' => SubmitFilesRoute::ROUTE_SLUG,
 
 			// Public.

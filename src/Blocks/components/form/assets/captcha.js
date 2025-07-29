@@ -110,7 +110,7 @@ export class Captcha {
 		.then((responseData) => {
 			const response = this.utils.formSubmitIsJsonString(responseData, 'invisibleCaptcha', null);
 
-			if (response?.status === 'error' && !response?.data?.isSpam) {
+			if (response?.status === 'error' && !response?.data?.captchaIsSpam) {
 				throw new Error(`API response returned an error. Function used: "formSubmitCaptchaInvisible". Msg: ${response.message} Action: ${action}`);
 			}
 

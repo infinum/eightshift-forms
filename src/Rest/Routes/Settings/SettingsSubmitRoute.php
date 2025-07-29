@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Helpers\ApiHelpers;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
 
 /**
  * Class SettingsSubmitRoute
  */
-class SettingsSubmitRoute extends AbstractFormSubmit
+class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

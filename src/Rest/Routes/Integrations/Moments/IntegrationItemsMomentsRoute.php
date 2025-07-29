@@ -12,15 +12,18 @@ namespace EightshiftForms\Rest\Routes\Integrations\Moments;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use WP_REST_Request;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class IntegrationItemsMomentsRoute
  */
-class IntegrationItemsMomentsRoute extends AbstractBaseRoute
+class IntegrationItemsMomentsRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Instance variable for Moments data.
@@ -47,10 +50,17 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param ClientInterface $momentsClient Inject HubSpot which holds HubSpot connect data.
+	 * @param ValidatorInterface $validator Inject validator methods.
+	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param ClientInterface $momentsClient Inject Moments which holds Moments connect data.
 	 */
-	public function __construct(ClientInterface $momentsClient)
-	{
+	public function __construct(
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
+		ClientInterface $momentsClient
+	) {
+		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->momentsClient = $momentsClient;
 	}
 
@@ -65,47 +75,43 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
-		];
-
-		// Check if Moments global settings is valid.
-		$isGlobalSettingsValid = \apply_filters(SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME, false);
-
-		if (!$isGlobalSettingsValid) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					\esc_html__('Global not configured', 'eightshift-forms'),
-					[],
-					$debug
-				)
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
+		// Check if global settings is valid.
+		if (!\apply_filters(SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME, false)) {
+			throw new BadRequestException(
+				$this->labels->getLabel('globalNotConfigured'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
+				]
 			);
 		}
 
 		$items = $this->momentsClient->getItems();
 
 		if (!$items) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					\esc_html__('Items missing', 'eightshift-forms'),
-					[],
-					$debug
-				)
+			throw new BadRequestException(
+				$this->labels->getLabel('integrationItemsMissing'),
+				[
+					AbstractBaseRoute::R_DEBUG => $items,
+					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
+				]
 			);
 		}
 
@@ -123,13 +129,15 @@ class IntegrationItemsMomentsRoute extends AbstractBaseRoute
 			$items
 		)));
 
-		// Finish.
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				\esc_html__('Success', 'eightshift-forms'),
-				$items,
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('integrationItemsSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $items,
+				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('editorIntegrationItems') => $items,
+			],
+		];
 	}
 }

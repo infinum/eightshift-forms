@@ -439,6 +439,37 @@ class Validator extends AbstractValidation
 	}
 
 	/**
+	 * Validate mandatory params.
+	 *
+	 * @param array<string, mixed> $params Params to validate.
+	 * @param array<string, mixed> $mandatoryParams Mandatory params to validate.
+	 *
+	 * @return boolean
+	 */
+	public function validateMandatoryParams(array $params, array $mandatoryParams): bool
+	{
+		if (!$params) {
+			return true;
+		}
+
+		foreach ($mandatoryParams as $paramName => $paramType) {
+			if (!isset($params[$paramName])) {
+				return false;
+			}
+
+			if (empty($params[$paramName])) {
+				return false;
+			}
+
+			if (\gettype($params[$paramName]) !== $paramType) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get validation label from cache or db on multiple items.
 	 *
 	 * @param array<string, string> $items Array of items to get label.

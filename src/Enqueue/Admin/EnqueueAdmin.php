@@ -83,6 +83,11 @@ class EnqueueAdmin extends AbstractEnqueueAdmin
 				'importErrorMsg' => \__('There is an error with your data, please try again.', 'eightshift-forms'),
 				'isAdmin' => true,
 				'redirectionTimeout' => 100,
+				'labels' => [
+					'selectOptionAria' => \esc_html__('Select option', 'eightshift-forms'),
+					'fileRemoveContent' => \esc_html__('Remove file', 'eightshift-forms'),
+					'fileRemoveAria' => \esc_html__('Remove file', 'eightshift-forms'),
+				],
 			],
 		);
 

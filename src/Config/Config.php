@@ -411,6 +411,13 @@ class Config
 	public const ROUTE_PREFIX_INTEGRATION_EDITOR = 'integration-editor';
 
 	/**
+	 * Dynamic name route prefix for test api.
+	 *
+	 * @var string
+	 */
+	public const ROUTE_PREFIX_TEST_API = 'test-api';
+
+	/**
 	 * Delimiter used in checkboxes and multiple items.
 	 *
 	 * @var string
@@ -491,6 +498,7 @@ class Config
 	public const FD_STEPS_SETUP = 'stepsSetup';
 	public const FD_RESPONSE_OUTPUT_DATA = 'responseOutputData';
 	public const FD_PARAMS_ORIGINAL = 'paramsOriginal';
+	public const FD_COUNTRY = 'country';
 
 	// ------------------------------------------------------------------
 	// Integration API response details data Keys

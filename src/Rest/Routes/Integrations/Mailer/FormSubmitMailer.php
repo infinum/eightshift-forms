@@ -156,7 +156,7 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 
 	/**
 	 * Send fallback email - Processing.
-	 * This function is used in AbstractFormSubmit for processing validation issues.
+	 * This function is used in AbstractIntegrationFormSubmit for processing validation issues.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param string $customSubject Custom subject for the email.

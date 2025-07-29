@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Integrations\Calculator;
 
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 
 /**
  * Class FormSubmitCalculatorRoute
  */
-class FormSubmitCalculatorRoute extends AbstractFormSubmit
+class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

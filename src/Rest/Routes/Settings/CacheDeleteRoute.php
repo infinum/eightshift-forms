@@ -11,35 +11,17 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes\Settings;
 
 use EightshiftForms\Misc\SettingsRocketCache;
-use EightshiftForms\Helpers\ApiHelpers;
-use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
-use WP_REST_Request;
 
 /**
  * Class CacheDeleteRoute
  */
-class CacheDeleteRoute extends AbstractBaseRoute
+class CacheDeleteRoute extends AbstractSimpleFormSubmit
 {
-	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
-	 * Create a new instance that injects classes
-	 *
-	 * @param ValidatorInterface $validator Inject validation methods.
-	 */
-	public function __construct(ValidatorInterface $validator)
-	{
-		$this->validator = $validator;
-	}
-
 	/**
 	 * Route slug.
 	 */
@@ -56,37 +38,37 @@ class CacheDeleteRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(): array
+	{
+		return [
+			'type' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request);
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$type = $params['type'] ?? '';
-		if (!$type) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					\esc_html__('Type key was not provided.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
 
 		$data = \apply_filters(Config::FILTER_SETTINGS_DATA, []);
 
@@ -109,27 +91,22 @@ class CacheDeleteRoute extends AbstractBaseRoute
 
 				$outputTitle = \esc_html__('All operational', 'eightshift-forms');
 				break;
-			case 'allInteral':
-				$outputTitle = \esc_html__('All internal', 'eightshift-forms');
-				Helpers::clearAllCache();
-				break;
 			default:
 				$cacheTypes = $data[$type]['cache'] ?? [];
+				$outputTitle = \ucfirst($type);
+
 				if (!$cacheTypes) {
-					return \rest_ensure_response(
-						ApiHelpers::getApiErrorPublicOutput(
-							\esc_html__('Provided cache type doesn\'t exist.', 'eightshift-forms'),
-							[],
-							$debug
-						)
+					throw new BadRequestException(
+						\sprintf(\esc_html__('%s %s', 'eightshift-forms'), $outputTitle, $this->labels->getLabel('cacheTypeNotFound')),
+						[
+							AbstractBaseRoute::R_DEBUG_KEY => 'cacheTypeNotFound',
+						]
 					);
 				}
 
 				foreach ($cacheTypes as $item) {
 					\delete_transient($item);
 				}
-
-				$outputTitle = \ucfirst($type);
 				break;
 		}
 
@@ -139,13 +116,11 @@ class CacheDeleteRoute extends AbstractBaseRoute
 		}
 
 		// Finish.
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				// translators: %s will be replaced with the form type.
-				\sprintf(\esc_html__('%s cache deleted successfully!', 'eightshift-forms'), $outputTitle),
-				[],
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%s %s', 'eightshift-forms'), $outputTitle, $this->labels->getLabel('cacheDeletedSuccess')),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'cacheDeletedSuccess',
+			],
+		];
 	}
 }

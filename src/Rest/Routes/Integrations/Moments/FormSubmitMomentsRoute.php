@@ -3,7 +3,7 @@
 /**
  * The class register route for public form submitting endpoint - Moments
  *
- * @package EightshiftForms\Rest\Rout\Integrations\Momentses
+ * @package EightshiftForms\Rest\Routes\Integrations\Moments
  */
 
 declare(strict_types=1);
@@ -17,7 +17,7 @@ use EightshiftForms\Integrations\Moments\MomentsEventsInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
@@ -26,7 +26,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 /**
  * Class FormSubmitMomentsRoute
  */
-class FormSubmitMomentsRoute extends AbstractFormSubmit
+class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

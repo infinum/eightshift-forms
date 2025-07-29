@@ -13,7 +13,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Paycek;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Paycek\SettingsPaycek;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
@@ -22,7 +22,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 /**
  * Class FormSubmitPaycekRoute
  */
-class FormSubmitPaycekRoute extends AbstractFormSubmit
+class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

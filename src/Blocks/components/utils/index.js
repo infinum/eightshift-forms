@@ -65,7 +65,7 @@ export const updateIntegrationBlocks = (clientId, postId, type, itemId, innerId 
 		resetInnerBlocks(clientId);
 
 		if (response.code === 200) {
-			const builtBlocks = createBlocksFromInnerBlocksTemplate(response?.data?.data?.output);
+			const builtBlocks = createBlocksFromInnerBlocksTemplate(response?.data?.syncForm?.data?.output);
 
 			updateInnerBlocks(clientId, builtBlocks);
 
@@ -97,7 +97,7 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 
 			if (parentId) {
 				resetInnerBlocks(parentId);
-				updateInnerBlocks(parentId, createBlocksFromInnerBlocksTemplate(response?.data?.data?.output));
+				updateInnerBlocks(parentId, createBlocksFromInnerBlocksTemplate(response?.data?.syncForm?.data?.output));
 
 				const blocks = select('core/block-editor').getBlocks(parentId);
 
@@ -107,23 +107,23 @@ export const syncIntegrationBlocks = (clientId, postId) => {
 			}
 		}
 
-		if (!response?.data?.data?.update) {
+		if (!response?.data?.syncForm?.data?.update) {
 			dispatch(FORMS_STORE_NAME).setSyncDialog({});
 		} else {
 			dispatch(FORMS_STORE_NAME).setSyncDialog({
-				update: response?.data?.data?.update,
-				removed: response?.data?.data?.removed,
-				added: response?.data?.data?.added,
-				replaced: response?.data?.data?.replaced,
-				changed: response?.data?.data?.changed,
+				update: response?.data?.syncForm?.data?.update,
+				removed: response?.data?.syncForm?.data?.removed,
+				added: response?.data?.syncForm?.data?.added,
+				replaced: response?.data?.syncForm?.data?.replaced,
+				changed: response?.data?.syncForm?.data?.changed,
 			});
 		}
 
 		return {
 			message: response?.message,
-			debugType: response?.data?.debugType,
+			debugType: response?.data?.syncForm?.debugType,
 			status: response?.status,
-			update: response?.data?.data?.update,
+			update: response?.data?.syncForm?.data?.update,
 		};
 	});
 };
@@ -453,7 +453,7 @@ export const NameField = ({
 	let helpText = sprintf(__('Identifies the %s within form submission data. Must be unique. %s', 'eightshift-forms'), type, help);
 
 	if (type === 'resultOutputItem') {
-		helpText = __('Identifies the what result output item the user will see after sucesfull submit redirect.', 'eightshift-forms');
+		helpText = __('Identifies the what result output item the user will see after successful submit redirect.', 'eightshift-forms');
 	}
 
 	return (

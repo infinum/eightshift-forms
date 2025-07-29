@@ -15,14 +15,17 @@ use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Transfer\TransferInterface;
-use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Validation\ValidatorInterface;
 use WP_REST_Request;
 
 /**
  * Class BulkRoute
  */
-class BulkRoute extends AbstractBaseRoute
+class BulkRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
@@ -46,13 +49,19 @@ class BulkRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance.
 	 *
+	 * @param ValidatorInterface $validator Inject validation methods.
+	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
 	public function __construct(
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
 		IntegrationSyncInterface $integrationSyncDiff,
 		TransferInterface $transfer
 	) {
+		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;
 		$this->transfer = $transfer;
 	}
@@ -68,49 +77,49 @@ class BulkRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$debug = [
-			'request' => $request,
+	/**
+	 * Get mandatory params.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(): array
+	{
+		return [
+			'ids' => 'string',
+			'type' => 'string',
 		];
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
-
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$ids = isset($params['ids']) ? \json_decode($params['ids'], true) : [];
 
 		if (!$ids) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					\__('There are no selected forms.', 'eightshift-forms'),
-					[],
-					$debug
-				)
+			throw new BadRequestException(
+				$this->labels->getLabel('bulkMissingItems'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'bulkMissingItems',
+				]
 			);
 		}
 
 		$type = $params['type'] ?? '';
-		if (!$type) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					\__('Action type is missing.', 'eightshift-forms'),
-					[],
-					$debug
-				)
-			);
-		}
 
 		$output = [];
 
@@ -140,28 +149,25 @@ class BulkRoute extends AbstractBaseRoute
 
 		switch ($output['status']) {
 			case 'success':
-				return \rest_ensure_response(
-					ApiHelpers::getApiSuccessPublicOutput(
-						$output['msg'] ?? \esc_html__('Success', 'eightshift-forms'),
-						$output['data'] ?? [],
-						$debug
-					)
-				);
+				return [
+					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->labels->getLabel('genericSuccess'),
+					AbstractBaseRoute::R_DEBUG => [
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst($type),
+					],
+				];
 			case 'warning':
-				return \rest_ensure_response(
-					ApiHelpers::getApiWarningPublicOutput(
-						$output['msg'] ?? \esc_html__('Warning', 'eightshift-forms'),
-						$output['data'] ?? [],
-						$debug
-					)
+				throw new BadRequestException(
+					$output['msg'] ?? $this->labels->getLabel('genericWarning'),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst($type),
+					]
 				);
 			default:
-				return \rest_ensure_response(
-					ApiHelpers::getApiErrorPublicOutput(
-						$output['msg'] ?? \esc_html__('Error', 'eightshift-forms'),
-						$output['data'] ?? [],
-						$debug
-					)
+				throw new BadRequestException(
+					$output['msg'] ?? $this->labels->getLabel('genericError'),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst($type),
+					]
 				);
 		}
 	}

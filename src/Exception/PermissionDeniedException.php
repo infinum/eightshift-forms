@@ -27,19 +27,25 @@ final class PermissionDeniedException extends Exception implements GeneralExcept
 	private $data = [];
 
 	/**
+	 * Internal debug data.
+	 *
+	 * @var array<int|string, mixed>
+	 */
+	private $debug = [];
+
+	/**
 	 * Throws error if user has no permission.
 	 *
-	 * @param string $message Message to show.
+	 * @param array<int|string, mixed> $debug Debug data.
 	 * @param array<int|string, mixed> $data Data that is wrong.
-	 * @param int $code The code.
 	 */
 	public function __construct(
-		string $message,
-		array $data = [],
-		int $code = AbstractRoute::API_RESPONSE_CODE_UNAUTHORIZED
+		array $debug = [],
+		array $data = []
 	) {
 		$this->data = $data;
-		parent::__construct($message, $code);
+		$this->debug = $debug;
+		parent::__construct(\__('You don\'t have enough permissions to perform this action!', 'eightshift-forms'), AbstractRoute::API_RESPONSE_CODE_UNAUTHORIZED);
 	}
 
 	/**
@@ -50,5 +56,15 @@ final class PermissionDeniedException extends Exception implements GeneralExcept
 	public function getData(): array
 	{
 		return $this->data;
+	}
+
+	/**
+	 * Get exception debug data
+	 *
+	 * @return array<int|string, mixed>
+	 */
+	public function getDebug(): array
+	{
+		return $this->debug;
 	}
 }

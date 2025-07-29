@@ -17,7 +17,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 /**
  * Class SubmitFilesRoute
  */
-class SubmitFilesRoute extends AbstractFormSubmit
+class SubmitFilesRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

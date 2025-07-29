@@ -16,7 +16,7 @@ use EightshiftForms\Integrations\Airtable\AirtableClientInterface;
 use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
@@ -24,7 +24,7 @@ use EightshiftForms\Config\Config;
 /**
  * Class FormSubmitAirtableRoute
  */
-class FormSubmitAirtableRoute extends AbstractFormSubmit
+class FormSubmitAirtableRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

@@ -10,16 +10,19 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Editor;
 
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Integrations\IntegrationSyncInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use WP_REST_Request;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class IntegrationEditorCreateRoute
  */
-class IntegrationEditorCreateRoute extends AbstractBaseRoute
+class IntegrationEditorCreateRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
@@ -36,10 +39,17 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 	/**
 	 * Create a new instance.
 	 *
+	 * @param ValidatorInterface $validator Inject validator methods.
+	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
-	public function __construct(IntegrationSyncInterface $integrationSyncDiff)
-	{
+	public function __construct(
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
+		IntegrationSyncInterface $integrationSyncDiff
+	) {
+		$this->validator = $validator;
+		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;
 	}
 
@@ -64,23 +74,38 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns rest response
+	 * Check if the route is admin protected.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return boolean
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function isRouteAdminProtected(): bool
 	{
-		$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
-		if ($permission) {
-			return \rest_ensure_response($permission);
-		}
+		return true;
+	}
 
-		$params = $this->prepareSimpleApiParams($request, $this->getMethods());
+	/**
+	 * Get mandatory params.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(): array
+	{
+		return [
+			'id' => 'string',
+			'type' => 'string',
+			'itemId' => 'string',
+		];
+	}
 
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		$formId = $params['id'] ?? '';
 		$type = $params['type'] ?? '';
 		$itemId = $params['itemId'] ?? '';
@@ -89,34 +114,30 @@ class IntegrationEditorCreateRoute extends AbstractBaseRoute
 		$syncForm = $this->integrationSyncDiff->createFormEditor($formId, $type, $itemId, $innerId, true);
 
 		$status = $syncForm['status'] ?? '';
-
-		$status = $syncForm['status'] ?? '';
 		$message = $syncForm['message'] ?? '';
 
 		unset($syncForm['message']);
 		unset($syncForm['status']);
 
-		$debug = [
-			'request' => $request,
-			'syncForm' => $syncForm,
-		];
-
 		if ($status === Config::STATUS_ERROR) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$message,
-					$syncForm,
-					$debug
-				)
+			throw new BadRequestException(
+				$message,
+				[
+					AbstractBaseRoute::R_DEBUG => $syncForm,
+					AbstractBaseRoute::R_DEBUG_KEY => 'createFormError',
+				]
 			);
 		}
 
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				$message,
-				$syncForm,
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $message,
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $syncForm,
+				AbstractBaseRoute::R_DEBUG_KEY => 'createFormSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('editorSyncForm') => $syncForm,
+			],
+		];
 	}
 }

@@ -530,6 +530,7 @@
 			"group": "js-es-block-group",
 			"field": "js-es-block-field",
 			"fieldNoFormsBlock": "js-es-block-field-custom",
+			"fileButton": "js-es-block-file-button",
 			"rating": "js-es-block-rating",
 			"resultOutput": "js-es-block-result-output",
 			"resultOutputItem": "js-es-block-result-output-item",
@@ -664,7 +665,24 @@
 			"entry": "entry",
 			"formId": "formId",
 			"geoId": "geoId",
-			"incrementId": "incrementId"
+			"incrementId": "incrementId",
+			"captchaIsSpam": "captchaIsSpam",
+			"captchaResponse": "captchaResponse",
+			"geolocationCountries": "countries",
+			
+			"editorIntegrationItems": "integrationItems",
+			"editorSyncForm": "syncForm",
+			"editorFormFields": "fields",
+			"editorFormFieldsSteps": "steps",
+			"editorFormFieldsStepsFull": "stepsFull",
+			"editorFormFieldsNames": "names",
+			"adminNoticeTitle": "noticeTitle",
+			"adminEncrypt": "encrypt",
+			"adminLocations": "locations",
+			"adminTransferName": "transferName",
+			"adminTransferContent": "transferContent",
+			"adminExportContent": "exportContent",
+			"adminMigration": "migration"
 		},
 		"successRedirectUrlKeys": {
 			"variation": "es-variation",

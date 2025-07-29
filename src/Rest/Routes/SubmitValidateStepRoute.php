@@ -17,7 +17,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 /**
  * Class SubmitValidateStepRoute
  */
-class SubmitValidateStepRoute extends AbstractFormSubmit
+class SubmitValidateStepRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

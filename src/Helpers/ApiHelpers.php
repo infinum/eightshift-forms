@@ -65,6 +65,8 @@ final class ApiHelpers
 					$body = \json_decode($body, true) ?? [];
 				}
 			}
+
+			$status = AbstractRoute::STATUS_SUCCESS;
 		} else {
 			// Mock response for WP_Error.
 			$code = AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST;
@@ -72,6 +74,7 @@ final class ApiHelpers
 				'error' => $response->get_error_message(),
 			];
 			$response = [];
+			$status = AbstractRoute::STATUS_ERROR;
 		}
 
 		return [
@@ -80,6 +83,7 @@ final class ApiHelpers
 			Config::IARD_FILES => $files,
 			Config::IARD_RESPONSE => $response['response'] ?? [],
 			Config::IARD_CODE => $code,
+			Config::IARD_STATUS => $status,
 			Config::IARD_BODY => !\is_string($body) ? $body : [],
 			Config::IARD_URL => $url,
 			Config::IARD_ITEM_ID => $itemId,

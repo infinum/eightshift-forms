@@ -1438,7 +1438,7 @@ export class Form {
 				);
 			});
 
-			// Once data is outputed from uplaod.
+			// Once data is outputted from upload.
 			dropzone.on('success', (file) => {
 				try {
 					const response = JSON.parse(file.xhr.response);

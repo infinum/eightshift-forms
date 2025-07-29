@@ -16,7 +16,7 @@ use EightshiftForms\Integrations\Pipedrive\PipedriveClientInterface;
 use EightshiftForms\Integrations\Pipedrive\SettingsPipedrive;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
@@ -24,7 +24,7 @@ use EightshiftForms\Config\Config;
 /**
  * Class FormSubmitPipedriveRoute
  */
-class FormSubmitPipedriveRoute extends AbstractFormSubmit
+class FormSubmitPipedriveRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

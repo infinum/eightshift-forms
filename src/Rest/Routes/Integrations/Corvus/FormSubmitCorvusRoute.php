@@ -13,7 +13,7 @@ namespace EightshiftForms\Rest\Routes\Integrations\Corvus;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
-use EightshiftForms\Rest\Routes\AbstractFormSubmit;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
@@ -22,7 +22,7 @@ use EightshiftForms\Helpers\SettingsHelpers;
 /**
  * Class FormSubmitCorvusRoute
  */
-class FormSubmitCorvusRoute extends AbstractFormSubmit
+class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

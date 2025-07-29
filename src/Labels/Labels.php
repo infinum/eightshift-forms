@@ -123,6 +123,42 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'submitWpError' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+			'submitFallbackError' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+			'submitFallbackSuccess' => \__('Success.', 'eightshift-forms'),
+			'testApiSuccess' => \__('The API test was successful.', 'eightshift-forms'),
+			'testApiError' => \__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
+			'globalNotConfigured' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),
+			'integrationItemsMissing' => \__('Integration items are missing.', 'eightshift-forms'),
+			'integrationItemsSuccess' => \__('Integration items were successfully fetched.', 'eightshift-forms'),
+			'geolocationCountriesMissing' => \__('Geolocation countries are missing.', 'eightshift-forms'),
+			'geolocationCountriesSuccess' => \__('Geolocation countries were successfully fetched.', 'eightshift-forms'),
+			'formFieldsMissing' => \__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
+			'formFieldsSuccess' => \__('Form fields were successfully fetched.', 'eightshift-forms'),
+			'cacheTypeNotFound' => \__('cache doesn\'t exist.', 'eightshift-forms'),
+			'cacheDeletedSuccess' => \__('cache deleted successfully!', 'eightshift-forms'),
+			'encryptFailed' => \__('Encrypt failed!', 'eightshift-forms'),
+			'decryptFailed' => \__('Decrypt failed!', 'eightshift-forms'),
+			'encryptSuccess' => \__('Encrypt finished successfully!', 'eightshift-forms'),
+			'decryptSuccess' => \__('Decrypt finished successfully!', 'eightshift-forms'),
+			'incrementResetSuccess' => \__('Increment reset successful.', 'eightshift-forms'),
+			'locationsResultOutputError' => \__('Your result output is not used in any location!', 'eightshift-forms'),
+			'locationsFormError' => \__('Your form is not used in any location!', 'eightshift-forms'),
+			'locationsSuccess' => \__('Locations were successfully fetched.', 'eightshift-forms'),
+			'transferExportMissingForms' => \__('Please click on the forms you want to export.', 'eightshift-forms'),
+			'transferExportMissingResultOutputs' => \__('Please click on the result outputs you want to export.', 'eightshift-forms'),
+			'transferUploadMissingFile' => \__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
+			'transferUploadError' => \__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
+			'transferUploadMissingType' => \__('Transfer version type key was not provided.', 'eightshift-forms'),
+			'transferSuccess' => \__('successfully done!', 'eightshift-forms'),
+			'exportMissingItems' => \__('Please select the items you want to export.', 'eightshift-forms'),
+			'exportDataEmpty' => \__('Data for export is empty.', 'eightshift-forms'),
+			'exportSuccess' => \__('Data export finished with success.', 'eightshift-forms'),
+			'bulkMissingItems' => \__('Please select the items you want to bulk action.', 'eightshift-forms'),
+			'genericSuccess' => \__('Success', 'eightshift-forms'),
+			'genericWarning' => \__('Warning', 'eightshift-forms'),
+			'genericError' => \__('Error', 'eightshift-forms'),
+			'migrationTypeNotFound' => \__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
+			'migrationSuccess' => \__('Migration finished with success.', 'eightshift-forms'),
 		];
 	}
 
@@ -384,6 +420,7 @@ class Labels implements LabelsInterface
 			'captchaWrongAction' => \__('Spam prevention system encountered an error. Captcha response "action" is not valid.', 'eightshift-forms'),
 			'captchaScoreSpam' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),
 			'captchaError' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
+			'captchaSuccess' => \__('Success', 'eightshift-forms'),
 		];
 	}
 

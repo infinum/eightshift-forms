@@ -10,19 +10,18 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes;
 
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\EncryptionHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
-use Throwable;
-use WP_REST_Request;
+use EightshiftForms\Validation\ValidatorInterface;
 
 /**
  * Class SubmitGeolocationRoute
  */
-class SubmitGeolocationRoute extends AbstractBaseRoute
+class SubmitGeolocationRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
@@ -37,24 +36,20 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 	protected GeolocationInterface $geolocation;
 
 	/**
-	 * Instance variable of labels data.
-	 *
-	 * @var LabelsInterface
-	 */
-	protected LabelsInterface $labels;
-
-	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
+	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
+	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
 	 */
 	public function __construct(
+		ValidatorInterface $validator,
+		LabelsInterface $labels,
 		GeolocationInterface $geolocation,
-		LabelsInterface $labels
 	) {
-		$this->geolocation = $geolocation;
+		$this->validator = $validator;
 		$this->labels = $labels;
+		$this->geolocation = $geolocation;
 	}
 
 	/**
@@ -68,97 +63,83 @@ class SubmitGeolocationRoute extends AbstractBaseRoute
 	}
 
 	/**
-	 * Method that returns WP REST Response
+	 * Get mandatory params.
 	 *
-	 * @param WP_REST_Request $request Data got from endpoint url.
-	 *
-	 * @return WP_REST_Response|mixed If response generated an error, WP_Error, if response
-	 *                                is already an instance, WP_HTTP_Response, otherwise
-	 *                                returns a new WP_REST_Response instance.
+	 * @return array<string, string>
 	 */
-	public function routeCallback(WP_REST_Request $request)
+	protected function getMandatoryParams(): array
 	{
-		$debug = [
-			'request' => $request,
+		return [
+			'data' => 'string',
 		];
+	}
 
+	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Implement submit action.
+	 *
+	 * @param array<string, mixed> $params Prepared params.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function submitAction(array $params): array
+	{
 		// Bailout if geolocation setting is off.
 		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiSuccessPublicOutput(
-					$this->labels->getLabel('geolocationSkipCheck'),
-					[],
-					$debug
-				)
+			return [
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel('geolocationSkipCheck'),
+				AbstractBaseRoute::R_DEBUG => [
+					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationFeatureDisabled',
+				],
+			];
+		}
+
+		$data = EncryptionHelpers::decryptor($params['data'] ?? '');
+
+		$dataOutput = \json_decode($data, true);
+
+		if (!\is_array($dataOutput) && !$dataOutput) {
+			throw new BadRequestException(
+				$this->labels->getLabel('geolocationMalformedOrNotValid'),
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationMalformedOrNotValidData',
+				]
 			);
 		}
 
-		try {
-			$params = $this->prepareSimpleApiParams($request);
+		$formId = $dataOutput['id'] ?? '';
+		$geo = $dataOutput['geo'] ?? [];
+		$alt = $dataOutput['alt'] ?? [];
 
-			$data = $params['data'] ?? '';
-			if (!\is_string($data)) {
-				return \rest_ensure_response(
-					ApiHelpers::getApiErrorPublicOutput(
-						$this->labels->getLabel('geolocationMalformedOrNotValid'),
-						[],
-						$debug
-					)
-				);
-			}
+		$geolocation = $this->geolocation->isUserGeolocated($formId, $geo, $alt);
 
-			$params = EncryptionHelpers::decryptor($data);
-
-			if (!\json_validate($params)) {
-				return \rest_ensure_response(
-					ApiHelpers::getApiErrorPublicOutput(
-						$this->labels->getLabel('geolocationMalformedOrNotValid'),
-						[],
-						$debug
-					)
-				);
-			}
-
-			$params = \json_decode($params, true);
-
-			if (!\is_array($params) && !$params) {
-				return \rest_ensure_response(
-					ApiHelpers::getApiErrorPublicOutput(
-						$this->labels->getLabel('geolocationMalformedOrNotValid'),
-						[],
-						$debug
-					)
-				);
-			}
-
-			$formId = $params['id'] ?? '';
-			$geo = $params['geo'] ?? [];
-			$alt = $params['alt'] ?? [];
-
-			$geolocation = $this->geolocation->isUserGeolocated($formId, $geo, $alt);
-
-			return \rest_ensure_response(
-				ApiHelpers::getApiSuccessPublicOutput(
-					$this->labels->getLabel('geolocationSuccess'),
-					[
-						UtilsHelper::getStateResponseOutputKey('geoId') => $geolocation,
-					],
-					$debug
-				)
-			);
-		} catch (Throwable $t) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('geolocationMalformedOrNotValid'),
-					[],
-					\array_merge(
-						$debug,
-						[
-							'exeption' => $t,
-						]
-					)
-				)
+		if (!$geolocation) {
+			throw new BadRequestException(
+				$this->labels->getLabel('geolocationMalformedOrNotValid'),
+				[
+					AbstractBaseRoute::R_DEBUG => $dataOutput,
+					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationMalformedOrNotValidData',
+				]
 			);
 		}
+
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('geolocationSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => 'geolocationSuccess',
+			],
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('geoId') => $geolocation,
+			],
+		];
 	}
 }
