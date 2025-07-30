@@ -111,9 +111,11 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'type' => 'string',
@@ -142,7 +144,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 				return $this->getMigrationClearbit();
 			default:
 				throw new BadRequestException(
-					$this->labels->getLabel('migrationTypeNotFound'),
+					$this->getLabels()->getLabel('migrationTypeNotFound'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'migrationTypeNotFound',
 					]
@@ -213,7 +215,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3General',
 			],
@@ -405,7 +407,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Forms',
 			],
@@ -519,7 +521,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccess2To3Locale',
 			],
@@ -610,7 +612,7 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('migrationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('migrationSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'migrationSuccessClearbit',
 			],

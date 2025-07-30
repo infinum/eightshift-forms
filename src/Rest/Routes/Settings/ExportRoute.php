@@ -50,9 +50,11 @@ class ExportRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'ids' => 'string',
@@ -72,7 +74,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 
 		if (!$ids) {
 			throw new BadRequestException(
-				$this->labels->getLabel('exportMissingItems'),
+				$this->getLabels()->getLabel('exportMissingItems'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'exportMissingItems',
 				]
@@ -124,7 +126,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 
 		if (!$output) {
 			throw new BadRequestException(
-				$this->labels->getLabel('exportDataEmpty'),
+				$this->getLabels()->getLabel('exportDataEmpty'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'exportDataEmpty',
 				]
@@ -132,7 +134,7 @@ class ExportRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('exportSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('exportSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'exportSuccess',
 			],

@@ -19,11 +19,10 @@ interface ValidatorInterface
 	 * Validate params.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param bool $strictValidation Is validation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validateParams(array $formDetails, bool $strictValidation = true): array;
+	public function validateParams(array $formDetails): array;
 
 	/**
 	 * Validate files from the validation reference.
@@ -42,12 +41,12 @@ interface ValidatorInterface
 	 *
 	 * @return boolean
 	 */
-	public function validateFormMandatoryProperties(array $formDetails): bool;
+	public function validateMandatoryIntegrationParams(array $formDetails): bool;
 
 	/**
-	 * Validate mandatory params.
+	 * Validate mandatory params or FormDetails.
 	 *
-	 * @param array<string, mixed> $params Params to validate.
+	 * @param array<string, mixed> $params Params to validate or FormDetails.
 	 * @param array<string, mixed> $mandatoryParams Mandatory params to validate.
 	 *
 	 * @return boolean

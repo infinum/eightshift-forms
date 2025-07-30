@@ -67,9 +67,11 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'data' => 'string',
@@ -98,7 +100,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 		// Bailout if geolocation setting is off.
 		if (!\apply_filters(SettingsGeolocation::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('geolocationSkipCheck'),
+				AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('geolocationSkipCheck'),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationFeatureDisabled',
 				],
@@ -111,7 +113,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 
 		if (!\is_array($dataOutput) && !$dataOutput) {
 			throw new BadRequestException(
-				$this->labels->getLabel('geolocationMalformedOrNotValid'),
+				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationMalformedOrNotValidData',
 				]
@@ -126,7 +128,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 
 		if (!$geolocation) {
 			throw new BadRequestException(
-				$this->labels->getLabel('geolocationMalformedOrNotValid'),
+				$this->getLabels()->getLabel('geolocationMalformedOrNotValid'),
 				[
 					AbstractBaseRoute::R_DEBUG => $dataOutput,
 					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationMalformedOrNotValidData',
@@ -135,7 +137,7 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('geolocationSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('geolocationSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'geolocationSuccess',
 			],

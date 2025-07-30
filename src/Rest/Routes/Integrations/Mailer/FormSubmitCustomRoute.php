@@ -37,6 +37,31 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 	}
 
 	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+		];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -58,7 +83,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		if (!$action) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('customNoAction', $formId),
+					$this->getLabels()->getLabel('customNoAction', $formId),
 					[],
 					$debug
 				)
@@ -73,7 +98,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 
 			return \rest_ensure_response(
 				ApiHelpers::getApiSuccessPublicOutput(
-					$this->labels->getLabel('customSuccessRedirect', $formId),
+					$this->getLabels()->getLabel('customSuccessRedirect', $formId),
 					\array_merge(
 						$successAdditionalData['public'],
 						$successAdditionalData['additional'],
@@ -108,7 +133,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		if (!$customResponseCode || $customResponseCode > 399) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('customError', $formId),
+					$this->getLabels()->getLabel('customError', $formId),
 					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 					$debug
 				)
@@ -121,7 +146,7 @@ class FormSubmitCustomRoute extends AbstractIntegrationFormSubmit
 		// Finish.
 		return \rest_ensure_response(
 			ApiHelpers::getApiSuccessPublicOutput(
-				$this->labels->getLabel('customSuccess', $formId),
+				$this->getLabels()->getLabel('customSuccess', $formId),
 				\array_merge(
 					$successAdditionalData['public'],
 					$successAdditionalData['additional']

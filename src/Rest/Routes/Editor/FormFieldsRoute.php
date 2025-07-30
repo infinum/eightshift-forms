@@ -88,15 +88,16 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'id' => 'string',
 		];
 	}
-
 
 	/**
 	 * Implement submit action.
@@ -113,7 +114,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 
 		if (!$fieldsOnly) {
 			throw new BadRequestException(
-				$this->labels->getLabel('formFieldsMissing'),
+				$this->getLabels()->getLabel('formFieldsMissing'),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
 					AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsMissing',
@@ -126,7 +127,7 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 		$steps = $formDetails[Config::FD_STEPS_SETUP] ?? [];
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('formFieldsSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('formFieldsSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $fieldsOutput,
 				AbstractBaseRoute::R_DEBUG_KEY => 'formFieldsSuccess',

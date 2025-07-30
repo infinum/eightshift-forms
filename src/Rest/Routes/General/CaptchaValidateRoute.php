@@ -64,9 +64,11 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'token' => 'string',
@@ -97,7 +99,7 @@ class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 		// Bailout if troubleshooting skip captcha is on.
 		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
 			return [
-				AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSkipCheck'),
+				AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('captchaSkipCheck'),
 				AbstractBaseRoute::R_DEBUG => [
 					AbstractBaseRoute::R_DEBUG_KEY => 'captchaDebugSkipCheck',
 				],

@@ -46,6 +46,32 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 	}
 
 	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+			Config::FD_ITEM_ID => 'string',
+		];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -62,7 +88,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$currentStep) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('validationStepsCurrentStepProblem'),
+					$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
 					[],
 					$debug
 				)
@@ -73,7 +99,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$submittedNames) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('validationStepsCurrentStepProblem'),
+					$this->getLabels()->getLabel('validationStepsCurrentStepProblem'),
 					[],
 					$debug
 				)
@@ -84,7 +110,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 		if (!$steps) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('validationStepsNextStepProblem'),
+					$this->getLabels()->getLabel('validationStepsNextStepProblem'),
 					[],
 					$debug
 				)
@@ -105,7 +131,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 			if (!$params) {
 				return \rest_ensure_response(
 					ApiHelpers::getApiErrorPublicOutput(
-						$this->labels->getLabel('validationStepsParametersProblem'),
+						$this->getLabels()->getLabel('validationStepsParametersProblem'),
 						[],
 						$debug
 					)
@@ -145,7 +171,7 @@ class ValidateStepRoute extends AbstractIntegrationFormSubmit
 
 		return \rest_ensure_response(
 			ApiHelpers::getApiSuccessPublicOutput(
-				$this->labels->getLabel('validationStepsSuccess'),
+				$this->getLabels()->getLabel('validationStepsSuccess'),
 				[
 					UtilsHelper::getStateResponseOutputKey('stepType') => $type,
 					UtilsHelper::getStateResponseOutputKey('stepNextStep') => $nextStep,

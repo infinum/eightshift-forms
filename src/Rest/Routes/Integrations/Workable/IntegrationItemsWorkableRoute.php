@@ -85,6 +85,18 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 	}
 
 	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $params Prepared params.
@@ -98,7 +110,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 		// Check if global settings is valid.
 		if (!\apply_filters(SettingsWorkable::FILTER_SETTINGS_GLOBAL_NAME, false)) {
 			throw new BadRequestException(
-				$this->labels->getLabel('globalNotConfigured'),
+				$this->getLabels()->getLabel('globalNotConfigured'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
 				]
@@ -109,7 +121,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 
 		if (!$items) {
 			throw new BadRequestException(
-				$this->labels->getLabel('integrationItemsMissing'),
+				$this->getLabels()->getLabel('integrationItemsMissing'),
 				[
 					AbstractBaseRoute::R_DEBUG => $items,
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
@@ -132,7 +144,7 @@ class IntegrationItemsWorkableRoute extends AbstractSimpleFormSubmit
 		)));
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('integrationItemsSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('integrationItemsSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $items,
 				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',

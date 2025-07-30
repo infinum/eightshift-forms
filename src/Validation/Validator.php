@@ -97,11 +97,10 @@ class Validator extends AbstractValidation
 	 * Validate params.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param bool $strictValidation Is validation is strict.
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function validateParams(array $formDetails, bool $strictValidation = true): array
+	public function validateParams(array $formDetails): array
 	{
 		$output = [];
 		$formType = $formDetails[Config::FD_TYPE];
@@ -386,6 +385,7 @@ class Validator extends AbstractValidation
 	}
 
 	/**
+	 * TODO : Remove this function.
 	 * Validate all mandatory fields that are passed from the `getFormDetailsApi` function.
 	 * If these fields are missing it can be that the forme is not configured correctly or it could be a unauthorized request.
 	 *
@@ -393,7 +393,7 @@ class Validator extends AbstractValidation
 	 *
 	 * @return boolean
 	 */
-	public function validateFormMandatoryProperties(array $formDetails): bool
+	public function validateMandatoryIntegrationParams(array $formDetails): bool
 	{
 		$type = $formDetails[Config::FD_TYPE] ?? '';
 		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
@@ -439,9 +439,9 @@ class Validator extends AbstractValidation
 	}
 
 	/**
-	 * Validate mandatory params.
+	 * Validate mandatory params or FormDetails.
 	 *
-	 * @param array<string, mixed> $params Params to validate.
+	 * @param array<string, mixed> $params Params to validate or FormDetails.
 	 * @param array<string, mixed> $mandatoryParams Mandatory params to validate.
 	 *
 	 * @return boolean

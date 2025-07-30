@@ -67,9 +67,11 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'type' => 'string',
@@ -99,7 +101,7 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
 			throw new BadRequestException(
-				$this->labels->getLabel('testApiError'),
+				$this->getLabels()->getLabel('testApiError'),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
 					AbstractBaseRoute::R_DEBUG_KEY => 'testApiError',
@@ -108,7 +110,7 @@ class TestApiNationbuilderRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('testApiSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('testApiSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
 				AbstractBaseRoute::R_DEBUG_KEY => 'testApiSuccess',

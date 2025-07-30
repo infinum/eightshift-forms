@@ -85,6 +85,18 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 	}
 
 	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $params Prepared params.
@@ -97,7 +109,7 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 
 		if (!$countries) {
 			throw new BadRequestException(
-				$this->labels->getLabel('geolocationCountriesMissing'),
+				$this->getLabels()->getLabel('geolocationCountriesMissing'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesMissing',
 				]
@@ -105,7 +117,7 @@ class GeolocationCountriesRoute extends AbstractSimpleFormSubmit
 		}
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('geolocationCountriesSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('geolocationCountriesSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'geolocationCountriesSuccess',
 			],

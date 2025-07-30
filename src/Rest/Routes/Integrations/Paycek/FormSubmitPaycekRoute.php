@@ -40,6 +40,31 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	}
 
 	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+		];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -53,7 +78,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('paycekMissingConfig', $formId)
+					$this->getLabels()->getLabel('paycekMissingConfig', $formId)
 				)
 			);
 		}
@@ -74,7 +99,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		if ($missingOrEmpty) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('paycekMissingReqParams', $formId)
+					$this->getLabels()->getLabel('paycekMissingReqParams', $formId)
 				)
 			);
 		}
@@ -102,7 +127,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		// Finish.
 		return \rest_ensure_response(
 			ApiHelpers::getApiSuccessPublicOutput(
-				$this->labels->getLabel('paycekSuccess', $formId),
+				$this->getLabels()->getLabel('paycekSuccess', $formId),
 				\array_merge(
 					$successAdditionalData['public'],
 					$successAdditionalData['additional'],

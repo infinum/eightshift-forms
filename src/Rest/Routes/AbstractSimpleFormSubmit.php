@@ -84,7 +84,6 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		// Try catch request.
 		try {
 			// If route is used for admin only, check if user has permission. (generally used for settings).
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
@@ -99,9 +98,9 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			$params = $this->prepareSimpleApiParams($request, $this->getMethods());
 
 			// Validate mandatory params.
-			if (!$this->getValidator()->validateMandatoryParams($params, $this->getMandatoryParams())) {
+			if (!$this->getValidator()->validateMandatoryParams($params, $this->getMandatoryParams($params))) {
 				throw new ValidationFailedException(
-					$this->getValidatorLabels()->getLabel('validationMissingMandatoryParams'),
+					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'validationMissingMandatoryParams',
 					]
@@ -113,7 +112,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 
 			return \rest_ensure_response(
 				Helpers::getApiResponse(
-					$return[AbstractBaseRoute::R_MSG] ?? $this->labels->getLabel('submitFallbackSuccess'),
+					$return[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel('submitFallbackSuccess'),
 					$return[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
 					AbstractRoute::STATUS_SUCCESS,
 					$this->getResponseDataOutput(
@@ -138,7 +137,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			// Return validation failed response.
 			return \rest_ensure_response(
 				Helpers::getApiResponse(
-					$return[AbstractBaseRoute::R_MSG] ?: $this->labels->getLabel('submitFallbackError'),
+					$return[AbstractBaseRoute::R_MSG] ?: $this->getLabels()->getLabel('submitFallbackError'),
 					$return[AbstractBaseRoute::R_CODE] ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
 					$return[AbstractBaseRoute::R_STATUS],
 					$return[AbstractBaseRoute::R_DATA] ?: []
@@ -158,11 +157,11 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	}
 
 	/**
-	 * Returns validator labels class.
+	 * Returns labels class.
 	 *
 	 * @return LabelsInterface
 	 */
-	protected function getValidatorLabels()
+	protected function getLabels()
 	{
 		return $this->labels;
 	}
@@ -178,13 +177,29 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	}
 
 	/**
-	 * Get mandatory params.
+	 * Convert JS FormData object to usable data in php.
 	 *
-	 * @return array<string, string>
+	 * @param WP_REST_Request $request $request Data got from endpoint url.
+	 * @param string $type Request type.
+	 *
+	 * @return array<string, mixed>
 	 */
-	protected function getMandatoryParams(): array
+	protected function prepareSimpleApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
 	{
-		return [];
+		// Get params.
+		$params = $this->getRequestParams($request, $type);
+
+		// Bailout if there are no params.
+		if (!$params) {
+			return [];
+		}
+
+		return \array_map(
+			static function ($item) {
+				return \sanitize_text_field($item);
+			},
+			$params
+		);
 	}
 
 	/**

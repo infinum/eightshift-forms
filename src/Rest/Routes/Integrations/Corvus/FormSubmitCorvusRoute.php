@@ -40,6 +40,31 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	}
 
 	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+		];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -53,7 +78,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		if (!\apply_filters(SettingsCorvus::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('corvusMissingConfig', $formId)
+					$this->getLabels()->getLabel('corvusMissingConfig', $formId)
 				)
 			);
 		}
@@ -78,7 +103,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		if ($missingOrEmpty) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('corvusMissingReqParams', $formId)
+					$this->getLabels()->getLabel('corvusMissingReqParams', $formId)
 				)
 			);
 		}
@@ -87,7 +112,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		if (isset($params['store_id']) && empty(Variables::getApiKeyCorvus($params['store_id']))) {
 			return \rest_ensure_response(
 				ApiHelpers::getApiErrorPublicOutput(
-					$this->labels->getLabel('corvusMissingReqParams', $formId)
+					$this->getLabels()->getLabel('corvusMissingReqParams', $formId)
 				)
 			);
 		}
@@ -113,7 +138,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		// Finish.
 		return \rest_ensure_response(
 			ApiHelpers::getApiSuccessPublicOutput(
-				$this->labels->getLabel('corvusSuccess', $formId),
+				$this->getLabels()->getLabel('corvusSuccess', $formId),
 				\array_merge(
 					$successAdditionalData['public'],
 					$successAdditionalData['additional'],

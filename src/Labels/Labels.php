@@ -159,6 +159,7 @@ class Labels implements LabelsInterface
 			'genericError' => \__('Error', 'eightshift-forms'),
 			'migrationTypeNotFound' => \__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
 			'migrationSuccess' => \__('Migration finished with success.', 'eightshift-forms'),
+			'settingsSuccess' => \__('Changes saved!', 'eightshift-forms'),
 		];
 	}
 

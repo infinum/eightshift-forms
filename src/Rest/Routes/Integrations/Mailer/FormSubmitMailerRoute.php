@@ -37,6 +37,31 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 	}
 
 	/**
+	 * Check if the route is admin protected.
+	 *
+	 * @return boolean
+	 */
+	protected function isRouteAdminProtected(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [
+			Config::FD_FORM_ID => 'string',
+			Config::FD_POST_ID => 'string',
+		];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -72,7 +97,7 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 
 			// return \rest_ensure_response(
 			// 	ApiHelpers::getApiSuccessPublicOutput(
-			// 		$this->labels->getLabel($label, $formId),
+			// 		$this->getLabels()->getLabel($label, $formId),
 			// 		\array_merge(
 			// 			$successAdditionalData['public'],
 			// 			$successAdditionalData['additional']
@@ -83,7 +108,7 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 		}
 
 		throw new ValidationFailedException(
-			$this->getValidatorLabels()->getLabel($label, $formId),
+			$this->getLabels()->getLabel($label, $formId),
 			[
 				self::RESPONSE_SEND_FALLBACK_KEY => true,
 				self::RESPONSE_OUTPUT_KEY => $this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
@@ -93,7 +118,7 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 
 		return \rest_ensure_response(
 			ApiHelpers::getApiErrorPublicOutput(
-				$this->labels->getLabel($label, $formId),
+				$this->getLabels()->getLabel($label, $formId),
 				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
 				$debug
 			)

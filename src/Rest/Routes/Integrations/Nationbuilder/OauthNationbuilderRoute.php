@@ -82,6 +82,18 @@ class OauthNationbuilderRoute extends AbstractOauth
 	}
 
 	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param string $code The code.

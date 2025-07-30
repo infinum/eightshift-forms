@@ -89,9 +89,11 @@ class BulkRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'ids' => 'string',
@@ -112,7 +114,7 @@ class BulkRoute extends AbstractSimpleFormSubmit
 
 		if (!$ids) {
 			throw new BadRequestException(
-				$this->labels->getLabel('bulkMissingItems'),
+				$this->getLabels()->getLabel('bulkMissingItems'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'bulkMissingItems',
 				]
@@ -150,21 +152,21 @@ class BulkRoute extends AbstractSimpleFormSubmit
 		switch ($output['status']) {
 			case 'success':
 				return [
-					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->labels->getLabel('genericSuccess'),
+					AbstractBaseRoute::R_MSG => $output['msg'] ?? $this->getLabels()->getLabel('genericSuccess'),
 					AbstractBaseRoute::R_DEBUG => [
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkSuccess' . \ucfirst($type),
 					],
 				];
 			case 'warning':
 				throw new BadRequestException(
-					$output['msg'] ?? $this->labels->getLabel('genericWarning'),
+					$output['msg'] ?? $this->getLabels()->getLabel('genericWarning'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkWarning' . \ucfirst($type),
 					]
 				);
 			default:
 				throw new BadRequestException(
-					$output['msg'] ?? $this->labels->getLabel('genericError'),
+					$output['msg'] ?? $this->getLabels()->getLabel('genericError'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'bulkError' . \ucfirst($type),
 					]

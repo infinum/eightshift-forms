@@ -47,9 +47,11 @@ class IncrementRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'formId' => 'string',
@@ -68,7 +70,7 @@ class IncrementRoute extends AbstractSimpleFormSubmit
 		FormsHelper::resetIncrement($params['formId'] ?? '');
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('incrementResetSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('incrementResetSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'incrementResetSuccess',
 			],

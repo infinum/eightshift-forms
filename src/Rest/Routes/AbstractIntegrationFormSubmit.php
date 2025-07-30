@@ -34,6 +34,7 @@ use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodin
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\EncryptionHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UploadHelpers;
@@ -154,296 +155,289 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 */
 	public function routeCallback(WP_REST_Request $request)
 	{
-		// Try catch request.
 		try {
 			// If route is used for admin only, check if user has permission. (generally used for settings).
-			if ($this->isRouteAdminProtected()) {
-				$permission = $this->checkUserPermission(Config::CAP_SETTINGS);
-
-				if ($permission) {
-					throw new PermissionDeniedException(
-						$permission['message'],
-						$permission,
-						$permission['code']
-					);
-				}
+			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
+				throw new PermissionDeniedException(
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'permissionDenied',
+					]
+				);
 			}
 
 			// Prepare all data.
 			$formDetails = $this->getFormDetailsApi($request);
 
-			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
-			if (!$this->getValidator()->validateFormMandatoryProperties($formDetails)) {
-				throw new ValidationFailedException(
-					$this->getValidatorLabels()->getLabel('validationMissingMandatoryParams'),
+			// Validate submit only when logged in.
+			if ($this->getValidator()->validateSubmitOnlyLoggedIn($formDetails[Config::FD_FORM_ID] ?? '')) {
+				throw new ForbiddenException(
+					$this->getLabels()->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
-						self::RESPONSE_SEND_FALLBACK_KEY => true,
+						AbstractBaseRoute::R_DEBUG_KEY => 'validationSubmitLoggedIn',
 					]
 				);
 			}
 
-			switch ($this->routeGetType()) {
-				case self::ROUTE_TYPE_FILE:
-					// Validate files.
-					if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
-						$validate = $this->getValidator()->validateFiles($formDetails);
+			// Validate submit only once.
+			if ($this->getValidator()->validateSubmitOnlyOnce($formDetails[Config::FD_FORM_ID] ?? '')) {
+				throw new ForbiddenException(
+					$this->getLabels()->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'validationSubmitOnce',
+					]
+				);
+			}
 
-						if ($validate) {
-							throw new ValidationFailedException(
-								$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
+			// In case the form has missing itemId, type, formId, etc it is not configured correctly or it could be a unauthorized request.
+			if (!$this->getValidator()->validateMandatoryParams($formDetails, $this->getMandatoryParams($formDetails))) {
+				throw new ValidationFailedException(
+					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
+					[
+						AbstractBaseRoute::R_DEBUG_KEY => 'validationMissingMandatoryParams',
+						AbstractBaseRoute::R_FALLBACK_NOTICE => true,
+					]
+				);
+			}
+
+			// Validate allowed number of requests.
+			if ($this->shouldCheckSecurity()) {
+				if (!$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE])) {
+					throw new RequestLimitException(
+						$this->getLabels()->getLabel('validationSecurity'),
+						[
+							AbstractBaseRoute::R_DEBUG_KEY => 'validationSecurity',
+							AbstractBaseRoute::R_FALLBACK_NOTICE => true,
+						]
+					);
+				}
+			}
+
+			// Validate params.
+			if ($this->shouldCheckParamsValidation()) {
+				if ($validate = $this->getValidator()->validateParams($formDetails)) {
+					throw new ValidationFailedException(
+						$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
+						[
+							AbstractBaseRoute::R_DEBUG_KEY => 'validationParams',
+						],
+						[
+							UtilsHelper::getStateResponseOutputKey('validation') => $validate,
+						]
+					);
+				}
+			}
+
+			// Validate captcha.
+			if ($this->shouldCheckCaptcha()) {
+				if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+					$shouldValidateCaptcha = [
+						$formDetails[Config::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY,
+						!DeveloperHelpers::isDeveloperSkipCaptchaActive(),
+					];
+
+					if (!\in_array(false, $shouldValidateCaptcha, true)) {
+						$captchaParams = $formDetails[Config::FD_CAPTCHA] ?? [];
+
+						if (!$captchaParams) {
+							throw new BadRequestException(
+								$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 								[
 									self::RESPONSE_OUTPUT_KEY => [
-										self::RESPONSE_OUTPUT_VALIDATION_KEY => $validate,
+										self::RESPONSE_OUTPUT_CAPTCHA_KEY => $captchaParams,
 									],
-									self::RESPONSE_INTERNAL_KEY => 'validationFileUploadMissingRequiredParams',
+									self::RESPONSE_INTERNAL_KEY => 'validationDefaultCaptcha',
 								]
 							);
 						}
-					}
 
-					$uploadFile = UploadHelpers::uploadFile($formDetails[Config::FD_FILES_UPLOAD]);
-					$uploadError = $uploadFile['errorOutput'] ?? '';
-					$uploadFileId = $formDetails[Config::FD_FILES_UPLOAD]['id'] ?? '';
-
-					// Upload files to temp folder.
-					$formDetails[Config::FD_FILES_UPLOAD] = $uploadFile;
-
-					$isUploadError = UploadHelpers::isUploadError($uploadError);
-
-					if ($isUploadError) {
-						throw new ValidationFailedException(
-							$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
-							[
-								self::RESPONSE_OUTPUT_KEY => [
-									$uploadFileId => $this->getValidatorLabels()->getLabel('validationFileUpload'),
-								],
-								self::RESPONSE_SEND_FALLBACK_KEY => true,
-								self::RESPONSE_INTERNAL_KEY => 'validationFileUploadProcessError',
-							]
+						$captchaCheck = $this->getCaptcha()->check(
+							$captchaParams['token'],
+							$captchaParams['action'],
+							$captchaParams['isEnterprise'] === 'true'
 						);
-					}
-					break;
-				case self::ROUTE_TYPE_SETTINGS:
-					// Validate params.
-					$validate = $this->getValidator()->validateParams($formDetails, false);
 
-					if ($validate) {
-						throw new ValidationFailedException(
-							$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
-							[
-								self::RESPONSE_OUTPUT_KEY => [
-									self::RESPONSE_OUTPUT_VALIDATION_KEY => $validate,
-								],
-								self::RESPONSE_INTERNAL_KEY => 'validationSettingsMissingRequiredParams',
-							]
-						);
-					}
-					break;
-				case self::ROUTE_TYPE_STEP_VALIDATION:
-					// Validate params.
-					if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
-						$validate = $this->getValidator()->validateParams($formDetails, false);
+						$captchaStatus = $captchaCheck['status'] ?? '';
+						$captchaMessage = $captchaCheck['message'] ?? '';
+						$captchaDebug = $captchaCheck['debug'] ?? [];
+						$captchaData = $captchaCheck['data'] ?? [];
 
-						if ($validate) {
-							throw new ValidationFailedException(
-								$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
-								[
-									self::RESPONSE_OUTPUT_KEY => [
-										self::RESPONSE_OUTPUT_VALIDATION_KEY => $validate,
-									],
-									self::RESPONSE_INTERNAL_KEY => 'validationStepMissingRequiredParams',
-								]
-							);
-						}
-					}
-					break;
-				default:
-					// Skip any validation if direct import.
-					if (isset($formDetails[Config::FD_DIRECT_IMPORT])) {
-						break;
-					}
+						if ($captchaStatus === Config::STATUS_ERROR) {
+							$isSpam = $captchaData['isSpam'] ?? false;
 
-					// Validate allowed number of requests.
-					// We don't want to limit any custom requests like files, settings, steps, etc.
-					if (!$this->getSecurity()->isRequestValid($formDetails[Config::FD_TYPE])) {
-						throw new RequestLimitException(
-							$this->getValidatorLabels()->getLabel('validationSecurity'),
-							[
-								self::RESPONSE_SEND_FALLBACK_KEY => true,
-								self::RESPONSE_INTERNAL_KEY => 'validationSecurity',
-							]
-						);
-					}
-
-					// Validate params.
-					if (!DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
-						$validate = $this->getValidator()->validateParams($formDetails);
-
-						if ($validate) {
-							throw new ValidationFailedException(
-								$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
-								[
-									self::RESPONSE_OUTPUT_KEY => [
-										self::RESPONSE_OUTPUT_VALIDATION_KEY => $validate,
-									],
-									self::RESPONSE_INTERNAL_KEY => 'validationDefaultMissingRequiredParams',
-								]
-							);
-						}
-					}
-
-					// Validate captcha.
-					if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-						$shouldValidateCaptcha = [
-							$formDetails[Config::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY,
-							!DeveloperHelpers::isDeveloperSkipCaptchaActive(),
-						];
-
-						if (!\in_array(false, $shouldValidateCaptcha, true)) {
-							$captchaParams = $formDetails[Config::FD_CAPTCHA] ?? [];
-
-							if (!$captchaParams) {
-								throw new BadRequestException(
-									$this->getValidatorLabels()->getLabel('validationGlobalMissingRequiredParams'),
+							if (!$isSpam) {
+								// Send fallback email if there is an issue with reCaptcha.
+								$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
+									$formDetails,
+									// translators: %s is the form ID.
+									\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[Config::FD_FORM_ID] ?? ''),
+									'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the available data for debugging purposes.', 'eightshift-forms') . '</p>',
 									[
-										self::RESPONSE_OUTPUT_KEY => [
-											self::RESPONSE_OUTPUT_CAPTCHA_KEY => $captchaParams,
-										],
-										self::RESPONSE_INTERNAL_KEY => 'validationDefaultCaptcha',
+										self::VALIDATION_ERROR_DATA => \array_merge(
+											$captchaData,
+											$captchaDebug,
+										),
 									]
 								);
 							}
 
-							$captchaCheck = $this->getCaptcha()->check(
-								$captchaParams['token'],
-								$captchaParams['action'],
-								$captchaParams['isEnterprise'] === 'true'
-							);
-
-							$captchaStatus = $captchaCheck['status'] ?? '';
-							$captchaMessage = $captchaCheck['message'] ?? '';
-							$captchaDebug = $captchaCheck['debug'] ?? [];
-							$captchaData = $captchaCheck['data'] ?? [];
-
-							if ($captchaStatus === Config::STATUS_ERROR) {
-								$isSpam = $captchaData['isSpam'] ?? false;
-
-								if (!$isSpam) {
-									// Send fallback email if there is an issue with reCaptcha.
-									$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
-										$formDetails,
-										// translators: %s is the form ID.
-										\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[Config::FD_FORM_ID] ?? ''),
-										'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the available data for debugging purposes.', 'eightshift-forms') . '</p>',
-										[
-											self::VALIDATION_ERROR_DATA => \array_merge(
-												$captchaData,
-												$captchaDebug,
-											),
-										]
-									);
-								}
-
-								throw new ValidationFailedException(
-									$captchaMessage,
-									[
-										self::RESPONSE_OUTPUT_KEY => [
-											self::RESPONSE_OUTPUT_CAPTCHA_KEY => $captchaParams,
-										],
-										self::RESPONSE_INTERNAL_KEY => 'validationDefaultCaptcha',
-										// self::VALIDATION_ERROR_DATA => \array_merge(
-										// 	$captchaData,
-										// 	$captchaDebug,
-										// ),
-									]
-								);
-							}
-						}
-					}
-
-					// Validate submit only logged in.
-					if ($this->getValidator()->validateSubmitOnlyLoggedIn($formDetails[Config::FD_FORM_ID] ?? '')) {
-						// Validate submit only logged in.
-						throw new ForbiddenException(
-							$this->getValidatorLabels()->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
-						);
-					} else {
-						// Validate submit only once.
-						if ($this->getValidator()->validateSubmitOnlyOnce($formDetails[Config::FD_FORM_ID] ?? '')) {
-							throw new ForbiddenException(
-								$this->getValidatorLabels()->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
+							throw new ValidationFailedException(
+								$captchaMessage,
+								[
+									self::RESPONSE_OUTPUT_KEY => [
+										self::RESPONSE_OUTPUT_CAPTCHA_KEY => $captchaParams,
+									],
+									self::RESPONSE_INTERNAL_KEY => 'validationDefaultCaptcha',
+									// self::VALIDATION_ERROR_DATA => \array_merge(
+									// 	$captchaData,
+									// 	$captchaDebug,
+									// ),
+								]
 							);
 						}
 					}
+				}
+			}
 
-					// Map enrichment data.
-					$formDetails[Config::FD_PARAMS] = $this->enrichment->mapEnrichmentFields($formDetails[Config::FD_PARAMS]);
+			// Map enrichment data.
+			if ($this->shouldCheckEnrichment()) {
+				$formDetails[Config::FD_PARAMS] = $this->getEnrichment()->mapEnrichmentFields($formDetails[Config::FD_PARAMS]);
+			}
 
-					// Add country to the form details.
-					$formDetails[Config::FD_COUNTRY] = $this->getRequestCountryCookie($request);
+			// Add country to the form details.
+			if ($this->shouldCheckCountry()) {
+				$formDetails[Config::FD_COUNTRY] = $this->getRequestCountryCookie($request);
+			}
 
-					// Filter params.
-					$filterName = HooksHelpers::getFilterName(['integrations', $formDetails[Config::FD_TYPE], 'prePostParams']);
-					if (\has_filter($filterName)) {
-						$formDetails[Config::FD_PARAMS] = \apply_filters($filterName, $formDetails[Config::FD_PARAMS], $formDetails[Config::FD_FORM_ID]) ?? [];
-					}
-
-					break;
+			// Filter params.
+			if ($this->shouldCheckFilterParams()) {
+				$filterName = HooksHelpers::getFilterName(['integrations', $formDetails[Config::FD_TYPE], 'prePostParams']);
+				if (\has_filter($filterName)) {
+					$formDetails[Config::FD_PARAMS] = \apply_filters($filterName, $formDetails[Config::FD_PARAMS], $formDetails[Config::FD_FORM_ID]) ?? [];
+				}
 			}
 
 			// Do action.
-			return $this->submitAction($formDetails);
-		} catch (PermissionDeniedException $e) {
-			// Return permission denied response.
-			return \rest_ensure_response(new WP_REST_Response($e->getData(), $e->getCode()));
-		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException $e) {
-			$data = $e->getData();
+			$return = $this->submitAction($formDetails);
 
-			$outputData = [];
-
-			if (isset($data[self::RESPONSE_OUTPUT_KEY])) {
-				$outputData[UtilsHelper::getStateResponseOutputKey('validation')] = $data[self::RESPONSE_OUTPUT_KEY];
-			}
-
+			return \rest_ensure_response(
+				Helpers::getApiResponse(
+					$return[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel('submitFallbackSuccess'),
+					$return[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
+					AbstractRoute::STATUS_SUCCESS,
+					$this->getResponseDataOutput(
+						$return[AbstractBaseRoute::R_DATA] ?? [],
+						$return[AbstractBaseRoute::R_DEBUG] ?? [],
+						$request
+					)
+				)
+			);
+		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException | PermissionDeniedException $e) {
 			$return = [
-				'message' => $e->getMessage(),
-				'code' => $e->getCode(),
-				'status' => AbstractRoute::STATUS_ERROR,
-				'data' => $outputData,
-				// 'debug' => [
-				// 	'exception' => $e,
-				// 	'request' => $request,
-				// 	'data' => $data,
-				// 	'formDetails' => $formDetails,
-				// ]
+				AbstractBaseRoute::R_MSG => $e->getMessage(),
+				AbstractBaseRoute::R_CODE => $e->getCode(),
+				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_ERROR,
+				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
+					$e->getData(),
+					$e->getDebug(),
+					$request
+				),
 			];
 
+			\dump($return);
+
 			// Do action.
-			if ($data[self::RESPONSE_SEND_FALLBACK_KEY] ?? false) {
-				// Send fallback email.
-				$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
-					$formDetails,
-					'',
-					'',
-					[
-						self::VALIDATION_ERROR_CODE => \esc_html($return['data'][self::VALIDATION_ERROR_CODE] ?? ''),
-						self::VALIDATION_ERROR_MSG => \esc_html($return['message']),
-						self::VALIDATION_ERROR_OUTPUT => $return['data'][self::VALIDATION_ERROR_OUTPUT] ?? '',
-						self::VALIDATION_ERROR_DATA => $return['data'][self::VALIDATION_ERROR_DATA] ?? '',
-					]
-				);
-			}
+			// if ($data[self::RESPONSE_SEND_FALLBACK_KEY] ?? false) {
+			// 	// Send fallback email.
+			// 	$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
+			// 		$formDetails,
+			// 		'',
+			// 		'',
+			// 		[
+			// 			self::VALIDATION_ERROR_CODE => \esc_html($return['data'][self::VALIDATION_ERROR_CODE] ?? ''),
+			// 			self::VALIDATION_ERROR_MSG => \esc_html($return['message']),
+			// 			self::VALIDATION_ERROR_OUTPUT => $return['data'][self::VALIDATION_ERROR_OUTPUT] ?? '',
+			// 			self::VALIDATION_ERROR_DATA => $return['data'][self::VALIDATION_ERROR_DATA] ?? '',
+			// 		]
+			// 	);
+			// }
 
 			// Return validation failed response.
 			return \rest_ensure_response(
 				Helpers::getApiResponse(
-					$return['message'],
-					$return['code'],
-					$return['status'],
-					$return['data']
+					$return[AbstractBaseRoute::R_MSG] ?: $this->getLabels()->getLabel('submitFallbackError'),
+					$return[AbstractBaseRoute::R_CODE] ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
+					$return[AbstractBaseRoute::R_STATUS],
+					$return[AbstractBaseRoute::R_DATA] ?: []
 				)
 			);
 		}
+	}
+
+	/**
+	 * Check if params validation should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckParamsValidation(): bool
+	{
+		if (DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if security should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckSecurity(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Check if captcha should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckCaptcha(): bool
+	{
+		if (DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Check if enrichment should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckEnrichment(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Check if country should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckCountry(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Check if filter params should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckFilterParams(): bool
+	{
+		return true;
 	}
 
 	/**
@@ -493,7 +487,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			}
 		}
 
-		$labelsOutput = $this->getValidatorLabels()->getLabel($response[Config::IARD_MSG], $formId);
+		$labelsOutput = $this->getLabels()->getLabel($response[Config::IARD_MSG], $formId);
 		$responseOutput = $response;
 
 		// Output fake success and send fallback email.
@@ -502,7 +496,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			$fakeResponse = ApiHelpers::getIntegrationSuccessInternalOutput($response);
 
-			$labelsOutput = $this->getValidatorLabels()->getLabel($fakeResponse[Config::IARD_MSG], $formId);
+			$labelsOutput = $this->getLabels()->getLabel($fakeResponse[Config::IARD_MSG], $formId);
 			$responseOutput = $fakeResponse;
 		}
 
@@ -775,7 +769,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 *
 	 * @return LabelsInterface
 	 */
-	protected function getValidatorLabels()
+	protected function getLabels()
 	{
 		return $this->labels;
 	}
@@ -818,16 +812,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	protected function getFormSubmitMailer()
 	{
 		return $this->formSubmitMailer;
-	}
-
-	/**
-	 * Check if the route is admin protected.
-	 *
-	 * @return boolean
-	 */
-	protected function isRouteAdminProtected(): bool
-	{
-		return false;
 	}
 
 	/**
@@ -1143,5 +1127,380 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		}
 
 		return $country;
+	}
+
+	/**
+	 * Prepare file from request for later usage. Attach custom data to file array.
+	 *
+	 * @param array<string, mixed> $file File array from request.
+	 * @param array<string, mixed> $params Params to use.
+	 * @return array<string, mixed>
+	 */
+	protected function prepareFile(array $file, array $params): array
+	{
+		$file = $file['file'] ?? [];
+
+		if (!$file) {
+			return [];
+		}
+
+		return \array_merge(
+			$file,
+			[
+				'id' => $params[UtilsHelper::getStateParam('fileId')]['value'] ?? '',
+				'fieldName' => $params[UtilsHelper::getStateParam('name')]['value'] ?? '',
+			]
+		);
+	}
+
+	/**
+	 * Prepare form details api data.
+	 *
+	 * @param mixed $request Data got from endpoint url.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getFormDetailsApi($request): array
+	{
+		$output = [];
+
+		// Get params from request.
+		$params = $this->prepareApiParams($request);
+
+		// Get form id from params.
+		$formId = $params['formId'] ?? '';
+
+		// Get form type from params.
+		$type = $params['type'] ?? '';
+
+		// Get form directImport from params.
+		if (isset($params['directImport'])) {
+			return $this->getFormDetailsApiDirectImport($params);
+		}
+
+		// Get form settings for admin from params.
+		$formSettingsType = $params['settingsType'] ?? '';
+
+		// Manual populate output it admin settings our build it from form Id.
+		if (
+			$type === Config::SETTINGS_TYPE_NAME ||
+			$type === Config::SETTINGS_GLOBAL_TYPE_NAME ||
+			$type === Config::FILE_UPLOAD_ADMIN_TYPE_NAME
+		) {
+			// This provides filter name for setting.
+			$settingsName = \apply_filters(Config::FILTER_SETTINGS_DATA, [])[$formSettingsType][$type] ?? '';
+
+			$output[Config::FD_FORM_ID] = $formId;
+			$output[Config::FD_TYPE] = $type;
+			$output[Config::FD_ITEM_ID] = '';
+			$output[Config::FD_INNER_ID] = '';
+			$output[Config::FD_FIELDS_ONLY] = !empty($settingsName) ? \apply_filters($settingsName, $formId) : [];
+		} else {
+			$formDetails = GeneralHelpers::getFormDetails($formId);
+
+			$output[Config::FD_FORM_ID] = $formId;
+			$output[Config::FD_IS_VALID] = $formDetails[Config::FD_IS_VALID] ?? false;
+			$output[Config::FD_IS_API_VALID] = $formDetails[Config::FD_IS_API_VALID] ?? false;
+			$output[Config::FD_LABEL] = $formDetails[Config::FD_LABEL] ?? '';
+			$output[Config::FD_ICON] = $formDetails[Config::FD_ICON] ?? '';
+			$output[Config::FD_TYPE] = $formDetails[Config::FD_TYPE] ?? '';
+			$output[Config::FD_ITEM_ID] = $formDetails[Config::FD_ITEM_ID] ?? '';
+			$output[Config::FD_INNER_ID] = $formDetails[Config::FD_INNER_ID] ?? '';
+			$output[Config::FD_FIELDS] = $formDetails[Config::FD_FIELDS] ?? [];
+			$output[Config::FD_FIELDS_ONLY] = $formDetails[Config::FD_FIELDS_ONLY] ?? [];
+			$output[Config::FD_FIELD_NAMES] = $formDetails[Config::FD_FIELD_NAMES] ?? [];
+			$output[Config::FD_STEPS_SETUP] = $formDetails[Config::FD_STEPS_SETUP] ?? [];
+		}
+
+		// Populate params.
+		$output[Config::FD_PARAMS] = $params['params'] ?? [];
+
+		// Populate files from uploaded ID.
+		$output[Config::FD_FILES] = $params['files'] ?? [];
+
+		// Populate files on upload. Only populated on file upload.
+		$output[Config::FD_FILES_UPLOAD] = $this->prepareFile($request->get_file_params(), $params['params'] ?? []);
+
+		// Populate action.
+		$output[Config::FD_SECURE_DATA] = $params['secureData'] ?? '';
+
+		// Populate action.
+		$output[Config::FD_ACTION] = $params['action'] ?? '';
+
+		// Populate action external.
+		$output[Config::FD_ACTION_EXTERNAL] = $params['actionExternal'] ?? '';
+
+		// Populate step fields.
+		$output[Config::FD_API_STEPS] = $params['apiSteps'] ?? [];
+
+		// Get form captcha from params.
+		$output[Config::FD_CAPTCHA] = $params['captcha'] ?? [];
+
+		// Get form post Id from params.
+		$output[Config::FD_POST_ID] = $params['postId'] ?? '';
+
+		// Get form storage from params.
+		$output[Config::FD_STORAGE] = \json_decode($params['storage'] ?? '', true) ?? [];
+
+		// Set debug original params.
+		$output[Config::FD_PARAMS_ORIGINAL] = \sanitize_text_field(\wp_json_encode($this->getRequestParams($request)));
+
+		return $output;
+	}
+
+	/**
+	 * Prepare form details api data for direct import.
+	 *
+	 * @param array<string, mixed> $params Params to use.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getFormDetailsApiDirectImport(array $params): array
+	{
+		// Get form id from params.
+		$formId = $params['formId'] ?? '';
+
+		// Get form type from params.
+		$type = $params['type'] ?? '';
+
+		// Get form directImport from params.
+		$output[Config::FD_DIRECT_IMPORT] = true;
+		$output[Config::FD_TYPE] = $type;
+		$output[Config::FD_FORM_ID] = $formId;
+		$output[Config::FD_ITEM_ID] = $params['itemId'] ?? '';
+		$output[Config::FD_INNER_ID] = $params['innerId'] ?? '';
+		$output[Config::FD_POST_ID] = $params['postId'] ?? '';
+		$output[Config::FD_PARAMS] = $params['params'] ?? [];
+		$output[Config::FD_FILES] = $params['files'] ?? [];
+
+		return $output;
+	}
+
+	/**
+	 * Convert JS FormData object to usable data in php.
+	 *
+	 * @param WP_REST_Request $request $request Data got from endpoint url.
+	 * @param string $type Request type.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function prepareApiParams(WP_REST_Request $request, string $type = self::CREATABLE): array
+	{
+		// Get params.
+		$params = $this->getRequestParams($request, $type);
+
+		// Bailout if there are no params.
+		if (!$params) {
+			return [];
+		}
+
+		// Skip any manipulations if direct param is set.
+		$paramsOutput = \array_map(
+			static function ($item) {
+				// Check if array then output only value that is not empty.
+				if (\is_array($item)) {
+					// Loop all items and decode.
+					$inner = \array_map(
+						static function ($item) {
+							return \json_decode(\sanitize_text_field($item), true);
+						},
+						$item
+					);
+
+					// Find all items where value is not empty.
+					$innerNotEmpty = \array_values(
+						\array_filter(
+							$inner,
+							static function ($innerItem) {
+								return !empty($innerItem['value']);
+							}
+						)
+					);
+
+					// Fallback if everything is empty.
+					if (!$innerNotEmpty) {
+						return $inner[0];
+					}
+
+					// If multiple values this is checkbox.
+					if (\count($innerNotEmpty) > 1) {
+						$multiple = \array_values(
+							\array_map(
+								static function ($item) {
+									return $item['value'];
+								},
+								$innerNotEmpty
+							)
+						);
+
+						// Append values to the first value.
+						$innerNotEmpty[0]['value'] = $multiple;
+
+						return $innerNotEmpty[0];
+					}
+
+					// If one item then this is probably radio.
+					return $innerNotEmpty[0];
+				}
+
+				// Try to clean the string.
+				// Parts of the code taken from https://developer.wordpress.org/reference/functions/_sanitize_text_fields/.
+				$item = \wp_check_invalid_utf8($item);
+				$item = \wp_strip_all_tags($item);
+
+				$filtered = \trim($item);
+
+				// Remove percent-encoded characters.
+				$found = false;
+				while (\preg_match('/%[a-f0-9]{2}/i', $filtered, $match)) {
+					$filtered = \str_replace($match[0], '', $filtered);
+					$found = true;
+				}
+
+				if ($found) {
+					// Strip out the whitespace that may now exist after removing percent-encoded characters.
+					$filtered = \trim(\preg_replace('/ +/', ' ', $filtered));
+				}
+
+				// Decode value.
+				return \json_decode($filtered, true);
+			},
+			$params
+		);
+
+		$output = [];
+
+		// These are the required keys for each field.
+		$reqKeys = [
+			'name' => '',
+			'value' => '',
+			'type' => '',
+			'custom' => '',
+			'typeCustom' => '',
+		];
+
+		$paramsBroken = false;
+
+		// If this route is for public form prepare all params.
+		foreach ($paramsOutput as $key => $value) {
+			// Check if all required keys are present and bail out if not.
+			if (!\is_array($value) || \array_diff_key($reqKeys, $value)) {
+				$paramsBroken = true;
+				break;
+			}
+
+			switch ($key) {
+				// Used for direct import from settings.
+				case UtilsHelper::getStateParam('direct'):
+					$output['directImport'] = (bool) $value['value'];
+					break;
+				// Used for direct import from settings.
+				case UtilsHelper::getStateParam('itemId'):
+					$output['itemId'] = $value['value'];
+					break;
+				// Used for direct import from settings.
+				case UtilsHelper::getStateParam('innerId'):
+					$output['innerId'] = $value['value'];
+					break;
+				case UtilsHelper::getStateParam('formId'):
+					$output['formId'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('postId'):
+					$output['postId'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('type'):
+					$output['type'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('secureData'):
+					$output['secureData'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('action'):
+					$output['action'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('captcha'):
+					$output['captcha'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('actionExternal'):
+					$output['actionExternal'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('settingsType'):
+					$output['settingsType'] = $value['value'];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('storage'):
+					$output['storage'] = $value['value'];
+					$value['value'] = (!empty($value['value'])) ? \json_decode($value['value'], true) : [];
+					$output['params'][$key] = $value;
+					break;
+				case UtilsHelper::getStateParam('steps'):
+					$output['apiSteps'] = [
+						'fields' => $value['value'],
+						'current' => $value['custom'],
+					];
+					break;
+				default:
+					// All other "normal" fields.
+					$fieldType = $value['type'] ?? '';
+					$fieldValue = $value['value'] ?? '';
+					$fieldName = $value['name'] ?? '';
+
+					if (!$fieldName) {
+						break;
+					}
+
+					// File.
+					if ($fieldType === 'file') {
+						$output['files'][$key] = $value;
+
+						if (!$fieldValue) {
+							$output['files'][$key]['value'] = [];
+						} else {
+							if (!\is_array($fieldValue)) {
+								$fieldValue = [$fieldValue];
+							}
+
+							$output['files'][$key]['value'] = \array_map(
+								static function (string $file) {
+									return UploadHelpers::getFilePath($file);
+								},
+								$fieldValue
+							);
+						}
+						break;
+					}
+
+					// Rating.
+					if ($fieldType === 'rating' && $fieldValue === '0') {
+						$value['value'] = '';
+					}
+
+					// Checkbox.
+					if ($fieldType === 'checkbox') {
+						if (!$fieldValue) {
+							$value['value'] = [];
+						} else {
+							$value['value'] = \is_string($fieldValue) ? [$fieldValue] : $fieldValue;
+						}
+					}
+
+					$output['params'][$key] = $value;
+
+					break;
+			}
+		}
+
+		// Bail out if we have a broken param.
+		if ($paramsBroken) {
+			return [];
+		}
+
+		return $output;
 	}
 }

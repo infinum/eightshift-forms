@@ -78,9 +78,11 @@ class TransferRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'type' => 'string',
@@ -114,7 +116,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 
 				if (!$items) {
 					throw new BadRequestException(
-						$this->labels->getLabel('transferExportMissingForms'),
+						$this->getLabels()->getLabel('transferExportMissingForms'),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingForms',
 						]
@@ -131,7 +133,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 
 				if (!$items) {
 					throw new BadRequestException(
-						$this->labels->getLabel('transferExportMissingResultOutputs'),
+						$this->getLabels()->getLabel('transferExportMissingResultOutputs'),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferExportMissingResultOutputs',
 						]
@@ -154,7 +156,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 
 				if (!$upload) {
 					throw new BadRequestException(
-						$this->labels->getLabel('transferUploadMissingFile'),
+						$this->getLabels()->getLabel('transferUploadMissingFile'),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingFile',
 						]
@@ -168,7 +170,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 
 				if (!$uploadStatus) {
 					throw new BadRequestException(
-						$this->labels->getLabel('transferUploadError'),
+						$this->getLabels()->getLabel('transferUploadError'),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadError',
 						]
@@ -179,7 +181,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 				break;
 			default:
 				throw new BadRequestException(
-					$this->labels->getLabel('transferUploadMissingType'),
+					$this->getLabels()->getLabel('transferUploadMissingType'),
 					[
 						AbstractBaseRoute::R_DEBUG_KEY => 'transferUploadMissingType',
 					]
@@ -190,7 +192,7 @@ class TransferRoute extends AbstractSimpleFormSubmit
 
 
 		return [
-			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%s %s', 'eightshift-forms'), \ucfirst($internalType), $this->labels->getLabel('transferSuccess')),
+			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%s %s', 'eightshift-forms'), \ucfirst($internalType), $this->getLabels()->getLabel('transferSuccess')),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'transferSuccess',
 			],

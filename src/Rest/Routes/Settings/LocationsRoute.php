@@ -51,9 +51,11 @@ class LocationsRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'id' => 'string',
@@ -75,17 +77,17 @@ class LocationsRoute extends AbstractSimpleFormSubmit
 
 		switch ($usageType) {
 			case Result::POST_TYPE_SLUG:
-				$errorMsg = $this->labels->getLabel('locationsResultOutputError');
+				$errorMsg = $this->getLabels()->getLabel('locationsResultOutputError');
 				break;
 			default:
-				$errorMsg = $this->labels->getLabel('locationsFormError');
+				$errorMsg = $this->getLabels()->getLabel('locationsFormError');
 				break;
 		}
 
 		$type = GeneralHelpers::getFormTypeById($id);
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('locationsSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('locationsSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'locationsSuccess',
 			],

@@ -14,6 +14,7 @@ use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
  * Class SettingsSubmitRoute
@@ -56,6 +57,48 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	}
 
 	/**
+	 * Check if filter params should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckFilterParams(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Check if captcha should be checked.
+	 *
+	 * @return bool
+	 */
+	protected function shouldCheckCaptcha(): bool
+	{
+		return false;
+	}
+
+	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		\dump($params);
+
+		switch ($params[Config::FD_TYPE]) {
+			case Config::SETTINGS_GLOBAL_TYPE_NAME:
+				// case Config::FILE_UPLOAD_ADMIN_TYPE_NAME: // TODO: Add file upload admin.
+				return [];
+			default:
+				return [
+					Config::FD_FORM_ID => 'string',
+				];
+		}
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
@@ -64,9 +107,6 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$debug = [
-			'formDetails' => $formDetails,
-		];
 		$formId = $formDetails[Config::FD_FORM_ID];
 		$params = $formDetails[Config::FD_PARAMS];
 
@@ -99,13 +139,8 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 			}
 		}
 
-		// Finish.
-		return \rest_ensure_response(
-			ApiHelpers::getApiSuccessPublicOutput(
-				\esc_html__('Changes saved!', 'eightshift-forms'),
-				[],
-				$debug
-			)
-		);
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('settingsSuccess'),
+		];
 	}
 }

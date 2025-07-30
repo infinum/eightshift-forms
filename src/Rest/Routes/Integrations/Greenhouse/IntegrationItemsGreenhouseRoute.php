@@ -12,7 +12,6 @@ namespace EightshiftForms\Rest\Routes\Integrations\Greenhouse;
 
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\UtilsHelper;
@@ -20,7 +19,6 @@ use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Validation\ValidatorInterface;
-use WP_REST_Request;
 
 /**
  * Class IntegrationItemsGreenhouseRoute
@@ -87,6 +85,18 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 	}
 
 	/**
+	 * Get mandatory params.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, string>
+	 */
+	protected function getMandatoryParams(array $params): array
+	{
+		return [];
+	}
+
+	/**
 	 * Implement submit action.
 	 *
 	 * @param array<string, mixed> $params Prepared params.
@@ -98,7 +108,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 		// Check if global settings is valid.
 		if (!\apply_filters(SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME, false)) {
 			throw new BadRequestException(
-				$this->labels->getLabel('globalNotConfigured'),
+				$this->getLabels()->getLabel('globalNotConfigured'),
 				[
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsGlobalNotConfigured',
 				]
@@ -109,7 +119,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 
 		if (!$items) {
 			throw new BadRequestException(
-				$this->labels->getLabel('integrationItemsMissing'),
+				$this->getLabels()->getLabel('integrationItemsMissing'),
 				[
 					AbstractBaseRoute::R_DEBUG => $items,
 					AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsMissingItems',
@@ -132,7 +142,7 @@ class IntegrationItemsGreenhouseRoute extends AbstractSimpleFormSubmit
 		)));
 
 		return [
-			AbstractBaseRoute::R_MSG => $this->labels->getLabel('integrationItemsSuccess'),
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel('integrationItemsSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $items,
 				AbstractBaseRoute::R_DEBUG_KEY => 'integrationItemsSuccess',

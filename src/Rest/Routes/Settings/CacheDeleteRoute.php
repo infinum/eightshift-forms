@@ -50,9 +50,11 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'type' => 'string',
@@ -97,7 +99,7 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 
 				if (!$cacheTypes) {
 					throw new BadRequestException(
-						\sprintf(\esc_html__('%s %s', 'eightshift-forms'), $outputTitle, $this->labels->getLabel('cacheTypeNotFound')),
+						\sprintf(\esc_html__('%s %s', 'eightshift-forms'), $outputTitle, $this->getLabels()->getLabel('cacheTypeNotFound')),
 						[
 							AbstractBaseRoute::R_DEBUG_KEY => 'cacheTypeNotFound',
 						]
@@ -117,7 +119,7 @@ class CacheDeleteRoute extends AbstractSimpleFormSubmit
 
 		// Finish.
 		return [
-			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%s %s', 'eightshift-forms'), $outputTitle, $this->labels->getLabel('cacheDeletedSuccess')),
+			AbstractBaseRoute::R_MSG => \sprintf(\esc_html__('%s %s', 'eightshift-forms'), $outputTitle, $this->getLabels()->getLabel('cacheDeletedSuccess')),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG_KEY => 'cacheDeletedSuccess',
 			],

@@ -49,9 +49,11 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Get mandatory params.
 	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
 	 * @return array<string, string>
 	 */
-	protected function getMandatoryParams(): array
+	protected function getMandatoryParams(array $params): array
 	{
 		return [
 			'type' => 'string',
@@ -80,7 +82,7 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 
 		if (!$output) {
 			throw new BadRequestException(
-				$type === 'encrypt' ? $this->labels->getLabel('encryptFailed') : $this->labels->getLabel('decryptFailed'),
+				$type === 'encrypt' ? $this->getLabels()->getLabel('encryptFailed') : $this->getLabels()->getLabel('decryptFailed'),
 				[
 					AbstractBaseRoute::R_DEBUG => $output,
 					AbstractBaseRoute::R_DEBUG_KEY => 'encryptFailed',
@@ -90,7 +92,7 @@ class DebugEncryptRoute extends AbstractSimpleFormSubmit
 
 		// Finish.
 		return [
-			AbstractBaseRoute::R_MSG => $type === 'encrypt' ? $this->labels->getLabel('encryptSuccess') : $this->labels->getLabel('decryptSuccess'),
+			AbstractBaseRoute::R_MSG => $type === 'encrypt' ? $this->getLabels()->getLabel('encryptSuccess') : $this->getLabels()->getLabel('decryptSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $output,
 				AbstractBaseRoute::R_DEBUG_KEY => $type === 'encrypt' ? 'encryptSuccess' : 'decryptSuccess',
