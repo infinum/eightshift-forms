@@ -169,8 +169,7 @@ class MailerliteClient implements ClientInterface
 			$body,
 			$files,
 			$itemId,
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY, SettingsMailerlite::SETTINGS_MAILERLITE_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
 		$code = $details[Config::IARD_CODE];

@@ -122,11 +122,6 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 	public const SETTINGS_CORVUS_IBAN_VALUE_KEY = 'corvus-iban-value';
 
 	/**
-	 * Skip integration.
-	 */
-	public const SETTINGS_CORVUS_SKIP_INTEGRATION_KEY = 'corvus-skip-integration';
-
-	/**
 	 * Instance variable for Fallback settings.
 	 *
 	 * @var SettingsFallbackDataInterface
@@ -657,8 +652,6 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY, self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY);
-
 		$storeIds = SettingsHelpers::getOptionValueGroup(self::SETTINGS_CORVUS_STORE_IDS_KEY);
 
 		return [
@@ -671,54 +664,29 @@ class SettingsCorvus extends AbstractSettingsIntegrations implements SettingGlob
 						'tabLabel' => \__('API', 'eightshift-forms'),
 						'tabContent' => [
 							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
-										'checkboxIsChecked' => $deactivateIntegration,
-										'checkboxValue' => self::SETTINGS_CORVUS_SKIP_INTEGRATION_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									]
-								]
-							],
-							...($deactivateIntegration ? [
-								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
-								],
-							] : [
-								[
-									'component' => 'textarea',
-									'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_CORVUS_STORE_IDS_KEY),
-									'textareaIsMonospace' => true,
-									'textareaIsRequired' => true,
-									'textareaSaveAsJson' => true,
-									'textareaFieldLabel' => \__('Store IDs', 'eightshift-forms'),
-									// translators: %s will be replaced with local validation patterns.
-									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
+								'component' => 'textarea',
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_CORVUS_STORE_IDS_KEY),
+								'textareaIsMonospace' => true,
+								'textareaIsRequired' => true,
+								'textareaSaveAsJson' => true,
+								'textareaFieldLabel' => \__('Store IDs', 'eightshift-forms'),
+								// translators: %s will be replaced with local validation patterns.
+								'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
 										Enter one Store ID per line, in the following format:<br />
 										Example:
 										<ul>
 										<li>Name : 133144</li>
 										<li>Store New :454331</li>
 										</ul>", 'eightshift-forms')),
-									'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_CORVUS_STORE_IDS_KEY, 2),
+								'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_CORVUS_STORE_IDS_KEY, 2),
+							],
+							...($storeIds ? [
+								[
+									'component' => 'divider',
+									'dividerExtraVSpacing' => true,
 								],
-								...($storeIds ? [
-									[
-										'component' => 'divider',
-										'dividerExtraVSpacing' => true,
-									],
-									...$this->getApiKeysSettings($storeIds),
-								] : []),
-							]),
+								...$this->getApiKeysSettings($storeIds),
+							] : []),
 						],
 					],
 					$this->settingsFallback->getOutputGlobalFallback(SettingsCorvus::SETTINGS_TYPE_KEY),

@@ -91,13 +91,6 @@ class Mailer implements MailerInterface
 		$customMsg = '',
 		$customData = []
 	): bool {
-
-		// Check if the email should be ignored.
-		$shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, SettingsHelpers::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
-		if (isset($shouldIgnoreKeys[$formDetails[Config::FD_RESPONSE_OUTPUT_DATA][Config::IARD_MSG]])) {
-			return false;
-		}
-
 		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
 
 		if (!$isSettingsValid) {
@@ -105,6 +98,12 @@ class Mailer implements MailerInterface
 		}
 
 		$response = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA] ?? [];
+
+		// Check if the email should be ignored.
+		$shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, SettingsHelpers::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
+		if (isset($shouldIgnoreKeys[$response[Config::IARD_MSG] ?? ''])) {
+			return false;
+		}
 
 		$type = $response[Config::IARD_TYPE] ?? '';
 		$files = $response[Config::IARD_FILES] ?? [];

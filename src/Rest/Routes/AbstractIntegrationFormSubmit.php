@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Exception\UnverifiedRequestException;
-use EightshiftForms\Captcha\SettingsCaptcha;
 use EightshiftForms\Captcha\CaptchaInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Entries\EntriesHelper;
@@ -22,16 +21,15 @@ use EightshiftForms\Exception\PermissionDeniedException;
 use EightshiftForms\Exception\RequestLimitException;
 use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\General\SettingsGeneral;
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\FiltersOutputMock;
-use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\EncryptionHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
@@ -229,73 +227,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 
 			// Validate captcha.
 			if ($this->shouldCheckCaptcha()) {
-				if (\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
-					$shouldValidateCaptcha = [
-						$formDetails[Config::FD_TYPE] !== SettingsCalculator::SETTINGS_TYPE_KEY,
-						!DeveloperHelpers::isDeveloperSkipCaptchaActive(),
-					];
-
-					if (!\in_array(false, $shouldValidateCaptcha, true)) {
-						$captchaParams = $formDetails[Config::FD_CAPTCHA] ?? [];
-
-						if (!$captchaParams) {
-							throw new BadRequestException(
-								$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
-								[
-									self::RESPONSE_OUTPUT_KEY => [
-										self::RESPONSE_OUTPUT_CAPTCHA_KEY => $captchaParams,
-									],
-									self::RESPONSE_INTERNAL_KEY => 'validationDefaultCaptcha',
-								]
-							);
-						}
-
-						$captchaCheck = $this->getCaptcha()->check(
-							$captchaParams['token'],
-							$captchaParams['action'],
-							$captchaParams['isEnterprise'] === 'true'
-						);
-
-						$captchaStatus = $captchaCheck['status'] ?? '';
-						$captchaMessage = $captchaCheck['message'] ?? '';
-						$captchaDebug = $captchaCheck['debug'] ?? [];
-						$captchaData = $captchaCheck['data'] ?? [];
-
-						if ($captchaStatus === Config::STATUS_ERROR) {
-							$isSpam = $captchaData['isSpam'] ?? false;
-
-							if (!$isSpam) {
-								// Send fallback email if there is an issue with reCaptcha.
-								$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
-									$formDetails,
-									// translators: %s is the form ID.
-									\sprintf(\__('reCaptcha error form: %s', 'eightshift-forms'), $formDetails[Config::FD_FORM_ID] ?? ''),
-									'<p>' . \esc_html__('It seems like there was an issue with forms reCaptcha. Here is all the available data for debugging purposes.', 'eightshift-forms') . '</p>',
-									[
-										self::VALIDATION_ERROR_DATA => \array_merge(
-											$captchaData,
-											$captchaDebug,
-										),
-									]
-								);
-							}
-
-							throw new ValidationFailedException(
-								$captchaMessage,
-								[
-									self::RESPONSE_OUTPUT_KEY => [
-										self::RESPONSE_OUTPUT_CAPTCHA_KEY => $captchaParams,
-									],
-									self::RESPONSE_INTERNAL_KEY => 'validationDefaultCaptcha',
-									// self::VALIDATION_ERROR_DATA => \array_merge(
-									// 	$captchaData,
-									// 	$captchaDebug,
-									// ),
-								]
-							);
-						}
-					}
-				}
+				$this->getCaptcha()->check(
+					$formDetails[Config::FD_CAPTCHA]['token'] ?? '',
+					$formDetails[Config::FD_CAPTCHA]['action'] ?? '',
+					$formDetails[Config::FD_CAPTCHA]['isEnterprise'] ?? 'false'
+				);
 			}
 
 			// Map enrichment data.
@@ -329,6 +265,28 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 						$return[AbstractBaseRoute::R_DEBUG] ?? [],
 						$request
 					)
+				)
+			);
+		} catch (DisabledIntegrationException $e) {
+			$return = [
+				AbstractBaseRoute::R_MSG => $e->getMessage(),
+				AbstractBaseRoute::R_CODE => $e->getCode(),
+				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
+				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
+					$e->getData(),
+					$e->getDebug(),
+					$request
+				),
+			];
+
+			$this->getFormSubmitMailer()->sendFallbackIntegrationEmail($formDetails);
+
+			return \rest_ensure_response(
+				Helpers::getApiResponse(
+					$return[AbstractBaseRoute::R_MSG] ?: $this->getLabels()->getLabel('genericSuccess'),
+					$return[AbstractBaseRoute::R_CODE] ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
+					$return[AbstractBaseRoute::R_STATUS],
+					$return[AbstractBaseRoute::R_DATA] ?: []
 				)
 			);
 		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException | PermissionDeniedException $e) {
@@ -404,9 +362,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 */
 	protected function shouldCheckCaptcha(): bool
 	{
-		if (DeveloperHelpers::isDeveloperSkipFormValidationActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCaptchaActive()) {
 			return false;
 		}
+
 		return true;
 	}
 
@@ -470,81 +429,74 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		$validation = $response[Config::IARD_VALIDATION] ?? [];
 		$status = $response[Config::IARD_STATUS] ?? Config::STATUS_ERROR;
 
-		$disableFallbackEmail = false;
-
 		// Output integrations validation issues.
 		if ($validation) {
 			$response[Config::IARD_VALIDATION] = $this->getValidator()->getValidationLabelItems($validation, $formId);
-			$disableFallbackEmail = true;
 		}
 
-		// Skip fallback email if integration is disabled.
-		if (!$response[Config::IARD_IS_DISABLED] && $response[Config::IARD_STATUS] === Config::STATUS_ERROR) {
-			// Prevent fallback email if we have validation errors parsed.
-			if (!$disableFallbackEmail) {
-				// Send fallback email.
-				$this->getFormSubmitMailer()->sendFallbackIntegrationEmail($formDetails);
-			}
-		}
-
-		$labelsOutput = $this->getLabels()->getLabel($response[Config::IARD_MSG], $formId);
-		$responseOutput = $response;
-
-		// Output fake success and send fallback email.
-		if ($response[Config::IARD_IS_DISABLED] && !$validation) {
-			$this->getFormSubmitMailer()->sendFallbackIntegrationEmail($formDetails);
-
-			$fakeResponse = ApiHelpers::getIntegrationSuccessInternalOutput($response);
-
-			$labelsOutput = $this->getLabels()->getLabel($fakeResponse[Config::IARD_MSG], $formId);
-			$responseOutput = $fakeResponse;
-		}
-
-		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $responseOutput;
-
-		if ($status === Config::STATUS_SUCCESS) {
-			$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
-
-			// Send email if it is configured in the backend.
-			if ($response[Config::IARD_STATUS] === Config::STATUS_SUCCESS) {
-				$this->getFormSubmitMailer()->sendEmails(
-					$formDetails,
-					$this->getCombinedEmailResponseTags(
-						$formDetails,
-						\array_merge(
-							$successAdditionalData['public'],
-							$successAdditionalData['private'],
-						)
-					)
-				);
-			}
-
-			// Callback functions.
-			$this->callIntegrationResponseSuccessCallback($formDetails, $successAdditionalData);
-
-			// Set validation submit once.
-			$this->getValidator()->setValidationSubmitOnce($formId);
-
-			return ApiHelpers::getApiSuccessPublicOutput(
-				$labelsOutput,
-				\array_merge(
-					$successAdditionalData['public'],
-					$successAdditionalData['additional']
-				),
-				$response
+		if ($status === Config::STATUS_ERROR) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel($response[Config::IARD_MSG], $formId),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => 'submitIntegrationError',
+				],
+				array_merge(
+					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
+					((isset($response[Config::IARD_VALIDATION])) ? [
+						UtilsHelper::getStateResponseOutputKey('validation') => $response[Config::IARD_VALIDATION],
+					] : [])
+				)
 			);
 		}
 
-		return ApiHelpers::getApiErrorPublicOutput(
-			$labelsOutput,
-			\array_merge(
-				$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
-				((isset($response[Config::IARD_VALIDATION])) ? [
-					UtilsHelper::getStateResponseOutputKey('validation') => $response[Config::IARD_VALIDATION],
-				] : []),
-			),
-			$response
+		return $this->getIntegrationResponseSuccessOutput($formDetails);
+	}
+
+	/**
+	 * Get integration response output on success.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getIntegrationResponseSuccessOutput(array $formDetails): array
+	{
+		$type = $formDetails[Config::FD_TYPE] ?? '';
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+
+		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
+
+		// Send email if it is configured in the backend.
+		$this->getFormSubmitMailer()->sendEmails(
+			$formDetails,
+			$this->getCombinedEmailResponseTags(
+				$formDetails,
+				\array_merge(
+					$successAdditionalData['public'],
+					$successAdditionalData['private'],
+				)
+			)
 		);
+
+		// Callback functions.
+		$this->callIntegrationResponseSuccessCallback($formDetails, $successAdditionalData);
+
+		// Set validation submit once.
+		$this->getValidator()->setValidationSubmitOnce($formId);
+
+		return [
+			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success"),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG => $formDetails,
+				AbstractBaseRoute::R_DEBUG_KEY => 'submitIntegrationSuccess',
+				AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA => $successAdditionalData,
+			],
+			AbstractBaseRoute::R_DATA => \array_merge(
+				$successAdditionalData['public'],
+				$successAdditionalData['additional']
+			),
+		];
 	}
 
 	/**

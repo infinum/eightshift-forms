@@ -141,8 +141,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 			$params,
 			$files,
 			$itemId,
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
 		$code = $details[Config::IARD_CODE];

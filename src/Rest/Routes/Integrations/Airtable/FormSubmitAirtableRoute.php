@@ -20,6 +20,9 @@ use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\DisabledIntegrationException;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
  * Class FormSubmitAirtableRoute
@@ -108,14 +111,22 @@ class FormSubmitAirtableRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY, SettingsAirtable::SETTINGS_AIRTABLE_SKIP_INTEGRATION_KEY)) {
+			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
+
+			throw new DisabledIntegrationException(
+				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
 		// Send application to Airtable.
 		$response = $this->airtableClient->postApplication($formDetails);
 
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
-		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction($formDetails)
-		);
+		return $this->getIntegrationCommonSubmitAction($formDetails);
 	}
 }

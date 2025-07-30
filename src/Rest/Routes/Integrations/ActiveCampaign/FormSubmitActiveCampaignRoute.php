@@ -20,6 +20,9 @@ use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\DisabledIntegrationException;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 
 /**
  * Class FormSubmitActiveCampaignRoute
@@ -107,6 +110,16 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY)) {
+			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
+
+			throw new DisabledIntegrationException(
+				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
 		$params = $formDetails[Config::FD_PARAMS];
 
 		// Send application to ActiveCampaign.
@@ -146,8 +159,6 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		}
 
 		// Finish.
-		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction($formDetails)
-		);
+		return $this->getIntegrationCommonSubmitAction($formDetails);
 	}
 }

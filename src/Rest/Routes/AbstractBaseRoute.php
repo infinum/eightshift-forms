@@ -29,6 +29,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const R_DEBUG = 'debug';
 	public const R_DEBUG_KEY = 'debugKey';
 	public const R_DEBUG_REQUEST = 'debugRequest';
+	public const R_DEBUG_SUCCESS_ADDITIONAL_DATA = 'debugSuccessAdditionalData';
 	public const R_FALLBACK_NOTICE = 'fallbackNotice';
 
 	/**

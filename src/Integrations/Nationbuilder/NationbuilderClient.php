@@ -248,8 +248,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			$body,
 			[],
 			'',
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
 		$code = $details[Config::IARD_CODE];

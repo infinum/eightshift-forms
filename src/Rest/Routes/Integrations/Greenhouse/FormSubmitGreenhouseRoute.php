@@ -113,8 +113,6 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 		$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $response;
 
 		// Finish.
-		return \rest_ensure_response(
-			$this->getIntegrationCommonSubmitAction($formDetails)
-		);
+		return $this->getIntegrationCommonSubmitAction($formDetails);
 	}
 }

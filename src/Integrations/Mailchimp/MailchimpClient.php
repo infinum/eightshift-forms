@@ -210,8 +210,7 @@ class MailchimpClient implements MailchimpClientInterface
 			$body,
 			$files,
 			$itemId,
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY, SettingsMailchimp::SETTINGS_MAILCHIMP_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
 		$code = $details[Config::IARD_CODE];

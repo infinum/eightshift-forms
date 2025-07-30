@@ -179,8 +179,7 @@ class JiraClient implements JiraClientInterface
 			$body,
 			[],
 			'',
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY, SettingsJira::SETTINGS_JIRA_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
 		$code = $details[Config::IARD_CODE];

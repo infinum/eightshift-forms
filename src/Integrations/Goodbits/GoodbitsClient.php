@@ -128,8 +128,7 @@ class GoodbitsClient implements ClientInterface
 			$body,
 			$files,
 			$itemId,
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY, SettingsGoodbits::SETTINGS_GOODBITS_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
 		$code = $details[Config::IARD_CODE];

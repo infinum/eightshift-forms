@@ -380,8 +380,7 @@ class PipedriveClient implements PipedriveClientInterface
 			$body,
 			[],
 			'',
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY, SettingsPipedrive::SETTINGS_PIPEDRIVE_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 	}
 

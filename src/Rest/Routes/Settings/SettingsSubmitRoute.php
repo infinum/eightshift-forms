@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Rest\Routes\Settings;
 
-use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\GeneralHelpers;
@@ -85,8 +84,6 @@ class SettingsSubmitRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function getMandatoryParams(array $params): array
 	{
-		\dump($params);
-
 		switch ($params[Config::FD_TYPE]) {
 			case Config::SETTINGS_GLOBAL_TYPE_NAME:
 				// case Config::FILE_UPLOAD_ADMIN_TYPE_NAME: // TODO: Add file upload admin.

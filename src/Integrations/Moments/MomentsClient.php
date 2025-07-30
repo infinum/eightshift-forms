@@ -14,7 +14,6 @@ use EightshiftForms\Cache\SettingsCache;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\ClientInterface;
-use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
@@ -142,8 +141,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			$body,
 			$files,
 			$itemId,
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
 		$code = $details[Config::IARD_CODE];

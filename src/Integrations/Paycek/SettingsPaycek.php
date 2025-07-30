@@ -97,11 +97,6 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 	public const SETTINGS_PAYCEK_URL_CANCEL = 'paycek-url-cancel';
 
 	/**
-	 * Skip integration.
-	 */
-	public const SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY = 'paycek-skip-integration';
-
-	/**
 	 * Entry ID use key.
 	 */
 	public const SETTINGS_PAYCEK_ENTRY_ID_USE_KEY = 'paycek-entry-id-use';
@@ -374,8 +369,6 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY, self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY);
-
 		return [
 			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
@@ -385,47 +378,18 @@ class SettingsPaycek extends AbstractSettingsIntegrations implements SettingGlob
 						'component' => 'tab',
 						'tabLabel' => \__('API', 'eightshift-forms'),
 						'tabContent' => [
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY),
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
-										'checkboxIsChecked' => $deactivateIntegration,
-										'checkboxValue' => self::SETTINGS_PAYCEK_SKIP_INTEGRATION_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-									]
-								]
-							],
-							...($deactivateIntegration ? [
-								[
-									'component' => 'intro',
-									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
-									'introIsHighlighted' => true,
-									'introIsHighlightedImportant' => true,
-								],
-							] : [
-								[
-									'component' => 'divider',
-									'dividerExtraVSpacing' => true,
-								],
-								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
-									Variables::getApiKeyPaycek(),
-									self::SETTINGS_PAYCEK_API_KEY_KEY,
-									'ES_API_KEY_PAYCEK',
-									\__('API key', 'eightshift-forms'),
-								),
-								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
-									Variables::getApiProfileKeyPaycek(),
-									self::SETTINGS_PAYCEK_API_PROFILE_KEY,
-									'ES_PROFILE_KEY_PAYCEK',
-									\__('Profile key', 'eightshift-forms'),
-								),
-							]),
+							SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
+								Variables::getApiKeyPaycek(),
+								self::SETTINGS_PAYCEK_API_KEY_KEY,
+								'ES_API_KEY_PAYCEK',
+								\__('API key', 'eightshift-forms'),
+							),
+							SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
+								Variables::getApiProfileKeyPaycek(),
+								self::SETTINGS_PAYCEK_API_PROFILE_KEY,
+								'ES_PROFILE_KEY_PAYCEK',
+								\__('Profile key', 'eightshift-forms'),
+							),
 						],
 					],
 					$this->settingsFallback->getOutputGlobalFallback(SettingsPaycek::SETTINGS_TYPE_KEY),

@@ -51,6 +51,15 @@ class Captcha implements CaptchaInterface
 	 */
 	public function check(string $token, string $action, bool $isEnterprise): array
 	{
+		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return [
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
+				AbstractBaseRoute::R_DEBUG => [
+					AbstractBaseRoute::R_DEBUG_KEY => 'captchaFeatureDisabled',
+				],
+			];
+		}
+
 		$debug = [
 			'token' => $token,
 			'action' => $action,

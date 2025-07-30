@@ -174,8 +174,7 @@ class WorkableClient implements ClientInterface
 			$paramsPrepared,
 			$paramsFiles,
 			$itemId,
-			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsWorkable::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, SettingsWorkable::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
 		$code = $details[Config::IARD_CODE];

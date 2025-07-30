@@ -197,7 +197,6 @@ class GreenhouseClient implements ClientInterface
 			$paramsFiles,
 			$itemId,
 			$formId,
-			SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY),
 			true
 		);
 
