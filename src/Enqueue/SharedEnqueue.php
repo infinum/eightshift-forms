@@ -13,7 +13,6 @@ namespace EightshiftForms\Enqueue;
 use EightshiftForms\Rest\Routes\Editor\FormFieldsRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorCreateRoute;
 use EightshiftForms\Rest\Routes\Editor\IntegrationEditorSyncRoute;
-use EightshiftForms\Rest\Routes\Editor\Options\GeolocationCountriesRoute;
 use EightshiftForms\Rest\Routes\Settings\BulkRoute;
 use EightshiftForms\Rest\Routes\Settings\CacheDeleteRoute;
 use EightshiftForms\Rest\Routes\Settings\IncrementRoute;
@@ -23,12 +22,13 @@ use EightshiftForms\Rest\Routes\Settings\LocationsRoute;
 use EightshiftForms\Rest\Routes\Settings\MigrationRoute;
 use EightshiftForms\Rest\Routes\Settings\SettingsSubmitRoute;
 use EightshiftForms\Rest\Routes\Settings\TransferRoute;
-use EightshiftForms\Rest\Routes\SubmitCaptchaRoute;
-use EightshiftForms\Rest\Routes\SubmitFilesRoute;
-use EightshiftForms\Rest\Routes\SubmitGeolocationRoute;
-use EightshiftForms\Rest\Routes\SubmitValidateStepRoute;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Rest\Routes\General\GeolocationCountriesRoute;
+use EightshiftForms\Rest\Routes\General\CaptchaValidateRoute;
+use EightshiftForms\Rest\Routes\General\FilesUploadRoute;
+use EightshiftForms\Rest\Routes\General\GeolocationDetectionRoute;
+use EightshiftForms\Rest\Routes\General\ValidateStepRoute;
 
 /**
  * Trait SharedEnqueue
@@ -55,12 +55,12 @@ trait SharedEnqueue
 			'prefixProject' => $restPrefixProject,
 			'prefixSubmit' => Config::ROUTE_PREFIX_FORM_SUBMIT,
 			'prefixTestApi' => Config::ROUTE_PREFIX_TEST_API,
-			'files' => SubmitFilesRoute::ROUTE_SLUG,
+			'files' => FilesUploadRoute::ROUTE_SLUG,
 
 			// Public.
-			'captcha' => SubmitCaptchaRoute::ROUTE_SLUG,
-			'geolocation' => SubmitGeolocationRoute::ROUTE_SLUG,
-			'validationStep' => SubmitValidateStepRoute::ROUTE_SLUG,
+			'captcha' => CaptchaValidateRoute::ROUTE_SLUG,
+			'geolocation' => GeolocationDetectionRoute::ROUTE_SLUG,
+			'validationStep' => ValidateStepRoute::ROUTE_SLUG,
 		];
 
 		// Public routes filter.

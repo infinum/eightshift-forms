@@ -88,7 +88,7 @@ export class Transfer {
 							location.reload();
 						}, 1000);
 					} else {
-						this.createFile(data[this.state.getStateResponseOutputKey('adminTransferContent')], data[this.state.getStateResponseOutputKey('adminTransferName')]);
+						this.createFile(data?.[this.state.getStateResponseOutputKey('adminTransferContent')], data?.[this.state.getStateResponseOutputKey('adminTransferName')]);
 					}
 				}
 

@@ -3,21 +3,22 @@
 /**
  * The class register route for public form submitting endpoint - validating step
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\General;
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 
 /**
- * Class SubmitValidateStepRoute
+ * Class ValidateStepRoute
  */
-class SubmitValidateStepRoute extends AbstractIntegrationFormSubmit
+class ValidateStepRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

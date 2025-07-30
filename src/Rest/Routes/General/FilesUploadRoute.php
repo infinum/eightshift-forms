@@ -1,23 +1,24 @@
 <?php
 
 /**
- * The class register route for public form submitting endpoint - files
+ * The class register route for public form submitting endpoint - files upload.
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\General;
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 
 /**
- * Class SubmitFilesRoute
+ * Class FilesUploadRoute
  */
-class SubmitFilesRoute extends AbstractIntegrationFormSubmit
+class FilesUploadRoute extends AbstractIntegrationFormSubmit
 {
 	/**
 	 * Route slug.

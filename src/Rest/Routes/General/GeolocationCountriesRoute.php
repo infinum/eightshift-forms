@@ -3,12 +3,12 @@
 /**
  * The class register route for getting Geolocation list of countries endpoint.
  *
- * @package EightshiftForms\Rest\Routes\Editor\Options;
+ * @package EightshiftForms\Rest\Routes\General;
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes\Editor\Options;
+namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;

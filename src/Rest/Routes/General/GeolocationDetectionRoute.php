@@ -1,14 +1,14 @@
 <?php
 
 /**
- * The class register route for public form submitting endpoint - Captcha
+ * The class register route for public form submitting endpoint - geolocation detection.
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\General;
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Geolocation\GeolocationInterface;
@@ -16,12 +16,14 @@ use EightshiftForms\Geolocation\SettingsGeolocation;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\EncryptionHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
- * Class SubmitGeolocationRoute
+ * Class GeolocationDetectionRoute
  */
-class SubmitGeolocationRoute extends AbstractSimpleFormSubmit
+class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.

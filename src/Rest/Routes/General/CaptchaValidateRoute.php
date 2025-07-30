@@ -1,24 +1,26 @@
 <?php
 
 /**
- * The class register route for public form submitting endpoint - Captcha
+ * The class register route for public form submitting endpoint - Captcha validation
  *
- * @package EightshiftForms\Rest\Routes
+ * @package EightshiftForms\Rest\Routes\General;
  */
 
 declare(strict_types=1);
 
-namespace EightshiftForms\Rest\Routes;
+namespace EightshiftForms\Rest\Routes\General;
 
 use EightshiftForms\Captcha\CaptchaInterface;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
- * Class SubmitCaptchaRoute
+ * Class CaptchaValidateRoute
  */
-class SubmitCaptchaRoute extends AbstractSimpleFormSubmit
+class CaptchaValidateRoute extends AbstractSimpleFormSubmit
 {
 	/**
 	 * Route slug.
