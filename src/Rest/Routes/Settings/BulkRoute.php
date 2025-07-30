@@ -19,6 +19,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use WP_REST_Request;
 
@@ -49,17 +50,20 @@ class BulkRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Create a new instance.
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
 	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		IntegrationSyncInterface $integrationSyncDiff,
 		TransferInterface $transfer
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;

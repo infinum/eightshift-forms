@@ -18,6 +18,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -50,15 +51,18 @@ class IntegrationItemsTalentlyftRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param ClientInterface $talentlyftClient Inject Talentlyft which holds Talentlyft connect data.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		ClientInterface $talentlyftClient
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->talentlyftClient = $talentlyftClient;

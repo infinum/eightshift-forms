@@ -18,6 +18,7 @@ use EightshiftForms\Helpers\EncryptionHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 
 /**
@@ -40,15 +41,18 @@ class GeolocationDetectionRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param GeolocationInterface $geolocation Inject geolocation which holds data about for storing to geolocation.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		GeolocationInterface $geolocation,
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->geolocation = $geolocation;

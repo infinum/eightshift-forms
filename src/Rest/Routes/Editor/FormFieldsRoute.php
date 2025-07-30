@@ -18,6 +18,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -41,15 +42,18 @@ class FormFieldsRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Create a new instance.
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		IntegrationSyncInterface $integrationSyncDiff
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;

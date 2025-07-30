@@ -17,6 +17,7 @@ use EightshiftForms\Integrations\Airtable\SettingsAirtable;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
@@ -40,15 +41,18 @@ class TestApiAirtableRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param AirtableClientInterface $airtableClient Inject Airtable which holds Airtable connect data.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		AirtableClientInterface $airtableClient
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->airtableClient = $airtableClient;

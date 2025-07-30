@@ -17,6 +17,7 @@ use EightshiftForms\Integrations\Workable\SettingsWorkable;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
@@ -40,15 +41,18 @@ class TestApiWorkableRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator.
 	 * @param LabelsInterface $labels Inject labels.
 	 * @param ClientInterface $workableClient Inject Workable which holds Workable connect data.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		ClientInterface $workableClient
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->workableClient = $workableClient;

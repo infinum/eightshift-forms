@@ -52,26 +52,31 @@ class FormSubmitHubspotRoute extends AbstractIntegrationFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param SecurityInterface $security Inject security methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param HubspotClientInterface $hubspotClient Inject hubspotClient methods.
 	 * @param ClearbitClientInterface $clearbitClient Inject clearbitClient methods.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		SecurityInterface $security,
 		FormSubmitMailerInterface $formSubmitMailer,
 		EnrichmentInterface $enrichment,
 		HubspotClientInterface $hubspotClient,
 		ClearbitClientInterface $clearbitClient
 	) {
-		parent::__construct($validator, $labels, $captcha, $security, $formSubmitMailer, $enrichment);
+		$this->security = $security;
+		$this->validator = $validator;
+		$this->labels = $labels;
+		$this->captcha = $captcha;
+		$this->formSubmitMailer = $formSubmitMailer;
+		$this->enrichment = $enrichment;
 		$this->hubspotClient = $hubspotClient;
 		$this->clearbitClient = $clearbitClient;
 	}

@@ -39,6 +39,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 use WP_Query;
 use WP_REST_Request;
 
@@ -53,13 +54,6 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	use MigrationHelper;
 
 	/**
-	 * Instance variable of ValidatorInterface data.
-	 *
-	 * @var ValidatorInterface
-	 */
-	protected $validator;
-
-	/**
 	 * Instance variable for HubSpot form data.
 	 *
 	 * @var IntegrationSyncInterface
@@ -69,15 +63,18 @@ class MigrationRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
 	 * @param LabelsInterface $labels Inject labels.
 	 * @param IntegrationSyncInterface $integrationSyncDiff Inject IntegrationSyncDiff which holds sync data.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		IntegrationSyncInterface $integrationSyncDiff
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->integrationSyncDiff = $integrationSyncDiff;

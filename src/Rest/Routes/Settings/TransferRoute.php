@@ -20,6 +20,7 @@ use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
 use EightshiftForms\Rest\Routes\AbstractSimpleFormSubmit;
+use EightshiftForms\Security\SecurityInterface;
 
 /**
  * Class TransferRoute
@@ -36,15 +37,18 @@ class TransferRoute extends AbstractSimpleFormSubmit
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validation methods.
 	 * @param LabelsInterface $labels Inject labels.
 	 * @param TransferInterface $transfer Inject TransferInterface which holds transfer methods.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		TransferInterface $transfer
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->transfer = $transfer;

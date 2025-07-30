@@ -13,6 +13,7 @@ namespace EightshiftForms\Rest\Routes;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
@@ -27,10 +28,28 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const R_STATUS = 'status';
 	public const R_DATA = 'data';
 	public const R_DEBUG = 'debug';
+	public const R_DEBUG_USER = 'debugUser';
 	public const R_DEBUG_KEY = 'debugKey';
 	public const R_DEBUG_REQUEST = 'debugRequest';
 	public const R_DEBUG_SUCCESS_ADDITIONAL_DATA = 'debugSuccessAdditionalData';
 	public const R_FALLBACK_NOTICE = 'fallbackNotice';
+
+	/**
+	 * Instance variable of SecurityInterface data.
+	 *
+	 * @var SecurityInterface
+	 */
+	protected $security;
+
+	/**
+	 * Create a new instance that injects classes.
+	 * 
+	 * @param SecurityInterface $security Security interface.
+	 */
+	public function __construct(SecurityInterface $security)
+	{
+		$this->security = $security;
+	}
 
 	/**
 	 * Check if the route is admin protected.
@@ -113,6 +132,16 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
+	 * Returns security class.
+	 *
+	 * @return SecurityInterface
+	 */
+	protected function getSecurity()
+	{
+		return $this->security;
+	}
+
+	/**
 	 * Extract params from request.
 	 * Check if array then output only value that is not empty.
 	 *
@@ -163,12 +192,22 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	): array {
 		$output = [];
 
+		// Check if there are any response output keys in the data and allowed to be returned.
+		foreach (UtilsHelper::getStateResponseOutputKeys() as $key) {
+			if (isset($data[$key])) {
+				$output[$key] = $data[$key];
+			}
+		}
+
 		$isDeveloperMode = DeveloperHelpers::isDeveloperModeActive();
 
 		if ($isDeveloperMode) {
 			$output[self::R_DEBUG] = [
 				self::R_DEBUG => $debug[self::R_DEBUG] ?? [],
 				self::R_DEBUG_KEY => $debug[self::R_DEBUG_KEY] ?? '',
+				self::R_DEBUG_USER => [
+					'ip' => $this->getSecurity()->getIpAddress('anonymize'),
+				],
 				self::R_DEBUG_REQUEST => [
 					'body' => $request->get_body(),
 					'params' => $request->get_params(),
@@ -180,13 +219,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 					'route' => $request->get_route(),
 				],
 			];
-		}
-
-		// Check if there are any response output keys in the data and allowed to be returned.
-		foreach (UtilsHelper::getStateResponseOutputKeys() as $key) {
-			if (isset($data[$key])) {
-				$output[$key] = $data[$key];
-			}
 		}
 
 		return $output;

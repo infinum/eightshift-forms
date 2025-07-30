@@ -19,6 +19,7 @@ use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStanda
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Config\Config;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
@@ -53,6 +54,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
@@ -60,10 +62,12 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	 * @return void
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		FormSubmitMailerInterface $formSubmitMailer,
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->formSubmitMailer = $formSubmitMailer;

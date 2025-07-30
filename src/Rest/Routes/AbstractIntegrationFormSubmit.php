@@ -76,13 +76,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	protected $captcha;
 
 	/**
-	 * Instance variable of SecurityInterface data.
-	 *
-	 * @var SecurityInterface
-	 */
-	protected $security;
-
-	/**
 	 * Instance variable of enrichment data.
 	 *
 	 * @var EnrichmentInterface
@@ -92,25 +85,25 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	/**
 	 * Create a new instance that injects classes
 	 *
+	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param SecurityInterface $security Inject security methods.
 	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 */
 	public function __construct(
+		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		SecurityInterface $security,
 		FormSubmitMailerInterface $formSubmitMailer,
 		EnrichmentInterface $enrichment
 	) {
+		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
-		$this->security = $security;
 		$this->formSubmitMailer = $formSubmitMailer;
 		$this->enrichment = $enrichment;
 	}
@@ -734,16 +727,6 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	protected function getCaptcha()
 	{
 		return $this->captcha;
-	}
-
-	/**
-	 * Returns security class.
-	 *
-	 * @return SecurityInterface
-	 */
-	protected function getSecurity()
-	{
-		return $this->security;
 	}
 
 	/**
