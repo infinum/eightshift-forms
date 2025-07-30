@@ -12,6 +12,7 @@ namespace EightshiftForms\Security;
 
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Misc\SettingsCloudFront;
 use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -120,6 +121,14 @@ class Security implements SecurityInterface
 
 		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_CONNECTING_IP'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
+			$ip = isset($_SERVER['CloudFront-Viewer-Address']) ? \sanitize_text_field(\wp_unslash($_SERVER['CloudFront-Viewer-Address'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+			if ($ip) {
+				$ip = \explode(':', $ip)[0] ?? '';
+			}
 		}
 
 		if (!$ip) {

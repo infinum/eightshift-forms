@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a CHANGELOG](https://keepachangelog.com/).
 
+## [7.0.3]
+
+### Fixed
+
+- Security IP function now uses CloudFront header if enabled.
+
 ## [7.0.2]
 
 ### Added
@@ -1319,6 +1325,7 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 - Initial production release.
 
+[7.0.3]: https://github.com/infinum/eightshift-forms/compare/7.0.2...7.0.3
 [7.0.2]: https://github.com/infinum/eightshift-forms/compare/7.0.1...7.0.2
 [7.0.1]: https://github.com/infinum/eightshift-forms/compare/7.0.0...7.0.1
 [7.0.0]: https://github.com/infinum/eightshift-forms/compare/6.9.0...7.0.0

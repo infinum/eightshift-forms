@@ -102,7 +102,7 @@ class EntriesAutoDelete implements ServiceInterface, ServiceCliInterface
 		$forms = $this->formsListing->getFormsList();
 
 		foreach ($forms as $form) {
-			$formId = (string) $form['id'] ?? '';
+			$formId = (string) $form['id'] ?: '';
 
 			$autoDeleteIsUsed = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_AUTO_DELETE_KEY, SettingsEntries::SETTINGS_ENTRIES_AUTO_DELETE_KEY, $formId);
 			$retentionInterval = UtilsSettingsHelper::getSettingValue(SettingsEntries::SETTINGS_ENTRIES_AUTO_DELETE_RETENTION_KEY, $formId);
