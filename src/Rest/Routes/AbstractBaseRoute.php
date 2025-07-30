@@ -14,6 +14,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Security\SecurityInterface;
+use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
@@ -199,29 +200,52 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 			}
 		}
 
+		$output[self::R_DEBUG] = [
+			self::R_DEBUG => $debug[self::R_DEBUG] ?? [],
+			self::R_DEBUG_KEY => $debug[self::R_DEBUG_KEY] ?? '',
+			self::R_DEBUG_USER => [
+				'ip' => $this->getSecurity()->getIpAddress('anonymize'),
+				'forms' => Helpers::getPluginVersion(),
+				'php' => \phpversion(),
+				'wp' => \get_bloginfo('version'),
+				'url' => \get_bloginfo('url'),
+				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
+				'time' => \wp_date('Y-m-d H:i:s'),
+				'requestUrl' => Helpers::getCurrentUrl(),
+			],
+			self::R_DEBUG_REQUEST => [
+				'body' => $request->get_body(),
+				'params' => $request->get_params(),
+				'method' => $request->get_method(),
+				'headers' => $request->get_headers(),
+				'bodyParams' => $request->get_body_params(),
+				'queryParams' => $request->get_query_params(),
+				'urlParams' => $request->get_url_params(),
+				'route' => $request->get_route(),
+			],
+		];
+
+		return $output;
+	}
+
+	/**
+	 * Clean up debug output.
+	 *
+	 * @param array<string, mixed> $data Data to use.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function cleanUpDebugOutput(array $data): array
+	{
 		$isDeveloperMode = DeveloperHelpers::isDeveloperModeActive();
 
 		if ($isDeveloperMode) {
-			$output[self::R_DEBUG] = [
-				self::R_DEBUG => $debug[self::R_DEBUG] ?? [],
-				self::R_DEBUG_KEY => $debug[self::R_DEBUG_KEY] ?? '',
-				self::R_DEBUG_USER => [
-					'ip' => $this->getSecurity()->getIpAddress('anonymize'),
-				],
-				self::R_DEBUG_REQUEST => [
-					'body' => $request->get_body(),
-					'params' => $request->get_params(),
-					'method' => $request->get_method(),
-					'headers' => $request->get_headers(),
-					'bodyParams' => $request->get_body_params(),
-					'queryParams' => $request->get_query_params(),
-					'urlParams' => $request->get_url_params(),
-					'route' => $request->get_route(),
-				],
-			];
+			return $data;
 		}
 
-		return $output;
+		unset($data[self::R_DEBUG]);
+
+		return $data;
 	}
 
 	/**

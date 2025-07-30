@@ -41,6 +41,23 @@ interface MailerInterface
 	): bool;
 
 	/**
+	 * Send troubleshooting email.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $data Data to send in the email.
+	 * @param string $subject Email subject.
+	 * @param string $body Email body.
+	 *
+	 * @return boolean
+	 */
+	public function sendTroubleshootingEmail(
+		array $formDetails,
+		array $data,
+		string $subject = '',
+		string $body = '',
+	): bool;
+
+	/**
 	 * Send fallback email
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.

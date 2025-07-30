@@ -124,7 +124,6 @@ class Labels implements LabelsInterface
 		return [
 			'submitWpError' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
 			'submitFallbackError' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
-			'submitFallbackSuccess' => \__('Success.', 'eightshift-forms'),
 			'testApiSuccess' => \__('The API test was successful.', 'eightshift-forms'),
 			'testApiError' => \__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
 			'globalNotConfigured' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),

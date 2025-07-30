@@ -112,24 +112,31 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			}
 
 			// Do action.
-			$return = $this->submitAction($params);
+			$output = $this->submitAction($params);
+
+			$return = [
+				AbstractBaseRoute::R_MSG => $output[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel('genericSuccess'),
+				AbstractBaseRoute::R_CODE => $output[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
+				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_SUCCESS,
+				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
+					$output[AbstractBaseRoute::R_DATA] ?? [],
+					$output[AbstractBaseRoute::R_DEBUG] ?? [],
+					$request
+				),
+			];
 
 			return \rest_ensure_response(
 				Helpers::getApiResponse(
-					$return[AbstractBaseRoute::R_MSG] ?? $this->getLabels()->getLabel('submitFallbackSuccess'),
-					$return[AbstractBaseRoute::R_CODE] ?? AbstractRoute::API_RESPONSE_CODE_OK,
-					AbstractRoute::STATUS_SUCCESS,
-					$this->getResponseDataOutput(
-						$return[AbstractBaseRoute::R_DATA] ?? [],
-						$return[AbstractBaseRoute::R_DEBUG] ?? [],
-						$request
-					)
+					$return[AbstractBaseRoute::R_MSG],
+					$return[AbstractBaseRoute::R_CODE],
+					$return[AbstractBaseRoute::R_STATUS],
+					$this->cleanUpDebugOutput($return[AbstractBaseRoute::R_DATA])
 				)
 			);
 		} catch (ValidationFailedException | RequestLimitException | ForbiddenException | BadRequestException | PermissionDeniedException $e) {
 			$return = [
-				AbstractBaseRoute::R_MSG => $e->getMessage(),
-				AbstractBaseRoute::R_CODE => $e->getCode(),
+				AbstractBaseRoute::R_MSG => $e->getMessage() ?: $this->getLabels()->getLabel('submitFallbackError'),
+				AbstractBaseRoute::R_CODE => $e->getCode() ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
 				AbstractBaseRoute::R_STATUS => AbstractRoute::STATUS_ERROR,
 				AbstractBaseRoute::R_DATA => $this->getResponseDataOutput(
 					$e->getData(),
@@ -141,10 +148,10 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 			// Return validation failed response.
 			return \rest_ensure_response(
 				Helpers::getApiResponse(
-					$return[AbstractBaseRoute::R_MSG] ?: $this->getLabels()->getLabel('submitFallbackError'),
-					$return[AbstractBaseRoute::R_CODE] ?: AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST,
+					$return[AbstractBaseRoute::R_MSG],
+					$return[AbstractBaseRoute::R_CODE],
 					$return[AbstractBaseRoute::R_STATUS],
-					$return[AbstractBaseRoute::R_DATA] ?: []
+					$this->cleanUpDebugOutput($return[AbstractBaseRoute::R_DATA])
 				)
 			);
 		}

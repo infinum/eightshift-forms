@@ -76,6 +76,68 @@ class Mailer implements MailerInterface
 	}
 
 	/**
+	 * Send troubleshooting email.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $data Data to send in the email.
+	 * @param string $subject Email subject.
+	 * @param string $body Email body.
+	 *
+	 * @return boolean
+	 */
+	public function sendTroubleshootingEmail(
+		array $formDetails,
+		array $data,
+		string $subject = '',
+		string $body = '',
+	): bool {
+		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
+
+		if (!$isSettingsValid) {
+			return false;
+		}
+
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
+		$files = $formDetails[Config::FD_FILES] ?? [];
+
+		$body = '<p>' . \esc_html__('It seems like there was an issue with the user\'s form submission. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
+
+		// translators: %s replaces the form name.
+		$body .= '<p>' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
+
+		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
+
+		$filesOutput = [];
+		if ($files) {
+			switch ($type) {
+				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
+					foreach ($files as $file) {
+						if ($file instanceof CURLFile) {
+							$filesOutput[] = $file->name;
+						}
+					}
+					break;
+				default:
+					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
+					break;
+			}
+		}
+
+		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
+		$headers = [
+			$this->getType()
+		];
+
+		if ($cc) {
+			$headers[] = "Cc: {$cc}";
+		}
+
+		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
+	}
+
+	/**
 	 * Send fallback email
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
