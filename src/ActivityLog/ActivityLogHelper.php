@@ -154,22 +154,22 @@ class ActivityLogHelper
 	 *
 	 * @param string $ip IP address of the request.
 	 * @param string $statusKey Status key of the activity log.
-	 * @param array<string, mixed> $formData Form data to save.
-	 * @param array<string, mixed> $debug Debug data to save.
+	 * @param string $formId Form ID.
+	 * @param array<string, mixed> $data Data to save.
 	 *
 	 * @return int|false
 	 */
-	public static function setActivityLog(string $ip, string $statusKey, array $formData, array $debug)
-	{
+	public static function setActivityLog(
+		string $ip,
+		string $statusKey,
+		string $formId,
+		array $data
+	) {
 		global $wpdb;
-
-		$formId = $formData[Config::IARD_FORM_ID] ?? '';
 
 		if (!$formId) {
 			return false;
 		}
-
-		$time = \current_time('mysql', true);
 
 		$result = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			self::getFullTableName(),
@@ -177,9 +177,8 @@ class ActivityLogHelper
 				'ip_address' => $ip,
 				'status_key' => $statusKey,
 				'form_id' => (int) $formId,
-				'form_data' => \wp_json_encode($formData),
-				'debug' => \wp_json_encode($debug),
-				'created_at' => $time,
+				'data' => \wp_json_encode($data),
+				'created_at' => \current_time('mysql', true),
 			],
 			[
 				'%s',
@@ -245,8 +244,7 @@ class ActivityLogHelper
 			'statusKey' => $data['status_key'] ?? '',
 			'ipAddress' => $data['ip_address'] ?? '',
 			'formId' => $data['form_id'] ?? '',
-			'formData' => $data['form_data'] ?? '',
-			'debug' => $data['debug'] ?? '',
+			'data' => $data['data'] ?? '',
 			'createdAt' => $data['created_at'] ?? '',
 		];
 	}

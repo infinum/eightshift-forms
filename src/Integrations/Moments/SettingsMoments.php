@@ -36,6 +36,11 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_moments';
 
 	/**
+	 * Filter settings global is Valid key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_moments';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'moments';
@@ -105,6 +110,7 @@ class SettingsMoments extends AbstractSettingsIntegrations implements SettingGlo
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**

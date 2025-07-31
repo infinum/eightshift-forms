@@ -15,9 +15,12 @@ use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitCorvusRoute
@@ -73,15 +76,16 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
-		$formId = $formDetails[Config::FD_FORM_ID];
-
-		if (!\apply_filters(SettingsCorvus::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->getLabels()->getLabel('corvusMissingConfig', $formId)
-				)
+		if (!\apply_filters(SettingsCorvus::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('corvusMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CORVUS_MISSING_CONFIG,
+				],
 			);
 		}
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsCorvus::SETTINGS_CORVUS_PARAMS_MAP_KEY, $formId);
 
@@ -124,7 +128,7 @@ class FormSubmitCorvusRoute extends AbstractIntegrationFormSubmit
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.
-		$this->getFormSubmitMailer()->sendEmails(
+		$this->getMailer()->sendEmails(
 			$formDetails,
 			$this->getCommonEmailResponseTags(
 				\array_merge(

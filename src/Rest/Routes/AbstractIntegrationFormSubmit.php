@@ -25,7 +25,6 @@ use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Hooks\FiltersOutputMock;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Security\SecurityInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Config\Config;
@@ -37,6 +36,7 @@ use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
@@ -56,11 +56,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	protected $validator;
 
 	/**
-	 * Instance variable of FormSubmitMailerInterface data.
+	 * Instance variable of MailerInterface data.
 	 *
-	 * @var FormSubmitMailerInterface
+	 * @var MailerInterface
 	 */
-	public $formSubmitMailer;
+	public $mailer;
 
 	/**
 	 * Instance variable of LabelsInterface data.
@@ -90,7 +90,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param MailerInterface $mailer Inject mailer methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 */
 	public function __construct(
@@ -98,14 +98,14 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		FormSubmitMailerInterface $formSubmitMailer,
+		MailerInterface $mailer,
 		EnrichmentInterface $enrichment
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
-		$this->formSubmitMailer = $formSubmitMailer;
+		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 	}
 
@@ -258,8 +258,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				),
 			];
 
-			if ($this->shouldLogActivity($output[AbstractBaseRoute::R_DEBUG] ?? [])) {
-				$this->getFormSubmitMailer()->sendTroubleshootingEmail($formDetails, $this->getDebugOutputLevel($return));
+			if ($this->shouldLogActivity($output)) {
+				$this->getMailer()->sendTroubleshootingEmail(
+					$formDetails,
+					$return
+				);
 			}
 
 			return \rest_ensure_response(
@@ -282,8 +285,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				),
 			];
 
-			if ($this->shouldLogActivity($e->getDebug())) {
-				$this->getFormSubmitMailer()->sendTroubleshootingEmail($formDetails, $this->getDebugOutputLevel($return));
+			if ($this->shouldLogActivity($return)) {
+				$this->getMailer()->sendTroubleshootingEmail(
+					$formDetails,
+					$return
+				);
 			}
 
 			return \rest_ensure_response(
@@ -306,8 +312,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				),
 			];
 
-			if ($this->shouldLogActivity($e->getDebug())) {
-				$this->getFormSubmitMailer()->sendTroubleshootingEmail($formDetails, $this->getDebugOutputLevel($return));
+			if ($this->shouldLogActivity($return)) {
+				$this->getMailer()->sendTroubleshootingEmail(
+					$formDetails,
+					$return
+				);
 			}
 
 			// Return validation failed response.
@@ -391,19 +400,13 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	}
 
 	/**
-	 * Get IP address.
+	 * Check if activity should be logged.
 	 *
-	 * @return string
+	 * @return bool
 	 */
-	protected function getIpAddress(): string
+	protected function shouldLogActivity(array $return): bool
 	{
-		static $ip = '';
-
-		if (!$ip) {
-			$ip = $this->getSecurity()->getIpAddress('hash');
-		}
-
-		return $ip;
+		return \apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, $this->getMailer()->getDebugKey($return));
 	}
 
 	/**
@@ -459,7 +462,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email if it is configured in the backend.
-		$this->getFormSubmitMailer()->sendEmails(
+		$this->getMailer()->sendEmails(
 			$formDetails,
 			$this->getCombinedEmailResponseTags(
 				$formDetails,
@@ -740,11 +743,11 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 	/**
 	 * Returns form submit mailer class.
 	 *
-	 * @return FormSubmitMailerInterface
+	 * @return MailerInterface
 	 */
-	protected function getFormSubmitMailer()
+	protected function getMailer()
 	{
-		return $this->formSubmitMailer;
+		return $this->mailer;
 	}
 
 	/**

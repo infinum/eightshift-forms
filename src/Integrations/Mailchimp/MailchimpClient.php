@@ -243,7 +243,7 @@ class MailchimpClient implements MailchimpClientInterface
 			case 'Bad Request':
 				return 'mailchimpBadRequestError';
 			case 'Your request did not include an API key.':
-				return 'mailchimpErrorSettingsMissing';
+				return 'mailchimpMissingConfig';
 			default:
 				return 'submitWpError';
 		}

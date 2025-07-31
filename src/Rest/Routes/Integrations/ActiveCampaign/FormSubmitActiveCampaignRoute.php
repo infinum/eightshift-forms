@@ -16,13 +16,15 @@ use EightshiftForms\Integrations\ActiveCampaign\ActiveCampaignClientInterface;
 use EightshiftForms\Integrations\ActiveCampaign\SettingsActiveCampaign;
 use EightshiftForms\Labels\LabelsInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitActiveCampaignRoute
@@ -48,7 +50,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param ActiveCampaignClientInterface $activeCampaignClient Inject ActiveCampaign methods.
 	 */
@@ -57,7 +59,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		FormSubmitMailerInterface $formSubmitMailer,
+		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		ActiveCampaignClientInterface $activeCampaignClient
 	) {
@@ -65,7 +67,7 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
-		$this->formSubmitMailer = $formSubmitMailer;
+		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 		$this->activeCampaignClient = $activeCampaignClient;
 	}
@@ -115,6 +117,16 @@ class FormSubmitActiveCampaignRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		if (!\apply_filters(SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('activeCampaignMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_ACTIVE_CAMPAIGN_MISSING_CONFIG,
+				],
+			);
+		}
+
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY, SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 

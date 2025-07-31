@@ -153,7 +153,7 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 	{
 		\add_filter(self::FILTER_SETTINGS_NAME, [$this, 'getSettingsData']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid'], 10, 2);
+		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsValid']);
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
@@ -161,11 +161,10 @@ class SettingsJira extends AbstractSettingsIntegrations implements SettingGlobal
 	 * Determine if settings are valid.
 	 *
 	 * @param string $formId Form ID.
-	 * @param string $type Integration type.
 	 *
 	 * @return boolean
 	 */
-	public function isSettingsValid(string $formId, string $type): bool
+	public function isSettingsValid(string $formId): bool
 	{
 		if (!$this->isSettingsGlobalValid()) {
 			return false;

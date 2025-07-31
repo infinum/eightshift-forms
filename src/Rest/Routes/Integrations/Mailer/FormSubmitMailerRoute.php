@@ -14,7 +14,10 @@ use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Integrations\Mailer\SettingsMailer;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitMailerRoute
@@ -72,11 +75,21 @@ class FormSubmitMailerRoute extends AbstractIntegrationFormSubmit
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
+		if (!\apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('mailerMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MAILER_MISSING_CONFIG,
+				],
+			);
+		}
+
 		// Located before the sendEmail method so we can utilize common email response tags.
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.
-		$mailerResponse = $this->getFormSubmitMailer()->sendEmails(
+		$mailerResponse = $this->getMailer()->sendEmails(
 			$formDetails,
 			$this->getCommonEmailResponseTags(
 				\array_merge(

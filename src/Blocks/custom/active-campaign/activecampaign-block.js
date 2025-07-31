@@ -1,7 +1,7 @@
 import React from 'react';
 import { InspectorControls } from '@wordpress/block-editor';
-import { ActiveCampaignEditor } from './components/active-campaign-editor';
-import { ActiveCampaignOptions } from './components/active-campaign-options';
+import { ActiveCampaignEditor } from './components/activecampaign-editor';
+import { ActiveCampaignOptions } from './components/activecampaign-options';
 
 export const ActiveCampaign = (props) => {
 	const itemIdKey = 'activeCampaignIntegrationId';

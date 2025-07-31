@@ -32,6 +32,11 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_workable';
 
 	/**
+	 * Filter settings global is Valid key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_workable';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'workable';
@@ -101,6 +106,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGl
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**

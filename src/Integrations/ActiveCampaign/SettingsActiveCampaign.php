@@ -29,29 +29,34 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_active_campaign';
 
 	/**
+	 * Filter settings global is Valid key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_active_campaign';
+
+	/**
 	 * Settings key.
 	 */
-	public const SETTINGS_TYPE_KEY = 'active-campaign';
+	public const SETTINGS_TYPE_KEY = 'activecampaign';
 
 	/**
 	 * ActiveCampaign Use key.
 	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_USE_KEY = 'active-campaign-use';
+	public const SETTINGS_ACTIVE_CAMPAIGN_USE_KEY = 'activecampaign-use';
 
 	/**
 	 * API Key.
 	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY = 'active-campaign-api-key';
+	public const SETTINGS_ACTIVE_CAMPAIGN_API_KEY_KEY = 'activecampaign-api-key';
 
 	/**
 	 * API Url.
 	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY = 'active-campaign-api-url';
+	public const SETTINGS_ACTIVE_CAMPAIGN_API_URL_KEY = 'activecampaign-api-url';
 
 	/**
 	 * Skip integration.
 	 */
-	public const SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY = 'active-campaign-skip-integration';
+	public const SETTINGS_ACTIVE_CAMPAIGN_SKIP_INTEGRATION_KEY = 'activecampaign-skip-integration';
 
 	/**
 	 * Instance variable for Fallback settings.
@@ -78,6 +83,7 @@ class SettingsActiveCampaign extends AbstractSettingsIntegrations implements Set
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**

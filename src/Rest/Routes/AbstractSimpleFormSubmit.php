@@ -16,7 +16,7 @@ use EightshiftForms\Exception\PermissionDeniedException;
 use EightshiftForms\Exception\RequestLimitException;
 use EightshiftForms\Exception\ValidationFailedException;
 use EightshiftForms\Labels\LabelsInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use EightshiftForms\Integrations\Mailer\MailerInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Validation\ValidatorInterface; // phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use EightshiftForms\Config\Config;
 use EightshiftForms\Security\SecurityInterface;
@@ -39,11 +39,11 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	protected $validator;
 
 	/**
-	 * Instance variable of FormSubmitMailerInterface data.
+	 * Instance variable of MailerInterface data.
 	 *
-	 * @var FormSubmitMailerInterface
+	 * @var MailerInterface
 	 */
-	public $formSubmitMailer;
+	public $mailer;
 
 	/**
 	 * Instance variable of LabelsInterface data.
@@ -58,7 +58,7 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	 * @param SecurityInterface $security Inject security methods.
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param MailerInterface $mailer Inject mailer methods.
 	 *
 	 * @return void
 	 */
@@ -66,12 +66,12 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 		SecurityInterface $security,
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
-		FormSubmitMailerInterface $formSubmitMailer,
+		MailerInterface $mailer,
 	) {
 		$this->security = $security;
 		$this->validator = $validator;
 		$this->labels = $labels;
-		$this->formSubmitMailer = $formSubmitMailer;
+		$this->mailer = $mailer;
 	}
 
 	/**
@@ -181,11 +181,11 @@ abstract class AbstractSimpleFormSubmit extends AbstractBaseRoute
 	/**
 	 * Returns form submit mailer class.
 	 *
-	 * @return FormSubmitMailerInterface
+	 * @return MailerInterface
 	 */
-	protected function getFormSubmitMailer()
+	protected function getMailer()
 	{
-		return $this->formSubmitMailer;
+		return $this->mailer;
 	}
 
 	/**

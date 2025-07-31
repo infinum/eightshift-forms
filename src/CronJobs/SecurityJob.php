@@ -34,6 +34,10 @@ class SecurityJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function register(): void
 	{
+		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return;
+		}
+
 		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
 		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.ChangeDetected
 		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);

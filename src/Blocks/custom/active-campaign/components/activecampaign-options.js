@@ -1,7 +1,7 @@
 import React from 'react';
 import { select } from '@wordpress/data';
 import { STORE_NAME, checkAttr } from '@eightshift/frontend-libs/scripts';
-import { IntegrationsOptions } from './../../../components/integrations/components/integrations-options';
+import { IntegrationsOptions } from '../../../components/integrations/components/integrations-options';
 
 export const ActiveCampaignOptions = ({
 	attributes,
@@ -9,7 +9,7 @@ export const ActiveCampaignOptions = ({
 	clientId,
 	itemIdKey,
 }) => {
-	const manifest = select(STORE_NAME).getBlock('active-campaign');
+	const manifest = select(STORE_NAME).getBlock('activecampaign');
 
 	const {
 		title,

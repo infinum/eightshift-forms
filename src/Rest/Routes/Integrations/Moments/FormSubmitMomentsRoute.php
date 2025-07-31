@@ -16,16 +16,17 @@ use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Moments\MomentsEventsInterface;
 use EightshiftForms\Integrations\Moments\SettingsMoments;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Exception\DisabledIntegrationException;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
-use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitMomentsRoute
@@ -58,7 +59,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param ClientInterface $momentsClient Inject momentsClient methods.
 	 * @param MomentsEventsInterface $momentsEvents Inject momentsEvents methods.
@@ -68,7 +69,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		FormSubmitMailerInterface $formSubmitMailer,
+		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		ClientInterface $momentsClient,
 		MomentsEventsInterface $momentsEvents
@@ -77,7 +78,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
-		$this->formSubmitMailer = $formSubmitMailer;
+		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 		$this->momentsClient = $momentsClient;
 		$this->momentsEvents = $momentsEvents;
@@ -128,6 +129,16 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		if (!\apply_filters(SettingsMoments::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('momentsMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_MISSING_CONFIG,
+				],
+			);
+		}
+
 		if (SettingsHelpers::isOptionCheckboxChecked(SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY, SettingsMoments::SETTINGS_MOMENTS_SKIP_INTEGRATION_KEY)) {
 			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
 
@@ -199,14 +210,18 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 			return;
 		}
 
-		$this->getFormSubmitMailer()->sendFallbackIntegrationEmail(
-			$formDetails,
-			// translators: %1$s is the type of the event, %2$s is the form id.
-			\sprintf(\__('Failed %1$s event submit on form: %2$s', 'eightshift-forms'), $type, $formId),
-			\__('The Moments integration data was sent but there was an error with the custom event. Here is all the data for debugging purposes.', 'eightshift-forms'),
-			[
-				'eventResponse' => $response
-			]
-		);
+		if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR)) {
+			$this->getMailer()->sendTroubleshootingEmail(
+				[
+					Config::FD_FORM_ID => (string) $formId,
+					Config::FD_TYPE => $type,
+				],
+				[
+					'response' => $response[Config::IARD_RESPONSE] ?? [],
+					'body' => $response[Config::IARD_BODY] ?? [],
+				],
+				SettingsFallback::SETTINGS_FALLBACK_FLAG_MOMENTS_EVENTS_ERROR
+			);
+		}
 	}
 }

@@ -202,7 +202,7 @@ class MailerliteClient implements ClientInterface
 			case 'Bad Request':
 				return 'mailerliteBadRequestError';
 			case 'Unauthorized':
-				return 'mailerliteErrorSettingsMissing';
+				return 'mailerliteMissingConfig';
 			default:
 				return 'submitWpError';
 		}

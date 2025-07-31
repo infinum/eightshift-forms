@@ -37,8 +37,7 @@ class CreateActivityLogsTable
 			form_id int(11) NOT NULL,
 			ip_address VARCHAR(255) NOT NULL,
 			status_key VARCHAR(255) NOT NULL,
-			form_data LONGTEXT NOT NULL,
-			debug LONGTEXT NOT NULL,
+			data LONGTEXT NOT NULL,
 			created_at DATETIME NOT NULL,
 			PRIMARY KEY  (id)
 		) $charsetCollate;";

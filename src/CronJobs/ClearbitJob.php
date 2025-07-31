@@ -14,10 +14,11 @@ use EightshiftForms\Integrations\Clearbit\ClearbitClientInterface;
 use EightshiftForms\Integrations\Clearbit\SettingsClearbit;
 use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
@@ -49,25 +50,25 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	protected $hubspotClient;
 
 	/**
-	 * Instance variable of FormSubmitMailerInterface data.
+	 * Instance variable of MailerInterface data.
 	 *
-	 * @var FormSubmitMailerInterface
+	 * @var MailerInterface
 	 */
-	public $formSubmitMailer;
+	public $mailer;
 
 	/**
 	 * Create a new instance that injects classes
 	 *
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject FormSubmitMailerInterface which holds mailer methods.
+	 * @param MailerInterface $mailer Inject MailerInterface which holds mailer methods.
 	 * @param ClearbitClientInterface $clearbitClient Inject Clearbit which holds clearbit connect data.
 	 * @param HubspotClientInterface $hubspotClient Inject Hubspot which holds hubspot connect data.
 	 */
 	public function __construct(
-		FormSubmitMailerInterface $formSubmitMailer,
+		MailerInterface $mailer,
 		ClearbitClientInterface $clearbitClient,
 		HubspotClientInterface $hubspotClient
 	) {
-		$this->formSubmitMailer = $formSubmitMailer;
+		$this->mailer = $mailer;
 		$this->clearbitClient = $clearbitClient;
 		$this->hubspotClient = $hubspotClient;
 	}
@@ -79,6 +80,10 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	 */
 	public function register(): void
 	{
+		if (!\apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return;
+		}
+
 		\add_action('admin_init', [$this, 'checkIfJobIsSet']);
 		\add_filter('cron_schedules', [$this, 'addJobToSchedule']); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
 		\add_action(self::JOB_NAME, [$this, 'getJobCallback']);
@@ -125,10 +130,9 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 	public function getJobCallback()
 	{
 		$use = \apply_filters(SettingsClearbit::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false);
-		$useCron = SettingsHelpers::isOptionCheckboxChecked(SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, SettingsClearbit::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY);
 		$jobs = SettingsHelpers::getOptionValueGroup(SettingsClearbit::SETTINGS_CLEARBIT_CRON_KEY);
 
-		if (!$use || !$useCron || !$jobs) {
+		if (!$use || !$jobs) {
 			return;
 		}
 
@@ -164,7 +168,19 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 						if ($clearbitResponse[Config::IARD_CODE] !== AbstractRoute::API_RESPONSE_CODE_NOT_FOUND) {
 							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
 
-							$this->formSubmitMailer->sendFallbackIntegrationEmail($formDetails);
+							if (\apply_filters(SettingsFallback::FILTER_SETTINGS_SHOULD_LOG_ACTIVITY_NAME, false, SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR)) {
+								$this->mailer->sendTroubleshootingEmail(
+									[
+										Config::FD_FORM_ID => (string) $formId,
+										Config::FD_TYPE => $type,
+									],
+									[
+										'response' => $clearbitResponse[Config::IARD_RESPONSE] ?? [],
+										'body' => $clearbitResponse[Config::IARD_BODY] ?? [],
+									],
+									SettingsFallback::SETTINGS_FALLBACK_FLAG_CLEARBIT_CRON_ERROR
+								);
+							}
 						}
 					}
 

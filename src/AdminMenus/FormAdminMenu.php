@@ -750,15 +750,15 @@ class FormAdminMenu extends AbstractAdminMenu
 		switch ($type) {
 			case Config::SLUG_ADMIN_LISTING_LOCATIONS:
 				foreach ($items as $item) {
-					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$itemId = $item['id'] ?? '';
 					$postType = $item['postType'] ?? '';
 					$editLink = $item['editLink'] ?? '';
 
-					$title = \get_the_title($id);
+					$itemTitle = \get_the_title($itemId);
 
 					$output[] = Helpers::render('card-inline', [
 						// Translators: %1$s is the post type, %2$s is the post title.
-						'cardInlineTitle' => \sprintf(\__('%1$s - %2$s', 'eightshift-forms'), \ucfirst($postType), $title) . ($isDevMode ? " ({$id})" : ''),
+						'cardInlineTitle' => \sprintf(\__('%1$s - %2$s', 'eightshift-forms'), \ucfirst($postType), $itemTitle) . ($isDevMode ? " ({$itemId})" : ''),
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
 						'cardInlineUseHover' => true,
@@ -770,14 +770,14 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case Config::SLUG_ADMIN_LISTING_RESULTS:
 				foreach ($items as $item) {
-					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$itemId = $item['id'] ?? '';
 					$postType = $item['postType'] ?? '';
 					$editLink = $item['editLink'] ?? '';
 
-					$title = \get_the_title($id);
+					$itemTitle = \get_the_title($itemId);
 
 					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
+						'cardInlineTitle' => $itemTitle . ($isDevMode ? " ({$itemId})" : ''),
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['status'])),
 						'cardInlineUseHover' => true,
@@ -785,33 +785,32 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineLeftContent' => Helpers::ensureString($this->getLeftContent($item)),
 						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 						'additionalAttributes' => [
-							UtilsHelper::getStateAttribute('bulkId') => $id,
+							UtilsHelper::getStateAttribute('bulkId') => $itemId,
 						],
-						'additionalClass' => Helpers::classnames([
+						'additionalClass' => Helpers::clsx([
 							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
 				}
 				break;
 			case Config::SLUG_ADMIN_LISTING_ENTRIES:
-			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
 				$i = 0;
 
 				$tableHead = [];
 				$tableContent = [];
 
 				foreach (\array_reverse($items) as $item) {
-					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$itemId = $item['id'] ?? '';
 					$entryValues = $item['entryValue'] ?? [];
 					$createdAt = $item['createdAt'] ?? '';
 
 					// Prefixes are here to ensure that the columns are sorted correctly.
 					$tableHead['___bulk'] = \__('Bulk', 'eightshift-forms');
-					$tableContent[$id]['___bulk'] = Helpers::ensureString($this->getLeftContent($item));
+					$tableContent[$itemId]['___bulk'] = Helpers::ensureString($this->getLeftContent($item));
 					$tableHead['__id'] = \__('ID', 'eightshift-forms');
-					$tableContent[$id]['__id'] = $id;
+					$tableContent[$itemId]['__id'] = $itemId;
 					$tableHead['_createdAt'] = \__('Created', 'eightshift-forms');
-					$tableContent[$id]['_createdAt'] = $createdAt;
+					$tableContent[$itemId]['_createdAt'] = $createdAt;
 
 					foreach ($entryValues as $entryKey => $entryValue) {
 						if (\gettype($entryValue) === 'array') {
@@ -842,7 +841,7 @@ class FormAdminMenu extends AbstractAdminMenu
 						if (!isset($tableHead[$entryKey])) {
 							$tableHead[$entryKey] = \ucfirst($entryKey);
 						}
-						$tableContent[$id][$entryKey] = $entryValue;
+						$tableContent[$itemId][$entryKey] = $entryValue;
 					}
 
 					\ksort($tableHead);
@@ -853,7 +852,43 @@ class FormAdminMenu extends AbstractAdminMenu
 				$output[] = Helpers::render('table', [
 					'tableContent' => $tableContent,
 					'tableHead' => $tableHead,
-					'additionalClass' => Helpers::classnames([
+					'additionalClass' => Helpers::clsx([
+						UtilsHelper::getStateSelectorAdmin('listingItem'),
+					]),
+					'selectorClass' => Helpers::getComponent('admin-listing')['componentClass'],
+				]);
+				break;
+			case Config::SLUG_ADMIN_LISTING_ACTIVITY_LOGS:
+				$i = 0;
+
+				$tableHead = [];
+				$tableContent = [];
+
+				foreach (\array_reverse($items) as $item) {
+					$itemId = $item['id'] ?? '';
+
+					$tableHead['bulk'] = \__('Bulk', 'eightshift-forms');
+					$tableContent[$itemId]['bulk'] = Helpers::ensureString($this->getLeftContent($item));
+					$tableHead['id'] = \__('ID', 'eightshift-forms');
+					$tableContent[$itemId]['id'] = $itemId;
+					$tableHead['formId'] = \__('Form ID', 'eightshift-forms');
+					$tableContent[$itemId]['formId'] = $item['formId'] ?? '';
+					$tableHead['statusKey'] = \__('Status', 'eightshift-forms');
+					$tableContent[$itemId]['statusKey'] = $item['statusKey'] ?? '';
+					$tableHead['ipAddress'] = \__('IP', 'eightshift-forms');
+					$tableContent[$itemId]['ipAddress'] = $item['ipAddress'] ?? '';
+					$tableHead['createdAt'] = \__('Created', 'eightshift-forms');
+					$tableContent[$itemId]['createdAt'] = $item['createdAt'] ?? '';
+					$tableHead['data'] = \__('Data', 'eightshift-forms');
+					$tableContent[$itemId]['data'] = $item['data'] ?? '';
+
+					$i++;
+				}
+
+				$output[] = Helpers::render('table', [
+					'tableContent' => $tableContent,
+					'tableHead' => $tableHead,
+					'additionalClass' => Helpers::clsx([
 						UtilsHelper::getStateSelectorAdmin('listingItem'),
 					]),
 					'selectorClass' => Helpers::getComponent('admin-listing')['componentClass'],
@@ -861,16 +896,16 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			case Config::SLUG_ADMIN_LISTING_TRASH:
 				foreach ($items as $item) {
-					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-					$title = $item['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$itemId = $item['id'] ?? '';
+					$itemTitle = $item['title'] ?? '';
 
-					if (!$title) {
+					if (!$itemTitle) {
 						// Translators: %s is the form ID.
-						$title = \sprintf(\__('Form %s', 'eightshift-forms'), $id);
+						$title = \sprintf(\__('Form %s', 'eightshift-forms'), $itemId);
 					}
 
 					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
+						'cardInlineTitle' => $title . ($isDevMode ? " ({$itemId})" : ''),
 						'cardInlineTitleLink' => $item['editLink'] ?? '#',
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item, ['all'])),
 						'cardInlineIcon' => UtilsHelper::getUtilsIcons('listingGeneric'),
@@ -878,9 +913,9 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineRightContent' => Helpers::ensureString($this->getRightContent($item, $type, $parent)),
 						'cardInlineUseHover' => true,
 						'additionalAttributes' => [
-							UtilsHelper::getStateAttribute('bulkId') => $id,
+							UtilsHelper::getStateAttribute('bulkId') => $itemId,
 						],
-						'additionalClass' => Helpers::classnames([
+						'additionalClass' => Helpers::clsx([
 							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);
@@ -889,22 +924,22 @@ class FormAdminMenu extends AbstractAdminMenu
 				break;
 			default:
 				foreach ($items as $item) {
-					$id = $item['id'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-					$title = $item['title'] ?? ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$itemId = $item['id'] ?? '';
+					$itemTitle = $item['title'] ?? '';
 					$editLink = $item['editLink'] ?? '#';
 					$postType = $item['postType'] ?? '';
 					$activeIntegration = $item['activeIntegration'] ?? [];
 					$cardIcon = isset($activeIntegration['icon']) ? $activeIntegration['icon'] : UtilsHelper::getUtilsIcons('listingGeneric'); // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
-					if (!$title) {
+					if (!$itemTitle) {
 						// Translators: %s is the form ID.
-						$title = \sprintf(\__('Form %s', 'eightshift-forms'), $id);
+						$title = \sprintf(\__('Form %s', 'eightshift-forms'), $itemId);
 					}
 
 					$isValid = $this->isIntegrationValid($item);
 
 					$output[] = Helpers::render('card-inline', [
-						'cardInlineTitle' => $title . ($isDevMode ? " ({$id})" : ''),
+						'cardInlineTitle' => $title . ($isDevMode ? " ({$itemId})" : ''),
 						'cardInlineTitleLink' => $editLink,
 						'cardInlineSubTitle' => \implode(', ', $this->getSubtitle($item)),
 						'cardInlineIcon' => $cardIcon,
@@ -914,9 +949,9 @@ class FormAdminMenu extends AbstractAdminMenu
 						'cardInlineUseHover' => true,
 						'additionalAttributes' => [
 							UtilsHelper::getStateAttribute('adminIntegrationType') => $isValid ? $activeIntegration['value'] : FormAdminMenu::ADMIN_MENU_FILTER_NOT_CONFIGURED,
-							UtilsHelper::getStateAttribute('bulkId') => $id,
+							UtilsHelper::getStateAttribute('bulkId') => $itemId,
 						],
-						'additionalClass' => Helpers::classnames([
+						'additionalClass' => Helpers::clsx([
 							UtilsHelper::getStateSelectorAdmin('listingItem'),
 						]),
 					]);

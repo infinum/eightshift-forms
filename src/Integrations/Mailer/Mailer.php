@@ -11,12 +11,16 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailer;
 
 use CURLFile;
+use EightshiftForms\ActivityLog\ActivityLogHelper;
 use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\FormsHelper;
 use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms_Parsedown as Parsedown;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -25,6 +29,227 @@ use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
  */
 class Mailer implements MailerInterface
 {
+	/**
+	 * Instance variable of SecurityInterface data.
+	 *
+	 * @var SecurityInterface
+	 */
+	protected $security;
+
+	/**
+	 * Create a new instance that injects classes.
+	 * 
+	 * @param SecurityInterface $security Security interface.
+	 */
+	public function __construct(SecurityInterface $security)
+	{
+		$this->security = $security;
+	}
+
+	/**
+	 * Send emails method.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $responseTags Response tags.
+	 *
+	 * @return array<string, array<mixed>|int|string>
+	 */
+	public function sendEmails(array $formDetails, array $responseTags = []): array
+	{
+		$formId = $formDetails[Config::FD_FORM_ID];
+
+		$debug = [
+			'formDetails' => $formDetails,
+		];
+
+		// Check if Mailer data is set and valid.
+		$isSettingsValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME, $formId);
+
+		// Bailout if settings are not ok.
+		if (!$isSettingsValid) {
+			return [
+				'status' => Config::STATUS_ERROR,
+				'label' => 'mailerMissingConfig',
+				'debug' => $debug,
+			];
+		}
+
+		// This data is set here because $formDetails can me modified in the previous filters.
+		$params = $formDetails[Config::FD_PARAMS];
+		$files = $formDetails[Config::FD_FILES];
+
+		// Send email.
+		$response = $this->internalSendEmail(
+			$formId,
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_TO_KEY, $formId),
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SUBJECT_KEY, $formId),
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_TEMPLATE_KEY, $formId),
+			$files,
+			$params,
+			$responseTags,
+			[
+				'settings' => SettingsHelpers::getSettingValueGroup(SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_KEY, $formId),
+				'shouldAppend' => SettingsHelpers::isSettingCheckboxChecked(SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, SettingsMailer::SETTINGS_MAILER_TO_ADVANCED_APPEND_KEY, $formId),
+			]
+		);
+
+		// If email fails.
+		if (!$response) {
+			return [
+				'status' => Config::STATUS_ERROR,
+				'label' => 'mailerErrorEmailSend',
+				'debug' => $debug,
+			];
+		}
+
+		$this->sendConfirmationEmail($formId, $params, $files, $responseTags);
+
+		return [
+			'status' => Config::STATUS_SUCCESS,
+			'label' => 'mailerSuccess',
+			'debug' => $debug,
+		];
+	}
+
+	/**
+	 * Send troubleshooting email.
+	 *
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $data Data to send in the email.
+	 * @param string $debugKey Debug key.
+	 *
+	 * @return boolean
+	 */
+	public function sendTroubleshootingEmail(
+		array $formDetails,
+		array $data,
+		string $debugKey = ''
+	): bool {
+		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
+		$type = $formDetails[Config::FD_TYPE] ?? '';
+		$files = $formDetails[Config::FD_FILES] ?? [];
+
+		$debugKeyValue = $debugKey ?: $this->getDebugKey($data);
+
+		$activityLogId = ActivityLogHelper::setActivityLog(
+			$this->security->getIpAddress('hash'),
+			$debugKeyValue,
+			$formId,
+			$debugKey ? $data : $this->getDebugOutputActivityLog($data)
+		);
+
+
+		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
+		$headers = [
+			$this->getType()
+		];
+
+		if (!$to && !$cc) {
+			return false;
+		}
+
+		if (!$to && $cc) {
+			$to = $cc;
+			$cc = '';
+		}
+
+		if ($cc) {
+			$headers[] = "Cc: {$cc}";
+		}
+
+		$data = $debugKey ? $data : $this->getDebugOutputLevel($data);
+
+		$subject = \sprintf(\__('Troubleshooting form: %s (%s)(%s)', 'eightshift-forms'), \get_the_title($formId), \esc_html($formId), \esc_html($debugKeyValue));
+
+		$body = '<p style="font-family: monospace;">' . \esc_html__('It seems like there was an issue with form on your website. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
+
+		// translators: %s replaces the form name.
+		$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
+		$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Form ID: <strong>%s</strong>', 'eightshift-forms')), \esc_html($formId)) . '</p>';
+
+		if ($activityLogId) {
+			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Activity Log ID: <strong>%s</strong>', 'eightshift-forms')), \esc_html($activityLogId)) . '</p>';
+		}
+
+		if ($debugKeyValue) {
+			$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Debug Key: <strong>%s</strong>', 'eightshift-forms')), \esc_html($debugKeyValue)) . '</p>';
+		}
+
+		$body .= '<p style="font-family: monospace;">' . \sprintf(\wp_kses_post(\__('Website url: <strong>%s</strong>', 'eightshift-forms')), \esc_html(\get_bloginfo('url'))) . '</p>';
+
+		$body .= '<p style="font-family: monospace;">' . \esc_html__('Debug data:', 'eightshift-forms') . '</p>';
+
+		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
+
+		$filesOutput = [];
+		if ($files) {
+			switch ($type) {
+				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
+					foreach ($files as $file) {
+						if ($file instanceof CURLFile) {
+							$filesOutput[] = $file->name;
+						}
+					}
+					break;
+				default:
+					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
+					break;
+			}
+		}
+
+		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
+	}
+
+	/**
+	 * Get debug key.
+	 *
+	 * @param array<string, mixed> $data Data to use.
+	 *
+	 * @return string
+	 */
+	public function getDebugKey(array $data): string
+	{
+		return $data[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_KEY] ?? '';
+	}
+
+	/**
+	 * Send confirmation email.
+	 *
+	 * @param string $formId Form ID.
+	 * @param array<mixed> $params Params array.
+	 * @param array<mixed> $files Files array.
+	 * @param array<string, mixed> $responseTags Response tags.
+	 *
+	 * @return boolean
+	 */
+	private function sendConfirmationEmail(string $formId, array $params, array $files, array $responseTags = []): bool
+	{
+		// Check if Mailer data is set and valid.
+		$isConfirmationValid = \apply_filters(SettingsMailer::FILTER_SETTINGS_IS_VALID_CONFIRMATION_NAME, $formId);
+
+		if (!$isConfirmationValid) {
+			return false;
+		}
+
+		$senderEmail = FormsHelper::getParamValue(SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_EMAIL_FIELD_KEY, $formId), $params);
+
+		if (!$senderEmail) {
+			return false;
+		}
+
+		// Send email.
+		return $this->internalSendEmail(
+			$formId,
+			$senderEmail,
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_SUBJECT_KEY, $formId),
+			SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_TEMPLATE_KEY, $formId),
+			$files,
+			$params,
+			$responseTags
+		);
+	}
+
 	/**
 	 * Send email function for form ID.
 	 *
@@ -39,7 +264,7 @@ class Mailer implements MailerInterface
 	 *
 	 * @return bool
 	 */
-	public function sendFormEmail(
+	private function internalSendEmail(
 		string $formId,
 		string $to,
 		string $subject,
@@ -72,292 +297,6 @@ class Mailer implements MailerInterface
 				SettingsHelpers::getSettingValue(SettingsMailer::SETTINGS_MAILER_SENDER_NAME_KEY, $formId)
 			),
 			$this->prepareFiles($files)
-		);
-	}
-
-	/**
-	 * Send troubleshooting email.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param array<string, mixed> $data Data to send in the email.
-	 *
-	 * @return boolean
-	 */
-	public function sendTroubleshootingEmail(
-		array $formDetails,
-		array $data
-	): bool {
-		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
-		$type = $formDetails[Config::FD_TYPE] ?? '';
-		$files = $formDetails[Config::FD_FILES] ?? [];
-
-		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
-		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
-		$headers = [
-			$this->getType()
-		];
-
-		if (!$to && !$cc) {
-			return false;
-		}
-
-		if (!$to && $cc) {
-			$to = $cc;
-			$cc = '';
-		}
-
-		if ($cc) {
-			$headers[] = "Cc: {$cc}";
-		}
-
-		$subject = \sprintf(\__('Troubleshooting form: %s', 'eightshift-forms'), \get_the_title($formId));
-
-		$body = '<p>' . \esc_html__('It seems like there was an issue with form on your website. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
-
-		// translators: %s replaces the form name.
-		$body .= '<p>' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
-
-		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
-
-		$filesOutput = [];
-		if ($files) {
-			switch ($type) {
-				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
-					foreach ($files as $file) {
-						if ($file instanceof CURLFile) {
-							$filesOutput[] = $file->name;
-						}
-					}
-					break;
-				default:
-					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
-					break;
-			}
-		}
-
-		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
-	}
-
-	/**
-	 * Send fallback email
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param string $customSubject Custom subject for the email.
-	 * @param string $customMsg Custom message for the email.
-	 * @param array<string, mixed> $customData Custom data for the email.
-	 *
-	 * @return boolean
-	 */
-	public function fallbackIntegrationEmail(
-		array $formDetails,
-		$customSubject = '',
-		$customMsg = '',
-		$customData = []
-	): bool {
-		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
-
-		if (!$isSettingsValid) {
-			return false;
-		}
-
-		$response = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA] ?? [];
-
-		// Check if the email should be ignored.
-		// $shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, SettingsHelpers::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
-		// if (isset($shouldIgnoreKeys[$response[Config::IARD_MSG] ?? ''])) {
-		// 	return false;
-		// }
-
-		$type = $response[Config::IARD_TYPE] ?? '';
-		$files = $response[Config::IARD_FILES] ?? [];
-		$formId = $response[Config::IARD_FORM_ID] ?? '';
-		$isDisabled = $response[Config::IARD_IS_DISABLED] ?? false;
-
-		$customDebugData = $customData['debug'] ?? [];
-		if ($customDebugData) {
-			unset($customData['debug']);
-		}
-
-		$output = [
-			Config::IARD_STATUS => $response[Config::IARD_STATUS] ?? Config::STATUS_ERROR,
-			Config::IARD_MSG => $response[Config::IARD_MSG] ?? '',
-			Config::IARD_TYPE => $type,
-			Config::IARD_PARAMS => $response[Config::IARD_PARAMS] ?? [],
-			Config::IARD_RESPONSE => $response[Config::IARD_RESPONSE] ?? [],
-			Config::IARD_CODE => $response[Config::IARD_CODE] ?? 0,
-			Config::IARD_BODY => $response[Config::IARD_BODY] ?? [],
-			Config::IARD_URL => $response[Config::IARD_URL] ?? '',
-			Config::IARD_ITEM_ID => $response[Config::IARD_ITEM_ID] ?? '',
-			Config::IARD_FORM_ID => $formId,
-			Config::FD_POST_ID => $formDetails[Config::FD_POST_ID] ?? '',
-			'customData' => $customData,
-			'debug' => $this->getDebugOptions($customDebugData, $formDetails),
-			'formDetails' => $this->cleanUpFormDetails($formDetails),
-		];
-
-		if ($customData) {
-			$output = \array_merge($output, $customData);
-		}
-
-		// translators: %1$s replaces the integration name and %2$s formId.
-		$subject = \sprintf(\__('Failed %1$s form: %2$s', 'eightshift-forms'), $type, $formId);
-		$body = '<p>' . \esc_html__('It seems like there was an issue with the user\'s form submission. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
-
-		if ($isDisabled) {
-			$body = '<p>' . \esc_html__('It appears that your form is currently inactive, and as a result, all the data from your form is included in this email for you to manually input.', 'eightshift-forms') . '</p>';
-			// translators: %1$s replaces the integration name and %2$s formId.
-			$subject = \sprintf(\__('Disabled %1$s form: %2$s', 'eightshift-forms'), $type, $formId);
-		}
-
-		if ($customMsg) {
-			$body = '<p>' . $customMsg . '</p>';
-		}
-
-		// translators: %s replaces the form name.
-		$body .= '<p>' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
-
-		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($output, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
-
-		$filesOutput = [];
-		if ($files) {
-			switch ($type) {
-				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
-					foreach ($files as $file) {
-						if ($file instanceof CURLFile) {
-							$filesOutput[] = $file->name;
-						}
-					}
-					break;
-				default:
-					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
-					break;
-			}
-		}
-
-		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
-		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
-		$headers = [
-			$this->getType()
-		];
-
-		if ($cc) {
-			$headers[] = "Cc: {$cc}";
-		}
-
-		if ($customSubject) {
-			$subject = $customSubject;
-		}
-
-		// Send email.
-		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
-	}
-
-	/**
-	 * Send fallback email - Processing.
-	 * This function is used in AbstractIntegrationFormSubmit for processing validation issues.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param string $customSubject Custom subject for the email.
-	 * @param string $customMsg Custom message for the email.
-	 * @param array<string, mixed> $customData Custom data for the email.
-	 *
-	 * @return boolean
-	 */
-	public function fallbackProcessingEmail(
-		array $formDetails,
-		$customSubject = '',
-		$customMsg = '',
-		$customData = []
-	): bool {
-
-		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
-
-		if (!$isSettingsValid) {
-			return false;
-		}
-
-		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
-		$type = $formDetails[Config::FD_TYPE] ?? '';
-		$files = $formDetails[Config::FD_FILES] ?? [];
-
-		$customDebugData = $customData['debug'] ?? [];
-		if ($customDebugData) {
-			unset($customData['debug']);
-		}
-
-		$output = [
-			'customData' => $customData,
-			'debug' => $this->getDebugOptions($customDebugData, $formDetails),
-			'formDetails' => $this->cleanUpFormDetails($formDetails),
-		];
-
-		// translators: %s replaces the formId.
-		$subject = \sprintf(\__('Processing error form: %s', 'eightshift-forms'), $formId);
-		$body = '<p>' . \esc_html__('It seems like there was an issue with the user\'s form validation. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
-
-		if ($customMsg) {
-			$body = '<p>' . $customMsg . '</p>';
-		}
-
-		// translators: %s replaces the form name.
-		$body .= '<p>' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
-
-		$body .= '<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace;">' . \htmlentities(\wp_json_encode($output, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES), \ENT_QUOTES, 'UTF-8') . '</pre>';
-
-		$filesOutput = [];
-		if ($files) {
-			switch ($type) {
-				case SettingsGreenhouse::SETTINGS_TYPE_KEY:
-					foreach ($files as $file) {
-						if ($file instanceof CURLFile) {
-							$filesOutput[] = $file->name;
-						}
-					}
-					break;
-				default:
-					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
-					break;
-			}
-		}
-
-		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
-
-		$headers = [
-			$this->getType()
-		];
-
-		if ($customSubject) {
-			$subject = $customSubject;
-		}
-
-		// Send email.
-		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
-	}
-
-	/**
-	 * Get debug options.
-	 *
-	 * @param array<string, mixed> $customData Custom data for the email.
-	 * @param array<string, mixed> $formDetails Form details.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function getDebugOptions(array $customData, array $formDetails): array
-	{
-		$customDebugData['originalParams'] = $formDetails[Config::FD_PARAMS_ORIGINAL] ?? '';
-
-		return \array_merge(
-			[
-				'forms' => Helpers::getPluginVersion(),
-				'php' => \phpversion(),
-				'wp' => \get_bloginfo('version'),
-				'url' => \get_bloginfo('url'),
-				'userAgent' => isset($_SERVER['HTTP_USER_AGENT']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
-				'time' => \wp_date('Y-m-d H:i:s'),
-				'requestUrl' => Helpers::getCurrentUrl(),
-				'originalParams' => $formDetails[Config::FD_PARAMS_ORIGINAL] ?? '',
-			],
-			$customData
 		);
 	}
 
@@ -516,25 +455,6 @@ class Mailer implements MailerInterface
 	}
 
 	/**
-	 * Clean up form details.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 *
-	 * @return array<string, mixed>
-	 */
-	private function cleanUpFormDetails(array $formDetails): array
-	{
-		$list = [
-			Config::FD_FIELDS,
-			Config::FD_FIELDS_ONLY,
-			Config::FD_ICON,
-			Config::FD_PARAMS_ORIGINAL,
-		];
-
-		return \array_diff_key($formDetails, \array_flip($list));
-	}
-
-	/**
 	 * Get advanced conditions.
 	 *
 	 * @param string $default Default email.
@@ -649,5 +569,139 @@ class Mailer implements MailerInterface
 		}
 
 		return \in_array(true, $stack, true);
+	}
+
+	/**
+	 * Get debug output details.
+	 *
+	 * @param array<string, mixed> $data Data to use.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getDebugOutputLevel(array $data): array
+	{
+		$logLevel = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_LOG_LEVEL_KEY);
+
+		$debugData = $data[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG] ?? [];
+
+		$output = [
+			AbstractBaseRoute::R_MSG => $data[AbstractBaseRoute::R_MSG] ?? '',
+			AbstractBaseRoute::R_CODE => $data[AbstractBaseRoute::R_CODE] ?? '',
+			AbstractBaseRoute::R_STATUS => $data[AbstractBaseRoute::R_STATUS] ?? '',
+			AbstractBaseRoute::R_DATA => $data[AbstractBaseRoute::R_DATA] ?? [],
+		];
+
+		if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG])) {
+			unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG]);
+		}
+
+		switch ($logLevel) {
+			case 'minimal':
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG_KEY])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_KEY] = $debugData[AbstractBaseRoute::R_DEBUG_KEY];
+				}
+
+				return $output;
+			case 'fullMax':
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG_KEY])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_KEY] = $debugData[AbstractBaseRoute::R_DEBUG_KEY];
+				}
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG] = $debugData[AbstractBaseRoute::R_DEBUG];
+				}
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG_USER])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_USER] = $debugData[AbstractBaseRoute::R_DEBUG_USER];
+				}
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA] = $debugData[AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA];
+				}
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG_REQUEST])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_REQUEST] = $debugData[AbstractBaseRoute::R_DEBUG_REQUEST];
+				}
+
+				return $output;
+			default:
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG_KEY])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_KEY] = $debugData[AbstractBaseRoute::R_DEBUG_KEY];
+				}
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG] = $debugData[AbstractBaseRoute::R_DEBUG];
+
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ICON])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ICON]);
+					}
+
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS_ONLY])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELDS_ONLY]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES_FULL])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FIELD_NAMES_FULL]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_STEPS_SETUP])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_STEPS_SETUP]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES_UPLOAD])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES_UPLOAD]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_FILES]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_API_STEPS])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_API_STEPS]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION]);
+					}
+					if (isset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION_EXTERNAL])) {
+						unset($output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG][Config::FD_ACTION_EXTERNAL]);
+					}
+				}
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG_USER])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_USER] = $debugData[AbstractBaseRoute::R_DEBUG_USER];
+				}
+				if (isset($debugData[AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA])) {
+					$output[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG][AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA] = $debugData[AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA];
+				}
+
+				return $output;
+		}
+	}
+
+	/**
+	 * Get debug output for activity log.
+	 *
+	 * @param array<mixed> $data Data to use.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function getDebugOutputActivityLog(array $data): array
+	{
+		$debugData = $data[AbstractBaseRoute::R_DATA][AbstractBaseRoute::R_DEBUG] ?? [];
+
+		$output = [];
+
+		if (isset($debugData[AbstractBaseRoute::R_DEBUG_KEY])) {
+			$output[AbstractBaseRoute::R_DEBUG_KEY] = $debugData[AbstractBaseRoute::R_DEBUG_KEY];
+		}
+
+		if (isset($debugData[AbstractBaseRoute::R_DEBUG][Config::FD_PARAMS_ORIGINAL])) {
+			$output['params'] = $debugData[AbstractBaseRoute::R_DEBUG][Config::FD_PARAMS_ORIGINAL];
+		}
+
+		if (isset($debugData[AbstractBaseRoute::R_DEBUG][Config::FD_RESPONSE_OUTPUT_DATA][Config::IARD_RESPONSE])) {
+			$output['integrationResponse'] = $debugData[AbstractBaseRoute::R_DEBUG][Config::FD_RESPONSE_OUTPUT_DATA][Config::IARD_RESPONSE];
+		}
+
+		if (isset($debugData[AbstractBaseRoute::R_DEBUG][Config::FD_RESPONSE_OUTPUT_DATA][Config::IARD_BODY])) {
+			$output['integrationBody'] = $debugData[AbstractBaseRoute::R_DEBUG][Config::FD_RESPONSE_OUTPUT_DATA][Config::IARD_BODY];
+		}
+
+		return $output;
 	}
 }

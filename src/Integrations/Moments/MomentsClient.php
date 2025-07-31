@@ -174,7 +174,7 @@ class MomentsClient extends AbstractMoments implements ClientInterface
 			case 'BAD_REQUEST':
 				return 'momentsBadRequestError';
 			case 'UNAUTHORIZED':
-				return 'momentsErrorSettingsMissing';
+				return 'momentsMissingConfig';
 			default:
 				return 'submitWpError';
 		}

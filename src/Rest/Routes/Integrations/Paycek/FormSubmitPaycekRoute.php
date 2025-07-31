@@ -18,6 +18,9 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitPaycekRoute
@@ -75,11 +78,13 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 	{
 		$formId = $formDetails[Config::FD_FORM_ID];
 
-		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_IS_VALID_NAME, $formId)) {
-			return \rest_ensure_response(
-				ApiHelpers::getApiErrorPublicOutput(
-					$this->getLabels()->getLabel('paycekMissingConfig', $formId)
-				)
+		if (!\apply_filters(SettingsPaycek::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('paycekMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PAYCEK_MISSING_CONFIG,
+				],
 			);
 		}
 
@@ -111,7 +116,7 @@ class FormSubmitPaycekRoute extends AbstractIntegrationFormSubmit
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.
-		$this->getFormSubmitMailer()->sendEmails(
+		$this->getMailer()->sendEmails(
 			$formDetails,
 			$this->getCommonEmailResponseTags(
 				\array_merge(

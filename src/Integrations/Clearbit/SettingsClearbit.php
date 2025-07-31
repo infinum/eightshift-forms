@@ -55,11 +55,6 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 	public const SETTINGS_CLEARBIT_USE_KEY = 'clearbit-use';
 
 	/**
-	 * Clearbit Use jobs queue key.
-	 */
-	public const SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY = 'clearbit-use-jobs-queue';
-
-	/**
 	 * API Key.
 	 */
 	public const SETTINGS_CLEARBIT_API_KEY_KEY = 'clearbit-api-key';
@@ -239,28 +234,6 @@ class SettingsClearbit implements ServiceInterface, SettingGlobalInterface, Sett
 								'ES_API_KEY_CLEARBIT',
 								\__('API key', 'eightshift-forms'),
 							),
-							[
-								'component' => 'divider',
-								'dividerExtraVSpacing' => true,
-							],
-							[
-								'component' => 'checkboxes',
-								'checkboxesFieldLabel' => '',
-								'checkboxesName' => SettingsHelpers::getSettingName(self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY),
-								'checkboxesIsRequired' => false,
-								'checkboxesContent' => [
-									[
-										'component' => 'checkbox',
-										'checkboxLabel' => \__('Use jobs queue', 'eightshift-forms'),
-										'checkboxHelp' => \__('Turn on your jobs queue to process Clearbit data using CRON.', 'eightshift-forms'),
-										'checkboxIsChecked' => SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY, self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY),
-										'checkboxValue' => self::SETTINGS_CLEARBIT_USE_JOBS_QUEUE_KEY,
-										'checkboxSingleSubmit' => true,
-										'checkboxAsToggle' => true,
-										'checkboxAsToggleSize' => 'medium',
-									],
-								]
-							],
 						],
 					],
 					...($this->isSettingsGlobalValid() ? [

@@ -16,75 +16,36 @@ namespace EightshiftForms\Integrations\Mailer;
 interface MailerInterface
 {
 	/**
-	 * Send email function for form ID.
+	 * Send emails method.
 	 *
-	 * @param string $formId Form Id.
-	 * @param string $to Email to.
-	 * @param string $subject Email subject.
-	 * @param string $template Email template.
-	 * @param array<string, mixed> $files Email files.
-	 * @param array<string, mixed> $fields Email fields.
-	 * @param array<string, mixed> $responseFields Custom field passed from the api response data for custom tags.
-	 * @param array<string, mixed> $toAdvanced Advanced conditions for the email to.
+	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
+	 * @param array<string, mixed> $responseTags Response tags.
 	 *
-	 * @return bool
+	 * @return array<string, array<mixed>|int|string>
 	 */
-	public function sendFormEmail(
-		string $formId,
-		string $to,
-		string $subject,
-		string $template = '',
-		array $files = [],
-		array $fields = [],
-		array $responseFields = [],
-		array $toAdvanced = [],
-	): bool;
+	public function sendEmails(array $formDetails, array $responseTags = []): array;
 
 	/**
 	 * Send troubleshooting email.
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $data Data to send in the email.
+	 * @param string $debugKey Debug key.
 	 *
 	 * @return boolean
 	 */
 	public function sendTroubleshootingEmail(
 		array $formDetails,
-		array $data
+		array $data,
+		string $debugKey = ''
 	): bool;
 
 	/**
-	 * Send fallback email
+	 * Get debug key.
 	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param string $customSubject Custom subject for the email.
-	 * @param string $customMsg Custom message for the email.
-	 * @param array<string, mixed> $customData Custom data for the email.
+	 * @param array<string, mixed> $data Data to use.
 	 *
-	 * @return boolean
+	 * @return string
 	 */
-	public function fallbackIntegrationEmail(
-		array $formDetails,
-		$customSubject = '',
-		$customMsg = '',
-		$customData = []
-	): bool;
-
-	/**
-	 * Send fallback email - Processing.
-	 * This function is used in AbstractIntegrationFormSubmit for processing validation issues.
-	 *
-	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
-	 * @param string $customSubject Custom subject for the email.
-	 * @param string $customMsg Custom message for the email.
-	 * @param array<string, mixed> $customData Custom data for the email.
-	 *
-	 * @return boolean
-	 */
-	public function fallbackProcessingEmail(
-		array $formDetails,
-		$customSubject = '',
-		$customMsg = '',
-		$customData = []
-	): bool;
+	public function getDebugKey(array $data): string;
 }

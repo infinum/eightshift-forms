@@ -15,11 +15,16 @@ use EightshiftForms\Enrichment\EnrichmentInterface;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\Greenhouse\SettingsGreenhouse;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
+use EightshiftForms\Integrations\Mailer\MailerInterface;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Exception\DisabledIntegrationException;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitGreenhouseRoute
@@ -45,7 +50,7 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	 * @param ValidatorInterface $validator Inject validator methods.
 	 * @param LabelsInterface $labels Inject labels methods.
 	 * @param CaptchaInterface $captcha Inject captcha methods.
-	 * @param FormSubmitMailerInterface $formSubmitMailer Inject formSubmitMailer methods.
+	 * @param MailerInterface $mailer Inject mailerInterface methods.
 	 * @param EnrichmentInterface $enrichment Inject enrichment methods.
 	 * @param ClientInterface $greenhouseClient Inject greenhouseClient methods.
 	 */
@@ -54,7 +59,7 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 		ValidatorInterface $validator,
 		LabelsInterface $labels,
 		CaptchaInterface $captcha,
-		FormSubmitMailerInterface $formSubmitMailer,
+		MailerInterface $mailer,
 		EnrichmentInterface $enrichment,
 		ClientInterface $greenhouseClient
 	) {
@@ -62,7 +67,7 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 		$this->validator = $validator;
 		$this->labels = $labels;
 		$this->captcha = $captcha;
-		$this->formSubmitMailer = $formSubmitMailer;
+		$this->mailer = $mailer;
 		$this->enrichment = $enrichment;
 		$this->greenhouseClient = $greenhouseClient;
 	}
@@ -112,6 +117,26 @@ class FormSubmitGreenhouseRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		if (!\apply_filters(SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('greenhouseMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_GREENHOUSE_MISSING_CONFIG,
+				],
+			);
+		}
+
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY, SettingsGreenhouse::SETTINGS_GREENHOUSE_SKIP_INTEGRATION_KEY)) {
+			$integrationSuccessResponse = $this->getIntegrationResponseSuccessOutput($formDetails);
+
+			throw new DisabledIntegrationException(
+				$integrationSuccessResponse[AbstractBaseRoute::R_MSG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DEBUG],
+				$integrationSuccessResponse[AbstractBaseRoute::R_DATA]
+			);
+		}
+
 		// Send application to Greenhouse.
 		$response = $this->greenhouseClient->postApplication($formDetails);
 

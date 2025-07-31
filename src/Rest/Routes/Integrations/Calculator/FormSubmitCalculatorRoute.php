@@ -13,7 +13,10 @@ namespace EightshiftForms\Rest\Routes\Integrations\Calculator;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Rest\Routes\AbstractIntegrationFormSubmit;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 
 /**
  * Class FormSubmitCalculatorRoute
@@ -69,6 +72,16 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 	 */
 	protected function submitAction(array $formDetails)
 	{
+		if (!\apply_filters(SettingsCalculator::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			throw new BadRequestException(
+				$this->getLabels()->getLabel('calculatorMissingConfig'),
+				[
+					AbstractBaseRoute::R_DEBUG => $formDetails,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CALCULATOR_MISSING_CONFIG,
+				],
+			);
+		}
+
 		$formId = $formDetails[Config::FD_FORM_ID];
 
 		$debug = [
@@ -82,7 +95,7 @@ class FormSubmitCalculatorRoute extends AbstractIntegrationFormSubmit
 		$successAdditionalData = $this->getIntegrationResponseSuccessOutputAdditionalData($formDetails);
 
 		// Send email.
-		$this->getFormSubmitMailer()->sendEmails(
+		$this->getMailer()->sendEmails(
 			$formDetails,
 			$this->getCommonEmailResponseTags(
 				\array_merge(

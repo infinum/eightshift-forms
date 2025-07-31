@@ -29,6 +29,11 @@ class SettingsAirtable extends AbstractSettingsIntegrations implements SettingGl
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_airtable';
 
 	/**
+	 * Filter settings global is Valid key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_airtable';
+
+	/**
 	 * Settings key.
 	 */
 	public const SETTINGS_TYPE_KEY = 'airtable';
@@ -72,6 +77,7 @@ class SettingsAirtable extends AbstractSettingsIntegrations implements SettingGl
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**

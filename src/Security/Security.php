@@ -45,7 +45,7 @@ class Security implements SecurityInterface
 	public function isRequestValid(string $formType): bool
 	{
 		// Bailout if this feature is not enabled.
-		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_IS_VALID_NAME, [])) {
+		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return true;
 		}
 
