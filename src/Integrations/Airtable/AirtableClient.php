@@ -218,7 +218,7 @@ class AirtableClient implements AirtableClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
@@ -299,7 +299,7 @@ class AirtableClient implements AirtableClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body ?? [];
 		}
 
@@ -341,7 +341,7 @@ class AirtableClient implements AirtableClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			$data = $body['records'] ?? [];
 			$offset = $body['offset'] ?? '';
 
@@ -394,7 +394,7 @@ class AirtableClient implements AirtableClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body['bases'] ?? [];
 		}
 

@@ -240,7 +240,7 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	{
 		$isDeveloperMode = DeveloperHelpers::isDeveloperModeActive();
 
-		if ($isDeveloperMode) {
+		if ($isDeveloperMode && $this->checkPermission(Config::CAP_SETTINGS_GLOBAL)) {
 			return $data;
 		}
 
@@ -259,9 +259,6 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function getDebugOutputLevel(array $data): array
 	{
 		$logLevel = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_LOG_LEVEL_KEY);
-
-		dump($logLevel);
-		dump($data);
 
 		$debugData = $data[self::R_DATA][self::R_DEBUG] ?? [];
 
@@ -283,9 +280,12 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 				}
 
 				return $output;
-			case 'insane':
+			case 'fullMax':
 				if (isset($debugData[self::R_DEBUG_KEY])) {
 					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_KEY] = $debugData[self::R_DEBUG_KEY];
+				}
+				if (isset($debugData[self::R_DEBUG])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG] = $debugData[self::R_DEBUG];
 				}
 				if (isset($debugData[self::R_DEBUG_USER])) {
 					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_USER] = $debugData[self::R_DEBUG_USER];

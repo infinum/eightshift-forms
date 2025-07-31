@@ -103,6 +103,8 @@ class TestApiHubspotRoute extends AbstractSimpleFormSubmit
 	{
 		$output = $this->hubspotClient->getTestApi();
 
+		dump($output);
+
 		if ($output[Config::IARD_STATUS] === AbstractRoute::STATUS_ERROR) {
 			throw new BadRequestException(
 				$this->getLabels()->getLabel('testApiError'),

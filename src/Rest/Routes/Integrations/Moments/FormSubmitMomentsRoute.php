@@ -22,8 +22,10 @@ use EightshiftForms\Security\SecurityInterface;
 use EightshiftForms\Validation\ValidatorInterface;
 use EightshiftForms\Config\Config;
 use EightshiftForms\Exception\DisabledIntegrationException;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * Class FormSubmitMomentsRoute
@@ -193,7 +195,7 @@ class FormSubmitMomentsRoute extends AbstractIntegrationFormSubmit
 			$formId
 		);
 
-		if ($response[Config::IARD_CODE] >= Config::API_RESPONSE_CODE_SUCCESS && $response[Config::IARD_CODE] <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($response[Config::IARD_CODE])) {
 			return;
 		}
 

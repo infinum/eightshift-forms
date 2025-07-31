@@ -148,26 +148,13 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput(
 				$details,
 				[
 					'contactId' => $body['contact']['id'],
 				]
 			);
-		}
-
-		// Filter different error outputs.
-		switch ($details['code']) {
-			case Config::API_RESPONSE_CODE_ERROR_FORBIDDEN:
-				$error = 'activeCampaignForbidden';
-				break;
-			case Config::API_RESPONSE_CODE_ERROR_SERVER:
-				$error = 'activeCampaign500';
-				break;
-			default:
-				$error = $body['errors'] ?? [];
-				break;
 		}
 
 		// Output error.
@@ -222,7 +209,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details[Config::IARD_CODE];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
@@ -270,7 +257,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$code = $details[Config::IARD_CODE];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
@@ -308,7 +295,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			// Find tag id from array.
 			$tagId = \array_filter(
 				$body['tags'],
@@ -368,7 +355,7 @@ class ActiveCampaignClient implements ActiveCampaignClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body['id'] ?? '';
 		}
 

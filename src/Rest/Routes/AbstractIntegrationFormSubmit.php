@@ -258,6 +258,10 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				),
 			];
 
+			if ($this->shouldLogActivity($output[AbstractBaseRoute::R_DEBUG] ?? [])) {
+				$this->getFormSubmitMailer()->sendTroubleshootingEmail($formDetails, $this->getDebugOutputLevel($return));
+			}
+
 			return \rest_ensure_response(
 				Helpers::getApiResponse(
 					$return[AbstractBaseRoute::R_MSG],
@@ -279,12 +283,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			];
 
 			if ($this->shouldLogActivity($e->getDebug())) {
-				$this->getFormSubmitMailer()->sendTroubleshootingEmail(
-					$formDetails,
-					$this->getDebugOutputLevel($return),
-					// $this->getLabels()->getLabel('submitFallbackError'),
-					// $this->getLabels()->getLabel('submitFallbackError')
-				);
+				$this->getFormSubmitMailer()->sendTroubleshootingEmail($formDetails, $this->getDebugOutputLevel($return));
 			}
 
 			return \rest_ensure_response(
@@ -307,23 +306,9 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				),
 			];
 
-			\dump($return);
-
-			// Do action.
-			// if ($data[self::RESPONSE_SEND_FALLBACK_KEY] ?? false) {
-			// 	// Send fallback email.
-			// 	$this->getFormSubmitMailer()->sendFallbackProcessingEmail(
-			// 		$formDetails,
-			// 		'',
-			// 		'',
-			// 		[
-			// 			self::VALIDATION_ERROR_CODE => \esc_html($return['data'][self::VALIDATION_ERROR_CODE] ?? ''),
-			// 			self::VALIDATION_ERROR_MSG => \esc_html($return['message']),
-			// 			self::VALIDATION_ERROR_OUTPUT => $return['data'][self::VALIDATION_ERROR_OUTPUT] ?? '',
-			// 			self::VALIDATION_ERROR_DATA => $return['data'][self::VALIDATION_ERROR_DATA] ?? '',
-			// 		]
-			// 	);
-			// }
+			if ($this->shouldLogActivity($e->getDebug())) {
+				$this->getFormSubmitMailer()->sendTroubleshootingEmail($formDetails, $this->getDebugOutputLevel($return));
+			}
 
 			// Return validation failed response.
 			return \rest_ensure_response(

@@ -285,7 +285,7 @@ class HubspotClient implements HubspotClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
@@ -348,7 +348,7 @@ class HubspotClient implements HubspotClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
@@ -415,7 +415,7 @@ class HubspotClient implements HubspotClientInterface
 		$code = \curl_getinfo($curl, \CURLINFO_HTTP_CODE); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 		\curl_close($curl); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			$response = \json_decode((string) $response, true);
 
 			return $response['url'] ?? '';
@@ -559,7 +559,7 @@ class HubspotClient implements HubspotClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body['results'] ?? [];
 		}
 
@@ -603,7 +603,7 @@ class HubspotClient implements HubspotClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body ?? [];
 		}
 

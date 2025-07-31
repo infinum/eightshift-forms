@@ -16,7 +16,9 @@ use EightshiftForms\Integrations\Hubspot\HubspotClientInterface;
 use EightshiftForms\Integrations\Hubspot\SettingsHubspot;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -150,7 +152,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 						(string) $formId
 					);
 
-					if ($clearbitResponse[Config::IARD_CODE] >= Config::API_RESPONSE_CODE_SUCCESS && $clearbitResponse[Config::IARD_CODE] <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+					if (ApiHelpers::isSuccessResponse($clearbitResponse[Config::IARD_CODE])) {
 						if ($type === SettingsHubspot::SETTINGS_TYPE_KEY) {
 							$this->hubspotClient->postContactProperty(
 								$clearbitResponse['email'] ?? '',
@@ -159,7 +161,7 @@ class ClearbitJob implements ServiceInterface, ServiceCliInterface
 						}
 					} else {
 						// Send fallback email if error but ignore for unknown entry.
-						if ($clearbitResponse[Config::IARD_CODE] !== Config::API_RESPONSE_CODE_ERROR_MISSING) {
+						if ($clearbitResponse[Config::IARD_CODE] !== AbstractRoute::API_RESPONSE_CODE_NOT_FOUND) {
 							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $clearbitResponse;
 
 							$this->formSubmitMailer->sendFallbackIntegrationEmail($formDetails);

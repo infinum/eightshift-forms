@@ -263,7 +263,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			$list = SettingsHelpers::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
 			$tags = \explode(Config::DELIMITER, SettingsHelpers::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId));
 
@@ -347,7 +347,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
@@ -408,7 +408,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
@@ -526,7 +526,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			// Check if we need to paginate.
 			if ($paginate) {
 				$pagedData = \array_merge($pagedData, $body['data'] ?? []);

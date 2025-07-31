@@ -21,6 +21,7 @@ use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
 use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 
 /**
  * PipedriveClient integration class.
@@ -197,7 +198,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$organization = [];
 		$lead = [];
 		$person = [];
-		$code = Config::API_RESPONSE_CODE_ERROR_MISSING;
+		$code = AbstractRoute::API_RESPONSE_CODE_NOT_FOUND;
 		$body = [];
 
 		if (SettingsHelpers::isSettingCheckboxChecked(SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_ORGANIZATION, $formId)) {
@@ -210,7 +211,7 @@ class PipedriveClient implements PipedriveClientInterface
 			$code = $organization[Config::IARD_CODE];
 			$body = $organization[Config::IARD_BODY];
 
-			if ($code < Config::API_RESPONSE_CODE_SUCCESS && $code > Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			if (ApiHelpers::isErrorResponse($code)) {
 				$organization[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 				return ApiHelpers::getIntegrationErrorInternalOutput($organization);
@@ -234,7 +235,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$code = $person[Config::IARD_CODE];
 		$body = $person[Config::IARD_BODY];
 
-		if ($code < Config::API_RESPONSE_CODE_SUCCESS && $code > Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isErrorResponse($code)) {
 			$person[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 			return ApiHelpers::getIntegrationErrorInternalOutput($person);
@@ -259,7 +260,7 @@ class PipedriveClient implements PipedriveClientInterface
 			$code = $lead[Config::IARD_CODE];
 			$body = $lead[Config::IARD_BODY];
 
-			if ($code < Config::API_RESPONSE_CODE_SUCCESS && $code > Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+			if (ApiHelpers::isErrorResponse($code)) {
 				$lead[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 				return ApiHelpers::getIntegrationErrorInternalOutput($lead);
@@ -410,7 +411,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body['data'] ?? [];
 		}
 
@@ -443,7 +444,7 @@ class PipedriveClient implements PipedriveClientInterface
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			return $body['data'] ?? [];
 		}
 

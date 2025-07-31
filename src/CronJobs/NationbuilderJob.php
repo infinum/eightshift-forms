@@ -14,7 +14,9 @@ use EightshiftForms\Integrations\Nationbuilder\NationbuilderClientInterface;
 use EightshiftForms\Integrations\Nationbuilder\SettingsNationbuilder;
 use EightshiftForms\Rest\Routes\Integrations\Mailer\FormSubmitMailerInterface;
 use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\ApiHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceCliInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
@@ -123,7 +125,7 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 					foreach ($signupIds as $signupId) {
 						$listResponse = $this->nationbuilderClient->postList((string) $listId, $signupId);
 
-						if ($listResponse[Config::IARD_CODE] < Config::API_RESPONSE_CODE_SUCCESS && $listResponse[Config::IARD_CODE] > Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+						if (ApiHelpers::isErrorResponse($listResponse[Config::IARD_CODE])) {
 							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $listResponse;
 
 							$this->formSubmitMailer->sendFallbackIntegrationEmail($formDetails);
@@ -139,7 +141,7 @@ class NationbuilderJob implements ServiceInterface, ServiceCliInterface
 					foreach ($signupIds as $signupId) {
 						$tagResponse = $this->nationbuilderClient->postTag((string) $tagId, $signupId);
 
-						if ($tagResponse[Config::IARD_CODE] < Config::API_RESPONSE_CODE_SUCCESS && $tagResponse[Config::IARD_CODE] > Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+						if (ApiHelpers::isErrorResponse($tagResponse[Config::IARD_CODE])) {
 							$formDetails[Config::FD_RESPONSE_OUTPUT_DATA] = $tagResponse;
 
 							$this->formSubmitMailer->sendFallbackIntegrationEmail($formDetails);

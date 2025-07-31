@@ -55,10 +55,10 @@ final class ApiHelpers
 		// Do regular stuff if this is not and WP_Error.
 		if (!\is_wp_error($response)) {
 			if ($isCurl) {
-				$code = $response['status'] ?? AbstractRoute::API_RESPONSE_CODE_OK;
+				$code = $response['status'] ?? AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST;
 				$body = $response;
 			} else {
-				$code = $response['response']['code'] ?? AbstractRoute::API_RESPONSE_CODE_OK;
+				$code = $response['response']['code'] ?? AbstractRoute::API_RESPONSE_CODE_BAD_REQUEST;
 				$body = $response['body'] ?? '';
 
 				if (\json_validate($body)) {
@@ -83,7 +83,7 @@ final class ApiHelpers
 			Config::IARD_FILES => $files,
 			Config::IARD_RESPONSE => $response['response'] ?? [],
 			Config::IARD_CODE => $code,
-			Config::IARD_STATUS => $status,
+			Config::IARD_STATUS => self::isSuccessResponse($code) ? AbstractRoute::STATUS_SUCCESS : $status,
 			Config::IARD_BODY => !\is_string($body) ? $body : [],
 			Config::IARD_URL => $url,
 			Config::IARD_ITEM_ID => $itemId,
@@ -179,7 +179,7 @@ final class ApiHelpers
 	{
 		$output = [
 			'status' => Config::STATUS_SUCCESS,
-			'code' => Config::API_RESPONSE_CODE_SUCCESS,
+			'code' => AbstractRoute::API_RESPONSE_CODE_OK,
 			'message' => $msg,
 		];
 
@@ -220,5 +220,29 @@ final class ApiHelpers
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Check if the code is a success code.
+	 *
+	 * @param int $code The code to check.
+	 *
+	 * @return bool
+	 */
+	public static function isSuccessResponse(int $code): bool
+	{
+		return $code >= AbstractRoute::API_RESPONSE_CODE_OK && $code <= 299;
+	}
+
+	/**
+	 * Check if the code is a error code.
+	 *
+	 * @param int $code The code to check.
+	 *
+	 * @return bool
+	 */
+	public static function isErrorResponse(int $code): bool
+	{
+		return $code < AbstractRoute::API_RESPONSE_CODE_OK && $code > 299;
 	}
 }

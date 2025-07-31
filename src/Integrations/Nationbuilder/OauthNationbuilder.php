@@ -197,7 +197,7 @@ class OauthNationbuilder extends AbstractOauth
 		$body = $details[Config::IARD_BODY];
 
 		// On success return output.
-		if ($code >= Config::API_RESPONSE_CODE_SUCCESS && $code <= Config::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			\update_option(SettingsHelpers::getSettingName(OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY), $body['access_token']);
 			\update_option(SettingsHelpers::getSettingName(OauthNationbuilder::OAUTH_NATIONBUILDER_REFRESH_TOKEN_KEY), $body['refresh_token']);
 
