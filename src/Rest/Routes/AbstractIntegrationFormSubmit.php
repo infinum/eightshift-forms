@@ -37,6 +37,7 @@ use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UploadHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
 use WP_REST_Request;
@@ -151,7 +152,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			if ($this->isRouteAdminProtected() && !$this->checkPermission(Config::CAP_SETTINGS)) {
 				throw new PermissionDeniedException(
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'permissionDenied',
+						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_PERMISSION_DENIED,
 					]
 				);
 			}
@@ -164,7 +165,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				throw new ForbiddenException(
 					$this->getLabels()->getLabel('validationSubmitLoggedIn', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'validationSubmitLoggedIn',
+						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_LOGGED_IN,
 					]
 				);
 			}
@@ -174,7 +175,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				throw new ForbiddenException(
 					$this->getLabels()->getLabel('validationSubmitOnce', $formDetails[Config::FD_FORM_ID] ?? ''),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'validationSubmitOnce',
+						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SUBMIT_ONCE,
 					]
 				);
 			}
@@ -184,8 +185,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				throw new ValidationFailedException(
 					$this->getLabels()->getLabel('validationMissingMandatoryParams'),
 					[
-						AbstractBaseRoute::R_DEBUG_KEY => 'validationMissingMandatoryParams',
-						AbstractBaseRoute::R_FALLBACK_NOTICE => true,
+						AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_MISSING_MANDATORY_PARAMS,
 					]
 				);
 			}
@@ -196,8 +196,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					throw new RequestLimitException(
 						$this->getLabels()->getLabel('validationSecurity'),
 						[
-							AbstractBaseRoute::R_DEBUG_KEY => 'validationSecurity',
-							AbstractBaseRoute::R_FALLBACK_NOTICE => true,
+							AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_SECURITY,
 						]
 					);
 				}
@@ -209,7 +208,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 					throw new ValidationFailedException(
 						$this->getLabels()->getLabel('validationGlobalMissingRequiredParams'),
 						[
-							AbstractBaseRoute::R_DEBUG_KEY => 'validationParams',
+							AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_VALIDATION_PARAMS,
 						],
 						[
 							UtilsHelper::getStateResponseOutputKey('validation') => $validate,
@@ -279,12 +278,14 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				),
 			];
 
-			$this->getFormSubmitMailer()->sendTroubleshootingEmail(
-				$formDetails,
-				$return,
-				// $this->getLabels()->getLabel('submitFallbackError'),
-				// $this->getLabels()->getLabel('submitFallbackError')
-			);
+			if ($this->shouldLogActivity($e->getDebug())) {
+				$this->getFormSubmitMailer()->sendTroubleshootingEmail(
+					$formDetails,
+					$this->getDebugOutputLevel($return),
+					// $this->getLabels()->getLabel('submitFallbackError'),
+					// $this->getLabels()->getLabel('submitFallbackError')
+				);
+			}
 
 			return \rest_ensure_response(
 				Helpers::getApiResponse(
@@ -444,7 +445,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 				$this->getLabels()->getLabel($response[Config::IARD_MSG], $formId),
 				[
 					AbstractBaseRoute::R_DEBUG => $formDetails,
-					AbstractBaseRoute::R_DEBUG_KEY => 'submitIntegrationError',
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_ERROR,
 				],
 				array_merge(
 					$this->getIntegrationResponseErrorOutputAdditionalData($formDetails),
@@ -494,7 +495,7 @@ abstract class AbstractIntegrationFormSubmit extends AbstractBaseRoute
 			AbstractBaseRoute::R_MSG => $this->getLabels()->getLabel("{$type}Success"),
 			AbstractBaseRoute::R_DEBUG => [
 				AbstractBaseRoute::R_DEBUG => $formDetails,
-				AbstractBaseRoute::R_DEBUG_KEY => 'submitIntegrationSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_SUBMIT_INTEGRATION_SUCCESS,
 				AbstractBaseRoute::R_DEBUG_SUCCESS_ADDITIONAL_DATA => $successAdditionalData,
 			],
 			AbstractBaseRoute::R_DATA => \array_merge(

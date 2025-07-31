@@ -80,28 +80,39 @@ class Mailer implements MailerInterface
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $data Data to send in the email.
-	 * @param string $subject Email subject.
-	 * @param string $body Email body.
 	 *
 	 * @return boolean
 	 */
 	public function sendTroubleshootingEmail(
 		array $formDetails,
-		array $data,
-		string $subject = '',
-		string $body = '',
+		array $data
 	): bool {
-		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, []);
-
-		if (!$isSettingsValid) {
-			return false;
-		}
-
 		$formId = $formDetails[Config::FD_FORM_ID] ?? '';
 		$type = $formDetails[Config::FD_TYPE] ?? '';
 		$files = $formDetails[Config::FD_FILES] ?? [];
 
-		$body = '<p>' . \esc_html__('It seems like there was an issue with the user\'s form submission. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
+		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
+		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
+		$headers = [
+			$this->getType()
+		];
+
+		if (!$to && !$cc) {
+			return false;
+		}
+
+		if (!$to && $cc) {
+			$to = $cc;
+			$cc = '';
+		}
+
+		if ($cc) {
+			$headers[] = "Cc: {$cc}";
+		}
+
+		$subject = \sprintf(\__('Troubleshooting form: %s', 'eightshift-forms'), \get_the_title($formId));
+
+		$body = '<p>' . \esc_html__('It seems like there was an issue with form on your website. Here is all the data for debugging purposes.', 'eightshift-forms') . '</p>';
 
 		// translators: %s replaces the form name.
 		$body .= '<p>' . \sprintf(\wp_kses_post(\__('Form Title: <strong>%s</strong>', 'eightshift-forms')), \get_the_title($formId)) . '</p>';
@@ -122,16 +133,6 @@ class Mailer implements MailerInterface
 					$filesOutput = Helpers::recursiveArrayFind($files, 'path');
 					break;
 			}
-		}
-
-		$to = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY);
-		$cc = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_FALLBACK_EMAIL_KEY . '-' . $type);
-		$headers = [
-			$this->getType()
-		];
-
-		if ($cc) {
-			$headers[] = "Cc: {$cc}";
 		}
 
 		return \wp_mail($to, $subject, $body, $headers, $filesOutput);
@@ -162,10 +163,10 @@ class Mailer implements MailerInterface
 		$response = $formDetails[Config::FD_RESPONSE_OUTPUT_DATA] ?? [];
 
 		// Check if the email should be ignored.
-		$shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, SettingsHelpers::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
-		if (isset($shouldIgnoreKeys[$response[Config::IARD_MSG] ?? ''])) {
-			return false;
-		}
+		// $shouldIgnoreKeys = \array_flip(\array_values(\array_filter(\explode(\PHP_EOL, SettingsHelpers::getOptionValueAsJson(SettingsFallback::SETTINGS_FALLBACK_IGNORE_KEY, 1)))));
+		// if (isset($shouldIgnoreKeys[$response[Config::IARD_MSG] ?? ''])) {
+		// 	return false;
+		// }
 
 		$type = $response[Config::IARD_TYPE] ?? '';
 		$files = $response[Config::IARD_FILES] ?? [];

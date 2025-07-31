@@ -56,7 +56,6 @@ use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftForms\Captcha\SettingsCaptcha;
-use EightshiftForms\ActivityLog\SettingsActivityLog;
 use EightshiftForms\Entries\SettingsEntries;
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Integrations\Corvus\SettingsCorvus;
@@ -620,17 +619,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsFallback::SETTINGS_FALLBACK_USE_KEY,
 				'labels' => [
-					'title' => \__('Fallback e-mails', 'eightshift-forms'),
-					'desc' => \__('Send a plain-text e-mail in case a form submission fails to complete.', 'eightshift-forms'),
-				],
-			],
-			SettingsActivityLog::SETTINGS_TYPE_KEY => [
-				'settingsGlobal' => SettingsActivityLog::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
-				'use' => SettingsActivityLog::SETTINGS_ACTIVITY_LOG_USE_KEY,
-				'labels' => [
-					'title' => \__('Activity log', 'eightshift-forms'),
-					'desc' => \__('Log all form submissions to the database.', 'eightshift-forms'),
+					'title' => \__('Fallbacks', 'eightshift-forms'),
+					'desc' => \__('Send a plain-text e-mail or store data in the database in case a form submission fails to complete.', 'eightshift-forms'),
 				],
 			],
 			SettingsMigration::SETTINGS_TYPE_KEY => [

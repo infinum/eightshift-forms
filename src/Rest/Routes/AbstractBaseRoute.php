@@ -12,8 +12,10 @@ namespace EightshiftForms\Rest\Routes;
 
 use EightshiftForms\Config\Config;
 use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Security\SecurityInterface;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 use EightshiftFormsVendor\EightshiftLibs\Rest\CallableRouteInterface;
 use EightshiftFormsVendor\EightshiftLibs\Rest\Routes\AbstractRoute;
@@ -29,11 +31,10 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	public const R_STATUS = 'status';
 	public const R_DATA = 'data';
 	public const R_DEBUG = 'debug';
-	public const R_DEBUG_USER = 'debugUser';
 	public const R_DEBUG_KEY = 'debugKey';
+	public const R_DEBUG_USER = 'debugUser';
 	public const R_DEBUG_REQUEST = 'debugRequest';
 	public const R_DEBUG_SUCCESS_ADDITIONAL_DATA = 'debugSuccessAdditionalData';
-	public const R_FALLBACK_NOTICE = 'fallbackNotice';
 
 	/**
 	 * Instance variable of SecurityInterface data.
@@ -249,6 +250,108 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	}
 
 	/**
+	 * Get debug output details.
+	 *
+	 * @param array<string, mixed> $data Data to use.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getDebugOutputLevel(array $data): array
+	{
+		$logLevel = SettingsHelpers::getOptionValue(SettingsFallback::SETTINGS_FALLBACK_LOG_LEVEL_KEY);
+
+		dump($logLevel);
+		dump($data);
+
+		$debugData = $data[self::R_DATA][self::R_DEBUG] ?? [];
+
+		$output = [
+			self::R_MSG => $data[self::R_MSG] ?? '',
+			self::R_CODE => $data[self::R_CODE] ?? '',
+			self::R_STATUS => $data[self::R_STATUS] ?? '',
+			self::R_DATA => $data[self::R_DATA] ?? [],
+		];
+
+		if (isset($output[self::R_DATA][self::R_DEBUG])) {
+			unset($output[self::R_DATA][self::R_DEBUG]);
+		}
+
+		switch ($logLevel) {
+			case 'minimal':
+				if (isset($debugData[self::R_DEBUG_KEY])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_KEY] = $debugData[self::R_DEBUG_KEY];
+				}
+
+				return $output;
+			case 'insane':
+				if (isset($debugData[self::R_DEBUG_KEY])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_KEY] = $debugData[self::R_DEBUG_KEY];
+				}
+				if (isset($debugData[self::R_DEBUG_USER])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_USER] = $debugData[self::R_DEBUG_USER];
+				}
+				if (isset($debugData[self::R_DEBUG_SUCCESS_ADDITIONAL_DATA])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_SUCCESS_ADDITIONAL_DATA] = $debugData[self::R_DEBUG_SUCCESS_ADDITIONAL_DATA];
+				}
+				if (isset($debugData[self::R_DEBUG_REQUEST])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_REQUEST] = $debugData[self::R_DEBUG_REQUEST];
+				}
+
+				return $output;
+			default:
+				if (isset($debugData[self::R_DEBUG_KEY])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_KEY] = $debugData[self::R_DEBUG_KEY];
+				}
+				if (isset($debugData[self::R_DEBUG])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG] = $debugData[self::R_DEBUG];
+
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_ICON])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_ICON]);
+					}
+
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FIELDS])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FIELDS]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FIELDS_ONLY])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FIELDS_ONLY]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FIELD_NAMES])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FIELD_NAMES]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FIELD_NAMES_FULL])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FIELD_NAMES_FULL]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_STEPS_SETUP])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_STEPS_SETUP]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FILES_UPLOAD])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FILES_UPLOAD]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FILES])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_FILES]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_API_STEPS])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_API_STEPS]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_ACTION])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_ACTION]);
+					}
+					if (isset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_ACTION_EXTERNAL])) {
+						unset($output[self::R_DATA][self::R_DEBUG][self::R_DEBUG][Config::FD_ACTION_EXTERNAL]);
+					}
+				}
+				if (isset($debugData[self::R_DEBUG_USER])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_USER] = $debugData[self::R_DEBUG_USER];
+				}
+				if (isset($debugData[self::R_DEBUG_SUCCESS_ADDITIONAL_DATA])) {
+					$output[self::R_DATA][self::R_DEBUG][self::R_DEBUG_SUCCESS_ADDITIONAL_DATA] = $debugData[self::R_DEBUG_SUCCESS_ADDITIONAL_DATA];
+				}
+
+				return $output;
+		}
+	}
+
+	/**
 	 * Check user permission for route action.
 	 *
 	 * @param string $permission Permission to check.
@@ -258,5 +361,29 @@ abstract class AbstractBaseRoute extends AbstractRoute implements CallableRouteI
 	protected function checkPermission(string $permission): bool
 	{
 		return \current_user_can($permission);
+	}
+
+	/**
+	 * Log activity.
+	 *
+	 * @param array<string, mixed> $data Data to log.
+	 *
+	 * @return void
+	 */
+	protected function shouldLogActivity(array $debug): bool
+	{
+		$key = $debug[self::R_DEBUG_KEY] ?? '';
+
+		if (!$key) {
+			return false;
+		}
+
+		$isSettingsValid = \apply_filters(SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME, false);
+
+		if (!$isSettingsValid) {
+			return false;
+		}
+
+		return SettingsHelpers::isOptionCheckboxChecked($key, SettingsFallback::SETTINGS_FALLBACK_FLAGS_KEY);
 	}
 }

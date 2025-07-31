@@ -131,14 +131,12 @@ class FormSubmitMailer implements FormSubmitMailerInterface
 	 *
 	 * @param array<string, mixed> $formDetails Data passed from the `getFormDetailsApi` function.
 	 * @param array<string, mixed> $data Data to send in the email.
-	 * @param string $subject Email subject.
-	 * @param string $body Email body.
 	 *
 	 * @return boolean
 	 */
-	public function sendTroubleshootingEmail(array $formDetails, array $data, string $subject = '', string $body = ''): bool
+	public function sendTroubleshootingEmail(array $formDetails, array $data): bool
 	{
-		return $this->mailer->sendTroubleshootingEmail($formDetails, $data, $subject, $body);
+		return $this->mailer->sendTroubleshootingEmail($formDetails, $data);
 	}
 
 	/**

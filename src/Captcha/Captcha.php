@@ -16,6 +16,7 @@ use EightshiftForms\Exception\BadRequestException;
 use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
 use WP_Error;
 
 /**
@@ -55,7 +56,7 @@ class Captcha implements CaptchaInterface
 			return [
 				AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
 				AbstractBaseRoute::R_DEBUG => [
-					AbstractBaseRoute::R_DEBUG_KEY => 'captchaFeatureDisabled',
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED,
 				],
 			];
 		}
@@ -70,7 +71,7 @@ class Captcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaBadRequest'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'captchaRequestMissingToken',
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_MISSING_TOKEN,
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
@@ -87,7 +88,7 @@ class Captcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('submitWpError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'captchaRequestWpError',
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_WP_ERROR,
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
@@ -181,7 +182,7 @@ class Captcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'captchaEnterpriseOutputError',
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
@@ -220,7 +221,7 @@ class Captcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'captchaFreeOutputError',
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FREE_OUTPUT_ERROR,
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
@@ -265,7 +266,7 @@ class Captcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaWrongAction'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'captchaWrongAction',
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_WRONG_ACTION,
 					AbstractBaseRoute::R_DEBUG => $debug,
 				]
 			);
@@ -278,7 +279,7 @@ class Captcha implements CaptchaInterface
 			throw new BadRequestException(
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
-					AbstractBaseRoute::R_DEBUG_KEY => 'captchaScoreSpam',
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SCORE_SPAM,
 					AbstractBaseRoute::R_DEBUG => $debug,
 				],
 				[
@@ -291,7 +292,7 @@ class Captcha implements CaptchaInterface
 		return [
 			AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
 			AbstractBaseRoute::R_DEBUG => [
-				AbstractBaseRoute::R_DEBUG_KEY => 'captchaSuccess',
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
 				AbstractBaseRoute::R_DEBUG => $debug,
 			],
 			AbstractBaseRoute::R_DATA => [
