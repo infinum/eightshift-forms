@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Nationbuilder;
 
 use EightshiftForms\Cache\SettingsCache;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\ApiHelpers;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Oauth\OauthInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsDeveloperHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\DeveloperHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 
 /**
  * NationbuilderClient integration class.
@@ -65,7 +65,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	/**
 	 * Return custom fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<mixed>
 	 */
@@ -75,7 +75,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		$output = \get_transient(self::CACHE_NATIONBUILDER_CUSTOM_FIELDS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -121,7 +121,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		$output = \get_transient(self::CACHE_NATIONBUILDER_LISTS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -167,7 +167,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		$output = \get_transient(self::CACHE_NATIONBUILDER_TAGS_TRANSIENT_NAME) ?: []; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Prevent cache.
-		if (UtilsDeveloperHelper::isDeveloperSkipCacheActive()) {
+		if (DeveloperHelpers::isDeveloperSkipCacheActive()) {
 			$output = [];
 		}
 
@@ -210,12 +210,12 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 */
 	public function postApplication(array $formDetails): array
 	{
-		$params = $formDetails[UtilsConfig::FD_PARAMS];
-		$files = $formDetails[UtilsConfig::FD_FILES];
-		$formId = $formDetails[UtilsConfig::FD_FORM_ID];
+		$params = $formDetails[Config::FD_PARAMS];
+		$files = $formDetails[Config::FD_FILES];
+		$formId = $formDetails[Config::FD_FORM_ID];
 
 		// Filter override post request.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsNationbuilder::SETTINGS_TYPE_KEY, 'overridePostRequest']);
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsNationbuilder::SETTINGS_TYPE_KEY, 'overridePostRequest']);
 		if (\has_filter($filterName)) {
 			$filterValue = \apply_filters($filterName, [], $params, $files, $formId) ?? [];
 
@@ -241,19 +241,18 @@ class NationbuilderClient implements NationbuilderClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 			$body,
 			[],
 			'',
-			$formId,
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
+			$formId
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
 			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
@@ -264,12 +263,12 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			$list = UtilsSettingsHelper::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
-			$tags = \explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId));
+		if (ApiHelpers::isSuccessResponse($code)) {
+			$list = SettingsHelpers::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_LIST_KEY, $formId);
+			$tags = \explode(Config::DELIMITER, SettingsHelpers::getSettingValue(SettingsNationbuilder::SETTINGS_NATIONBUILDER_TAGS_KEY, $formId));
 
 			if ($list || $tags) {
-				$job = UtilsSettingsHelper::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
+				$job = SettingsHelpers::getOptionValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY);
 
 				if ($list) {
 					$job['list'][$list][] = $body['data']['id'] ?? '';
@@ -281,17 +280,17 @@ class NationbuilderClient implements NationbuilderClientInterface
 					}
 				}
 
-				\update_option(UtilsSettingsHelper::getSettingName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $job);
+				\update_option(SettingsHelpers::getSettingName(SettingsNationbuilder::SETTINGS_NATIONBUILDER_CRON_KEY), $job);
 			}
 
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
-		$details[UtilsConfig::IARD_VALIDATION] = $this->getFieldsErrors($body, $formId);
-		$details[UtilsConfig::IARD_MSG] = $this->getErrorMsg($body);
+		$details[Config::IARD_VALIDATION] = $this->getFieldsErrors($body, $formId);
+		$details[Config::IARD_MSG] = $this->getErrorMsg($body);
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -325,7 +324,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -333,11 +332,11 @@ class NationbuilderClient implements NationbuilderClientInterface
 			[],
 			'',
 			'',
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
+			SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
 			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
@@ -348,12 +347,12 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		if (ApiHelpers::isSuccessResponse($code)) {
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -386,7 +385,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -394,11 +393,11 @@ class NationbuilderClient implements NationbuilderClientInterface
 			[],
 			'',
 			'',
-			UtilsSettingsHelper::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
+			SettingsHelpers::isOptionCheckboxChecked(SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY, SettingsNationbuilder::SETTINGS_NATIONBUILDER_SKIP_INTEGRATION_KEY)
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
 			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
@@ -409,12 +408,12 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
-			return UtilsApiHelper::getIntegrationSuccessInternalOutput($details);
+		if (ApiHelpers::isSuccessResponse($code)) {
+			return ApiHelpers::getIntegrationSuccessInternalOutput($details);
 		}
 
 		// Output error.
-		return UtilsApiHelper::getIntegrationErrorInternalOutput($details);
+		return ApiHelpers::getIntegrationErrorInternalOutput($details);
 	}
 
 	/**
@@ -453,7 +452,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		$errors = $body['errors'] ?? [];
 		$output = [];
 
-		$mapParams = \array_flip(UtilsSettingsHelper::getSettingValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId));
+		$mapParams = \array_flip(SettingsHelpers::getSettingValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId));
 
 		foreach ($errors as $error) {
 			$message = $error['detail'] ?? '';
@@ -509,14 +508,14 @@ class NationbuilderClient implements NationbuilderClientInterface
 		);
 
 		// Structure response details.
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$code = $details[UtilsConfig::IARD_CODE];
-		$body = $details[UtilsConfig::IARD_BODY];
+		$code = $details[Config::IARD_CODE];
+		$body = $details[Config::IARD_BODY];
 
 		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
 			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
@@ -527,7 +526,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// On success return output.
-		if ($code >= UtilsConfig::API_RESPONSE_CODE_SUCCESS && $code <= UtilsConfig::API_RESPONSE_CODE_SUCCESS_RANGE) {
+		if (ApiHelpers::isSuccessResponse($code)) {
 			// Check if we need to paginate.
 			if ($paginate) {
 				$pagedData = \array_merge($pagedData, $body['data'] ?? []);
@@ -558,8 +557,8 @@ class NationbuilderClient implements NationbuilderClientInterface
 	private function prepareParams(array $params, string $formId): array
 	{
 		// Remove unnecessary params.
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
-		$mapParams = UtilsSettingsHelper::getSettingValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
+		$mapParams = SettingsHelpers::getSettingValueGroup(SettingsNationbuilder::SETTINGS_NATIONBUILDER_PARAMS_MAP_KEY, $formId);
 		$output = [];
 
 		if (!$mapParams || !$params) {
@@ -567,7 +566,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		foreach ($mapParams as $mapParamKey => $mapParam) {
-			$param = UtilsGeneralHelper::getFieldDetailsByName($params, $mapParamKey);
+			$param = GeneralHelpers::getFieldDetailsByName($params, $mapParamKey);
 
 			$value = $param['value'] ?? '';
 			$name = $param['name'] ?? '';
@@ -618,13 +617,13 @@ class NationbuilderClient implements NationbuilderClientInterface
 			]
 		);
 
-		$details = UtilsApiHelper::getIntegrationApiReponseDetails(
+		$details = ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
 		);
 
-		$body = $details[UtilsConfig::IARD_BODY];
+		$body = $details[Config::IARD_BODY];
 
 		if ($this->oauthNationbuilder->hasTokenExpired($body)) {
 			$refreshToken = $this->oauthNationbuilder->getRefreshToken();
@@ -635,7 +634,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 		}
 
 		// Structure response details.
-		return UtilsApiHelper::getIntegrationApiReponseDetails(
+		return ApiHelpers::getIntegrationApiResponseDetails(
 			SettingsNationbuilder::SETTINGS_TYPE_KEY,
 			$response,
 			$url,
@@ -651,7 +650,7 @@ class NationbuilderClient implements NationbuilderClientInterface
 	 */
 	private function getBaseUrl(string $path): string
 	{
-		$accessToken = UtilsSettingsHelper::getOptionValue(OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY);
+		$accessToken = SettingsHelpers::getOptionValue(OauthNationbuilder::OAUTH_NATIONBUILDER_ACCESS_TOKEN_KEY);
 
 		return $this->oauthNationbuilder->getApiUrl("api/v2/{$path}?access_token={$accessToken}");
 	}

@@ -12,9 +12,12 @@ namespace EightshiftForms\Captcha;
 
 use EightshiftForms\Hooks\Variables;
 use EightshiftForms\Labels\LabelsInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsApiHelper;
-use Throwable;
+use EightshiftForms\Exception\BadRequestException;
+use EightshiftForms\Helpers\SettingsHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Rest\Routes\AbstractBaseRoute;
+use EightshiftForms\Troubleshooting\SettingsFallback;
+use WP_Error;
 
 /**
  * Captcha class.
@@ -49,6 +52,15 @@ class Captcha implements CaptchaInterface
 	 */
 	public function check(string $token, string $action, bool $isEnterprise): array
 	{
+		if (!\apply_filters(SettingsCaptcha::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
+			return [
+				AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
+				AbstractBaseRoute::R_DEBUG => [
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FEATURE_DISABLED,
+				],
+			];
+		}
+
 		$debug = [
 			'token' => $token,
 			'action' => $action,
@@ -56,10 +68,12 @@ class Captcha implements CaptchaInterface
 		];
 
 		if (!$token) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			throw new BadRequestException(
 				$this->labels->getLabel('captchaBadRequest'),
-				[],
-				$debug
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_MISSING_TOKEN,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
 			);
 		}
 
@@ -71,29 +85,23 @@ class Captcha implements CaptchaInterface
 
 		// Generic error msg from WP.
 		if (\is_wp_error($response)) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			throw new BadRequestException(
 				$this->labels->getLabel('submitWpError'),
-				[],
-				$debug
+				[
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_REQUEST_WP_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
 			);
 		}
 
 		// Get body from the response.
-		try {
-			$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
-		} catch (Throwable $t) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$this->labels->getLabel('captchaBadRequest'),
-				[],
-				$debug
-			);
-		}
+		$responseBody = \json_decode(\wp_remote_retrieve_body($response), true);
 
 		if ($isEnterprise) {
-			return $this->getEnterpriseOutput($responseBody, $action);
-		} else {
-			return $this->getFreeOutput($responseBody, $action);
+			return $this->getEnterpriseOutput($responseBody, $action, $debug);
 		}
+
+		return $this->getFreeOutput($responseBody, $action, $debug);
 	}
 
 	/**
@@ -102,13 +110,13 @@ class Captcha implements CaptchaInterface
 	 * @param string $token Token for captcha.
 	 * @param string $action Action name.
 	 *
-	 * @return mixed
+	 * @return array<mixed>|WP_Error
 	 */
-	private function onEnterprise(string $token, string $action)
+	private function onEnterprise(string $token, string $action): array|WP_Error
 	{
-		$siteKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
-		$apiKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
-		$projectIdKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
+		$siteKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSiteKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SITE_KEY);
+		$apiKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaApiKey(), SettingsCaptcha::SETTINGS_CAPTCHA_API_KEY);
+		$projectIdKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaProjectIdKey(), SettingsCaptcha::SETTINGS_CAPTCHA_PROJECT_ID_KEY);
 
 		return \wp_remote_post(
 			"https://recaptchaenterprise.googleapis.com/v1/projects/{$projectIdKey}/assessments?key={$apiKey}",
@@ -133,11 +141,11 @@ class Captcha implements CaptchaInterface
 	 *
 	 * @param string $token Token for captcha.
 	 *
-	 * @return mixed
+	 * @return array<mixed>|WP_Error
 	 */
-	private function onFree(string $token)
+	private function onFree(string $token): array|WP_Error
 	{
-		$secretKey = UtilsSettingsHelper::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
+		$secretKey = SettingsHelpers::getOptionWithConstant(Variables::getGoogleReCaptchaSecretKey(), SettingsCaptcha::SETTINGS_CAPTCHA_SECRET_KEY);
 
 		return \wp_remote_post(
 			"https://www.google.com/recaptcha/api/siteverify",
@@ -153,67 +161,79 @@ class Captcha implements CaptchaInterface
 	/**
 	 * Get enterprise output.
 	 *
-	 * @param mixed $responseBody Response body from API.
+	 * @param array<mixed> $responseBody Response body from API.
 	 * @param string $action Action name.
+	 * @param array<mixed> $debug Debug data.
 	 *
 	 * @return mixed
 	 */
-	private function getEnterpriseOutput($responseBody, string $action)
+	private function getEnterpriseOutput(array $responseBody, string $action, array $debug)
 	{
-		$debug = [
+		$debug = \array_merge($debug, [
 			'responseBody' => $responseBody,
 			'action' => $action,
-		];
+		]);
 
 		// Check the status.
 		$error = $responseBody['error'] ?? [];
 
 		// If error status returns error.
 		if ($error) {
-			// Bailout on error.
-			return UtilsApiHelper::getApiErrorPublicOutput(
-				$error['message'] ?? '',
+			throw new BadRequestException(
+				$this->labels->getLabel('captchaError'),
 				[
-					'response' => $responseBody,
-				],
-				$debug
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_ENTERPRISE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
 			);
 		}
 
-		return $this->validate($responseBody, $action, $responseBody['tokenProperties']['action'] ?? '', $responseBody['riskAnalysis']['score'] ?? 0.0);
+		return $this->validate(
+			$responseBody,
+			$action,
+			$responseBody['tokenProperties']['action'] ?? '',
+			$responseBody['riskAnalysis']['score'] ?? 0.0,
+			$debug
+		);
 	}
 
 	/**
 	 * Get free output.
 	 *
-	 * @param mixed $responseBody Response body from API.
+	 * @param array<mixed> $responseBody Response body from API.
 	 * @param string $action Action name.
+	 * @param array<mixed> $debug Debug data.
 	 *
 	 * @return mixed
 	 */
-	private function getFreeOutput($responseBody, string $action)
+	private function getFreeOutput(array $responseBody, string $action, array $debug)
 	{
-		$debug = [
+		$debug = \array_merge($debug, [
 			'responseBody' => $responseBody,
 			'action' => $action,
-		];
+		]);
 
 		// Check the status.
 		$success = $responseBody['success'] ?? false;
 
 		// If error status returns error.
 		if (!$success) {
-			// Bailout on error.
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			throw new BadRequestException(
 				$this->labels->getLabel('captchaError'),
 				[
-					'response' => $responseBody,
-				],
-				$debug
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_FREE_OUTPUT_ERROR,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
 			);
 		}
 
-		return $this->validate($responseBody, $action, $responseBody['action'] ?? '', $responseBody['score'] ?? 0.0);
+		return $this->validate(
+			$responseBody,
+			$action,
+			$responseBody['action'] ?? '',
+			$responseBody['score'] ?? 0.0,
+			$debug
+		);
 	}
 
 	/**
@@ -223,49 +243,62 @@ class Captcha implements CaptchaInterface
 	 * @param string $action Action name.
 	 * @param string $actionResponse Action response from API.
 	 * @param float $score Score value Score value from API.
+	 * @param array<mixed> $debug Debug data.
 	 *
 	 * @return mixed
 	 */
-	private function validate($responseBody, string $action, string $actionResponse, float $score)
-	{
-		$debug = [
+	private function validate(
+		$responseBody,
+		string $action,
+		string $actionResponse,
+		float $score,
+		array $debug
+	) {
+		$debug = \array_merge($debug, [
 			'responseBody' => $responseBody,
 			'action' => $action,
 			'actionResponse' => $actionResponse,
 			'score' => $score,
-		];
+		]);
 
 		// Bailout if action is not correct.
 		if ($actionResponse !== $action) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			throw new BadRequestException(
 				$this->labels->getLabel('captchaWrongAction'),
 				[
-					'response' => $responseBody,
-				],
-				$debug
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_WRONG_ACTION,
+					AbstractBaseRoute::R_DEBUG => $debug,
+				]
 			);
 		}
 
-		$setScore = UtilsSettingsHelper::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
+		$setScore = SettingsHelpers::getOptionValue(SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_KEY) ?: SettingsCaptcha::SETTINGS_CAPTCHA_SCORE_DEFAULT_KEY; // phpcs:ignore WordPress.PHP.DisallowShortTernary.Found
 
 		// Bailout on spam.
 		if (\floatval($score) < \floatval($setScore)) {
-			return UtilsApiHelper::getApiErrorPublicOutput(
+			throw new BadRequestException(
 				$this->labels->getLabel('captchaScoreSpam'),
 				[
-					'response' => $responseBody,
-					'isSpam' => true,
+					AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SCORE_SPAM,
+					AbstractBaseRoute::R_DEBUG => $debug,
 				],
-				$debug
+				[
+					UtilsHelper::getStateResponseOutputKey('captchaIsSpam') => true,
+					UtilsHelper::getStateResponseOutputKey('captchaResponse') => $responseBody,
+				]
 			);
 		}
 
-		return UtilsApiHelper::getApiSuccessPublicOutput(
-			'Success',
-			[
-				'response' => $responseBody,
+		return [
+			AbstractBaseRoute::R_MSG => $this->labels->getLabel('captchaSuccess'),
+			AbstractBaseRoute::R_DEBUG => [
+				AbstractBaseRoute::R_DEBUG_KEY => SettingsFallback::SETTINGS_FALLBACK_FLAG_CAPTCHA_SUCCESS,
+				AbstractBaseRoute::R_DEBUG => $debug,
 			],
-			$debug
-		);
+			AbstractBaseRoute::R_DATA => [
+				UtilsHelper::getStateResponseOutputKey('captchaIsSpam') => false,
+				UtilsHelper::getStateResponseOutputKey('captchaResponse') => $responseBody,
+			],
+		];
 	}
 }

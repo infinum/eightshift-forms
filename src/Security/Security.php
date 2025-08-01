@@ -12,8 +12,8 @@ namespace EightshiftForms\Security;
 
 use EightshiftForms\Integrations\Calculator\SettingsCalculator;
 use EightshiftForms\Misc\SettingsCloudflare;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Misc\SettingsCloudFront;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
@@ -45,16 +45,16 @@ class Security implements SecurityInterface
 	public function isRequestValid(string $formType): bool
 	{
 		// Bailout if this feature is not enabled.
-		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_IS_VALID_NAME, [])) {
+		if (!\apply_filters(SettingsSecurity::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, false)) {
 			return true;
 		}
 
-		$keyName = UtilsSettingsHelper::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
-		$data = UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
+		$keyName = SettingsHelpers::getOptionName(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
+		$data = SettingsHelpers::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_DATA_KEY);
 		$time = \time();
 
 		// Bailout if the IP is in the ignore list.
-		$ignoreIps = Helpers::flattenArray(UtilsSettingsHelper::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_IP_IGNORE_KEY));
+		$ignoreIps = Helpers::flattenArray(SettingsHelpers::getOptionValueGroup(SettingsSecurity::SETTINGS_SECURITY_IP_IGNORE_KEY));
 
 		if (isset(\array_flip($ignoreIps)[$this->getIpAddress()])) {
 			return true;
@@ -69,7 +69,7 @@ class Security implements SecurityInterface
 				'time' => $time,
 			];
 
-			\update_option($keyName, $data); // No need for unserilize because we are storing array.
+			\update_option($keyName, $data); // No need for unserialize because we are storing array.
 			return true;
 		}
 
@@ -79,15 +79,15 @@ class Security implements SecurityInterface
 		$count = $user['count'] ?? 0;
 
 		// Reset the count if the time window has passed.
-		if (($time - $timestamp) > \intval(UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
+		if (($time - $timestamp) > \intval(SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_WINDOW_KEY, (string) self::RATE_LIMIT_WINDOW))) {
 			unset($data[$ip]);
 			\update_option($keyName, $data);
 			return true;
 		}
 
 		// Check if the request count exceeds the rate limit.
-		$rateLimitGeneral = UtilsSettingsHelper::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
-		$rateLimitCalculator = UtilsSettingsHelper::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
+		$rateLimitGeneral = SettingsHelpers::getOptionValueWithFallback(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_KEY, (string) self::RATE_LIMIT);
+		$rateLimitCalculator = SettingsHelpers::getOptionValue(SettingsSecurity::SETTINGS_SECURITY_RATE_LIMIT_CALCULATOR_KEY);
 
 		// Different rate limit for calculator.
 		if ($rateLimitCalculator && $formType === SettingsCalculator::SETTINGS_TYPE_KEY) {
@@ -98,7 +98,7 @@ class Security implements SecurityInterface
 			return false;
 		}
 
-		// Finaly update the count and time.
+		// Finally update the count and time.
 		$data[$ip] = [
 			'count' => $count + 1,
 			'time' => $time,
@@ -119,11 +119,11 @@ class Security implements SecurityInterface
 	{
 		$ip = isset($_SERVER['REMOTE_ADDR']) ? \sanitize_text_field(\wp_unslash($_SERVER['REMOTE_ADDR'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY, SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY)) {
 			$ip = isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? \sanitize_text_field(\wp_unslash($_SERVER['HTTP_CF_CONNECTING_IP'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
-		if (UtilsSettingsHelper::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
+		if (SettingsHelpers::isOptionCheckboxChecked(SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY, SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY)) {
 			$ip = isset($_SERVER['CloudFront-Viewer-Address']) ? \sanitize_text_field(\wp_unslash($_SERVER['CloudFront-Viewer-Address'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			if ($ip) {

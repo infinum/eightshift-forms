@@ -23,4 +23,13 @@ interface SettingsFallbackDataInterface
 	 * @return array<string, array<int, array<string, bool|string>>|string>
 	 */
 	public function getOutputGlobalFallback(string $integration): array;
+
+	/**
+	 * Get flag label.
+	 *
+	 * @param string $key Key to get label for.
+	 *
+	 * @return string
+	 */
+	public function getFlagLabel(string $key): string;
 }

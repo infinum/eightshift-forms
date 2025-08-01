@@ -11,25 +11,30 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Workable;
 
 use EightshiftForms\Geolocation\SettingsGeolocation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsWorkable class.
  */
-class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsWorkable extends AbstractSettingsIntegrations implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
 	 */
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_workable';
+
+	/**
+	 * Filter settings global is Valid key.
+	 */
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_workable';
 
 	/**
 	 * Settings key.
@@ -101,6 +106,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**
@@ -110,9 +116,9 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY);
-		$subdomain = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyWorkable(), self::SETTINGS_WORKABLE_API_KEY_KEY);
+		$subdomain = (bool) SettingsHelpers::getOptionWithConstant(Variables::getSubdomainWorkable(), self::SETTINGS_WORKABLE_SUBDOMAIN_KEY);
 
 		if (!$isUsed || !$apiKey || !$subdomain) {
 			return false;
@@ -129,18 +135,18 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_USE_KEY, self::SETTINGS_WORKABLE_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY);
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY, self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY);
 
-		$isGeolocationEnabled = UtilsSettingsHelper::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY);
+		$isGeolocationEnabled = SettingsHelpers::isOptionCheckboxChecked(SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY, SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY);
 
-		$selectedListType = \array_flip(\array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(self::SETTINGS_WORKABLE_LIST_TYPE_KEY))));
+		$selectedListType = \array_flip(\array_filter(\explode(Config::DELIMITER, SettingsHelpers::getOptionValue(self::SETTINGS_WORKABLE_LIST_TYPE_KEY))));
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -151,12 +157,12 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_WORKABLE_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -167,7 +173,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -176,7 +182,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyWorkable(),
 									self::SETTINGS_WORKABLE_API_KEY_KEY,
 									'ES_API_KEY_WORKABLE',
@@ -186,7 +192,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getInputFieldWithGlobalVariable(
+								SettingsOutputHelpers::getInputFieldWithGlobalVariable(
 									Variables::getSubdomainWorkable(),
 									self::SETTINGS_WORKABLE_SUBDOMAIN_KEY,
 									'ES_SUBDOMAIN_WORKABLE',
@@ -196,7 +202,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
+								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -207,7 +213,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 							...$this->getGlobalGeneralSettings(self::SETTINGS_TYPE_KEY),
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
 								'inputFieldHelp' => \__('Up to 25MB.', 'eightshift-forms'),
 								'inputType' => 'number',
@@ -215,7 +221,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 								'inputFieldAfterContent' => 'MB',
 								'inputFieldInlineBeforeAfterContent' => true,
 								'inputPlaceholder' => self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT,
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY),
 								'inputMin' => 1,
 								'inputMax' => 25,
 								'inputStep' => 1,
@@ -227,7 +233,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 							[
 								'component' => 'select',
 								'selectIsMultiple' => true,
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_WORKABLE_LIST_TYPE_KEY),
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_WORKABLE_LIST_TYPE_KEY),
 								'selectFieldLabel' => \__('Additional statuses list', 'eightshift-forms'),
 								'selectFieldHelp' => \__('Get additional jobs from other statuses. Published is always included. Use with caution!', 'eightshift-forms'),
 								'selectContent' => [
@@ -265,11 +271,11 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 								],
 								[
 									'component' => 'textarea',
-									'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY),
+									'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY),
 									'textareaIsMonospace' => true,
 									'textareaSaveAsJson' => true,
 									'textareaFieldLabel' => \__('Geolocation tags', 'eightshift-forms'),
-									'textareaFieldHelp' => UtilsGeneralHelper::minifyString(\__("
+									'textareaFieldHelp' => GeneralHelpers::minifyString(\__("
 										Enter one tag per line, in the following format:<br />
 										<code>country-code : tag-value</code><br /><br />
 										Example:
@@ -277,7 +283,7 @@ class SettingsWorkable extends AbstractSettingsIntegrations implements UtilsSett
 											<li>US : disabled</li>
 											<li>DE : disabled, test</li>
 										</ul>", 'eightshift-forms')),
-									'textareaValue' => UtilsSettingsHelper::getOptionValueAsJson(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY, 2),
+									'textareaValue' => SettingsHelpers::getOptionValueAsJson(self::SETTINGS_WORKABLE_GEOLOCATION_TAGS_KEY, 2),
 								],
 							],
 						]

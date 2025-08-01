@@ -4,4 +4,8 @@
 
 .es-checkbox-toggle {
 	@include checkbox-toggle-styles;
+
+	.info-strong {
+		color: var(--global-colors-esf-admin-accent);
+	}
 }

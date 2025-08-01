@@ -55,7 +55,7 @@ export class Locations {
 
 				if (response.status === 'success') {
 					item.classList.add(this.state.getStateSelector('isHidden'));
-					item.closest(this.itemSelector).insertAdjacentHTML('afterend', response.data.output);
+					item.closest(this.itemSelector).insertAdjacentHTML('afterend', response.data[this.state.getStateResponseOutputKey('adminLocations')]);
 					item.remove();
 				}
 			});

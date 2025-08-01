@@ -65,7 +65,7 @@ export const FormsOptions = ({
 			path: getRestUrl('countriesGeolocation', true),
 		}).then((response) => {
 			if (response.code === 200) {
-				setGeoFormFields(response.data);
+				setGeoFormFields(response?.data?.countries);
 			}
 		});
 	}, []);

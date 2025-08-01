@@ -6,7 +6,7 @@
  * @package EightshiftFormsAddonComputedFields
  */
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
 $blockClass = $attributes['blockClass'] ?? '';

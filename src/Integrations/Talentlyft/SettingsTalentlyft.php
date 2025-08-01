@@ -10,20 +10,20 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Talentlyft;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Hooks\Variables;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
 use EightshiftForms\Integrations\AbstractSettingsIntegrations;
 use EightshiftForms\Troubleshooting\SettingsFallbackDataInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingInterface;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Settings\SettingInterface;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsTalentlyft class.
  */
-class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSettingGlobalInterface, UtilsSettingInterface, ServiceInterface
+class SettingsTalentlyft extends AbstractSettingsIntegrations implements SettingGlobalInterface, SettingInterface, ServiceInterface
 {
 	/**
 	 * Filter settings key.
@@ -125,8 +125,8 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_KEY, self::SETTINGS_TALENTLYFT_USE_KEY);
-		$apiKey = (bool) UtilsSettingsHelper::getOptionWithConstant(Variables::getApiKeyTalentlyft(), self::SETTINGS_TALENTLYFT_API_KEY_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_KEY, self::SETTINGS_TALENTLYFT_USE_KEY);
+		$apiKey = (bool) SettingsHelpers::getOptionWithConstant(Variables::getApiKeyTalentlyft(), self::SETTINGS_TALENTLYFT_API_KEY_KEY);
 
 		if (!$isUsed || !$apiKey) {
 			return false;
@@ -146,11 +146,11 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 	{
 		// Bailout if feature is not active.
 		if (!$this->isSettingsGlobalValid()) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -161,13 +161,13 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Is Applied', 'eightshift-forms'),
 										'checkboxHelp' => \__('Candidates are considered as applied and receiving the "thank you for applying" email.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY, self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY, self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_TALENTLYFT_USE_FLAGS_APPLIED_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -176,7 +176,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 										'component' => 'checkbox',
 										'checkboxLabel' => \__('Is Prospect', 'eightshift-forms'),
 										'checkboxHelp' => \__('Candidates are considered as sourced and not receiving the "thank you for applying" email.', 'eightshift-forms'),
-										'checkboxIsChecked' => UtilsSettingsHelper::isSettingCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY, self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
+										'checkboxIsChecked' => SettingsHelpers::isSettingCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY, self::SETTINGS_TALENTLYFT_USE_FLAGS_KEY, $formId),
 										'checkboxValue' => self::SETTINGS_TALENTLYFT_USE_FLAGS_PROSPECT_KEY,
 										'checkboxSingleSubmit' => true,
 										'checkboxAsToggle' => true,
@@ -198,15 +198,15 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 	public function getSettingsGlobalData(): array
 	{
 		// Bailout if feature is not active.
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_KEY, self::SETTINGS_TALENTLYFT_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_USE_KEY, self::SETTINGS_TALENTLYFT_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
-		$deactivateIntegration = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY, self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY);
-		$selectedListType = \array_flip(\array_filter(\explode(UtilsConfig::DELIMITER, UtilsSettingsHelper::getOptionValue(self::SETTINGS_TALENTLYFT_LIST_TYPE_KEY))));
+		$deactivateIntegration = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY, self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY);
+		$selectedListType = \array_flip(\array_filter(\explode(Config::DELIMITER, SettingsHelpers::getOptionValue(self::SETTINGS_TALENTLYFT_LIST_TYPE_KEY))));
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
 			[
 				'component' => 'tabs',
 				'tabsContent' => [
@@ -217,12 +217,12 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 							[
 								'component' => 'checkboxes',
 								'checkboxesFieldLabel' => '',
-								'checkboxesName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY),
+								'checkboxesName' => SettingsHelpers::getOptionName(self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY),
 								'checkboxesContent' => [
 									[
 										'component' => 'checkbox',
-										'checkboxLabel' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxLabel'),
-										'checkboxHelp' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('checkboxHelp'),
+										'checkboxLabel' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxLabel'),
+										'checkboxHelp' => SettingsOutputHelpers::getPartialDeactivatedIntegration('checkboxHelp'),
 										'checkboxIsChecked' => $deactivateIntegration,
 										'checkboxValue' => self::SETTINGS_TALENTLYFT_SKIP_INTEGRATION_KEY,
 										'checkboxSingleSubmit' => true,
@@ -233,7 +233,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 							...($deactivateIntegration ? [
 								[
 									'component' => 'intro',
-									'introSubtitle' => UtilsSettingsOutputHelper::getPartialDeactivatedIntegration('introSubtitle'),
+									'introSubtitle' => SettingsOutputHelpers::getPartialDeactivatedIntegration('introSubtitle'),
 									'introIsHighlighted' => true,
 									'introIsHighlightedImportant' => true,
 								],
@@ -242,7 +242,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getPasswordFieldWithGlobalVariable(
+								SettingsOutputHelpers::getPasswordFieldWithGlobalVariable(
 									Variables::getApiKeyTalentlyft(),
 									self::SETTINGS_TALENTLYFT_API_KEY_KEY,
 									'ES_API_KEY_TALENTLYFT',
@@ -252,7 +252,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 									'component' => 'divider',
 									'dividerExtraVSpacing' => true,
 								],
-								UtilsSettingsOutputHelper::getTestApiConnection(self::SETTINGS_TYPE_KEY),
+								SettingsOutputHelpers::getTestApiConnection(self::SETTINGS_TYPE_KEY),
 							]),
 						],
 					],
@@ -263,7 +263,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 							...$this->getGlobalGeneralSettings(self::SETTINGS_TYPE_KEY),
 							[
 								'component' => 'input',
-								'inputName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY),
+								'inputName' => SettingsHelpers::getOptionName(self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY),
 								'inputFieldLabel' => \__('Max upload file size', 'eightshift-forms'),
 								// translators: %d will be replaced with the default file upload limit.
 								'inputFieldHelp' => \sprintf(\__('Up to %dMB.', 'eightshift-forms'), self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT),
@@ -272,7 +272,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 								'inputFieldAfterContent' => 'MB',
 								'inputFieldInlineBeforeAfterContent' => true,
 								'inputPlaceholder' => self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_DEFAULT,
-								'inputValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY),
+								'inputValue' => SettingsHelpers::getOptionValue(self::SETTINGS_TALENTLYFT_FILE_UPLOAD_LIMIT_KEY),
 								'inputMin' => 1,
 								'inputMax' => 5,
 								'inputStep' => 1,
@@ -284,7 +284,7 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 							[
 								'component' => 'select',
 								'selectIsMultiple' => true,
-								'selectName' => UtilsSettingsHelper::getSettingName(self::SETTINGS_TALENTLYFT_LIST_TYPE_KEY),
+								'selectName' => SettingsHelpers::getSettingName(self::SETTINGS_TALENTLYFT_LIST_TYPE_KEY),
 								'selectFieldLabel' => \__('Additional statuses list', 'eightshift-forms'),
 								'selectFieldHelp' => \__('Get additional jobs from other statuses. Published is always included. Use with caution!', 'eightshift-forms'),
 								'selectContent' => [
@@ -304,23 +304,23 @@ class SettingsTalentlyft extends AbstractSettingsIntegrations implements UtilsSe
 						'tabContent' => [
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TALENTLYFT_CONSENT_PRIVACY_KEY),
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_TALENTLYFT_CONSENT_PRIVACY_KEY),
 								'textareaFieldLabel' => \__('Privacy Consent', 'eightshift-forms'),
-								'textareaValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_TALENTLYFT_CONSENT_PRIVACY_KEY),
+								'textareaValue' => SettingsHelpers::getOptionValue(self::SETTINGS_TALENTLYFT_CONSENT_PRIVACY_KEY),
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TALENTLYFT_CONSENT_STORAGE_KEY),
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_TALENTLYFT_CONSENT_STORAGE_KEY),
 								'textareaFieldLabel' => \__('Storage Consent', 'eightshift-forms'),
-								'textareaValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_TALENTLYFT_CONSENT_STORAGE_KEY),
+								'textareaValue' => SettingsHelpers::getOptionValue(self::SETTINGS_TALENTLYFT_CONSENT_STORAGE_KEY),
 								// translators: %s will be replaced with the available variables.
 								'textareaFieldHelp' => \sprintf(\__('Available variables: %s', 'eightshift-forms'), '<code>{period} {company}</code>'),
 							],
 							[
 								'component' => 'textarea',
-								'textareaName' => UtilsSettingsHelper::getOptionName(self::SETTINGS_TALENTLYFT_CONSENT_SHARE_KEY),
+								'textareaName' => SettingsHelpers::getOptionName(self::SETTINGS_TALENTLYFT_CONSENT_SHARE_KEY),
 								'textareaFieldLabel' => \__('Share Consent', 'eightshift-forms'),
-								'textareaValue' => UtilsSettingsHelper::getOptionValue(self::SETTINGS_TALENTLYFT_CONSENT_SHARE_KEY),
+								'textareaValue' => SettingsHelpers::getOptionValue(self::SETTINGS_TALENTLYFT_CONSENT_SHARE_KEY),
 								// translators: %s will be replaced with the available variables.
 								'textareaFieldHelp' => \sprintf(\__('Available variables: %s', 'eightshift-forms'), '<code>{companies}</code>'),
 							],

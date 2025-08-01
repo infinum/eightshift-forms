@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Labels;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * Labels class.
@@ -93,14 +93,14 @@ class Labels implements LabelsInterface
 			$local = \array_flip(self::ALL_LOCAL_LABELS);
 
 			if (isset($local[$key])) {
-				$dbLabel = UtilsSettingsHelper::getSettingValue($key, $formId);
+				$dbLabel = SettingsHelpers::getSettingValue($key, $formId);
 			} else {
-				$dbLabel = UtilsSettingsHelper::getOptionValue($key);
+				$dbLabel = SettingsHelpers::getOptionValue($key);
 			}
 
 			// If there is an override in the DB use that.
 			if (!empty($dbLabel)) {
-				return $dbLabel;
+				return \esc_html($dbLabel);
 			}
 		}
 
@@ -111,7 +111,7 @@ class Labels implements LabelsInterface
 			$labels = \array_merge(...\array_values($this->getLabels()));
 		}
 
-		return $labels[$key] ?? '';
+		return \esc_html($labels[$key] ?? '');
 	}
 
 	/**
@@ -123,6 +123,42 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'submitWpError' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+			'submitFallbackError' => \__('Something went wrong while submitting your form. Please try again.', 'eightshift-forms'),
+			'testApiSuccess' => \__('The API test was successful.', 'eightshift-forms'),
+			'testApiError' => \__('There seems to be an error with the API test. Please ensure that your credentials are correct.', 'eightshift-forms'),
+			'globalNotConfigured' => \__('Global settings are not configured correctly. Please ensure that your feature is enabled in the settings.', 'eightshift-forms'),
+			'integrationItemsMissing' => \__('Integration items are missing.', 'eightshift-forms'),
+			'integrationItemsSuccess' => \__('Integration items were successfully fetched.', 'eightshift-forms'),
+			'geolocationCountriesMissing' => \__('Geolocation countries are missing.', 'eightshift-forms'),
+			'geolocationCountriesSuccess' => \__('Geolocation countries were successfully fetched.', 'eightshift-forms'),
+			'formFieldsMissing' => \__('Form has no fields to provide, please check your form is configured correctly.', 'eightshift-forms'),
+			'formFieldsSuccess' => \__('Form fields were successfully fetched.', 'eightshift-forms'),
+			'cacheTypeNotFound' => \__('cache doesn\'t exist.', 'eightshift-forms'),
+			'cacheDeletedSuccess' => \__('cache deleted successfully!', 'eightshift-forms'),
+			'encryptFailed' => \__('Encrypt failed!', 'eightshift-forms'),
+			'decryptFailed' => \__('Decrypt failed!', 'eightshift-forms'),
+			'encryptSuccess' => \__('Encrypt finished successfully!', 'eightshift-forms'),
+			'decryptSuccess' => \__('Decrypt finished successfully!', 'eightshift-forms'),
+			'incrementResetSuccess' => \__('Increment reset successful.', 'eightshift-forms'),
+			'locationsResultOutputError' => \__('Your result output is not used in any location!', 'eightshift-forms'),
+			'locationsFormError' => \__('Your form is not used in any location!', 'eightshift-forms'),
+			'locationsSuccess' => \__('Locations were successfully fetched.', 'eightshift-forms'),
+			'transferExportMissingForms' => \__('Please click on the forms you want to export.', 'eightshift-forms'),
+			'transferExportMissingResultOutputs' => \__('Please click on the result outputs you want to export.', 'eightshift-forms'),
+			'transferUploadMissingFile' => \__('Please use the upload field to provide the .json file for the upload.', 'eightshift-forms'),
+			'transferUploadError' => \__('There was an issue with your upload file. Please make sure you use forms export file and try again.', 'eightshift-forms'),
+			'transferUploadMissingType' => \__('Transfer version type key was not provided.', 'eightshift-forms'),
+			'transferSuccess' => \__('successfully done!', 'eightshift-forms'),
+			'exportMissingItems' => \__('Please select the items you want to export.', 'eightshift-forms'),
+			'exportDataEmpty' => \__('Data for export is empty.', 'eightshift-forms'),
+			'exportSuccess' => \__('Data export finished with success.', 'eightshift-forms'),
+			'bulkMissingItems' => \__('Please select the items you want to bulk action.', 'eightshift-forms'),
+			'genericSuccess' => \__('Success', 'eightshift-forms'),
+			'genericWarning' => \__('Warning', 'eightshift-forms'),
+			'genericError' => \__('Error', 'eightshift-forms'),
+			'migrationTypeNotFound' => \__('Migration version type key was not provided or not valid.', 'eightshift-forms'),
+			'migrationSuccess' => \__('Migration finished with success.', 'eightshift-forms'),
+			'settingsSuccess' => \__('Changes saved!', 'eightshift-forms'),
 		];
 	}
 
@@ -224,6 +260,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			'validationStepsCurrentStepProblem' => \__('It looks like there is some problem with current step, please try again.', 'eightshift-forms'),
+			'validationStepsFieldsProblem' => \__('It looks like there is some problem with step fields, please try again.', 'eightshift-forms'),
 			'validationStepsNextStepProblem' => \__('It looks like there is some problem with next step, please try again.', 'eightshift-forms'),
 			'validationStepsParametersProblem' => \__('It looks like there is some problem with parameters sent, please try again.', 'eightshift-forms'),
 			'validationStepsSuccess' => \__('Step validation is successful, you may continue.', 'eightshift-forms'),
@@ -238,6 +275,7 @@ class Labels implements LabelsInterface
 	private function getCustomLabels(): array
 	{
 		return [
+			'customMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'customNoAction' => \__('There was an issue with form action. Check the form settings.', 'eightshift-forms'),
 			'customError' => \__('There was an error with your form submission.', 'eightshift-forms'),
 			'customSuccess' => \__('Form was successfully submitted.', 'eightshift-forms'),
@@ -253,7 +291,7 @@ class Labels implements LabelsInterface
 	private function getMailerLabels(): array
 	{
 		return [
-			'mailerErrorSettingsMissing' => \__('Form is not configured correctly. Please try again.', 'eightshift-forms'),
+			'mailerMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'mailerErrorEmailSend' => \__('E-mail was not sent due to an unknown issue. Please try again.', 'eightshift-forms'),
 			'mailerErrorEmailConfirmationSend' => \__('Confirmation e-mail was not sent due to unknown issue. Please try again.', 'eightshift-forms'),
 			'mailerSuccess' => \__('E-mail was sent successfully.', 'eightshift-forms'),
@@ -268,7 +306,7 @@ class Labels implements LabelsInterface
 	private function getGreenhouseLabels(): array
 	{
 		return [
-			'greenhouseErrorSettingsMissing' => \__('Greenhouse integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'greenhouseMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'greenhouseBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'greenhouseSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
@@ -282,7 +320,7 @@ class Labels implements LabelsInterface
 	private function getMailchimpLabels(): array
 	{
 		return [
-			'mailchimpErrorSettingsMissing' => \__('Mailchimp integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'mailchimpMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'mailchimpBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailchimpSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
@@ -297,7 +335,7 @@ class Labels implements LabelsInterface
 	{
 		return [
 			// Internal.
-			'hubspotErrorSettingsMissing' => \__('Hubspot integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'hubspotMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'hubspotBadRequestError' => \__('Something is not with the application. Please check all the fields and try again.', 'eightshift-forms'),
 			'hubspotInvalidRequestError' => \__('Something is not right with the application. Please check all the fields and try again.', 'eightshift-forms'),
 			'hubspotSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
@@ -335,7 +373,7 @@ class Labels implements LabelsInterface
 	private function getMailerliteLabels(): array
 	{
 		return [
-			'mailerliteErrorSettingsMissing' => \__('MailerLite integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'mailerliteMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'mailerliteBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'mailerliteSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
@@ -349,7 +387,7 @@ class Labels implements LabelsInterface
 	private function getGoodbitsLabels(): array
 	{
 		return [
-			'goodbitsErrorSettingsMissing' => \__('Goodbits integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'goodbitsMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'goodbitsBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'goodbitsSuccess' => \__('The newsletter subscription was successful. Thank you!', 'eightshift-forms'),
 		];
@@ -363,6 +401,7 @@ class Labels implements LabelsInterface
 	private function getActiveCampaignLabels(): array
 	{
 		return [
+			'activeCampaignMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'activeCampaignInvalidEmailError' => \__('Enter a valid email address.', 'eightshift-forms'),
 			'activeCampaignDuplicateError' => \__('Email address already exists in the system.', 'eightshift-forms'),
 			'activeCampaign500Error' => \__('There was an error with the service. Please try again.', 'eightshift-forms'),
@@ -379,11 +418,13 @@ class Labels implements LabelsInterface
 	private function getCaptchaLabels(): array
 	{
 		return [
+			'captchaMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'captchaSkipCheck' => \__('Form captcha skipped due to troubleshooting config set in settings.', 'eightshift-forms'),
 			'captchaBadRequest' => \__('Spam prevention system encountered an error. Captcha "request" is invalid or malformed.', 'eightshift-forms'),
 			'captchaWrongAction' => \__('Spam prevention system encountered an error. Captcha response "action" is not valid.', 'eightshift-forms'),
 			'captchaScoreSpam' => \__('The request was marked as a potential spam request. Please try again.', 'eightshift-forms'),
 			'captchaError' => \__('Spam prevention system encountered an error. Please try again.', 'eightshift-forms'),
+			'captchaSuccess' => \__('Success', 'eightshift-forms'),
 		];
 	}
 
@@ -395,6 +436,7 @@ class Labels implements LabelsInterface
 	private function getAirtableLabels(): array
 	{
 		return [
+			'airtableMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'airtableNotFoundError' => \__('Airtable integration is not configured correctly. Please try again.', 'eightshift-forms'),
 			'airtableInvalidPermissionsOrModelNotFoundError' => \__('Invalid permissions, or the requested model was not found. Check that your token has the required permissions and that the model names and/or ids are correct.', 'eightshift-forms'),
 			'airtableInvalidPermissionsError' => \__('You are not permitted to perform this operation.', 'eightshift-forms'),
@@ -412,7 +454,7 @@ class Labels implements LabelsInterface
 	private function getMomentsLabels(): array
 	{
 		return [
-			'momentsErrorSettingsMissing' => \__('Moments integration is not configured correctly. Please try again.', 'eightshift-forms'),
+			'momentsMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'momentsBadRequestError' => \__('Something is not right with the submission. Please check all the fields and try again.', 'eightshift-forms'),
 			'momentsSuccess' => \__('The form was submitted successfully. Thank you!', 'eightshift-forms'),
 		];
@@ -426,6 +468,7 @@ class Labels implements LabelsInterface
 	private function getWorkableLabels(): array
 	{
 		return [
+			'workableMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'workableBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'workableArchivedJobError' => \__('We apologize, but this job is no longer available. Please try again later, or contact us if you believe this is a mistake.', 'eightshift-forms'),
 			'workableTooLongFileNameError' => \__('One of your uploaded files has a filename that is too long. Please reduce the filename and try again.', 'eightshift-forms'),
@@ -441,6 +484,7 @@ class Labels implements LabelsInterface
 	private function getTalentlyftLabels(): array
 	{
 		return [
+			'talentlyftMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'talentlyftBadRequestError' => \__('Something is not right with the job application. Please check all the fields and try again.', 'eightshift-forms'),
 			'talentlyftValidationError' => \__('It looks like there are some issues with your form fields. Please check all the fields and try again.', 'eightshift-forms'),
 			'talentlyftSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
@@ -455,6 +499,7 @@ class Labels implements LabelsInterface
 	private function getJiraLabels(): array
 	{
 		return [
+			'jiraMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'jiraMissingProject' => \__('Your form is missing project key. Please try again.', 'eightshift-forms'),
 			'jiraMissingIssueType' => \__('Your form is missing issue type. Please try again.', 'eightshift-forms'),
 			'jiraMissingSummary' => \__('Your form is missing issue summary. Please try again.', 'eightshift-forms'),
@@ -471,8 +516,8 @@ class Labels implements LabelsInterface
 	private function getCorvusLabels(): array
 	{
 		return [
-			'corvusMissingReqParams' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'corvusMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'corvusMissingReqParams' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'corvusSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -485,8 +530,8 @@ class Labels implements LabelsInterface
 	private function getPaycekLabels(): array
 	{
 		return [
-			'paycekMissingReqParams' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'paycekMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
+			'paycekMissingReqParams' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'paycekSuccess' => \__('Payment submitted successfully. Thank you!', 'eightshift-forms'),
 		];
 	}
@@ -499,6 +544,7 @@ class Labels implements LabelsInterface
 	private function getPipedriveLabels(): array
 	{
 		return [
+			'pipedriveMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'pipedriveMissingName' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'pipedriveMissingOrganization' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'pipedriveWrongOrganizationId' => \__('Organization ID is invalid.', 'eightshift-forms'),
@@ -516,6 +562,7 @@ class Labels implements LabelsInterface
 	private function getCalculatorLabels(): array
 	{
 		return [
+			'calculatorMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'calculatorErrorSettingsMissing' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'calculatorBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),
 			'calculatorSuccess' => \__('Application submitted successfully. Thank you!', 'eightshift-forms'),
@@ -530,6 +577,7 @@ class Labels implements LabelsInterface
 	private function getNationbuilderLabels(): array
 	{
 		return [
+			'nationbuilderMissingConfig' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'nationbuilderErrorSettingsMissing' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'nationbuilderServerError' => \__('This form is not configured correctly. Please get in touch with the website administrator to resolve this issue.', 'eightshift-forms'),
 			'nationbuilderBadRequestError' => \__('Something is not right with the subscription. Please check all the fields and try again.', 'eightshift-forms'),

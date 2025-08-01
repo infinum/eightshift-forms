@@ -1,7 +1,6 @@
 /* global esFormsLocalization */
 
 import globalManifest from '../../../manifest.json';
-import utilsManifest from '../../../../../vendor-prefixed/infinum/eightshift-forms-utils/src/manifest.json';
 
 ////////////////////////////////////////////////////////////////
 // Constants
@@ -190,32 +189,32 @@ export function setStateInitial() {
 	};
 
 	// Selectors.
-	for (const [key, item] of Object.entries(utilsManifest.enums.selectors ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.selectors ?? {})) {
 		setState([key], item, StateEnum.SELECTORS);
 	}
 
 	// Selectors Admin.
-	for (const [key, item] of Object.entries(utilsManifest.enums.selectorsAdmin ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.selectorsAdmin ?? {})) {
 		setState([key], item, StateEnum.SELECTORS_ADMIN);
 	}
 
 	// Response output keys.
-	for (const [key, item] of Object.entries(utilsManifest.enums.responseOutputKeys ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.responseOutputKeys ?? {})) {
 		setState([key], item, StateEnum.RESPONSE_OUTPUT_KEYS);
 	}
 
 	// Success Redirect Url keys.
-	for (const [key, item] of Object.entries(utilsManifest.enums.successRedirectUrlKeys ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.successRedirectUrlKeys ?? {})) {
 		setState([key], item, StateEnum.SUCCESS_REDIRECT_URL_KEYS);
 	}
 
 	// Attributes.
-	for (const [key, item] of Object.entries(utilsManifest.enums.attrs ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.attrs ?? {})) {
 		setState([key], item, StateEnum.ATTRIBUTES);
 	}
 
 	// Params.
-	for (const [key, item] of Object.entries(utilsManifest.enums.params ?? {})) {
+	for (const [key, item] of Object.entries(globalManifest.enums.params ?? {})) {
 		setState([key], item, StateEnum.PARAMS);
 	}
 
@@ -1006,7 +1005,7 @@ export function simpleDecode(str) {
  * @returns {string}
  */
 export function getUtilsIcons(name) {
-	return utilsManifest?.icons?.[name];
+	return globalManifest?.icons?.[name];
 }
 
 ////////////////////////////////////////////////////////////////

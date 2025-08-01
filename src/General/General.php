@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\General;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -44,7 +44,7 @@ class General implements ServiceInterface
 	 */
 	public function getHttpRequestArgs(array $args): array
 	{
-		$filterName = UtilsHooksHelper::getFilterName(['general', 'httpRequestTimeout']);
+		$filterName = HooksHelpers::getFilterName(['general', 'httpRequestTimeout']);
 
 		$args['timeout'] = \apply_filters($filterName, self::HTTP_REQUEST_TIMEOUT_DEFAULT);
 

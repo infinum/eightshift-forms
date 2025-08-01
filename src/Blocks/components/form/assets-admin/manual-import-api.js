@@ -31,7 +31,7 @@ export class ManualImportApi {
 
 		this.utils.showLoader(formId);
 
-		// Clear output everytime.
+		// Clear output every time.
 		document.querySelector(this.outputSelector).value = '';
 
 		// If no items, show error and return.

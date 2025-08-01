@@ -11,11 +11,11 @@ declare(strict_types=1);
 namespace EightshiftForms\Entries;
 
 use EightshiftForms\Helpers\FormsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 
 /**
  * EntriesHelper class.
@@ -39,25 +39,25 @@ class EntriesHelper
 	public static function setEntryByFormDataRef(array $formDetails)
 	{
 		$params = \array_merge(
-			$formDetails[UtilsConfig::FD_PARAMS] ?? [],
-			$formDetails[UtilsConfig::FD_FILES] ?? []
+			$formDetails[Config::FD_PARAMS] ?? [],
+			$formDetails[Config::FD_FILES] ?? []
 		);
-		$formId = $formDetails[UtilsConfig::IARD_FORM_ID] ?? '';
+		$formId = $formDetails[Config::IARD_FORM_ID] ?? '';
 
 		$output = [];
 
 		// Filter params.
-		$filterName = UtilsHooksHelper::getFilterName(['entries', 'prePostParams']);
+		$filterName = HooksHelpers::getFilterName(['entries', 'prePostParams']);
 		if (\has_filter($filterName)) {
 			$params = \apply_filters($filterName, $params, $formId, $formDetails) ?? [];
 		}
 
-		// Get skipped params earlier as we are removing them from the main array using removeUneceseryParamFields method.
+		// Get skipped params earlier as we are removing them from the main array using removeUnnecessaryParamFields method.
 		$paramsSkipped = FormsHelper::getParamValue(UtilsHelper::getStateParam('skippedParams'), $params);
 
-		$params = UtilsGeneralHelper::removeUneceseryParamFields($params);
+		$params = GeneralHelpers::removeUnnecessaryParamFields($params);
 
-		$saveEmptyFields = UtilsSettingsHelper::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId);
+		$saveEmptyFields = SettingsHelpers::isSettingCheckboxChecked(SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, SettingsEntries::SETTINGS_ENTRIES_SAVE_EMPTY_FIELDS, $formId);
 
 		foreach ($params as $param) {
 			$name = $param['name'] ?? '';
@@ -110,7 +110,7 @@ class EntriesHelper
 	 */
 	public static function getEntryAdminUrl(string $entryId, string $formId): string
 	{
-		return UtilsGeneralHelper::getListingPageUrl(UtilsConfig::SLUG_ADMIN_LISTING_ENTRIES, $formId) . "#entry-{$entryId}";
+		return GeneralHelpers::getListingPageUrl(Config::SLUG_ADMIN_LISTING_ENTRIES, $formId) . "#entry-{$entryId}";
 	}
 
 	/**

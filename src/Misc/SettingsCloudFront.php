@@ -10,15 +10,15 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Misc;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsOutputHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Settings\UtilsSettingGlobalInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsOutputHelpers;
+use EightshiftForms\Settings\SettingGlobalInterface;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
  * SettingsCloudFront class.
  */
-class SettingsCloudFront implements UtilsSettingGlobalInterface, ServiceInterface
+class SettingsCloudFront implements SettingGlobalInterface, ServiceInterface
 {
 	/**
 	 * Filter global settings key.
@@ -26,9 +26,9 @@ class SettingsCloudFront implements UtilsSettingGlobalInterface, ServiceInterfac
 	public const FILTER_SETTINGS_GLOBAL_NAME = 'es_forms_settings_global_cloudfront';
 
 	/**
-	 * Filter settings is Valid key.
+	 * Filter settings global is Valid key.
 	 */
-	public const FILTER_SETTINGS_IS_VALID_NAME = 'es_forms_settings_is_valid_cloudfront';
+	public const FILTER_SETTINGS_GLOBAL_IS_VALID_NAME = 'es_forms_settings_global_is_valid_cloudfront';
 
 	/**
 	 * Settings key.
@@ -48,7 +48,7 @@ class SettingsCloudFront implements UtilsSettingGlobalInterface, ServiceInterfac
 	public function register(): void
 	{
 		\add_filter(self::FILTER_SETTINGS_GLOBAL_NAME, [$this, 'getSettingsGlobalData']);
-		\add_filter(self::FILTER_SETTINGS_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
+		\add_filter(self::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME, [$this, 'isSettingsGlobalValid']);
 	}
 
 	/**
@@ -58,7 +58,7 @@ class SettingsCloudFront implements UtilsSettingGlobalInterface, ServiceInterfac
 	 */
 	public function isSettingsGlobalValid(): bool
 	{
-		$isUsed = UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLOUDFRONT_USE_KEY, self::SETTINGS_CLOUDFRONT_USE_KEY);
+		$isUsed = SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CLOUDFRONT_USE_KEY, self::SETTINGS_CLOUDFRONT_USE_KEY);
 
 		if (!$isUsed) {
 			return false;
@@ -74,13 +74,13 @@ class SettingsCloudFront implements UtilsSettingGlobalInterface, ServiceInterfac
 	 */
 	public function getSettingsGlobalData(): array
 	{
-		if (!UtilsSettingsHelper::isOptionCheckboxChecked(self::SETTINGS_CLOUDFRONT_USE_KEY, self::SETTINGS_CLOUDFRONT_USE_KEY)) {
-			return UtilsSettingsOutputHelper::getNoActiveFeature();
+		if (!SettingsHelpers::isOptionCheckboxChecked(self::SETTINGS_CLOUDFRONT_USE_KEY, self::SETTINGS_CLOUDFRONT_USE_KEY)) {
+			return SettingsOutputHelpers::getNoActiveFeature();
 		}
 
 		return [
-			UtilsSettingsOutputHelper::getIntro(self::SETTINGS_TYPE_KEY),
-			UtilsSettingsOutputHelper::getMiscDisclaimer(\__('CloudFront', 'eightshift-forms')),
+			SettingsOutputHelpers::getIntro(self::SETTINGS_TYPE_KEY),
+			SettingsOutputHelpers::getMiscDisclaimer(\__('CloudFront', 'eightshift-forms')),
 			[
 				'component' => 'intro',
 				'introTitle' => \__('Features affected by CloudFront are:', 'eightshift-forms'),

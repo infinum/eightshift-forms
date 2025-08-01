@@ -18,7 +18,7 @@ interface NationbuilderClientInterface extends ClientMappingInterface
 	/**
 	 * Return custom fields.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<mixed>
 	 */
@@ -27,7 +27,7 @@ interface NationbuilderClientInterface extends ClientMappingInterface
 	/**
 	 * Return lists.
 	 *
-	 * @param bool $hideUpdateTime Determin if update time will be in the output or not.
+	 * @param bool $hideUpdateTime Determine if update time will be in the output or not.
 	 *
 	 * @return array<string, mixed>
 	 */

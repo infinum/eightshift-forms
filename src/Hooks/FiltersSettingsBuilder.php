@@ -51,7 +51,7 @@ use EightshiftForms\Integrations\Talentlyft\SettingsTalentlyft;
 use EightshiftForms\Integrations\Talentlyft\Talentlyft;
 use EightshiftForms\Integrations\Talentlyft\TalentlyftClient;
 use EightshiftForms\Blocks\SettingsBlocks;
-use EightshiftForms\Settings\Settings\SettingsSettings;
+use EightshiftForms\Settings\SettingsSettings;
 use EightshiftForms\Transfer\SettingsTransfer;
 use EightshiftForms\Troubleshooting\SettingsDebug;
 use EightshiftForms\Troubleshooting\SettingsFallback;
@@ -70,13 +70,13 @@ use EightshiftForms\Misc\SettingsRocketCache;
 use EightshiftForms\Misc\SettingsWpml;
 use EightshiftForms\Security\SettingsSecurity;
 use EightshiftForms\Validation\SettingsValidation;
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Config\Config;
+use EightshiftForms\Helpers\HooksHelpers;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
- * The FilFiltersSettingsBuilderters class, used for defining settings and integrations filter variables.
+ * The FilFiltersSettingsBuilder class, used for defining settings and integrations filter variables.
  */
 class FiltersSettingsBuilder implements ServiceInterface
 {
@@ -87,7 +87,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter(UtilsConfig::FILTER_SETTINGS_DATA, [$this, 'getSettingsFiltersData']);
+		\add_filter(Config::FILTER_SETTINGS_DATA, [$this, 'getSettingsFiltersData']);
 	}
 
 	/**
@@ -102,7 +102,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			// ------------------------------
 			// GENERAL.
 			// ------------------------------
-			UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL => [
+			Config::SETTINGS_INTERNAL_TYPE_GENERAL => [
 				'order' => 1,
 				'labels' => [
 					'title' => \__('General', 'eightshift-forms'),
@@ -110,7 +110,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsDashboard::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsDashboard::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('Dashboard', 'eightshift-forms'),
 					'desc' => \__('Choose the features you want to use in your project.', 'eightshift-forms'),
@@ -118,7 +118,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsGeneral::SETTINGS_TYPE_KEY => [
 				'settings' => SettingsGeneral::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('General', 'eightshift-forms'),
 					'desc' => \__('General form settings.', 'eightshift-forms'),
@@ -126,7 +126,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsSettings::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsSettings::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('Settings', 'eightshift-forms'),
 					'desc' => \__('Disable default scripts and styles, configure behaviors after form submission.', 'eightshift-forms'),
@@ -135,7 +135,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsValidation::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsValidation::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsValidation::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'labels' => [
 					'title' => \__('Validation', 'eightshift-forms'),
 					'desc' => \__('Settings for all forms validation options.', 'eightshift-forms'),
@@ -144,7 +144,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			// ------------------------------
 			// ADVANCED.
 			// ------------------------------
-			UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED => [
+			Config::SETTINGS_INTERNAL_TYPE_ADVANCED => [
 				'order' => 2,
 				'labels' => [
 					'title' => \__('Advanced', 'eightshift-forms'),
@@ -152,7 +152,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsCaptcha::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCaptcha::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsCaptcha::SETTINGS_CAPTCHA_USE_KEY,
 				'labels' => [
 					'title' => \__('Spam prevention', 'eightshift-forms'),
@@ -162,7 +162,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsGeolocation::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsGeolocation::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsGeolocation::SETTINGS_GEOLOCATION_USE_KEY,
 				'labels' => [
 					'title' => \__('Geolocation', 'eightshift-forms'),
@@ -171,7 +171,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsEnrichment::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsEnrichment::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsEnrichment::SETTINGS_ENRICHMENT_USE_KEY,
 				'labels' => [
 					'title' => \__('Enrichment', 'eightshift-forms'),
@@ -181,7 +181,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsBlocks::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsBlocks::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsBlocks::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_GENERAL,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_GENERAL,
 				'countryOutput' => SettingsBlocks::FILTER_SETTINGS_BLOCK_COUNTRY_DATASET_VALUE_NAME,
 				'labels' => [
 					'title' => \__('Blocks', 'eightshift-forms'),
@@ -190,7 +190,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsSecurity::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsSecurity::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsSecurity::SETTINGS_SECURITY_USE_KEY,
 				'labels' => [
 					'title' => \__('Security', 'eightshift-forms'),
@@ -200,7 +200,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsEntries::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsEntries::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsEntries::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_ADVANCED,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_ADVANCED,
 				'use' => SettingsEntries::SETTINGS_ENTRIES_USE_KEY,
 				'labels' => [
 					'title' => \__('Entries', 'eightshift-forms'),
@@ -210,7 +210,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			// ------------------------------
 			// INTEGRATIONS.
 			// ------------------------------
-			UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION => [
+			Config::SETTINGS_INTERNAL_TYPE_INTEGRATION => [
 				'order' => 3,
 				'labels' => [
 					'title' => \__('Integrations', 'eightshift-forms'),
@@ -220,8 +220,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settingsGlobal' => SettingsMailer::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsMailer::FILTER_SETTINGS_NAME,
 				'valid' => SettingsMailer::FILTER_SETTINGS_IS_VALID_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsMailer::SETTINGS_MAILER_USE_KEY,
 				'settingsForceShow' => true,
 				'emailTemplateTags' => [
@@ -247,8 +247,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsMailchimp::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsMailchimp::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Mailchimp::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMailchimp::SETTINGS_MAILCHIMP_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -264,8 +264,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsGreenhouse::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsGreenhouse::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Greenhouse::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsGreenhouse::SETTINGS_GREENHOUSE_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -282,8 +282,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settingsGlobal' => SettingsHubspot::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsHubspot::FILTER_SETTINGS_NAME,
 				'fields' => Hubspot::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsHubspot::SETTINGS_HUBSPOT_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -300,8 +300,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsMailerlite::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsMailerlite::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Mailerlite::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMailerlite::SETTINGS_MAILERLITE_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -317,8 +317,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsGoodbits::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsGoodbits::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsGoodbits::SETTINGS_GOODBITS_USE_KEY,
 				'settingsForceShow' => false,
 				'labels' => [
@@ -332,7 +332,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settingsGlobal' => SettingsClearbit::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsClearbit::FILTER_SETTINGS_NAME,
 				'fields' => Goodbits::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
 				'use' => SettingsClearbit::SETTINGS_CLEARBIT_USE_KEY,
 				'settingsForceShow' => true,
 				'labels' => [
@@ -345,8 +345,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsActiveCampaign::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsActiveCampaign::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => ActiveCampaign::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_COMPLEX,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_COMPLEX,
 				'use' => SettingsActiveCampaign::SETTINGS_ACTIVE_CAMPAIGN_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -362,8 +362,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsAirtable::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsAirtable::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Airtable::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsAirtable::SETTINGS_AIRTABLE_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -380,8 +380,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settingsGlobal' => SettingsMoments::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsMoments::FILTER_SETTINGS_NAME,
 				'fields' => Moments::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsMoments::SETTINGS_MOMENTS_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -398,8 +398,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsWorkable::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsWorkable::FILTER_SETTINGS_GLOBAL_NAME,
 				'fields' => Workable::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsWorkable::SETTINGS_WORKABLE_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -416,8 +416,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settingsGlobal' => SettingsTalentlyft::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsTalentlyft::FILTER_SETTINGS_NAME,
 				'fields' => Talentlyft::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_DEFAULT,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_DEFAULT,
 				'use' => SettingsTalentlyft::SETTINGS_TALENTLYFT_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -433,8 +433,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsJira::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsJira::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsJira::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsJira::SETTINGS_JIRA_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -456,8 +456,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsCorvus::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCorvus::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsCorvus::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsCorvus::SETTINGS_CORVUS_USE_KEY,
 				'settingsForceShow' => false,
 				'emailTemplateTags' => [],
@@ -471,8 +471,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsPaycek::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsPaycek::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsPaycek::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsPaycek::SETTINGS_PAYCEK_USE_KEY,
 				'settingsForceShow' => false,
 				'emailTemplateTags' => [],
@@ -486,8 +486,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			SettingsPipedrive::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsPipedrive::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsPipedrive::FILTER_SETTINGS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsPipedrive::SETTINGS_PIPEDRIVE_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -507,8 +507,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsCalculator::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCalculator::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsCalculator::SETTINGS_CALCULATOR_USE_KEY,
 				'settingsForceShow' => false,
 				'labels' => [
@@ -520,8 +520,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 				'settingsGlobal' => SettingsNationbuilder::FILTER_SETTINGS_GLOBAL_NAME,
 				'settings' => SettingsNationbuilder::FILTER_SETTINGS_NAME,
 				'fields' => Workable::FILTER_FORM_FIELDS_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_INTEGRATION,
-				'integrationType' => UtilsConfig::INTEGRATION_TYPE_NO_BUILDER,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_INTEGRATION,
+				'integrationType' => Config::INTEGRATION_TYPE_NO_BUILDER,
 				'use' => SettingsNationbuilder::SETTINGS_NATIONBUILDER_USE_KEY,
 				'settingsForceShow' => false,
 				'cache' => [
@@ -542,7 +542,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			// ------------------------------
 			// MISCELLANEOUS.
 			// ------------------------------
-			UtilsConfig::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS => [
+			Config::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS => [
 				'order' => 4,
 				'labels' => [
 					'title' => \__('Miscellaneous', 'eightshift-forms'),
@@ -551,7 +551,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsWpml::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsWpml::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
 				'use' => SettingsWpml::SETTINGS_WPML_USE_KEY,
 				'labels' => [
 					'title' => \__('WPML', 'eightshift-forms'),
@@ -560,7 +560,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsRocketCache::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsRocketCache::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
 				'use' => SettingsRocketCache::SETTINGS_ROCKET_CACHE_USE_KEY,
 				'labels' => [
 					'title' => \__('Rocket Cache', 'eightshift-forms'),
@@ -569,7 +569,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsCloudflare::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCloudflare::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
 				'use' => SettingsCloudflare::SETTINGS_CLOUDFLARE_USE_KEY,
 				'labels' => [
 					'title' => \__('Cloudflare', 'eightshift-forms'),
@@ -578,7 +578,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsCloudFront::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCloudFront::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_MISCELLANEOUS,
 				'use' => SettingsCloudFront::SETTINGS_CLOUDFRONT_USE_KEY,
 				'labels' => [
 					'title' => \__('CloudFront', 'eightshift-forms'),
@@ -588,7 +588,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			// ------------------------------
 			// ADD-ONS.
 			// ------------------------------
-			UtilsConfig::SETTINGS_INTERNAL_TYPE_ADDON => [
+			Config::SETTINGS_INTERNAL_TYPE_ADDON => [
 				'order' => 5,
 				'labels' => [
 					'title' => \__('Add-ons', 'eightshift-forms'),
@@ -598,7 +598,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			// ------------------------------
 			// TROUBLESHOOTING.
 			// ------------------------------
-			UtilsConfig::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING => [
+			Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING => [
 				'order' => 6,
 				'labels' => [
 					'title' => \__('Troubleshooting', 'eightshift-forms'),
@@ -607,25 +607,26 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsCache::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsCache::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'labels' => [
 					'title' => \__('Cache', 'eightshift-forms'),
 					'desc' => \__('Force data re-fetch for certain integrations.', 'eightshift-forms'),
 				],
 			],
 			SettingsFallback::SETTINGS_TYPE_KEY => [
+				'settings' => SettingsFallback::FILTER_SETTINGS_NAME,
 				'settingsGlobal' => SettingsFallback::FILTER_SETTINGS_GLOBAL_NAME,
-				'valid' => SettingsFallback::FILTER_SETTINGS_IS_VALID_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
+				'valid' => SettingsFallback::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsFallback::SETTINGS_FALLBACK_USE_KEY,
 				'labels' => [
-					'title' => \__('Fallback e-mails', 'eightshift-forms'),
-					'desc' => \__('Send a plain-text e-mail in case a form submission fails to complete.', 'eightshift-forms'),
+					'title' => \__('Fallbacks', 'eightshift-forms'),
+					'desc' => \__('Send a plain-text e-mail or store data in the database in case a form submission fails to complete.', 'eightshift-forms'),
 				],
 			],
 			SettingsMigration::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsMigration::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsMigration::SETTINGS_MIGRATION_USE_KEY,
 				'labels' => [
 					'title' => \__('Migration', 'eightshift-forms'),
@@ -634,8 +635,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsTransfer::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsTransfer::FILTER_SETTINGS_GLOBAL_NAME,
-				'valid' => SettingsTransfer::FILTER_SETTINGS_IS_VALID_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
+				'valid' => SettingsTransfer::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsTransfer::SETTINGS_TRANSFER_USE_KEY,
 				'labels' => [
 					'title' => \__('Import/export', 'eightshift-forms'),
@@ -644,8 +645,8 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsDebug::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsDebug::FILTER_SETTINGS_GLOBAL_NAME,
-				'valid' => SettingsDebug::FILTER_SETTINGS_IS_VALID_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
+				'valid' => SettingsDebug::FILTER_SETTINGS_GLOBAL_IS_VALID_NAME,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'use' => SettingsDebug::SETTINGS_DEBUG_USE_KEY,
 				'labels' => [
 					'title' => \__('Debug', 'eightshift-forms'),
@@ -654,7 +655,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 			],
 			SettingsDocumentation::SETTINGS_TYPE_KEY => [
 				'settingsGlobal' => SettingsDocumentation::FILTER_SETTINGS_GLOBAL_NAME,
-				'type' => UtilsConfig::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
+				'type' => Config::SETTINGS_INTERNAL_TYPE_TROUBLESHOOTING,
 				'labels' => [
 					'title' => \__('Documentation', 'eightshift-forms'),
 					'desc' => \__('Need help? Interested in learning more? Find resources here.', 'eightshift-forms'),
@@ -673,7 +674,7 @@ class FiltersSettingsBuilder implements ServiceInterface
 		}
 
 		// Populate additional items from filters, used for add-ons.
-		$filterName = UtilsHooksHelper::getFilterName(['admin', 'settings', 'data']);
+		$filterName = HooksHelpers::getFilterName(['admin', 'settings', 'data']);
 		if (\has_filter($filterName)) {
 			$data = \apply_filters($filterName, $data);
 		}

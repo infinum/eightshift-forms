@@ -61,8 +61,9 @@ export class Steps {
 
 			if (data?.[validationOutputKey] !== undefined) {
 				this.utils.outputErrors(formId, data?.[validationOutputKey]);
-				this.utils.setGlobalMsg(formId, message, status, data);
 			}
+
+			this.utils.setGlobalMsg(formId, message, status, data);
 		}
 	}
 

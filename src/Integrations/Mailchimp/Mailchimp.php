@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace EightshiftForms\Integrations\Mailchimp;
 
 use EightshiftForms\Form\AbstractFormBuilder;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsGeneralHelper;
+use EightshiftForms\Helpers\GeneralHelpers;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHelper;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
+use EightshiftForms\Helpers\UtilsHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -252,7 +252,7 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 						'dateType' => 'date',
 						'dateIsRequired' => (bool) $isRequired,
 						'datePreviewFormat' => 'F j, Y',
-						'dateOutputFormat' => UtilsGeneralHelper::getCorrectLibDateFormats($dateFormat, '/'),
+						'dateOutputFormat' => GeneralHelpers::getCorrectLibDateFormats($dateFormat, '/'),
 						'dateValue' => $value,
 						'dateDisabledOptions' => $this->prepareDisabledOptions('date', [
 							$isRequired ? 'dateIsRequired' : '',
@@ -332,8 +332,8 @@ class Mailchimp extends AbstractFormBuilder implements MapperInterface, ServiceI
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
-		// Change the final output if necesery.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'data']);
+		// Change the final output if necessary.
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsMailchimp::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}

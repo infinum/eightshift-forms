@@ -50,7 +50,7 @@ export const IntegrationsOptions = ({
 			path: getRestUrlByType('prefixIntegrationItems', block, true),
 		}).then((response) => {
 			if (response.code === 200) {
-				setFormItems(response.data);
+				setFormItems(response.data.integrationItems);
 			}
 		});
 
@@ -59,7 +59,7 @@ export const IntegrationsOptions = ({
 				path: `${getRestUrlByType('prefixIntegrationItemsInner', block, true)}?id=${itemId}`,
 			}).then((response) => {
 				if (response.code === 200) {
-					setFormInnerItems(response.data);
+					setFormInnerItems(response.data.integrationItems);
 				}
 			});
 		}

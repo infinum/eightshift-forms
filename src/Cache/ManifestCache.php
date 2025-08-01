@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Cache;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Config\UtilsConfig;
+use EightshiftForms\Config\Config;
 use EightshiftFormsVendor\EightshiftLibs\Cache\AbstractManifestCache;
 use EightshiftFormsVendor\EightshiftLibs\Helpers\Helpers;
 
@@ -42,7 +42,7 @@ class ManifestCache extends AbstractManifestCache
 	 */
 	public function getCacheName(): string
 	{
-		return UtilsConfig::MAIN_PLUGIN_MANIFEST_CACHE_NAME;
+		return Config::MAIN_PLUGIN_MANIFEST_CACHE_NAME;
 	}
 
 	/**

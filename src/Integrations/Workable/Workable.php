@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace EightshiftForms\Integrations\Workable;
 
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsSettingsHelper;
+use EightshiftForms\Helpers\SettingsHelpers;
 use EightshiftForms\Form\AbstractFormBuilder;
+use EightshiftForms\Helpers\HooksHelpers;
 use EightshiftForms\Integrations\ClientInterface;
 use EightshiftForms\Integrations\MapperInterface;
-use EightshiftFormsVendor\EightshiftFormsUtils\Helpers\UtilsHooksHelper;
 use EightshiftFormsVendor\EightshiftLibs\Services\ServiceInterface;
 
 /**
@@ -220,7 +220,7 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 					}
 					break;
 				case 'file':
-					$maxFileSize = UtilsSettingsHelper::getOptionValueWithFallback(SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT);
+					$maxFileSize = SettingsHelpers::getOptionValueWithFallback(SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_KEY, (string) SettingsWorkable::SETTINGS_WORKABLE_FILE_UPLOAD_LIMIT_DEFAULT);
 
 					$output[] = [
 						'component' => 'file',
@@ -273,18 +273,18 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 					];
 					break;
 				case 'free_text':
-						$output[] = [
-							'component' => 'textarea',
-							'textareaName' => $name,
-							'textareaTracking' => $name,
-							'textareaFieldLabel' => $label,
-							'textareaIsRequired' => $required,
-							'textareaTypeCustom' => $type,
-							'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
-								$required ? 'textareaIsRequired' : '',
-								'textareaTypeCustom',
-							]),
-						];
+					$output[] = [
+						'component' => 'textarea',
+						'textareaName' => $name,
+						'textareaTracking' => $name,
+						'textareaFieldLabel' => $label,
+						'textareaIsRequired' => $required,
+						'textareaTypeCustom' => $type,
+						'textareaDisabledOptions' => $this->prepareDisabledOptions('textarea', [
+							$required ? 'textareaIsRequired' : '',
+							'textareaTypeCustom',
+						]),
+					];
 					break;
 				case 'boolean':
 					$output[] = [
@@ -321,8 +321,8 @@ class Workable extends AbstractFormBuilder implements MapperInterface, ServiceIn
 			'submitDisabledOptions' => $this->prepareDisabledOptions('submit'),
 		];
 
-		// Change the final output if necesery.
-		$filterName = UtilsHooksHelper::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'data']);
+		// Change the final output if necessary.
+		$filterName = HooksHelpers::getFilterName(['integrations', SettingsWorkable::SETTINGS_TYPE_KEY, 'data']);
 		if (\has_filter($filterName)) {
 			$output = \apply_filters($filterName, $output, $formId) ?? [];
 		}
